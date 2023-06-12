@@ -95,4 +95,9 @@ interface SubscriptionInterface extends ContentEntityInterface {
    */
   public function cancel();
 
+  /**
+   * Sends a confirmation email for this subscription.
+   */
+  public function sendConfirmationEmail(): array;
+
 }

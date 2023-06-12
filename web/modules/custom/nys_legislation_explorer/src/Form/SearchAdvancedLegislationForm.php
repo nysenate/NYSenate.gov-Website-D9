@@ -194,7 +194,7 @@ class SearchAdvancedLegislationForm extends FormBase {
     else {
       $form['advanced_search']['advanced_search_title'] = [
         '#type' => 'item',
-        '#markup' => $this->t('Advanced Legislation Search'),
+        '#markup' => $this->t('<h1>Advanced Legislation Search</h1>'),
       ];
     }
     $args = $this->requestStack->getCurrentRequest()->query->all();
@@ -224,8 +224,8 @@ class SearchAdvancedLegislationForm extends FormBase {
       '#options' => [
         'bill' => t('Bills'),
         'resolution' => t('Resolutions'),
-        'agenda' => t('Committee Meeting Agendas'),
-        'calendar' => t('Session Calendars'),
+        'meeting' => t('Committee Meeting Agendas'),
+        'event' => t('Session Calendars'),
         'floor' => t('Session Transcripts'),
         'public_hearing' => t('Public Hearing Transcripts'),
       ],
@@ -288,8 +288,8 @@ class SearchAdvancedLegislationForm extends FormBase {
       '#states' => [
         'visible' => [
           'select[name="type"]' => [
-            ['value' => 'agenda'],
-            ['value' => 'calendar'],
+            ['value' => 'meeting'],
+            ['value' => 'event'],
             ['value' => 'floor'],
             ['value' => 'public_hearing'],
           ],
@@ -308,8 +308,8 @@ class SearchAdvancedLegislationForm extends FormBase {
       '#states' => [
         'visible' => [
           'select[name="type"]' => [
-            ['value' => 'agenda'],
-            ['value' => 'calendar'],
+            ['value' => 'meeting'],
+            ['value' => 'event'],
             ['value' => 'floor'],
             ['value' => 'public_hearing'],
           ],
@@ -399,7 +399,7 @@ class SearchAdvancedLegislationForm extends FormBase {
         'visible' => [
           'select[name="type"]' => [
             ['value' => 'bill'],
-            ['value' => 'agenda'],
+            ['value' => 'meeting'],
           ],
         ],
       ],
@@ -487,21 +487,21 @@ class SearchAdvancedLegislationForm extends FormBase {
         ];
         break;
 
-      case 'agenda':
+      case 'meeting':
         $params = [
           'type' => $values['type'] ?: '',
           'meeting_date' => $date_range ?: '',
           'committee' => $values['committee'] ?: '',
-          'sort_by' => 'field_ol_meeting_date',
+          'sort_by' => ' field_date_range',
           'sort_order' => 'DESC',
         ];
         break;
 
-      case 'calendar':
+      case 'event':
         $params = [
           'type' => $values['type'] ?: '',
           'date' => $date_range ?: '',
-          'sort_by' => 'field_publication_date',
+          'sort_by' => 'field_date_range',
           'sort_order' => 'DESC',
         ];
         break;

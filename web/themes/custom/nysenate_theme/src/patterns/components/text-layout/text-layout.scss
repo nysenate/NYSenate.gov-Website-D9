@@ -2,11 +2,25 @@
 
 .text-layout {
 
-  p {
+  p, ul, li {
     color: $grey03;
+    font-size: 20px;
 
     &:first-child {
       margin-top: 0;
+    }
+  }
+
+  blockquote {
+  
+    p {
+      font-family: $font-serif-semibold;
+      font-size: 18px;
+  
+      @include breakpoint($bp-md) {
+        font-size: 28px;
+        line-height: 1.3em;
+      }
     }
   }
 
@@ -151,7 +165,7 @@
   }
 
   h3 {
-    font-family: "Proxima Nova SemiBold";
+    font-family: $font-sans-bold;
     font-size: 14px;
     line-height: 18px;
     text-transform: uppercase;
@@ -159,9 +173,15 @@
   }
 
   p {
-    font-family: "Proxima Nova Regular";
+    font-family: $font-sans;
     font-size: 16px;
     line-height: 25px;
-    color: #444444;
+    color: $grey08;
   }
+}
+
+.page--citizen_guide .text-layout__body h3 {
+  font-family: $font-sans-bold;
+  color: $grey08;
+  margin: 24px 0 0;
 }

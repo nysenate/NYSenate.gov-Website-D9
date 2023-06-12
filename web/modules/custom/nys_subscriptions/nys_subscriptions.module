@@ -12,6 +12,7 @@ use Drupal\nys_subscriptions\SubscriptionQueueItem;
 use SendGrid\Mail\From;
 use SendGrid\Mail\Mail;
 use SendGrid\Mail\Personalization;
+use SendGrid\Mail\To;
 
 /**
  * Implements hook_theme().
@@ -39,6 +40,87 @@ function template_preprocess_subscription(array &$variables): void {
   foreach (Element::children($variables['elements']) as $key) {
     $variables['content'][$key] = $variables['elements'][$key];
   }
+}
+
+/**
+ * Implements hook_mail().
+ *
+ * Handles generating mail for "nys_subscriptions_confirmation".  This mail
+ * could silently fail if $message is not populated with a proper subscription.
+ */
+function nys_subscriptions_confirmation_mail(string $mail_key, array &$message, array $params): void {
+
+  // Have a subscription entity, or cancel and leave.
+  // This is the stupidest goddamn thing the sniffer has done so far.
+  $sub = NULL;
+  /** @var \Drupal\nys_subscriptions\Entity\Subscription $sub */
+  if (!($sub = ($message['params']['subscription'] ?? NULL))) {
+    $message['params']['send'] = FALSE;
+    return;
+  }
+
+  // Make sure a bill is loaded.
+  /** @var \Drupal\node\Entity\Node $bill */
+  $bill = $sub->getSource();
+  if (!(
+    $bill->getEntityTypeId() == 'node'
+    && in_array($bill->bundle(), ['bill', 'resolution'])
+  )) {
+    $message['params']['send'] = FALSE;
+    return;
+  }
+
+  // Have a base mail object, or cancel and leave.
+  if (!($mail = _nys_subscriptions_generate_mail_object())) {
+    $message['params']['send'] = FALSE;
+    return;
+  }
+
+  try {
+    // Get the confirmation link.
+    $confirm = $sub->toUrl('confirm', ['absolute' => TRUE, 'https' => TRUE]);
+
+    // Set the mail template and subject.
+    // @todo make the template id a config point.
+    $mail->setTemplateId('5182d9b2-8670-41cb-9f65-5f671541907f');
+    $mail->setGlobalSubject((string) t('Please Confirm Your NYS Subscription.'));
+
+    // Special check for budget bills.
+    $sponsor = $bill->field_ol_sponsor_name->value;
+    $section = $bill->field_ol_law_section->value;
+    if (!$sponsor && ($section == 'Budget Bills')) {
+      $sponsor = $section;
+    }
+
+    // Set up the Personalization object.
+    $person = new Personalization();
+    $person->addTo(new To($sub->email->value, $sub->email->value));
+    $person->addSubstitution('%bill.base_print%', $bill->field_ol_base_print_no->value);
+    $person->addSubstitution('%bill.session%', $bill->field_ol_session->value);
+    $person->addSubstitution('%bill.print_number%', $bill->field_ol_print_no->value);
+    $person->addSubstitution('%bill.chamber%', ucwords($bill->field_ol_chamber->value));
+    $person->addSubstitution('%bill.summary%', $bill->field_ol_name->value);
+    $person->addSubstitution('%bill.sponsor%', $sponsor);
+    $person->addSubstitution('%confirm_url%', $confirm->toString());
+
+    // Add the subscriber to the Mail object.
+    $mail->addPersonalization($person);
+  }
+  catch (Throwable $e) {
+    \Drupal::logger('nys_subscriptions')->error(
+      'Failed to configure mail object for confirmation email',
+      ['@msg' => $e->getMessage(), '@sub_id' => $sub->id()]
+    );
+    $message['params']['send'] = FALSE;
+    return;
+  }
+
+  $message['params']['sendgrid_mail'] = $mail;
+  $message['params']['subject'] = $mail->getGlobalSubject();
+  $message['params']['GA_CampaignName'] = 'subscriptions';
+  $message['params']['GA_CampaignContent'] = 'Confirmation';
+  $message['params']['subscriptions'] = ['tid' => $bill->field_bill_multi_session_root->target_id];
+
 }
 
 /**
@@ -96,9 +178,9 @@ function nys_subscriptions_mail(string $mail_key, array &$message, array $params
 
   // Collect the subject, if it is already defined.
   $subject = $item->substitutions['subject'] ?? (
-      \Drupal::config('nys_subscriptions.settings')->get('subject')
-      ?? SubscriptionQueue::DEFAULT_SUBJECT
-    );
+    \Drupal::config('nys_subscriptions.settings')->get('subject')
+    ?? SubscriptionQueue::DEFAULT_SUBJECT
+  );
 
   // Create the mail object.  Passing the initial From prevents a NULL person.
   // No need to report to slack on any of these conditions, but they will be

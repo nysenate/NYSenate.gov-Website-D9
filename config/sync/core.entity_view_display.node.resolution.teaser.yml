@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.teaser
+    - field.field.node.resolution.field_comments
     - field.field.node.resolution.field_featured_quote
     - field.field.node.resolution.field_image_main
     - field.field.node.resolution.field_issues
@@ -46,6 +47,7 @@ content:
     weight: 100
     region: content
 hidden:
+  field_comments: true
   field_featured_quote: true
   field_image_main: true
   field_issues: true
@@ -75,4 +77,5 @@ hidden:
   field_ol_sponsor_name: true
   field_ol_summary: true
   langcode: true
+  private_message_link: true
   search_api_excerpt: true

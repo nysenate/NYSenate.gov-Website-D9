@@ -54,15 +54,6 @@ content:
     third_party_settings: {  }
     weight: 1
     region: content
-  field_profile_picture:
-    type: entity_reference_entity_view
-    label: hidden
-    settings:
-      view_mode: default
-      link: true
-    third_party_settings: {  }
-    weight: 2
-    region: content
   field_senator_multiref:
     type: entity_reference_label
     label: hidden
@@ -80,6 +71,7 @@ hidden:
   field_ldap_username: true
   field_password_expiration: true
   field_pending_expire_sent: true
+  field_profile_picture: true
   field_senator_inbox_access: true
   field_top_issue: true
   field_user_banned_comments: true

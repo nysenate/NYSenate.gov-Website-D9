@@ -173,19 +173,23 @@ class AccumulatorEntry {
     }
 
     // If the entity is not a senator or district, report something traceable.
+    // This may be a "normal" error, e.g. anonymous and out-of-state users.
     if (!(
       ($target instanceof ContentEntityBase)
       && (in_array($this->getEntityKey($target), $require_entity))
     )) {
-      $this->log->warning(
-        'Failed to resolve a valid target',
-        [
-          '@type' => $this->type,
-          '@action' => $this->action,
-          '@uid' => $this->getUser()->id(),
-          '@info' => $this->info,
-        ]
-      );
+      // Unauthenticated users will never have a district.
+      if ($this->getUser()->id()) {
+        $this->log->warning(
+          'Failed to resolve a valid target',
+          [
+            '@type' => $this->type,
+            '@action' => $this->action,
+            '@uid' => $this->getUser()->id(),
+            '@info' => $this->info,
+          ]
+        );
+      }
       $target = NULL;
     }
 
@@ -297,9 +301,9 @@ class AccumulatorEntry {
       'first_name' => trim($user->field_first_name->value ?? ''),
       'last_name' => trim($user->field_last_name->value ?? ''),
       'address' => trim($address1 . ($address2 ? ' ' . $address2 : '')),
-      'city' => trim($location['locality']),
-      'state' => trim($location['administrative_area']),
-      'zipcode' => trim($location['postal_code']),
+      'city' => trim($location['locality'] ?? ''),
+      'state' => trim($location['administrative_area'] ?? ''),
+      'zipcode' => trim($location['postal_code'] ?? ''),
     ];
 
   }
@@ -344,7 +348,7 @@ class AccumulatorEntry {
 
     return [
       'user_id' => $user->id(),
-      'user_is_verified' => (bool) $user->getLastAccessedTime(),
+      'user_is_verified' => $user->getLastAccessedTime() ? 1 : 0,
       'target_shortname' => $target_info['shortname'],
       'target_district' => $target_info['district'],
       'user_shortname' => $user_info['shortname'],

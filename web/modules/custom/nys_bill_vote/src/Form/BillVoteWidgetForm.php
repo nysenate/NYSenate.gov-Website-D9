@@ -454,7 +454,7 @@ class BillVoteWidgetForm extends FormBase {
       $this->logger('BillVoteWidgetForm')->error('Could not load node storage');
       return NULL;
     }
-    return $this->billHelper->subscribeToBill($bill);
+    return $this->billHelper->subscribeToBill($bill, $email_address);
   }
 
   /**

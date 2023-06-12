@@ -4,6 +4,7 @@ simple_sitemap.sitemap_default:
     _controller: '\Drupal\simple_sitemap\Controller\SimpleSitemapController::getSitemap'
     _disable_route_normalizer: 'TRUE'
   requirements:
+    # Sitemaps are accessible for everyone.
     _access: 'TRUE'
 
 # The actual path to a variant is '/{variant}/sitemap.xml'. Because Drupal 8
@@ -16,6 +17,7 @@ simple_sitemap.sitemap_variant:
     _controller: '\Drupal\simple_sitemap\Controller\SimpleSitemapController::getSitemap'
     _disable_route_normalizer: 'TRUE'
   requirements:
+    # Sitemaps are accessible for everyone.
     _access: 'TRUE'
 
 simple_sitemap.sitemap_xsl:
@@ -24,6 +26,7 @@ simple_sitemap.sitemap_xsl:
     _controller: '\Drupal\simple_sitemap\Controller\SimpleSitemapController::getSitemapXsl'
     _disable_route_normalizer: 'TRUE'
   requirements:
+    # Sitemaps are accessible for everyone.
     _access: 'TRUE'
 
 simple_sitemap.settings:

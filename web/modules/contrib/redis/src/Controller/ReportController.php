@@ -23,7 +23,7 @@ class ReportController extends ControllerBase {
   /**
    * The redis client.
    *
-   * @var \Redis|\Predis\Client|false
+   * @var \Redis|\Relay\Relay|\Predis\Client|false
    */
   protected $redis;
 
@@ -262,14 +262,33 @@ class ReportController extends ControllerBase {
       ]);
     }
     if (count($cache_tags) == 0) {
-      $requirements['cache_tag_totals']['severity_status'] = 'warning';
+      $requirements['cache_tag_totals']['severity'] = REQUIREMENT_WARNING;
       $requirements['cache_tag_totals']['description'] = $this->t('No cache tags found, make sure that the redis cache tag checksum service is used. See example.services.yml on root of this module.');
       unset($requirements['cache_tags']);
     }
 
+    if ($this->redis instanceof \Relay\Relay) {
+      $stats = $this->redis->stats();
+
+      $requirements['relay'] = [
+        'title' => $this->t('Relay'),
+        'value' => t("@used / @total memory usage, eviction policy: @policy", [
+          '@used' => format_size($stats['memory']['active'] ?? 0),
+          '@total' => format_size($stats['memory']['total'] ?? 0),
+          '@policy' => ini_get('relay.eviction_policy')
+        ]),
+      ];
+
+      if (ini_get('relay.eviction_policy') != 'lru') {
+        $requirements['relay']['severity'] = REQUIREMENT_WARNING;
+        $requirements['relay']['description'] = $this->t('It is recommended to set the relay eviction plicy to lru');
+      }
+
+    }
+
     if ($cache_tags_max) {
       $requirements['max_cache_tags'] = [
-        'severity_status' => 'warning',
+        'severity' => REQUIREMENT_WARNING,
         'title' => $this->t('Cache tags limit reached'),
         'value' => ['#markup' => $this->t('Cache tag count incomplete, only counted @count cache tags.', ['@count' => count($cache_tags)])],
       ];
@@ -292,7 +311,7 @@ class ReportController extends ControllerBase {
    */
   protected function scan($match, $count = 10000) {
     $it = NULL;
-    if ($this->redis instanceof \Redis) {
+    if ($this->redis instanceof \Redis || $this->redis instanceof \Relay\Relay) {
       while ($keys = $this->redis->scan($it, $this->getPrefix() . '*', $count)) {
         yield from $keys;
       }

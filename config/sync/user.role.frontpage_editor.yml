@@ -20,6 +20,7 @@ dependencies:
     - media
     - node
     - nys_access_permissions
+    - rabbit_hole
     - system
     - toolbar
 id: frontpage_editor
@@ -105,6 +106,9 @@ permissions:
   - 'merge participatory_budgeting_categories terms'
   - 'merge prev_ver terms'
   - 'merge terms'
+  - 'rabbit hole bypass media'
+  - 'rabbit hole bypass node'
+  - 'rabbit hole bypass taxonomy_term'
   - 'skip CAPTCHA'
   - 'update frontpage_news entityqueue'
   - 'update global_promo_banner entityqueue'

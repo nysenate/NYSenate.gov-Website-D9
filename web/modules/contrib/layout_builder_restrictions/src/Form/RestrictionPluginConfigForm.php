@@ -2,16 +2,16 @@
 
 namespace Drupal\layout_builder_restrictions\Form;
 
-use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\layout_builder_restrictions\Plugin\LayoutBuilderRestrictionManager;
 use Drupal\Core\Config\ConfigManager;
 
 /**
- * Class RestrictionPluginConfigForm.
+ * The form for the restriction plugin.
  */
-class RestrictionPluginConfigForm extends FormBase {
+class RestrictionPluginConfigForm extends ConfigFormBase {
 
   /**
    * The UI for managing Layout Builder Restrictions Plugins.
@@ -57,6 +57,13 @@ class RestrictionPluginConfigForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  protected function getEditableConfigNames() {
+    return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $plugin_list = $this->pluginManagerLayoutBuilderRestriction->getSortedPlugins(TRUE);
 
@@ -78,7 +85,7 @@ class RestrictionPluginConfigForm extends FormBase {
           'group' => 'plugin-table-order-weight',
         ],
       ],
-      '#prefix' => '<p>Set the order the Layout Builder Restriction plugins should be called, and enable or disable as needed.</p>',
+      '#prefix' => '<p>Set the order of Layout Builder Restriction plugin execution, and enable or disable as needed.</p>',
     ];
     // Build the table rows and columns.
     // The first nested level in the render array forms the table row,
@@ -120,12 +127,7 @@ class RestrictionPluginConfigForm extends FormBase {
       ];
 
     }
-    $form['submit'] = [
-      '#type' => 'submit',
-      '#value' => $this->t('Save configuration'),
-    ];
-
-    return $form;
+    return parent::buildForm($form, $form_state);
   }
 
   /**

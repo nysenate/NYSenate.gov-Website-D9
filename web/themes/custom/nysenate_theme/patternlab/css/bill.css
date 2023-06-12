@@ -2297,6 +2297,11 @@ h2.c-subpage-header--title {
 .panel-separator {
   clear: both; }
 
+img[data-align='left'] {
+  float: left;
+  margin: 40px 30px 20px 0;
+  margin-left: -14%; }
+
 @media screen and (min-width: 760px) {
   .c-detail--header__bill .c-bill--flag {
     margin-left: 20px;
@@ -2780,21 +2785,27 @@ th.c-bill--actions-table-header strong {
   .c-bill-widget--btn {
     height: 45px; } }
 
-.page-node-type-bill .sponsor-list {
+.page-node-type-bill .sponsor-list,
+.page-node-type-resolution .sponsor-list {
   margin: 30px 0 10px; }
   .page-node-type-bill .sponsor-list .nys-senator--name,
-  .page-node-type-bill .sponsor-list .nys-senator--district {
+  .page-node-type-bill .sponsor-list .nys-senator--district,
+  .page-node-type-resolution .sponsor-list .nys-senator--name,
+  .page-node-type-resolution .sponsor-list .nys-senator--district {
     margin: 0;
     line-height: 1.2em; }
-  .page-node-type-bill .sponsor-list .nys-senator--district {
+  .page-node-type-bill .sponsor-list .nys-senator--district,
+  .page-node-type-resolution .sponsor-list .nys-senator--district {
     font-size: 12px; }
-    .page-node-type-bill .sponsor-list .nys-senator--district .nys-senator--party {
+    .page-node-type-bill .sponsor-list .nys-senator--district .nys-senator--party,
+    .page-node-type-resolution .sponsor-list .nys-senator--district .nys-senator--party {
       font-weight: 400;
       line-height: 1.2em;
       text-transform: uppercase;
       color: #2b6990;
       font-family: "Proxima Nova SemiBold", "Arial", sans-serif; }
-      .page-node-type-bill .sponsor-list .nys-senator--district .nys-senator--party span {
+      .page-node-type-bill .sponsor-list .nys-senator--district .nys-senator--party span,
+      .page-node-type-resolution .sponsor-list .nys-senator--district .nys-senator--party span {
         color: #666666;
         font-family: "Proxima Nova Regular", "Arial", sans-serif; }
 

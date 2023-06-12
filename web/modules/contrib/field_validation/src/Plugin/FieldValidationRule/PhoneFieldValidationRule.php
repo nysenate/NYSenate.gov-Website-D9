@@ -7,7 +7,7 @@ use Drupal\field_validation\ConfigurableFieldValidationRuleBase;
 use Drupal\field_validation\FieldValidationRuleSetInterface;
 
 /**
- * PhoneFieldValidationRule.
+ * Phone Field Validation Rule.
  *
  * @FieldValidationRule(
  *   id = "phone_field_validation_rule",
@@ -20,7 +20,6 @@ class PhoneFieldValidationRule extends ConfigurableFieldValidationRuleBase {
   /**
    * {@inheritdoc}
    */
-
   public function addFieldValidationRule(FieldValidationRuleSetInterface $field_validation_rule_set) {
 
     return TRUE;
@@ -49,9 +48,9 @@ class PhoneFieldValidationRule extends ConfigurableFieldValidationRuleBase {
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $countries = $this->phone_countries();
-    $country_options = array();
+    $country_options = [];
     foreach ($countries as $country_code => $country) {
-      $country_options[$country_code] = isset($country['name']) ? $country['name'] : '';
+      $country_options[$country_code] = $country['name'] ?? '';
     }
     $form['country'] = [
       '#title' => $this->t('Country'),
@@ -71,29 +70,33 @@ class PhoneFieldValidationRule extends ConfigurableFieldValidationRuleBase {
 
     $this->configuration['country'] = $form_state->getValue('country');
   }
-
+  
+  /**
+   * {@inheritdoc}
+   */
   public function validate($params) {
-    $value = isset($params['value']) ? $params['value'] : '';
-	$rule = isset($params['rule']) ? $params['rule'] : null;
-	$context = isset($params['context']) ? $params['context'] : null;
-	$settings = array();
-	if(!empty($rule) && !empty($rule->configuration)){
-	  $settings = $rule->configuration;
-	}
+    $value = $params['value'] ?? '';
+    $rule = $params['rule'] ?? NULL;
+    $context = $params['context'] ?? NULL;
+    $settings = [];
+    if (!empty($rule) && !empty($rule->configuration)) {
+      $settings = $rule->configuration;
+    }
     if ($value !== '' && !is_null($value)) {
-      $country_code = isset($settings['country']) ? $settings['country'] : '';
+      $country_code = $settings['country'] ?? '';
       $country_regex = '';
-      $countries = $this->phone_countries();
-      $country_regex = isset($countries[$country_code]['regex']) ? $countries[$country_code]['regex'] : '';
+      $countries = $this->phoneCountries();
+      $country_regex = $countries[$country_code]['regex'] ?? '';
       if (!preg_match($country_regex, $value)) {
         $context->addViolation($rule->getErrorMessage());
       }
-
     }
-
   }
-
-  public function phone_countries() {
+  
+  /**
+   * Phone regex of countries.
+   */
+  public function phoneCountries() {
    $countries = [
       'fr' => [
         'name' => $this->t('France'),
@@ -135,20 +138,10 @@ class PhoneFieldValidationRule extends ConfigurableFieldValidationRuleBase {
         'name' => $this->t('Russia'),
         'regex' => "/^\D*[78]?\D*\d{3,5}\D*\d{1,3}\D*\d{2}\D*\d{2}\D*/x",
       ],
-      /*
-      'ua' => [
-        'name' => t('Ukraine'),
-        'regex' => '',
-      ], */
-      'es' =>[
+      'es' => [
         'name' => $this->t('Spain'),
         'regex' => '/^[0-9]{2,3}-? ?[0-9]{6,7}$/',
       ],
-      /*
-      'au' => [
-        'name' => t('Australia'),
-        'regex' => '',
-      ], */
       'cs' => [
         'name' => $this->t('Czech Republic'),
         'regex' => '/^((?:\+|00)420)? ?(\d{3}) ?(\d{3}) ?(\d{3})$/',
@@ -173,16 +166,6 @@ class PhoneFieldValidationRule extends ConfigurableFieldValidationRuleBase {
         'name' => $this->t('South Africa'),
         'regex' => '/^((?:\+27|27)|0)[ ]*((\d{2})(-| )?(\d{3})(-| )?(\d{4})|(\d{2})( |-)(\d{7}))$/',
       ],
-      /*
-      'il' => [
-        'name' => t('Israel'),
-        'regex' => '',
-      ], */
-      /*
-      'nz' => [
-        'name' => t('New Zealand'),
-        'regex' => '',
-      ], */
       'br' => [
         'name' => $this->t('Brazil'),
         'regex' => "/^(\+|0{2}|)?(55|0|)[ -.]?((\(0?[1-9][0-9]\))|(0?[1-9][0-9]))[ -.]?([1-9][0-9]{2,3})[ -.]?([0-9]{4})$/",
@@ -195,15 +178,6 @@ class PhoneFieldValidationRule extends ConfigurableFieldValidationRuleBase {
         'name' => $this->t('China'),
         'regex' => '/^(\+86|86)?( |-)?([0-9]{11}|([0-9]{3,4}(\-|\.| )[0-9]{3,8})|[0-9]{2}( |\-)[0-9]{4}[ ][0-9]{4}|[0-9]{2}\.[0-9]{2}\.[0-9]{2}\.[0-9]{2}\.[0-9]{2})$/',
       ],
-      /*
-      'hk' => [
-        'name' => t('Hong-Kong'),
-        'regex' => '',
-      ],
-      'mo' => [
-        'name' => t('Macao'),
-        'regex' => '',
-      ],  */
       'ph' => [
         'name' => $this->t('The Philippines'),
         'regex' => "/((^\+63\s?\(?\d{5}\)?|^\(?\d{5}\)?){1}\s?\d{3}(\S?|\s?)?\d{4}|(^\+63\s?\(?\d{4}\)?|^\(?\d{4}\)?){1}\s?\d{3}(\S?|\s?)?\d{4}|(^\+63\s?\(?\d{3}\)?|^\(?\d{3}\)?){1}\s?\d{3}(\S?|\s?)?\d{4}|(^\+63\s?\(?\d{2}\)?|^\(?\d{2}\)?){1}\s?\d{3}(\S?|\s?)?\d{4}|(^\+63\s?\(?\d{1}\)?|^\(?\d{1}\)?){1}\s?\d{3}(\S?|\s?)?\d{4})(\s?\#\d*)?/x",
@@ -216,11 +190,6 @@ class PhoneFieldValidationRule extends ConfigurableFieldValidationRuleBase {
         'name' => $this->t('Jordan'),
         'regex' => "/(^(\+962|00962|962|0)[-\s]{0,1}[7]{1}[7-9]{1}[0-9]{7}$) | (^(\+962|00962|962|0)[-\s]{0,1}[2-6][-\s]{0,1}[0-9]{7}$)/x",
       ],
-      /*
-      'eg' => [
-        'name' => t('Egypt'),
-        'regex' => '',
-      ], */
       'pk' => [
         'name' => $this->t('Pakistan'),
         'regex' => "/^(\+)?([9]{1}[2]{1})?-? ?(\()?([0]{1})?[1-9]{2,4}(\))?-? ??(\()?[1-9]{4,7}(\))?$/i",
@@ -237,4 +206,5 @@ class PhoneFieldValidationRule extends ConfigurableFieldValidationRuleBase {
 
     return $countries;
   }
+
 }

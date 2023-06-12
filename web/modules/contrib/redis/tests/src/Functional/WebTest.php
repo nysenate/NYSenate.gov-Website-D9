@@ -29,7 +29,7 @@ class WebTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'starterkit_theme';
 
   /**
    * {@inheritdoc}
@@ -110,7 +110,6 @@ class WebTest extends BrowserTestBase {
     OpCodeCache::invalidate(DRUPAL_ROOT . '/' . $filename);
 
     // Reset the cache factory.
-    $this->container->set('cache.factory', NULL);
     $this->rebuildContainer();
 
     // Get database schema.

@@ -301,10 +301,19 @@ class ViewsBulkOperationsBulkForm extends FieldPluginBase implements CacheableDe
    */
   protected function getExposedInput(array $exposed_input = []): array {
     if (empty($exposed_input)) {
-      // To avoid unnecessary reset of selection, we apply default values. We do
-      // that, because default values can be provided or not in the request, and
-      // it doesn't change results.
-      $exposed_input = \array_merge($this->view->getExposedInput(), $this->view->exposed_raw_input);
+      // To avoid unnecessary reset of selection, we apply default values.
+      // We do that, because default values can be provided or not
+      // in the request, and it doesn't change results.
+      $exposed_input = $this->view->getExposedInput();
+
+      // Remove ajax_page_state that leaks to exposed input if AJAX is
+      // enabled on the view.
+      unset($exposed_input['ajax_page_state']);
+      foreach ($this->view->exposed_raw_input as $key => $value) {
+        if (!array_key_exists($key, $exposed_input)) {
+          $exposed_input[$key] = $value;
+        }
+      }
     }
     // Sort values to avoid problems when comparing old and current exposed
     // input.

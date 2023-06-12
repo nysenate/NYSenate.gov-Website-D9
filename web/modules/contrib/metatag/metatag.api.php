@@ -72,3 +72,16 @@ function hook_metatag_migrate_metatagd7_tags_map_alter(array $tags_map) {
   // This tag was renamed in D8.
   $tags_map['custom:tag'] = 'custom_tag';
 }
+
+/**
+ * Allow the list of Nodewords D6's tags to be changed.
+ *
+ * This is only used when migrating meta tags from Nodewords-D6.
+ *
+ * @param array $tags_map
+ *   An array of D6 tag names mapped against the D8 tag's IDs.
+ */
+function hook_metatag_migrate_nodewordsd6_tags_map_alter(array $tags_map) {
+  // This tag was renamed in D8.
+  $tags_map['custom:tag'] = 'custom_tag';
+}

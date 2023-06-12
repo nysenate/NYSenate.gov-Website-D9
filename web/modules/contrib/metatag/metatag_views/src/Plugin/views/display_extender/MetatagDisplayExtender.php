@@ -102,7 +102,11 @@ class MetatagDisplayExtender extends DisplayExtenderPluginBase {
       $metatags = $form_state->cleanValues()->getValues();
       $this->options['tokenize'] = $metatags['tokenize'] ?? FALSE;
       unset($metatags['tokenize']);
+      $available_tags = array_keys($this->metatagTagManager->getDefinitions());
       foreach ($metatags as $tag_id => $tag_value) {
+        if (!in_array($tag_id, $available_tags)) {
+          continue;
+        }
         // Some plugins need to process form input before storing it.
         // Hence, we set it and then get it.
         $tag = $this->metatagTagManager->createInstance($tag_id);

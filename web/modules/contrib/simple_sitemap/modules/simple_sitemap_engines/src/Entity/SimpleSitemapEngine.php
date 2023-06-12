@@ -108,6 +108,7 @@ class SimpleSitemapEngine extends ConfigEntityBase {
    * Loads all engines capable of sitemap pinging.
    *
    * @return \Drupal\simple_sitemap_engines\Entity\SimpleSitemapEngine[]
+   *   Engines capable of sitemap pinging.
    */
   public static function loadSitemapSubmissionEngines(): array {
     $ids = \Drupal::entityQuery('simple_sitemap_engine')
@@ -121,6 +122,7 @@ class SimpleSitemapEngine extends ConfigEntityBase {
    * Loads all IndexNow capable engines.
    *
    * @return \Drupal\simple_sitemap_engines\Entity\SimpleSitemapEngine[]
+   *   IndexNow capable engines.
    */
   public static function loadIndexNowEngines(): array {
     $ids = \Drupal::entityQuery('simple_sitemap_engine')

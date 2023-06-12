@@ -279,6 +279,20 @@
 	}
 }
 
+.nys-article-title {
+  margin: 0 0 20px 0;
+  color: $grey08;
+  font-family: "Adelle Light";
+  font-size: 22px;
+  line-height: 1.2em;
+}
+
+.password-reset-greeting {
+  font-size: 18pt;
+  font-family: "Adelle Light";
+  margin-top: 3em;
+}
+
 @media #{$tablet} {
 	.c-login {
 		margin: 0;
@@ -513,5 +527,84 @@
 	div.ctools-modal-content .modal-content {
 		height: auto !important;
 	  overflow: hidden;
+	}
+
+	.nys-article-title {
+		margin: 0 0 30px;
+		font-size: 48px;
+	}
+}
+
+.nys-registration-password-reset-form {
+	.form-item-pass {
+		text-align: center;
+
+		> .form-item {
+			float: left;
+			width: 22em;
+			margin: 0 3.5% 0 0;
+			clear: none;
+		}
+
+		* {
+			text-align: initial;
+		}
+
+		.description {
+			clear:both;
+		}
+	}
+
+	.password-suggestions {
+		width: 46%;
+		top: -1rem;
+		position: relative;
+		margin: 0 0 .5em;
+
+		ul {
+			padding-left: 1.5em;
+			margin-top: .5em;
+		}
+
+		li {
+			font-size: 14px;
+			margin: 0;
+			line-height: 1.75em;
+		}
+	}
+
+	.password-strength,
+	.password-confirm {
+		margin-top: 0;
+		text-align: right;
+	}
+
+	.password-strength-text {
+		width: 6em;
+		text-align: right;
+		padding: 0 .5em 0 0;
+	}
+
+	.password-confirm {
+		text-align: right;
+
+		span {
+			display: inline-block;
+			line-height: 1em;
+			padding: .5em 1em;
+			margin: 0 .5em;
+			font-size: .75rem;
+			width: 3.5em;
+			text-align: center;
+
+			&.ok {
+				background-color: darkgreen;
+				color: white;
+			}
+		}
+	}
+
+	input.form-text {
+		text-align: left;
 	}
 }

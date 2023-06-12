@@ -157,6 +157,7 @@ class IndexNowSubmitter extends SubmitterBase {
     $this->request(
       str_replace(
         ['[url]', '[key]'],
+        // phpcs:ignore Drupal.Arrays.Array.LongLineDeclaration
         [urlencode($entity->toUrl('canonical', $url_options)->setAbsolute()->toString()), $this->getKey()],
         $this->getEngine()->index_now_url
       )

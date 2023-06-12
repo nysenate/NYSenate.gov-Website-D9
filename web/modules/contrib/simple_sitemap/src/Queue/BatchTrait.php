@@ -40,6 +40,7 @@ trait BatchTrait {
     $this->batch = [
       'title' => $this->t('Generating XML sitemaps'),
       'init_message' => $this->t('Initializing...'),
+      // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
       'error_message' => $this->t(self::$batchErrorMessage),
       'progress_message' => $this->t('Processing items from the queue.<br>Each sitemap gets published after all of its items have been processed.'),
       'operations' => [[__CLASS__ . '::' . 'doBatchGenerate', []]],

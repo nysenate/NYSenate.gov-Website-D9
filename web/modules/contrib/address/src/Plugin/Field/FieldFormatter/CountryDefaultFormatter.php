@@ -80,7 +80,7 @@ class CountryDefaultFormatter extends FormatterBase implements ContainerFactoryP
     $elements = [];
     foreach ($items as $delta => $item) {
       $elements[$delta] = [
-        '#plain_text' => isset($countries[$item->value]) ? $countries[$item->value] : $item->value,
+        '#plain_text' => $countries[$item->value] ?? $item->value,
         '#cache' => [
           'contexts' => [
             'languages:' . LanguageInterface::TYPE_INTERFACE,

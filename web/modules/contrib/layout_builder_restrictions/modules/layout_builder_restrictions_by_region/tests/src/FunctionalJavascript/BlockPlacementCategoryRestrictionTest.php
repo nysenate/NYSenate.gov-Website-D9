@@ -192,8 +192,8 @@ class BlockPlacementCategoryRestrictionTest extends WebDriverTestBase {
 
     $this->drupalGet("$field_ui_prefix/display/default");
 
-    // Verify the UI reflects the restriction: the "first" section should not read
-    // "Unrestricted," while the second region *should* still read "Unrestricted."
+    // Verify the UI reflects the restriction: the 1st section shouldn't read
+    // "Unrestricted," while the 2nd region *should* still read "Unrestricted".
     $element = $page->find('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-by-layout-layout-twocol-section"]/summary');
     $element->click();
     $assert_session->elementNotContains('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-by-layout-layout-twocol-section-table"]/tbody/tr[@data-region="first"]', 'Unrestricted');
@@ -215,7 +215,7 @@ class BlockPlacementCategoryRestrictionTest extends WebDriverTestBase {
     $assert_session->linkExists('Basic');
     $assert_session->linkExists('Alternate');
 
-    // Restrict Inline blocks categorically
+    // Restrict Inline blocks categorically.
     $this->drupalGet("$field_ui_prefix/display/default");
     $element = $page->find('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-by-layout-layout-twocol-section"]/summary');
     $element->click();
@@ -224,7 +224,6 @@ class BlockPlacementCategoryRestrictionTest extends WebDriverTestBase {
     $element = $page->find('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-by-layout-layout-twocol-section-table"]/tbody/tr[@data-region="first"]//a');
     $element->click();
     $assert_session->assertWaitOnAjaxRequest();
-
 
     // Impose Custom Block type restrictions.
     $assert_session->checkboxChecked('Allow all existing & new Inline blocks blocks.');
@@ -240,8 +239,8 @@ class BlockPlacementCategoryRestrictionTest extends WebDriverTestBase {
 
     $this->drupalGet("$field_ui_prefix/display/default");
 
-    // Verify the UI reflects the restriction: the "first" section should not read
-    // "Unrestricted," while the second region *should* still read "Unrestricted."
+    // Verify the UI reflects the restriction: the 1st region should not read
+    // "Unrestricted," while the 2nd region *should* still read "Unrestricted".
     $element = $page->find('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-by-layout-layout-twocol-section"]/summary');
     $element->click();
     $assert_session->elementNotContains('xpath', '//*[@id="edit-layout-builder-restrictions-allowed-blocks-by-layout-layout-twocol-section-table"]/tbody/tr[@data-region="first"]', 'Unrestricted');

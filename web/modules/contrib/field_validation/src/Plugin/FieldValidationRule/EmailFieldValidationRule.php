@@ -59,18 +59,12 @@ class EmailFieldValidationRule extends ConfigurableFieldValidationRuleBase {
   }
 
   public function validate($params) {
-    $value = isset($params['value']) ? $params['value'] : '';
-	$rule = isset($params['rule']) ? $params['rule'] : null;
-	$context = isset($params['context']) ? $params['context'] : null;
-	$settings = array();
-	if(!empty($rule) && !empty($rule->configuration)){
-	  $settings = $rule->configuration;
-	}
-    $pattern = isset($settings['setting']) ? $settings['setting'] : '';
-	//$settings = $this->rule->settings;
-    if ($value != '' && (!\Drupal::service('email.validator')->isValid($value))) {
-		$context->addViolation($rule->getErrorMessage());
-    }
+    $value = $params['value'] ?? '';
+	$rule = $params['rule'] ?? null;
+	$context = $params['context'] ?? null;
 
+    if ($value != '' && (!\Drupal::service('email.validator')->isValid($value))) {
+      $context->addViolation($rule->getErrorMessage());
+    }
   }
 }

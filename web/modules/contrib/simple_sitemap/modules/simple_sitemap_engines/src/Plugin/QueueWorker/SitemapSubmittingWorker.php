@@ -55,7 +55,7 @@ class SitemapSubmittingWorker extends QueueWorkerBase implements ContainerFactor
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('simple_sitemap.engines.sitemap_submitter'),
+      $container->get('simple_sitemap.engines.sitemap_submitter')
     );
   }
 

@@ -110,7 +110,6 @@ class MetatagSettingsForm extends ConfigFormBase {
 
     $trimSettingsMaxlength = $this->config('metatag.settings')->get('tag_trim_maxlength');
     $trimMethod = $this->config('metatag.settings')->get('tag_trim_method');
-    $metatags = $this->tagPluginManager->getDefinitions();
 
     $form['tag_trim'] = [
       '#title' => $this->t('Metatag Trimming Options'),
@@ -140,9 +139,8 @@ class MetatagSettingsForm extends ConfigFormBase {
 
     // Name the variable "metatag_id" to avoid confusing this with the "name"
     // value from the meta tag plugin as it's actually the plugin ID.
-    foreach ($metatags as $metatag_id => $metatag_info) {
+    foreach ($this->metatagManager->sortedTags() as $metatag_id => $metatag_info) {
       if (!empty($metatag_info['trimmable'])) {
-
         $form['tag_trim']['maxlength']['metatag_maxlength_' . $metatag_id] = [
           '#title' => $this->t('Meta Tags:') . ' ' . $metatag_id . ' ' . $this->t('length'),
           '#type' => 'number',

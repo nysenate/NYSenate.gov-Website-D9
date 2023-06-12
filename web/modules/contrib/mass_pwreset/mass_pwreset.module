@@ -23,7 +23,7 @@ function mass_pwreset_multiple_reset(array $data) {
     'init_message' => t('Multiple password reset in progress.'),
     'progress_message' => t('Password reset batch in progress.'),
     'error_message' => t('There was an error in the password reset batch.'),
-    'file' => drupal_get_path('module', 'mass_pwreset') . '/mass_pwreset.batch.inc',
+    'file' => \Drupal::service('extension.list.module')->getPath('mass_pwreset') . '/mass_pwreset.batch.inc',
   ];
   // Set batch via form submit handler.
   batch_set($batch);

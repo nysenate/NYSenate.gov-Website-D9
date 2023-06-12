@@ -49,7 +49,8 @@ class SitemapWriter extends \XMLWriter {
     // located in a subdirectory, which is why the following logic adds the base
     // path of the installation.
     // See https://www.drupal.org/project/simple_sitemap/issues/3154494.
-    // All of this seems to be an over engineered way of writing '/sitemap_generator/{sitemap_generator}/sitemap.xsl',
+    // All of this seems to be an over engineered way of writing
+    // '/sitemap_generator/{sitemap_generator}/sitemap.xsl',
     // but may be useful in cases where another module alters the routes.
     $xsl_url = base_path() . ltrim($xsl_url, '/');
 

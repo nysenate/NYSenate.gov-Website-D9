@@ -2291,6 +2291,11 @@ h2.c-subpage-header--title {
 .panel-separator {
   clear: both; }
 
+img[data-align='left'] {
+  float: left;
+  margin: 40px 30px 20px 0;
+  margin-left: -14%; }
+
 .nys-search-legislation-form {
   display: grid;
   grid-template-columns: 1fr;
@@ -2300,6 +2305,16 @@ h2.c-subpage-header--title {
       grid-template-columns: repeat(2, 1fr);
       -moz-column-gap: 20px;
       column-gap: 20px; } }
+  .nys-search-legislation-form .js-form-item-advanced-search-title {
+    grid-column: span 2; }
+    .nys-search-legislation-form .js-form-item-advanced-search-title h1 {
+      text-transform: capitalize;
+      font-family: "Adelle Regular", serif;
+      font-size: 32px;
+      width: 100%;
+      float: left;
+      border-bottom: solid 1px #ddd;
+      padding-bottom: 20px; }
   .nys-search-legislation-form .nys-title,
   .nys-search-legislation-form .form-item-type,
   .nys-search-legislation-form .form-item-full-text,
@@ -2395,6 +2410,14 @@ h2.c-subpage-header--title {
       outline: 0; }
     .nys-search-legislation-form .search__submit-icon {
       display: none; }
+  .nys-search-legislation-form .js-form-item-advanced-search-text {
+    font-size: 20px;
+    font-family: "Adelle Light", serif;
+    line-height: 32px;
+    grid-column: span 2;
+    color: #666666;
+    padding-bottom: 1.26rem;
+    border-bottom: solid 1px #ddd; }
 
 .page--search-legislation .l-row--main {
   padding-bottom: 0; }

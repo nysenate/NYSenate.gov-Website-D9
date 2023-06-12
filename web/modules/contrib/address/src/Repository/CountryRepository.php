@@ -40,7 +40,7 @@ class CountryRepository extends ExternalCountryRepository {
   /**
    * {@inheritdoc}
    */
-  protected function loadDefinitions($locale): array {
+  protected function loadDefinitions(string $locale): array {
     if (isset($this->definitions[$locale])) {
       return $this->definitions[$locale];
     }

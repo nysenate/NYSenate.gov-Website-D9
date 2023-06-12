@@ -43,7 +43,7 @@ class RedisCacheTagsChecksum implements CacheTagsChecksumInterface, CacheTagsInv
   protected $clientType;
 
   /**
-   * Creates a PHpRedis cache backend.
+   * Creates a Redis cache backend.
    */
   public function __construct(ClientFactory $factory) {
     $this->client = $factory->getClient();
@@ -56,8 +56,8 @@ class RedisCacheTagsChecksum implements CacheTagsChecksumInterface, CacheTagsInv
   public function doInvalidateTags(array $tags) {
     $keys = array_map([$this, 'getTagKey'], $tags);
 
-    // We want to differentiate between PhpRedis and Redis clients.
-    if ($this->clientType === 'PhpRedis') {
+    // We want to differentiate between PhpRedis, Relay and Predis clients.
+    if ($this->clientType === 'PhpRedis' || $this->clientType === 'Relay') {
       $multi = $this->client->multi();
       foreach ($keys as $key) {
         $multi->incr($key);
@@ -78,6 +78,13 @@ class RedisCacheTagsChecksum implements CacheTagsChecksumInterface, CacheTagsInv
    * {@inheritdoc}
    */
   protected function getTagInvalidationCounts(array $tags) {
+    // Do not use MGET for a single key as Relay does not support in-memory
+    // caching for MGET misses.
+    if (count($tags) == 1) {
+      $tag = reset($tags);
+      return [$tag => (int) $this->client->get($this->getTagKey($tag))];
+    }
+
     $keys = array_map([$this, 'getTagKey'], $tags);
     // The mget command returns the values as an array with numeric keys,
     // combine it with the tags array to get the expected return value and run

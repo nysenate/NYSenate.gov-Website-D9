@@ -1,3 +1,33 @@
+Metatag 8.x-1.25, 2023-05-31
+----------------------------
+#3363189 by DamienMcKenna, floown, jvizcarrondo, uditrawat:
+  metatag_post_update_remove_robots_noydir_noodp() fails on entity types without
+  revision support.
+g#3363315 by DamienMcKenna: metatag_post_update_convert_author_data() doesn't
+  update the revisions tables.
+#3363231 by DamienMcKenna, jan kellermann: remove_robots_noydir_noodp:
+  TypeError: explode(): Argument #2 ($string) must be of type string, array
+  given.
+#3363366 by marcoscano, DamienMcKenna: metatag_generate_entity_metatags() no
+  longer accepts NULL, causing BC-breaking change.
+#3362195 by DamienMcKenna, jayvolk: Wording improvements for Twitter Player Card
+  field descriptions.
+
+
+Metatag 8.x-1.24, 2023-05-26
+----------------------------
+#3083743 by Eugene Bocharov, DamienMcKenna, bserem, gkannan25, osopolar,
+  timohuisman, akalam, zcht, druhu, maticb, vuil: Add Google's new robots tags.
+#3360836 by DamienMcKenna: Nodewords migration triggers wrong API.
+#3106383 by DamienMcKenna, fathima.asmat: Remove the NOYDIR option on ROBOTS
+  tag.
+#3106384 by DamienMcKenna: Remove the NOODP option on ROBOTS tag.
+#3298064 by DamienMcKenna: Deprecate Google CSE Ratings tag.
+#3362522 by DamienMcKenna: Fix meta tag output sort order.
+#3362760 by DamienMcKenna: Deprecate normalization plugins.
+#3361309 by DamienMcKenna: Update migration status.
+
+
 Metatag 8.x-1.23, 2023-05-12
 ----------------------------
 #3312950 by DamienMcKenna, nkraft: Warning: Undefined array key "href" in

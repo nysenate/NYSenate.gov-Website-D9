@@ -1,0 +1,64 @@
+uuid: 04cb6250-6ee9-4b0c-9a87-061e123fe9d5
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.search_teaser
+    - field.field.node.transcript.field_ol_committee
+    - field.field.node.transcript.field_ol_committee_names
+    - field.field.node.transcript.field_ol_filename
+    - field.field.node.transcript.field_ol_location
+    - field.field.node.transcript.field_ol_publish_date
+    - field.field.node.transcript.field_ol_session_type
+    - field.field.node.transcript.field_ol_text
+    - field.field.node.transcript.field_ol_transcript_type
+    - node.type.transcript
+  module:
+    - datetime
+    - options
+    - user
+id: node.transcript.search_teaser
+targetEntityType: node
+bundle: transcript
+mode: search_teaser
+content:
+  field_ol_filename:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_ol_publish_date:
+    type: datetime_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: html_datetime
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_ol_text:
+    type: basic_string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_ol_transcript_type:
+    type: list_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  field_ol_committee: true
+  field_ol_committee_names: true
+  field_ol_location: true
+  field_ol_session_type: true
+  langcode: true
+  links: true
+  private_message_link: true
+  search_api_excerpt: true

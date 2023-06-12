@@ -2,6 +2,7 @@
 
 namespace Drupal\simple_sitemap\Form\Handler;
 
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -140,14 +141,13 @@ abstract class EntityFormHandlerBase implements EntityFormHandlerInterface {
   public function settingsForm(array $form): array {
     $sitemaps = SimpleSitemap::loadMultiple();
     $settings = $this->getSettings();
-
     if ($sitemaps) {
       $form['#markup'] = '<strong>' . $this->t('Sitemaps') . '</strong>';
     }
     else {
-      $form['#markup'] = $this->t('At least one sitemap needs to be defined for a bundle to be indexable.<br>Sitemaps can be configured <a href="@url">here</a>.', [
-        '@url' => $GLOBALS['base_url'] . '/admin/config/search/simplesitemap',
-      ]);
+      $form['#markup'] = $this->t('At least one sitemap needs to be defined for a bundle to be indexable.<br>Sitemaps can be configured <a href="@url">here</a>.',
+        ['@url' => Url::fromRoute('entity.simple_sitemap.collection')->toString(),]
+      );
     }
 
     foreach ($sitemaps as $variant => $sitemap) {

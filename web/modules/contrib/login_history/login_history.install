@@ -82,7 +82,7 @@ function login_history_update_8001() {
 function login_history_update_8002() {
   // Only create if the login_history view doesn't exist and views is enabled.
   if (\Drupal::moduleHandler()->moduleExists('views') && !View::load('login_history')) {
-    $config_path = drupal_get_path('module', 'login_history') . '/config/install/views.view.login_history.yml';
+    $config_path = \Drupal::service('extension.list.module')->getPath('login_history') . '/config/install/views.view.login_history.yml';
     $data = Yaml::parseFile($config_path);
     \Drupal::configFactory()->getEditable('views.view.login_history')->setData($data)->save(TRUE);
     return 'The new login_history view has been created.';

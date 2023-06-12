@@ -33,7 +33,7 @@ class FieldHelper {
       AddressField::FAMILY_NAME => 'family_name',
     ];
 
-    return isset($property_mapping[$field]) ? $property_mapping[$field] : NULL;
+    return $property_mapping[$field] ?? NULL;
   }
 
   /**
@@ -62,7 +62,7 @@ class FieldHelper {
       AddressField::GIVEN_NAME => 'given-name',
     ];
 
-    return isset($autocomplete_mapping[$field]) ? $autocomplete_mapping[$field] : NULL;
+    return $autocomplete_mapping[$field] ?? NULL;
   }
 
 }

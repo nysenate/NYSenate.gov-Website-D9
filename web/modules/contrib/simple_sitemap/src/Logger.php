@@ -121,6 +121,7 @@ class Logger {
    */
   public function display(string $displayMessageType = self::DISPLAY_MESSAGE_TYPE_DEFAULT, string $permission = ''): Logger {
     if (empty($permission) || $this->currentUser->hasPermission($permission)) {
+      // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
       $this->messenger->addMessage($this->t($this->message, $this->substitutions), $displayMessageType);
     }
 

@@ -5,6 +5,7 @@
  * Module install and update procedures.
  */
 
+use Drupal\Core\Url;
 use Drupal\simple_sitemap_engines\Entity\SimpleSitemapEngine;
 use Drupal\simple_sitemap_engines\Form\SimplesitemapEnginesForm;
 
@@ -44,7 +45,9 @@ function simple_sitemap_engines_requirements(string $phase): array {
  * Implements hook_install().
  */
 function simple_sitemap_engines_install() {
-  \Drupal::messenger()->addWarning(t('In order to generate a verification key for the IndexNow service and choose which sitemaps are to be submitted to search engines, visit <a href="@url">this</a> configuration page.', ['@url' => $GLOBALS['base_url'] . '/admin/config/search/simplesitemap/engines/settings']));
+  \Drupal::messenger()->addWarning(t('In order to generate a verification key for the IndexNow service and choose which sitemaps are to be submitted to search engines, visit <a href="@url">this</a> configuration page.',
+    ['@url' => Url::fromRoute('simple_sitemap.engines.settings')->toString()])
+  );
 }
 
 /**

@@ -110,7 +110,7 @@
       {% if bill.is_poll %}
         <div class="c-bill-polling med-bg embed">
           {% if bill.vote_widget %}
-             {{ bill.vote_widget }}
+            {{ bill.vote_widget }}
           {% else %}
             {% include "@nysenate_theme/bill-vote-widget/bill-vote-widget.twig" with {
               action: bill.action,

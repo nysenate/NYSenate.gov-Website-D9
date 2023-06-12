@@ -60,7 +60,7 @@ interface ViewsBulkOperationsActionInterface extends ActionInterface {
    *   Performed operations array.
    *
    * @return \Symfony\Component\HttpFoundation\RedirectResponse|null
-   *   Bach redirect response or NULL.
+   *   Batch redirect response or NULL.
    */
   public static function finished($success, array $results, array $operations): ?RedirectResponse;
 

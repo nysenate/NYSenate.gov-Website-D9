@@ -20,7 +20,6 @@ class IntegerFieldValidationRule extends ConfigurableFieldValidationRuleBase {
   /**
    * {@inheritdoc}
    */
-   
   public function addFieldValidationRule(FieldValidationRuleSetInterface $field_validation_rule_set) {
 
     return TRUE;
@@ -60,7 +59,7 @@ class IntegerFieldValidationRule extends ConfigurableFieldValidationRuleBase {
       '#title' => $this->t('Maximum value'),
       '#default_value' => $this->configuration['max'],
       '#required' => TRUE,
-    ];	
+    ];
     return $form;
   }
 
@@ -75,30 +74,29 @@ class IntegerFieldValidationRule extends ConfigurableFieldValidationRuleBase {
   }
   
   public function validate($params) {
-    $value = isset($params['value']) ? $params['value'] : '';
-	$rule = isset($params['rule']) ? $params['rule'] : null;
-	$context = isset($params['context']) ? $params['context'] : null;
-	$settings = array();
+    $value = $params['value'] ?? '';
+	$rule = $params['rule'] ?? null;
+	$context = $params['context'] ?? null;
+    $settings = [];
 	if(!empty($rule) && !empty($rule->configuration)){
-	  $settings = $rule->configuration;
-	}
-	//$settings = $this->rule->settings;
+      $settings = $rule->configuration;
+    }
+
     if ($value !== '' && !is_null($value)) {
-      $options = array();
+      $options = [];
       if (isset($settings['min']) && $settings['min'] != '') {
-	    $min = $settings['min'];
+        $min = $settings['min'];
         $options['options']['min_range'] = $min;
       }
       if (isset($settings['max']) && $settings['max'] != '') {
-	    $max = $settings['max'];
+        $max = $settings['max'];
         $options['options']['max_range'] = $max;
       }  
-  
+
       if (FALSE === filter_var($value, FILTER_VALIDATE_INT, $options)) {
         $context->addViolation($rule->getErrorMessage());
-      }      
+      }
 
-    }	
-    //return true;
+    }
   }
 }

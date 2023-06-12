@@ -103,6 +103,12 @@ field_validation.rule.length_field_validation_rule:
     max:
       type: string
       label: 'Maximum value'
+    strip_tags:
+      type: boolean
+      label: 'Strip tags'
+    trim:
+      type: boolean
+      label: 'Trim'
 
 field_validation.rule.must_be_empty_field_validation_rule:
   type: mapping
@@ -149,6 +155,12 @@ field_validation.rule.unique_field_validation_rule:
     scope:
       type: string
       label: 'Scope of unique'
+    published:
+      type: boolean
+      label: 'Published entities'
+    per_user:
+      type: boolean
+      label: 'Per user'
 
 field_validation.rule.words_field_validation_rule:
   type: mapping
@@ -160,3 +172,66 @@ field_validation.rule.words_field_validation_rule:
     max:
       type: string
       label: 'Maximum number of words'
+
+field_validation.rule.url_field_validation_rule:
+  type: mapping
+  label: 'Url field validation rule'
+  mapping:
+    external:
+      type: boolean
+      label: 'External'
+    internal:
+      type: boolean
+      label: 'Internal'
+
+field_validation.rule.specific_value_field_validation_rule:
+  type: mapping
+  label: 'Specific value(s) field validation rule'
+  mapping:
+    setting:
+      type: string
+      label: '(Key) values'
+
+field_validation.rule.pattern_field_validation_rule:
+  type: mapping
+  label: 'Pattern field validation rule'
+  mapping:
+    pattern:
+      type: string
+      label: 'Pattern'
+
+field_validation.rule.match_field_field_validation_rule:
+  type: mapping
+  label: 'Match against a field validation rule'
+  mapping:
+    entity_type:
+      type: string
+      label: 'Entity type'
+    bundle:
+      type: string
+      label: 'Bundle'
+    field_name:
+      type: string
+      label: 'Field name'
+    column:
+      type: string
+      label: 'Column'
+    reverse:
+      type: boolean
+      label: 'Reverse'
+
+field_validation.rule.one_of_several_validation_rule:
+  type: mapping
+  label: 'Require at least one of several fields validation rule'
+  mapping:
+    data:
+      type: string
+      label: 'Group name'
+
+field_validation.rule.equal_values_field_validation_rule:
+  type: mapping
+  label: 'Equal values on multiple fields validation rule'
+  mapping:
+    data:
+      type: string
+      label: 'Group name'

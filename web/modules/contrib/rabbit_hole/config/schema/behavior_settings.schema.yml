@@ -1,0 +1,28 @@
+rabbit_hole.behavior_settings.*:
+  type: config_entity
+  label: 'Rabbit hole settings'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    entity_type_id:
+      type: string
+      label: 'Entity Type ID'
+    entity_id:
+      type:  string
+      label: 'Bundle'
+    action:
+      type: string
+      label: 'Action'
+    allow_override:
+      type: integer
+      label: 'Allow override'
+    redirect:
+      type: string
+      label: 'Redirect path'
+    redirect_code:
+      type: integer
+      label: 'Redirect code'
+    redirect_fallback_action:
+      type: string
+      label: 'Fallback action'

@@ -138,8 +138,8 @@ class StatusForm extends SimpleSitemapFormBase {
     $form['status']['actions']['regenerate_submit'] = [
       '#type' => 'submit',
       '#value' => $this->queueWorker->generationInProgress()
-      ? $this->t('Resume generation')
-      : $this->t('Rebuild queue & generate'),
+        ? $this->t('Resume generation')
+        : $this->t('Rebuild queue & generate'),
       '#submit' => [self::class . '::generate'],
       '#validate' => [],
     ];

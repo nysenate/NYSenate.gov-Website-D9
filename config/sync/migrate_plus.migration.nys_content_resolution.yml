@@ -22,13 +22,6 @@ process:
     -
       plugin: get
       source: tnid
-  title:
-    -
-      plugin: concat
-      source:
-        - field_ol_session/0/value
-        - title
-      delimiter: '-'
   uid:
     -
       plugin: get
@@ -71,18 +64,6 @@ process:
     -
       plugin: get
       source: field_featured_quote
-  field_ol_session:
-    -
-      plugin: get
-      source: field_ol_session
-  field_ol_print_no:
-    -
-      plugin: get
-      source: field_ol_print_no
-  field_ol_base_print_no:
-    -
-      plugin: get
-      source: field_ol_base_print_no
 destination:
   plugin: 'entity:node'
   default_bundle: resolution

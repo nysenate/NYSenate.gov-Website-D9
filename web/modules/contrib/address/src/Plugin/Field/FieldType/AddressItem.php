@@ -201,7 +201,7 @@ class AddressItem extends FieldItemBase implements AddressInterface {
     ];
     $field_overrides = $this->getFieldOverrides();
     foreach (LabelHelper::getGenericFieldLabels() as $field_name => $label) {
-      $override = isset($field_overrides[$field_name]) ? $field_overrides[$field_name] : '';
+      $override = $field_overrides[$field_name] ?? '';
 
       $element['field_overrides'][$field_name] = [
         'field_label' => [

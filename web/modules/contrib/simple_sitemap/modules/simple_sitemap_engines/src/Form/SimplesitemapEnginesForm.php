@@ -12,6 +12,7 @@ use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Url;
 use Drupal\simple_sitemap\Entity\SimpleSitemap;
 use Drupal\simple_sitemap_engines\Entity\SimpleSitemapEngine;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -135,7 +136,11 @@ class SimplesitemapEnginesForm extends ConfigFormBase {
     $form['settings']['engines'] = [
       '#type' => 'details',
       '#title' => $this->t('Engines'),
-      '#markup' => '<div class="description">' . $this->t('Choose which sitemaps are to be submitted to which search engines.<br>Sitemaps can be configured <a href="@url">here</a>.', ['@url' => $GLOBALS['base_url'] . '/admin/config/search/simplesitemap']) . '</div>',
+      '#markup' => '<div class="description">'
+        . $this->t('Choose which sitemaps are to be submitted to which search engines.<br>Sitemaps can be configured <a href="@url">here</a>.',
+          ['@url' => Url::fromRoute('entity.simple_sitemap.collection')->toString()]
+        )
+        . '</div>',
       '#open' => TRUE,
       '#states' => [
         'visible' => [':input[name="settings[enabled]"]' => ['checked' => TRUE]],
@@ -166,7 +171,9 @@ class SimplesitemapEnginesForm extends ConfigFormBase {
     $form['index_now']['enabled'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Submit changes to IndexNow capable engines'),
-      '#description' => $this->t('Send change notice to IndexNow compatible search engines right after submitting entity forms. Changes include creating, deleting and updating of an entity.<br/>This behaviour can be overridden on entity forms. Don\'t forget to <a href="@inclusion_url">include entities</a>.', ['@inclusion_url' => $GLOBALS['base_url'] . '/admin/config/search/simplesitemap/entities']),
+      '#description' => $this->t('Send change notice to IndexNow compatible search engines right after submitting entity forms. Changes include creating, deleting and updating of an entity.<br/>This behaviour can be overridden on entity forms. Don\'t forget to <a href="@inclusion_url">include entities</a>.',
+        ['@inclusion_url' => Url::fromRoute('simple_sitemap.entities')->toString()]
+      ),
       '#default_value' => $config->get('index_now_enabled'),
     ];
 
@@ -186,7 +193,9 @@ class SimplesitemapEnginesForm extends ConfigFormBase {
     $form['index_now']['on_entity_save'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Index on every entity save operation'),
-      '#description' => $this->t('If checked, all entity save operations for <a href="@inclusion_url">included entities</a> will trigger notification of IndexNow search engines.<br/>If unchecked, this will only be possible by adding/altering/deleting an entity through a form.<br/>This should be unchecked if there are mass operations performed on entities that are irrelevant to indexing.', ['@inclusion_url' => $GLOBALS['base_url'] . '/admin/config/search/simplesitemap/entities']),
+      '#description' => $this->t('If checked, all entity save operations for <a href="@inclusion_url">included entities</a> will trigger notification of IndexNow search engines.<br/>If unchecked, this will only be possible by adding/altering/deleting an entity through a form.<br/>This should be unchecked if there are mass operations performed on entities that are irrelevant to indexing.',
+        ['@inclusion_url' => Url::fromRoute('simple_sitemap.entities')->toString()]
+      ),
       '#default_value' => $config->get('index_now_on_entity_save'),
       '#states' => [
         'visible' => [':input[name="index_now[enabled]"]' => ['checked' => TRUE]],
@@ -222,7 +231,7 @@ class SimplesitemapEnginesForm extends ConfigFormBase {
       '#submit' => in_array($key_location, ['state', 'settings_state'])
         ? [self::class . '::removeKey']
         : [self::class . '::generateKey'],
-      '#disabled' => $key_location === 'settings' ,
+      '#disabled' => $key_location === 'settings',
       '#validate' => [],
       '#prefix' => '<p>' . $text . '</p>',
     ];

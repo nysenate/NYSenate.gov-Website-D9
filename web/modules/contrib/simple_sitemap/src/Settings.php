@@ -46,6 +46,28 @@ class Settings {
   }
 
   /**
+   * Returns a specific setting (without config overrides) or a default value
+   * if setting does not exist.
+   *
+   * @param string $name
+   *   Name of the setting, like 'max_links'.
+   * @param mixed $default
+   *   Value to be returned if the setting does not exist in the configuration.
+   *
+   * @return mixed
+   *   The current setting from configuration or a default value.
+   *
+   * @see https://www.drupal.org/project/simple_sitemap/issues/3359679.
+   */
+  public function getEditable(string $name, $default = NULL) {
+    $setting = $this->configFactory
+      ->getEditable('simple_sitemap.settings')
+      ->get($name);
+
+    return $setting ?? $default;
+  }
+
+  /**
    * Returns all settings.
    *
    * @return mixed

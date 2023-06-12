@@ -2,14 +2,12 @@
 
 namespace Drupal\address\Plugin\Validation\Constraint;
 
-use CommerceGuys\Addressing\AddressFormat\AddressField;
 use CommerceGuys\Addressing\AddressFormat\AddressFormat;
 use CommerceGuys\Addressing\Validator\Constraints\AddressFormatConstraintValidator as ExternalValidator;
 use Drupal\address\FieldHelper;
 use Drupal\address\LabelHelper;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Validator\Constraint;
 
 /**
  * Validates the address format constraint.

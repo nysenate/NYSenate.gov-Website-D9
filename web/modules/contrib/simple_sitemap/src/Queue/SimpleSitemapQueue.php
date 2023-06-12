@@ -126,7 +126,7 @@ class SimpleSitemapQueue extends DatabaseQueue {
     $query = $this->connection->insert(static::TABLE_NAME)
       ->fields(['name', 'data', 'created']);
 
-    foreach ($data_sets as $i => $data) {
+    foreach ($data_sets as $data) {
       $query->values([
         $this->name,
         serialize($data),

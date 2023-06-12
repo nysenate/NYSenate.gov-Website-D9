@@ -20,7 +20,6 @@ class NumericFieldValidationRule extends ConfigurableFieldValidationRuleBase {
   /**
    * {@inheritdoc}
    */
-   
   public function addFieldValidationRule(FieldValidationRuleSetInterface $field_validation_rule_set) {
 
     return TRUE;
@@ -67,7 +66,7 @@ class NumericFieldValidationRule extends ConfigurableFieldValidationRuleBase {
       '#description' => $this->t('The step scale factor. Must be positive.'),
       '#type' => 'textfield',
       '#default_value' => $this->configuration['step'],
-    ];	
+    ];
     return $form;
   }
 
@@ -78,19 +77,19 @@ class NumericFieldValidationRule extends ConfigurableFieldValidationRuleBase {
     parent::submitConfigurationForm($form, $form_state);
 
     $this->configuration['min'] = $form_state->getValue('min');
-	$this->configuration['max'] = $form_state->getValue('max');
-	$this->configuration['step'] = $form_state->getValue('step');
+    $this->configuration['max'] = $form_state->getValue('max');
+    $this->configuration['step'] = $form_state->getValue('step');
   }
 
   public function validate($params) {
-    $value = isset($params['value']) ? $params['value'] : '';
-	$rule = isset($params['rule']) ? $params['rule'] : null;
-	$context = isset($params['context']) ? $params['context'] : null;
-	$settings = array();
-	if(!empty($rule) && !empty($rule->configuration)){
-	  $settings = $rule->configuration;
-	}
-	//$settings = $this->rule->settings;
+    $value = $params['value'] ?? '';
+    $rule = $params['rule'] ?? null;
+    $context = $params['context'] ?? null;
+    $settings =  [];
+    if(!empty($rule) && !empty($rule->configuration)){
+      $settings = $rule->configuration;
+    }
+
     if ($value !== '' && !is_null($value)) {
       $flag = TRUE;
       if (!is_numeric($value)) {
@@ -99,13 +98,13 @@ class NumericFieldValidationRule extends ConfigurableFieldValidationRuleBase {
       else{
         if (isset($settings['min']) && $settings['min'] != '') {
           $min = $settings['min'];
-		  if ($value < $min) {
+          if ($value < $min) {
             $flag = FALSE;
           }
         }
         if (isset($settings['max']) && $settings['max'] != '') {
           $max = $settings['max'];
-		  if ($value > $max) {
+          if ($value > $max) {
             $flag = FALSE;
           }
         }
@@ -123,8 +122,7 @@ class NumericFieldValidationRule extends ConfigurableFieldValidationRuleBase {
       if (!$flag) {
         $context->addViolation($rule->getErrorMessage());
       }
-    }	
-    //return true;
+    }
   }
 
   /**

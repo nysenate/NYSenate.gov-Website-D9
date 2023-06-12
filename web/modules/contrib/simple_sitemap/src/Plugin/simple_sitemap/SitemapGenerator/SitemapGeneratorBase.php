@@ -159,12 +159,18 @@ abstract class SitemapGeneratorBase extends SimpleSitemapPluginBase implements S
     return $this->writer->outputMemory();
   }
 
+  /**
+   * Adds the XML stylesheet.
+   */
   protected function addXslUrl(): void {
     if ($this->settings->get('xsl')) {
       $this->writer->writeXsl($this->getPluginId());
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getXslContent(): ?string {
     return NULL;
   }

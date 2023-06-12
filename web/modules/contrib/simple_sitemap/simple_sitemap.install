@@ -29,7 +29,7 @@ function simple_sitemap_requirements($phase) {
     case 'runtime':
 
       // @todo Implement for 4.x
-      // @codingStandardsIgnoreStart
+      // phpcs:disable
 //      /** @var \Drupal\simple_sitemap\Simplesitemap $generator */
 //      $generator = \Drupal::service('simple_sitemap.generator');
 //      $generated_ago = $generator->getGeneratedAgo();
@@ -64,7 +64,7 @@ function simple_sitemap_requirements($phase) {
 //        'description' => $description,
 //        'severity' => $severity,
 //      ];
-      // @codingStandardsIgnoreEnd
+      // phpcs:enable
       break;
   }
   return $requirements;

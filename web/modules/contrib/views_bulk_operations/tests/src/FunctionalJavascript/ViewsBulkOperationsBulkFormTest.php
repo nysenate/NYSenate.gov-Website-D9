@@ -137,6 +137,7 @@ class ViewsBulkOperationsBulkFormTest extends WebDriverTestBase {
       $this->selectedIndexes[] = $selected_index + $this->testViewParams['items_per_page'];
       $this->page->checkField('views_bulk_operations_bulk_form[' . $selected_index . ']');
     }
+    $this->assertSession->assertWaitOnAjaxRequest();
 
     // Execute test operation.
     $this->page->pressButton('Simple test action');

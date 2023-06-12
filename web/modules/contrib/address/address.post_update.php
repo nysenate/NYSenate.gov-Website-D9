@@ -16,12 +16,12 @@
 function address_post_update_convert_names_subdivisions(&$sandbox = NULL) {
   if (!isset($sandbox['fields'])) {
     $sandbox['fields'] = \Drupal::state()->get('address_8101_processed');
-    $sandbox['count'] = count($sandbox['fields']);
     // No fields were updated.
     if (empty($sandbox['fields'])) {
       $sandbox['#finished'] = 1;
       return;
     }
+    $sandbox['count'] = count($sandbox['fields']);
   }
 
   $field = array_pop($sandbox['fields']);
@@ -29,6 +29,7 @@ function address_post_update_convert_names_subdivisions(&$sandbox = NULL) {
   $field_name = $field[1];
   $storage = \Drupal::entityTypeManager()->getStorage($entity_type_id);
   $query = $storage->getQuery()->exists($field_name . '.country_code');
+  $query->accessCheck(FALSE);
   $entities = $storage->loadMultiple($query->execute());
   foreach ($entities as $entity) {
     _address_update_entity($entity, $field_name);

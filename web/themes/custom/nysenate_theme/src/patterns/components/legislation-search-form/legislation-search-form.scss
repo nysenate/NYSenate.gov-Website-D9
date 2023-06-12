@@ -10,6 +10,20 @@
     column-gap: 20px;
   }
 
+  .js-form-item-advanced-search-title {
+    grid-column: span 2;
+    
+    h1 {
+      text-transform: capitalize;
+      font-family: $font-serif-regular;
+      font-size: 32px;
+      width: 100%;
+      float: left;
+      border-bottom: solid 1px $color-alto;
+      padding-bottom: 20px;
+    }
+  }
+
   .nys-title,
   .form-item-type,
   .form-item-full-text,
@@ -143,6 +157,16 @@
     &-icon {
       display: none;
     }
+  }
+
+  .js-form-item-advanced-search-text {
+    font-size: 20px;
+    font-family: $font-serif;
+    line-height: 32px;
+    grid-column: span 2;
+    color: $grey03;
+    padding-bottom: 1.26rem;
+    border-bottom: solid 1px $color-alto;
   }
 }
 

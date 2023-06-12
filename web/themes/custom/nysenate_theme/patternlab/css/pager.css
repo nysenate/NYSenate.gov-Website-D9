@@ -2293,6 +2293,11 @@ h2.c-subpage-header--title {
 .panel-separator {
   clear: both; }
 
+img[data-align='left'] {
+  float: left;
+  margin: 40px 30px 20px 0;
+  margin-left: -14%; }
+
 .pager {
   text-align: center;
   margin-bottom: 3rem;
@@ -2345,7 +2350,6 @@ h2.c-subpage-header--title {
   width: 30px;
   text-decoration: none; }
   .pager__control:hover {
-    color: #464646;
     text-decoration: none; }
   .pager__control.disabled {
     pointer-events: none;
@@ -2354,6 +2358,9 @@ h2.c-subpage-header--title {
     display: flex; }
     .pager__control svg path {
       fill: #fff; }
+
+.is-active a.pager__control {
+  color: #fff; }
 
 .pager.js-pager__items {
   margin-top: 0;
@@ -2374,7 +2381,7 @@ h2.c-subpage-header--title {
     padding: 15px 0;
     width: 100%;
     text-align: center;
-    font-family: "Proxima Nova SemiBold";
+    font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
     font-size: 16px;
     line-height: 25px; }
     .pager .pager__item.pager-load-more a::after {
@@ -2384,3 +2391,17 @@ h2.c-subpage-header--title {
       line-height: 25px; }
   .pager .pager__item.pager-load-more.pager-load-more-empty {
     display: none; }
+
+.view-advanced-legislation-search .pager {
+  background-color: #eeeeee;
+  padding: 10px; }
+  .view-advanced-legislation-search .pager a.pager__control {
+    font-size: 14px; }
+  .view-advanced-legislation-search .pager li.pager__item:hover {
+    background-color: #e6e6e6;
+    border-radius: 0; }
+  .view-advanced-legislation-search .pager li.pager__item.is-active a.pager__control {
+    color: #323232;
+    background-color: #eeeeee; }
+  .view-advanced-legislation-search .pager li.pager__item--next:hover svg path {
+    fill: #003954; }

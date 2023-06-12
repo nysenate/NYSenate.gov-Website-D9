@@ -584,7 +584,7 @@ class SimpleSitemapStorage extends ConfigEntityStorage {
    */
   public function invalidateCache(?array $variants = NULL): void {
     $variants = $variants ?? array_keys(SimpleSitemap::loadMultiple());
-    $tags = Cache::buildTags('simple_sitemap', (array) $variants);
+    $tags = Cache::buildTags('simple_sitemap', $variants);
     Cache::invalidateTags($tags);
   }
 

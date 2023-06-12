@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Hooks provided by the Simple XML Sitemap module.
+ */
+
 use Drupal\simple_sitemap\Entity\SimpleSitemapInterface;
 
 /**
@@ -13,7 +18,7 @@ use Drupal\simple_sitemap\Entity\SimpleSitemapInterface;
  */
 
 /**
- * Alter the generated link data before the sitemap is saved.
+ * Alter the generated link data before a sitemap is saved.
  *
  * This hook gets invoked for every sitemap chunk generated.
  *
@@ -43,10 +48,15 @@ function hook_simple_sitemap_links_alter(array &$links, SimpleSitemapInterface $
 }
 
 /**
- * Add arbitrary links to the sitemap.
+ * Add arbitrary links to a sitemap.
+ *
+ * This hook gets invoked for sitemaps that are of a type that implements the
+ * 'arbitrary' URL generator plugin. E.g. if wanting to alter the sitemap index,
+ * add the 'arbitrary' URL generator to the 'Sitemap index' sitemap type first.
  *
  * @param array &$arbitrary_links
- *   An array of arbitrary links.
+ *   An array of arbitrary links. Their structure depends on what the sitemap
+ *   type's sitemap generator expects.
  * @param \Drupal\simple_sitemap\Entity\SimpleSitemapInterface $sitemap
  *   Sitemap entity.
  */
@@ -84,7 +94,7 @@ function hook_simple_sitemap_arbitrary_links_alter(array &$arbitrary_links, Simp
 }
 
 /**
- * Alters the sitemap attributes shortly before XML document generation.
+ * Alters a sitemap's attributes shortly before XML document generation.
  *
  * Attributes can be added, changed and removed.
  *

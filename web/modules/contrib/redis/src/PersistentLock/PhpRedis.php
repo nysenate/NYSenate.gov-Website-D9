@@ -5,12 +5,12 @@ namespace Drupal\redis\PersistentLock;
 use Drupal\redis\ClientFactory;
 
 /**
- * PHpRedis persistent lock backend
+ * PhpRedis persistent lock backend
  */
 class PhpRedis extends \Drupal\redis\Lock\PhpRedis {
 
   /**
-   * Creates a PHpRedis persistent lock backend.
+   * Creates a PhpRedis persistent lock backend.
    */
   public function __construct(ClientFactory $factory) {
     // Do not call the parent constructor to avoid registering a shutdown

@@ -20,7 +20,6 @@ class MustBeEmptyFieldValidationRule extends ConfigurableFieldValidationRuleBase
   /**
    * {@inheritdoc}
    */
-   
   public function addFieldValidationRule(FieldValidationRuleSetInterface $field_validation_rule_set) {
 
     return TRUE;
@@ -57,20 +56,14 @@ class MustBeEmptyFieldValidationRule extends ConfigurableFieldValidationRuleBase
     parent::submitConfigurationForm($form, $form_state);
 
   }
-  
-  public function validate($params) {
-    $value = isset($params['value']) ? $params['value'] : '';
-	$rule = isset($params['rule']) ? $params['rule'] : null;
-	$context = isset($params['context']) ? $params['context'] : null;
-	$settings = array();
-	if(!empty($rule) && !empty($rule->configuration)){
-	  $settings = $rule->configuration;
-	}
-    $pattern = isset($settings['setting']) ? $settings['setting'] : '';
-	//$settings = $this->rule->settings;
-    if ($value != '') {
-		$context->addViolation($rule->getErrorMessage());
-    }	
 
+  public function validate($params) {
+    $value = $params['value'] ?? '';
+	$rule = $params['rule'] ?? null;
+	$context = $params['context'] ?? null;
+
+    if ($value != '') {
+      $context->addViolation($rule->getErrorMessage());
+    }
   }
 }

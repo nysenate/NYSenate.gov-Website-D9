@@ -35,7 +35,7 @@ class IndexNowPathProcessor implements InboundPathProcessorInterface {
    * {@inheritdoc}
    */
   public function processInbound($path, Request $request) {
-    $args = explode('/', $path);
+    $args = explode('/', $path ?? '');
 
     if (count($args) === 2 && substr($args[1], -4) === '.txt') {
       $key = $this->submitter->getKey();

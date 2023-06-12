@@ -53,15 +53,14 @@ class FieldValidationRuleSetEditForm extends FieldValidationRuleSetFormBase {
     $form['#tree'] = TRUE;
     //$form['#attached']['library'][] = 'field_validation/admin';
 
-
     // Build the list of existing field validation rule for this rule set.
     $form['rules'] = [
       '#type' => 'table',
       '#header' => [
         $this->t('Title'),
-        $this->t('Weight'),		
-        $this->t('Plugin'),		
-        $this->t('Field'),		
+        $this->t('Weight'),
+        $this->t('Plugin'),
+        $this->t('Field'),
         $this->t('Operations'),
       ],
       '#tabledrag' => [
@@ -79,9 +78,8 @@ class FieldValidationRuleSetEditForm extends FieldValidationRuleSetFormBase {
       '#weight' => 5,
     ];
 	$field_validation_rules =  $this->entity->getFieldValidationRules();
-	//drupal_set_message(var_export($field_validation_rules, true));
+
     foreach ($field_validation_rules as $field_validation_rule) {
-	  //drupal_set_message('abcd');
       $key = $field_validation_rule->getUuid();
       $form['rules'][$key]['#attributes']['class'][] = 'draggable';
       $form['rules'][$key]['#weight'] = isset($user_input['rules']) ? $user_input['rules'][$key]['weight'] : NULL;
@@ -93,18 +91,6 @@ class FieldValidationRuleSetEditForm extends FieldValidationRuleSetFormBase {
           ],
         ],
       ];
-	  
-      //$form['rules'][$key]['field_name'] = [
-      //  '#markup' => $field_validation_rule->getFieldName(),
-      //];
-
-	  
-      //$summary = $field_validation_rule->getSummary();
-
-      //if (!empty($summary)) {
-      //  $summary['#prefix'] = ' ';
-      //  $form['rules'][$key]['rule']['data']['summary'] = $summary;
-      //}
 
       $form['rules'][$key]['weight'] = [
         '#type' => 'weight',
@@ -115,16 +101,16 @@ class FieldValidationRuleSetEditForm extends FieldValidationRuleSetFormBase {
           'class' =>['rule-order-weight'],
         ],
       ];
-	  
+
       $form['rules'][$key]['id'] = [
         '#markup' => $field_validation_rule->getPluginId(),
       ];
-	  
+
       $form['rules'][$key]['field'] = [
 	    '#type' => 'markup',
         '#markup' => $field_validation_rule->getFieldName(),
       ];
-	  
+
       $links = [];
       $is_configurable = $field_validation_rule instanceof ConfigurableFieldValidationRuleInterface;
       if ($is_configurable) {
@@ -147,13 +133,12 @@ class FieldValidationRuleSetEditForm extends FieldValidationRuleSetFormBase {
         '#type' => 'operations',
         '#links' => $links,
       ];
-	  
+
     }
 
     // Build the new field_validation_rule addition form and add it to the field_validation_rule list.
     $new_field_validation_rule_options = [];
     $field_validation_rules = $this->fieldValidationRuleManager->getDefinitions();
-	//drupal_set_message(var_export($field_validation_rules, true));
     uasort($field_validation_rules, function ($a, $b) {
       return strcasecmp($a['id'], $b['id']);
     });
@@ -221,8 +206,7 @@ class FieldValidationRuleSetEditForm extends FieldValidationRuleSetFormBase {
 
     // Load the configuration form for this option.
     if (is_subclass_of($field_validation_rule['class'], '\Drupal\field_validation\ConfigurableFieldValidationRuleInterface')) {
-      // Remove the destination parameter as it redirects us back to the
-      // overview.
+      // Remove the destination parameter as it redirects us back to the overview.
       $this->getRequest()->query->remove('destination');
 
       $form_state->setRedirect(
@@ -294,5 +278,4 @@ class FieldValidationRuleSetEditForm extends FieldValidationRuleSetFormBase {
       }
     }
   }
-
 }

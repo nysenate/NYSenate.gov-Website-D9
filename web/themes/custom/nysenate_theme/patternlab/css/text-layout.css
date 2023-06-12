@@ -2291,10 +2291,24 @@ h2.c-subpage-header--title {
 .panel-separator {
   clear: both; }
 
-.text-layout p {
-  color: #666666; }
-  .text-layout p:first-child {
+img[data-align='left'] {
+  float: left;
+  margin: 40px 30px 20px 0;
+  margin-left: -14%; }
+
+.text-layout p, .text-layout ul, .text-layout li {
+  color: #666666;
+  font-size: 20px; }
+  .text-layout p:first-child, .text-layout ul:first-child, .text-layout li:first-child {
     margin-top: 0; }
+
+.text-layout blockquote p {
+  font-family: "Adelle SemiBold", serif;
+  font-size: 18px; }
+  @media screen and (min-width: 1024px) {
+    .text-layout blockquote p {
+      font-size: 28px;
+      line-height: 1.3em; } }
 
 .text-layout::after {
   content: '';
@@ -2397,14 +2411,19 @@ h2.c-subpage-header--title {
   line-height: 15px; }
 
 .text-layout.contact-us h3 {
-  font-family: "Proxima Nova SemiBold";
+  font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
   font-size: 14px;
   line-height: 18px;
   text-transform: uppercase;
   margin: 0; }
 
 .text-layout.contact-us p {
-  font-family: "Proxima Nova Regular";
+  font-family: "Proxima Nova Regular", "Arial", sans-serif;
   font-size: 16px;
   line-height: 25px;
   color: #444444; }
+
+.page--citizen_guide .text-layout__body h3 {
+  font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
+  color: #444444;
+  margin: 24px 0 0; }

@@ -324,10 +324,8 @@ class BillVoteHelper {
 
     // If the user auto-subscribes when voting, create the subscription.
     // This also creates a flagging entry, for now.
-    if ($user->field_voting_auto_subscribe->value ?? TRUE) {
-      if ($subscription = $this->billsHelper->subscribeToBill($bill_node, $user)) {
-        $subscription->confirm()->save();
-      }
+    if ($user->id() && ($user->field_voting_auto_subscribe->value ?? TRUE)) {
+      $this->billsHelper->subscribeToBill($bill_node, $user);
     }
 
     // If needed, set the vote value and save.

@@ -1,6 +1,7 @@
 <?php
 
 namespace Drupal\redis;
+
 use Drupal\Core\Site\Settings;
 
 /**
@@ -116,6 +117,12 @@ class ClientFactory {
       {
         // Fallback on PhpRedis if available.
         $className = self::getClass(self::REDIS_IMPL_CLIENT, 'PhpRedis');
+        self::$_clientInterface = new $className();
+      }
+      elseif (class_exists('Relay\Relay'))
+      {
+        // Fallback on PhpRedis if available.
+        $className = self::getClass(self::REDIS_IMPL_CLIENT, 'Relay');
         self::$_clientInterface = new $className();
       }
       else

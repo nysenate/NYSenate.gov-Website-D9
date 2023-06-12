@@ -213,9 +213,11 @@ class EntityHelper {
         $url_object = Url::fromUri('internal:' . $uri);
       }
 
-      if (!empty($route_parameters = $url_object->getRouteParameters())
-        && $this->entityTypeManager->getDefinition($entity_type_id = key($route_parameters), FALSE)) {
-        return $this->entityTypeManager->getStorage($entity_type_id)->load($route_parameters[$entity_type_id]);
+      foreach ($url_object->getRouteParameters() as $entity_type_id => $entity_id) {
+        if ($entity_id && $this->entityTypeManager->hasDefinition($entity_type_id)
+          && $entity = $this->entityTypeManager->getStorage($entity_type_id)->load($entity_id)) {
+          return $entity;
+        }
       }
     }
 

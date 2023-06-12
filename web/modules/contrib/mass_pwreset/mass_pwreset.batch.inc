@@ -27,7 +27,7 @@ function mass_pwreset_batch_process($data, &$context) {
   // Reset user password.
   if (isset($data['uids'][$i])) {
     $user = User::load($data['uids'][$i]);
-    $user->setPassword(user_password(40));
+    $user->setPassword(\Drupal::service('password_generator')->generate(40));
     $user->save();
 
     // Update status message.

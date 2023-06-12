@@ -2,12 +2,12 @@
 
 namespace Drupal\views_bulk_operations\Service;
 
-use Drupal\Component\EventDispatcher\Event;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Action\ActionManager;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\views_bulk_operations\ActionAlterDefinitionsEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -209,7 +209,7 @@ class ViewsBulkOperationsActionManager extends ActionManager {
   protected function alterDefinitions(&$definitions) {
     // Let other modules change definitions.
     // Main purpose: Action permissions bridge.
-    $event = new Event();
+    $event = new ActionAlterDefinitionsEvent();
     $event->alterParameters = $this->alterParameters;
     $event->definitions = &$definitions;
 

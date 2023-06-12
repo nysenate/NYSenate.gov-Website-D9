@@ -71,9 +71,9 @@ class BlocklistFieldValidationRule extends ConfigurableFieldValidationRuleBase {
    * {@inheritdoc}
    */
   public function validate($params) {
-    $value = isset($params['value']) ? $params['value'] : '';
-    $rule = isset($params['rule']) ? $params['rule'] : NULL;
-    $context = isset($params['context']) ? $params['context'] : NULL;
+    $value = $params['value'] ?? '';
+    $rule = $params['rule'] ?? NULL;
+    $context = $params['context'] ?? NULL;
     $settings = [];
     if (!empty($rule) && !empty($rule->configuration)) {
       $settings = $rule->configuration;

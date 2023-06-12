@@ -41,8 +41,8 @@ class DateRangeFieldValidationRule extends ConfigurableFieldValidationRuleBase {
   public function defaultConfiguration() {
     return [
       'min' => NULL,
-	  'max' => NULL,
-	  'cycle' => NULL,
+      'max' => NULL,
+      'cycle' => NULL,
     ];
   }
 
@@ -68,13 +68,13 @@ class DateRangeFieldValidationRule extends ConfigurableFieldValidationRuleBase {
     $form['min'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Minimum date'),
-	    '#description' => $this->t('Optionally specify the minimum date.'),
+      '#description' => $this->t('Optionally specify the minimum date.'),
       '#default_value' => $this->configuration['min'],
     ];
     $form['max'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Maximum date'),
-	    '#description' => $this->t('Optionally specify the maximum date.'),
+      '#description' => $this->t('Optionally specify the maximum date.'),
       '#default_value' => $this->configuration['max'],
     ];
 
@@ -88,22 +88,21 @@ class DateRangeFieldValidationRule extends ConfigurableFieldValidationRuleBase {
     parent::submitConfigurationForm($form, $form_state);
 
     $this->configuration['min'] = $form_state->getValue('min');
-	$this->configuration['max'] = $form_state->getValue('max');
-	$this->configuration['cycle'] = $form_state->getValue('cycle');
+    $this->configuration['max'] = $form_state->getValue('max');
+    $this->configuration['cycle'] = $form_state->getValue('cycle');
   }
 
   public function validate($params) {
-    $value = isset($params['value']) ? $params['value'] : '';
-	$rule = isset($params['rule']) ? $params['rule'] : null;
-	$context = isset($params['context']) ? $params['context'] : null;
-	$settings = array();
-	if(!empty($rule) && !empty($rule->configuration)){
-	  $settings = $rule->configuration;
-	}
-	//$settings = $this->rule->settings;
-    if ($value !== '' && !is_null($value)) {
+    $value = $params['value'] ?? '';
+    $rule = $params['rule'] ?? NULL;
+    $context = $params['context'] ?? NULL;
+    $settings = [];
+    if (!empty($rule) && !empty($rule->configuration)) {
+      $settings = $rule->configuration;
+    }
+
+    if ($value !== '' && !is_null($value) && !is_array($value)) {
       $flag = FALSE;
-      //$settings =  $this->rule->settings;
       $cycle = isset($settings['cycle']) ? $settings['cycle'] : '';
       // support date, datetime
       if (!is_numeric($value)) {
@@ -111,54 +110,48 @@ class DateRangeFieldValidationRule extends ConfigurableFieldValidationRuleBase {
       }
 
       $date_str = date("Y-m-d H:i:s", $value);
-      if ($cycle =='global') {
-
+      $str_place = 0;
+      if ($cycle == 'global') {
         if (!empty($settings['min'])) {
-          //$settings['min'] = $settings['min'];
           $settings['min'] = strtotime($settings['min']);
           $settings['min'] = date("Y-m-d H:i:s", $settings['min']);
         }
         if (!empty($settings['max'])) {
-          //$settings['max'] = strtr($settings['max'], $tokens);
           $settings['max'] = strtotime($settings['max']);
           $settings['max'] = date("Y-m-d H:i:s", $settings['max']);
-          $str_place = 0;
         }
       }
-      if ($cycle =='year') {
+      if ($cycle == 'year') {
         $str_place = 5;
         $date_str = substr($date_str, $str_place);
       }
-      elseif ($cycle =='month') {
+      elseif ($cycle == 'month') {
         $str_place = 8;
         $date_str = substr($date_str, $str_place);
       }
-      elseif ($cycle =='week') {
+      elseif ($cycle == 'week') {
         $str_place = 10;
         $week_day = date('w', strtotime($date_str));
         $date_str = substr($date_str, $str_place);
         $date_str = $week_day . $date_str;
-
       }
-      elseif ($cycle =='day') {
+      elseif ($cycle == 'day') {
         $str_place = 11;
         $date_str = substr($date_str, $str_place);
-
       }
-      elseif ($cycle =='hour') {
+      elseif ($cycle == 'hour') {
         $str_place = 14;
         $date_str = substr($date_str, $str_place);
-
       }
-      elseif ($cycle =='minute') {
+      elseif ($cycle == 'minute') {
         $str_place = 17;
         $date_str = substr($date_str, $str_place);
       }
 
-      if (!empty($settings['min'])  && $date_str <  substr($settings['min'], $str_place)) {
+      if (!empty($settings['min']) && $date_str < substr($settings['min'], $str_place)) {
         $flag = TRUE;
       }
-      if (!empty($settings['max'])  && $date_str > substr($settings['max'], $str_place)) {
+      if (!empty($settings['max']) && $date_str > substr($settings['max'], $str_place)) {
         $flag = TRUE;
       }
 
@@ -167,6 +160,5 @@ class DateRangeFieldValidationRule extends ConfigurableFieldValidationRuleBase {
       }
 
     }
-    //return true;
   }
 }

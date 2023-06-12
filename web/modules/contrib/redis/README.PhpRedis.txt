@@ -8,9 +8,9 @@ Get PhpRedis
 
 You can download this library at:
 
-  https://github.com/nicolasff/phpredis
+  https://github.com/phpredis/phpredis
 
-This is PHP extension, too recent for being packaged in most distribution, you
+This is a PHP extension, too recent for being packaged in most distribution, you
 will probably need to compile it yourself.
 
 Default behavior is to connect via tcp://localhost:6379 but you might want to

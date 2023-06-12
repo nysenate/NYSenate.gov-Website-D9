@@ -99,6 +99,14 @@ function nys_registration_form_user_login_form_alter(&$form, FormStateInterface 
 }
 
 /**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function nys_registration_form_user_pass_reset_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // Redirect the submit action to the custom function.
+  $form['#action'] = '/nys' . $form['#action'];
+}
+
+/**
  * Custom submit handler for the login form.
  */
 function nys_registration_user_login_form_submit($form, FormStateInterface $form_state) {

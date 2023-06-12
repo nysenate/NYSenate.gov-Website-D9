@@ -111,6 +111,7 @@ interface SimpleSitemapInterface extends ConfigEntityInterface {
    * only if the sitemap is enabled AND its content published.
    *
    * @return bool
+   *   The enabled status of the sitemap.
    */
   public function isEnabled(): bool;
 

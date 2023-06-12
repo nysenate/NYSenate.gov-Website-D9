@@ -208,13 +208,13 @@ class EntityMenuLinkContentUrlGenerator extends EntityUrlGeneratorBase {
     $path_data = [
       'url' => $url_object,
       'lastmod' => !empty($entity) && method_exists($entity, 'getChangedTime')
-      ? date('c', $entity->getChangedTime())
-      : NULL,
+        ? date('c', $entity->getChangedTime())
+        : NULL,
       'priority' => $entity_settings['priority'] ?? NULL,
       'changefreq' => !empty($entity_settings['changefreq']) ? $entity_settings['changefreq'] : NULL,
       'images' => !empty($entity_settings['include_images']) && !empty($entity)
-      ? $this->getEntityImageData($entity)
-      : [],
+        ? $this->getEntityImageData($entity)
+        : [],
 
       // Additional info useful in hooks.
       'meta' => [

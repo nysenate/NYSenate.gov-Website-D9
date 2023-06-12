@@ -31,6 +31,13 @@ class CountryNameTokenTest extends KernelTestBase {
   protected $testFormat;
 
   /**
+   * A field.
+   *
+   * @var \Drupal\field\Entity\FieldConfig
+   */
+  protected $field;
+
+  /**
    * Vocabulary for testing chained token support.
    *
    * @var \Drupal\taxonomy\VocabularyInterface

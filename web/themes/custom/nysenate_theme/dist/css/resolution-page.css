@@ -2299,6 +2299,11 @@ h2.c-subpage-header--title {
 .panel-separator {
   clear: both; }
 
+img[data-align='left'] {
+  float: left;
+  margin: 40px 30px 20px 0;
+  margin-left: -14%; }
+
 .node-resolution {
   padding: 0 20px;
   margin: 0 auto; }
@@ -2678,7 +2683,8 @@ h2.c-subpage-header--title {
   display: table;
   clear: both; }
 
-.other_co-sponsors {
+.other_co-sponsors,
+.other_multi-sponsors {
   margin-top: 20px;
   clear: both; }
 
@@ -2929,7 +2935,8 @@ h2.c-subpage-header--title {
     padding-right: 2%; }
     .nys-senator.sponsor-list:nth-child(odd) {
       clear: left; }
-  .other_co-sponsors {
+  .other_co-sponsors,
+  .other_multi-sponsors {
     margin-top: 30px; }
   .pieContainer {
     float: left; }

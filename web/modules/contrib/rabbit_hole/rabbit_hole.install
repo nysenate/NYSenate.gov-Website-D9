@@ -1,0 +1,46 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the Rabbit Hole module.
+ */
+
+use Drupal\Core\Field\BaseFieldDefinition;
+
+/**
+ * Install redirect_fallback_action field.
+ */
+function rabbit_hole_update_8100() {
+  $rh_definitions = \Drupal::service('plugin.manager.rabbit_hole_entity_plugin')->getDefinitions();
+  $update_manager = \Drupal::entityDefinitionUpdateManager();
+
+  $rh_redirect_fallback_field = BaseFieldDefinition::create('string')
+    ->setName('rh_redirect_fallback_action')
+    ->setLabel(t('Rabbit Hole redirect fallback action'))
+    ->setDescription(t('Specifies the action that should be used when the redirect path is invalid or empty.'));
+
+  foreach ($rh_definitions as $rh_module => $definition) {
+    $entity_type_id = $definition['entityType'];
+    $field_storage_definition = $update_manager->getFieldStorageDefinition('rh_redirect_fallback_action', $entity_type_id);
+    if (empty($field_storage_definition)) {
+      $update_manager->installFieldStorageDefinition('rh_redirect_fallback_action', $entity_type_id, $rh_module, $rh_redirect_fallback_field);
+    }
+  }
+}
+
+/**
+ * Update redirect_fallback_action field default values.
+ */
+function rabbit_hole_update_8101() {
+  /** @var \Drupal\Core\Config\ConfigFactoryInterface $configFactory */
+  $configFactory = \Drupal::configFactory();
+  /** @var \Drupal\Core\Config\StorageInterface $configStorage */
+  $configStorage = \Drupal::service('config.storage');
+
+  foreach ($configStorage->listAll('rabbit_hole.behavior_settings') as $configName) {
+    $config = $configFactory->getEditable($configName);
+    if (!$config->get('redirect_fallback_action')) {
+      $config->set('redirect_fallback_action', 'access_denied')->save();
+    }
+  }
+}

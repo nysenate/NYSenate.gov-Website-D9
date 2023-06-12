@@ -18,7 +18,7 @@ class LoginHistoryTest extends BrowserTestBase {
    *
    * @var array
    */
-  static public $modules = ['block', 'login_history'];
+  protected static $modules = ['block', 'login_history'];
 
   /**
    * The installation profile to use with this test.
@@ -51,7 +51,7 @@ class LoginHistoryTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->adminUser = $this->drupalCreateUser([
@@ -75,25 +75,25 @@ class LoginHistoryTest extends BrowserTestBase {
     // Verify we can successfully access the Login history page.
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/reports/login-history');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Verify the Login history page has the table.
-    $this->assertText('Date');
-    $this->assertText('Username');
-    $this->assertText('IP Address');
-    $this->assertText('One-time login?');
-    $this->assertText('User Agent');
+    $this->assertSession()->pageTextContains('Date');
+    $this->assertSession()->pageTextContains('Username');
+    $this->assertSession()->pageTextContains('IP Address');
+    $this->assertSession()->pageTextContains('One-time login?');
+    $this->assertSession()->pageTextContains('User Agent');
 
     // Verify the Last Login block is on the home page.
     $this->drupalGet('<front>');
-    $this->assertText('You last logged in from');
+    $this->assertSession()->pageTextContains('You last logged in from');
 
     // Verify the link is in the block.
     $this->clickLink($this->t('View your login history'));
 
     // Verify the Login History tab is reachable.
     $this->drupalGet('user/' . $this->adminUser->id() . '/login-history');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     $this->drupalLogout();
 
@@ -106,10 +106,10 @@ class LoginHistoryTest extends BrowserTestBase {
     $this->assertSession()->statusCodeNotEquals(200);
 
     $this->drupalGet('<front>');
-    $this->assertNoText('You last logged in from');
+    $this->assertSession()->pageTextNotContains('You last logged in from');
 
     $this->drupalGet('user/' . $this->authenticatedUser->id() . '/login-history');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     $this->drupalLogout();
   }

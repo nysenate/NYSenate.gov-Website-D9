@@ -22,13 +22,6 @@ process:
     -
       plugin: get
       source: tnid
-  title:
-    -
-      plugin: concat
-      source:
-        - field_ol_session/0/value
-        - title
-      delimiter: '-'
   uid:
     -
       plugin: get
@@ -51,12 +44,6 @@ process:
       source: field_issues
       process:
         target_id: tid
-  field_bill_multi_session_root:
-    -
-      plugin: sub_process
-      source: field_bill_multi_session_root
-      process:
-        target_id: tid
   field_bill_no_issue_tags:
     -
       plugin: get
@@ -67,18 +54,6 @@ process:
       source: field_majority_issue_tag
       process:
         target_id: tid
-  field_ol_session:
-    -
-      plugin: get
-      source: field_ol_session
-  field_ol_print_no:
-    -
-      plugin: get
-      source: field_ol_print_no
-  field_ol_base_print_no:
-    -
-      plugin: get
-      source: field_ol_base_print_no
 destination:
   plugin: 'entity:node'
   default_bundle: bill

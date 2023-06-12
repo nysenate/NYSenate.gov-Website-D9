@@ -76,33 +76,23 @@ class CustomLinksForm extends SimpleSitemapFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $custom_link_settings = $this->generator->setVariants()->customLinkManager()->get();
+    $form['variants']['#tree'] = TRUE;
 
-    $form['custom_links'] = [
-      '#type' => 'textarea',
-      '#title' => $this->t('Relative Drupal paths'),
-      '#default_value' => $custom_link_settings ? $this->customLinksToString(reset($custom_link_settings)) : '',
-      '#description' => $this->t("Please specify drupal internal (relative) paths, one per line. Do not forget to prepend the paths with a '/'.<br>Optionally link priority <em>(0.0 - 1.0)</em> can be added by appending it after a space.<br> Optionally link change frequency <em>(always / hourly / daily / weekly / monthly / yearly / never)</em> can be added by appending it after a space.<br/<br><strong>Examples:</strong><br><em>/ 1.0 daily</em> -> home page with the highest priority and daily change frequency<br><em>/contact</em> -> contact page with the default priority and no change frequency information"),
-    ];
+    foreach ($this->getCustomLinkCapableSitemaps() as $variant => $sitemap) {
+      $custom_link_settings = $this->generator->setVariants($variant)->customLinkManager()->get();
 
-    $form['variants'] = [
-      '#type' => 'select',
-      '#multiple' => TRUE,
-      '#title' => $this->t('Sitemaps'),
-      '#description' => $this->t('The sitemaps to include the above links in.<br>Sitemaps can be configured <a href="@url">here</a>.', ['@url' => $GLOBALS['base_url'] . '/admin/config/search/simplesitemap']),
-      '#options' => array_map(
-        function ($variant) {
-          return $variant->label();
-        },
-        SimpleSitemap::loadMultiple()
-      ),
-      '#default_value' => array_keys(array_filter(
-          $this->generator->setVariants()->customLinkManager()->get(),
-          function ($e) {
-            return !empty($e);
-          })
-      ),
-    ];
+      $count = $custom_link_settings ? count($custom_link_settings[$variant]) : 0;
+      $form['variants'][$sitemap->id()] = [
+        '#type' => 'details',
+        '#title' => $sitemap->label() . ($count ? ' (' . $count . ')' : ''),
+        '#open' => (bool) $custom_link_settings,
+      ];
+
+      $form['variants'][$variant]['custom_links'] = [
+        '#type' => 'textarea',
+        '#default_value' => $custom_link_settings ? $this->customLinksToString($custom_link_settings[$variant]) : '',
+      ];
+    }
 
     $form['include_images'] = [
       '#type' => 'select',
@@ -121,40 +111,40 @@ class CustomLinksForm extends SimpleSitemapFormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    if (!empty($form_state->getValue('custom_links')) && empty($form_state->getValue('variants'))) {
-      $form_state->setErrorByName('variants', $this->t('Custom links must be assigned to at least one sitemap.'));
-    }
+    $sitemaps = $this->getCustomLinkCapableSitemaps();
+    foreach ($form_state->getValue('variants') as $variant => $values) {
+      foreach ($this->stringToCustomLinks($values['custom_links']) as $i => $link_config) {
+        $placeholders = [
+          '@sitemap' => $sitemaps[$variant]->label(),
+          '@line' => ++$i,
+          '@path' => $link_config['path'],
+          '@priority' => $link_config['priority'] ?? '',
+          '@changefreq' => $link_config['changefreq'] ?? '',
+          '@changefreq_options' => implode(', ', array_keys(FormHelper::getChangefreqOptions())),
+        ];
 
-    foreach ($this->stringToCustomLinks($form_state->getValue('custom_links')) as $i => $link_config) {
-      $placeholders = [
-        '@line' => ++$i,
-        '@path' => $link_config['path'],
-        '@priority' => $link_config['priority'] ?? '',
-        '@changefreq' => $link_config['changefreq'] ?? '',
-        '@changefreq_options' => implode(', ', array_keys(FormHelper::getChangefreqOptions())),
-      ];
+        // Checking if internal path exists.
+        if (!$this->pathValidator->getUrlIfValidWithoutAccessCheck($link_config['path'])
+          // Path validator does not see a double slash as an error. Catching
+          // this to prevent breaking path generation.
+          || strpos($link_config['path'], '//') !== FALSE) {
+          $form_state->setError($form['variants'][$variant]['custom_links'], $this->t('<strong>@sitemap, line @line</strong>: The path <em>@path</em> does not exist.', $placeholders));
+        }
 
-      // Checking if internal path exists.
-      if (!(bool) $this->pathValidator->getUrlIfValidWithoutAccessCheck($link_config['path'])
-      // Path validator does not see a double slash as an error. Catching this
-      // to prevent breaking path generation.
-       || strpos($link_config['path'], '//') !== FALSE) {
-        $form_state->setErrorByName('', $this->t('<strong>Line @line</strong>: The path <em>@path</em> does not exist.', $placeholders));
-      }
+        // Making sure the paths start with a slash.
+        if ($link_config['path'][0] !== '/') {
+          $form_state->setError($form['variants'][$variant]['custom_links'], $this->t("<strong>@sitemap, line @line</strong>: The path <em>@path</em> needs to start with a '/'.", $placeholders));
+        }
 
-      // Making sure the paths start with a slash.
-      if ($link_config['path'][0] !== '/') {
-        $form_state->setErrorByName('', $this->t("<strong>Line @line</strong>: The path <em>@path</em> needs to start with a '/'.", $placeholders));
-      }
+        // Making sure the priority is formatted correctly.
+        if (isset($link_config['priority']) && !FormHelper::isValidPriority($link_config['priority'])) {
+          $form_state->setError($form['variants'][$variant]['custom_links'], $this->t('<strong>@sitemap, line @line</strong>: The priority setting <em>@priority</em> for path <em>@path</em> is incorrect. Set the priority from 0.0 to 1.0.', $placeholders));
+        }
 
-      // Making sure the priority is formatted correctly.
-      if (isset($link_config['priority']) && !FormHelper::isValidPriority($link_config['priority'])) {
-        $form_state->setErrorByName('', $this->t('<strong>Line @line</strong>: The priority setting <em>@priority</em> for path <em>@path</em> is incorrect. Set the priority from 0.0 to 1.0.', $placeholders));
-      }
-
-      // Making sure changefreq is formatted correctly.
-      if (isset($link_config['changefreq']) && !FormHelper::isValidChangefreq($link_config['changefreq'])) {
-        $form_state->setErrorByName('', $this->t('<strong>Line @line</strong>: The changefreq setting <em>@changefreq</em> for path <em>@path</em> is incorrect. The following are the correct values: <em>@changefreq_options</em>.', $placeholders));
+        // Making sure changefreq is formatted correctly.
+        if (isset($link_config['changefreq']) && !FormHelper::isValidChangefreq($link_config['changefreq'])) {
+          $form_state->setError($form['variants'][$variant]['custom_links'], $this->t('<strong>@sitemap, line @line</strong>: The changefreq setting <em>@changefreq</em> for path <em>@path</em> is incorrect. The following are the correct values: <em>@changefreq_options</em>.', $placeholders));
+        }
       }
     }
   }
@@ -163,16 +153,32 @@ class CustomLinksForm extends SimpleSitemapFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $this->generator->setVariants()->customLinkManager()->remove();
-    if (!empty($variants = $form_state->getValue('variants')) && !empty($links = $form_state->getValue('custom_links'))) {
-      $this->generator->setVariants(array_values($variants));
-      foreach ($this->stringToCustomLinks($links) as $link_config) {
+    foreach ($form_state->getValue('variants') as $variant => $values) {
+      $this->generator->setVariants($variant)->customLinkManager()->remove();
+      foreach ($this->stringToCustomLinks($values['custom_links']) as $link_config) {
         $this->generator->customLinkManager()->add($link_config['path'], $link_config);
       }
     }
-
     $this->settings->save('custom_links_include_images', (bool) $form_state->getValue('include_images'));
+
     parent::submitForm($form, $form_state);
+  }
+
+  /**
+   * Gets sitemaps that are of a type that implements a custom URL generator.
+   *
+   * @return \Drupal\simple_sitemap\Entity\SimpleSitemap[]
+   *   Array of sitemaps of a type that implements a custom URL generator.
+   */
+  protected function getCustomLinkCapableSitemaps(): array {
+    $sitemaps = SimpleSitemap::loadMultiple();
+    foreach ($sitemaps as $variant => $sitemap) {
+      if (!$sitemap->getType()->hasUrlGenerator('custom')) {
+        unset($sitemaps[$variant]);
+      }
+    }
+
+    return $sitemaps;
   }
 
   /**

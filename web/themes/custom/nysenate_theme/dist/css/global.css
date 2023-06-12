@@ -2355,6 +2355,11 @@ h2.c-subpage-header--title {
 .panel-separator {
   clear: both; }
 
+img[data-align='left'] {
+  float: left;
+  margin: 40px 30px 20px 0;
+  margin-left: -14%; }
+
 .container {
   max-width: unset; }
 
@@ -5512,6 +5517,11 @@ h2.c-subpage-header--title {
 .panel-separator {
   clear: both; }
 
+img[data-align='left'] {
+  float: left;
+  margin: 40px 30px 20px 0;
+  margin-left: -14%; }
+
 .field--name-field-landing-blocks > .field__item {
   margin-bottom: 80px; }
   .field--name-field-landing-blocks > .field__item .text-layout__container h2.c-container--h2-title {
@@ -5946,6 +5956,28 @@ h6 {
 
 a {
   text-decoration: none; }
+
+blockquote p {
+  border: none;
+  margin: 0;
+  position: relative;
+  color: #444444;
+  font-family: "Adelle SemiBold", serif;
+  padding: 50px 0 40px;
+  font-size: 18px;
+  line-height: 1.3em; }
+  blockquote p:before {
+    position: absolute;
+    top: 0;
+    left: -0.2em;
+    font-size: 2.7em;
+    content: "\71";
+    font-family: "senate_icons";
+    color: #2b6a90; }
+  @media screen and (min-width: 1024px) {
+    blockquote p {
+      padding: 60px 30px 40px;
+      font-size: 28px; } }
 
 p {
   font-family: "Adelle Light", serif;

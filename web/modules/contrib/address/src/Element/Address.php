@@ -258,9 +258,9 @@ class Address extends FormElement {
         $element[$property] = [
           '#type' => 'textfield',
           '#title' => $labels[$field],
-          '#default_value' => isset($value[$property]) ? $value[$property] : '',
+          '#default_value' => $value[$property] ?? '',
           '#required' => in_array($field, $required_fields),
-          '#size' => isset($size_attributes[$field]) ? $size_attributes[$field] : 60,
+          '#size' => $size_attributes[$field] ?? 60,
           '#attributes' => [
             'class' => [$class],
             'autocomplete' => FieldHelper::getAutocompleteAttribute($field),

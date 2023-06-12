@@ -1,0 +1,280 @@
+uuid: 4f8f1d1c-bf1c-4b6e-b37f-a06d909b7e08
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.search_teaser
+    - field.field.node.resolution.field_comments
+    - field.field.node.resolution.field_featured_quote
+    - field.field.node.resolution.field_image_main
+    - field.field.node.resolution.field_issues
+    - field.field.node.resolution.field_ol_active_version
+    - field.field.node.resolution.field_ol_add_sponsor_names
+    - field.field.node.resolution.field_ol_add_sponsors
+    - field.field.node.resolution.field_ol_all_statuses
+    - field.field.node.resolution.field_ol_amendments
+    - field.field.node.resolution.field_ol_base_print_no
+    - field.field.node.resolution.field_ol_chamber
+    - field.field.node.resolution.field_ol_co_sponsor_names
+    - field.field.node.resolution.field_ol_co_sponsors
+    - field.field.node.resolution.field_ol_full_text
+    - field.field.node.resolution.field_ol_has_same_as
+    - field.field.node.resolution.field_ol_is_amended
+    - field.field.node.resolution.field_ol_law_section
+    - field.field.node.resolution.field_ol_memo
+    - field.field.node.resolution.field_ol_multi_sponsor_names
+    - field.field.node.resolution.field_ol_multi_sponsors
+    - field.field.node.resolution.field_ol_name
+    - field.field.node.resolution.field_ol_previous_versions
+    - field.field.node.resolution.field_ol_print_no
+    - field.field.node.resolution.field_ol_publish_date
+    - field.field.node.resolution.field_ol_same_as
+    - field.field.node.resolution.field_ol_session
+    - field.field.node.resolution.field_ol_sponsor
+    - field.field.node.resolution.field_ol_sponsor_name
+    - field.field.node.resolution.field_ol_summary
+    - node.type.resolution
+  module:
+    - datetime
+    - nys_list_formatter
+    - options
+    - user
+id: node.resolution.search_teaser
+targetEntityType: node
+bundle: resolution
+mode: search_teaser
+content:
+  field_featured_quote:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_image_main:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_issues:
+    type: list_formatter
+    label: hidden
+    settings:
+      type: ul
+      separator_custom: ''
+      separator_custom_tag: span
+      separator_custom_class: ''
+      comma_tag: div
+      class: list-formatter-list
+      list_formatter_contrib:
+        entity_reference_link: '1'
+      comma_and: 0
+      comma_full_stop: 0
+      comma_override: 0
+      term_plain: 0
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_ol_active_version:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 7
+    region: content
+  field_ol_add_sponsor_names:
+    type: basic_string
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 15
+    region: content
+  field_ol_add_sponsors:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 14
+    region: content
+  field_ol_all_statuses:
+    type: basic_string
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 16
+    region: content
+  field_ol_amendments:
+    type: basic_string
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 18
+    region: content
+  field_ol_base_print_no:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 6
+    region: content
+  field_ol_chamber:
+    type: list_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_ol_co_sponsor_names:
+    type: basic_string
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 23
+    region: content
+  field_ol_co_sponsors:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 22
+    region: content
+  field_ol_has_same_as:
+    type: boolean
+    label: hidden
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 25
+    region: content
+  field_ol_is_amended:
+    type: boolean
+    label: hidden
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 9
+    region: content
+  field_ol_law_section:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 20
+    region: content
+  field_ol_memo:
+    type: basic_string
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 21
+    region: content
+  field_ol_multi_sponsor_names:
+    type: basic_string
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 27
+    region: content
+  field_ol_multi_sponsors:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 24
+    region: content
+  field_ol_name:
+    type: basic_string
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 10
+    region: content
+  field_ol_previous_versions:
+    type: basic_string
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 19
+    region: content
+  field_ol_print_no:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 8
+    region: content
+  field_ol_publish_date:
+    type: datetime_default
+    label: hidden
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 11
+    region: content
+  field_ol_same_as:
+    type: basic_string
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 26
+    region: content
+  field_ol_session:
+    type: number_integer
+    label: hidden
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  field_ol_sponsor:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 12
+    region: content
+  field_ol_sponsor_name:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 13
+    region: content
+  field_ol_summary:
+    type: basic_string
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 17
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  field_comments: true
+  field_ol_full_text: true
+  langcode: true
+  private_message_link: true
+  search_api_excerpt: true

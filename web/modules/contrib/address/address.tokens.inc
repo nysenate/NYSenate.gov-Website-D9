@@ -82,7 +82,7 @@ function address_tokens($type, $tokens, array $data, array $options, BubbleableM
       $country_name = '';
       if ($country_code = $field_item->country_code) {
         $country_repository = \Drupal::service('address.country_repository');
-        $locale = isset($options['langcode']) ? $options['langcode'] : NULL;
+        $locale = $options['langcode'] ?? NULL;
         if ($country = $country_repository->get($country_code, $locale)) {
           $country_name = $country->getName();
         }

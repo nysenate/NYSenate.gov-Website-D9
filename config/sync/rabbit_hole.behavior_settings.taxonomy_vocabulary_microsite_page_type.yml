@@ -1,0 +1,14 @@
+uuid: 6349c900-965f-4cf9-9381-39fcd1234221
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.microsite_page_type
+id: taxonomy_vocabulary_microsite_page_type
+entity_type_id: taxonomy_vocabulary
+entity_id: microsite_page_type
+action: page_redirect
+allow_override: 1
+redirect: '<front>'
+redirect_code: 301
+redirect_fallback_action: access_denied

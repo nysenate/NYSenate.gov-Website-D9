@@ -205,10 +205,12 @@ class EntityManager {
       return $this;
     }
 
-    //@todo Not working with menu link content.
+    // @todo Not working with menu link content.
+    // phpcs:disable
 //    if ($bundle_name && !isset($this->entityHelper->getBundleInfo($entity_type_id)[$bundle_name])) {
 //      return $this;
 //    }
+    // phpcs:enable
 
     $bundle_name = $bundle_name ?? $entity_type_id;
 
@@ -294,10 +296,12 @@ class EntityManager {
     if (!isset($this->entityHelper->getSupportedEntityTypes()[$entity_type_id])) {
       return [];
     }
-    //@todo Not working with menu link content.
+    // @todo Not working with menu link content.
+    // phpcs:disable
 //    if ($bundle_name && !isset($this->entityHelper->getBundleInfo($entity_type_id)[$bundle_name])) {
 //      return [];
 //    }
+    // phpcs:enable
     $bundle_name = $bundle_name ?? $entity_type_id;
     $all_bundle_settings = [];
 

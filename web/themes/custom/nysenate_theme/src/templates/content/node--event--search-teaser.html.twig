@@ -1,0 +1,20 @@
+{{ attach_library('nysenate_theme/nysenate-search-results-listing') }}
+
+{% set meeting_date = content.date|date('F j, Y') %}
+
+{% include "@nysenate_theme/nysenate-search-results-listing/nysenate-search-results-listing.twig" with {
+  "article": {
+    "bill": true,
+    "is_full_width": true,
+    "is_dynamic_color": true,
+    "bill_title": {
+      "url": url,
+      "text": title
+    },
+    "topics": [
+      {
+        "name": "Meeting " ~ meeting_date
+      }
+    ]
+  }
+} only %}

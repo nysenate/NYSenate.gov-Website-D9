@@ -418,7 +418,7 @@ class SimplesitemapTest extends SimplesitemapTestBase {
     $this->assertSession()->responseNotContains('node/' . $this->node->id());
   }
 
-  // @todo testGenerateDurationSetting
+  // phpcs:ignore @todo testGenerateDurationSetting
 
   /**
    * Test setting the base URL.
@@ -582,8 +582,8 @@ class SimplesitemapTest extends SimplesitemapTestBase {
     $this->assertSession()->responseContains('user/' . $user_id);
   }
 
-  // @todo Test indexing menu.
-  // @todo Test deleting a bundle.
+  // phpcs:ignore @todo Test indexing menu.
+  // phpcs:ignore @todo Test deleting a bundle.
 
   /**
    * Test disabling sitemap support for an entity type.
@@ -634,7 +634,7 @@ class SimplesitemapTest extends SimplesitemapTestBase {
     $this->assertTrue($this->generator->entityManager()->entityTypeIsEnabled('node'));
   }
 
-  // @todo testSitemapLanguages.
+  // phpcs:ignore @todo testSitemapLanguages.
 
   /**
    * Test adding and removing sitemap variants.
@@ -677,7 +677,7 @@ class SimplesitemapTest extends SimplesitemapTestBase {
     $this->assertSession()->statusCodeEquals(404);
   }
 
-  // @todo Test removeSitemap().
+  // phpcs:ignore @todo Test removeSitemap().
 
   /**
    * Test cases for ::testGenerationResume.

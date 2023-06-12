@@ -7,7 +7,7 @@ use Drupal\field_validation\ConfigurableFieldValidationRuleBase;
 use Drupal\field_validation\FieldValidationRuleSetInterface;
 
 /**
- * PlainTextFieldValidationRule.
+ * Plain Text Field Validation Rule.
  *
  * @FieldValidationRule(
  *   id = "plain_text_field_validation_rule",
@@ -20,7 +20,6 @@ class PlainTextFieldValidationRule extends ConfigurableFieldValidationRuleBase {
   /**
    * {@inheritdoc}
    */
-   
   public function addFieldValidationRule(FieldValidationRuleSetInterface $field_validation_rule_set) {
 
     return TRUE;
@@ -46,7 +45,6 @@ class PlainTextFieldValidationRule extends ConfigurableFieldValidationRuleBase {
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
-
     return $form;
   }
 
@@ -57,15 +55,18 @@ class PlainTextFieldValidationRule extends ConfigurableFieldValidationRuleBase {
     parent::submitConfigurationForm($form, $form_state);
 
   }
-  
+
+  /**
+   * {@inheritdoc}
+   */
   public function validate($params) {
-    $value = isset($params['value']) ? $params['value'] : '';
-	$rule = isset($params['rule']) ? $params['rule'] : null;
-	$context = isset($params['context']) ? $params['context'] : null;
+    $value = $params['value'] ?? '';
+    $rule = $params['rule'] ?? NULL;
+    $context = $params['context'] ?? NULL;
 
     if ($value != '' && (strcmp($value, strip_tags($value)))) {
-		$context->addViolation($rule->getErrorMessage());
-    }	
-
+      $context->addViolation($rule->getErrorMessage());
+    }
   }
+
 }

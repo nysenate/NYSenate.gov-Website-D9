@@ -11,6 +11,7 @@ dependencies:
     - field.storage.node.field_comments
     - field.storage.node.field_committee
     - field.storage.taxonomy_term.field_committee_types
+    - field.storage.node.field_date_range
     - field.storage.node.field_image_caption
     - field.storage.node.field_issues
     - field.storage.node.field_ol_add_sponsor_names
@@ -33,7 +34,6 @@ dependencies:
     - field.storage.node.field_ol_sponsor_name
     - field.storage.node.field_ol_summary
     - field.storage.node.field_ol_transcript_type
-    - field.storage.node.field_publication_date
     - field.storage.node.field_senator_multiref
     - field.storage.node.field_short_title
     - field.storage.node.field_subhead
@@ -202,6 +202,14 @@ field_settings:
     dependencies:
       config:
         - field.storage.taxonomy_term.field_committee_types
+  field_date_range:
+    label: 'Meeting Date Range'
+    datasource_id: 'entity:node'
+    property_path: field_date_range
+    type: date
+    dependencies:
+      config:
+        - field.storage.node.field_date_range
   field_image_caption:
     label: 'Image Caption'
     datasource_id: 'entity:node'
@@ -378,14 +386,6 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_ol_transcript_type
-  field_publication_date:
-    label: Date
-    datasource_id: 'entity:node'
-    property_path: field_publication_date
-    type: date
-    dependencies:
-      config:
-        - field.storage.node.field_publication_date
   field_senator_multiref:
     label: Senator
     datasource_id: 'entity:node'
@@ -539,7 +539,7 @@ datasource_settings:
         - agenda
         - article
         - bill
-        - calendar
+        - event
         - honoree
         - in_the_news
         - landing

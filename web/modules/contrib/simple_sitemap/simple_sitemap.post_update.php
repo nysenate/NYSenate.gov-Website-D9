@@ -1,13 +1,18 @@
 <?php
 
+/**
+ * @file
+ * Post update functions for the Simple XML Sitemap module.
+ */
+
 use Symfony\Component\Yaml\Yaml;
 
 /**
  * Prevent config:import from deleting and recreating configs created through update hooks.
+ *
+ * @see https://www.drupal.org/project/simple_sitemap/issues/3236623
  */
 function simple_sitemap_post_update_8403(&$sandbox) {
-  // See https://www.drupal.org/project/simple_sitemap/issues/3236623.
-
   $config_factory = \Drupal::configFactory();
   $settings = Drupal::service('settings');
 

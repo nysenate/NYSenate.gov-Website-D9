@@ -1,109 +1,101 @@
-Redis backends
+Redis clients
 ====================
 
-This package provides two different Redis backends. If you want to use
-Redis as cache backend, you have to choose one of the two, but you cannot use
-both at the same time.
+This package provides support for three different Redis clients.
 
-PhpRedis
---------
+  * PhpRedis
+  * Predis
+  * Relay (See configuration recommendations for in-memory cache)
 
-This implementation uses the PhpRedis PHP extension. In order to use it, you
-will need to compile the extension yourself.
-
-Predis
-------
-
-Support for the Predis PHP library is experimental, but feel free to try it out.
-You can install the required library using composer. Check out the README.Predis.txt file
-for more information.
-
-Important notice
-----------------
-
-This module requires at least Redis 2.4, additionally, the lock backend
-requires Redis 2.6 to support millisecond timeouts and atomic lock operations.
-
-Getting started
-===============
-
-Quick setup
------------
-
-Here is a simple yet working easy way to setup the module.
-
-This method will allow Drupal to use Redis for all caches.
-
-    $settings['redis.connection']['interface'] = 'PhpRedis'; // Can be "Predis".
-    $settings['redis.connection']['host']      = '1.2.3.4';  // Your Redis instance hostname.
-    $settings['cache']['default'] = 'cache.backend.redis';
-
-To use some Predis goodness, including a redis primary/replica setup you can use a config like this.
-
-    $settings['redis.connection']['interface'] = 'Predis'; // Use predis library.
-    $settings['redis.connection']['replication'] = TRUE; // Turns on replication.
-    $settings['redis.connection']['replication.host'][1]['host'] = '1.2.3.4';  // Your Redis instance hostname.
-    $settings['redis.connection']['replication.host'][1]['port'] = '6379'; // Only required if using non-standard port.
-    $settings['redis.connection']['replication.host'][1]['role'] = 'primary'; // The redis instance role.
-    $settings['redis.connection']['replication.host'][2]['host'] = '1.2.3.5';
-    $settings['redis.connection']['replication.host'][2]['port'] = '6379';
-    $settings['redis.connection']['replication.host'][2]['role'] = 'replica';
-    $settings['redis.connection']['replication.host'][3]['host'] = '1.2.3.6';
-    $settings['redis.connection']['replication.host'][3]['port'] = '6379';
-    $settings['redis.connection']['replication.host'][3]['role'] = 'replica';
-    $settings['cache']['default'] = 'cache.backend.redis';
-
-Either include the default example.services.yml from the module, which will
-replace all supported backend services (that currently includes the cache tags
-checksum service and the lock backends, check the file for the current list)
-or copy the service definitions into a site specific services.yml.
-
-    $settings['container_yamls'][] = 'modules/contrib/redis/example.services.yml';
-
-Note that for any of this, the redis module must be enabled. See next chapters
-for more information.
-
-Is there any cache bins that should *never* go into Redis?
-----------------------------------------------------------
-
-TL;DR: No.
-
-Redis has been maturing a lot over time, and will apply different sensible
-settings for different bins; It's today very stable.
-
-Advanced configuration
-======================
-
-Choose the Redis client library to use
---------------------------------------
-
-Note: This is not yet supported, only the PhpRedis interface is available.
-
-Add into your settings.php file:
+By default, the first available client will be used in that order, to configure
+it explicitly, use
 
     $settings['redis.connection']['interface'] = 'PhpRedis';
 
-You can replace 'PhpRedis' with 'Predis', depending on the library you chose.
+Each supported client has its own README client specific installation and
+configuration options.
 
+Common cache configuration
+===================
 
-Tell Drupal to use the cache backend
-------------------------------------
+See settings.redis.example.php for a quick start and recommended configuration.
 
-Usual cache backend configuration, as follows, to add into your settings.php
-file like any other backend:
+Customize the default host and port:
 
-    # Use for all bins otherwise specified.
+    $settings['redis.connection']['host'] = '127.0.0.1;
+    $settings['redis.connection']['port'] = 6379;
+
+Use Redis for all caches:
+
     $settings['cache']['default'] = 'cache.backend.redis';
 
-    # Use this to only use it for specific cache bins.
+Configure usage for a specific bin
+
     $settings['cache']['bins']['render'] = 'cache.backend.redis';
 
-Tell Drupal to use the lock backend
------------------------------------
+The example.services.yml from the module will replace the cache tags checksum
+service, flood and the lock backends (check the file for the current list).
+Either include it directly or copy the desired service definitions into a site
+specific services.yml file for more control.
+
+    $settings['container_yamls'][] = 'modules/contrib/redis/example.services.yml';
+
+It is recommended to enable the redis module, to use the report feature, but
+the redis.services.yml can also be included explicitly.
+
+    $settings['container_yamls'][] = 'modules/contrib/redis/redis.services.yml';
+
+Compressing the data stored in redis can massively reduce the nedeed storage.
+
+To enable, set the minimal length after which the cached data should be
+compressed:
+
+    $settings['redis_compress_length'] = 100;
+
+By default, compression level 1 is used, which provides considerable storage
+optimization with minimal CPU overhead, to change:
+
+    $settings['redis_compress_level'] = 6;
+
+Redis can also be used for the container cache bin, the bootstrap container
+needs to be configured for that.
+
+    $class_loader->addPsr4('Drupal\\redis\\', 'modules/contrib/redis/src');
+
+    $settings['bootstrap_container_definition'] = [
+      'parameters' => [],
+      'services' => [
+        'redis.factory' => [
+          'class' => 'Drupal\redis\ClientFactory',
+        ],
+        'cache.backend.redis' => [
+          'class' => 'Drupal\redis\Cache\CacheBackendFactory',
+          'arguments' => ['@redis.factory', '@cache_tags_provider.container', '@serialization.phpserialize'],
+        ],
+        'cache.container' => [
+          'class' => '\Drupal\redis\Cache\PhpRedis',
+          'factory' => ['@cache.backend.redis', 'get'],
+          'arguments' => ['container'],
+        ],
+        'cache_tags_provider.container' => [
+          'class' => 'Drupal\redis\Cache\RedisCacheTagsChecksum',
+          'arguments' => ['@redis.factory'],
+        ],
+        'serialization.phpserialize' => [
+          'class' => 'Drupal\Component\Serialization\PhpSerialize',
+        ],
+      ],
+    ];
+
+Additional configuration and features.
+===============
+
+Lock Backend
+------------
 
 See the provided example.services.yml file on how to override the lock services.
 
-Tell Drupal to use the queue backend
+Queue Backend
 ------------------------------------
 
 This module provides reliable and non-reliable queue implementations. Depending
@@ -119,27 +111,11 @@ add this to your settings.php file:
     # Or if you want to use reliable queue implementation.
     $settings['queue_default'] = 'queue.redis_reliable';
 
-
     # Use this to only use Redis for a specific queue (aggregator_feeds in this case).
     $settings['queue_service_aggregator_feeds'] = 'queue.redis';
 
     # Or if you want to use reliable queue implementation.
     $settings['queue_service_aggregator_feeds'] = 'queue.redis_reliable';
-
-
-Common settings
-===============
-
-Connect to a remote host
-------------------------
-
-If your Redis instance is remote, you can use this syntax:
-
-    $settings['redis.connection']['interface'] = 'PhpRedis'; // Can be "Predis".
-    $settings['redis.connection']['host']      = '1.2.3.4';  // Your Redis instance hostname.
-    $settings['redis.connection']['port']      = '6379';  // Redis port
-
-Port is optional, default is 6379 (default Redis port).
 
 Use persistent connections
 --------------------------
@@ -147,20 +123,6 @@ Use persistent connections
 This mode needs the following setting:
 
     $settings['redis.connection']['persistent'] = TRUE;
-
-Compression
--------------------------
-Compressing the data stored in redis can massively reduce the nedeed storage.
-
-To enable, set the minimal length after which the cached data should be
-compressed:
-
-    $settings['redis_compress_length'] = 100;
-
-By default, compression level 1 is used, which provides considerable storage
-optimization with minimal CPU overhead, to change:
-
-    $settings['redis_compress_level'] = 6;
 
 Using a specific database
 -------------------------
@@ -341,19 +303,16 @@ CACHE_PERMANENT ONLY; All other use cases (CACHE_TEMPORARY or user set TTL
 on single cache entries) will continue to behave as documented in Drupal core
 cache backend documentation.
 
-Lock backends
--------------
-
-@todo: Update for Drupal 8
-
-Both implementations provides a Redis lock backend. Redis lock backend proved to
-be faster than the default SQL based one when using both servers on the same box.
-
-Both backends, thanks to the Redis WATCH, MULTI and EXEC commands provides a
-real race condition free mutexes if you use Redis >= 2.1.0.
-
 Testing
 =======
 
-I did not find any hint about making tests being configurable, so per default
-the tested Redis server must always be on localhost with default configuration.
+The tests respect the following two environment variables to customize the redis
+host and used interface.
+
+  * REDIS_HOST
+  * REDIS_INTERFACE
+
+These can for example be configured through phpunit.xml
+
+    <env name="REDIS_HOST" value="redis"/>
+    <env name="REDIS_INTERFACE" value="Relay"/>

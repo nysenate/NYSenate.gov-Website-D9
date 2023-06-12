@@ -90,7 +90,7 @@ class UniqueQueueTest extends KernelTestBase {
    *  is released so that all md5 references are removed.
    */
   public function testUpdateHook8001() {
-    module_load_install('queue_unique');
+    \Drupal::moduleHandler()->loadInclude('queue_unique', 'install');
     /** @var \Drupal\Core\Database\Schema $database_schema */
     $database_schema = $this->container->get('database')->schema();
     // The table should not exist yet.
@@ -145,17 +145,17 @@ class UniqueQueueTest extends KernelTestBase {
   }
 
   /**
-   * Adds a queue item and store it directly to the queue.
+   * Adds a queue item and stores it directly to the queue.
    *
    * This code mimics the code that was in UniqueDatabaseQueue::doCreateItem()
    * before the update to sha2.
    *
    * @param string $name
    *   The queue name.
-   * @param $data
+   * @param mixed $data
    *   Arbitrary data to be associated with the new task in the queue.
    *
-   * @return
+   * @return string|false
    *   A unique ID if the item was successfully created. False otherwise.
    */
   protected function createItemMd5($name, $data) {

@@ -1,0 +1,99 @@
+uuid: adc2de21-2cf6-470b-b5c5-f577b2f631df
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.search_teaser
+    - field.field.node.event.body
+    - field.field.node.event.field_accessible_sitewide
+    - field.field.node.event.field_attachment
+    - field.field.node.event.field_committee
+    - field.field.node.event.field_committee_featured
+    - field.field.node.event.field_date_range
+    - field.field.node.event.field_event_online_link
+    - field.field.node.event.field_event_place
+    - field.field.node.event.field_event_type
+    - field.field.node.event.field_feature_image
+    - field.field.node.event.field_featured
+    - field.field.node.event.field_image_main
+    - field.field.node.event.field_issues
+    - field.field.node.event.field_location
+    - field.field.node.event.field_majority_issue_tag
+    - field.field.node.event.field_meeting_location
+    - field.field.node.event.field_senator_multiref
+    - field.field.node.event.field_social_image
+    - field.field.node.event.field_social_teaser
+    - field.field.node.event.field_teleconference_id_number
+    - field.field.node.event.field_teleconference_number
+    - field.field.node.event.field_ustream
+    - field.field.node.event.field_video_status
+    - field.field.node.event.field_yt
+    - node.type.event
+  module:
+    - datetime_range
+    - options
+    - text
+    - user
+id: node.event.search_teaser
+targetEntityType: node
+bundle: event
+mode: search_teaser
+content:
+  body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_date_range:
+    type: daterange_default
+    label: hidden
+    settings:
+      timezone_override: ''
+      format_type: html_datetime
+      separator: '-'
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_event_type:
+    type: list_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_image_main:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: true
+    third_party_settings: {  }
+    weight: 2
+    region: content
+hidden:
+  field_accessible_sitewide: true
+  field_attachment: true
+  field_committee: true
+  field_committee_featured: true
+  field_event_online_link: true
+  field_event_place: true
+  field_feature_image: true
+  field_featured: true
+  field_issues: true
+  field_location: true
+  field_majority_issue_tag: true
+  field_meeting_location: true
+  field_senator_multiref: true
+  field_social_image: true
+  field_social_teaser: true
+  field_teleconference_id_number: true
+  field_teleconference_number: true
+  field_ustream: true
+  field_video_status: true
+  field_yt: true
+  langcode: true
+  links: true
+  private_message_link: true
+  search_api_excerpt: true

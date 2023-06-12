@@ -387,10 +387,10 @@ class ConfigCommands extends DrushCommands implements StdinAwareInterface, SiteA
      *   1. User-provided $directory.
      *   2. Default sync directory
      *
-     * @param string $directory
-     *   A configuration directory.
+     * @param mixed $directory
+     *   A configuration directory. Note; can be boolean.
      */
-    public static function getDirectory($directory = null): string
+    public static function getDirectory(mixed $directory = null): string
     {
         $return = null;
         // If the user provided a directory, use it.
@@ -597,8 +597,11 @@ class ConfigCommands extends DrushCommands implements StdinAwareInterface, SiteA
         self::copyConfig($source_storage, $temp_source_storage);
 
         $prefix = ['diff'];
-        if (self::programExists('git') && $output->isDecorated()) {
-            $prefix = ['git', 'diff', '--color=always'];
+        if (self::programExists('git')) {
+            $prefix = ['git', 'diff'];
+            if ($output->isDecorated()) {
+                $prefix[] = '--color=always';
+            }
         }
         $args = array_merge($prefix, ['-u', $temp_destination_dir, $temp_source_dir]);
         $process = Drush::process($args);

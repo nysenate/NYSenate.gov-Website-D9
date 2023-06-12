@@ -20,7 +20,6 @@ class IpFieldValidationRule extends ConfigurableFieldValidationRuleBase {
   /**
    * {@inheritdoc}
    */
-   
   public function addFieldValidationRule(FieldValidationRuleSetInterface $field_validation_rule_set) {
 
     return TRUE;
@@ -81,13 +80,13 @@ class IpFieldValidationRule extends ConfigurableFieldValidationRuleBase {
   }
   
   public function validate($params) {
-    $value = isset($params['value']) ? $params['value'] : '';
-	$rule = isset($params['rule']) ? $params['rule'] : null;
-	$context = isset($params['context']) ? $params['context'] : null;
-	$settings = array();
-	if(!empty($rule) && !empty($rule->configuration)){
-	  $settings = $rule->configuration;
-	}
+    $value = $params['value'] ?? '';
+	$rule = $params['rule'] ?? null;
+	$context = $params['context'] ?? null;
+	$settings = [];
+    if(!empty($rule) && !empty($rule->configuration)){
+      $settings = $rule->configuration;
+    }
     if ($value !== '' && !is_null($value)) {
       $version = isset($settings['version']) ? $settings['version'] : '';
       switch ($version) {
@@ -143,7 +142,6 @@ class IpFieldValidationRule extends ConfigurableFieldValidationRuleBase {
       if (!filter_var($value, FILTER_VALIDATE_IP, $flag)) {
         $context->addViolation($rule->getErrorMessage());
       }
-    }	
-	
+    }
   }
 }

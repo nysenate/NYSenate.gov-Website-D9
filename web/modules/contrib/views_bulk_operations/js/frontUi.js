@@ -128,18 +128,24 @@
         var $selectionInfo = this.$selectionInfo;
         var target_uri = drupalSettings.path.baseUrl + drupalSettings.path.pathPrefix + 'views-bulk-operations/ajax/' + this.view_id + '/' + this.display_id;
 
-        $.ajax(target_uri, {
-          method: 'POST',
-          data: {
+        var ajaxDrupal = Drupal.ajax({
+          url: target_uri,
+          progress: false,
+          submit: {
             list: list,
             op: op
-          },
-          success: function (data) {
-            $selectionInfo.html(data.selection_info);
-            $summary.text(Drupal.formatPlural(data.count, 'Selected 1 item', 'Selected @count items'));
-            selectionObject.toggleButtonsState();
           }
         });
+
+        ajaxDrupal.original_success = ajaxDrupal.success;
+        ajaxDrupal.success = function (data, status) {
+          $selectionInfo.html(data.selection_info);
+          $summary.text(Drupal.formatPlural(data.count, 'Selected 1 item', 'Selected @count items'));
+          selectionObject.toggleButtonsState();
+          this.original_success(data, status);
+        };
+        ajaxDrupal.execute();
+
       }
     }
   };

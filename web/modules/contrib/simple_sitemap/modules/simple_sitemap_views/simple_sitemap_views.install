@@ -5,6 +5,8 @@
  * Install and uninstall hooks for the simple_sitemap_views module.
  */
 
+use Drupal\Core\Url;
+
 /**
  * Implements hook_install().
  */
@@ -13,7 +15,9 @@ function simple_sitemap_views_install() {
   /** @var \Drupal\simple_sitemap_views\SimpleSitemapViews $simple_sitemap_views */
   $simple_sitemap_views = \Drupal::service('simple_sitemap.views');
   $simple_sitemap_views->enable();
-  \Drupal::messenger()->addWarning(t('In order to use the Simple XML Sitemap Views module, the Views URL generator must be <a href="@url">added</a> to a sitemap type.', ['@url' => $GLOBALS['base_url'] . '/admin/config/search/simplesitemap/types']));
+  \Drupal::messenger()->addWarning(t('In order to use the Simple XML Sitemap Views module, the Views URL generator must be <a href="@url">added</a> to a sitemap type.',
+      ['@url' => Url::fromRoute('entity.simple_sitemap_type.collection')->toString()])
+  );
 }
 
 /**

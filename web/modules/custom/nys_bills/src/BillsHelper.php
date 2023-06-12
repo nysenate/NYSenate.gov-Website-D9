@@ -2,6 +2,7 @@
 
 namespace Drupal\nys_bills;
 
+use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Logger\LoggerChannelTrait;
 use Drupal\flag\FlagServiceInterface;
@@ -644,7 +645,9 @@ class BillsHelper {
     $prev_vers_result = $query->execute();
 
     // Cache data for later use.
-    $cache_ttl = \Drupal::configFactory()->get('nys_config.settings')->get('nys_access_permissions_prev_query_ttl');
+    $cache_ttl = \Drupal::configFactory()
+      ->get('nys_config.settings')
+      ->get('nys_access_permissions_prev_query_ttl');
     if (empty($cache_ttl)) {
       $cache_ttl = '+24 hours';
     }
@@ -715,7 +718,8 @@ class BillsHelper {
    *   A bill node, the subscription target.
    * @param mixed $user
    *   The user creating the subscription.  Can be an AccountInterface, an
-   *   integer representing a user ID, or NULL for the current user.
+   *   integer representing a user ID, or NULL for the current user.  For
+   *   unauthenticated users, this should be an email address.
    * @param \Drupal\Core\Entity\EntityInterface|null $source
    *   An optional source entity.  If NULL, the bill is used.
    *
@@ -725,30 +729,32 @@ class BillsHelper {
    *
    * @see UsersHelper::resolveUser()
    *
-   * @todo This should not be here.  It should go in nys_bill_notifications.
+   * @todo This should not be here.  Maybe nys_bill_notifications?
    */
   public function subscribeToBill(NodeInterface $bill, mixed $user = NULL, ?EntityInterface $source = NULL): ?SubscriptionInterface {
-    try {
-      $storage = $this->entityTypeManager->getStorage('subscription');
-      $user = UsersHelper::resolveUser($user);
+
+    // Resolve the $user down to a User object, either existing or new.
+    if (is_string($user)) {
+      $resolved_user = UsersHelper::resolveUser(0);
+      $resolved_user->setEmail($user);
     }
-    catch (\Throwable $e) {
-      $this->log->error('Failed to prepare subscription generation', ['@msg' => $e->getMessage()]);
-      return NULL;
+    else {
+      $resolved_user = UsersHelper::resolveUser($user);
     }
 
-    // Find an existing, matching subscription, or create a new one.
-    $props = [
-      'sub_type' => 'bill_notifications',
-      'uid' => $user->id(),
-      'subscribe_to_type' => 'taxonomy_term',
-      'subscribe_to_id' => $bill->field_bill_multi_session_root->target_id,
-    ];
-    $existing = $storage->loadByProperties($props);
-    /** @var \Drupal\nys_subscriptions\SubscriptionInterface $subscription */
-    $subscription = count($existing)
-      ? current($existing)
-      : $storage->create($props + ['source' => $source ?? $bill]);
+    // Get the matching subscription, or create a new one.
+    $subscription = $this->findSubscription($bill, $user, TRUE);
+
+    // Set the source for new subscriptions.
+    if ($subscription->isNew()) {
+      $subscription->setSource($source ?? $bill);
+    }
+
+    // If the user is authenticated, auto-confirm.
+    if ($resolved_user->id()) {
+      $subscription->confirm();
+    }
+
     try {
       $subscription->save();
     }
@@ -757,53 +763,73 @@ class BillsHelper {
       return NULL;
     }
 
+    // If the user is unauthenticated, send the confirmation email.
+    if (!$resolved_user->id()) {
+      $subscription->sendConfirmationEmail();
+    }
+
     // Create a flagging entry to match the subscription.
     // This will not be necessary once subscriptions takes over.
     $flag = $this->flagService->getFlagById('follow_this_bill');
-    if (empty($this->flagService->getFlagging($flag, $bill, $user))) {
-      $this->flagService->flag($flag, $bill, $user);
+    $flag_user = $resolved_user->id() ? $resolved_user : NULL;
+    if (empty($this->flagService->getFlagging($flag, $bill, $flag_user))) {
+      $this->flagService->flag($flag, $bill, $flag_user);
     }
 
     return $subscription;
   }
 
   /**
-   * Creates a subscription to a bill.
+   * Finds, or optionally creates, a subscription for a bill and user/email.
    *
-   * Until subscriptions fully replaces flagging, the flagging entries must be
-   * made at the same time as a subscription.
+   * @param \Drupal\Core\Entity\ContentEntityBase $bill
+   *   A bill node.
+   * @param mixed|null $user_or_email
+   *   As needed by UsersHelper::resolveUser(), or an email address (string).
+   * @param bool $create
+   *   If true and an existing subscription is not found, one will be created.
    *
-   * @param \Drupal\node\NodeInterface $bill
-   *   A bill node, the subscription target.
-   * @param mixed $user
-   *   The user creating the subscription.  Can be an AccountInterface, an
-   *   integer representing a user ID, or NULL for the current user.
+   * @return \Drupal\nys_subscriptions\SubscriptionInterface|null
+   *   Returns NULL on error, or if a subscription is not found (and $create
+   *   is false).
    *
-   * @return bool
-   *   If a matching subscription exists, return TRUE, otherwise, FALSE.
+   * @see \Drupal\nys_users\UsersHelper::resolveUser()
    *
-   * @see UsersHelper::resolveUser()
+   * @todo This should not be here.  It should go in nys_bill_notifications.  If
+   *   it is generalized, nys_subscriptions.
    */
-  public function isSubscribedToBill(NodeInterface $bill, mixed $user = NULL): bool {
+  public function findSubscription(ContentEntityBase $bill, mixed $user_or_email = NULL, bool $create = FALSE): ?SubscriptionInterface {
+
     try {
       $storage = $this->entityTypeManager->getStorage('subscription');
-      $user = UsersHelper::resolveUser($user);
     }
     catch (\Throwable $e) {
-      $this->log->error('Failed to prepare subscription generation', ['@msg' => $e->getMessage()]);
-      return FALSE;
+      $this->log->error('Failed to prepare for finding a subscription', ['@msg' => $e->getMessage()]);
+      return NULL;
     }
 
-    // Find an existing, matching subscription, or create a new one.
     $props = [
       'sub_type' => 'bill_notifications',
-      'uid' => $user->id(),
       'subscribe_to_type' => 'taxonomy_term',
       'subscribe_to_id' => $bill->field_bill_multi_session_root->target_id,
     ];
-    $existing = $storage->loadByProperties($props);
+    if (is_string($user_or_email)) {
+      $props['email'] = $user_or_email;
+    }
+    else {
+      $props['uid'] = UsersHelper::resolveUser($user_or_email)->id();
+      if (!$props['uid']) {
+        $props['email'] = '';
+      }
+    }
 
-    return count($existing) ? TRUE : FALSE;
+    /** @var \Drupal\nys_subscriptions\SubscriptionInterface|null $ret */
+    $ret = current($storage->loadByProperties($props)) ?: NULL;
+    if ($create && !$ret) {
+      $ret = $storage->create($props + ['source' => $bill]);
+    }
+
+    return $ret;
   }
 
 }

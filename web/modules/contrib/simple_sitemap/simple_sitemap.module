@@ -24,7 +24,9 @@ function simple_sitemap_help($route_name, RouteMatchInterface $route_match) {
       return '<p>' . t('Simple XML Sitemap settings will be added only to entity forms of entity types enabled here. Settings for specific entity bundles (e.g. <em>page</em>) can be adjusted here or on the bundle pages.') . '</p>';
 
     case 'simple_sitemap.custom':
-      return '<p>' . t('Add custom internal drupal paths to the XML sitemap.') . '</p>';
+      return '<p>' . t('Add custom internal drupal paths to specific sitemaps.') . '</p>'
+        . '<p>' . t("Specify drupal internal (relative) paths, one per line. Do not forget to prepend the paths with a '/'.<br>Optionally link priority <em>(0.0 - 1.0)</em> can be added by appending it after a space.<br> Optionally link change frequency <em>(always / hourly / daily / weekly / monthly / yearly / never)</em> can be added by appending it after a space.") . '</p>'
+        . '<p>' . t('<strong>Examples:</strong><br><em>/ 1.0 daily</em> -> home page with the highest priority and daily change frequency<br><em>/contact</em> -> contact page with the default priority and no change frequency information') . '</p>';
 
     default:
       return NULL;

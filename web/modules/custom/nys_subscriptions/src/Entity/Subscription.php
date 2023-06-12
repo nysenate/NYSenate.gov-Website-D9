@@ -8,7 +8,9 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Logger\LoggerChannelTrait;
+use Drupal\Core\Mail\MailManagerInterface;
 use Drupal\nys_subscriptions\Event\GetSubscribersEvent;
 use Drupal\nys_subscriptions\Events;
 use Drupal\nys_subscriptions\Exception\InvalidSubscriptionEntity;
@@ -47,7 +49,10 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  *   links = {
  *     "canonical" = "/subscriptions/{subscription}",
  *     "delete-form" = "/admin/content/subscriptions/{subscription}/delete",
- *     "collection" = "/admin/content/subscriptions"
+ *     "collection" = "/admin/content/subscriptions",
+ *     "confirm" = "/subscriptions/subscribe/{uuid}",
+ *     "unsubscribe" = "/subscriptions/unsubscribe/{uuid}",
+ *     "global-unsubscribe" = "/subscriptions/global-unsubscribe/{user_uuid}"
  *   },
  *   field_ui_base_route = "entity.subscription.settings",
  *   constraints = {
@@ -96,6 +101,20 @@ class Subscription extends ContentEntityBase implements SubscriptionInterface {
   protected EventDispatcherInterface $dispatcher;
 
   /**
+   * Drupal's Mail Manager service.
+   *
+   * @var \Drupal\Core\Mail\MailManagerInterface
+   */
+  protected MailManagerInterface $mailer;
+
+  /**
+   * Drupal's Language Manager service.
+   *
+   * @var \Drupal\Core\Language\LanguageManagerInterface
+   */
+  protected LanguageManagerInterface $language;
+
+  /**
    * {@inheritDoc}
    *
    * When creating a subscription:
@@ -117,6 +136,8 @@ class Subscription extends ContentEntityBase implements SubscriptionInterface {
     parent::__construct($values, $entity_type, $bundle, $translations);
     $this->entityTypeManager = \Drupal::entityTypeManager();
     $this->dispatcher = \Drupal::service('event_dispatcher');
+    $this->mailer = \Drupal::service('plugin.manager.mail');
+    $this->language = \Drupal::service('language_manager');
   }
 
   /**
@@ -474,6 +495,34 @@ class Subscription extends ContentEntityBase implements SubscriptionInterface {
    */
   public function isCanceled(): bool {
     return (bool) $this->getCanceled();
+  }
+
+  /**
+   * Sends a confirmation email.
+   *
+   * Note this does not check for confirmation before sending.
+   *
+   * @return array
+   *   The message array.
+   */
+  public function sendConfirmationEmail(): array {
+    return $this->mailer->mail(
+      'nys_subscriptions_confirmation',
+      'confirmation',
+      '',
+      $this->language->getCurrentLanguage()->getId(),
+      ['subscription' => $this]
+    );
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  protected function urlRouteParameters($rel): array {
+    $ret = parent::urlRouteParameters($rel);
+    $ret['uuid'] = $this->uuid();
+    $ret['user_uuid'] = $this->getSubscriber()->uuid();
+    return $ret;
   }
 
   /**

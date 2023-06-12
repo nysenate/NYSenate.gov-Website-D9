@@ -46,9 +46,11 @@
         {% endif %}
         {% if article.bill_description %}
           {% if article.bill_description.url %}
+          <p class="c-bill-descript">
             <a class="c-bill-descript" href={{ article.bill_description.url }}>
               {{ article.bill_description.text }}
             </a>
+          </p>
           {% else %}
             <p class="c-bill-descript">
               {{ article.bill_description.text }}

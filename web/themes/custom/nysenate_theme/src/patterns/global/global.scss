@@ -370,6 +370,35 @@ a {
   text-decoration: none;
 }
 
+blockquote {
+
+  p {
+    border: none;
+    margin: 0;
+    position: relative;
+    color: $grey08;
+    font-family: $font-serif-semibold;
+    padding: 50px 0 40px;
+    font-size: 18px;
+    line-height: 1.3em;
+
+    &:before {
+      position: absolute;
+      top: 0;
+      left: -0.2em;
+      font-size: 2.7em;
+      content: "\71";
+      font-family: $senate-icons;
+      color: $gen_blue_lgt;
+    }
+
+    @include breakpoint($bp-md) {
+      padding: 60px 30px 40px;
+      font-size: 28px;
+    }
+  }
+}
+
 p {
   @include font-stack-primary;
   @include font(16 24);

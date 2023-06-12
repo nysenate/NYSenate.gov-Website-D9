@@ -718,7 +718,8 @@ class BillsHelper {
    *   A bill node, the subscription target.
    * @param mixed $user
    *   The user creating the subscription.  Can be an AccountInterface, an
-   *   integer representing a user ID, or NULL for the current user.
+   *   integer representing a user ID, or NULL for the current user.  For
+   *   unauthenticated users, this should be an email address.
    * @param \Drupal\Core\Entity\EntityInterface|null $source
    *   An optional source entity.  If NULL, the bill is used.
    *
@@ -817,6 +818,9 @@ class BillsHelper {
     }
     else {
       $props['uid'] = UsersHelper::resolveUser($user_or_email)->id();
+      if (!$props['uid']) {
+        $props['email'] = '';
+      }
     }
 
     /** @var \Drupal\nys_subscriptions\SubscriptionInterface|null $ret */

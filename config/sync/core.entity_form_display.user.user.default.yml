@@ -22,11 +22,12 @@ dependencies:
     - field.field.user.user.field_user_phone_no
     - field.field.user.user.field_user_receive_emails
     - field.field.user.user.field_voting_auto_subscribe
+    - image.style.thumbnail
   module:
     - address
     - datetime
-    - media_library
     - path
+    - svg_image
     - telephone
     - user
 id: user.user.default
@@ -115,11 +116,12 @@ content:
       display_label: true
     third_party_settings: {  }
   field_profile_picture:
-    type: media_library_widget
-    weight: 4
+    type: image_image
+    weight: 25
     region: content
     settings:
-      media_types: {  }
+      progress_indicator: throbber
+      preview_image_style: thumbnail
     third_party_settings: {  }
   field_senator_inbox_access:
     type: options_select

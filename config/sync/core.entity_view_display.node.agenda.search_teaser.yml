@@ -1,0 +1,82 @@
+uuid: e34b5733-3c22-4a63-863f-db3e703e27d8
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.search_teaser
+    - field.field.node.agenda.field_from_openleg
+    - field.field.node.agenda.field_ol_agenda_addendum
+    - field.field.node.agenda.field_ol_agenda_bills
+    - field.field.node.agenda.field_ol_agenda_location
+    - field.field.node.agenda.field_ol_agenda_notes
+    - field.field.node.agenda.field_ol_committee
+    - field.field.node.agenda.field_ol_committee_name
+    - field.field.node.agenda.field_ol_meeting_date
+    - field.field.node.agenda.field_ol_week
+    - field.field.node.agenda.field_ol_year
+    - node.type.agenda
+  module:
+    - datetime
+    - user
+id: node.agenda.search_teaser
+targetEntityType: node
+bundle: agenda
+mode: search_teaser
+content:
+  field_ol_committee:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: false
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_ol_committee_name:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  field_ol_meeting_date:
+    type: datetime_default
+    label: hidden
+    settings:
+      timezone_override: ''
+      format_type: html_date
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_ol_week:
+    type: number_integer
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_ol_year:
+    type: number_integer
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  field_from_openleg: true
+  field_ol_agenda_addendum: true
+  field_ol_agenda_bills: true
+  field_ol_agenda_location: true
+  field_ol_agenda_notes: true
+  langcode: true
+  private_message_link: true
+  search_api_excerpt: true

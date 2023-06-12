@@ -1,0 +1,40 @@
+{#
+/**
+ * @file
+ * Theme override for the "Search Teaser" view mode.
+ */
+#}
+{{ attach_library('nysenate_theme/nysenate-search-results-listing') }}
+{{ attach_library('nysenate_theme/bill-item') }}
+
+{# Reformats session year #}
+{% set session_year_to = content.field_ol_session[0]['#markup'] - 1999 %}
+{% set session_date = content.field_ol_session[0]['#markup'] ~ '-' ~ session_year_to ~ ' Session' %}
+
+{% include "@nysenate_theme/nysenate-search-results-listing/nysenate-search-results-listing.twig" with {
+  "article": {
+    "bill": true,
+    "bill_title": {
+      "url": url,
+      "prefix": "Bill",
+      "text": content.field_ol_print_no.0
+    },
+    "is_dynamic_color": true,
+    "topics": [
+      {
+        "name": session_date,
+      }
+    ],
+    "bill_description": {
+      "text": content.field_ol_summary.0,
+      "url": url
+    },
+    "sponsor": {
+      "text": content.field_ol_sponsor_name[0]
+    },
+    "date": node.getCreatedTime|format_date('publish_date'),
+    "issue_type": {
+      "text": content.field_ol_last_status.0
+    }
+  }
+} only %}

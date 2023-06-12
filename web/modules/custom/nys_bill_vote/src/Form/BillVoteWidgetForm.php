@@ -213,9 +213,13 @@ class BillVoteWidgetForm extends FormBase {
       ],
     ];
 
-    $this->addSubscriptionForm($form, $form_state);
+    $this->addSubscriptionForm($form, $form_state, $node_id);
 
     $form['#cache'] = ['max-age' => 0];
+
+    if ($parameter['is_embed']) {
+      $form['#attributes']['class'][] = 'nys-bill-vote-form-embedded';
+    }
 
     return $form;
   }
@@ -223,13 +227,13 @@ class BillVoteWidgetForm extends FormBase {
   /**
    * Insert Subsciption form fields.
    */
-  public function addSubscriptionForm(&$form, FormStateInterface $form_state) {
+  public function addSubscriptionForm(&$form, FormStateInterface $form_state, $node_id = '') {
     $settings = $form_state->getBuildInfo();
     $nid = $settings['entity_id'];
 
     // If we have a node id, load that node.  Otherwise, use the current.
-    $ref_node = $this->routeMatch->getParameter('node')
-      ?: $this->entityTypeManager->getStorage('node')->load($nid);
+    $ref_node = !empty($node_id) ? $this->entityTypeManager->getStorage('node')->load($node_id)
+      : $this->routeMatch->getParameter('node');
 
     // If the nid matches the current node's id, then this is not an embed.
     $is_embed = FALSE;
@@ -260,11 +264,11 @@ class BillVoteWidgetForm extends FormBase {
             'value' => 'subscribe',
             'type' => 'submit',
           ],
-          '#id' => 'edit-nys-bill-subscribe-' . $nid,
+          '#id' => 'edit-nys-bill-subscribe-' . $node_id,
           '#value' => 'Subscribe',
           '#ajax' => [
             'callback' => [$this, 'subscribeAjaxSubmit'],
-            'wrapper' => 'edit-nys-bill-subscribe-' . $nid,
+            'wrapper' => 'edit-nys-bill-subscribe-' . $node_id,
           ],
           '#weight' => $is_embed ? 2 : 5,
         ];
@@ -275,7 +279,7 @@ class BillVoteWidgetForm extends FormBase {
         'nys_bill_subscribe' => $nys_bill_subscribe,
         'nid' => [
           '#type' => 'hidden',
-          '#value' => $nid,
+          '#value' => $node_id,
         ],
         'tid' => [
           '#type' => 'hidden',
@@ -297,7 +301,7 @@ class BillVoteWidgetForm extends FormBase {
         $newform = [
           '#type' => 'container',
           '#attributes' => ['class' => ['nys-bill-subscribe']],
-          '#id' => 'edit-nys-bill-subscribe-container-' . $nid,
+          '#id' => 'edit-nys-bill-subscribe-container-' . $node_id,
           'nys_bill_subscribe_title' => [
             '#markup' => '<div class="nys-bill-subscribe-beta"><a href="/citizen-guide/bill-alerts" style="color: #ffffff; font-weight: bold">BETA ⓘ</a></div><div class="nys-bill-subscribe-title">' . 'Get Status Alerts for ' . $ref_node->label() . '</div>',
           ],
@@ -306,12 +310,12 @@ class BillVoteWidgetForm extends FormBase {
           $newform['email_form'] = [
             '#type' => 'container',
             '#attributes' => ['class' => ['subscribe_email_container']],
-            'email_address_entry' => [
+            'email' => [
               '#type' => 'textfield',
               '#title' => t('Email Address'),
               '#name' => 'email',
               '#size' => 20,
-              '#id' => 'edit-email-address-entry-' . $nid,
+              '#id' => 'edit-email-address-entry-' . $node_id,
             ],
           ];
         }
@@ -379,7 +383,7 @@ class BillVoteWidgetForm extends FormBase {
     $nid = (int) ($values['nid'] ?? 0);
 
     // If the user is logged in, revert to that email address.
-    if (!empty($user->mail)) {
+    if ($this->currentUser->isAuthenticated()) {
       /** @var \Drupal\user\UserInterface $user */
       $email_address = $user->getEmail();
     }

@@ -6007,8 +6007,12 @@ function nysenate_theme_preprocess_node__landing__explore_issues(&$variables) {
           ->getViewBuilder('block_content')
           ->view($item['#block_content']);
       }
+      elseif ($item['#block_content']->field_title->value == 'Issues Anon') {
+        $variables['explore_issues_alpha_anon'] = \Drupal::entityTypeManager()
+          ->getViewBuilder('block_content')
+          ->view($item['#block_content']);
+      }
     }
-
   }
 
   // Fetch the Exposed Form Search block.

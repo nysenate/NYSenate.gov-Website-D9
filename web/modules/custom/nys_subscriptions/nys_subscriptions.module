@@ -51,6 +51,8 @@ function template_preprocess_subscription(array &$variables): void {
 function nys_subscriptions_confirmation_mail(string $mail_key, array &$message, array $params): void {
 
   // Have a subscription entity, or cancel and leave.
+  // This is the stupidest goddamn thing the sniffer has done so far.
+  $sub = NULL;
   /** @var \Drupal\nys_subscriptions\Entity\Subscription $sub */
   if (!($sub = ($message['params']['subscription'] ?? NULL))) {
     $message['params']['send'] = FALSE;

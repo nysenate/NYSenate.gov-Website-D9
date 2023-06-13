@@ -1,0 +1,29 @@
+uuid: ae4f843b-0685-4535-8bb6-0a81b60b75d7
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_school
+    - node.type.school
+    - paragraphs.paragraphs_type.summer_reading
+id: paragraph.summer_reading.field_school
+field_name: field_school
+entity_type: paragraph
+bundle: summer_reading
+label: school
+description: 'Start typing your school''s name and choose from list. If your school does not show up, please contact us.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      school: school
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

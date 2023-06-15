@@ -172,24 +172,11 @@ class AccumulatorEntry {
       $target = $this->getUser()->field_district->entity;
     }
 
-    // If the entity is not a senator or district, report something traceable.
-    // This may be a "normal" error, e.g. anonymous and out-of-state users.
+    // Unauthenticated users will never have a district.
     if (!(
       ($target instanceof ContentEntityBase)
       && (in_array($this->getEntityKey($target), $require_entity))
     )) {
-      // Unauthenticated users will never have a district.
-      if ($this->getUser()->id()) {
-        $this->log->warning(
-          'Failed to resolve a valid target',
-          [
-            '@type' => $this->type,
-            '@action' => $this->action,
-            '@uid' => $this->getUser()->id(),
-            '@info' => $this->info,
-          ]
-        );
-      }
       $target = NULL;
     }
 

@@ -196,20 +196,54 @@ class FlagCountManager implements FlagCountManagerInterface, EventSubscriberInte
     $flag = $flagging->getFlag();
     $entity = $flagging->getFlaggable();
 
-    $this->connection->merge('flag_counts')
-      ->key([
-        'flag_id' => $flag->id(),
-        'entity_id' => $entity->id(),
-        'entity_type' => $entity->getEntityTypeId(),
-      ])
-      ->fields([
-        'last_updated' => $this->dateTime->getRequestTime(),
-        'count' => 1,
-      ])
-      ->expression('count', 'count + :inc', [':inc' => 1])
-      ->execute();
+    if (!empty($entity) && !empty($flag)) {
+      $this->connection->merge('flag_counts')
+        ->key([
+          'flag_id' => $flag->id(),
+          'entity_id' => $entity->id(),
+          'entity_type' => $entity->getEntityTypeId(),
+        ])
+        ->fields([
+          'last_updated' => $this->dateTime->getRequestTime(),
+          'count' => 1,
+        ])
+        ->expression('count', 'count + :inc', [':inc' => 1])
+        ->execute();
 
-    $this->resetLoadedCounts($entity, $flag);
+      $this->resetLoadedCounts($entity, $flag);
+    }
+    else {
+      $entity_type = $flagging->entity_type->value;
+      $entity_id = $flagging->entity_id->value;
+      $flag_id = $flag->id();
+
+      $existing_entity = $this->connection->select('flag_counts')
+        ->fields('flag_counts', ['count'])
+        ->condition('entity_type', $entity_type)
+        ->condition('entity_id', $entity_id)
+        ->execute()
+        ->fetch();
+
+      if ($existing_entity) {
+        $count = $existing_entity->count + 1;
+
+        $this->connection->update('flag_counts')
+          ->fields(['count' => $count])
+          ->condition('entity_type', $entity_type)
+          ->condition('entity_id', $entity_id)
+          ->execute();
+      } else {
+        // Entity does not exist, so insert a new row
+        $this->connection->insert('flag_counts')
+          ->fields([
+            'flag_id' => $flag_id,
+            'entity_type' => $entity_type,
+            'entity_id' => $entity_id,
+            'count' => 1
+          ])
+          ->execute();
+      }
+    }
   }
 
   /**

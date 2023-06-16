@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a4109a7be713332eb309111b4d03dfd1",
+    "content-hash": "2176c783a8e0e8b115d3f7a4f26fd43b",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2999,6 +2999,107 @@
                 "source": "https://git.drupalcode.org/project/config_split",
                 "issues": "https://www.drupal.org/project/issues/config_split",
                 "slack": "https://drupal.slack.com/archives/C45342CDD"
+            }
+        },
+        {
+            "name": "drupal/contact_block",
+            "version": "2.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/contact_block.git",
+                "reference": "2.0.2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/contact_block-2.0.2.zip",
+                "reference": "2.0.2",
+                "shasum": "222050b04f41c328a2dde760061a530b7bc51b12"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9 || ^10"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "2.0.2",
+                    "datestamp": "1671437826",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Sutharsan",
+                    "homepage": "https://www.drupal.org/user/73854"
+                },
+                {
+                    "name": "vuil",
+                    "homepage": "https://www.drupal.org/user/3568458"
+                }
+            ],
+            "description": "The Contact Block module provides contact forms in a block.",
+            "homepage": "https://www.drupal.org/project/contact_block",
+            "keywords": [
+                "Drupal",
+                "contact_block"
+            ],
+            "support": {
+                "source": "https://git.drupalcode.org/project/contact_block",
+                "issues": "https://www.drupal.org/project/issues/contact_block"
+            }
+        },
+        {
+            "name": "drupal/contact_permissions",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/contact_permissions.git",
+                "reference": "8.x-2.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/contact_permissions-8.x-2.0.zip",
+                "reference": "8.x-2.0",
+                "shasum": "9263858e6ff522394238b2862475632e0a4b1f40"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-2.0",
+                    "datestamp": "1591958450",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Manuel Garcia",
+                    "homepage": "https://www.drupal.org/user/213194"
+                },
+                {
+                    "name": "pcambra",
+                    "homepage": "https://www.drupal.org/user/122101"
+                }
+            ],
+            "description": "Provides permissions for having a personal contact form",
+            "homepage": "https://www.drupal.org/project/contact_permissions",
+            "support": {
+                "source": "https://git.drupalcode.org/project/contact_permissions"
             }
         },
         {
@@ -21597,14 +21698,13 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://bitbucket.org/mediacurrent/ci-tests/get/8dcb01c2202a703883e57a60fc77e745f7829ae9.zip",
+                "url": "https://bitbucket.org/mediacurrent/ci-tests/get/2457918b1dfe6374bfb06b855478b6d6c51590b0.zip",
                 "reference": "8dcb01c2202a703883e57a60fc77e745f7829ae9",
                 "shasum": ""
             },
             "require": {
-                "dmore/behat-chrome-extension": "^1.3",
-                "weitzman/drupal-test-traits": "^1.5",
-                "weitzman/logintrait": "^1.1"
+                "behat/mink-goutte-driver": "^1.2 || ^2",
+                "dmore/behat-chrome-extension": "^1.3"
             },
             "default-branch": true,
             "bin": [
@@ -21619,7 +21719,7 @@
             "homepage": "https://bitbucket.org/mediacurrent/ci-tests",
             "support": {
                 "issues": "https://bitbucket.org/mediacurrent/ci-tests/issues",
-                "source": "https://bitbucket.org/mediacurrent/ci-tests/src/8dcb01c2202a703883e57a60fc77e745f7829ae9/?at=master"
+                "source": "https://bitbucket.org/mediacurrent/ci-tests/src/2457918b1dfe6374bfb06b855478b6d6c51590b0/?at=master"
             },
             "time": "2023-06-05T12:00:14+00:00"
         },

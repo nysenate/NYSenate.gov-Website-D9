@@ -67,6 +67,13 @@
         line-height: 1em;
         color: $grey10;
 
+        &.c-bill-search {
+
+          a {
+            color: $grey10;
+          }
+        }
+
         @include breakpoint($bp-sm) {
           &.c-bill-search {
             font-size: 22px;
@@ -228,10 +235,6 @@
 
       &.c-bill-search {
         font-size: 22px;
-
-        a {
-          color: $grey10;
-        }
       }
     }
 

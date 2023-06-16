@@ -14,12 +14,16 @@
       </h3>
     {% else %}
       <p class="c-press-release--title {% if article.search_results %} c-bill-search {% endif %}">
-        <a href={{ article.title.url }}>
+          {% if article.description.url %}
+            <a href={{ article.description.url }}>
+          {% endif %}
           {{ article.title }}
           {% if article.print_no %}
             {{ article.print_no }}
           {% endif %}
-        </a>
+        {% if article.description.url %}
+          </a>
+        {% endif %}
       </p>
     {% endif %}
     {% for topic in article.topics %}

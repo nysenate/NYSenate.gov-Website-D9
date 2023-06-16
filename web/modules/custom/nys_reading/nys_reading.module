@@ -77,8 +77,8 @@ function nys_reading_validation(array &$form, FormStateInterface &$form_state) {
           $form_state->setErrorByName('field_children][' . $key . '][field_student_books',
             t('You must enter three books for @child_name, you have only entered @key2.',
               $array = [
-                '$child_name' => '@child_name',
-                '$key2' => '@key2',
+                '@child_name' => $child_name,
+                '@key2' => $key2,
               ]));
         }
       }

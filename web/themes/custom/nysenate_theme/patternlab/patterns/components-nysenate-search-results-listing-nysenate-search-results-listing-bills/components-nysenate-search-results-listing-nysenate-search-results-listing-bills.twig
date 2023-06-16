@@ -14,9 +14,15 @@
       </h3>
     {% else %}
       <p class="c-press-release--title {% if article.search_results %} c-bill-search {% endif %}">
-        {{ article.title }}
-        {% if article.print_no %}
-          {{ article.print_no }}
+          {% if article.description.url %}
+            <a href={{ article.description.url }}>
+          {% endif %}
+          {{ article.title }}
+          {% if article.print_no %}
+            {{ article.print_no }}
+          {% endif %}
+        {% if article.description.url %}
+          </a>
         {% endif %}
       </p>
     {% endif %}

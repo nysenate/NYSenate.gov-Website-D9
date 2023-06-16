@@ -77,7 +77,9 @@
     once('exposed-form', this.$exposed_form).forEach($.proxy(this.attachExposedFormAjax, this));
     if (this.$view.find('.views-infinite-scroll-content-wrapper').length) {
       this.$pager_links = this.$view.find('ul.js-pager__items > li > a, th.views-field a, .attachment .views-summary a');
-      this.$pager_links.once('ajax-pager').each($.proxy(this.attachPagerLinkAjax, this));
+      once('ajax-pager', this.$pager_links).forEach(
+        $.proxy(this.attachPagerLinkAjax, this),
+      );
     }
     else {
       once('ajax-pager', this.$view.filter($.proxy(this.filterNestedViews, this))).forEach($.proxy(this.attachPagerAjax, this));

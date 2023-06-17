@@ -39,7 +39,6 @@ function nys_reading_form_submit(array $form, FormStateInterface $form_state) {
   $params = array_filter($params);
   // SAGE returns a district number.  Try to load the district entity.
   $district = \Drupal::service('sage_api')->districtAssign($params);
-  /** @var \Drupal\taxonomy\Entity\Term|null $district_term */
   try {
     $district_term = current(
       \Drupal::entityTypeManager()

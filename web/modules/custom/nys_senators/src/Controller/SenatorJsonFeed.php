@@ -35,9 +35,13 @@ class SenatorJsonFeed extends ControllerBase {
 
   /**
    * Returns the JSON feed as an HTTP response.
+   *
+   * @param string $shortname
+   *   An optional senator shortname.  If available, only the matching
+   *   senator will be included in the feed.
    */
-  public function getFeed(): JsonResponse {
-    return $this->senatorsJson->getJsonResponse();
+  public function getFeed(string $shortname = SenatorsJson::NYS_SENATORS_JSON_ALL_SENATORS): JsonResponse {
+    return $this->senatorsJson->getFeedJson($shortname);
   }
 
 }

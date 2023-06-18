@@ -166,7 +166,7 @@ class SenatorsJson {
       $address = NULL;
     }
     $ret = [];
-    if ($address?->country_code) {
+    if ($address && ($country = $address->getCountryCode())) {
       // Some fields are missing from D9's implementation of location.  The
       // Java model does not appear to need them.  Leaving them here for
       // future reference.
@@ -174,21 +174,22 @@ class SenatorsJson {
       // "is_primary" => <0|1>.
       try {
         $country_name = $this->countryRepo
-          ->get($address->country_code)
+          ->get($country)
           ->getName();
       }
       catch (\Throwable) {
         $country_name = '';
       }
+      $admin_area = $address->getAdministrativeArea() ?? '';
       $ret = [
-        "name" => $address->organization ?? '',
-        "street" => $address->address_line1 ?? '',
-        "additional" => $address->address_line2 ?? '',
-        "city" => $address->locality ?? '',
-        "province" => $address->administrative_area ?? '',
-        "postal_code" => $address->postal_code ?? '',
-        "country" => $address->country_code,
-        "province_name" => $this->statesList()[$address->administrative_area ?? ''] ?? '',
+        "name" => $address->getOrganization() ?? '',
+        "street" => $address->getAddressLine1() ?? '',
+        "additional" => $address->getAddressLine2() ?? '',
+        "city" => $address->getLocality() ?? '',
+        "province" => $admin_area,
+        "postal_code" => $address->getPostalCode() ?? '',
+        "country" => $$country,
+        "province_name" => $this->statesList()[$admin_area] ?? '',
         "country_name" => $country_name,
         "fax" => $office->field_fax->value ?? '',
         "phone" => $office->field_office_contact_phone->value ?? '',

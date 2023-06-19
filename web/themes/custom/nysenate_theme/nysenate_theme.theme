@@ -62,7 +62,7 @@ function nysenate_theme_preprocess_block__system_branding_block(&$variables) {
   $variables['site_branding'] = [
     'text' => $variables['site_name'],
     'img' => [
-      'url' => 'https://www.nysenate.gov/sites/all/themes/nysenate/images/nys_logo224x224.png',
+      'url' => '/themes/custom/nysenate_theme/src/assets/nys_logo224x224.png',
       'alt' => 'New York State Senate Seal',
     ],
     'link' => Url::fromRoute('<front>'),

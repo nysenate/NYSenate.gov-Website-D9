@@ -41,7 +41,7 @@ class DashboardSenatorsController extends ControllerBase {
     $content = [];
     $viewer = $this->entityTypeManager()->getViewBuilder('taxonomy_term');
     /**
-* @var \Drupal\taxonomy\Entity\Term $senator
+     * @var \Drupal\taxonomy\Entity\Term $senator
 */
     foreach ($senators as $senator) {
       $content['senator_' . $senator->id()] = [

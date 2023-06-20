@@ -296,7 +296,7 @@ class BillVoteHelper {
 
     try {
       /**
-* @var \Drupal\votingapi\VoteStorageInterface $vote_store
+       * @var \Drupal\votingapi\VoteStorageInterface $vote_store
 */
       $vote_store = $this->entityTypeManager->getStorage('vote');
     }
@@ -315,7 +315,7 @@ class BillVoteHelper {
       );
 
     /**
-* @var \Drupal\votingapi\Entity\Vote $vote
+     * @var \Drupal\votingapi\Entity\Vote $vote
 */
     $vote = $existing_vote
         ? $vote_store->load($existing_vote)
@@ -415,14 +415,14 @@ class BillVoteHelper {
    */
   public function getDefault($entity_type, $entity_id) {
     /**
-* @var \Drupal\votingapi\VoteStorage $vote_storage
+     * @var \Drupal\votingapi\VoteStorage $vote_storage
 */
     $vote_storage = $this->entityTypeManager->getStorage('vote');
     $user_votes = $vote_storage->getUserVotes($this->currentUser->id(), self::VOTE_TYPE, $entity_type, $entity_id);
 
     if (!empty($user_votes)) {
       /**
-* @var \Drupal\votingapi\Entity\Vote $vote_entity
+       * @var \Drupal\votingapi\Entity\Vote $vote_entity
 */
       $vote_entity = $vote_storage->load(end($user_votes));
       return $vote_entity->getValue();

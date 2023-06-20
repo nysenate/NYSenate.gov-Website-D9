@@ -195,7 +195,7 @@ class OpenlegImport extends DrushCommands {
     // If the import plugin is not found, report and quit.
     try {
       /**
-* @var \Drupal\nys_openleg_imports\ImporterBase $importer
+       * @var \Drupal\nys_openleg_imports\ImporterBase $importer
 */
       $importer = $this->manager->getImporter($type);
     }
@@ -273,7 +273,7 @@ class OpenlegImport extends DrushCommands {
     // If the import plugin is not found, report and quit.
     try {
       /**
-* @var \Drupal\nys_openleg_imports\ImporterBase $importer
+       * @var \Drupal\nys_openleg_imports\ImporterBase $importer
 */
       $importer = $this->manager->getImporter($type);
     }
@@ -301,7 +301,7 @@ class OpenlegImport extends DrushCommands {
         'offset' => $this->options['offset'],
       ];
       /**
-* @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseSearch $search
+       * @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseSearch $search
 */
       $search = $this->api->get($importer->getRequester(), $this->options['session'], $params);
       $names = $importer->getIdFromYearList($search);

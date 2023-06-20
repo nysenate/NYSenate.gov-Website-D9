@@ -277,7 +277,7 @@ class MainController extends ControllerBase {
     // Execute the search and reformat into the results array.
     if ($search_term) {
       /**
-* @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseSearch $search
+       * @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseSearch $search
 */
       $search = $this->apiManager->getSearch(
             'statute',
@@ -300,7 +300,7 @@ class MainController extends ControllerBase {
         if ($lawId && $docType && $docLevelId && $title) {
           // Create the data structure for the template.
           $url = StatuteHelper::baseUrl() . '/' .
-                    implode('/', array_filter([$lawId, $locationId]));
+                      implode('/', array_filter([$lawId, $locationId]));
           $results[] = [
             'name' => implode(' ', [$lawId, $docType, $docLevelId]),
             'title' => $title,

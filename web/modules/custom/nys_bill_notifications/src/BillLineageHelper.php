@@ -88,7 +88,7 @@ class BillLineageHelper {
       $name = $session . '-' . $print;
       try {
         /**
-* @var \Drupal\taxonomy\Entity\Term $ret
+         * @var \Drupal\taxonomy\Entity\Term $ret
 */
         $ret = static::storage()->create(
               [

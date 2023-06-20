@@ -117,7 +117,7 @@ abstract class ImporterBase implements ImporterInterface {
    */
   public function importUpdates(string $time_from, string $time_to): ImportResult {
     /**
-* @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseUpdate $updates
+     * @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseUpdate $updates
 */
     $updates = $this->requester->retrieveUpdates($time_from, $time_to);
     return $this->import($updates->listIds());
@@ -245,7 +245,7 @@ abstract class ImporterBase implements ImporterInterface {
           array_filter(
               array_map(
                   function ($v) {
-                          return $this->id($v->result);
+                        return $this->id($v->result);
                   },
                   $response->items()
               )

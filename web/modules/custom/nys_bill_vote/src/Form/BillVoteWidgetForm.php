@@ -385,7 +385,7 @@ class BillVoteWidgetForm extends FormBase {
     // If the user is logged in, revert to that email address.
     if ($this->currentUser->isAuthenticated()) {
       /**
-* @var \Drupal\user\UserInterface $user
+       * @var \Drupal\user\UserInterface $user
 */
       $email_address = $user->getEmail();
     }
@@ -450,7 +450,7 @@ class BillVoteWidgetForm extends FormBase {
   public function subscriptionSignup($nid, $email_address): ?SubscriptionInterface {
     try {
       /**
-* @var \Drupal\node\NodeInterface $bill
+       * @var \Drupal\node\NodeInterface $bill
 */
       $bill = $this->entityTypeManager->getStorage('node')->load($nid);
     }

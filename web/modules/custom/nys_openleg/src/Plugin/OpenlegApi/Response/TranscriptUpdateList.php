@@ -21,7 +21,7 @@ class TranscriptUpdateList extends ResponseUpdate {
           array_filter(
               array_map(
                   function ($v) {
-                          return $v->transcriptId->dateTime ?? '';
+                        return $v->transcriptId->dateTime ?? '';
                   },
                   $this->items()
               )

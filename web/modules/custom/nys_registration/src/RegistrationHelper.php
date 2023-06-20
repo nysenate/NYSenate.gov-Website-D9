@@ -65,7 +65,7 @@ class RegistrationHelper {
     $district = $this->sageApi->districtAssign($params);
     try {
       /**
-* @var \Drupal\taxonomy\Entity\Term|null $district_term
+       * @var \Drupal\taxonomy\Entity\Term|null $district_term
 */
       $district_term = current(
             $this->entityTypeManager

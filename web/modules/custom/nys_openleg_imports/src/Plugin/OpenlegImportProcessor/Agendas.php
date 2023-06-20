@@ -226,7 +226,7 @@ class Agendas extends ImportProcessorBase {
     foreach ($votes as $bill_key => $vote) {
       if ($vote->nid ?? 0) {
         /**
-* @var \Drupal\paragraphs\Entity\Paragraph $new_pg
+         * @var \Drupal\paragraphs\Entity\Paragraph $new_pg
 */
         $new_pg = $storage->create(['type' => 'agenda_bills']);
         $new_pg->set('field_ol_bill', $vote->nid);

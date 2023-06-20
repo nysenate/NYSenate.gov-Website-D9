@@ -165,7 +165,7 @@ class ApiManager {
     $param = ['history' => $history];
 
     /**
-* @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\StatuteTree $tree
+     * @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\StatuteTree $tree
 */
     $tree = $this->get('statute', $book, $param + ['location' => $location]);
 
@@ -174,7 +174,7 @@ class ApiManager {
     }
 
     /**
-* @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\StatuteDetail $detail
+     * @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\StatuteDetail $detail
 */
     $detail = $this->get('statute', $book . '/' . $location, $param);
 

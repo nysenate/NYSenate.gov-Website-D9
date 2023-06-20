@@ -151,7 +151,7 @@ class Calendars extends ImportProcessorBase {
     foreach ($to_import as $one_import) {
       if (count(get_object_vars($one_import['items']))) {
         /**
-* @var \Drupal\paragraphs\Entity\Paragraph $new_pg
+         * @var \Drupal\paragraphs\Entity\Paragraph $new_pg
 */
         $new_pg = $storage->create(['type' => 'calendar']);
         $all_bills = [];

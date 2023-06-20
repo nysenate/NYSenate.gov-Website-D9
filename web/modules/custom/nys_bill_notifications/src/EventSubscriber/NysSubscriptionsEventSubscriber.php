@@ -259,7 +259,7 @@ class NysSubscriptionsEventSubscriber implements EventSubscriberInterface {
             )
         );
       $subs['%bill.committee_path%'] =
-            $url_formatted_committee_string
+              $url_formatted_committee_string
               ? '/committees/' . $url_formatted_committee_string . '/'
               : '';
 
@@ -307,7 +307,7 @@ class NysSubscriptionsEventSubscriber implements EventSubscriberInterface {
 
       // The target must be a bill node.  If not, report and skip.
       /**
-* @var \Drupal\node\Entity\Node $bill
+       * @var \Drupal\node\Entity\Node $bill
 */
       $bill = $item->references['updated_bill'];
       if (!(($bill instanceof Node) && ($bill->bundle() == 'bill'))) {
@@ -444,7 +444,7 @@ class NysSubscriptionsEventSubscriber implements EventSubscriberInterface {
     $search = 'BILL_ALERT__' . $name;
     foreach ($templates as $ret) {
       /**
-* @var \Drupal\nys_sendgrid\Api\Template $ret
+       * @var \Drupal\nys_sendgrid\Api\Template $ret
 */
       if ($search == ($ret->getName() ?? '')) {
         return $ret;

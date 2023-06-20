@@ -69,7 +69,7 @@ class ForwardForm extends FormBase {
     $private_message = PrivateMessage::load($private_message_id);
 
     /**
-* @var \Drupal\user\Entity\User $owner
+     * @var \Drupal\user\Entity\User $owner
 */
     $owner = $private_message->owner->entity;
     $from = $owner->name->value;

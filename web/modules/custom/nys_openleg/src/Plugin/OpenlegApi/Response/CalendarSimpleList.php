@@ -29,7 +29,7 @@ class CalendarSimpleList extends ResponseSearch {
           array_unique(
               array_map(
                   function ($v) {
-                          return BillHelper::formatTitle($v, TRUE, '/');
+                        return BillHelper::formatTitle($v, TRUE, '/');
                   },
                   $items
               )

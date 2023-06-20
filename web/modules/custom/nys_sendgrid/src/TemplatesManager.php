@@ -84,7 +84,7 @@ abstract class TemplatesManager {
       $templates = [];
 
       /**
-* @var \SendGrid $sg
+       * @var \SendGrid $sg
 */
       $sg = \Drupal::service('nys_sendgrid_client');
       $response = $sg->client->templates()
@@ -117,7 +117,7 @@ abstract class TemplatesManager {
         // Send to slack.
         if (!$slack_sent) {
           /**
-* @var \Drupal\nys_slack\Service\Slack $slack
+           * @var \Drupal\nys_slack\Service\Slack $slack
 */
           $slack = \Drupal::getContainer()->get('slack_messaging');
           $slack->setTitle($msg)

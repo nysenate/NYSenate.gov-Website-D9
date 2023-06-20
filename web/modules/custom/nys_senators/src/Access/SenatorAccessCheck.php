@@ -65,7 +65,7 @@ class SenatorAccessCheck implements AccessInterface {
     if ($senator instanceof Term) {
       try {
         /**
-* @var \Drupal\user\Entity\User $user
+         * @var \Drupal\user\Entity\User $user
 */
         $user = $this->getUser($account);
         $is_manager = UsersHelper::isLcOrMcp($user);

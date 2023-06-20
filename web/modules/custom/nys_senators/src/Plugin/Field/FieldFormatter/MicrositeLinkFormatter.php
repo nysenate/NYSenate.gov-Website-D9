@@ -64,7 +64,7 @@ class MicrositeLinkFormatter extends UriLinkFormatter {
   public function viewElements(FieldItemListInterface $item, $langcode): array {
     // This formatter only applies to the senator bundle of taxonomy terms.
     /**
-* @var \Drupal\taxonomy\Entity\Term $entity
+     * @var \Drupal\taxonomy\Entity\Term $entity
 */
     $entity = $item->getEntity();
     if (!(($entity->bundle() == 'senator')

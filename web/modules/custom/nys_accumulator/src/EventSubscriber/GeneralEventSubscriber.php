@@ -105,7 +105,7 @@ class GeneralEventSubscriber implements EventSubscriberInterface {
 
     try {
       /**
-* @var \Drupal\nys_accumulator\EventInfoGeneratorInterface $plugin
+       * @var \Drupal\nys_accumulator\EventInfoGeneratorInterface $plugin
 */
       $plugin = $this->infoManager->createInstance($msg_type);
       $event_info = $plugin->build($entity);
@@ -226,11 +226,11 @@ class GeneralEventSubscriber implements EventSubscriberInterface {
    */
   public function userEdit(UserEditEvent $event): void {
     /**
-* @var \Drupal\user\Entity\User $user
+     * @var \Drupal\user\Entity\User $user
 */
     $user = $event->context;
     /**
-* @var \Drupal\user\Entity\User $original
+     * @var \Drupal\user\Entity\User $original
 */
     $original = $user->original ?? NULL;
 
@@ -289,7 +289,7 @@ class GeneralEventSubscriber implements EventSubscriberInterface {
    */
   public function submitQuestion(SubmitQuestionEvent $event): void {
     /**
-* @var \Drupal\webform\Entity\WebformSubmission $submit
+     * @var \Drupal\webform\Entity\WebformSubmission $submit
 */
     $submit = $event->context;
 

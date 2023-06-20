@@ -200,7 +200,7 @@ class SchoolFormShowStudentForm extends ConfirmFormBase {
             $school_form_type = '';
 
             /**
-* @var \Drupal\node\NodeInterface $node
+             * @var \Drupal\node\NodeInterface $node
 */
             if ($node && $node->hasField('field_school_form_type') && !$node->get('field_school_form_type')->isEmpty()
                   && $node->get('field_school_form_type')->entity

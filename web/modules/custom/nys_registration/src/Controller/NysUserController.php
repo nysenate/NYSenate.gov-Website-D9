@@ -33,7 +33,7 @@ class NysUserController extends UserController {
    */
   public function resetPassLogin($uid, $timestamp, $hash, Request $request) {
     /**
-* @var \Drupal\user\UserInterface $user
+     * @var \Drupal\user\UserInterface $user
 */
     $user = $this->userStorage->load($uid);
     if ($redirect = $this->determineErrorRedirect($user, $timestamp, $hash)) {

@@ -276,7 +276,7 @@ class Subscription extends ContentEntityBase implements SubscriptionInterface {
     parent::postLoad($storage, $entities);
 
     /**
-* @var static $one_sub
+     * @var static $one_sub
 */
     foreach ($entities as $one_sub) {
       $one_sub->initEntities(TRUE);

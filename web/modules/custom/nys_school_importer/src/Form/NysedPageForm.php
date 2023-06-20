@@ -136,7 +136,7 @@ class NysedPageForm extends FormBase {
         '#id' => 'continue_button',
         '#value' => $this->t('Completed NYSED Uploads - Continue To School Import'),
         '#submit' => [
-        [$this, 'continueToSchoolUpload'],
+      [$this, 'continueToSchoolUpload'],
         ],
       ],
       '#validate' => [

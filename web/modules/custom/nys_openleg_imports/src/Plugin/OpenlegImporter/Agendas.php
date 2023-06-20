@@ -33,7 +33,7 @@ class Agendas extends ImporterBase {
    */
   public function importYear(string $year): ImportResult {
     /**
-* @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\AgendaYearList $items
+     * @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\AgendaYearList $items
 */
     $items = $this->requester->retrieve((int) $year, ['limit' => 0]);
     return $this->import($this->getIdFromYearList($items));

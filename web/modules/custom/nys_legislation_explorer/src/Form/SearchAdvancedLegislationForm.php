@@ -243,8 +243,8 @@ class SearchAdvancedLegislationForm extends FormBase {
       '#states' => [
         'visible' => [
           'select[name="type"]' => [
-          ['value' => 'bill'],
-          ['value' => 'resolution'],
+        ['value' => 'bill'],
+        ['value' => 'resolution'],
           ],
         ],
       ],
@@ -270,8 +270,8 @@ class SearchAdvancedLegislationForm extends FormBase {
       '#states' => [
         'visible' => [
           'select[name="type"]' => [
-          ['value' => 'bill'],
-          ['value' => 'resolution'],
+        ['value' => 'bill'],
+        ['value' => 'resolution'],
           ],
         ],
       ],
@@ -288,10 +288,10 @@ class SearchAdvancedLegislationForm extends FormBase {
       '#states' => [
         'visible' => [
           'select[name="type"]' => [
-          ['value' => 'meeting'],
-          ['value' => 'event'],
-          ['value' => 'floor'],
-          ['value' => 'public_hearing'],
+        ['value' => 'meeting'],
+        ['value' => 'event'],
+        ['value' => 'floor'],
+        ['value' => 'public_hearing'],
           ],
         ],
       ],
@@ -308,10 +308,10 @@ class SearchAdvancedLegislationForm extends FormBase {
       '#states' => [
         'visible' => [
           'select[name="type"]' => [
-          ['value' => 'meeting'],
-          ['value' => 'event'],
-          ['value' => 'floor'],
-          ['value' => 'public_hearing'],
+        ['value' => 'meeting'],
+        ['value' => 'event'],
+        ['value' => 'floor'],
+        ['value' => 'public_hearing'],
           ],
         ],
       ],
@@ -327,10 +327,10 @@ class SearchAdvancedLegislationForm extends FormBase {
       '#states' => [
         'visible' => [
           'select[name="type"]' => [
-          ['value' => 'bill'],
-          ['value' => 'resolution'],
-          ['value' => 'floor'],
-          ['value' => 'public_hearing'],
+        ['value' => 'bill'],
+        ['value' => 'resolution'],
+        ['value' => 'floor'],
+        ['value' => 'public_hearing'],
           ],
         ],
       ],
@@ -347,8 +347,8 @@ class SearchAdvancedLegislationForm extends FormBase {
       '#states' => [
         'visible' => [
           'select[name="type"]' => [
-          ['value' => 'bill'],
-          ['value' => 'resolution'],
+        ['value' => 'bill'],
+        ['value' => 'resolution'],
           ],
         ],
       ],
@@ -381,7 +381,7 @@ class SearchAdvancedLegislationForm extends FormBase {
       '#states' => [
         'visible' => [
           'select[name="type"]' => [
-          ['value' => 'bill'],
+        ['value' => 'bill'],
           ],
         ],
       ],
@@ -398,8 +398,8 @@ class SearchAdvancedLegislationForm extends FormBase {
       '#states' => [
         'visible' => [
           'select[name="type"]' => [
-          ['value' => 'bill'],
-          ['value' => 'meeting'],
+        ['value' => 'bill'],
+        ['value' => 'meeting'],
           ],
         ],
       ],
@@ -420,7 +420,7 @@ class SearchAdvancedLegislationForm extends FormBase {
       '#states' => [
         'visible' => [
           'select[name="type"]' => [
-          ['value' => 'bill'],
+        ['value' => 'bill'],
           ],
         ],
       ],

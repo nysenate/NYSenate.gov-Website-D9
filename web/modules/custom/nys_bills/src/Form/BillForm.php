@@ -475,7 +475,7 @@ class BillForm extends FormBase {
   public function justVoted($entity_id) {
     $uid = $this->currentUser->id();
     /**
-* @var \Drupal\votingapi\VoteStorage $vote_storage
+     * @var \Drupal\votingapi\VoteStorage $vote_storage
 */
     $vote_storage = $this->entityTypeManager->getStorage('vote');
     if ($uid === 0) {
@@ -491,7 +491,7 @@ class BillForm extends FormBase {
     $vote_entity = NULL;
     if (!empty($user_votes)) {
       /**
-* @var \Drupal\votingapi\Entity\Vote $vote_entity
+       * @var \Drupal\votingapi\Entity\Vote $vote_entity
 */
       $vote_entity = $vote_storage->load(end($user_votes));
       $created = $vote_entity->getCreatedTime();

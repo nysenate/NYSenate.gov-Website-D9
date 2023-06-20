@@ -121,12 +121,14 @@ class SenatorsJson {
     }
     else {
       $n = strtolower($shortname);
-      $ret = current(array_filter(
-        $feed,
-        function ($s) use ($n) {
-          return $n == $s['short_name'];
-        }
-      )) ?: [];
+      $ret = current(
+            array_filter(
+                $feed,
+                function ($s) use ($n) {
+                    return $n == $s['short_name'];
+                }
+            )
+        ) ?: [];
     }
 
     return $ret;
@@ -159,7 +161,9 @@ class SenatorsJson {
    */
   protected function transcribeOffice(Paragraph $office): array {
     try {
-      /** @var \Drupal\address\Plugin\Field\FieldType\AddressItem $address */
+      /**
+* @var \Drupal\address\Plugin\Field\FieldType\AddressItem $address
+*/
       $address = $office->field_office_address->first();
     }
     catch (\Throwable) {

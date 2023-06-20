@@ -156,7 +156,7 @@ class UpdatesProcessor {
         ->getStorage('node')
         ->loadByProperties(['title' => $print_num]);
       /**
-* @var \Drupal\node\Entity\Node|null $ret
+       * @var \Drupal\node\Entity\Node|null $ret
 */
       $ret = (count($nodes) == 1) ? current($nodes) : NULL;
     }
@@ -172,7 +172,7 @@ class UpdatesProcessor {
   protected function loadTerm(int $id): ?Term {
     try {
       /**
-* @var \Drupal\taxonomy\Entity\Term $ret
+       * @var \Drupal\taxonomy\Entity\Term $ret
 */
       $ret = $this->entityTypeManager
         ->getStorage('taxonomy_term')
@@ -199,11 +199,11 @@ class UpdatesProcessor {
   protected function compileEvents(array $results): array {
     $events = [];
     /**
-* @var \Drupal\nys_bill_notifications\MatchResults $one_result
+     * @var \Drupal\nys_bill_notifications\MatchResults $one_result
 */
     foreach ($results as $one_result) {
       /**
-* @var \Drupal\nys_bill_notifications\BillTestBase $one_test
+       * @var \Drupal\nys_bill_notifications\BillTestBase $one_test
 */
       foreach ($one_result->getMatches() as $one_test) {
         $events[] = [

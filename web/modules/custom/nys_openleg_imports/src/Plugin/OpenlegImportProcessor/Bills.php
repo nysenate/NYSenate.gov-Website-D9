@@ -251,7 +251,7 @@ class Bills extends ImportProcessorBase {
     // for each one.  Save the new paragraphs for addition to the node.
     foreach ($all_votes as $vote) {
       /**
-* @var \Drupal\paragraphs\Entity\Paragraph $paragraph
+       * @var \Drupal\paragraphs\Entity\Paragraph $paragraph
 */
       $paragraph = $storage->create(['type' => 'votes']);
 

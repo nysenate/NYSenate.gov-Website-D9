@@ -258,7 +258,7 @@ class BillsHelper {
         $session = $node->field_ol_session->value;
 
         /**
-* @var \Drupal\node\NodeInterface $bill
+         * @var \Drupal\node\NodeInterface $bill
 */
         foreach ($this->loadBillVersions($base_print, $session) as $bill) {
           $ret[$bill->getTitle()] = $bill->id();
@@ -547,7 +547,7 @@ class BillsHelper {
   protected function getPathAlias(array $values = []): ?PathAlias {
     try {
       /**
-* @var \Drupal\path_alias\PathAliasStorage $storage
+       * @var \Drupal\path_alias\PathAliasStorage $storage
 */
       $storage = $this->entityTypeManager->getStorage('path_alias');
     }
@@ -834,7 +834,7 @@ class BillsHelper {
     }
 
     /**
-* @var \Drupal\nys_subscriptions\SubscriptionInterface|null $ret
+     * @var \Drupal\nys_subscriptions\SubscriptionInterface|null $ret
 */
     $ret = current($storage->loadByProperties($props)) ?: NULL;
     if ($create && !$ret) {

@@ -33,7 +33,7 @@ class Bills extends ImporterBase {
    */
   public function importYear(string $year): ImportResult {
     /**
-* @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\BillYearList $items
+     * @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\BillYearList $items
 */
     $items = $this->requester->retrieve((int) $year, ['limit' => 0]);
     return $this->import($this->getIdFromYearList($items));

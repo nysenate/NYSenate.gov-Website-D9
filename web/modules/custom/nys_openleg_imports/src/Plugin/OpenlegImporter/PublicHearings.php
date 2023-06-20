@@ -31,7 +31,7 @@ class PublicHearings extends ImporterBase {
    */
   public function importYear(string $year): ImportResult {
     /**
-* @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\TranscriptYearList $items
+     * @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\TranscriptYearList $items
 */
     $items = $this->requester->retrieve((int) $year);
     return $this->import($this->getIdFromYearList($items));

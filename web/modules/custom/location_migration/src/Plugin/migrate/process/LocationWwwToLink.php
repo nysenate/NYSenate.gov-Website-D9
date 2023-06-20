@@ -28,8 +28,8 @@ class LocationWwwToLink extends LocationProcessPluginBase {
     foreach ($lids as $lid) {
       $link_value = $this->getLocationProperties($lid)['www'] ?? NULL;
       $processed_values[] = !empty($link_value)
-        ? ['uri' => $link_value]
-        : NULL;
+            ? ['uri' => $link_value]
+            : NULL;
     }
 
     return $processed_values;

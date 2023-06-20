@@ -2,16 +2,16 @@
 
 namespace Drupal\nys_school_importer\Controller;
 
-use Drupal\Core\State\State;
+use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Messenger\Messenger;
 use Drupal\Core\Render\RendererInterface;
-use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Form\FormBuilderInterface;
+use Drupal\Core\State\State;
 use Drupal\nys_school_importer\ImporterHelper;
 use Drupal\nys_school_importer\SchoolImporterHelper;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * The controller class for importer functionality.
@@ -86,14 +86,14 @@ class ImportController extends ControllerBase {
    *   The database connection class.
    */
   public function __construct(
-    ImporterHelper $importer_helper,
-    SchoolImporterHelper $school_importer_helper,
-    State $state,
-    FormBuilderInterface $form_builder_interface,
-    RendererInterface $renderer_interface,
-    Messenger $messenger,
-    Connection $connection
-  ) {
+        ImporterHelper $importer_helper,
+        SchoolImporterHelper $school_importer_helper,
+        State $state,
+        FormBuilderInterface $form_builder_interface,
+        RendererInterface $renderer_interface,
+        Messenger $messenger,
+        Connection $connection
+    ) {
     $this->importerHelper = $importer_helper;
     $this->schoolImporterHelper = $school_importer_helper;
     $this->state = $state;
@@ -108,14 +108,14 @@ class ImportController extends ControllerBase {
    */
   public static function create(ContainerInterface $container_interface) {
     return new static(
-      $container_interface->get('nys_school_importer.importer'),
-      $container_interface->get('nys_school_importer.school_importer'),
-      $container_interface->get('state'),
-      $container_interface->get('form_builder'),
-      $container_interface->get('renderer'),
-      $container_interface->get('messenger'),
-      $container_interface->get('database'),
-    );
+          $container_interface->get('nys_school_importer.importer'),
+          $container_interface->get('nys_school_importer.school_importer'),
+          $container_interface->get('state'),
+          $container_interface->get('form_builder'),
+          $container_interface->get('renderer'),
+          $container_interface->get('messenger'),
+          $container_interface->get('database'),
+      );
   }
 
   /**

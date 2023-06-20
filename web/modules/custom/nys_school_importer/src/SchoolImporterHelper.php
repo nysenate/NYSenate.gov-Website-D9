@@ -2,9 +2,9 @@
 
 namespace Drupal\nys_school_importer;
 
-use Drupal\Core\State\State;
-use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\State\State;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
@@ -157,10 +157,12 @@ class SchoolImporterHelper {
     }
     else {
       $error_operation = reset($operations);
-      $message = $this->t('An error occurred while processing %error_operation with arguments: @arguments', [
-        '%error_operation' => $error_operation[0],
-        '@arguments' => var_export($error_operation[1], TRUE),
-      ]);
+      $message = $this->t(
+            'An error occurred while processing %error_operation with arguments: @arguments', [
+              '%error_operation' => $error_operation[0],
+              '@arguments' => var_export($error_operation[1], TRUE),
+            ]
+        );
       $this->messenger->addError($message);
     }
   }

@@ -43,9 +43,9 @@ class IssuesManagementController extends ControllerBase {
    */
   public static function create(ContainerInterface $container): self {
     return new static(
-      $container->get('database'),
-      $container->get('renderer')
-    );
+          $container->get('database'),
+          $container->get('renderer')
+      );
   }
 
   /**
@@ -68,9 +68,9 @@ class IssuesManagementController extends ControllerBase {
 
     // Build each row based on the query return.
     $rows = array_map(
-      [$this, 'buildRow'],
-      $this->getIssueFollowers($taxonomy_term, $tid)
-    );
+          [$this, 'buildRow'],
+          $this->getIssueFollowers($taxonomy_term, $tid)
+      );
 
     $link = Link::fromTextAndUrl($tid->getName(), $tid->toUrl())->toString();
 
@@ -91,12 +91,14 @@ class IssuesManagementController extends ControllerBase {
     $name = $row['first_name'] . ' ' . $row['last_name'];
     $name_link = Link::fromTextAndUrl($name, $url)->toString();
 
-    $address = implode(', ', [
-      $row['addr_1'],
-      $row['addr_2'],
-      $row['city'],
-      $row['zip'],
-    ]);
+    $address = implode(
+          ', ', [
+            $row['addr_1'],
+            $row['addr_2'],
+            $row['city'],
+            $row['zip'],
+          ]
+      );
 
     // Build the row.
     return [
@@ -123,14 +125,18 @@ class IssuesManagementController extends ControllerBase {
     $query->join('user__field_district', 'ufd', 'ufd.entity_id=u.uid');
 
     // Join to the district's field_senator table.
-    $query->join('taxonomy_term__field_senator', 'ttfs',
-      'ttfs.entity_id=ufd.field_district_target_id and ttfs.bundle=:districts',
-      [':districts' => 'districts']);
+    $query->join(
+          'taxonomy_term__field_senator', 'ttfs',
+          'ttfs.entity_id=ufd.field_district_target_id and ttfs.bundle=:districts',
+          [':districts' => 'districts']
+      );
 
     // Join the flagging table.
-    $query->join('flagging', 'f',
-      'f.uid=u.uid and f.flag_id=:follow and f.entity_type=:term',
-      [':follow' => 'follow_issue', ':term' => 'taxonomy_term']);
+    $query->join(
+          'flagging', 'f',
+          'f.uid=u.uid and f.flag_id=:follow and f.entity_type=:term',
+          [':follow' => 'follow_issue', ':term' => 'taxonomy_term']
+      );
 
     // Fields to be returned.
     $query->addField('u', 'uid');
@@ -154,14 +160,14 @@ class IssuesManagementController extends ControllerBase {
     }
     catch (\Throwable $e) {
       $this->getLogger('nys_issues')->error(
-        "Failed to query for issue followers",
-        [
-          '@query' => (string) $query,
-          '@issue_tid' => $issue->id(),
-          '@senator_tid' => $senator->id(),
-          '@excp' => $e->getMessage(),
-        ]
-      );
+            "Failed to query for issue followers",
+            [
+              '@query' => (string) $query,
+              '@issue_tid' => $issue->id(),
+              '@senator_tid' => $senator->id(),
+              '@excp' => $e->getMessage(),
+            ]
+        );
       $ret = [];
     }
 

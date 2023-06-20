@@ -199,11 +199,13 @@ class NysOpenDataCsv {
     $column = (int) (is_numeric($sort) ? $sort : array_search($sort, $this->header));
 
     // Some minor special-ness to the sorting to account for currency.
-    usort($this->data, function ($a, $b) use ($column) {
-      $v1 = is_numeric($a[$column]) ? floatval($a[$column]) : $a[$column];
-      $v2 = is_numeric($b[$column]) ? floatval($b[$column]) : $b[$column];
-      return ($v1 == $v2 ? 0 : ($v1 < $v2 ? -1 : 1));
-    });
+    usort(
+          $this->data, function ($a, $b) use ($column) {
+              $v1 = is_numeric($a[$column]) ? floatval($a[$column]) : $a[$column];
+              $v2 = is_numeric($b[$column]) ? floatval($b[$column]) : $b[$column];
+              return ($v1 == $v2 ? 0 : ($v1 < $v2 ? -1 : 1));
+          }
+      );
 
     if ($reverse) {
       $this->data = array_reverse($this->data);
@@ -274,14 +276,18 @@ class NysOpenDataCsv {
       if ($data) {
         // Data is any row in which the first field does not start with
         // a hash character.
-        $this->data = array_filter($data, function ($v) {
-          return substr($v, 0, 2) != '"#';
-        });
+        $this->data = array_filter(
+              $data, function ($v) {
+                  return substr($v, 0, 2) != '"#';
+              }
+          );
 
         // Extra is any other row, because notes in CSV files are a thing now.
-        $this->extra = array_filter($data, function ($v) {
-          return substr($v, 0, 2) == '"#';
-        });
+        $this->extra = array_filter(
+              $data, function ($v) {
+                  return substr($v, 0, 2) == '"#';
+              }
+          );
 
         // Header is the first data row.  Stored weird for parsing.
         $this->header = [array_shift($this->data)];
@@ -324,8 +330,8 @@ class NysOpenDataCsv {
     $this->resetData();
     $this->managedFile = (int) $fid ? File::load($fid) : FALSE;
     $this->physicalPath = ($this->managedFile->uri->value ?? '')
-      ? \Drupal::service('file_system')->realpath($this->managedFile->uri->value)
-      : '';
+        ? \Drupal::service('file_system')->realpath($this->managedFile->uri->value)
+        : '';
   }
 
 }

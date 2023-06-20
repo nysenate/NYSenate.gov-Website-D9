@@ -121,12 +121,14 @@ class SenatorsJson {
     }
     else {
       $n = strtolower($shortname);
-      $ret = current(array_filter(
-        $feed,
-        function ($s) use ($n) {
-          return $n == $s['short_name'];
-        }
-      )) ?: [];
+      $ret = current(
+            array_filter(
+                $feed,
+                function ($s) use ($n) {
+                    return $n == $s['short_name'];
+                }
+            )
+        ) ?: [];
     }
 
     return $ret;
@@ -145,11 +147,11 @@ class SenatorsJson {
     }
     if ($set_cache) {
       $this->cache->set(
-        static::NYS_SENATORS_JSON_CACHE_CID,
-        $feed,
-        time() + static::NYS_SENATORS_JSON_MAX_CACHE_AGE,
-        ['taxonomy_term_list:senator']
-      );
+            static::NYS_SENATORS_JSON_CACHE_CID,
+            $feed,
+            time() + static::NYS_SENATORS_JSON_MAX_CACHE_AGE,
+            ['taxonomy_term_list:senator']
+        );
     }
     return $feed;
   }
@@ -159,7 +161,9 @@ class SenatorsJson {
    */
   protected function transcribeOffice(Paragraph $office): array {
     try {
-      /** @var \Drupal\address\Plugin\Field\FieldType\AddressItem $address */
+      /**
+       * @var \Drupal\address\Plugin\Field\FieldType\AddressItem $address
+      */
       $address = $office->field_office_address->first();
     }
     catch (\Throwable) {
@@ -285,9 +289,9 @@ class SenatorsJson {
     else {
       $os = match ($number % 10) {
         1 => 'st',
-        2 => 'nd',
-        3 => 'rd',
-        default => 'th',
+                2 => 'nd',
+                3 => 'rd',
+                default => 'th',
       };
     }
 
@@ -301,11 +305,11 @@ class SenatorsJson {
     static $list = [];
     if (!$list || $refresh) {
       $list = array_map(
-        function ($v) {
-          return $v->getName();
-        },
-        $this->stateRepo->getAll(['US'])
-      );
+            function ($v) {
+                return $v->getName();
+            },
+            $this->stateRepo->getAll(['US'])
+        );
     }
     return $list;
   }
@@ -314,9 +318,11 @@ class SenatorsJson {
    * Flattens a FieldItemList array.
    */
   protected function getFlatValue(FieldItemList $list): array {
-    return array_map(function ($v) {
-      return $v['value'];
-    }, $list->getValue());
+    return array_map(
+          function ($v) {
+              return $v['value'];
+          }, $list->getValue()
+      );
   }
 
 }

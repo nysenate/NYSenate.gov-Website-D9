@@ -17,12 +17,12 @@ class OpenlegImportProcessorManager extends DefaultPluginManager {
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
     parent::__construct(
-      'Plugin/OpenlegImportProcessor',
-      $namespaces,
-      $module_handler,
-      'Drupal\nys_openleg_imports\ImportProcessorInterface',
-      'Drupal\nys_openleg_imports\Annotation\OpenlegImportProcessor',
-    );
+          'Plugin/OpenlegImportProcessor',
+          $namespaces,
+          $module_handler,
+          'Drupal\nys_openleg_imports\ImportProcessorInterface',
+          'Drupal\nys_openleg_imports\Annotation\OpenlegImportProcessor',
+      );
     $this->setCacheBackend($cache_backend, 'openleg_imports.processors');
   }
 

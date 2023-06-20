@@ -5,11 +5,11 @@
  * Alters views queries as needed.
  */
 
-use Drupal\user\Entity\User;
 use Drupal\block_content\Entity\BlockContent;
-use Drupal\views\ViewExecutable;
+use Drupal\user\Entity\User;
 use Drupal\views\Plugin\views\query\QueryPluginBase;
 use Drupal\views\Plugin\views\query\Sql;
+use Drupal\views\ViewExecutable;
 
 /**
  * Implements hook_views_query_alter().
@@ -31,9 +31,10 @@ function nys_senators_views_query_alter(ViewExecutable $view, QueryPluginBase $q
       $senator_helper = \Drupal::service('nys_senators.senators_helper');
 
       // Check for MCP.
-      if (!$senator_helper->senatorUserIsAdmin($user) &&
-        $user->hasField('field_senator_multiref') &&
-        !empty($senators = $user->field_senator_multiref->getValue())) {
+      if (!$senator_helper->senatorUserIsAdmin($user)
+            && $user->hasField('field_senator_multiref')
+            && !empty($senators = $user->field_senator_multiref->getValue())
+        ) {
 
         // Format a nice array for where conditions.
         $senator_tids = [];
@@ -50,8 +51,9 @@ function nys_senators_views_query_alter(ViewExecutable $view, QueryPluginBase $q
     }
   }
 
-  if ($view->id() == 'global_promo_banner' &&
-    $view->current_display == 'senator_microsite_interior_footer') {
+  if ($view->id() == 'global_promo_banner'
+        && $view->current_display == 'senator_microsite_interior_footer'
+    ) {
     $node_storage = \Drupal::entityTypeManager()->getStorage('node');
 
     if (!empty($query->where[0]['conditions'][0]['value'][':node_field_data_nid1'])) {
@@ -64,19 +66,23 @@ function nys_senators_views_query_alter(ViewExecutable $view, QueryPluginBase $q
       if ($node->hasField('field_senator_multiref') && !$node->get('field_senator_multiref')->isEmpty()) {
         $senator_id = $node->get('field_senator_multiref')->first()->getString() ?? '';
         if (!empty($senator_id)) {
-          $microsite_home = $node_storage->loadByProperties([
-            'type' => 'microsite_page',
-            // Landing page.
-            'field_microsite_page_type' => '200005',
-            'field_senator_multiref' => $senator_id,
-          ]);
+          $microsite_home = $node_storage->loadByProperties(
+                [
+                  'type' => 'microsite_page',
+                // Landing page.
+                  'field_microsite_page_type' => '200005',
+                  'field_senator_multiref' => $senator_id,
+                ]
+            );
 
           $microsite_home = reset($microsite_home);
 
           // Get Promotional Banners.
           if ($microsite_home->hasField('field_block') && !$microsite_home->get('field_block')->isEmpty()) {
             foreach ($microsite_home->get('field_block') as $key => $value) {
-              /** @var \Drupal\block_content\Entity\BlockContent $block_content */
+              /**
+               * @var \Drupal\block_content\Entity\BlockContent $block_content
+               */
               $block_content = $value->entity ?? NULL;
 
               if ($block_content instanceof BlockContent) {

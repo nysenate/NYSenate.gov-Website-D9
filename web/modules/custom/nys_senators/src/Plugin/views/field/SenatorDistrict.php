@@ -89,9 +89,9 @@ class SenatorDistrict extends FieldPluginBase {
 
       $os = match ($last) {
         "1" => 'st',
-        "2" => 'nd',
-        "3" => 'rd',
-        default => 'th',
+                "2" => 'nd',
+                "3" => 'rd',
+                default => 'th',
       };
     }
 

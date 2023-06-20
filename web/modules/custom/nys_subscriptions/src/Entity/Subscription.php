@@ -189,10 +189,10 @@ class Subscription extends ContentEntityBase implements SubscriptionInterface {
     else {
       // Resolve the target entity.
       $target = $this->resolveEntity(
-        $this->values['target'] ?? NULL,
-        (string) $this->get('subscribe_to_type')->value,
-        (int) $this->get('subscribe_to_id')->value
-      );
+            $this->values['target'] ?? NULL,
+            (string) $this->get('subscribe_to_type')->value,
+            (int) $this->get('subscribe_to_id')->value
+        );
     }
 
     // If a target entity could not be loaded, stop here.
@@ -225,12 +225,12 @@ class Subscription extends ContentEntityBase implements SubscriptionInterface {
 
     if ($refresh || (!isset($this->source))) {
       $this->setSource(
-        $this->resolveEntity(
-          $this->values['source'] ?? NULL,
-          (string) $this->get('subscribe_from_type')->value,
-          (int) $this->get('subscribe_from_id')->value
-        )
-      );
+            $this->resolveEntity(
+                $this->values['source'] ?? NULL,
+                (string) $this->get('subscribe_from_type')->value,
+                (int) $this->get('subscribe_from_id')->value
+            )
+        );
     }
   }
 
@@ -275,7 +275,9 @@ class Subscription extends ContentEntityBase implements SubscriptionInterface {
   public static function postLoad(EntityStorageInterface $storage, array &$entities) {
     parent::postLoad($storage, $entities);
 
-    /** @var static $one_sub */
+    /**
+     * @var static $one_sub
+     */
     foreach ($entities as $one_sub) {
       $one_sub->initEntities(TRUE);
     }
@@ -507,12 +509,12 @@ class Subscription extends ContentEntityBase implements SubscriptionInterface {
    */
   public function sendConfirmationEmail(): array {
     return $this->mailer->mail(
-      'nys_subscriptions_confirmation',
-      'confirmation',
-      '',
-      $this->language->getCurrentLanguage()->getId(),
-      ['subscription' => $this]
-    );
+          'nys_subscriptions_confirmation',
+          'confirmation',
+          '',
+          $this->language->getCurrentLanguage()->getId(),
+          ['subscription' => $this]
+      );
   }
 
   /**
@@ -586,41 +588,49 @@ class Subscription extends ContentEntityBase implements SubscriptionInterface {
     $fields['created'] = BaseFieldDefinition::create('created')
       ->setLabel(t('Created on'))
       ->setDescription(t('The time the subscription was created.'))
-      ->setDisplayOptions('view', [
-        'type' => 'timestamp',
-        'settings' => ['date_format' => 'short'],
-        'weight' => 0,
-      ])
+      ->setDisplayOptions(
+              'view', [
+                'type' => 'timestamp',
+                'settings' => ['date_format' => 'short'],
+                'weight' => 0,
+              ]
+          )
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['confirmed'] = BaseFieldDefinition::create('timestamp')
       ->setLabel(t('Confirmed'))
       ->setDescription(t('The time the subscription was confirmed.'))
-      ->setDisplayOptions('view', [
-        'type' => 'boolean',
-        'settings' => ['format' => 'yes-no'],
-        'weight' => 0,
-      ])
+      ->setDisplayOptions(
+              'view', [
+                'type' => 'boolean',
+                'settings' => ['format' => 'yes-no'],
+                'weight' => 0,
+              ]
+          )
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['canceled'] = BaseFieldDefinition::create('timestamp')
       ->setLabel(t('Canceled'))
       ->setDescription(t('The time the subscription was canceled.'))
-      ->setDisplayOptions('view', [
-        'type' => 'boolean',
-        'settings' => ['format' => 'yes-no'],
-        'weight' => 0,
-      ])
+      ->setDisplayOptions(
+              'view', [
+                'type' => 'boolean',
+                'settings' => ['format' => 'yes-no'],
+                'weight' => 0,
+              ]
+          )
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['last_sent'] = BaseFieldDefinition::create('timestamp')
       ->setLabel(t('Last Mail'))
       ->setDescription(t('The time of the last mail sent on behalf of this entry.'))
-      ->setDisplayOptions('view', [
-        'type' => 'timestamp',
-        'settings' => ['date_format' => 'short'],
-        'weight' => 0,
-      ])
+      ->setDisplayOptions(
+              'view', [
+                'type' => 'timestamp',
+                'settings' => ['date_format' => 'short'],
+                'weight' => 0,
+              ]
+          )
       ->setDisplayConfigurable('view', TRUE);
 
     return $fields;
@@ -692,10 +702,12 @@ class Subscription extends ContentEntityBase implements SubscriptionInterface {
       }
       catch (\Throwable $e) {
         \Drupal::logger('nys_subscriptions')
-          ->error("Failed to generate subscriber for subscription @id", [
-            '@id' => $subscriber->id(),
-            '@message' => $e->getMessage(),
-          ]);
+          ->error(
+                  "Failed to generate subscriber for subscription @id", [
+                    '@id' => $subscriber->id(),
+                    '@message' => $e->getMessage(),
+                  ]
+              );
       }
     }
 

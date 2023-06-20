@@ -52,8 +52,8 @@ abstract class LocationDeriverBase extends DeriverBase {
           'bundle' => $bundle,
         ];
         $derivative_id = $bundle !== NULL
-          ? $entity_type . PluginBase::DERIVATIVE_SEPARATOR . $bundle
-          : $entity_type;
+                ? $entity_type . PluginBase::DERIVATIVE_SEPARATOR . $bundle
+                : $entity_type;
         $derivatives[$derivative_id] = $values;
       }
     }
@@ -74,15 +74,19 @@ abstract class LocationDeriverBase extends DeriverBase {
     $bundle = $migration_plugin_definition['source']['bundle'] ?? NULL;
 
     $migration_plugin_definition['label'] = !empty($bundle)
-      ? $this->t('@label (@entity-type, @bundle)', [
-        '@label' => $migration_plugin_definition['label'],
-        '@entity-type' => $entity_type_id,
-        '@bundle' => $bundle,
-      ])
-      : $this->t('@label (@entity-type)', [
-        '@label' => $migration_plugin_definition['label'],
-        '@entity-type' => $entity_type_id,
-      ]);
+        ? $this->t(
+          '@label (@entity-type, @bundle)', [
+            '@label' => $migration_plugin_definition['label'],
+            '@entity-type' => $entity_type_id,
+            '@bundle' => $bundle,
+          ]
+      )
+        : $this->t(
+          '@label (@entity-type)', [
+            '@label' => $migration_plugin_definition['label'],
+            '@entity-type' => $entity_type_id,
+          ]
+      );
   }
 
 }

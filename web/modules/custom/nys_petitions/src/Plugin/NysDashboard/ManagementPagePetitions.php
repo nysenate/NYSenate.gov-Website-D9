@@ -60,15 +60,18 @@ class ManagementPagePetitions extends ManagementPageBase {
 
     // Join for the owning senator's district.
     // ttfs.entity_id = tid of the district to which $senator is assigned.
-    $query->join('taxonomy_term__field_senator', 'ttfs',
-      'ttfs.field_senator_target_id=smr.field_senator_multiref_target_id AND ttfs.bundle=:term_bundle',
-      [':term_bundle' => 'districts']
-    );
+    $query->join(
+          'taxonomy_term__field_senator', 'ttfs',
+          'ttfs.field_senator_target_id=smr.field_senator_multiref_target_id AND ttfs.bundle=:term_bundle',
+          [':term_bundle' => 'districts']
+      );
 
     // Join the flagging table.
-    $query->join('flagging', 'f',
-      'f.flag_id=:sign_flag AND f.entity_type=:node_type AND f.entity_id=n.nid',
-      [':sign_flag' => 'sign_petition', ':node_type' => 'node']);
+    $query->join(
+          'flagging', 'f',
+          'f.flag_id=:sign_flag AND f.entity_type=:node_type AND f.entity_id=n.nid',
+          [':sign_flag' => 'sign_petition', ':node_type' => 'node']
+      );
 
     // Join the signing user's district.
     // ufd.entity_id = tid of the district to which the user is assigned.
@@ -109,14 +112,16 @@ class ManagementPagePetitions extends ManagementPageBase {
     // Execute the query.
     try {
       $ret = $query->execute()->fetchAllAssoc('nid', \PDO::FETCH_ASSOC) ?? [];
-      $this->logger->debug('Query for senator petitions',
-        ['@query' => (string) $query]);
+      $this->logger->debug(
+            'Query for senator petitions',
+            ['@query' => (string) $query]
+        );
     }
     catch (\Throwable $e) {
       $this->logger->error(
-        'Query failed for your petitions',
-        ['@query' => (string) $query, '@excp' => $e->getMessage()]
-      );
+            'Query failed for your petitions',
+            ['@query' => (string) $query, '@excp' => $e->getMessage()]
+        );
       $ret = [];
     }
     return $ret;
@@ -161,14 +166,16 @@ class ManagementPagePetitions extends ManagementPageBase {
     // Execute the query.
     try {
       $rows = $query->execute()->fetchAllAssoc('nid', \PDO::FETCH_ASSOC) ?? [];
-      $this->logger->debug('Query for other petitions',
-        ['@query' => (string) $query]);
+      $this->logger->debug(
+            'Query for other petitions',
+            ['@query' => (string) $query]
+        );
     }
     catch (\Throwable $e) {
       $this->logger->error(
-        'Query failed for other petitions',
-        ['@query' => (string) $query, '@excp' => $e->getMessage()]
-      );
+            'Query failed for other petitions',
+            ['@query' => (string) $query, '@excp' => $e->getMessage()]
+        );
       $rows = [];
     }
 
@@ -200,7 +207,9 @@ class ManagementPagePetitions extends ManagementPageBase {
 
       $author = '';
       if ($node->hasField('field_senator_multiref') && !$node->get('field_senator_multiref')->isEmpty()) {
-        /** @var \Drupal\taxonomy\Entity\Term $senator */
+        /**
+         * @var \Drupal\taxonomy\Entity\Term $senator
+         */
         $senator = $node->field_senator_multiref->entity;
         if ($senator) {
           $author = Link::fromTextAndUrl($senator->getName(), $senator->toUrl())->toString();
@@ -209,16 +218,16 @@ class ManagementPagePetitions extends ManagementPageBase {
 
       $ret[] = [
         'data' => [
-          [
-            'data' => new FormattableMarkup(
-              '<h3 class="entry-title">' . $link . '</h3>
+        [
+          'data' => new FormattableMarkup(
+            '<h3 class="entry-title">' . $link . '</h3>
               <div class="pet-type">' . $issues . '</div>
               <div class="author"><span>By: ' . $author . '</span></div>',
-              []
-            ),
-            'class' => 'petition-link',
-          ],
-          ['data' => $row['in_district'], 'class' => 'signing-count'],
+            []
+          ),
+          'class' => 'petition-link',
+        ],
+        ['data' => $row['in_district'], 'class' => 'signing-count'],
         ],
         'class' => ['other-petition'],
         'data-nid' => $row['nid'],

@@ -2,27 +2,27 @@
 
 namespace Drupal\nys_school_forms\Form;
 
-use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Url;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Extension\ModuleHandler;
+use Drupal\Core\File\FileSystem;
+use Drupal\Core\File\FileUrlGenerator;
+use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormBuilder;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Pager\PagerManagerInterface;
 use Drupal\Core\Pager\PagerParametersInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Drupal\Core\Form\FormBuilder;
-use Drupal\path_alias\AliasManagerInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
-use Drupal\Core\Entity\EntityTypeManager;
-use Drupal\Component\Render\FormattableMarkup;
-use Drupal\Core\File\FileUrlGenerator;
-use Drupal\Core\File\FileSystem;
+use Drupal\Core\TempStore\PrivateTempStoreFactory;
+use Drupal\Core\Url;
 use Drupal\file\FileRepository;
 use Drupal\nys_school_forms\SchoolFormsService;
-use Drupal\Core\Form\FormBase;
-use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\TempStore\PrivateTempStoreFactory;
+use Drupal\path_alias\AliasManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Builds a Form for search school form submissions.
@@ -187,22 +187,23 @@ class SchoolFormEnityUpdateForm extends FormBase {
    *   Current user.
    */
   public function __construct(
-    RequestStack $request,
-    ModuleHandler $moduleHandler,
-    Connection $database,
-    MessengerInterface $messenger,
-    PagerParametersInterface $pager_param,
-    PagerManagerInterface $pager_manager,
-    FormBuilder $form_builder,
-    AliasManagerInterface $alias_manager,
-    StreamWrapperManager $streamWrapperManager,
-    EntityTypeManager $entityTypeManager,
-    SchoolFormsService $schoolFormsService,
-    FileUrlGenerator $fileUrlGenerator,
-    FileSystem $fileSystem,
-    FileRepository $fileRepository,
-    PrivateTempStoreFactory $temp_store_factory,
-    AccountInterface $current_user) {
+        RequestStack $request,
+        ModuleHandler $moduleHandler,
+        Connection $database,
+        MessengerInterface $messenger,
+        PagerParametersInterface $pager_param,
+        PagerManagerInterface $pager_manager,
+        FormBuilder $form_builder,
+        AliasManagerInterface $alias_manager,
+        StreamWrapperManager $streamWrapperManager,
+        EntityTypeManager $entityTypeManager,
+        SchoolFormsService $schoolFormsService,
+        FileUrlGenerator $fileUrlGenerator,
+        FileSystem $fileSystem,
+        FileRepository $fileRepository,
+        PrivateTempStoreFactory $temp_store_factory,
+        AccountInterface $current_user
+    ) {
     $this->request = $request;
     $this->moduleHandler = $moduleHandler;
     $this->database = $database;
@@ -227,23 +228,23 @@ class SchoolFormEnityUpdateForm extends FormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('request_stack'),
-      $container->get('module_handler'),
-      $container->get('database'),
-      $container->get('messenger'),
-      $container->get('pager.parameters'),
-      $container->get('pager.manager'),
-      $container->get('form_builder'),
-      $container->get('path_alias.manager'),
-      $container->get('stream_wrapper_manager'),
-      $container->get('entity_type.manager'),
-      $container->get('nys_school_forms.school_forms'),
-      $container->get('file_url_generator'),
-      $container->get('file_system'),
-      $container->get('file.repository'),
-      $container->get('tempstore.private'),
-      $container->get('current_user')
-    );
+          $container->get('request_stack'),
+          $container->get('module_handler'),
+          $container->get('database'),
+          $container->get('messenger'),
+          $container->get('pager.parameters'),
+          $container->get('pager.manager'),
+          $container->get('form_builder'),
+          $container->get('path_alias.manager'),
+          $container->get('stream_wrapper_manager'),
+          $container->get('entity_type.manager'),
+          $container->get('nys_school_forms.school_forms'),
+          $container->get('file_url_generator'),
+          $container->get('file_system'),
+          $container->get('file.repository'),
+          $container->get('tempstore.private'),
+          $container->get('current_user')
+      );
   }
 
   /**
@@ -338,25 +339,31 @@ class SchoolFormEnityUpdateForm extends FormBase {
           $school_form_type = 'Submitted directly from webform';
         }
         $table_results[$result['student']['student_submission'] . '-' . $result['submission']->id()] = [
-          'school' => new FormattableMarkup('@school_name <br> @street <br> @city, @state, @zipcode', [
-            '@school_name' => $school_name,
-            '@street' => $school_address['address_line1'],
-            '@city' => $school_address['locality'],
-            '@state' => $school_address['administrative_area'],
-            '@zipcode' => $school_address['postal_code'],
-          ]),
+          'school' => new FormattableMarkup(
+              '@school_name <br> @street <br> @city, @state, @zipcode', [
+                '@school_name' => $school_name,
+                '@street' => $school_address['address_line1'],
+                '@city' => $school_address['locality'],
+                '@state' => $school_address['administrative_area'],
+                '@zipcode' => $school_address['postal_code'],
+              ]
+          ),
           'senator' => $result['senator']->label(),
-          'contact_information' => new FormattableMarkup('@contact_name <br> @contact_email', [
-            '@contact_name' => $result['submission']->getData()['contact_name'],
-            '@contact_email' => $result['submission']->getData()['contact_email'],
-          ]),
-          'submission' => new FormattableMarkup('<strong>@student_name</strong> <br> @type <br> <a href="@submission">@file_name</a> <br> Show status: @show_status', [
-            '@student_name' => $result['student']['student_name'],
-            '@type' => $submission_types[$result['student']['submission_type'] ?? NULL] ?? NULL,
-            '@submission' => $file_url,
-            '@file_name' => $file->getFilename(),
-            '@show_status' => $show_status,
-          ]),
+          'contact_information' => new FormattableMarkup(
+              '@contact_name <br> @contact_email', [
+                '@contact_name' => $result['submission']->getData()['contact_name'],
+                '@contact_email' => $result['submission']->getData()['contact_email'],
+              ]
+          ),
+          'submission' => new FormattableMarkup(
+              '<strong>@student_name</strong> <br> @type <br> <a href="@submission">@file_name</a> <br> Show status: @show_status', [
+                '@student_name' => $result['student']['student_name'],
+                '@type' => $submission_types[$result['student']['submission_type'] ?? NULL] ?? NULL,
+                '@submission' => $file_url,
+                '@file_name' => $file->getFilename(),
+                '@show_status' => $show_status,
+              ]
+          ),
           'date_submitted' => date('F j, Y', $result['submission']->getCreatedTime()),
           'school_form_type' => $school_form_type,
         ];

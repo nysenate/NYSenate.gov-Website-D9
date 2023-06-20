@@ -53,10 +53,10 @@ class QuestionnairesManagementController extends ControllerBase {
    */
   public static function create(ContainerInterface $container): self {
     return new static(
-      $container->get('database'),
-      $container->get('nys_senators.senators_helper'),
-      $container->get('renderer')
-    );
+          $container->get('database'),
+          $container->get('nys_senators.senators_helper'),
+          $container->get('renderer')
+      );
   }
 
   /**
@@ -80,14 +80,14 @@ class QuestionnairesManagementController extends ControllerBase {
 
     // If the senator is not the owner, set a filter for the senator's district.
     $district = $owner->id() == $taxonomy_term->id()
-      ? NULL
-      : $this->senatorsHelper->loadDistrict($taxonomy_term);
+        ? NULL
+        : $this->senatorsHelper->loadDistrict($taxonomy_term);
 
     // Build each row based on the query return.
     $rows = array_map(
-      [$this, 'buildSubmissionRow'],
-      $this->getSubmissions($qid, $district)
-    );
+          [$this, 'buildSubmissionRow'],
+          $this->getSubmissions($qid, $district)
+      );
 
     // Finish the render array, and render it.
     if (count($rows)) {
@@ -118,10 +118,12 @@ class QuestionnairesManagementController extends ControllerBase {
     $name_link = Link::fromTextAndUrl($name, $url)->toString();
 
     // Get the link for the submission.
-    $url = Url::fromRoute('entity.webform.user.submission', [
-      'webform' => $row['qid'],
-      'webform_submission' => $row['sid'],
-    ]);
+    $url = Url::fromRoute(
+          'entity.webform.user.submission', [
+            'webform' => $row['qid'],
+            'webform_submission' => $row['sid'],
+          ]
+      );
     $sub_link = Link::fromTextAndUrl(date("Y-m-d H:i:s", $row['submitted']), $url)
       ->toString();
 
@@ -161,10 +163,11 @@ class QuestionnairesManagementController extends ControllerBase {
     $query->join('user__field_first_name', 'ufn', 'u.uid=ufn.entity_id');
     $query->join('user__field_last_name', 'uln', 'u.uid=uln.entity_id');
     $query->join('user__field_district', 'ud', 'u.uid=ud.entity_id');
-    $query->join('taxonomy_term__field_district_number', 'fdn',
-      'ud.field_district_target_id=fdn.entity_id and fdn.bundle=:district',
-      [':district' => 'districts']
-    );
+    $query->join(
+          'taxonomy_term__field_district_number', 'fdn',
+          'ud.field_district_target_id=fdn.entity_id and fdn.bundle=:district',
+          [':district' => 'districts']
+      );
 
     // Fields to be returned.
     $query->addExpression($qid->id(), 'qid');
@@ -190,14 +193,14 @@ class QuestionnairesManagementController extends ControllerBase {
     }
     catch (\Throwable $e) {
       $this->getLogger('nys_questionnaires')->error(
-        "Failed to query for questionnaire submissions",
-        [
-          '@query' => (string) $query,
-          '@qid' => $qid->id(),
-          '@district' => $district ? $district->id() : 'none',
-          '@excp' => $e->getMessage(),
-        ]
-      );
+            "Failed to query for questionnaire submissions",
+            [
+              '@query' => (string) $query,
+              '@qid' => $qid->id(),
+              '@district' => $district ? $district->id() : 'none',
+              '@excp' => $e->getMessage(),
+            ]
+        );
       $ret = [];
     }
 

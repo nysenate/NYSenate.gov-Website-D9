@@ -4,8 +4,8 @@ namespace Drupal\nys_school_importer\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\nys_school_importer\SchoolImporterHelper;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\nys_school_importer\SchoolImporterHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -37,8 +37,8 @@ class ContinueForm extends FormBase {
    */
   public static function create(ContainerInterface $container_interface) {
     return new static(
-      $container_interface->get('nys_school_importer.school_importer')
-    );
+          $container_interface->get('nys_school_importer.school_importer')
+      );
   }
 
   /**

@@ -51,12 +51,12 @@ class Agendas extends ImportProcessorBase {
       catch (\Throwable $e) {
         $ret = FALSE;
         $this->logger->error(
-          'Failed to save imported agenda @title',
-          [
-            '@title' => $this->getId(),
-            '@message' => $e->getMessage(),
-          ]
-        );
+              'Failed to save imported agenda @title',
+              [
+                '@title' => $this->getId(),
+                '@message' => $e->getMessage(),
+              ]
+          );
       }
     }
 
@@ -112,13 +112,13 @@ class Agendas extends ImportProcessorBase {
     catch (\Throwable $e) {
       $success = FALSE;
       $this->logger->error(
-        'Failed to set properties for node @node from @item',
-        [
-          '@node' => $node->id(),
-          '@item' => $node->get('title')->getValue(),
-          '@message' => $e->getMessage(),
-        ]
-      );
+            'Failed to set properties for node @node from @item',
+            [
+              '@node' => $node->id(),
+              '@item' => $node->get('title')->getValue(),
+              '@message' => $e->getMessage(),
+            ]
+        );
     }
 
     return $success;
@@ -150,8 +150,8 @@ class Agendas extends ImportProcessorBase {
     $time = $meeting->meeting->meetingDateTime ?? '';
 
     return ($year && $week && $time && $committee)
-      ? "$year Week $week $committee ($time)"
-      : '';
+        ? "$year Week $week $committee ($time)"
+        : '';
   }
 
   /**
@@ -184,11 +184,11 @@ class Agendas extends ImportProcessorBase {
 
     // Note the current paragraphs for later and initialize the "new" list.
     $old_votes = array_map(
-      function ($v) {
-        return $v['target_id'];
-      },
-      $node->get('field_ol_agenda_bills')->getValue()
-    );
+          function ($v) {
+              return $v['target_id'];
+          },
+          $node->get('field_ol_agenda_bills')->getValue()
+      );
     $new_votes = [];
 
     // Organize the bill and vote objects for easier reference.
@@ -206,12 +206,16 @@ class Agendas extends ImportProcessorBase {
     // Resolve the node id references for each bill.
     if (count($bills)) {
       $bill_storage = $this->entityTypeManager->getStorage('node');
-      $bill_refs = $bill_storage->loadByProperties([
-        'type' => 'bill',
-        'title' => array_keys($bills),
-      ]);
+      $bill_refs = $bill_storage->loadByProperties(
+            [
+              'type' => 'bill',
+              'title' => array_keys($bills),
+            ]
+        );
       foreach ($bill_refs as $nid => $bill_node) {
-        /** @var \Drupal\node\Entity\Node $bill_node */
+        /**
+         * @var \Drupal\node\Entity\Node $bill_node
+         */
         $title = $bill_node->getTitle();
         if (array_key_exists($title, $votes)) {
           $votes[$title]->nid = $nid;
@@ -221,7 +225,9 @@ class Agendas extends ImportProcessorBase {
 
     foreach ($votes as $bill_key => $vote) {
       if ($vote->nid ?? 0) {
-        /** @var \Drupal\paragraphs\Entity\Paragraph $new_pg */
+        /**
+         * @var \Drupal\paragraphs\Entity\Paragraph $new_pg
+         */
         $new_pg = $storage->create(['type' => 'agenda_bills']);
         $new_pg->set('field_ol_bill', $vote->nid);
         $new_pg->set('field_ol_bill_message', $bills[$bill_key]->message);

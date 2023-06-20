@@ -2,10 +2,10 @@
 
 namespace Drupal\nys_list_formatter\Plugin\list_formatter;
 
-use Drupal\nys_list_formatter\Plugin\ListFormatterListInterface;
-use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterInterface;
+use Drupal\nys_list_formatter\Plugin\ListFormatterListInterface;
 
 /**
  * Plugin implementation of the 'text' list formatter.

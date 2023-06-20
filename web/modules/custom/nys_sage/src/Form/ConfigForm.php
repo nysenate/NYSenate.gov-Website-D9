@@ -45,8 +45,8 @@ class ConfigForm extends ConfigFormBase {
     // Need to get the immutable config to see overrides.
     $apikey = $this->configFactory->get('nys_sage.settings')->get('api_key');
     $apikey_text = $apikey
-      ? "An API key is already saved.  Leave the box blank to keep it, or input a new one to change it."
-      : "<h2><b>No API key has been configured.  SAGE calls will fail until one is provided.</b></h2>";
+        ? "An API key is already saved.  Leave the box blank to keep it, or input a new one to change it."
+        : "<h2><b>No API key has been configured.  SAGE calls will fail until one is provided.</b></h2>";
     $apikey_required = !((boolean) $apikey);
 
     $form['api_key'] = [

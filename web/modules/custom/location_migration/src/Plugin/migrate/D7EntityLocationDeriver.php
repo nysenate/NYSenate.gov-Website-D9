@@ -40,19 +40,19 @@ class D7EntityLocationDeriver extends LocationDeriverBase {
       $storage_migration_dep_key = array_search('d7_entity_location_field', $migration_required_deps);
       if ($storage_migration_dep_key !== FALSE) {
         LocationMigration::mergeDerivedRequiredDependencies(
-          $derivative_definition['migration_dependencies'],
-          ['d7_entity_location_field'],
-          [$entity_type]
-        );
+              $derivative_definition['migration_dependencies'],
+              ['d7_entity_location_field'],
+              [$entity_type]
+          );
       }
 
       $instance_migration_dep_key = array_search('d7_entity_location_field_instance', $migration_required_deps);
       if ($instance_migration_dep_key !== FALSE) {
         LocationMigration::mergeDerivedRequiredDependencies(
-          $derivative_definition['migration_dependencies'],
-          ['d7_entity_location_field_instance'],
-          array_filter([$entity_type, $bundle])
-        );
+              $derivative_definition['migration_dependencies'],
+              ['d7_entity_location_field_instance'],
+              array_filter([$entity_type, $bundle])
+          );
       }
 
       if ($bundle) {

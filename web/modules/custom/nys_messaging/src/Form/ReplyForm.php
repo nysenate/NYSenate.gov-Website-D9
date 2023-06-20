@@ -2,17 +2,17 @@
 
 namespace Drupal\nys_messaging\Form;
 
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBase;
-use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\Session\AccountProxyInterface;
-use Drupal\private_message\Entity\PrivateMessage;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\private_message\Entity\PrivateMessage;
 use Drupal\private_message\Service\PrivateMessageServiceInterface;
 use Drupal\private_message\Service\PrivateMessageThreadManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Form class for replying messages.
@@ -80,12 +80,13 @@ class ReplyForm extends FormBase {
    *   The messenger object.
    */
   public function __construct(
-    PrivateMessageServiceInterface $private_message,
-    PrivateMessageThreadManagerInterface $thread_manager,
-    EntityTypeManagerInterface $entity_type_manager,
-    CurrentPathStack $current_path,
-    AccountProxyInterface $current_user,
-    MessengerInterface $messenger) {
+        PrivateMessageServiceInterface $private_message,
+        PrivateMessageThreadManagerInterface $thread_manager,
+        EntityTypeManagerInterface $entity_type_manager,
+        CurrentPathStack $current_path,
+        AccountProxyInterface $current_user,
+        MessengerInterface $messenger
+    ) {
     $this->privateMessage = $private_message;
     $this->privateMessageThreadManager = $thread_manager;
     $this->entityTypeManager = $entity_type_manager;
@@ -99,13 +100,13 @@ class ReplyForm extends FormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('private_message.service'),
-      $container->get('private_message.thread_manager'),
-      $container->get('entity_type.manager'),
-      $container->get('path.current'),
-      $container->get('current_user'),
-      $container->get('messenger'),
-    );
+          $container->get('private_message.service'),
+          $container->get('private_message.thread_manager'),
+          $container->get('entity_type.manager'),
+          $container->get('path.current'),
+          $container->get('current_user'),
+          $container->get('messenger'),
+      );
   }
 
   /**
@@ -171,11 +172,13 @@ class ReplyForm extends FormBase {
     $owner = $loaded_message->owner->target_id;
 
     // Create the reply private message entity.
-    $message = PrivateMessage::create([
-      'message' => $reply,
-      // @phpstan-ignore-next-line
-      'field_subject' => $loaded_message->field_subject->value,
-    ]);
+    $message = PrivateMessage::create(
+          [
+            'message' => $reply,
+          // @phpstan-ignore-next-line
+            'field_subject' => $loaded_message->field_subject->value,
+          ]
+      );
     $message->field_to = [$owner];
 
     $message->save();

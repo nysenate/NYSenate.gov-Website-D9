@@ -21,8 +21,8 @@ class DistrictAssignResponse extends Response {
    */
   public function isMatchAcceptable(): bool {
     return ($this->response->status == 'SUCCESS' && (
-        $this->response->uspsValidated
-        || $this->response->matchLevel == 'HOUSE'
+      $this->response->uspsValidated
+      || $this->response->matchLevel == 'HOUSE'
       ));
   }
 

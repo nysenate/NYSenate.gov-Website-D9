@@ -3,10 +3,10 @@
 namespace Drupal\nys_school_forms;
 
 use Drupal\Core\Entity\EntityTypeManager;
-use Drupal\Core\Pager\PagerManagerInterface;
-use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\File\FileUrlGeneratorInterface;
+use Drupal\Core\Pager\PagerManagerInterface;
 use Drupal\Core\Pager\PagerParametersInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
 
 /**
@@ -73,12 +73,12 @@ class SchoolFormsService {
    *   The file URL generator.
    */
   public function __construct(
-    PagerParametersInterface $pager_param,
-    PagerManagerInterface $pager_manager,
-    EntityTypeManager $entityTypeManager,
-    RouteMatchInterface $current_route_match,
-    StreamWrapperManager $streamWrapperManager,
-    FileUrlGeneratorInterface $file_url_generator
+        PagerParametersInterface $pager_param,
+        PagerManagerInterface $pager_manager,
+        EntityTypeManager $entityTypeManager,
+        RouteMatchInterface $current_route_match,
+        StreamWrapperManager $streamWrapperManager,
+        FileUrlGeneratorInterface $file_url_generator
     ) {
     $this->pagerParam = $pager_param;
     $this->pagerManager = $pager_manager;
@@ -113,10 +113,11 @@ class SchoolFormsService {
 
         default:
           $terms = $this->entityTypeManager->getStorage('taxonomy_term')->loadByProperties(
-            [
-              'vid' => 'school_form_type',
-              'name' => $params['form_type'],
-            ]);
+                [
+                  'vid' => 'school_form_type',
+                  'name' => $params['form_type'],
+                ]
+            );
           if ($terms !== NULL) {
             $term = reset($terms);
             if ($term) {
@@ -146,15 +147,21 @@ class SchoolFormsService {
     $query_results = $query->execute();
     foreach ($query_results as $query_result) {
       $submission = $this->entityTypeManager->getStorage('webform_submission')->load($query_result);
-      /** @var \Drupal\node\NodeInterface $parent_node */
+      /**
+       * @var \Drupal\node\NodeInterface $parent_node
+       */
       $parent_node = $submission->getSourceEntity();
       $submission_data = $submission->getData();
-      /** @var \Drupal\node\NodeInterface $school_node */
+      /**
+       * @var \Drupal\node\NodeInterface $school_node
+       */
       $school_node = $this->entityTypeManager->getStorage('node')->load($submission_data['school_name']);
       if ($params['school'] && $params['school'] != $school_node->label()) {
         continue;
       }
-      /** @var \Drupal\taxonomy\TermInterface $district */
+      /**
+       * @var \Drupal\taxonomy\TermInterface $district
+       */
       $district = $school_node->get('field_district')->entity;
       $school_senator = $district->get('field_senator')->entity;
       if ($params['senator'] && $params['senator'] != $school_senator->id()) {

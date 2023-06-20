@@ -72,14 +72,14 @@ class Statute {
   public function fullTitle(): array {
     $detail = $this->detail->result();
     $parents = array_map(
-      function ($v) {
-        return $v->docType . ' ' . $v->docLevelId;
-      },
-      $this->parents()
-    );
+          function ($v) {
+              return $v->docType . ' ' . $v->docLevelId;
+          },
+          $this->parents()
+      );
     $location = $parents
-      ? $detail->lawName . ' (' . $detail->lawId . ') ' . implode(', ', $parents)
-      : '';
+        ? $detail->lawName . ' (' . $detail->lawId . ') ' . implode(', ', $parents)
+        : '';
     return [
       $detail->docType . ' ' . $detail->docLevelId,
       $detail->title,

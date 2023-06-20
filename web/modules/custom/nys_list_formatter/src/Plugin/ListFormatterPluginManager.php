@@ -3,9 +3,9 @@
 namespace Drupal\nys_list_formatter\Plugin;
 
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Plugin\DefaultPluginManager;
 
 /**
  * Plugin type manager for all views plugins.

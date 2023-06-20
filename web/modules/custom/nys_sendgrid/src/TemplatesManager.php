@@ -85,7 +85,7 @@ abstract class TemplatesManager {
 
       /**
        * @var \SendGrid $sg
-*/
+       */
       $sg = \Drupal::service('nys_sendgrid_client');
       $response = $sg->client->templates()
         ->get(NULL, ['generations' => 'legacy,dynamic']);
@@ -118,7 +118,7 @@ abstract class TemplatesManager {
         if (!$slack_sent) {
           /**
            * @var \Drupal\nys_slack\Service\Slack $slack
-*/
+           */
           $slack = \Drupal::getContainer()->get('slack_messaging');
           $slack->setTitle($msg)
             ->addAttachment("env\n" . ($_ENV['PANTHEON_ENVIRONMENT'] ?? 'n/a'))

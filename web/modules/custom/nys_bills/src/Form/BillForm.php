@@ -476,7 +476,7 @@ class BillForm extends FormBase {
     $uid = $this->currentUser->id();
     /**
      * @var \Drupal\votingapi\VoteStorage $vote_storage
-*/
+     */
     $vote_storage = $this->entityTypeManager->getStorage('vote');
     if ($uid === 0) {
       // Anonymous user.
@@ -492,7 +492,7 @@ class BillForm extends FormBase {
     if (!empty($user_votes)) {
       /**
        * @var \Drupal\votingapi\Entity\Vote $vote_entity
-*/
+       */
       $vote_entity = $vote_storage->load(end($user_votes));
       $created = $vote_entity->getCreatedTime();
       // 4 secs buffer.

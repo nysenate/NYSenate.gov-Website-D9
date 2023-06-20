@@ -277,7 +277,7 @@ class Subscription extends ContentEntityBase implements SubscriptionInterface {
 
     /**
      * @var static $one_sub
-*/
+     */
     foreach ($entities as $one_sub) {
       $one_sub->initEntities(TRUE);
     }

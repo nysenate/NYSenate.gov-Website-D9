@@ -118,7 +118,7 @@ abstract class ImporterBase implements ImporterInterface {
   public function importUpdates(string $time_from, string $time_to): ImportResult {
     /**
      * @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseUpdate $updates
-*/
+     */
     $updates = $this->requester->retrieveUpdates($time_from, $time_to);
     return $this->import($updates->listIds());
   }

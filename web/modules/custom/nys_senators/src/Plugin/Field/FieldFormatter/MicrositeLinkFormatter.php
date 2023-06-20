@@ -65,7 +65,7 @@ class MicrositeLinkFormatter extends UriLinkFormatter {
     // This formatter only applies to the senator bundle of taxonomy terms.
     /**
      * @var \Drupal\taxonomy\Entity\Term $entity
-*/
+     */
     $entity = $item->getEntity();
     if (!(($entity->bundle() == 'senator')
           && ($entity->getEntityTypeId() == 'taxonomy_term'))

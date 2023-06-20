@@ -82,7 +82,7 @@ function nys_senators_views_query_alter(ViewExecutable $view, QueryPluginBase $q
             foreach ($microsite_home->get('field_block') as $key => $value) {
               /**
                * @var \Drupal\block_content\Entity\BlockContent $block_content
-*/
+               */
               $block_content = $value->entity ?? NULL;
 
               if ($block_content instanceof BlockContent) {

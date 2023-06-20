@@ -85,7 +85,7 @@ class SubscriptionListBuilder extends EntityListBuilder {
   public function buildRow(EntityInterface $entity): array {
     /**
      * @var \Drupal\nys_subscriptions\SubscriptionInterface $entity
-*/
+     */
     $row['id'] = $entity->toLink();
     $row['uid']['data'] = [
       '#theme' => 'username',

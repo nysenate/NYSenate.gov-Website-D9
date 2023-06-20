@@ -80,7 +80,7 @@ class Calendars extends ImportProcessorBase {
       foreach ($nodes as $nid => $node) {
         /**
          * @var \Drupal\node\Entity\Node $node
-*/
+         */
         $title = $node->get('title')->value;
         if (array_key_exists($title, $bills)) {
           $bills[$title]['nid'] = $nid;
@@ -152,7 +152,7 @@ class Calendars extends ImportProcessorBase {
       if (count(get_object_vars($one_import['items']))) {
         /**
          * @var \Drupal\paragraphs\Entity\Paragraph $new_pg
-*/
+         */
         $new_pg = $storage->create(['type' => 'calendar']);
         $all_bills = [];
         foreach ($one_import['items'] as $reading) {

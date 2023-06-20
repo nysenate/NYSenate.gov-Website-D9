@@ -76,18 +76,18 @@ class SubscriptionsController extends ControllerBase {
     try {
       /**
        * @var \Drupal\nys_subscriptions\SubscriptionInterface[] $subscriptions
-*/
+       */
       $subscriptions = $this->subscriptionStorage->loadByProperties(['uuid' => $uuid]);
 
       if ($subscriptions) {
         $subscription = reset($subscriptions);
         /**
          * @var \Drupal\nys_subscriptions\SubscriptionInterface $subscription
-*/
+         */
         $subscription->confirm();
         /**
          * @var \Drupal\Core\Entity\EntityStorageInterface $subscribe_from_id
-*/
+         */
         $subscribe_from_id = $subscription->get('subscribe_from_id')->getValue()[0]['value'];
         // Check if the subscribe_from_id exists and is a valid node.
         if ($subscribe_from_id && $node = Node::load($subscribe_from_id)) {
@@ -124,17 +124,17 @@ class SubscriptionsController extends ControllerBase {
     try {
       /**
        * @var \Drupal\nys_subscriptions\SubscriptionInterface[] $subscriptions
-*/
+       */
       $subscriptions = $this->subscriptionStorage->loadByProperties(['uuid' => $uuid]);
       if ($subscriptions) {
         $subscription = reset($subscriptions);
         /**
          * @var \Drupal\nys_subscriptions\SubscriptionInterface $subscription
-*/
+         */
         $subscription->cancel();
         /**
          * @var \Drupal\Core\Entity\EntityStorageInterface $subscribe_from_id
-*/
+         */
         $subscribe_from_id = $subscription->get('subscribe_from_id')->getValue()[0]['value'];
         // Check if the subscribe_from_id exists and is a valid node.
         if ($subscribe_from_id && $node = Node::load($subscribe_from_id)) {
@@ -173,7 +173,7 @@ class SubscriptionsController extends ControllerBase {
     try {
       /**
        * @var \Drupal\Core\Entity\EntityStorageInterface
-*/
+       */
       $subscriptions = $this->subscriptionStorage->loadByProperties(['uuid' => $uuid]);
       if ($subscriptions) {
         $uids = [];
@@ -181,7 +181,7 @@ class SubscriptionsController extends ControllerBase {
           $uids[] = $subscription->get('uid')->target_id;
           /**
            * @var \Drupal\nys_subscriptions\SubscriptionInterface $subscription
-*/
+           */
           $subscription->cancel();
         }
 
@@ -190,7 +190,7 @@ class SubscriptionsController extends ControllerBase {
         foreach ($other_subscriptions as $subscription) {
           /**
            * @var \Drupal\nys_subscriptions\SubscriptionInterface $subscription
-*/
+           */
           $subscription->cancel();
         }
         $this->messenger->addStatus('You have successfully globally unsubscribed.');

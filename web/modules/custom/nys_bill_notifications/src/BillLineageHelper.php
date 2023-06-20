@@ -89,7 +89,7 @@ class BillLineageHelper {
       try {
         /**
          * @var \Drupal\taxonomy\Entity\Term $ret
-*/
+         */
         $ret = static::storage()->create(
               [
                 'vid' => 'prev_ver',

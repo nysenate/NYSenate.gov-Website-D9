@@ -162,8 +162,8 @@ class SenatorsJson {
   protected function transcribeOffice(Paragraph $office): array {
     try {
       /**
-* @var \Drupal\address\Plugin\Field\FieldType\AddressItem $address
-*/
+       * @var \Drupal\address\Plugin\Field\FieldType\AddressItem $address
+      */
       $address = $office->field_office_address->first();
     }
     catch (\Throwable) {

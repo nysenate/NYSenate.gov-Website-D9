@@ -66,7 +66,7 @@ class SenatorAccessCheck implements AccessInterface {
       try {
         /**
          * @var \Drupal\user\Entity\User $user
-*/
+         */
         $user = $this->getUser($account);
         $is_manager = UsersHelper::isLcOrMcp($user);
         $assigns = array_merge(

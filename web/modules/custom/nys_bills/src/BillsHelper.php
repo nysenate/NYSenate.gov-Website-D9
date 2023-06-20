@@ -259,7 +259,7 @@ class BillsHelper {
 
         /**
          * @var \Drupal\node\NodeInterface $bill
-*/
+         */
         foreach ($this->loadBillVersions($base_print, $session) as $bill) {
           $ret[$bill->getTitle()] = $bill->id();
         }
@@ -293,7 +293,7 @@ class BillsHelper {
         );
       /**
        * @var \Drupal\node\NodeInterface|NULL $ret
-*/
+       */
       $ret = current($nodes) ?: NULL;
     }
     catch (\Throwable) {
@@ -548,7 +548,7 @@ class BillsHelper {
     try {
       /**
        * @var \Drupal\path_alias\PathAliasStorage $storage
-*/
+       */
       $storage = $this->entityTypeManager->getStorage('path_alias');
     }
     catch (\Throwable) {
@@ -835,7 +835,7 @@ class BillsHelper {
 
     /**
      * @var \Drupal\nys_subscriptions\SubscriptionInterface|null $ret
-*/
+     */
     $ret = current($storage->loadByProperties($props)) ?: NULL;
     if ($create && !$ret) {
       $ret = $storage->create($props + ['source' => $bill]);

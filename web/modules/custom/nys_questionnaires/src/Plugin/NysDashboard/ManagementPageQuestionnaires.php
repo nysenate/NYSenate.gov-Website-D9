@@ -235,7 +235,7 @@ class ManagementPageQuestionnaires extends ManagementPageBase {
       if ($node->hasField('field_senator_multiref') && !$node->get('field_senator_multiref')->isEmpty()) {
         /**
          * @var \Drupal\taxonomy\Entity\Term $senator
-*/
+         */
         $senator = $node->field_senator_multiref->entity;
         if ($senator) {
           $author = Link::fromTextAndUrl($senator->getName(), $senator->toUrl())->toString();

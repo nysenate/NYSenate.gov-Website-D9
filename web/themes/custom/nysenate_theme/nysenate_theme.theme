@@ -5,28 +5,28 @@
  * Functions to support theming in the rain_theme theme.
  */
 
+use Drupal\address\Plugin\Field\FieldType\AddressItem;
+use Drupal\block_content\Entity\BlockContent;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Html;
-use Drupal\Core\Link;
-use Drupal\Core\Url;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Template\Attribute;
-use Drupal\address\Plugin\Field\FieldType\AddressItem;
-use Drupal\block_content\Entity\BlockContent;
+use Drupal\Core\Url;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\file\Entity\File;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
-use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\nys_users\UsersHelper;
+use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\TermInterface;
 use Drupal\user\Entity\User;
-use Drupal\views\Views;
 use Drupal\views\ViewExecutable;
+use Drupal\views\Views;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**

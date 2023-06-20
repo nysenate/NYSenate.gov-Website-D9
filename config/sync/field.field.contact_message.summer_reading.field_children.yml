@@ -1,0 +1,82 @@
+uuid: f69d0de3-5945-4b0b-8a5c-edc4fda29490
+langcode: en
+status: true
+dependencies:
+  config:
+    - contact.form.summer_reading
+    - field.storage.contact_message.field_children
+    - paragraphs.paragraphs_type.summer_reading
+  module:
+    - entity_reference_revisions
+id: contact_message.summer_reading.field_children
+field_name: field_children
+entity_type: contact_message
+bundle: summer_reading
+label: 'Child''s Information'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      summer_reading: summer_reading
+    negate: 0
+    target_bundles_drag_drop:
+      accordion_item:
+        weight: 19
+        enabled: false
+      agenda_bills:
+        weight: 20
+        enabled: false
+      calendar:
+        weight: 21
+        enabled: false
+      card:
+        weight: 22
+        enabled: false
+      carousel:
+        weight: 23
+        enabled: false
+      committee_featured_legislation:
+        weight: 24
+        enabled: false
+      featured_legislation:
+        weight: 25
+        enabled: false
+      gallery_item:
+        weight: 26
+        enabled: false
+      members:
+        weight: 27
+        enabled: false
+      misc_legislative_group_members:
+        weight: 28
+        enabled: false
+      office_contacts:
+        weight: 29
+        enabled: false
+      office_locations:
+        weight: 30
+        enabled: false
+      quick_facts:
+        weight: 31
+        enabled: false
+      quote:
+        weight: 32
+        enabled: false
+      slider_item:
+        weight: 33
+        enabled: false
+      steps:
+        weight: 34
+        enabled: false
+      summer_reading:
+        weight: 35
+        enabled: true
+      votes:
+        weight: 36
+        enabled: false
+field_type: entity_reference_revisions

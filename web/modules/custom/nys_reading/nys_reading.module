@@ -1,0 +1,90 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for NYS Registration module.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_form_alter().
+ *
+ * Custom validation and submit handler for Summer Reading Form.
+ */
+function nys_reading_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if ($form_id == 'contact_message_summer_reading_form') {
+    array_unshift($form['#validate'], 'nys_reading_validation');
+    array_unshift($form['actions']['submit']['#submit'], 'nys_reading_form_submit');
+  }
+}
+
+/**
+ * Implements hook_form_submit().
+ *
+ * Looks up district address.
+ */
+function nys_reading_form_submit(array $form, FormStateInterface $form_state) {
+  $fields = [
+    'addr1' => 'address_line1',
+    'addr2' => 'address_line2',
+    'city' => 'locality',
+    'state' => 'administrative_area',
+    'zip' => 'postal_code',
+  ];
+  foreach ($fields as $k => $v) {
+    $state = ['field_address', 0, 'address', $v];
+    $params[$k] = $form_state->getValue($state) ?? '';
+  }
+  $params = array_filter($params);
+  // SAGE returns a district number.  Try to load the district entity.
+  $district = \Drupal::service('sage_api')->districtAssign($params);
+  try {
+    $district_term = current(
+      \Drupal::entityTypeManager()
+        ->getStorage('taxonomy_term')
+        ->loadByProperties(['field_district_number' => $district])
+    ) ?: NULL;
+  }
+  catch (\Throwable) {
+    $district_term = NULL;
+  }
+  $term_id = $district_term->id();
+  $form_state->setValue('field_district', [['target_id' => $term_id]]);
+}
+
+/**
+ * Implements hook_validation().
+ *
+ * Validates number of books submitted.
+ */
+function nys_reading_validation(array &$form, FormStateInterface &$form_state) {
+  $children = $form_state->getValue('field_children');
+  foreach ($children as $key => $child) {
+    $child_name = $form_state->getValue(
+      ['field_children', $key, 'subform', 'field_student_name', 0, 'value']
+    );
+    if (!$child_name) {
+      continue;
+    }
+    $values = $form_state->getValue(
+      ['field_children', $key, 'subform', 'field_student_books']
+    );
+    if (is_array($values)) {
+      foreach ($values as $key2 => $value) {
+        if (empty($value['value'])) {
+          $form_state->setErrorByName('field_children][' . $key . '][field_student_books',
+            t('You must enter three books for @child_name, you have only entered @key2.',
+              $array = [
+                '@child_name' => $child_name,
+                '@key2' => $key2,
+              ]));
+        }
+      }
+    }
+    else {
+      $form_state->setErrorByName('field_children][' . $key . '][field_student_books',
+        t('You must enter 3 books'));
+    }
+  }
+}

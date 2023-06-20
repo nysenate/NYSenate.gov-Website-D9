@@ -1,0 +1,21 @@
+uuid: 8f5e0849-15c0-49bb-8b86-d8ae1095bc0f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_grade
+    - paragraphs.paragraphs_type.summer_reading
+  module:
+    - options
+id: paragraph.summer_reading.field_grade
+field_name: field_grade
+entity_type: paragraph
+bundle: summer_reading
+label: 'Grade (in Fall 2023)'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

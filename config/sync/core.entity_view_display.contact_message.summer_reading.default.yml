@@ -1,0 +1,85 @@
+uuid: 9c7f3c8e-0e94-42fb-9736-4041fbe9a62d
+langcode: en
+status: true
+dependencies:
+  config:
+    - contact.form.summer_reading
+    - field.field.contact_message.summer_reading.field_address
+    - field.field.contact_message.summer_reading.field_children
+    - field.field.contact_message.summer_reading.field_district
+    - field.field.contact_message.summer_reading.field_email
+    - field.field.contact_message.summer_reading.field_student_parent_name
+  module:
+    - address
+    - entity_reference_revisions
+id: contact_message.summer_reading.default
+targetEntityType: contact_message
+bundle: summer_reading
+mode: default
+content:
+  field_address:
+    type: address_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_children:
+    type: entity_reference_revisions_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_district:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_email:
+    type: basic_string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_student_parent_name:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  mail:
+    type: basic_string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: -2
+    region: content
+  name:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: -3
+    region: content
+  subject:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: -1
+    region: content
+hidden:
+  langcode: true
+  message: true
+  search_api_excerpt: true

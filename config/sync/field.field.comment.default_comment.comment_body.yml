@@ -6,7 +6,12 @@ dependencies:
     - comment.type.default_comment
     - field.storage.comment.comment_body
   module:
+    - allowed_formats
     - text
+third_party_settings:
+  allowed_formats:
+    allowed_formats:
+      - plain_text
 id: comment.default_comment.comment_body
 field_name: comment_body
 entity_type: comment

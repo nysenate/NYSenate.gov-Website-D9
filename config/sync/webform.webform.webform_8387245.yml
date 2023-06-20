@@ -1,0 +1,143 @@
+uuid: df23baed-58a2-45bb-b18c-56286efa1ecb
+langcode: en
+status: open
+dependencies: {  }
+weight: 0
+open: null
+close: null
+uid: 2196030
+template: false
+archive: false
+id: webform_8387245
+title: 'Senator Gianaris Constituent Services'
+description: null
+category: null
+elements: |
+  first_name:
+    '#type': textfield
+    '#title': 'First Name' 
+    '#description': ""
+    '#required': true
+  last_name:
+    '#type': textfield
+    '#title': 'Last Name' 
+    '#description': ""
+    '#required': true
+  preferred_pronouns:
+    '#type': textfield
+    '#title': 'Preferred pronouns' 
+    '#description': ""
+  street_address:
+    '#type': textfield
+    '#title': 'Street Address' 
+    '#description': ""
+    '#required': true
+  city:
+    '#type': textfield
+    '#title': 'City' 
+    '#description': ""
+    '#required': true
+  state:
+    '#type': textfield
+    '#default_value': 'New York' 
+    '#title': 'State' 
+    '#description': ""
+    '#required': true
+  phone_number:
+    '#type': textfield
+    '#title': 'Phone Number' 
+    '#description': ""
+    '#required': true
+  email_address:
+    '#type': textfield
+    '#title': 'Email Address' 
+    '#description': ""
+    '#required': true
+  date_of_birth:
+    '#type': textfield
+    '#title': 'Date of Birth' 
+    '#description': ""
+    '#required': true
+  last_four_of_social_security_number___itin_if_available:
+    '#type': textfield
+    '#title': 'Last Four of Social Security Number / ITIN (if available)' 
+    '#description': "Required for Department of Labor Inquiries"
+  agency_involved_if_known_applicable:
+    '#type': textfield
+    '#title': 'Agency Involved (if known/applicable)' 
+    '#description': ""
+  case_reference_number_if_applicable:
+    '#type': textfield
+    '#title': 'Case/Reference Number (if applicable)' 
+    '#description': ""
+  details_about_your_request:
+    '#type': textarea
+    '#title': 'Details About Your Request' 
+    '#description': "How can we help you?"
+    '#required': true
+  upload_supporting_documents:
+    '#type': managed_file
+    '#max_filesize': '2'
+    '#file_extensions': 'gif jpg jpeg png'
+    '#title': 'Upload Supporting Documents' 
+    '#description': ""
+css: ''
+javascript: ''
+settings:
+  page: true
+  wizard_progress_bar: true
+  preview: 0
+  draft: '0'
+  draft_auto_save: false
+  confirmation_type: page
+  confirmation_url: ''
+  confirmation_message: ''
+  limit_total: null
+  limit_user: null
+  form_submit_label: ''
+  wizard_complete: 1
+access:
+  create:
+    roles:
+      - anonymous
+      - authenticated
+    users: {  }
+handlers:
+  email_1:
+    id: email
+    handler_id: email_1
+    label: 'Email 1'
+    notes: ''
+    status: true
+    conditions: {  }
+    weight: 1
+    settings:
+      states:
+        - completed
+      to_mail: schachte@nysenate.gov
+      to_options: {  }
+      bcc_mail: ''
+      bcc_options: {  }
+      cc_mail: ''
+      cc_options: {  }
+      from_mail: default
+      from_options: {  }
+      from_name: default
+      reply_to: ''
+      return_path: ''
+      sender_mail: ''
+      sender_name: ''
+      subject: default
+      body: default
+      excluded_elements: {  }
+      ignore_access: false
+      exclude_empty: true
+      exclude_empty_checkbox: false
+      exclude_attachments: false
+      html: true
+      attachments: false
+      twig: false
+      theme_name: ''
+      parameters: {  }
+      debug: false
+variants: {  }

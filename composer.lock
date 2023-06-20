@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "964e28bf096feb2a9fbff880f264f28e",
+    "content-hash": "2b454053eff00841562cd21f262d3c34",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -3002,6 +3002,168 @@
             }
         },
         {
+            "name": "drupal/contact_block",
+            "version": "2.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/contact_block.git",
+                "reference": "2.0.2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/contact_block-2.0.2.zip",
+                "reference": "2.0.2",
+                "shasum": "222050b04f41c328a2dde760061a530b7bc51b12"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9 || ^10"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "2.0.2",
+                    "datestamp": "1671437826",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Sutharsan",
+                    "homepage": "https://www.drupal.org/user/73854"
+                },
+                {
+                    "name": "vuil",
+                    "homepage": "https://www.drupal.org/user/3568458"
+                }
+            ],
+            "description": "The Contact Block module provides contact forms in a block.",
+            "homepage": "https://www.drupal.org/project/contact_block",
+            "keywords": [
+                "Drupal",
+                "contact_block"
+            ],
+            "support": {
+                "source": "https://git.drupalcode.org/project/contact_block",
+                "issues": "https://www.drupal.org/project/issues/contact_block"
+            }
+        },
+        {
+            "name": "drupal/contact_permissions",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/contact_permissions.git",
+                "reference": "8.x-2.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/contact_permissions-8.x-2.0.zip",
+                "reference": "8.x-2.0",
+                "shasum": "9263858e6ff522394238b2862475632e0a4b1f40"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-2.0",
+                    "datestamp": "1591958450",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Manuel Garcia",
+                    "homepage": "https://www.drupal.org/user/213194"
+                },
+                {
+                    "name": "pcambra",
+                    "homepage": "https://www.drupal.org/user/122101"
+                }
+            ],
+            "description": "Provides permissions for having a personal contact form",
+            "homepage": "https://www.drupal.org/project/contact_permissions",
+            "support": {
+                "source": "https://git.drupalcode.org/project/contact_permissions"
+            }
+        },
+        {
+            "name": "drupal/contact_storage",
+            "version": "1.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/contact_storage.git",
+                "reference": "8.x-1.3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/contact_storage-8.x-1.3.zip",
+                "reference": "8.x-1.3",
+                "shasum": "719dad5a991aa32e14c9bcb7b9dc76830e2331df"
+            },
+            "require": {
+                "drupal/core": "^9.1 || ^10",
+                "drupal/token": "^1.6"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-1.3",
+                    "datestamp": "1667651867",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "andypost",
+                    "homepage": "https://www.drupal.org/user/118908"
+                },
+                {
+                    "name": "Arla",
+                    "homepage": "https://www.drupal.org/user/226712"
+                },
+                {
+                    "name": "Berdir",
+                    "homepage": "https://www.drupal.org/user/214652"
+                },
+                {
+                    "name": "jibran",
+                    "homepage": "https://www.drupal.org/user/1198144"
+                },
+                {
+                    "name": "larowlan",
+                    "homepage": "https://www.drupal.org/user/395439"
+                }
+            ],
+            "description": "Provides storage and edit capability for contact messages.",
+            "homepage": "https://www.drupal.org/project/contact_storage",
+            "support": {
+                "source": "https://git.drupalcode.org/project/contact_storage"
+            }
+        },
+        {
             "name": "drupal/contextual_range_filter",
             "version": "1.0.0",
             "source": {
@@ -4890,40 +5052,12 @@
                     "role": "Co-maintainer"
                 },
                 {
-                    "name": "Dean Reilly",
-                    "homepage": "https://www.drupal.org/user/336031"
-                },
-                {
-                    "name": "gregseb",
-                    "homepage": "https://www.drupal.org/user/847848"
-                },
-                {
-                    "name": "indytechcook",
-                    "homepage": "https://www.drupal.org/user/245817"
-                },
-                {
-                    "name": "itamair",
-                    "homepage": "https://www.drupal.org/user/1179076"
-                },
-                {
                     "name": "michaelfavia",
                     "homepage": "https://www.drupal.org/user/49137"
                 },
                 {
-                    "name": "phayes",
-                    "homepage": "https://www.drupal.org/user/47098"
-                },
-                {
-                    "name": "Pol",
-                    "homepage": "https://www.drupal.org/user/47194"
-                },
-                {
-                    "name": "Simon Georges",
-                    "homepage": "https://www.drupal.org/user/172312"
-                },
-                {
-                    "name": "vidhatanand",
-                    "homepage": "https://www.drupal.org/user/585764"
+                    "name": "poker10",
+                    "homepage": "https://www.drupal.org/user/272316"
                 }
             ],
             "description": "Module and services based API to perform Geocode & Reverse Geocode operations among GIS data and addresses types & formats.",
@@ -21536,7 +21670,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://bitbucket.org/mediacurrent/ci-tests/get/d3ef879e7ce1722918c4c244eac5147480644931.zip",
+                "url": "https://bitbucket.org/mediacurrent/ci-tests/get/2457918b1dfe6374bfb06b855478b6d6c51590b0.zip",
                 "reference": "8dcb01c2202a703883e57a60fc77e745f7829ae9",
                 "shasum": ""
             },
@@ -21557,7 +21691,7 @@
             "homepage": "https://bitbucket.org/mediacurrent/ci-tests",
             "support": {
                 "issues": "https://bitbucket.org/mediacurrent/ci-tests/issues",
-                "source": "https://bitbucket.org/mediacurrent/ci-tests/src/d3ef879e7ce1722918c4c244eac5147480644931/?at=master"
+                "source": "https://bitbucket.org/mediacurrent/ci-tests/src/2457918b1dfe6374bfb06b855478b6d6c51590b0/?at=master"
             },
             "time": "2023-06-05T12:00:14+00:00"
         },

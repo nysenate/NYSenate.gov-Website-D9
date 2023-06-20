@@ -62,7 +62,7 @@ function nysenate_theme_preprocess_block__system_branding_block(&$variables) {
   $variables['site_branding'] = [
     'text' => $variables['site_name'],
     'img' => [
-      'url' => 'https://www.nysenate.gov/sites/all/themes/nysenate/images/nys_logo224x224.png',
+      'url' => '/themes/custom/nysenate_theme/src/assets/nys_logo224x224.png',
       'alt' => 'New York State Senate Seal',
     ],
     'link' => Url::fromRoute('<front>'),
@@ -2009,6 +2009,8 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
           $print_no = NULL;
           $positions = NULL;
           $bill_description = NULL;
+          $sponsor_lastname = NULL;
+
           if ($entity->hasField('field_ol_print_no') && !$entity->field_ol_print_no->isEmpty()) {
             $print_no = $entity->field_ol_print_no->first()->value;
           }
@@ -2017,6 +2019,9 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
           }
           if ($entity->hasField('field_ol_name') && !$entity->get('field_ol_name')->isEmpty()) {
             $bill_description = $entity->field_ol_name->first()->value;
+          }
+          if ($entity->hasField('field_ol_sponsor_name') && !$entity->get('field_ol_sponsor_name')->isEmpty()) {
+            $sponsor_lastname = $entity->field_ol_sponsor_name->first()->value;
           }
           if ($entity->hasField('field_ol_last_status_date') && !$entity->field_ol_last_status_date->isEmpty()) {
             $date = $entity->field_ol_last_status_date->first()->value;
@@ -2038,6 +2043,10 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
             $date = $entity->field_date->first()->value;
             $date = \Drupal::service('date.formatter')->format(strtotime($date), '', 'F j, Y');
           }
+          if ($entity->hasField('field_ol_publish_date') && !$entity->field_ol_publish_date->isEmpty()) {
+            $date = $entity->field_ol_publish_date->first()->value;
+            $date = \Drupal::service('date.formatter')->format(strtotime($date), '', 'F j, Y');
+          }
           if ($entity->hasField('field_senator_multiref') && !$entity->field_senator_multiref->isEmpty()) {
             $senator = $entity->field_senator_multiref->entity;
             $senator_link = [
@@ -2052,10 +2061,12 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
             'title' => $type->label(),
             'print_no' => $print_no,
             'bill' => $bill,
+            'bill_url' => $entity->toUrl(),
             'search_results' => TRUE,
             'positions' => $positions,
             'topics' => $topics,
             'bill_description' => $bill_description,
+            'sponsor' => $sponsor_lastname,
             'description' => [
               'text' => $title,
               'url' => $entity->toUrl(),

@@ -7,6 +7,7 @@
 {% include "@nysenate_theme/nysenate-search-results-listing/nysenate-search-results-listing.twig" with {
   "article": {
     "bill": true,
+    "bill_url": url,
     "is_dynamic_color": true,
     "bill_title": {
       "url": url,
@@ -19,10 +20,7 @@
         "url": url
       }
     ],
-    "bill_description": {
-      "text": content.field_ol_name[0],
-      "url": url
-    },
+    "bill_description": content.field_ol_name[0],
     "sponsor": {
       "text": content.field_ol_sponsor_name[0]
     }

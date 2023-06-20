@@ -50,8 +50,8 @@ class SearchLegislationController extends ControllerBase {
             $content['search_legislation_results'] = $view->buildRenderable('search_results_block_bills');
             break;
 
-          case 'event':
-            $content['search_legislation_results'] = $view->buildRenderable('search_results_block_events');
+          case 'session':
+            $content['search_legislation_results'] = $view->buildRenderable('search_results_block_sessions');
             break;
 
           case 'resolution':

@@ -6,8 +6,8 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Mail\MailManagerInterface;
 use Drupal\Core\Messenger\MessengerInterface;
-use Drupal\private_message\Entity\PrivateMessage;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\private_message\Entity\PrivateMessage;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -49,9 +49,9 @@ class ForwardForm extends FormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('messenger'),
-      $container->get('plugin.manager.mail'),
-    );
+          $container->get('messenger'),
+          $container->get('plugin.manager.mail'),
+      );
   }
 
   /**
@@ -68,7 +68,9 @@ class ForwardForm extends FormBase {
 
     $private_message = PrivateMessage::load($private_message_id);
 
-    /** @var \Drupal\user\Entity\User $owner */
+    /**
+* @var \Drupal\user\Entity\User $owner
+*/
     $owner = $private_message->owner->entity;
     $from = $owner->name->value;
     $subject = $private_message->field_subject->value;

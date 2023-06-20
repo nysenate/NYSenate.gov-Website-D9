@@ -2,9 +2,9 @@
 
 namespace Drupal\nys_legislation_explorer\Controller;
 
-use Drupal\views\Views;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\nys_legislation_explorer\SearchAdvancedLegislationHelper;
+use Drupal\views\Views;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**

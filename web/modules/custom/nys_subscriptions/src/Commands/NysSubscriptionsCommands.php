@@ -98,12 +98,14 @@ class NysSubscriptionsCommands extends DrushCommands {
         $queue = $this->queueManager->get($one_queue);
         $results = $queue->process($bedtime);
         $this->logger()
-          ->info("Completed processing for queue @name, @success success, @fail fail, @skip skipped",
-            [
-              '@success' => $results->getSuccess(),
-              '@fail' => $results->getFail(),
-              '@skip' => $results->getSkipped(),
-            ]);
+          ->info(
+                  "Completed processing for queue @name, @success success, @fail fail, @skip skipped",
+                  [
+                    '@success' => $results->getSuccess(),
+                    '@fail' => $results->getFail(),
+                    '@skip' => $results->getSkipped(),
+                  ]
+              );
       }
       catch (\Throwable $e) {
         $this->logger()

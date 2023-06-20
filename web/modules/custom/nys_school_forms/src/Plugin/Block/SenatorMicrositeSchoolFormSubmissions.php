@@ -2,16 +2,16 @@
 
 namespace Drupal\nys_school_forms\Plugin\Block;
 
-use Drupal\node\NodeInterface;
-use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Access\AccessResult;
-use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\Routing\CurrentRouteMatch;
+use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\nys_school_forms\SchoolFormsService;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Routing\CurrentRouteMatch;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\node\NodeInterface;
+use Drupal\nys_school_forms\SchoolFormsService;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -78,15 +78,15 @@ class SenatorMicrositeSchoolFormSubmissions extends BlockBase implements Contain
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
-        $configuration,
-        $plugin_id,
-        $plugin_definition,
-        $container->get('nys_school_forms.school_forms'),
-        $container->get('cache.default'),
-        $container->get('entity_type.manager'),
-        $container->get('current_route_match'),
-        $container->get('request_stack')
-    );
+          $configuration,
+          $plugin_id,
+          $plugin_definition,
+          $container->get('nys_school_forms.school_forms'),
+          $container->get('cache.default'),
+          $container->get('entity_type.manager'),
+          $container->get('current_route_match'),
+          $container->get('request_stack')
+      );
   }
 
   /**
@@ -96,7 +96,9 @@ class SenatorMicrositeSchoolFormSubmissions extends BlockBase implements Contain
    *   The menu links array for the 'Senator Microsite Menu' template.
    */
   public function build() {
-    /** @var \Drupal\node\Entity\Node $node */
+    /**
+* @var \Drupal\node\Entity\Node $node
+*/
     $node = $this->routeMatch->getParameter('node');
     $build = [];
     if ($node instanceof NodeInterface && $node->getType() === 'microsite_page') {
@@ -150,23 +152,23 @@ class SenatorMicrositeSchoolFormSubmissions extends BlockBase implements Contain
         '#theme' => 'nys_school_forms__results_block',
         '#content' => [
           'panels' => [
-            [
-              'tab_text' => 'Current Year',
-              'title' => date('Y') . ' Poster Submissions',
-              'filter' => $filter,
-              'years' => $this->schoolFormsService->getResults($params, FALSE),
-            ],
-            [
-              'tab_text' => 'Past Submissions',
-              'title' => 'Archived Submissions',
-              'filter' => $filter,
-              'filter_item' => [
-                'label' => 'Select Year',
-                'desc' => 'Archive only goes back to ' . end($filter_options)['text'],
-                'select_options' => $filter_options,
-              ],
-              'years' => $past_submissions,
-            ],
+        [
+          'tab_text' => 'Current Year',
+          'title' => date('Y') . ' Poster Submissions',
+          'filter' => $filter,
+          'years' => $this->schoolFormsService->getResults($params, FALSE),
+        ],
+        [
+          'tab_text' => 'Past Submissions',
+          'title' => 'Archived Submissions',
+          'filter' => $filter,
+          'filter_item' => [
+            'label' => 'Select Year',
+            'desc' => 'Archive only goes back to ' . end($filter_options)['text'],
+            'select_options' => $filter_options,
+          ],
+          'years' => $past_submissions,
+        ],
           ],
         ],
       ];

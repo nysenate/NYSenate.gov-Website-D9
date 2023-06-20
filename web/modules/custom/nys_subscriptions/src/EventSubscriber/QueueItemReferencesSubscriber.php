@@ -59,7 +59,7 @@ class QueueItemReferencesSubscriber implements EventSubscriberInterface {
     $type = $data['source_type'] ?? '';
     $id = $data['source_id'] ?? '';
     $refs['source_entity'] = ($type && $id)
-      ? $this->manager->getStorage($type)->load($id) : NULL;
+        ? $this->manager->getStorage($type)->load($id) : NULL;
   }
 
 }

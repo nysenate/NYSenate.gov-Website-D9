@@ -154,10 +154,12 @@ final class LocationMigration {
     $dependencies_to_add = [];
     $derivative_suffix = implode(PluginBase::DERIVATIVE_SEPARATOR, $derivative_pieces);
     foreach ($base_plugin_ids as $base_plugin_id) {
-      $dependencies_to_add[] = implode(PluginBase::DERIVATIVE_SEPARATOR, [
-        $base_plugin_id,
-        $derivative_suffix,
-      ]);
+      $dependencies_to_add[] = implode(
+            PluginBase::DERIVATIVE_SEPARATOR, [
+              $base_plugin_id,
+              $derivative_suffix,
+            ]
+        );
     }
 
     // Remove non-derived dependencies.
@@ -168,11 +170,11 @@ final class LocationMigration {
     }
 
     $migration_dependencies['required'] = array_unique(
-      array_merge(
-        array_values($migration_dependencies['required']),
-        $dependencies_to_add
-      )
-    );
+          array_merge(
+              array_values($migration_dependencies['required']),
+              $dependencies_to_add
+          )
+      );
   }
 
   /**

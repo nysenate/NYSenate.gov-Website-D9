@@ -3,8 +3,8 @@
 namespace Drupal\nys_blocks\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
-use Drupal\user\Entity\User;
 use Drupal\Core\Url;
+use Drupal\user\Entity\User;
 
 /**
  * Block for How a Bill Becomes a Law.
@@ -31,8 +31,8 @@ class WantTo extends BlockBase {
     if ($logged_in) {
       $current_user = \Drupal::currentUser();
       $user = User::load($current_user->id());
-      if ($user->hasField('field_district') && !$user->get('field_district')
-        ->isEmpty()) {
+      if ($user->hasField('field_district') && !$user->get('field_district')->isEmpty()
+        ) {
         // @phpstan-ignore-next-line
         $senator = $user->field_district->entity->field_senator->entity ?? NULL;
         // @phpstan-ignore-next-line

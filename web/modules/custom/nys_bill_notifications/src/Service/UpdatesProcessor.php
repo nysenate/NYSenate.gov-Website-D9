@@ -155,7 +155,9 @@ class UpdatesProcessor {
       $nodes = $this->entityTypeManager
         ->getStorage('node')
         ->loadByProperties(['title' => $print_num]);
-      /** @var \Drupal\node\Entity\Node|null $ret */
+      /**
+* @var \Drupal\node\Entity\Node|null $ret
+*/
       $ret = (count($nodes) == 1) ? current($nodes) : NULL;
     }
     catch (\Throwable $e) {
@@ -169,7 +171,9 @@ class UpdatesProcessor {
    */
   protected function loadTerm(int $id): ?Term {
     try {
-      /** @var \Drupal\taxonomy\Entity\Term $ret */
+      /**
+* @var \Drupal\taxonomy\Entity\Term $ret
+*/
       $ret = $this->entityTypeManager
         ->getStorage('taxonomy_term')
         ->load($id);
@@ -194,9 +198,13 @@ class UpdatesProcessor {
    */
   protected function compileEvents(array $results): array {
     $events = [];
-    /** @var \Drupal\nys_bill_notifications\MatchResults $one_result */
+    /**
+* @var \Drupal\nys_bill_notifications\MatchResults $one_result
+*/
     foreach ($results as $one_result) {
-      /** @var \Drupal\nys_bill_notifications\BillTestBase $one_test */
+      /**
+* @var \Drupal\nys_bill_notifications\BillTestBase $one_test
+*/
       foreach ($one_result->getMatches() as $one_test) {
         $events[] = [
           'name' => $one_test->getName(),
@@ -209,17 +217,19 @@ class UpdatesProcessor {
     }
 
     // Sort the events by priority (descending) and timestamp (descending).
-    usort($events, function (array $a, array $b) {
-      if ($a['priority'] != $b['priority']) {
-        return $a['priority'] < $b['priority'] ? 1 : -1;
-      }
-      elseif ($a['timestamp'] != $b['timestamp']) {
-        return $a['timestamp'] < $b['timestamp'] ? 1 : -1;
-      }
-      else {
-        return 0;
-      }
-    });
+    usort(
+          $events, function (array $a, array $b) {
+            if ($a['priority'] != $b['priority']) {
+                return $a['priority'] < $b['priority'] ? 1 : -1;
+            }
+            elseif ($a['timestamp'] != $b['timestamp']) {
+                return $a['timestamp'] < $b['timestamp'] ? 1 : -1;
+            }
+            else {
+                return 0;
+            }
+          }
+      );
 
     return $events;
   }
@@ -315,9 +325,9 @@ class UpdatesProcessor {
       // If a bill cannot be loaded, report and skip this update.
       if (!$bill = \Drupal::service('nys_bill.bills_helper')->loadBillByTitle($print_num)) {
         $this->logger->error(
-          'Could not load bill @print_num while processing updates',
-          ['@print_num' => $print_num]
-        );
+              'Could not load bill @print_num while processing updates',
+              ['@print_num' => $print_num]
+          );
         continue;
       }
 
@@ -325,9 +335,9 @@ class UpdatesProcessor {
       $root_tid = $bill->field_bill_multi_session_root->target_id ?? 0;
       if (!($term = $this->loadTerm($root_tid))) {
         $this->logger->error(
-          'Could not load term @tax_id for @print_num while processing updates',
-          ['@print_num' => $print_num, '@tax_id' => $root_tid]
-        );
+              'Could not load term @tax_id for @print_num while processing updates',
+              ['@print_num' => $print_num, '@tax_id' => $root_tid]
+          );
         continue;
       }
 

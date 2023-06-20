@@ -40,9 +40,9 @@ class TestForm extends FormBase {
    */
   public static function create(ContainerInterface $container): TestForm {
     return new static(
-      $container->get('config.factory'),
-      $container->get('sage_api')
-    );
+          $container->get('config.factory'),
+          $container->get('sage_api')
+      );
   }
 
   /**
@@ -77,8 +77,8 @@ class TestForm extends FormBase {
 
     $logging = (bool) $this->localConfig->get('logging');
     $log_desc = $logging
-      ? $this->t("Logging is already on.")
-      : $this->t("Force the call to be logged even though logging is turned off.");
+        ? $this->t("Logging is already on.")
+        : $this->t("Force the call to be logged even though logging is turned off.");
     $form['test_call_log'] = [
       '#type' => 'checkbox',
       '#title' => 'Log this call?',

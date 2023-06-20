@@ -31,8 +31,8 @@ class DashboardManagementController extends ControllerBase {
    */
   public static function create(ContainerInterface $container): static {
     return new static(
-      $container->get('nys_senators.dashboard.page_manager')
-    );
+          $container->get('nys_senators.dashboard.page_manager')
+      );
   }
 
   /**

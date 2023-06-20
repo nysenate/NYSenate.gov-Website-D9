@@ -78,12 +78,12 @@ abstract class ImportProcessorBase implements ImportProcessorInterface {
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
-      $container->get('entity_type.manager'),
-      $container->get('logger.channel.openleg_imports'),
-      $plugin_definition,
-      $plugin_id,
-      $configuration
-    );
+          $container->get('entity_type.manager'),
+          $container->get('logger.channel.openleg_imports'),
+          $plugin_definition,
+          $plugin_id,
+          $configuration
+      );
   }
 
   /**
@@ -151,9 +151,9 @@ abstract class ImportProcessorBase implements ImportProcessorInterface {
         }
         catch (\Throwable $e) {
           $this->logger->error(
-            'Failed to create a new node for @type import',
-            ['@type' => $search['type'], '@message' => $e->getMessage()]
-          );
+                'Failed to create a new node for @type import',
+                ['@type' => $search['type'], '@message' => $e->getMessage()]
+            );
           $node = NULL;
         }
       }

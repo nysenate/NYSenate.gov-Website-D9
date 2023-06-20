@@ -2,9 +2,9 @@
 
 namespace Drupal\nys_opendata\Controller;
 
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\nys_opendata\NysOpenDataCsv;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Class HomepageHeroController.

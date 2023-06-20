@@ -31,8 +31,8 @@ class FindMySenatorForm extends FormBase {
    */
   public static function create(ContainerInterface $container): self {
     return new static(
-      $container->get('nys_registration.helper')
-    );
+          $container->get('nys_registration.helper')
+      );
   }
 
   /**
@@ -101,8 +101,8 @@ class FindMySenatorForm extends FormBase {
     if ($form_state->isSubmitted()) {
       $district = $form_state->get('district');
       $form['result']['#markup'] = $district
-        ? '<h3>This address belongs to district ' . $district . '</h3>'
-        : 'A district assignment could not be made.  Please verify the address.';
+            ? '<h3>This address belongs to district ' . $district . '</h3>'
+            : 'A district assignment could not be made.  Please verify the address.';
     }
 
     return $form;

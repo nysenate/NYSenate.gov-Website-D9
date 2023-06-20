@@ -2,13 +2,12 @@
 
 namespace Drupal\nys_bills\Form;
 
-use Drupal\Core\Url;
 use Drupal\Core\Form\FormBase;
-
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Url;
 use Drupal\private_message\Entity\PrivateMessage;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
@@ -173,10 +172,12 @@ class BillForm extends FormBase {
       // If the user is already logged in,
       // personal info fields should be hidden.
       $text_type = 'hidden';
-      $form_markup = '<p>' . $this->t('Would you like to include a private message to @senator on <span class=\"bill-widget-status\"></span> @printno?', [
-        '@senator' => $senator,
-        '@printno' => $printno,
-      ]) . '</p>';
+      $form_markup = '<p>' . $this->t(
+            'Would you like to include a private message to @senator on <span class=\"bill-widget-status\"></span> @printno?', [
+              '@senator' => $senator,
+              '@printno' => $printno,
+            ]
+        ) . '</p>';
     }
     else {
       $text_type = 'textfield';
@@ -405,15 +406,17 @@ class BillForm extends FormBase {
             }
 
             $subject = $values['first_name'] . ' ' . $values['last_name'] . ' ' .
-              $vote_type . ' ' . $node->label();
+                        $vote_type . ' ' . $node->label();
 
             // Create the private message entity.
-            $message = PrivateMessage::create([
-              'message' => $values['message'],
-              'field_subject' => $subject,
-              'field_to' => [$senator_user_id],
-              'field_bill' => [$node->id()],
-            ]);
+            $message = PrivateMessage::create(
+                  [
+                    'message' => $values['message'],
+                    'field_subject' => $subject,
+                    'field_to' => [$senator_user_id],
+                    'field_bill' => [$node->id()],
+                  ]
+              );
             $message->save();
 
             $recipients = [$user_storage->load($senator_user_id), $user];
@@ -471,7 +474,9 @@ class BillForm extends FormBase {
    */
   public function justVoted($entity_id) {
     $uid = $this->currentUser->id();
-    /** @var \Drupal\votingapi\VoteStorage $vote_storage */
+    /**
+* @var \Drupal\votingapi\VoteStorage $vote_storage
+*/
     $vote_storage = $this->entityTypeManager->getStorage('vote');
     if ($uid === 0) {
       // Anonymous user.
@@ -485,7 +490,9 @@ class BillForm extends FormBase {
     $vote_value = NULL;
     $vote_entity = NULL;
     if (!empty($user_votes)) {
-      /** @var \Drupal\votingapi\Entity\Vote $vote_entity */
+      /**
+* @var \Drupal\votingapi\Entity\Vote $vote_entity
+*/
       $vote_entity = $vote_storage->load(end($user_votes));
       $created = $vote_entity->getCreatedTime();
       // 4 secs buffer.
@@ -535,11 +542,13 @@ class BillForm extends FormBase {
 
     $messages = NULL;
     if ($senator) {
-      $messages = $this->entityTypeManager->getStorage('private_message')->loadByProperties([
-        'field_to' => $senator->field_user_account->target_id ?? [],
-        'owner' => $user->id(),
-        'field_bill' => $entity_id,
-      ]);
+      $messages = $this->entityTypeManager->getStorage('private_message')->loadByProperties(
+            [
+              'field_to' => $senator->field_user_account->target_id ?? [],
+              'owner' => $user->id(),
+              'field_bill' => $entity_id,
+            ]
+        );
     }
 
     $thread = NULL;

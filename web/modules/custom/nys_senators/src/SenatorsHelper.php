@@ -2,12 +2,12 @@
 
 namespace Drupal\nys_senators;
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Http\RequestStack;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\nys_senators\Service\Microsites;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\TermInterface;
@@ -112,7 +112,7 @@ class SenatorsHelper {
    */
   protected function generateMicrositeUrl(string $name): string {
     return $this->request->getSchemeAndHttpHost() .
-      '/senators/' . strtolower(str_replace([' ', '.'], ['-', ''], $name));
+        '/senators/' . strtolower(str_replace([' ', '.'], ['-', ''], $name));
   }
 
   /**
@@ -167,10 +167,12 @@ class SenatorsHelper {
   public function getSenatorTidFromMemberId($member_id): ?EntityInterface {
     try {
       $ret = $this->getStorage()
-        ->loadByProperties([
-          'field_ol_member_id' => $member_id,
-          'vid' => 'senator',
-        ]);
+        ->loadByProperties(
+                [
+                  'field_ol_member_id' => $member_id,
+                  'vid' => 'senator',
+                ]
+            );
     }
     catch (\Throwable) {
       $ret = [];
@@ -226,7 +228,8 @@ class SenatorsHelper {
   public function hasMicroSiteInactive(array $nodes) {
     foreach ($nodes as $node) {
       if ($node->hasField('field_microsite_page_type')
-        && !$node->get('field_microsite_page_type')->isEmpty()) {
+            && !$node->get('field_microsite_page_type')->isEmpty()
+        ) {
         $tid = $node->field_microsite_page_type->getValue()[0]['target_id'] ?? '';
         $micrositeTerm = Term::load($tid);
         if ($micrositeTerm instanceof TermInterface && !empty($micrositeTerm->getName()) && $micrositeTerm->getName() === 'Inactive') {
@@ -290,16 +293,18 @@ class SenatorsHelper {
     // If a district number was passed, load the district.
     if (!is_object($district)) {
       $loaded = $this->getStorage()
-        ->loadByProperties([
-          'field_district_number' => $district,
-          'vid' => 'districts',
-        ]);
+        ->loadByProperties(
+                [
+                  'field_district_number' => $district,
+                  'vid' => 'districts',
+                ]
+            );
       $district = current($loaded);
     }
 
     return $district && property_exists($district, 'field_senator')
-      ? $this->getStorage()->load($district->field_senator->target_id)
-      : NULL;
+        ? $this->getStorage()->load($district->field_senator->target_id)
+        : NULL;
   }
 
   /**
@@ -312,10 +317,12 @@ class SenatorsHelper {
   public function loadDistrict(Term $senator): ?Term {
     try {
       $loaded = $this->getStorage()
-        ->loadByProperties([
-          'field_senator' => $senator->id(),
-          'vid' => 'districts',
-        ]);
+        ->loadByProperties(
+                [
+                  'field_senator' => $senator->id(),
+                  'vid' => 'districts',
+                ]
+            );
     }
     catch (\Throwable) {
       $loaded = [];
@@ -364,16 +371,18 @@ class SenatorsHelper {
    *   If true, sort by "<last> <first>".  Otherwise sort by "<first> <last>".
    */
   public static function sortByName(array &$senators, bool $last_first = TRUE): void {
-    usort($senators, function ($a, $b) use ($last_first) {
-      foreach (['a', 'b'] as $var) {
-        $first = ${$var}->field_senator_name->given ?? '';
-        $last = ${$var}->field_senator_name->family ?? '';
-        ${$var} = $last_first
-          ? $last . ' ' . $first
-          : $first . ' ' . $last;
-      }
-      return $a == $b ? 0 : ($a < $b ? -1 : 0);
-    });
+    usort(
+          $senators, function ($a, $b) use ($last_first) {
+            foreach (['a', 'b'] as $var) {
+                $first = ${$var}->field_senator_name->given ?? '';
+                $last = ${$var}->field_senator_name->family ?? '';
+                ${$var} = $last_first
+                ? $last . ' ' . $first
+                : $first . ' ' . $last;
+            }
+              return $a == $b ? 0 : ($a < $b ? -1 : 0);
+          }
+      );
   }
 
 }

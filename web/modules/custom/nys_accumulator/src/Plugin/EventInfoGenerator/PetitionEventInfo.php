@@ -42,18 +42,20 @@ class PetitionEventInfo extends EventInfoGeneratorBase {
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): EventInfoGeneratorBase {
     return new static(
-      $container->get('nys_senators.senators_helper'),
-      $plugin_definition,
-      $plugin_id,
-      $configuration
-    );
+          $container->get('nys_senators.senators_helper'),
+          $plugin_definition,
+          $plugin_id,
+          $configuration
+      );
   }
 
   /**
    * Add the petition's owner and their district.
    */
   protected function extraBuild(ContentEntityBase $source, array &$ret): void {
-    /** @var \Drupal\taxonomy\Entity\Term $sponsor */
+    /**
+* @var \Drupal\taxonomy\Entity\Term $sponsor
+*/
     $sponsor = $source->field_senator_multiref->entity;
     $district = $this->helper->loadDistrict($sponsor);
     $ret['senator_shortname'] = $sponsor?->field_ol_shortname?->value ?? '';

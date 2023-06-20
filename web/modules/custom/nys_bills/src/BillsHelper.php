@@ -2,19 +2,19 @@
 
 namespace Drupal\nys_bills;
 
+use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Logger\LoggerChannelTrait;
 use Drupal\flag\FlagServiceInterface;
 use Drupal\node\NodeInterface;
-use Drupal\Core\Database\Connection;
 use Drupal\nys_senators\SenatorsHelper;
 use Drupal\nys_subscriptions\SubscriptionInterface;
 use Drupal\nys_users\UsersHelper;
 use Drupal\path_alias\Entity\PathAlias;
-use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -166,8 +166,8 @@ class BillsHelper {
   public function buildAlias(NodeInterface $node): string {
     $version = strtoupper($node->field_ol_version->value ?? '') ?: 'original';
     return $this->isBill($node)
-      ? $this->buildActiveAlias($node) . '/amendment/' . $version
-      : '';
+        ? $this->buildActiveAlias($node) . '/amendment/' . $version
+        : '';
   }
 
   /**
@@ -218,12 +218,14 @@ class BillsHelper {
     }
 
     // Generate the key to be used.
-    return implode(':', [
-      'versions',
-      $node_type,
-      $session,
-      $base_print,
-    ]);
+    return implode(
+          ':', [
+            'versions',
+            $node_type,
+            $session,
+            $base_print,
+          ]
+      );
   }
 
   /**
@@ -247,16 +249,17 @@ class BillsHelper {
 
     if (is_null($ret) && $cid) {
       $ret = [];
-      if (
-        $node->hasField('field_ol_base_print_no')
-        && !$node->get('field_ol_base_print_no')->isEmpty()
-        && $node->hasField('field_ol_session')
-        && !$node->get('field_ol_session')->isEmpty()
-      ) {
+      if ($node->hasField('field_ol_base_print_no')
+            && !$node->get('field_ol_base_print_no')->isEmpty()
+            && $node->hasField('field_ol_session')
+            && !$node->get('field_ol_session')->isEmpty()
+        ) {
         $base_print = $node->field_ol_base_print_no->value;
         $session = $node->field_ol_session->value;
 
-        /** @var \Drupal\node\NodeInterface $bill */
+        /**
+* @var \Drupal\node\NodeInterface $bill
+*/
         foreach ($this->loadBillVersions($base_print, $session) as $bill) {
           $ret[$bill->getTitle()] = $bill->id();
         }
@@ -282,11 +285,15 @@ class BillsHelper {
    */
   public function loadBillByTitle(string $print_num): ?NodeInterface {
     try {
-      $nodes = $this->getStorage()->loadByProperties([
-        'type' => ['bill', 'resolution'],
-        'title' => $print_num,
-      ]);
-      /** @var \Drupal\node\NodeInterface|NULL $ret */
+      $nodes = $this->getStorage()->loadByProperties(
+            [
+              'type' => ['bill', 'resolution'],
+              'title' => $print_num,
+            ]
+        );
+      /**
+       * @var \Drupal\node\NodeInterface|NULL $ret
+*/
       $ret = current($nodes) ?: NULL;
     }
     catch (\Throwable) {
@@ -310,11 +317,11 @@ class BillsHelper {
       // Clear the node cache for all versions.
       // E.g., if S100B gets updated, S100 and S100A are also invalidated.
       $tags = array_map(
-        function ($nid) {
-          return "node:$nid";
-        },
-        array_keys($this->getBillVersions($node))
-      );
+            function ($nid) {
+                return "node:$nid";
+            },
+            array_keys($this->getBillVersions($node))
+        );
       if (count($tags)) {
         $this->cache->invalidateMultiple($tags);
       }
@@ -334,8 +341,8 @@ class BillsHelper {
    */
   public function formatFullBillTitle(NodeInterface $node): string {
     return $this->isBill($node)
-      ? ucfirst($node->field_ol_chamber->value) . ' ' . ucfirst($node->bundle()) . ' ' . $node->label()
-      : '';
+        ? ucfirst($node->field_ol_chamber->value) . ' ' . ucfirst($node->bundle()) . ' ' . $node->label()
+        : '';
   }
 
   /**
@@ -344,18 +351,17 @@ class BillsHelper {
    * @see formatTitleParts()
    */
   public function formatTitle(NodeInterface $node, string $version = '', string $separator = '-'): string {
-    if (
-      $node->hasField('field_ol_base_print_no')
-      && !$node->get('field_ol_base_print_no')->isEmpty()
-      && $node->hasField('field_ol_session')
-      && !$node->get('field_ol_session')->isEmpty()
-    ) {
+    if ($node->hasField('field_ol_base_print_no')
+          && !$node->get('field_ol_base_print_no')->isEmpty()
+          && $node->hasField('field_ol_session')
+          && !$node->get('field_ol_session')->isEmpty()
+      ) {
       $title = $this->formatTitleParts(
-        $node->field_ol_session->value,
-        $node->field_ol_base_print_no->value,
-        $version,
-        $separator
-      );
+            $node->field_ol_session->value,
+            $node->field_ol_base_print_no->value,
+            $version,
+            $separator
+        );
     }
     return $title ?? '';
   }
@@ -540,7 +546,9 @@ class BillsHelper {
    */
   protected function getPathAlias(array $values = []): ?PathAlias {
     try {
-      /** @var \Drupal\path_alias\PathAliasStorage $storage */
+      /**
+* @var \Drupal\path_alias\PathAliasStorage $storage
+*/
       $storage = $this->entityTypeManager->getStorage('path_alias');
     }
     catch (\Throwable) {
@@ -630,8 +638,8 @@ class BillsHelper {
     // We're using drupal_html_class() ensure that parameters have no spaces in
     // them.
     $cid = 'nysenate_bill_prev_versions_' .
-      str_replace(' ', '', $prev_vers_session) . '-' .
-      str_replace(' ', '', $prev_vers_print_no);
+        str_replace(' ', '', $prev_vers_session) . '-' .
+        str_replace(' ', '', $prev_vers_print_no);
     if ($cache = $this->cache->get($cid)) {
       return $cache->data;
     }
@@ -681,9 +689,11 @@ class BillsHelper {
       $metadata = $this->getBillMetadata($related_bills);
 
       // Load all bills associated with this bill's taxonomy root.
-      $related_metadata = array_filter($metadata, function ($v) {
-        return $v->print_num === $v->base_print_num;
-      });
+      $related_metadata = array_filter(
+            $metadata, function ($v) {
+                return $v->print_num === $v->base_print_num;
+            }
+        );
     }
 
     return $related_metadata;
@@ -823,7 +833,9 @@ class BillsHelper {
       }
     }
 
-    /** @var \Drupal\nys_subscriptions\SubscriptionInterface|null $ret */
+    /**
+* @var \Drupal\nys_subscriptions\SubscriptionInterface|null $ret
+*/
     $ret = current($storage->loadByProperties($props)) ?: NULL;
     if ($create && !$ret) {
       $ret = $storage->create($props + ['source' => $bill]);

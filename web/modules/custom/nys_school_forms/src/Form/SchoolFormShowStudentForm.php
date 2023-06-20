@@ -2,20 +2,20 @@
 
 namespace Drupal\nys_school_forms\Form;
 
+use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\File\FileSystem;
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
+use Drupal\Core\Url;
+use Drupal\file\FileInterface;
+use Drupal\file\FileRepository;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Drupal\Core\StringTranslation\TranslationInterface;
-use Drupal\file\FileInterface;
-use Drupal\Core\Url;
-use Drupal\file\FileRepository;
-use Drupal\Core\File\FileSystem;
-use Drupal\Core\File\FileSystemInterface;
-use Drupal\Core\Entity\EntityTypeManager;
 
 /**
  * Defines a confirmation form to confirm setting school submissions to public.
@@ -90,12 +90,13 @@ class SchoolFormShowStudentForm extends ConfirmFormBase {
    *   The entity type manager.
    */
   public function __construct(PrivateTempStoreFactory $temp_store_factory,
-  EntityTypeManagerInterface $entity_type_manager,
-  AccountInterface $account,
-  FileSystem $fileSystem,
-  FileRepository $fileRepository,
-  TranslationInterface $string_translation,
-  EntityTypeManager $entityTypeManager) {
+        EntityTypeManagerInterface $entity_type_manager,
+        AccountInterface $account,
+        FileSystem $fileSystem,
+        FileRepository $fileRepository,
+        TranslationInterface $string_translation,
+        EntityTypeManager $entityTypeManager
+    ) {
     $this->privateTempStoreFactory = $temp_store_factory;
     $this->fileStorage = $entity_type_manager->getStorage('file');
     $this->currentUser = $account;
@@ -110,14 +111,14 @@ class SchoolFormShowStudentForm extends ConfirmFormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('tempstore.private'),
-      $container->get('entity_type.manager'),
-      $container->get('current_user'),
-      $container->get('file_system'),
-      $container->get('file.repository'),
-      $container->get('string_translation'),
-      $container->get('entity_type.manager'),
-    );
+          $container->get('tempstore.private'),
+          $container->get('entity_type.manager'),
+          $container->get('current_user'),
+          $container->get('file_system'),
+          $container->get('file.repository'),
+          $container->get('string_translation'),
+          $container->get('entity_type.manager'),
+      );
   }
 
   /**
@@ -165,9 +166,11 @@ class SchoolFormShowStudentForm extends ConfirmFormBase {
 
     $form['files'] = [
       '#theme' => 'item_list',
-      '#items' => array_map(function ($file) {
-        return $file->getFilename();
-      }, $this->files),
+      '#items' => array_map(
+          function ($file) {
+              return $file->getFilename();
+          }, $this->files
+      ),
     ];
     return parent::buildForm($form, $form_state);
   }
@@ -196,9 +199,12 @@ class SchoolFormShowStudentForm extends ConfirmFormBase {
             $submission_timestamp = $submission->getCreatedTime();
             $school_form_type = '';
 
-            /** @var \Drupal\node\NodeInterface $node */
-            if ($node && $node->hasField('field_school_form_type') && !$node->get('field_school_form_type')->isEmpty() &&
-            $node->get('field_school_form_type')->entity) {
+            /**
+* @var \Drupal\node\NodeInterface $node
+*/
+            if ($node && $node->hasField('field_school_form_type') && !$node->get('field_school_form_type')->isEmpty()
+                  && $node->get('field_school_form_type')->entity
+              ) {
               $school_form_type = $node->get('field_school_form_type')->entity->label();
               $alias = str_replace([' ', '-', '\''], '_', strtolower($school_form_type));
               $directory = 'public://' . $alias . '/' . $node->id() . '/' . $sid . '/';
@@ -216,9 +222,13 @@ class SchoolFormShowStudentForm extends ConfirmFormBase {
             }
             else {
               $this->logger('School Forms')->notice('The file you selected to show does not exist.');
-              $this->messenger()->addMessage($this->stringTranslation->formatPlural($count,
-                '1 file does not exist in the file system. Cannot show student submission file.',
-                'A file you selected do not exits in the file system. Cannot show student submission file.'));
+              $this->messenger()->addMessage(
+                    $this->stringTranslation->formatPlural(
+                        $count,
+                        '1 file does not exist in the file system. Cannot show student submission file.',
+                        'A file you selected do not exits in the file system. Cannot show student submission file.'
+                    )
+                );
               $url = Url::fromUri($form_state->getValue('field_referrer'));
               $form_state->setRedirectUrl($url);
             }

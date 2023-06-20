@@ -34,12 +34,12 @@ class OverviewStatsManager extends DefaultPluginManager {
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, EventDispatcherInterface $dispatcher) {
     parent::__construct(
-      'Plugin/NysDashboard',
-      $namespaces,
-      $module_handler,
-      'Drupal\nys_senators\OverviewStatInterface',
-      'Drupal\nys_senators\Annotation\OverviewStat'
-    );
+          'Plugin/NysDashboard',
+          $namespaces,
+          $module_handler,
+          'Drupal\nys_senators\OverviewStatInterface',
+          'Drupal\nys_senators\Annotation\OverviewStat'
+      );
     $this->setCacheBackend($cache_backend, 'nys_senators.dashboard.overview.stats');
     $this->dispatcher = $dispatcher;
   }
@@ -79,7 +79,9 @@ class OverviewStatsManager extends DefaultPluginManager {
     $ret = [];
     $a = $this->getInstances();
     $url = $senator->toUrl()->toString();
-    /** @var \Drupal\nys_senators\OverviewStatInterface $stat */
+    /**
+* @var \Drupal\nys_senators\OverviewStatInterface $stat
+*/
     foreach ($a as $key => $stat) {
       $content = $stat->getContent($senator);
       if (!is_null($content)) {
@@ -92,11 +94,13 @@ class OverviewStatsManager extends DefaultPluginManager {
     // @phpstan-ignore-next-line
     $this->dispatcher->dispatch($event, Events::OVERVIEW_STATS_ALTER);
 
-    usort($event->stats, function ($a, $b) {
-      $a = $a['weight'] ?? 0;
-      $b = $b['weight'] ?? 0;
-      return ($a == $b) ? 0 : ($a < $b ? -1 : 1);
-    });
+    usort(
+          $event->stats, function ($a, $b) {
+              $a = $a['weight'] ?? 0;
+              $b = $b['weight'] ?? 0;
+              return ($a == $b) ? 0 : ($a < $b ? -1 : 1);
+          }
+      );
 
     return $event->stats;
   }

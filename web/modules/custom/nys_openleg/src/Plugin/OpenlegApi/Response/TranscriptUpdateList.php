@@ -17,12 +17,16 @@ class TranscriptUpdateList extends ResponseUpdate {
    * {@inheritDoc}
    */
   public function listIds(): array {
-    return array_unique(array_filter(array_map(
-      function ($v) {
-        return $v->transcriptId->dateTime ?? '';
-      },
-      $this->items()
-    )));
+    return array_unique(
+          array_filter(
+              array_map(
+                  function ($v) {
+                          return $v->transcriptId->dateTime ?? '';
+                  },
+                  $this->items()
+              )
+          )
+      );
   }
 
 }

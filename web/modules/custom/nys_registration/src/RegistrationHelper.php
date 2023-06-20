@@ -50,24 +50,28 @@ class RegistrationHelper {
    */
   public function getDistrictFromAddress(array $address_parts): ?Term {
     $zip = explode('-', $address_parts['postal_code'] ?? '');
-    $params = array_filter([
-      'addr1' => $address_parts['address_line1'] ?? '',
-      'addr2' => $address_parts['address_line2'] ?? '',
-      'city' => $address_parts['locality'] ?? '',
-      'state' => $address_parts['administrative_area'] ?? '',
-      'zip5' => $zip[0] ?? '',
-      'zip4' => $zip[1] ?? '',
-    ]);
+    $params = array_filter(
+          [
+            'addr1' => $address_parts['address_line1'] ?? '',
+            'addr2' => $address_parts['address_line2'] ?? '',
+            'city' => $address_parts['locality'] ?? '',
+            'state' => $address_parts['administrative_area'] ?? '',
+            'zip5' => $zip[0] ?? '',
+            'zip4' => $zip[1] ?? '',
+          ]
+      );
 
     // SAGE returns a district number.  Try to load the district entity.
     $district = $this->sageApi->districtAssign($params);
     try {
-      /** @var \Drupal\taxonomy\Entity\Term|null $district_term */
+      /**
+* @var \Drupal\taxonomy\Entity\Term|null $district_term
+*/
       $district_term = current(
-        $this->entityTypeManager
-          ->getStorage('taxonomy_term')
-          ->loadByProperties(['field_district_number' => $district])
-      ) ?: NULL;
+            $this->entityTypeManager
+              ->getStorage('taxonomy_term')
+              ->loadByProperties(['field_district_number' => $district])
+        ) ?: NULL;
     }
     catch (\Throwable) {
       $district_term = NULL;
@@ -87,10 +91,12 @@ class RegistrationHelper {
    */
   public function getMicrositeDistrictAlias(Term $senator) {
     $district_url = '';
-    $nids = $this->entityTypeManager->getStorage('node')->loadByProperties([
-      'field_microsite_page_type' => '200001',
-      'field_senator_multiref' => $senator->id(),
-    ]);
+    $nids = $this->entityTypeManager->getStorage('node')->loadByProperties(
+          [
+            'field_microsite_page_type' => '200001',
+            'field_senator_multiref' => $senator->id(),
+          ]
+      );
     foreach ($nids as $nid => $value) {
       $district_node = $this->entityTypeManager->getStorage('node')->load($nid);
     }

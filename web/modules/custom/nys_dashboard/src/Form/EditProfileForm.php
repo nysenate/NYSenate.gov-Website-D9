@@ -42,12 +42,12 @@ class EditProfileForm extends ProfileForm {
    */
   public static function create(ContainerInterface $container): self {
     return new static(
-      $container->get('entity.repository'),
-      $container->get('language_manager'),
-      $container->get('module_handler'),
-      $container->get('entity_type.bundle.info'),
-      $container->get('datetime.time')
-    );
+          $container->get('entity.repository'),
+          $container->get('language_manager'),
+          $container->get('module_handler'),
+          $container->get('entity_type.bundle.info'),
+          $container->get('datetime.time')
+      );
   }
 
   /**
@@ -76,11 +76,11 @@ class EditProfileForm extends ProfileForm {
     // Profile Image placeholder.
     if (isset($form['field_profile_picture']['widget']['#field_prefix']['empty_selection']['#markup'])) {
       $form['field_profile_picture']['widget']['#field_prefix']['empty_selection']['#markup'] =
-        new FormattableMarkup(
-          '<div class="nys-senator--thumb nys-senator--thumb--placeholder">
+            new FormattableMarkup(
+            '<div class="nys-senator--thumb nys-senator--thumb--placeholder">
             <img src="/themes/custom/nysenate_theme/src/assets/default-avatar.png" alt="Default avatar"/>
           </div>',
-          []
+            []
         );
     }
 

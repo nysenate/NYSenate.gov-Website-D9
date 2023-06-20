@@ -63,11 +63,11 @@ class Accumulator implements ContainerInjectionInterface {
    */
   public static function create(ContainerInterface $container): self {
     return new static(
-      $container->get('event_dispatcher'),
-      $container->get('database'),
-      $container->get('current_request'),
-      $container->get('nys_senators.senators_helper')
-    );
+          $container->get('event_dispatcher'),
+          $container->get('database'),
+          $container->get('current_request'),
+          $container->get('nys_senators.senators_helper')
+      );
   }
 
   /**
@@ -75,11 +75,11 @@ class Accumulator implements ContainerInjectionInterface {
    */
   public function newEntry(): AccumulatorEntry {
     return new AccumulatorEntry(
-      $this->dispatcher,
-      $this->database,
-      $this->request,
-      $this->helper
-    );
+          $this->dispatcher,
+          $this->database,
+          $this->request,
+          $this->helper
+      );
   }
 
   /**

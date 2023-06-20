@@ -77,7 +77,9 @@ class SenatorCommittees extends BlockBase implements ContainerFactoryPluginInter
         ->sort('field_committee_member_role', 'DESC')
         ->execute();
       foreach ($committee_membership_ids as $mpid) {
-        /** @var \Drupal\paragraphs\Entity\Paragraph $committee_membership */
+        /**
+* @var \Drupal\paragraphs\Entity\Paragraph $committee_membership
+*/
         $committee_membership = $paragraph_storage->load($mpid);
         $parent = $committee_membership->getParentEntity();
         if (!empty($parent)) {

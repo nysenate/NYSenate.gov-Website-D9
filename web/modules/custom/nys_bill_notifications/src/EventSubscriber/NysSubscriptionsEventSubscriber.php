@@ -2,19 +2,19 @@
 
 namespace Drupal\nys_bill_notifications\EventSubscriber;
 
-use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Logger\LoggerChannelTrait;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Config\ImmutableConfig;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Logger\LoggerChannelTrait;
 use Drupal\node\Entity\Node;
 use Drupal\nys_sendgrid\Api\Template;
 use Drupal\nys_sendgrid\TemplatesManager;
 use Drupal\nys_slack\Service\Slack;
+use Drupal\nys_subscriptions\Event\GetSubscribersEvent;
 use Drupal\nys_subscriptions\Event\QueueItemReferences;
 use Drupal\nys_subscriptions\Event\QueueItemSubscribers;
 use Drupal\nys_subscriptions\Event\QueueItemTokens;
 use Drupal\nys_subscriptions\Events;
-use Drupal\nys_subscriptions\Event\GetSubscribersEvent;
 use Drupal\nys_subscriptions\Exception\FailedTemplateAssignment;
 use Drupal\nys_subscriptions\Exception\InvalidSubscriptionEntity;
 use Drupal\nys_subscriptions\Subscriber;
@@ -137,8 +137,8 @@ class NysSubscriptionsEventSubscriber implements EventSubscriberInterface {
     // Set the mail key and module for the queue item.
     $event->item->mailModule = 'nys_bill_notifications';
     $event->item->mailKey = strtolower(
-      $event->item->data['primary_event']['name'] ?? 'bill_notifications_general'
-    );
+          $event->item->data['primary_event']['name'] ?? 'bill_notifications_general'
+      );
     $event->item->references['categories'][] = 'bill_notifications';
 
     // Try to load a reference to the updated bill.  If a bill cannot be loaded,
@@ -235,15 +235,15 @@ class NysSubscriptionsEventSubscriber implements EventSubscriberInterface {
       // Add the full session reference (2015-2016 vs 2015).
       if ($test_val = ($subs['%bill.session%'] ?? '')) {
         $subs['%bill.full_session%'] = $test_val % 2
-          ? $test_val . '-' . ((++$test_val) % 100)
-          : --$test_val . '-' . ((++$test_val) % 100);
+                ? $test_val . '-' . ((++$test_val) % 100)
+                : --$test_val . '-' . ((++$test_val) % 100);
       }
 
       // Set the alternate chamber.
       $subs['%bill.alternate_chamber%'] = match ($subs['%bill.chamber%'] ?? '') {
         'Senate' => "Assembly",
-        'Assembly' => "Senate",
-        default => '',
+                'Assembly' => "Senate",
+                default => '',
       };
 
       // Get the same_as variable we need for rendering.
@@ -251,15 +251,17 @@ class NysSubscriptionsEventSubscriber implements EventSubscriberInterface {
       $subs['%bill.same_as%'] = $same_as_array[0]->printNo ?? '';
 
       // Values for committee emails.
-      $url_formatted_committee_string = strtolower(str_replace(
-        [',', ' '],
-        ['', '-'],
-        $subs['%bill.latest_committee%'] ?? ''
-      ));
+      $url_formatted_committee_string = strtolower(
+            str_replace(
+                [',', ' '],
+                ['', '-'],
+                $subs['%bill.latest_committee%'] ?? ''
+            )
+        );
       $subs['%bill.committee_path%'] =
-        $url_formatted_committee_string
-          ? '/committees/' . $url_formatted_committee_string . '/'
-          : '';
+            $url_formatted_committee_string
+              ? '/committees/' . $url_formatted_committee_string . '/'
+              : '';
 
       // Get most recent actions from subscribed entity.
       $actions = '';
@@ -267,7 +269,7 @@ class NysSubscriptionsEventSubscriber implements EventSubscriberInterface {
       $recent_events = array_slice($all_events->items, -3, 3);
       foreach ($recent_events as $val) {
         $actions .= '<li>' . date("M j, Y", strtotime($val->date)) .
-          ' - ' . $val->text . '</li>';
+                    ' - ' . $val->text . '</li>';
       }
       $subs['%bill.actions%'] = $actions;
 
@@ -304,18 +306,20 @@ class NysSubscriptionsEventSubscriber implements EventSubscriberInterface {
       $subscriber = $event->subscriber;
 
       // The target must be a bill node.  If not, report and skip.
-      /** @var \Drupal\node\Entity\Node $bill */
+      /**
+* @var \Drupal\node\Entity\Node $bill
+*/
       $bill = $item->references['updated_bill'];
       if (!(($bill instanceof Node) && ($bill->bundle() == 'bill'))) {
         $this->logger->warning(
-          "Subscriber @sub_id referenced an invalid target",
-          [
-            '@subscriber' => $subscriber,
-            '@sub_id' => $subscriber->get('subId'),
-            '@target' => get_class($bill),
-            '@bundle' => $bill->bundle(),
-          ]
-        );
+              "Subscriber @sub_id referenced an invalid target",
+              [
+                '@subscriber' => $subscriber,
+                '@sub_id' => $subscriber->get('subId'),
+                '@target' => get_class($bill),
+                '@bundle' => $bill->bundle(),
+              ]
+          );
         return;
       }
 
@@ -343,14 +347,14 @@ class NysSubscriptionsEventSubscriber implements EventSubscriberInterface {
       }
       catch (\Throwable) {
         $this->logger->warning(
-          "Could not create recipient for subscriber @sub_id (empty name/email?)",
-          [
-            '@subscriber' => $subscriber,
-            '@email' => $um,
-            '@name' => $un,
-            '@sub_id' => $subscriber->get('subId'),
-          ]
-        );
+              "Could not create recipient for subscriber @sub_id (empty name/email?)",
+              [
+                '@subscriber' => $subscriber,
+                '@email' => $um,
+                '@name' => $un,
+                '@sub_id' => $subscriber->get('subId'),
+              ]
+          );
         return;
       }
 
@@ -415,9 +419,9 @@ class NysSubscriptionsEventSubscriber implements EventSubscriberInterface {
       }
       catch (TypeException $e) {
         $this->logger->error(
-          "Skipping subscriber: failed to transcribe substitutions",
-          ['@message' => $e->getMessage(), '@subscriber' => $subscriber]
-        );
+              "Skipping subscriber: failed to transcribe substitutions",
+              ['@message' => $e->getMessage(), '@subscriber' => $subscriber]
+          );
         return;
       }
 
@@ -439,7 +443,9 @@ class NysSubscriptionsEventSubscriber implements EventSubscriberInterface {
     $templates = TemplatesManager::getTemplates();
     $search = 'BILL_ALERT__' . $name;
     foreach ($templates as $ret) {
-      /** @var \Drupal\nys_sendgrid\Api\Template $ret */
+      /**
+* @var \Drupal\nys_sendgrid\Api\Template $ret
+*/
       if ($search == ($ret->getName() ?? '')) {
         return $ret;
       }

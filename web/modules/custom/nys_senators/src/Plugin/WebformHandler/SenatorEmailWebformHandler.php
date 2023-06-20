@@ -2,11 +2,11 @@
 
 namespace Drupal\nys_senators\Plugin\WebformHandler;
 
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\taxonomy\TermInterface;
 use Drupal\webform\Plugin\WebformHandler\EmailWebformHandler;
 use Drupal\webform\WebformSubmissionInterface;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -54,11 +54,13 @@ class SenatorEmailWebformHandler extends EmailWebformHandler {
 
     // Checks for senator email value and overrides email recipient.
     if ($senator_term instanceof TermInterface
-        && $senator_term->bundle() === 'senator') {
+          && $senator_term->bundle() === 'senator'
+      ) {
 
       // Set the general inquiry email as the default value.
       if (!$senator_term->get('field_email')->isEmpty()
-        && $senator_term->hasField('field_email')) {
+            && $senator_term->hasField('field_email')
+        ) {
         $message['to_mail'] = $senator_term->field_email->value;
       }
 
@@ -66,7 +68,8 @@ class SenatorEmailWebformHandler extends EmailWebformHandler {
       // Only override the value if the inquiry type is press_inquiry.
       if ($inquiry_type == 'press_inquiry') {
         if (!$senator_term->get('field_press_inquiries')->isEmpty()
-          && $senator_term->hasField('field_press_inquiries')) {
+              && $senator_term->hasField('field_press_inquiries')
+          ) {
           $message['to_mail'] = $senator_term->field_press_inquiries->value;
         }
       }

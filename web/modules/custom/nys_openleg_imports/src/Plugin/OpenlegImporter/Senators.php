@@ -44,24 +44,32 @@ class Senators extends ImporterBase {
   public function importMemberLinks(string $session): ImportResult {
     $ret = new ImportResult();
 
-    /** @var \Drupal\nys_openleg\Service\ApiManager $api */
+    /**
+* @var \Drupal\nys_openleg\Service\ApiManager $api
+*/
     $api = \Drupal::service('manager.openleg_api');
 
-    /** @var \Drupal\Core\Entity\EntityStorageBase $store */
+    /**
+* @var \Drupal\Core\Entity\EntityStorageBase $store
+*/
     $store = \Drupal::service('entity_type.manager')
       ->getStorage('taxonomy_term');
 
     $request = $api->getRequest('member');
-    /** @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\MemberSessionList $members */
+    /**
+* @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\MemberSessionList $members
+*/
     $members = $request->retrieve($session, ['limit' => 0]);
 
     foreach ($members->items() as $member) {
       $shortname = $member->shortName;
       $id = $member->memberId;
-      $tax_search = $store->loadByProperties([
-        'vid' => 'senator',
-        'field_senator_name.family' => $shortname,
-      ]);
+      $tax_search = $store->loadByProperties(
+            [
+              'vid' => 'senator',
+              'field_senator_name.family' => $shortname,
+            ]
+        );
       if (count($tax_search) == 1) {
         $term = reset($tax_search);
         // @phpstan-ignore-next-line

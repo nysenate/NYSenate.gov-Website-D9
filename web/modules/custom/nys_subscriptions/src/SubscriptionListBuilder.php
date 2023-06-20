@@ -2,9 +2,9 @@
 
 namespace Drupal\nys_subscriptions;
 
+use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityListBuilder;
-use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Routing\RedirectDestinationInterface;
@@ -45,11 +45,11 @@ class SubscriptionListBuilder extends EntityListBuilder {
    */
   public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
     return new static(
-      $entity_type,
-      $container->get('entity_type.manager')->getStorage($entity_type->id()),
-      $container->get('date.formatter'),
-      $container->get('redirect.destination')
-    );
+          $entity_type,
+          $container->get('entity_type.manager')->getStorage($entity_type->id()),
+          $container->get('date.formatter'),
+          $container->get('redirect.destination')
+      );
   }
 
   /**
@@ -83,7 +83,9 @@ class SubscriptionListBuilder extends EntityListBuilder {
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity): array {
-    /** @var \Drupal\nys_subscriptions\SubscriptionInterface $entity */
+    /**
+* @var \Drupal\nys_subscriptions\SubscriptionInterface $entity
+*/
     $row['id'] = $entity->toLink();
     $row['uid']['data'] = [
       '#theme' => 'username',
@@ -92,16 +94,20 @@ class SubscriptionListBuilder extends EntityListBuilder {
     // dateFormatter == $container->get('date.formatter')
     $row['created'] = $this->dateFormatter
       ->format($entity->getCreated(), 'custom', 'Y-m-d H:i:s');
-    $row['confirmed']['data'] = $entity->get('confirmed')->view([
-      'type' => 'boolean',
-      'label' => 'hidden',
-      'settings' => ['format' => 'unicode-yes-no'],
-    ]);
-    $row['canceled']['data'] = $entity->get('canceled')->view([
-      'type' => 'boolean',
-      'label' => 'hidden',
-      'settings' => ['format' => 'unicode-yes-no'],
-    ]);
+    $row['confirmed']['data'] = $entity->get('confirmed')->view(
+          [
+            'type' => 'boolean',
+            'label' => 'hidden',
+            'settings' => ['format' => 'unicode-yes-no'],
+          ]
+      );
+    $row['canceled']['data'] = $entity->get('canceled')->view(
+          [
+            'type' => 'boolean',
+            'label' => 'hidden',
+            'settings' => ['format' => 'unicode-yes-no'],
+          ]
+      );
     return $row + parent::buildRow($entity);
   }
 

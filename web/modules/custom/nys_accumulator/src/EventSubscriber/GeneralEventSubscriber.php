@@ -4,6 +4,7 @@ namespace Drupal\nys_accumulator\EventSubscriber;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Logger\LoggerChannelTrait;
 use Drupal\flag\Event\FlagEvents;
 use Drupal\flag\Event\FlaggingEvent;
 use Drupal\flag\Event\UnflaggingEvent;
@@ -18,7 +19,6 @@ use Drupal\nys_accumulator\Service\EventInfoManager;
 use Drupal\nys_slack\Service\Slack;
 use Drupal\user\Entity\User;
 use Psr\Log\LoggerInterface;
-use Drupal\Core\Logger\LoggerChannelTrait;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -104,16 +104,20 @@ class GeneralEventSubscriber implements EventSubscriberInterface {
   protected function buildEventInfo(string $msg_type, EntityInterface $entity): array {
 
     try {
-      /** @var \Drupal\nys_accumulator\EventInfoGeneratorInterface $plugin */
+      /**
+* @var \Drupal\nys_accumulator\EventInfoGeneratorInterface $plugin
+*/
       $plugin = $this->infoManager->createInstance($msg_type);
       $event_info = $plugin->build($entity);
     }
     catch (\Throwable $e) {
-      $this->logger->error('Failed to build event info', [
-        '@msg' => $e->getMessage(),
-        '@type' => $msg_type,
-        '@entity_type' => $entity->getEntityTypeId() . ':' . $entity->bundle(),
-      ]);
+      $this->logger->error(
+            'Failed to build event info', [
+              '@msg' => $e->getMessage(),
+              '@type' => $msg_type,
+              '@entity_type' => $entity->getEntityTypeId() . ':' . $entity->bundle(),
+            ]
+        );
       $event_info = [];
     }
     return $event_info;
@@ -134,10 +138,10 @@ class GeneralEventSubscriber implements EventSubscriberInterface {
     $flag_id = $flagging->getFlagId();
     $msg_type = match ($flag_id) {
       'follow_this_bill' => 'bill',
-      'follow_issue' => 'issue',
-      'follow_committee', 'follow_group' => 'committee',
-      'sign_petition' => 'petition',
-      default => '',
+            'follow_issue' => 'issue',
+            'follow_committee', 'follow_group' => 'committee',
+            'sign_petition' => 'petition',
+            default => '',
     };
     if (!$msg_type) {
       return;
@@ -186,10 +190,10 @@ class GeneralEventSubscriber implements EventSubscriberInterface {
   public function voteCast(VoteCastEvent $event) {
     if ($event->getVotedEntity()->bundle() == 'bill') {
       $entry = $this->accumulator->createEntry(
-        'bill',
-        $event->context->getValue() ? 'aye' : 'nay',
-        $event->context->getOwner()
-      );
+            'bill',
+            $event->context->getValue() ? 'aye' : 'nay',
+            $event->context->getOwner()
+        );
       $entry->info = $this->buildEventInfo('bill', $event->getVotedEntity());
       $entry->save();
     }
@@ -221,9 +225,13 @@ class GeneralEventSubscriber implements EventSubscriberInterface {
    * Acts on a user's profile being created or edited.
    */
   public function userEdit(UserEditEvent $event): void {
-    /** @var \Drupal\user\Entity\User $user */
+    /**
+* @var \Drupal\user\Entity\User $user
+*/
     $user = $event->context;
-    /** @var \Drupal\user\Entity\User $original */
+    /**
+* @var \Drupal\user\Entity\User $original
+*/
     $original = $user->original ?? NULL;
 
     // If this account is new (or has not been accessed), register the
@@ -280,7 +288,9 @@ class GeneralEventSubscriber implements EventSubscriberInterface {
    * Acts on a questionnaire submission.
    */
   public function submitQuestion(SubmitQuestionEvent $event): void {
-    /** @var \Drupal\webform\Entity\WebformSubmission $submit */
+    /**
+* @var \Drupal\webform\Entity\WebformSubmission $submit
+*/
     $submit = $event->context;
 
     // Only act if this is a new submission.
@@ -289,11 +299,13 @@ class GeneralEventSubscriber implements EventSubscriberInterface {
       $form = $submit->getWebform();
       try {
         $nodes = $this->entityManager->getStorage('node')
-          ->loadByProperties([
-            'type' => 'webform',
-            'status' => 1,
-            'webform.target_id' => $form->id(),
-          ]);
+          ->loadByProperties(
+                  [
+                    'type' => 'webform',
+                    'status' => 1,
+                    'webform.target_id' => $form->id(),
+                  ]
+              );
         $node = current($nodes);
       }
       catch (\Throwable) {

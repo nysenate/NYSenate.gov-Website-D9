@@ -3,12 +3,12 @@
 namespace Drupal\nys_subscriptions\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Drupal\Core\Messenger\MessengerInterface;
-use Psr\Log\LoggerInterface;
 use Drupal\node\Entity\Node;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -57,10 +57,10 @@ class SubscriptionsController extends ControllerBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity_type.manager')->getStorage('subscription'),
-      $container->get('logger.factory')->get('nys_subscriptions'),
-      $container->get('messenger')
-    );
+          $container->get('entity_type.manager')->getStorage('subscription'),
+          $container->get('logger.factory')->get('nys_subscriptions'),
+          $container->get('messenger')
+      );
   }
 
   /**
@@ -74,14 +74,20 @@ class SubscriptionsController extends ControllerBase {
    */
   public function confirmCreateSubscription($uuid) {
     try {
-      /** @var \Drupal\nys_subscriptions\SubscriptionInterface[] $subscriptions */
+      /**
+* @var \Drupal\nys_subscriptions\SubscriptionInterface[] $subscriptions
+*/
       $subscriptions = $this->subscriptionStorage->loadByProperties(['uuid' => $uuid]);
 
       if ($subscriptions) {
         $subscription = reset($subscriptions);
-        /** @var \Drupal\nys_subscriptions\SubscriptionInterface $subscription */
+        /**
+* @var \Drupal\nys_subscriptions\SubscriptionInterface $subscription
+*/
         $subscription->confirm();
-        /** @var \Drupal\Core\Entity\EntityStorageInterface $subscribe_from_id */
+        /**
+* @var \Drupal\Core\Entity\EntityStorageInterface $subscribe_from_id
+*/
         $subscribe_from_id = $subscription->get('subscribe_from_id')->getValue()[0]['value'];
         // Check if the subscribe_from_id exists and is a valid node.
         if ($subscribe_from_id && $node = Node::load($subscribe_from_id)) {
@@ -116,13 +122,19 @@ class SubscriptionsController extends ControllerBase {
    */
   public function removeSubscription($uuid) {
     try {
-      /** @var \Drupal\nys_subscriptions\SubscriptionInterface[] $subscriptions */
+      /**
+* @var \Drupal\nys_subscriptions\SubscriptionInterface[] $subscriptions
+*/
       $subscriptions = $this->subscriptionStorage->loadByProperties(['uuid' => $uuid]);
       if ($subscriptions) {
         $subscription = reset($subscriptions);
-        /** @var \Drupal\nys_subscriptions\SubscriptionInterface $subscription */
+        /**
+* @var \Drupal\nys_subscriptions\SubscriptionInterface $subscription
+*/
         $subscription->cancel();
-        /** @var \Drupal\Core\Entity\EntityStorageInterface $subscribe_from_id */
+        /**
+* @var \Drupal\Core\Entity\EntityStorageInterface $subscribe_from_id
+*/
         $subscribe_from_id = $subscription->get('subscribe_from_id')->getValue()[0]['value'];
         // Check if the subscribe_from_id exists and is a valid node.
         if ($subscribe_from_id && $node = Node::load($subscribe_from_id)) {
@@ -159,20 +171,26 @@ class SubscriptionsController extends ControllerBase {
    */
   public function globalUnsubscribe($uuid) {
     try {
-      /** @var \Drupal\Core\Entity\EntityStorageInterface */
+      /**
+* @var \Drupal\Core\Entity\EntityStorageInterface
+*/
       $subscriptions = $this->subscriptionStorage->loadByProperties(['uuid' => $uuid]);
       if ($subscriptions) {
         $uids = [];
         foreach ($subscriptions as $subscription) {
           $uids[] = $subscription->get('uid')->target_id;
-          /** @var \Drupal\nys_subscriptions\SubscriptionInterface $subscription */
+          /**
+* @var \Drupal\nys_subscriptions\SubscriptionInterface $subscription
+*/
           $subscription->cancel();
         }
 
         // Find other subscriptions with matching UIDs and cancel them.
         $other_subscriptions = $this->subscriptionStorage->loadByProperties(['uid' => $uids]);
         foreach ($other_subscriptions as $subscription) {
-          /** @var \Drupal\nys_subscriptions\SubscriptionInterface $subscription */
+          /**
+* @var \Drupal\nys_subscriptions\SubscriptionInterface $subscription
+*/
           $subscription->cancel();
         }
         $this->messenger->addStatus('You have successfully globally unsubscribed.');

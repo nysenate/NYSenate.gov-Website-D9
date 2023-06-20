@@ -31,7 +31,7 @@ class InAssemblyCommittee extends BillTestBase {
   public function getSummary(object $update): string {
     $comm = ucwords(strtolower($update->fields->{'Committee Name'}));
     return "Bill " . $update->id->basePrintNoStr . " was referred to " .
-      $comm . " Assembly committee.";
+        $comm . " Assembly committee.";
   }
 
 }

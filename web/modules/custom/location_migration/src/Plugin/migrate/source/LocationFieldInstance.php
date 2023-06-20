@@ -62,14 +62,14 @@ class LocationFieldInstance extends FieldInstance {
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration = NULL) {
     return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $migration,
-      $container->get('state'),
-      $container->get('entity_type.manager'),
-      $container->get('plugin.manager.field.field_type')
-    );
+          $configuration,
+          $plugin_id,
+          $plugin_definition,
+          $migration,
+          $container->get('state'),
+          $container->get('entity_type.manager'),
+          $container->get('plugin.manager.field.field_type')
+      );
   }
 
   /**

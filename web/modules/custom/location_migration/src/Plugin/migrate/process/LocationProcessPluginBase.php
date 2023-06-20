@@ -9,8 +9,8 @@ use Drupal\migrate\Plugin\migrate\source\SqlBase;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Base class for Location Migrate migration process plugins.
@@ -92,11 +92,11 @@ abstract class LocationProcessPluginBase extends ProcessPluginBase implements Co
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration = NULL) {
     return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $migration
-    );
+          $configuration,
+          $plugin_id,
+          $plugin_definition,
+          $migration
+      );
   }
 
   /**
@@ -167,12 +167,14 @@ abstract class LocationProcessPluginBase extends ProcessPluginBase implements Co
     if (is_array($values)) {
       ksort($values);
     }
-    return array_reduce($values ?? [], function (array $carry, array $value) {
-      if (!empty($value['lid'])) {
-        $carry[] = $value['lid'];
-      }
-      return $carry;
-    }, []);
+    return array_reduce(
+          $values ?? [], function (array $carry, array $value) {
+            if (!empty($value['lid'])) {
+                $carry[] = $value['lid'];
+            }
+              return $carry;
+          }, []
+      );
   }
 
   /**
@@ -261,10 +263,12 @@ abstract class LocationProcessPluginBase extends ProcessPluginBase implements Co
         $location_id_query->condition("li.$column_name", $column_value);
       }
       $location_id_query->orderBy('li.lid');
-      return array_reduce($location_id_query->execute()->fetchAll(\PDO::FETCH_ASSOC), function (array $carry, array $item) {
-        $carry[] = (int) $item['lid'];
-        return $carry;
-      }, []);
+      return array_reduce(
+            $location_id_query->execute()->fetchAll(\PDO::FETCH_ASSOC), function (array $carry, array $item) {
+                $carry[] = (int) $item['lid'];
+                return $carry;
+            }, []
+        );
     }
     catch (DatabaseExceptionWrapper $e) {
     }

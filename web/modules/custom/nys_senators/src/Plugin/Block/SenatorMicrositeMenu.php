@@ -2,18 +2,18 @@
 
 namespace Drupal\nys_senators\Plugin\Block;
 
-use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Block\BlockBase;
+use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Routing\CurrentRouteMatch;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
 use Drupal\taxonomy\TermInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Routing\CurrentRouteMatch;
-use Drupal\node\Entity\Node;
 
 /**
  * Block to generate the menu for all of the Senator Microsite Pages.
@@ -52,21 +52,24 @@ class SenatorMicrositeMenu extends BlockBase implements ContainerFactoryPluginIn
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static($configuration, $plugin_id, $plugin_definition,
-      $container->get('cache.default'),
-      $container->get('entity_type.manager'),
-      $container->get('current_route_match'));
+    return new static(
+          $configuration, $plugin_id, $plugin_definition,
+          $container->get('cache.default'),
+          $container->get('entity_type.manager'),
+          $container->get('current_route_match')
+      );
   }
 
   /**
    * Constructor.
    */
   public function __construct(array $configuration,
-  $plugin_id,
-  $plugin_definition,
-  CacheBackendInterface $cache_backend,
-  EntityTypeManagerInterface $entity_type_manager,
-  CurrentRouteMatch $route_match) {
+        $plugin_id,
+        $plugin_definition,
+        CacheBackendInterface $cache_backend,
+        EntityTypeManagerInterface $entity_type_manager,
+        CurrentRouteMatch $route_match
+    ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->cache = $cache_backend;
     $this->entityTypeManager = $entity_type_manager;
@@ -80,7 +83,9 @@ class SenatorMicrositeMenu extends BlockBase implements ContainerFactoryPluginIn
    *   The menu links array for the 'Senator Microsite Menu' template.
    */
   public function build() {
-    /** @var \Drupal\node\Entity\Node $node */
+    /**
+* @var \Drupal\node\Entity\Node $node
+*/
     $node = $this->routeMatch->getParameter('node');
 
     $microsite_pages = [
@@ -112,9 +117,13 @@ class SenatorMicrositeMenu extends BlockBase implements ContainerFactoryPluginIn
       }
       $nodes = Node::loadMultiple($nids);
       $menu_links = [];
-      /** @var \Drupal\node\Entity\Node $node */
+      /**
+* @var \Drupal\node\Entity\Node $node
+*/
       foreach ($nodes as $node) {
-        /** @var \Drupal\taxonomy\Entity\Term $term */
+        /**
+* @var \Drupal\taxonomy\Entity\Term $term
+*/
         $term = $node->get('field_microsite_page_type')->entity ?? [];
         if ($term instanceof TermInterface) {
           $menu_title = $term->getName() ?? '';

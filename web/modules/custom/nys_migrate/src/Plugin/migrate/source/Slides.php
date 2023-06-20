@@ -20,12 +20,14 @@ class Slides extends SqlBase {
    */
   public function query() {
     $query = $this->select('field_data_field_pg_slider_images', 's');
-    $query->fields('s', [
-      'bundle',
-      'entity_id',
-      'delta',
-      'field_pg_slider_images_fid',
-    ]);
+    $query->fields(
+          's', [
+            'bundle',
+            'entity_id',
+            'delta',
+            'field_pg_slider_images_fid',
+          ]
+      );
     return $query;
   }
 

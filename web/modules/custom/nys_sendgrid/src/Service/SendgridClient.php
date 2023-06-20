@@ -25,11 +25,13 @@ class SendgridClient {
 
     // Prepare the other possible options.
     // @todo maybe implement curl_options?  Is there a use case?
-    $options = array_filter([
-      'host' => $local_config->get('host'),
-      'version' => $local_config->get('version'),
-      'curl_options' => $local_config->get('curl_options'),
-    ]);
+    $options = array_filter(
+          [
+            'host' => $local_config->get('host'),
+            'version' => $local_config->get('version'),
+            'curl_options' => $local_config->get('curl_options'),
+          ]
+      );
     $options['verify_ssl'] = $local_config->get('verify_ssl') ?? TRUE;
 
     return new \SendGrid($api_key, $options);

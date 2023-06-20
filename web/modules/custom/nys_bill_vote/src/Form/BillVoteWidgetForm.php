@@ -2,14 +2,14 @@
 
 namespace Drupal\nys_bill_vote\Form;
 
-use Drupal\Core\Url;
-use Drupal\Core\Form\FormBase;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\BeforeCommand;
 use Drupal\Core\Ajax\InvokeCommand;
-use Drupal\Core\Ajax\RemoveCommand;
 use Drupal\Core\Ajax\RedirectCommand;
+use Drupal\Core\Ajax\RemoveCommand;
+use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Drupal\nys_bills\BillsHelper;
 use Drupal\nys_subscriptions\SubscriptionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -233,7 +233,7 @@ class BillVoteWidgetForm extends FormBase {
 
     // If we have a node id, load that node.  Otherwise, use the current.
     $ref_node = !empty($node_id) ? $this->entityTypeManager->getStorage('node')->load($node_id)
-      : $this->routeMatch->getParameter('node');
+        : $this->routeMatch->getParameter('node');
 
     // If the nid matches the current node's id, then this is not an embed.
     $is_embed = FALSE;
@@ -384,7 +384,9 @@ class BillVoteWidgetForm extends FormBase {
 
     // If the user is logged in, revert to that email address.
     if ($this->currentUser->isAuthenticated()) {
-      /** @var \Drupal\user\UserInterface $user */
+      /**
+* @var \Drupal\user\UserInterface $user
+*/
       $email_address = $user->getEmail();
     }
 
@@ -447,7 +449,9 @@ class BillVoteWidgetForm extends FormBase {
    */
   public function subscriptionSignup($nid, $email_address): ?SubscriptionInterface {
     try {
-      /** @var \Drupal\node\NodeInterface $bill */
+      /**
+* @var \Drupal\node\NodeInterface $bill
+*/
       $bill = $this->entityTypeManager->getStorage('node')->load($nid);
     }
     catch (\Throwable) {

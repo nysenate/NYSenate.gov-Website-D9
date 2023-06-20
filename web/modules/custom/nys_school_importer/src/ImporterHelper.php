@@ -3,11 +3,11 @@
 namespace Drupal\nys_school_importer;
 
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Extension\ExtensionPathResolver;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\State\State;
-use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\Extension\ExtensionPathResolver;
 use Drupal\Core\Logger\LoggerChannelFactory;
+use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\State\State;
 
 /**
  * Helper class for nys_school_importer.
@@ -72,13 +72,13 @@ class ImporterHelper {
    * {@inheritdoc}
    */
   public function __construct(
-    Connection $connection,
-    ExtensionPathResolver $path_resolver,
-    EntityTypeManagerInterface $entity_type_manager,
-    State $state,
-    MessengerInterface $messenger,
-    LoggerChannelFactory $logger
-  ) {
+        Connection $connection,
+        ExtensionPathResolver $path_resolver,
+        EntityTypeManagerInterface $entity_type_manager,
+        State $state,
+        MessengerInterface $messenger,
+        LoggerChannelFactory $logger
+    ) {
     $this->connection = $connection;
     $this->pathResolver = $path_resolver;
     $this->entityTypeManager = $entity_type_manager;
@@ -147,9 +147,11 @@ class ImporterHelper {
    */
   public function getNumSchoolsOneKey($legal_name) {
     $legal_name = addslashes($legal_name);
-    return $this->connection->query("SELECT count(*) FROM nys_school_names WHERE legal_name = ':legal_name'", [
-      ':legal_name' => $legal_name,
-    ])->fetchField();
+    return $this->connection->query(
+          "SELECT count(*) FROM nys_school_names WHERE legal_name = ':legal_name'", [
+            ':legal_name' => $legal_name,
+          ]
+      )->fetchField();
   }
 
   /**
@@ -157,10 +159,12 @@ class ImporterHelper {
    */
   public function getNumSchoolsTwoKeys($legal_name, $city) {
     $legal_name = addslashes($legal_name);
-    return $this->connection->query("SELECT count(*) FROM nys_school_names WHERE legal_name = ':legal_name' AND city = ':city'", [
-      ':legal_name' => $legal_name,
-      ':city' => $city,
-    ])->fetchField();
+    return $this->connection->query(
+          "SELECT count(*) FROM nys_school_names WHERE legal_name = ':legal_name' AND city = ':city'", [
+            ':legal_name' => $legal_name,
+            ':city' => $city,
+          ]
+      )->fetchField();
   }
 
   /**
@@ -168,12 +172,14 @@ class ImporterHelper {
    */
   public function getNumSchoolsThreeKeys($legal_name, $grade_organization, $city) {
     $legal_name = addslashes($legal_name);
-    return $this->connection->query("SELECT count(*) FROM nys_school_names
+    return $this->connection->query(
+          "SELECT count(*) FROM nys_school_names
       WHERE legal_name = ':legal_name' AND grade_organization = ':grade_organization' AND city = ':city'", [
         ':legal_name' => $legal_name,
         ':grade_organization' => $grade_organization,
         ':city' => $city,
-      ])->fetchField();
+      ]
+      )->fetchField();
   }
 
   /**
@@ -181,13 +187,15 @@ class ImporterHelper {
    */
   public function getNumSchoolsFourKeys($legal_name, $grade_organization, $city, $zip) {
     $legal_name = addslashes($legal_name);
-    return $this->connection->query("SELECT count(*) FROM nys_school_names
+    return $this->connection->query(
+          "SELECT count(*) FROM nys_school_names
       WHERE legal_name = ':legal_name' AND grade_organization = ':grade_organization' AND city = ':city' AND zip = ':zip'", [
         ':legal_name' => $legal_name,
         ':grade_organization' => $grade_organization,
         ':city' => $city,
         ':zip' => $zip,
-      ])->fetchField();
+      ]
+      )->fetchField();
   }
 
   /**
@@ -205,13 +213,15 @@ class ImporterHelper {
     $legal_name = addslashes($legal_name);
     // Insert columns into nys_school_names.
     $this->connection->insert('nys_school_names')
-      ->fields([
-        'sid' => NULL,
-        'legal_name' => $legal_name,
-        'grade_organization' => $grade_organization,
-        'city' => $city,
-        'zip' => $zip,
-      ])
+      ->fields(
+              [
+                'sid' => NULL,
+                'legal_name' => $legal_name,
+                'grade_organization' => $grade_organization,
+                'city' => $city,
+                'zip' => $zip,
+              ]
+          )
       ->execute();
   }
 
@@ -225,11 +235,13 @@ class ImporterHelper {
     }
     // Insert or update the data in in the num_keys comumn.
     if ($num_keys > 1) {
-      $this->connection->query("INSERT INTO nys_school_names_index (snid, legal_name, num_keys)
+      $this->connection->query(
+            "INSERT INTO nys_school_names_index (snid, legal_name, num_keys)
         VALUES (NULL, ':legal_name', ':num_keys') ON DUPLICATE KEY UPDATE num_keys = ':num_keys'", [
           ':legal_name' => $legal_name,
           ':num_keys' => $num_keys,
-        ]);
+        ]
+        );
     }
   }
 
@@ -246,9 +258,11 @@ class ImporterHelper {
     $legal_name = addslashes($legal_name);
 
     // Get the num_keys column.
-    $num_keys = $this->connection->query("SELECT `num_keys` FROM nys_school_names_index WHERE legal_name = ':legal_name'", [
-      ':legal_name' => $legal_name,
-    ])->fetchField();
+    $num_keys = $this->connection->query(
+          "SELECT `num_keys` FROM nys_school_names_index WHERE legal_name = ':legal_name'", [
+            ':legal_name' => $legal_name,
+          ]
+      )->fetchField();
 
     if ($num_keys === FALSE) {
       // Return the default value 1 indicating no changes are needed.
@@ -409,12 +423,14 @@ class ImporterHelper {
     AND `city` = :city
     AND `postal_code` = :zip";
 
-    $result = $this->connection->query($sql, [
-      ':legal_name' => $legal_name,
-      ':grade_org_desc' => $grade_organization,
-      ':city' => $city,
-      ':zip' => $zip,
-    ]);
+    $result = $this->connection->query(
+          $sql, [
+            ':legal_name' => $legal_name,
+            ':grade_org_desc' => $grade_organization,
+            ':city' => $city,
+            ':zip' => $zip,
+          ]
+      );
 
     if ($result->rowCount() == 1) {
       $entity_id = $result->fetchObject()->entity_id;
@@ -436,9 +452,11 @@ class ImporterHelper {
   public function createSchoolNode($data) {
     // Create a new empty node.
     $node = $this->entityTypeManager->getStorage('node')
-      ->create([
-        'type' => self::NYS_SCHOOL_IMPORTER_CONTENT_TYPE ?? self::NYS_SCHOOL_IMPORTER_CONTENT_TYPE_DEFAULT,
-      ]);
+      ->create(
+              [
+                'type' => self::NYS_SCHOOL_IMPORTER_CONTENT_TYPE ?? self::NYS_SCHOOL_IMPORTER_CONTENT_TYPE_DEFAULT,
+              ]
+          );
     $node->save();
     return $node;
   }
@@ -648,9 +666,11 @@ class ImporterHelper {
         }
       }
       else {
-        $this->messenger->addStatus("Sage could not supply district data for %cleaned_up_name.", [
-          '%cleaned_up_name' => $cleaned_up_name,
-        ]);
+        $this->messenger->addStatus(
+              "Sage could not supply district data for %cleaned_up_name.", [
+                '%cleaned_up_name' => $cleaned_up_name,
+              ]
+          );
         $this->loggerFactory->get('nys_school_importer')->notice(var_export($sage_data, TRUE));
       }
     }
@@ -719,10 +739,12 @@ class ImporterHelper {
   public function getDistrictTid($district_name) {
     // Lookup the district and it's associated Senator, if available.
     $term = $this->entityTypeManager->getStorage('taxonomy_term')
-      ->loadByProperties([
-        'vid' => self::NYS_SCHOOL_IMPORTER_COUNTY_TAXONOMY_VID,
-        'name' => $district_name,
-      ]);
+      ->loadByProperties(
+              [
+                'vid' => self::NYS_SCHOOL_IMPORTER_COUNTY_TAXONOMY_VID,
+                'name' => $district_name,
+              ]
+          );
 
     if (!empty($term)) {
       return $term;
@@ -737,10 +759,12 @@ class ImporterHelper {
   public function getCountyTid($county_name) {
     // Lookup the district and it's associated Senator, if available.
     $term = $this->entityTypeManager->getStorage('taxonomy_term')
-      ->loadByProperties([
-        'vid' => self::NYS_SCHOOL_IMPORTER_DISTRICT_TAXONOMY_VID,
-        'name' => $county_name,
-      ]);
+      ->loadByProperties(
+              [
+                'vid' => self::NYS_SCHOOL_IMPORTER_DISTRICT_TAXONOMY_VID,
+                'name' => $county_name,
+              ]
+          );
 
     if (!empty($term)) {
       return $term;
@@ -773,26 +797,27 @@ class ImporterHelper {
    * Create or Update institution data in SED database based on the sed_code.
    */
   public function insertOrUpdateNysedData(
-    $institution_id,
-    $popular_name,
-    $sed_code,
-    $institution_type_desc,
-    $institution_sub_type_desc,
-    $physical_address_line_1,
-    $address_line_2,
-    $city,
-    $state,
-    $zip_code,
-    $ceo_first_name,
-    $ceo_last_name,
-    $ceo_title,
-    $ceo_phone_number,
-    $senatorial_dist_1,
-    $senatorial_dist_2,
-    $senatorial_dist_3,
-    $senatorial_dist_4,
-    $senatorial_dist_5,
-    $senatorial_dist_6) {
+        $institution_id,
+        $popular_name,
+        $sed_code,
+        $institution_type_desc,
+        $institution_sub_type_desc,
+        $physical_address_line_1,
+        $address_line_2,
+        $city,
+        $state,
+        $zip_code,
+        $ceo_first_name,
+        $ceo_last_name,
+        $ceo_title,
+        $ceo_phone_number,
+        $senatorial_dist_1,
+        $senatorial_dist_2,
+        $senatorial_dist_3,
+        $senatorial_dist_4,
+        $senatorial_dist_5,
+        $senatorial_dist_6
+    ) {
 
     // Insert or update UPSERT.
     $sql = "INSERT INTO `nys_school_nysed_data` (`institution_id`, `popular_name`, `sed_code`, `institution_type_desc`, `institution_sub_type_desc`, `physical_address_line_1`, `address_line_2`, `city`, `state`, `zip_code`, `ceo_first_name`, `ceo_last_name`, `ceo_title`, `ceo_phone_number`, `senatorial_dist_1`, `senatorial_dist_2`, `senatorial_dist_3`, `senatorial_dist_4`, `senatorial_dist_5`, `senatorial_dist_6`)
@@ -835,9 +860,11 @@ class ImporterHelper {
    *   The nysed data.
    */
   public function getNysedData($nysed_id) {
-    $result = $this->connection->query("SELECT * FROM `nys_school_nysed_data` WHERE sed_code = :nysed_id", [
-      ':nysed_id' => $nysed_id,
-    ]);
+    $result = $this->connection->query(
+          "SELECT * FROM `nys_school_nysed_data` WHERE sed_code = :nysed_id", [
+            ':nysed_id' => $nysed_id,
+          ]
+      );
     if ($result->rowCount() == 1) {
       return $result->fetchObject();
     }

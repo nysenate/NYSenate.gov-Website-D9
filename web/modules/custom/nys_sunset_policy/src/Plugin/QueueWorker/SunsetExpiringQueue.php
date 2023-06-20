@@ -40,8 +40,8 @@ final class SunsetExpiringQueue extends QueueWorkerBase implements ContainerFact
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
-      $container->get('entity_type.manager')->getStorage('node')
-    );
+          $container->get('entity_type.manager')->getStorage('node')
+      );
   }
 
   /**
@@ -56,7 +56,9 @@ final class SunsetExpiringQueue extends QueueWorkerBase implements ContainerFact
    * @throws \Exception
    */
   public function processItem($data) {
-    /** @var \Drupal\node\NodeInterface $node */
+    /**
+* @var \Drupal\node\NodeInterface $node
+*/
     $node = $this->nodeStorage->load($data['data']);
     if ($node instanceof NodeInterface) {
       $host = \Drupal::request()->getHost();

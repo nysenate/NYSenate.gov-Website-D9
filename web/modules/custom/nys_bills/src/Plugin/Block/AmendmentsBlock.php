@@ -3,11 +3,11 @@
 namespace Drupal\nys_bills\Plugin\Block;
 
 use Drupal\Component\Utility\Html;
-use Drupal\Core\Url;
-use Drupal\Core\Link;
 use Drupal\Core\Block\BlockBase;
+use Drupal\Core\Link;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -49,10 +49,10 @@ class AmendmentsBlock extends BlockBase implements ContainerFactoryPluginInterfa
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     $instance = new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition
-    );
+          $configuration,
+          $plugin_id,
+          $plugin_definition
+      );
 
     $instance->entityTypeManager = $container->get('entity_type.manager');
     $instance->routeMatch = $container->get('current_route_match');
@@ -108,9 +108,11 @@ class AmendmentsBlock extends BlockBase implements ContainerFactoryPluginInterfa
       $metadata = $this->billsHelper->getBillMetadata($related_bills);
 
       // Load all bills associated with this bill's taxonomy root.
-      $related_metadata = array_filter($metadata, function ($v) {
-        return $v->print_num === $v->base_print_num;
-      });
+      $related_metadata = array_filter(
+            $metadata, function ($v) {
+                return $v->print_num === $v->base_print_num;
+            }
+        );
 
       // If a "same as" exists, add its previous versions to this bill as well.
       if (!empty($same_as)) {

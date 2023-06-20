@@ -22,16 +22,16 @@ class DynamicRouting {
       $term_name = $term->getName();
       $alias = str_replace([' ', '-', '\''], '_', strtolower($term_name));
       $route = new Route(
-        '/admin/school-forms/' . $alias,
-        [
-          '_title' => 'School Form Search - ' . $term_name,
-          '_controller' => '\Drupal\nys_school_forms\Controller\SchoolFormsController::view',
-          'form_type' => $term_name,
-        ],
-        [
-          '_permission' => 'access all webform results',
-        ]
-      );
+            '/admin/school-forms/' . $alias,
+            [
+              '_title' => 'School Form Search - ' . $term_name,
+              '_controller' => '\Drupal\nys_school_forms\Controller\SchoolFormsController::view',
+              'form_type' => $term_name,
+            ],
+            [
+              '_permission' => 'access all webform results',
+            ]
+        );
       $route->setOption('_admin_route', TRUE);
       $collection->add("nys_school_forms.school_forms.$alias", $route);
     }

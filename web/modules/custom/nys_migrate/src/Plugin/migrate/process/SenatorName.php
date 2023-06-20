@@ -2,10 +2,10 @@
 
 namespace Drupal\nys_migrate\Plugin\migrate\process;
 
-use Drupal\migrate\Row;
 use Drupal\Core\Database\Database;
-use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\MigrateExecutableInterface;
+use Drupal\migrate\ProcessPluginBase;
+use Drupal\migrate\Row;
 
 /**
  * The process plugin for getting the senator name.

@@ -6,10 +6,10 @@ use Drupal\Core\Routing\CurrentRouteMatch;
 use Drupal\Core\Routing\TrustedRedirectResponse;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\user\Entity\User;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Class McpEventSubscriber for adding custom redirects control to terms.
@@ -73,8 +73,9 @@ class McpEventSubscriber implements EventSubscriberInterface {
     $routeName = $this->currentRouteMatch->getRouteName();
 
     // Check if a non-admin is looking at a Senator term.
-    if ($routeName === 'entity.taxonomy_term.canonical' &&
-      ($term = $this->currentRouteMatch->getParameter('taxonomy_term'))->bundle() === 'senator') {
+    if ($routeName === 'entity.taxonomy_term.canonical'
+          && ($term = $this->currentRouteMatch->getParameter('taxonomy_term'))->bundle() === 'senator'
+      ) {
 
       $senator_helper = \Drupal::service('nys_senators.senators_helper');
 
@@ -85,9 +86,10 @@ class McpEventSubscriber implements EventSubscriberInterface {
         $has_mcp_access = FALSE;
 
         // Check if user has access to term.
-        if ($user->hasField('field_senator_multiref') &&
-          !empty($senators = array_column($user->field_senator_multiref->getValue(), 'target_id')) &&
-          in_array($term->id(), $senators, FALSE)) {
+        if ($user->hasField('field_senator_multiref')
+              && !empty($senators = array_column($user->field_senator_multiref->getValue(), 'target_id'))
+              && in_array($term->id(), $senators, FALSE)
+          ) {
           // User is MCP with access to term.
           $has_mcp_access = TRUE;
         }

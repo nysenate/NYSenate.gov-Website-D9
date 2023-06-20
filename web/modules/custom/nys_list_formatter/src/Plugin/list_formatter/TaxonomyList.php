@@ -2,12 +2,12 @@
 
 namespace Drupal\nys_list_formatter\Plugin\list_formatter;
 
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldFilteredMarkup;
+use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Field\FormatterInterface;
 use Drupal\nys_list_formatter\Plugin\ListFormatterListInterface;
 use Drupal\taxonomy\Entity\Term;
-use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\Core\Field\FormatterInterface;
 
 /**
  * Plugin implementation of the 'taxonomy_term' list formatter.

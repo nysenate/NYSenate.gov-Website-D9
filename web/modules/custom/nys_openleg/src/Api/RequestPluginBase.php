@@ -2,12 +2,12 @@
 
 namespace Drupal\nys_openleg\Api;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Core\Logger\LoggerChannel;
-use Drupal\nys_openleg\Service\ApiResponseManager;
 use Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseSearch;
 use Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseUpdate;
+use Drupal\nys_openleg\Service\ApiResponseManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * A base class for requesting an object from OpenLeg.
@@ -78,11 +78,11 @@ abstract class RequestPluginBase implements RequestPluginInterface {
     $options = $configuration['request_options'] ?? [];
     unset($configuration['request_options']);
     return new static(
-      $plugin_definition,
-      new Request($plugin_definition['endpoint'], $options),
-      $container->get('manager.openleg_responses'),
-      $container->get('logger.channel.openleg_api')
-    );
+          $plugin_definition,
+          new Request($plugin_definition['endpoint'], $options),
+          $container->get('manager.openleg_responses'),
+          $container->get('logger.channel.openleg_api')
+      );
   }
 
   /**
@@ -116,24 +116,24 @@ abstract class RequestPluginBase implements RequestPluginInterface {
     // Only accept 'offset', 'limit', and 'detail' as parameters.
     // Default the limit parameter to '0'.
     $params = array_intersect_key(
-      $this->prepParams($params) + ['limit' => '0'],
-      ['offset' => '', 'limit' => '', 'detail' => '']
-    );
+          $this->prepParams($params) + ['limit' => '0'],
+          ['offset' => '', 'limit' => '', 'detail' => '']
+      );
 
     // If no end time was passed, set it to now.
     $time_to = $this->normalizeTimestamp($time_to ?: microtime(TRUE));
     $f_time_to = $this->formatTimestamp($time_to);
     // From time defaults to one day ago.
     $time_from = $time_from
-      ? $this->normalizeTimestamp($time_from)
-      : $time_to->sub(new \DateInterval('P1D'));
+        ? $this->normalizeTimestamp($time_from)
+        : $time_to->sub(new \DateInterval('P1D'));
     $f_time_from = $this->formatTimestamp($time_from);
     $resource = "updates/$f_time_from/$f_time_to";
 
     return $this->generateResponse(
-      $this->request->get($resource, $params),
-      ApiResponseManager::OPENLEG_RESPONSE_TYPE_UPDATE
-    );
+          $this->request->get($resource, $params),
+          ApiResponseManager::OPENLEG_RESPONSE_TYPE_UPDATE
+      );
   }
 
   /**
@@ -162,9 +162,9 @@ abstract class RequestPluginBase implements RequestPluginInterface {
     ];
 
     return $this->generateResponse(
-      $this->request->get("search", $params),
-      ApiResponseManager::OPENLEG_RESPONSE_TYPE_SEARCH
-    );
+          $this->request->get("search", $params),
+          ApiResponseManager::OPENLEG_RESPONSE_TYPE_SEARCH
+      );
   }
 
   /**
@@ -211,7 +211,7 @@ abstract class RequestPluginBase implements RequestPluginInterface {
       // try to figure it out (and lose microsecond precision).
       $tz = new \DateTimeZone(date_default_timezone_get());
       $dt = \DateTimeImmutable::createFromFormat($format, $normalize, $tz)
-        ?: new \DateTimeImmutable($timestamp, $tz);
+            ?: new \DateTimeImmutable($timestamp, $tz);
     }
     catch (\Throwable $e) {
       // No options left.  Everyone out of the pool.
@@ -252,9 +252,9 @@ abstract class RequestPluginBase implements RequestPluginInterface {
    * @see \Drupal\nys_openleg\Service\ApiResponseManager
    */
   protected function generateResponse(
-    object $response,
-    string $type = ApiResponseManager::OPENLEG_RESPONSE_TYPE_ITEM
-  ): ResponsePluginBase {
+        object $response,
+        string $type = ApiResponseManager::OPENLEG_RESPONSE_TYPE_ITEM
+    ): ResponsePluginBase {
 
     // Check if a response-specific plugin exists.  Look for definitions named
     // after the responseType value (preferred), or the alternate comprised of
@@ -278,18 +278,20 @@ abstract class RequestPluginBase implements RequestPluginInterface {
     }
     catch (PluginException $e) {
       $this->logger->error(
-        "Failed to instantiate response object",
-        [
-          '@by_type' => $names['by_type'],
-          '@by_name' => $names['by_name'],
-          '@fallback' => $names['fallback'],
-          '@last_try' => $name,
-          '@message' => $e->getMessage(),
-        ]
-      );
+            "Failed to instantiate response object",
+            [
+              '@by_type' => $names['by_type'],
+              '@by_name' => $names['by_name'],
+              '@fallback' => $names['fallback'],
+              '@last_try' => $name,
+              '@message' => $e->getMessage(),
+            ]
+        );
       $ret = NULL;
     }
-    /** @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseItem|\Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseUpdate|\Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseSearch $ret */
+    /**
+* @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseItem|\Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseUpdate|\Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseSearch $ret
+*/
     return $ret;
   }
 

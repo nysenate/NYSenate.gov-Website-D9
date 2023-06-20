@@ -92,12 +92,12 @@ class Bills extends ImportProcessorBase {
       catch (\Throwable $e) {
         $ret = FALSE;
         $this->logger->error(
-          'Failed to save imported amendment @title',
-          [
-            '@title' => BillHelper::formatTitle($this->item),
-            '@message' => $e->getMessage(),
-          ]
-        );
+              'Failed to save imported amendment @title',
+              [
+                '@title' => BillHelper::formatTitle($this->item),
+                '@message' => $e->getMessage(),
+              ]
+          );
       }
     }
 
@@ -193,13 +193,13 @@ class Bills extends ImportProcessorBase {
     catch (\Throwable $e) {
       $success = FALSE;
       $this->logger->error(
-        'Failed to set properties for node @node from @item',
-        [
-          '@node' => $node->id(),
-          '@item' => BillHelper::formatTitle($this->item),
-          '@message' => $e->getMessage(),
-        ]
-      );
+            'Failed to set properties for node @node from @item',
+            [
+              '@node' => $node->id(),
+              '@item' => BillHelper::formatTitle($this->item),
+              '@message' => $e->getMessage(),
+            ]
+        );
     }
 
     return $success;
@@ -240,17 +240,19 @@ class Bills extends ImportProcessorBase {
 
     // Note the current paragraphs for later and initialize the "new" list.
     $old_vote_ids = array_map(
-      function ($v) {
-        return $v['target_id'];
-      },
-      $node->get('field_ol_votes')->getValue()
-    );
+          function ($v) {
+              return $v['target_id'];
+          },
+          $node->get('field_ol_votes')->getValue()
+      );
     $new_votes = [];
 
     // Iterate through the collection of vote sessions, creating new paragraph
     // for each one.  Save the new paragraphs for addition to the node.
     foreach ($all_votes as $vote) {
-      /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+      /**
+* @var \Drupal\paragraphs\Entity\Paragraph $paragraph
+*/
       $paragraph = $storage->create(['type' => 'votes']);
 
       // Set vote date and type.
@@ -264,10 +266,10 @@ class Bills extends ImportProcessorBase {
           'name' => ($vote->committee->name ?? ''),
         ];
         $comm_tid = array_keys(
-          $this->entityTypeManager
-            ->getStorage('taxonomy_term')
-            ->loadByProperties($comm_search)
-        );
+              $this->entityTypeManager
+                ->getStorage('taxonomy_term')
+                ->loadByProperties($comm_search)
+          );
         $paragraph->set('field_ol_committee', $comm_tid);
       }
 

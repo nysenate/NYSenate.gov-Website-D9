@@ -7,4 +7,5 @@ use Drupal\Core\Menu\MenuLinkDefault;
 /**
  * Represents a menu link for a single Product.
  */
-class SchoolFormMenus extends MenuLinkDefault {}
+class SchoolFormMenus extends MenuLinkDefault {
+}

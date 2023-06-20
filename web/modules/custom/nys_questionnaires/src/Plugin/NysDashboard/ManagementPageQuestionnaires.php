@@ -62,9 +62,11 @@ class ManagementPageQuestionnaires extends ManagementPageBase {
 
     // Join the webform reference table.  Want only open questionnaires.
     // nw.webform_target_id = the id of the node's webform.
-    $query->join('node__webform', 'nw',
-      'nw.entity_id=n.nid AND nw.bundle=n.type AND nw.webform_status=:status',
-      [':status' => 'open']);
+    $query->join(
+          'node__webform', 'nw',
+          'nw.entity_id=n.nid AND nw.bundle=n.type AND nw.webform_status=:status',
+          [':status' => 'open']
+      );
 
     // Join the submissions table.  LEFT join because there may not
     // be any submissions.
@@ -72,10 +74,11 @@ class ManagementPageQuestionnaires extends ManagementPageBase {
 
     // Join for the owning senator's district.
     // ttfs.entity_id = tid of the district to which $senator is assigned.
-    $query->join('taxonomy_term__field_senator', 'ttfs',
-      'ttfs.field_senator_target_id=smr.field_senator_multiref_target_id AND ttfs.bundle=:term_bundle',
-      [':term_bundle' => 'districts']
-    );
+    $query->join(
+          'taxonomy_term__field_senator', 'ttfs',
+          'ttfs.field_senator_target_id=smr.field_senator_multiref_target_id AND ttfs.bundle=:term_bundle',
+          [':term_bundle' => 'districts']
+      );
 
     // Join the submitting user's district.  LEFT join because the user may
     // not have a district.
@@ -102,14 +105,16 @@ class ManagementPageQuestionnaires extends ManagementPageBase {
     // Execute the query.
     try {
       $ret = $query->execute()->fetchAllAssoc('qid', \PDO::FETCH_ASSOC) ?? [];
-      $this->logger->debug('Query for senator questionnaires',
-        ['@query' => (string) $query]);
+      $this->logger->debug(
+            'Query for senator questionnaires',
+            ['@query' => (string) $query]
+        );
     }
     catch (\Throwable $e) {
       $this->logger->error(
-        'Query failed for your questionnaires',
-        ['@query' => (string) $query, '@excp' => $e->getMessage()]
-      );
+            'Query failed for your questionnaires',
+            ['@query' => (string) $query, '@excp' => $e->getMessage()]
+        );
       $ret = [];
     }
     return $ret;
@@ -138,9 +143,11 @@ class ManagementPageQuestionnaires extends ManagementPageBase {
 
     // Join the webform reference table.  Want only open questionnaires.
     // nw.webform_target_id = the node's webform id.
-    $query->join('node__webform', 'nw',
-      'nw.entity_id=n.nid AND nw.bundle=n.type AND nw.webform_status=:status',
-      [':status' => 'open']);
+    $query->join(
+          'node__webform', 'nw',
+          'nw.entity_id=n.nid AND nw.bundle=n.type AND nw.webform_status=:status',
+          [':status' => 'open']
+      );
 
     // Join the submissions table.
     $query->join('webform_submission', 'ws', 'ws.webform_id=nw.webform_target_id');
@@ -155,10 +162,11 @@ class ManagementPageQuestionnaires extends ManagementPageBase {
 
     // Join for the passed senator's district.  Generates a "constant".
     // ttfs.entity_id = tid of the district of passed senator.
-    $query->join('taxonomy_term__field_senator', 'ttfs',
-      'ttfs.field_senator_target_id=:senator_id AND ttfs.bundle=:term_bundle',
-      [':senator_id' => $senator->id(), ':term_bundle' => 'districts']
-    );
+    $query->join(
+          'taxonomy_term__field_senator', 'ttfs',
+          'ttfs.field_senator_target_id=:senator_id AND ttfs.bundle=:term_bundle',
+          [':senator_id' => $senator->id(), ':term_bundle' => 'districts']
+      );
 
     // Join the submitting user's district.
     // ufd.entity_id = tid of the district to which the user is assigned.
@@ -184,14 +192,16 @@ class ManagementPageQuestionnaires extends ManagementPageBase {
     // Execute the query.
     try {
       $rows = $query->execute()->fetchAllAssoc('nid', \PDO::FETCH_ASSOC) ?? [];
-      $this->logger->debug('Query for other questionnaires',
-        ['@query' => (string) $query]);
+      $this->logger->debug(
+            'Query for other questionnaires',
+            ['@query' => (string) $query]
+        );
     }
     catch (\Throwable $e) {
       $this->logger->error(
-        'Query failed for other questionnaires',
-        ['@query' => (string) $query, '@excp' => $e->getMessage()]
-      );
+            'Query failed for other questionnaires',
+            ['@query' => (string) $query, '@excp' => $e->getMessage()]
+        );
       $rows = [];
     }
 
@@ -223,7 +233,9 @@ class ManagementPageQuestionnaires extends ManagementPageBase {
 
       $author = '';
       if ($node->hasField('field_senator_multiref') && !$node->get('field_senator_multiref')->isEmpty()) {
-        /** @var \Drupal\taxonomy\Entity\Term $senator */
+        /**
+* @var \Drupal\taxonomy\Entity\Term $senator
+*/
         $senator = $node->field_senator_multiref->entity;
         if ($senator) {
           $author = Link::fromTextAndUrl($senator->getName(), $senator->toUrl())->toString();
@@ -232,16 +244,16 @@ class ManagementPageQuestionnaires extends ManagementPageBase {
 
       $ret[] = [
         'data' => [
-          [
-            'data' => new FormattableMarkup(
-              '<h3 class="entry-title">' . $link . '</h3>
+        [
+          'data' => new FormattableMarkup(
+            '<h3 class="entry-title">' . $link . '</h3>
               <div class="pet-type">' . $issues . '</div>
               <div class="author"><span>By: ' . $author . '</span></div>',
-              []
-            ),
-            'class' => 'questionnaire-link',
-          ],
-          ['data' => $row['in_district'], 'class' => 'questionnaire-sub-count'],
+            []
+          ),
+          'class' => 'questionnaire-link',
+        ],
+        ['data' => $row['in_district'], 'class' => 'questionnaire-sub-count'],
         ],
         'class' => ['other-questionnaire'],
         'data-qid' => $row['nid'],

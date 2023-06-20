@@ -134,8 +134,8 @@ class Microsites {
    */
   public function getTheme(string $name = ''): array {
     return $name
-      ? (($this->fetchThemes()[$name]) ?? static::DEFAULT_THEME)
-      : $this->fetchThemes();
+        ? (($this->fetchThemes()[$name]) ?? static::DEFAULT_THEME)
+        : $this->fetchThemes();
   }
 
   /**
@@ -178,10 +178,12 @@ class Microsites {
     try {
       $terms = $this->entityTypeManager
         ->getStorage('taxonomy_term')
-        ->loadByProperties([
-          'vid' => 'microsite_page_type',
-          'name' => 'Landing',
-        ]);
+        ->loadByProperties(
+                [
+                  'vid' => 'microsite_page_type',
+                  'name' => 'Landing',
+                ]
+            );
       $landing_term = current($terms);
       $landing_id = $landing_term->id();
     }
@@ -193,10 +195,12 @@ class Microsites {
     try {
       $pages = $this->entityTypeManager
         ->getStorage('node')
-        ->loadByProperties([
-          'type' => 'microsite_page',
-          'field_microsite_page_type' => $landing_id,
-        ]);
+        ->loadByProperties(
+                [
+                  'type' => 'microsite_page',
+                  'field_microsite_page_type' => $landing_id,
+                ]
+            );
     }
     catch (\Throwable) {
       $pages = [];
@@ -220,11 +224,11 @@ class Microsites {
 
     // Save to cache.
     $this->cache->set(
-      static::CACHE_NAME_MICROSITES,
-      $urls,
-      $this->cache::CACHE_PERMANENT,
-      ['node_list:microsite_page', 'taxonomy_term_list:senator']
-    );
+          static::CACHE_NAME_MICROSITES,
+          $urls,
+          $this->cache::CACHE_PERMANENT,
+          ['node_list:microsite_page', 'taxonomy_term_list:senator']
+      );
 
     return $urls;
   }

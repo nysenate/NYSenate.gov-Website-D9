@@ -39,9 +39,11 @@ class HomepageHeroController extends ControllerBase {
   public static function homepageHeroRemoveItem() {
     \Drupal::state()->set('homepage_hero_add_polling_js', 0);
     \Drupal::state()->set('homepage_hero_session_in_progress', 0);
-    \Drupal::service('cache_tags.invalidator')->invalidateTags([
-      'views:homepage_hero',
-    ]);
+    \Drupal::service('cache_tags.invalidator')->invalidateTags(
+          [
+            'views:homepage_hero',
+          ]
+      );
   }
 
 }

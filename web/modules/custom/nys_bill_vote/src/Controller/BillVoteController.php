@@ -2,13 +2,13 @@
 
 namespace Drupal\nys_bill_vote\Controller;
 
+use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountProxy;
 use Drupal\node\Entity\Node;
 use Drupal\nys_bill_vote\BillVoteHelper;
-use Drupal\Core\Controller\ControllerBase;
-use Symfony\Component\HttpFoundation\Response;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * The Bill Vote Controller class.
@@ -40,10 +40,10 @@ class BillVoteController extends ControllerBase {
    * {@inheritdoc}
    */
   public function __construct(
-    BillVoteHelper $bill_vote_helper,
-    AccountProxy $current_user,
-    EntityTypeManagerInterface $entity_type_manager
-  ) {
+        BillVoteHelper $bill_vote_helper,
+        AccountProxy $current_user,
+        EntityTypeManagerInterface $entity_type_manager
+    ) {
     $this->billVoteHelper = $bill_vote_helper;
     $this->currentUser = $current_user;
     $this->entityTypeManager = $entity_type_manager;
@@ -54,10 +54,10 @@ class BillVoteController extends ControllerBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('nys_bill_vote.bill_vote'),
-      $container->get('current_user'),
-      $container->get('entity_type.manager')
-    );
+          $container->get('nys_bill_vote.bill_vote'),
+          $container->get('current_user'),
+          $container->get('entity_type.manager')
+      );
   }
 
   /**
@@ -80,9 +80,9 @@ class BillVoteController extends ControllerBase {
   public function confirmationAjaxCallback(Node $bill_node, mixed $vote_value): Response {
     $vote_result = $this->billVoteHelper->processVote($this->currentUser(), $bill_node, $vote_value);
     $response = $this->t(
-      'Vote recorded on node %bill_id: %value',
-      ['%bill_id' => $bill_node->id(), '%value' => $vote_value]
-    );
+          'Vote recorded on node %bill_id: %value',
+          ['%bill_id' => $bill_node->id(), '%value' => $vote_value]
+      );
     return new Response($response);
   }
 

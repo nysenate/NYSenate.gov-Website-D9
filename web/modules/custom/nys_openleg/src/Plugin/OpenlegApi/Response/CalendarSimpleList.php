@@ -25,12 +25,16 @@ class CalendarSimpleList extends ResponseSearch {
    *   The list of bill print numbers.
    */
   public function getBillIdsFromList(array $items): array {
-    return array_filter(array_unique(array_map(
-      function ($v) {
-        return BillHelper::formatTitle($v, TRUE, '/');
-      },
-      $items
-    )));
+    return array_filter(
+          array_unique(
+              array_map(
+                  function ($v) {
+                          return BillHelper::formatTitle($v, TRUE, '/');
+                  },
+                  $items
+              )
+          )
+      );
   }
 
 }

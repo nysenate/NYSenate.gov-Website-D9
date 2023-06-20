@@ -18,12 +18,9 @@ namespace Drupal\location_migration\Plugin\migrate\source;
 use Drupal\migrate\Plugin\migrate\source\SourcePluginBase;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
-if (
-  (
-    version_compare(\Drupal::VERSION, '9.1.9', 'ge') &&
-    version_compare(\Drupal::VERSION, '9.2', 'lt')
-  ) ||
-  version_compare(\Drupal::VERSION, '9.2.0-alpha2', 'ge')
+if ((version_compare(\Drupal::VERSION, '9.1.9', 'ge')
+    && version_compare(\Drupal::VERSION, '9.2', 'lt'))
+    || version_compare(\Drupal::VERSION, '9.2.0-alpha2', 'ge')
 ) {
   /**
    * Base class for core where sql source plugin count caching is supported.

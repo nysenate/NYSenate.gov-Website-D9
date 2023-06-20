@@ -113,18 +113,18 @@ class Subscriber {
    * canceled fields are omitted.
    */
   protected function __construct(
-    int $sub_id,
-    string $uuid,
-    string $sub_type,
-    int $uid,
-    string $email,
-    string $subscribe_to_type,
-    int $subscribe_to_id,
-    ?string $subscribe_from_type,
-    ?int $subscribe_from_id,
-    int $created,
-    int $last_sent
-  ) {
+        int $sub_id,
+        string $uuid,
+        string $sub_type,
+        int $uid,
+        string $email,
+        string $subscribe_to_type,
+        int $subscribe_to_id,
+        ?string $subscribe_from_type,
+        ?int $subscribe_from_id,
+        int $created,
+        int $last_sent
+    ) {
     $this->subId = $sub_id;
     $this->uuid = $uuid;
     $this->subType = $sub_type;
@@ -146,7 +146,9 @@ class Subscriber {
    * @throws \Drupal\nys_subscriptions\Exception\InvalidSubscriptionEntity
    */
   public static function createFromLoad(int $id): Subscriber {
-    /** @var \Drupal\nys_subscriptions\Entity\Subscription $sub */
+    /**
+* @var \Drupal\nys_subscriptions\Entity\Subscription $sub
+*/
     $sub = \Drupal::entityTypeManager()->getStorage('subscription')->load($id);
     return static::createFromSubscription($sub);
   }
@@ -162,18 +164,18 @@ class Subscriber {
       throw new InvalidSubscriptionEntity('A subscriber cannot be created from a canceled or unconfirmed subscription');
     }
     return new static(
-      $sub->id() ?? 0,
-      $sub->uuid() ?? '',
-      $sub->sub_type->value ?? '',
-      $sub->uid->target_id ?? 0,
-      $sub->email->value ?? '',
-      $sub->subscribe_to_type->value ?? '',
-      $sub->subscribe_to_id->value ?? 0,
-      $sub->subscribe_from_type->value ?? '',
-      $sub->subscribe_from_id->value ?? 0,
-      $sub->created->value ?? 0,
-      $sub->last_sent->value ?? 0
-    );
+          $sub->id() ?? 0,
+          $sub->uuid() ?? '',
+          $sub->sub_type->value ?? '',
+          $sub->uid->target_id ?? 0,
+          $sub->email->value ?? '',
+          $sub->subscribe_to_type->value ?? '',
+          $sub->subscribe_to_id->value ?? 0,
+          $sub->subscribe_from_type->value ?? '',
+          $sub->subscribe_from_id->value ?? 0,
+          $sub->created->value ?? 0,
+          $sub->last_sent->value ?? 0
+      );
   }
 
   /**
@@ -189,12 +191,11 @@ class Subscriber {
    *   If the passed array does not include the four necessary values.
    */
   public static function createFromValues(array $values): Subscriber {
-    if (!(
-      ($values['sub_type'] ?? FALSE)
-      && ($values['email'] ?? FALSE)
-      && ($values['subscribe_to_type'] ?? FALSE)
-      && ($values['subscribe_to_id'] ?? FALSE)
-    )) {
+    if (!(($values['sub_type'] ?? FALSE)
+          && ($values['email'] ?? FALSE)
+          && ($values['subscribe_to_type'] ?? FALSE)
+          && ($values['subscribe_to_id'] ?? FALSE))
+      ) {
       throw new InvalidSubscriptionEntity('A subscriber must have a type (sub_type), email, and target identifiers (subscribe_to_type and subscribe_to_id)');
     }
     $arr = [
@@ -219,8 +220,8 @@ class Subscriber {
   public function __get($name) {
     return match ($name) {
       'confirmed' => time(),
-      'canceled' => 0,
-      default => $this->{$name},
+            'canceled' => 0,
+            default => $this->{$name},
     };
   }
 
@@ -252,12 +253,12 @@ class Subscriber {
     // Suss the desired format.
     $format = match ($format) {
       'long' => 'l F jS, Y',
-      default => $format
+            default => $format
     };
 
     return $datetime
-      ? $datetime->format($format)
-      : '[No date available]';
+        ? $datetime->format($format)
+        : '[No date available]';
   }
 
 }

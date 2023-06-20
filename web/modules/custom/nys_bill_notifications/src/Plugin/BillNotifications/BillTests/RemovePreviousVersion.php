@@ -30,7 +30,7 @@ class RemovePreviousVersion extends BillTestBase {
    */
   public function getSummary(object $update): string {
     $prev = $update->fields->{'Prev Bill Session Year'} . '-' .
-      $update->fields->{'Prev Bill Print No'};
+        $update->fields->{'Prev Bill Print No'};
     if (trim($update->fields->{'Prev Amend Version'})) {
       $prev .= $update->fields->{'Prev Amend Version'};
     }

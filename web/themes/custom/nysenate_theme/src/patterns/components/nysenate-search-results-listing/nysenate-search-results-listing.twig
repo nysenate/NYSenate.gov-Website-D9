@@ -45,16 +45,16 @@
   {% if article.is_full_width == false %}
     <div class="c-press-release--body">
       <div class="c-press-release--descript-wrapper">
-        {% if not article.bill %}
+        {% if not article.bill and article.title != "Resolution" %}
           <h3 class="c-press-release--descript">
             <a href="{{ article.description.url }}">{{ article.description.text }}</a>
           </h3>
         {% endif %}
         {% if article.bill_description %}
-          {% if article.bill_description.url %}
+          {% if article.bill_url %}
           <p class="c-bill-descript">
-            <a class="c-bill-descript" href={{ article.bill_description.url }}>
-              {{ article.bill_description.text }}
+            <a class="c-bill-descript" href={{ article.bill_url }}>
+              {{ article.bill_description }}
             </a>
           </p>
           {% else %}
@@ -63,7 +63,7 @@
             </p>
           {% endif %}
         {% endif %}
-        {% if article.positions %}
+        {% if article.positions and article.title != "Resolution" %}
           <ul class="nys-bill-status nys-bill-status__sml">
             <hr/>
             {% for position in article.positions %}
@@ -113,12 +113,10 @@
             {% endif %}
           </p>
         {% endif %}
-        {% if article.sponsor %}
+        {% if article.sponsor or article.sponsor_lastname %}
           <p class="c-bill-update--sponsor">
-            Sponsor: {{ article.sponsor }}
+            Sponsor: {{ article.sponsor }} {{ article.sponsor_lastname }}
           </p>
-        {% else %}
-          <p>Sponsor: {{ article.sponsor_lastname }}</p>
         {% endif %}
         {% if article.location %}
           <div class="event-location icon-before__circle-pin">{{ article.location }}</div>

@@ -2043,6 +2043,10 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
             $date = $entity->field_date->first()->value;
             $date = \Drupal::service('date.formatter')->format(strtotime($date), '', 'F j, Y');
           }
+          if ($entity->hasField('field_ol_publish_date') && !$entity->field_ol_publish_date->isEmpty()) {
+            $date = $entity->field_ol_publish_date->first()->value;
+            $date = \Drupal::service('date.formatter')->format(strtotime($date), '', 'F j, Y');
+          }
           if ($entity->hasField('field_senator_multiref') && !$entity->field_senator_multiref->isEmpty()) {
             $senator = $entity->field_senator_multiref->entity;
             $senator_link = [
@@ -2057,6 +2061,7 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
             'title' => $type->label(),
             'print_no' => $print_no,
             'bill' => $bill,
+            'bill_url' => $entity->toUrl(),
             'search_results' => TRUE,
             'positions' => $positions,
             'topics' => $topics,

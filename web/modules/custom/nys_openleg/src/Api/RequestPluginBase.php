@@ -291,7 +291,7 @@ abstract class RequestPluginBase implements RequestPluginInterface {
     }
     /**
      * @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseItem|\Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseUpdate|\Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseSearch $ret
-*/
+     */
     return $ret;
   }
 

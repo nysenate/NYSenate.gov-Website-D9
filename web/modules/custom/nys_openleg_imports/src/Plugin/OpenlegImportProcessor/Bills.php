@@ -252,7 +252,7 @@ class Bills extends ImportProcessorBase {
     foreach ($all_votes as $vote) {
       /**
        * @var \Drupal\paragraphs\Entity\Paragraph $paragraph
-*/
+       */
       $paragraph = $storage->create(['type' => 'votes']);
 
       // Set vote date and type.

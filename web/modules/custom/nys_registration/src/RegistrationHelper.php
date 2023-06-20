@@ -66,7 +66,7 @@ class RegistrationHelper {
     try {
       /**
        * @var \Drupal\taxonomy\Entity\Term|null $district_term
-*/
+       */
       $district_term = current(
             $this->entityTypeManager
               ->getStorage('taxonomy_term')

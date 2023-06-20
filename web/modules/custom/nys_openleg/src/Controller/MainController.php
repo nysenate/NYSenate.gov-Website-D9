@@ -278,7 +278,7 @@ class MainController extends ControllerBase {
     if ($search_term) {
       /**
        * @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseSearch $search
-*/
+       */
       $search = $this->apiManager->getSearch(
             'statute',
             $search_term,

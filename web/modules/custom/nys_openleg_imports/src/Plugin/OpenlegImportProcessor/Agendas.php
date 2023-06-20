@@ -215,7 +215,7 @@ class Agendas extends ImportProcessorBase {
       foreach ($bill_refs as $nid => $bill_node) {
         /**
          * @var \Drupal\node\Entity\Node $bill_node
-*/
+         */
         $title = $bill_node->getTitle();
         if (array_key_exists($title, $votes)) {
           $votes[$title]->nid = $nid;
@@ -227,7 +227,7 @@ class Agendas extends ImportProcessorBase {
       if ($vote->nid ?? 0) {
         /**
          * @var \Drupal\paragraphs\Entity\Paragraph $new_pg
-*/
+         */
         $new_pg = $storage->create(['type' => 'agenda_bills']);
         $new_pg->set('field_ol_bill', $vote->nid);
         $new_pg->set('field_ol_bill_message', $bills[$bill_key]->message);

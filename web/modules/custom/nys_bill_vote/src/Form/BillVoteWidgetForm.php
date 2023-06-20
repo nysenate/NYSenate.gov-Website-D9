@@ -386,7 +386,7 @@ class BillVoteWidgetForm extends FormBase {
     if ($this->currentUser->isAuthenticated()) {
       /**
        * @var \Drupal\user\UserInterface $user
-*/
+       */
       $email_address = $user->getEmail();
     }
 
@@ -451,7 +451,7 @@ class BillVoteWidgetForm extends FormBase {
     try {
       /**
        * @var \Drupal\node\NodeInterface $bill
-*/
+       */
       $bill = $this->entityTypeManager->getStorage('node')->load($nid);
     }
     catch (\Throwable) {

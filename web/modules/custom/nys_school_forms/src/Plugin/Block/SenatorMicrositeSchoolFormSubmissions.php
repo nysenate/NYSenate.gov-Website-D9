@@ -98,7 +98,7 @@ class SenatorMicrositeSchoolFormSubmissions extends BlockBase implements Contain
   public function build() {
     /**
      * @var \Drupal\node\Entity\Node $node
-*/
+     */
     $node = $this->routeMatch->getParameter('node');
     $build = [];
     if ($node instanceof NodeInterface && $node->getType() === 'microsite_page') {

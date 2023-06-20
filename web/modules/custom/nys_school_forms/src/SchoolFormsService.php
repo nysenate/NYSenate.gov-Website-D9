@@ -149,19 +149,19 @@ class SchoolFormsService {
       $submission = $this->entityTypeManager->getStorage('webform_submission')->load($query_result);
       /**
        * @var \Drupal\node\NodeInterface $parent_node
-*/
+       */
       $parent_node = $submission->getSourceEntity();
       $submission_data = $submission->getData();
       /**
        * @var \Drupal\node\NodeInterface $school_node
-*/
+       */
       $school_node = $this->entityTypeManager->getStorage('node')->load($submission_data['school_name']);
       if ($params['school'] && $params['school'] != $school_node->label()) {
         continue;
       }
       /**
        * @var \Drupal\taxonomy\TermInterface $district
-*/
+       */
       $district = $school_node->get('field_district')->entity;
       $school_senator = $district->get('field_senator')->entity;
       if ($params['senator'] && $params['senator'] != $school_senator->id()) {

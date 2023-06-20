@@ -148,7 +148,7 @@ class Subscriber {
   public static function createFromLoad(int $id): Subscriber {
     /**
      * @var \Drupal\nys_subscriptions\Entity\Subscription $sub
-*/
+     */
     $sub = \Drupal::entityTypeManager()->getStorage('subscription')->load($id);
     return static::createFromSubscription($sub);
   }

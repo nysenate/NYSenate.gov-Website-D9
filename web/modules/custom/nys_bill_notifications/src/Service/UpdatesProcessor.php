@@ -157,7 +157,7 @@ class UpdatesProcessor {
         ->loadByProperties(['title' => $print_num]);
       /**
        * @var \Drupal\node\Entity\Node|null $ret
-*/
+       */
       $ret = (count($nodes) == 1) ? current($nodes) : NULL;
     }
     catch (\Throwable $e) {
@@ -173,7 +173,7 @@ class UpdatesProcessor {
     try {
       /**
        * @var \Drupal\taxonomy\Entity\Term $ret
-*/
+       */
       $ret = $this->entityTypeManager
         ->getStorage('taxonomy_term')
         ->load($id);
@@ -200,11 +200,11 @@ class UpdatesProcessor {
     $events = [];
     /**
      * @var \Drupal\nys_bill_notifications\MatchResults $one_result
-*/
+     */
     foreach ($results as $one_result) {
       /**
        * @var \Drupal\nys_bill_notifications\BillTestBase $one_test
-*/
+       */
       foreach ($one_result->getMatches() as $one_test) {
         $events[] = [
           'name' => $one_test->getName(),

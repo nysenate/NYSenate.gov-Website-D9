@@ -196,7 +196,7 @@ class OpenlegImport extends DrushCommands {
     try {
       /**
        * @var \Drupal\nys_openleg_imports\ImporterBase $importer
-*/
+       */
       $importer = $this->manager->getImporter($type);
     }
     catch (\Throwable $e) {
@@ -274,7 +274,7 @@ class OpenlegImport extends DrushCommands {
     try {
       /**
        * @var \Drupal\nys_openleg_imports\ImporterBase $importer
-*/
+       */
       $importer = $this->manager->getImporter($type);
     }
     catch (\Throwable $e) {
@@ -302,7 +302,7 @@ class OpenlegImport extends DrushCommands {
       ];
       /**
        * @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseSearch $search
-*/
+       */
       $search = $this->api->get($importer->getRequester(), $this->options['session'], $params);
       $names = $importer->getIdFromYearList($search);
       $this->options['ids'] = array_filter(

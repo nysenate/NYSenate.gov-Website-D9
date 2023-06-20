@@ -85,7 +85,7 @@ class SenatorMicrositeMenu extends BlockBase implements ContainerFactoryPluginIn
   public function build() {
     /**
      * @var \Drupal\node\Entity\Node $node
-*/
+     */
     $node = $this->routeMatch->getParameter('node');
 
     $microsite_pages = [
@@ -119,11 +119,11 @@ class SenatorMicrositeMenu extends BlockBase implements ContainerFactoryPluginIn
       $menu_links = [];
       /**
        * @var \Drupal\node\Entity\Node $node
-*/
+       */
       foreach ($nodes as $node) {
         /**
          * @var \Drupal\taxonomy\Entity\Term $term
-*/
+         */
         $term = $node->get('field_microsite_page_type')->entity ?? [];
         if ($term instanceof TermInterface) {
           $menu_title = $term->getName() ?? '';

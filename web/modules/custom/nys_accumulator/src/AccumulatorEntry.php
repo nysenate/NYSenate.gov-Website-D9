@@ -237,7 +237,7 @@ class AccumulatorEntry {
         case 'user:user':
           /**
            * @var \Drupal\taxonomy\Entity\Term $district
-*/
+           */
           $district = $entity->field_district->entity;
           $senator = $district?->field_senator?->entity;
           break;
@@ -245,7 +245,7 @@ class AccumulatorEntry {
         case 'taxonomy_term:senator':
           /**
            * @var \Drupal\taxonomy\Entity\Term $entity
-*/
+           */
           $district = $this->helper->loadDistrict($entity);
           $senator = $entity;
           break;
@@ -267,10 +267,8 @@ class AccumulatorEntry {
     if ($senator && $district) {
       /**
        * @var \Drupal\taxonomy\Entity\Term $district
-*/
-      /**
        * @var \Drupal\taxonomy\Entity\Term $senator
-*/
+       */
       $ret = [
         'district' => $district->field_district_number->value ?: 0,
         'shortname' => $senator->field_ol_shortname->value ?: 'NONE_LOADED',

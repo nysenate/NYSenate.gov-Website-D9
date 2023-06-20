@@ -166,7 +166,7 @@ class ApiManager {
 
     /**
      * @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\StatuteTree $tree
-*/
+     */
     $tree = $this->get('statute', $book, $param + ['location' => $location]);
 
     if (!$location && $tree->success()) {
@@ -175,7 +175,7 @@ class ApiManager {
 
     /**
      * @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\StatuteDetail $detail
-*/
+     */
     $detail = $this->get('statute', $book . '/' . $location, $param);
 
     // If location is empty, only a tree will be returned.  This next part is

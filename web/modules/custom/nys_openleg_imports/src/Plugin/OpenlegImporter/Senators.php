@@ -46,19 +46,19 @@ class Senators extends ImporterBase {
 
     /**
      * @var \Drupal\nys_openleg\Service\ApiManager $api
-*/
+     */
     $api = \Drupal::service('manager.openleg_api');
 
     /**
      * @var \Drupal\Core\Entity\EntityStorageBase $store
-*/
+     */
     $store = \Drupal::service('entity_type.manager')
       ->getStorage('taxonomy_term');
 
     $request = $api->getRequest('member');
     /**
      * @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\MemberSessionList $members
-*/
+     */
     $members = $request->retrieve($session, ['limit' => 0]);
 
     foreach ($members->items() as $member) {

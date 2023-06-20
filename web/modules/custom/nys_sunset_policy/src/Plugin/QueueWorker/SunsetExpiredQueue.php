@@ -59,7 +59,7 @@ final class SunsetExpiredQueue extends QueueWorkerBase implements ContainerFacto
   public function processItem($data) {
     /**
      * @var \Drupal\node\NodeInterface $node
-*/
+     */
     $node = $this->nodeStorage->load($data['data']);
     if ($node instanceof NodeInterface) {
       $host = \Drupal::request()->getHost();

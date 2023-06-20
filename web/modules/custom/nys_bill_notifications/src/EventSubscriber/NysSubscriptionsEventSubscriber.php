@@ -308,7 +308,7 @@ class NysSubscriptionsEventSubscriber implements EventSubscriberInterface {
       // The target must be a bill node.  If not, report and skip.
       /**
        * @var \Drupal\node\Entity\Node $bill
-*/
+       */
       $bill = $item->references['updated_bill'];
       if (!(($bill instanceof Node) && ($bill->bundle() == 'bill'))) {
         $this->logger->warning(
@@ -445,7 +445,7 @@ class NysSubscriptionsEventSubscriber implements EventSubscriberInterface {
     foreach ($templates as $ret) {
       /**
        * @var \Drupal\nys_sendgrid\Api\Template $ret
-*/
+       */
       if ($search == ($ret->getName() ?? '')) {
         return $ret;
       }

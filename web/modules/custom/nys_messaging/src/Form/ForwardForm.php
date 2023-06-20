@@ -70,7 +70,7 @@ class ForwardForm extends FormBase {
 
     /**
      * @var \Drupal\user\Entity\User $owner
-*/
+     */
     $owner = $private_message->owner->entity;
     $from = $owner->name->value;
     $subject = $private_message->field_subject->value;

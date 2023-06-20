@@ -55,7 +55,7 @@ class PetitionEventInfo extends EventInfoGeneratorBase {
   protected function extraBuild(ContentEntityBase $source, array &$ret): void {
     /**
      * @var \Drupal\taxonomy\Entity\Term $sponsor
-*/
+     */
     $sponsor = $source->field_senator_multiref->entity;
     $district = $this->helper->loadDistrict($sponsor);
     $ret['senator_shortname'] = $sponsor?->field_ol_shortname?->value ?? '';

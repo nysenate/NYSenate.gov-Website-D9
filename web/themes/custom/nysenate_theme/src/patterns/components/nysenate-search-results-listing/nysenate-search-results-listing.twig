@@ -59,7 +59,7 @@
           </p>
           {% else %}
             <p class="c-bill-descript">
-              {{ article.bill_description.text }}
+              {{ article.bill_description }}
             </p>
           {% endif %}
         {% endif %}
@@ -115,13 +115,10 @@
         {% endif %}
         {% if article.sponsor %}
           <p class="c-bill-update--sponsor">
-            Sponsor:
-            {% if article.sponsor.url %}
-              <a href={{ article.sponsor.url }}>{{ article.sponsor.text }}</a>
-            {% else %}
-              <span>{{ article.sponsor.text }}</span>
-            {% endif %}
+            Sponsor: {{ article.sponsor }}
           </p>
+        {% else %}
+          <p>Sponsor: {{ article.sponsor_lastname }}</p>
         {% endif %}
         {% if article.location %}
           <div class="event-location icon-before__circle-pin">{{ article.location }}</div>

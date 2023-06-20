@@ -991,10 +991,8 @@ if (file_exists($migrate_settings) && isset($_ENV['PANTHEON_ENVIRONMENT'])) {
   include $migrate_settings;
 }
 
-/**
- * Drupal
- * Define appropriate location for tmp directory
- */
-if (isset($_ENV['PANTHEON_ENVIRONMENT'])) {
-  $settings['file_temp_path'] = 'sites/default/files/private/tmp';
+// Handle URL rewrites for NYSS.
+if (isset($_SERVER['PANTHEON_ENVIRONMENT']) && php_sapi_name() != 'cli') {
+  require_once 'nyss_redirects.inc.php';
 }
+

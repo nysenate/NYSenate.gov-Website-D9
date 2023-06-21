@@ -41,12 +41,10 @@ elements: |
     '#required': true
   do_you_support_this_legislation:
     '#type': checkboxes
+    '#title': 'Do you support this legislation? '
     '#options':
-      "yes_key: 'Yes'
-      "no_key: 'No'
-    '#multiple': true
-    '#title': 'Do you support this legislation? ' 
-    '#description': ""
+      'yes': 'Yes'
+      'no': 'No'
     '#required': true
 css: ''
 javascript: ''

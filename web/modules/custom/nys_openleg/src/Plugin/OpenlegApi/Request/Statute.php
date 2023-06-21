@@ -40,10 +40,10 @@ class Statute extends RequestPluginBase {
     // This for statute tree request, but has no effect on detail requests.
     // It is easier just to include it all the time.
     $params = parent::prepParams($params) +
-      [
-        'depth' => 1,
-        'fromLocation' => $this->params['location'] ?? '',
-      ];
+        [
+          'depth' => 1,
+          'fromLocation' => $this->params['location'] ?? '',
+        ];
     return array_merge($params, $this->resolveHistoryParameter());
   }
 
@@ -52,8 +52,8 @@ class Statute extends RequestPluginBase {
    */
   protected function resolveHistoryParameter(): array {
     return ($this->params['history'] ?? '')
-      ? ['date' => $this->formatHistoryTimestamp($this->params['history'])]
-      : [];
+        ? ['date' => $this->formatHistoryTimestamp($this->params['history'])]
+        : [];
   }
 
 }

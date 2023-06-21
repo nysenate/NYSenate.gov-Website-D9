@@ -155,10 +155,12 @@ class SubscriptionQueue extends DatabaseQueue implements SubscriptionQueueInterf
         // 404) are considered "normal" failures.
         $one_result = NULL;
         $this->logger
-          ->warning("Exception while processing item @id", [
-            '@id' => $item->item_id ?? 'No ID found',
-            '@msg' => $e->getMessage(),
-          ]);
+          ->warning(
+                  "Exception while processing item @id", [
+                    '@id' => $item->item_id ?? 'No ID found',
+                    '@msg' => $e->getMessage(),
+                  ]
+              );
       }
 
       // If processing was successful, delete the queue item.

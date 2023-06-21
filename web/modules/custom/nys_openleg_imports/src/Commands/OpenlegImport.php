@@ -127,11 +127,11 @@ class OpenlegImport extends DrushCommands {
 
     // Change any hyphens to slashes.
     $options['ids'] = array_map(
-      function ($v) {
-        return str_replace('-', '/', $v);
-      },
-      array_filter(array_unique($list))
-    );
+          function ($v) {
+              return str_replace('-', '/', $v);
+          },
+          array_filter(array_unique($list))
+      );
 
     return $options;
   }
@@ -148,8 +148,8 @@ class OpenlegImport extends DrushCommands {
       $this->logger()->warning("Process lock detected ...");
       if (!$this->options['force']) {
         $message = "Process lock in place since " .
-          date(Request::OPENLEG_TIME_SIMPLE, $has_lock) .
-          ".  Wait for it to release, or use option --force to reset.";
+                date(Request::OPENLEG_TIME_SIMPLE, $has_lock) .
+                ".  Wait for it to release, or use option --force to reset.";
         $this->logger()->critical($message);
         return FALSE;
       }
@@ -194,7 +194,9 @@ class OpenlegImport extends DrushCommands {
 
     // If the import plugin is not found, report and quit.
     try {
-      /** @var \Drupal\nys_openleg_imports\ImporterBase $importer */
+      /**
+       * @var \Drupal\nys_openleg_imports\ImporterBase $importer
+       */
       $importer = $this->manager->getImporter($type);
     }
     catch (\Throwable $e) {
@@ -270,7 +272,9 @@ class OpenlegImport extends DrushCommands {
 
     // If the import plugin is not found, report and quit.
     try {
-      /** @var \Drupal\nys_openleg_imports\ImporterBase $importer */
+      /**
+       * @var \Drupal\nys_openleg_imports\ImporterBase $importer
+       */
       $importer = $this->manager->getImporter($type);
     }
     catch (\Throwable $e) {
@@ -296,12 +300,16 @@ class OpenlegImport extends DrushCommands {
         'limit' => $this->options['limit'],
         'offset' => $this->options['offset'],
       ];
-      /** @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseSearch $search */
+      /**
+       * @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseSearch $search
+       */
       $search = $this->api->get($importer->getRequester(), $this->options['session'], $params);
       $names = $importer->getIdFromYearList($search);
-      $this->options['ids'] = array_filter(array_unique(
-        array_merge($this->options['ids'], $names)
-      ));
+      $this->options['ids'] = array_filter(
+            array_unique(
+                array_merge($this->options['ids'], $names)
+            )
+        );
     }
 
     // Get the list of items being imported.  The 'ids' option takes precedence.

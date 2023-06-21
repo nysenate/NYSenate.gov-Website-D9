@@ -172,24 +172,10 @@ class AccumulatorEntry {
       $target = $this->getUser()->field_district->entity;
     }
 
-    // If the entity is not a senator or district, report something traceable.
-    // This may be a "normal" error, e.g. anonymous and out-of-state users.
-    if (!(
-      ($target instanceof ContentEntityBase)
-      && (in_array($this->getEntityKey($target), $require_entity))
-    )) {
-      // Unauthenticated users will never have a district.
-      if ($this->getUser()->id()) {
-        $this->log->warning(
-          'Failed to resolve a valid target',
-          [
-            '@type' => $this->type,
-            '@action' => $this->action,
-            '@uid' => $this->getUser()->id(),
-            '@info' => $this->info,
-          ]
-        );
-      }
+    // Unauthenticated users will never have a district.
+    if (!(($target instanceof ContentEntityBase)
+          && (in_array($this->getEntityKey($target), $require_entity)))
+      ) {
       $target = NULL;
     }
 
@@ -249,13 +235,17 @@ class AccumulatorEntry {
     if ($entity) {
       switch ($key = $this->getEntityKey($entity)) {
         case 'user:user':
-          /** @var \Drupal\taxonomy\Entity\Term $district */
+          /**
+           * @var \Drupal\taxonomy\Entity\Term $district
+           */
           $district = $entity->field_district->entity;
           $senator = $district?->field_senator?->entity;
           break;
 
         case 'taxonomy_term:senator':
-          /** @var \Drupal\taxonomy\Entity\Term $entity */
+          /**
+           * @var \Drupal\taxonomy\Entity\Term $entity
+           */
           $district = $this->helper->loadDistrict($entity);
           $senator = $entity;
           break;
@@ -267,16 +257,18 @@ class AccumulatorEntry {
 
         default:
           $this->log->error(
-            "Invalid entity (@key), could not resolve district/shortname",
-            ['@key' => $key]
-          );
+                "Invalid entity (@key), could not resolve district/shortname",
+                ['@key' => $key]
+            );
           break;
       }
     }
 
     if ($senator && $district) {
-      /** @var \Drupal\taxonomy\Entity\Term $district */
-      /** @var \Drupal\taxonomy\Entity\Term $senator */
+      /**
+       * @var \Drupal\taxonomy\Entity\Term $district
+       * @var \Drupal\taxonomy\Entity\Term $senator
+       */
       $ret = [
         'district' => $district->field_district_number->value ?: 0,
         'shortname' => $senator->field_ol_shortname->value ?: 'NONE_LOADED',
@@ -322,12 +314,12 @@ class AccumulatorEntry {
     // Useful for all manner of debugging.
     // @todo Create debug options in config.
     $post = array_filter(
-      $this->request->request->all(),
-      function ($k) {
-        return !($k == 'ajax_page_state');
-      },
-      ARRAY_FILTER_USE_KEY
-    );
+          $this->request->request->all(),
+          function ($k) {
+              return !($k == 'ajax_page_state');
+          },
+          ARRAY_FILTER_USE_KEY
+      );
     $info['request_info'] = [
       'url' => $this->request->getPathInfo(),
       'get' => $this->request->query->all(),
@@ -378,9 +370,9 @@ class AccumulatorEntry {
     }
     catch (\Throwable $e) {
       $this->log->error(
-        "Failed to save accumulator entry",
-        ['@msg' => $e->getMessage(), '@fields' => $fields]
-      );
+            "Failed to save accumulator entry",
+            ['@msg' => $e->getMessage(), '@fields' => $fields]
+        );
       $id = 0;
     }
 

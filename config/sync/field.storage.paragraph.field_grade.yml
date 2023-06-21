@@ -1,0 +1,64 @@
+uuid: 001bfb7b-89d2-4023-be16-880d3c1d13d0
+langcode: en
+status: true
+dependencies:
+  module:
+    - field_permissions
+    - options
+    - paragraphs
+third_party_settings:
+  field_permissions:
+    permission_type: public
+id: paragraph.field_grade
+field_name: field_grade
+entity_type: paragraph
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: K
+      label: Kindergarten
+    -
+      value: '1'
+      label: '1st grade'
+    -
+      value: '2'
+      label: '2nd grade'
+    -
+      value: '3'
+      label: '3rd grade'
+    -
+      value: '4'
+      label: '4th grade'
+    -
+      value: '5'
+      label: '5th grade'
+    -
+      value: '6'
+      label: '6th grade'
+    -
+      value: '7'
+      label: '7th grade'
+    -
+      value: '8'
+      label: '8th grade'
+    -
+      value: '9'
+      label: '9th grade'
+    -
+      value: '10'
+      label: '10th grade'
+    -
+      value: '11'
+      label: '11th grade'
+    -
+      value: '12'
+      label: '12th grade'
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

@@ -47,12 +47,12 @@ class LocationToGeolocation extends LocationProcessPluginBase {
     }
 
     $empty_sqlite_value = version_compare(PHP_VERSION, '8.1.0-dev', 'ge')
-      ? self::COORDINATE_EMPTY_VALUE_SQLITE_PHP81
-      : self::COORDINATE_EMPTY_VALUE_SQLITE;
+        ? self::COORDINATE_EMPTY_VALUE_SQLITE_PHP81
+        : self::COORDINATE_EMPTY_VALUE_SQLITE;
 
     $empty_value = LocationMigration::connectionIsSqlite($this->database)
-      ? $empty_sqlite_value
-      : self::COORDINATE_EMPTY_VALUE;
+        ? $empty_sqlite_value
+        : self::COORDINATE_EMPTY_VALUE;
     $processed_values = [];
     foreach ($lids as $lid) {
       $location_data = $this->getLocationProperties($lid);
@@ -66,8 +66,8 @@ class LocationToGeolocation extends LocationProcessPluginBase {
       $source_is_not_empty = $latitude !== $empty_value || $longitude !== $empty_value || $known_geolocation_source;
 
       $processed_values[] = $source_is_not_empty
-        ? ['lat' => $latitude, 'lng' => $longitude]
-        : NULL;
+            ? ['lat' => $latitude, 'lng' => $longitude]
+            : NULL;
     }
 
     return $processed_values;

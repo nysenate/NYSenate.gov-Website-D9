@@ -4,9 +4,9 @@ namespace Drupal\nys_comment\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Controller class for nys_comment module.
@@ -37,8 +37,8 @@ class CommentController extends ControllerBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity_type.manager'),
-    );
+          $container->get('entity_type.manager'),
+      );
   }
 
   /**

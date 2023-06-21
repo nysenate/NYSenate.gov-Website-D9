@@ -6,8 +6,8 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Queue\QueueWorkerBase;
 use Drupal\node\NodeInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\webform\WebformInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
 * Custom Queue Worker.
@@ -41,8 +41,8 @@ final class SunsetExpiredQueue extends QueueWorkerBase implements ContainerFacto
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
-      $container->get('entity_type.manager')->getStorage('node')
-    );
+          $container->get('entity_type.manager')->getStorage('node')
+      );
   }
 
   /**
@@ -57,7 +57,9 @@ final class SunsetExpiredQueue extends QueueWorkerBase implements ContainerFacto
    * @throws \Exception
    */
   public function processItem($data) {
-    /** @var \Drupal\node\NodeInterface $node */
+    /**
+     * @var \Drupal\node\NodeInterface $node
+     */
     $node = $this->nodeStorage->load($data['data']);
     if ($node instanceof NodeInterface) {
       $host = \Drupal::request()->getHost();
@@ -98,7 +100,7 @@ final class SunsetExpiredQueue extends QueueWorkerBase implements ContainerFacto
         $node->setUnpublished();
         $node->save();
         if (!empty($node->get('webform'))) {
-          $webform_id = $node->get('webform')->getValue()[0]['target_id'];
+          $webform_id = $node->get('webform')->getValue()[0]['target_id'] ?? NULL;
           $webform = \Drupal::entityTypeManager()->getStorage('webform')->load($webform_id);
           $webform->setStatus(WebformInterface::STATUS_CLOSED);
           $webform->save();

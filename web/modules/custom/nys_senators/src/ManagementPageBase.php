@@ -75,13 +75,13 @@ abstract class ManagementPageBase implements ManagementPageInterface {
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): ManagementPageInterface {
     return new static(
-      $container->get('entity_type.manager'),
-      $container->get('database'),
-      $container->get('nys_senators.senators_helper'),
-      $plugin_id,
-      $plugin_definition,
-      $configuration
-    );
+          $container->get('entity_type.manager'),
+          $container->get('database'),
+          $container->get('nys_senators.senators_helper'),
+          $plugin_id,
+          $plugin_definition,
+          $configuration
+      );
   }
 
   /**

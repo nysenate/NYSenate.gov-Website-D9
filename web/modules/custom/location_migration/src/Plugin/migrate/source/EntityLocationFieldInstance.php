@@ -65,14 +65,14 @@ class EntityLocationFieldInstance extends EntityLocationFieldInstanceBase implem
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration = NULL) {
     return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $migration,
-      $container->get('state'),
-      $container->get('entity_type.manager'),
-      $container->get('plugin.manager.field.field_type')
-    );
+          $configuration,
+          $plugin_id,
+          $plugin_definition,
+          $migration,
+          $container->get('state'),
+          $container->get('entity_type.manager'),
+          $container->get('plugin.manager.field.field_type')
+      );
   }
 
   /**
@@ -85,11 +85,10 @@ class EntityLocationFieldInstance extends EntityLocationFieldInstanceBase implem
     ] = $this->configuration;
     $subquery = NULL;
 
-    if (
-      $this->moduleExists('location_node') &&
-      (!$entity_type || $entity_type === 'node') &&
-      $this->getDatabase()->schema()->tableExists('node_type')
-    ) {
+    if ($this->moduleExists('location_node')
+          && (!$entity_type || $entity_type === 'node')
+          && $this->getDatabase()->schema()->tableExists('node_type')
+      ) {
       $subquery = $this->select('node_type', 'nt');
       $subquery->addExpression("'node'", 'entity_type');
       $subquery->addField('nt', 'type', 'bundle');
@@ -100,11 +99,10 @@ class EntityLocationFieldInstance extends EntityLocationFieldInstanceBase implem
       }
     }
 
-    if (
-      $this->moduleExists('location_taxonomy') &&
-      (!$entity_type || $entity_type === 'taxonomy_term') &&
-      $this->getDatabase()->schema()->tableExists('taxonomy_vocabulary')
-    ) {
+    if ($this->moduleExists('location_taxonomy')
+          && (!$entity_type || $entity_type === 'taxonomy_term')
+          && $this->getDatabase()->schema()->tableExists('taxonomy_vocabulary')
+      ) {
       $union_query = $this->select('taxonomy_vocabulary', 'tv');
       $union_query->addExpression("'taxonomy_term'", 'entity_type');
       $union_query->addField('tv', 'machine_name', 'bundle');
@@ -117,11 +115,10 @@ class EntityLocationFieldInstance extends EntityLocationFieldInstanceBase implem
       $this->addUnionQuery($subquery, $union_query);
     }
 
-    if (
-      $this->moduleExists('location_user') &&
-      (!$entity_type || $entity_type === 'user') &&
-      $this->variableGet('location_settings_user', FALSE)
-    ) {
+    if ($this->moduleExists('location_user')
+          && (!$entity_type || $entity_type === 'user')
+          && $this->variableGet('location_settings_user', FALSE)
+      ) {
       $union_query = $this->select('variable', 'uv')
         ->condition('uv.name', 'location_settings_user');
       $union_query->addExpression("'user'", 'entity_type');
@@ -193,24 +190,32 @@ class EntityLocationFieldInstance extends EntityLocationFieldInstanceBase implem
       $result['widget_weight'] = (int) ($settings['form']['weight'] ?? 0);
       $result['formatter_weight'] = (int) ($settings['display']['weight'] ?? 0);
       $result['field_name'] = LocationMigration::getEntityLocationFieldBaseName($entity_type_id, $result['cardinality']);
-      $address_display_is_hidden = empty(array_diff([
-        'name',
-        'street',
-        'additional',
-        'city',
-        'province',
-        'postal_code',
-        'country',
-      ], static::getDisplayHiddenFields($settings)));
-      $address_widget_is_hidden = empty(array_diff([
-        'name',
-        'street',
-        'additional',
-        'city',
-        'province',
-        'postal_code',
-        'country',
-      ], static::getFormHiddenFields($settings)));
+      $address_display_is_hidden = empty(
+            array_diff(
+                [
+                  'name',
+                  'street',
+                  'additional',
+                  'city',
+                  'province',
+                  'postal_code',
+                  'country',
+                ], static::getDisplayHiddenFields($settings)
+            )
+        );
+      $address_widget_is_hidden = empty(
+            array_diff(
+                [
+                  'name',
+                  'street',
+                  'additional',
+                  'city',
+                  'province',
+                  'postal_code',
+                  'country',
+                ], static::getFormHiddenFields($settings)
+            )
+        );
 
       // This module depends on Address module, so we assume that the "address"
       // field type is available.
@@ -218,9 +223,11 @@ class EntityLocationFieldInstance extends EntityLocationFieldInstanceBase implem
         'type' => 'address',
         'widget_type' => 'address_default',
         'formatter_type' => 'address_default',
-        'field_label' => (string) $this->t('@field-label of @entity-label', $field_label_args + [
-          '@field-label' => LocationMigration::ADDRESS_FIELD_LABEL_PREFIX,
-        ]),
+        'field_label' => (string) $this->t(
+            '@field-label of @entity-label', $field_label_args + [
+              '@field-label' => LocationMigration::ADDRESS_FIELD_LABEL_PREFIX,
+            ]
+        ),
         'field_instance_settings' => LocationToAddressFieldInstanceSettings::defaultSettings(),
         'display_hidden' => $address_display_is_hidden,
         'widget_hidden' => $address_widget_is_hidden,
@@ -228,9 +235,9 @@ class EntityLocationFieldInstance extends EntityLocationFieldInstanceBase implem
 
       // Add additional extra fields.
       $rows = array_merge(
-        $rows,
-        $this->getExtraFieldRows($result)
-      );
+            $rows,
+            $this->getExtraFieldRows($result)
+        );
     }
 
     return new \ArrayIterator($rows);

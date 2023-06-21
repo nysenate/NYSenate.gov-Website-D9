@@ -77,8 +77,8 @@ class UsersHelper {
     $user = static::resolveUser($user);
     $district = $user->field_district->entity ?? NULL;
     return ($district instanceof Term)
-      ? ($district->field_senator->entity ?? NULL)
-      : NULL;
+        ? ($district->field_senator->entity ?? NULL)
+        : NULL;
   }
 
   /**
@@ -120,7 +120,7 @@ class UsersHelper {
     }
     return match ($test) {
       self::NYS_USERS_OWNS_ALL => (array_intersect($check_roles, $user_roles) === $check_roles),
-      self::NYS_USERS_OWNS_ANY => (bool) (count(array_intersect($check_roles, $user_roles)))
+            self::NYS_USERS_OWNS_ANY => (bool) (count(array_intersect($check_roles, $user_roles)))
     };
   }
 
@@ -162,10 +162,10 @@ class UsersHelper {
    */
   public static function isLcOrMcp(mixed $user): bool {
     return static::hasRoles(
-      $user,
-      ['microsite_content_producer', 'legislative_correspondent'],
-      static::NYS_USERS_OWNS_ANY
-    );
+          $user,
+          ['microsite_content_producer', 'legislative_correspondent'],
+          static::NYS_USERS_OWNS_ANY
+      );
   }
 
 }

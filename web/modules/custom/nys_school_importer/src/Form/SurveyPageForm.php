@@ -2,16 +2,16 @@
 
 namespace Drupal\nys_school_importer\Form;
 
-use Drupal\Core\Link;
-use Drupal\Core\State\State;
-use Drupal\Core\Form\FormBase;
 use Drupal\Core\File\FileSystem;
-use Drupal\Core\Messenger\Messenger;
+use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\nys_school_importer\ImporterHelper;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Drupal\Core\Link;
+use Drupal\Core\Messenger\Messenger;
+use Drupal\Core\State\State;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\nys_school_importer\ImporterHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Form class for school survey.
@@ -61,11 +61,11 @@ class SurveyPageForm extends FormBase {
    *   The file system class.
    */
   public function __construct(
-    ImporterHelper $importer_helper,
-    State $state,
-    Messenger $messenger,
-    FileSystem $file_system
-  ) {
+        ImporterHelper $importer_helper,
+        State $state,
+        Messenger $messenger,
+        FileSystem $file_system
+    ) {
     $this->importerHelper = $importer_helper;
     $this->state = $state;
     $this->messenger = $messenger;
@@ -77,11 +77,11 @@ class SurveyPageForm extends FormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('nys_school_importer.importer'),
-      $container->get('state'),
-      $container->get('messenger'),
-      $container->get('file_system')
-    );
+          $container->get('nys_school_importer.importer'),
+          $container->get('state'),
+          $container->get('messenger'),
+          $container->get('file_system')
+      );
   }
 
   /**
@@ -110,8 +110,8 @@ class SurveyPageForm extends FormBase {
         '#value' => $this->t('Commence Import'),
       ],
       '#validate' => [
-        [$this, 'validateFileUpload'],
-        [$this, 'formValidate'],
+      [$this, 'validateFileUpload'],
+      [$this, 'formValidate'],
       ],
     ];
 
@@ -244,13 +244,17 @@ class SurveyPageForm extends FormBase {
     $county_tid = $this->importerHelper->getCountyTid($county_name);
     if ($county_tid == FALSE) {
       // The supplied county name is not in the County taxonomy.
-      $this->messenger->addStatus($this->t("County `%country` not found in taxonomy for - %legal_name, %grade_organization, %city, %zip", [
-        '%country_name' => $county_name,
-        '%legal_name' => $legal_name,
-        '%grade_organization' => $grade_organization,
-        '%city' => $city,
-        '%zip' => $zip,
-      ]));
+      $this->messenger->addStatus(
+            $this->t(
+                "County `%country` not found in taxonomy for - %legal_name, %grade_organization, %city, %zip", [
+                  '%country_name' => $county_name,
+                  '%legal_name' => $legal_name,
+                  '%grade_organization' => $grade_organization,
+                  '%city' => $city,
+                  '%zip' => $zip,
+                ]
+            )
+        );
       $this->state->set('nys_school_importer_failed', TRUE);
     }
 

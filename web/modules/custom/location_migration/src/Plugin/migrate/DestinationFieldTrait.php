@@ -32,9 +32,9 @@ trait DestinationFieldTrait {
       // the Location migration field plugin.
       // @see \Drupal\location_migration\Plugin\migrate\field\Location
       $rows = array_merge(
-        $rows,
-        $this->getExtraFieldRows($item)
-      );
+            $rows,
+            $this->getExtraFieldRows($item)
+        );
     }
 
     return new \ArrayIterator($rows);
@@ -57,8 +57,8 @@ trait DestinationFieldTrait {
       return [];
     }
     $field_settings = is_string($migration_source_row['field_storage_data'] ?? $migration_source_row['data'] ?? NULL)
-      ? unserialize($migration_source_row['field_storage_data'] ?? $migration_source_row['data'])
-      : [];
+        ? unserialize($migration_source_row['field_storage_data'] ?? $migration_source_row['data'])
+        : [];
     // @phpstan-ignore-next-line
     $location_settings = $migration_source_row['location_settings'] ?? $field_settings['settings']['location_settings'] ?? [];
     $hidden_form_props = static::getFormHiddenFields($location_settings);
@@ -69,42 +69,62 @@ trait DestinationFieldTrait {
     $base_field_name = $migration_source_row['field_name'] ?? LocationMigration::getEntityLocationFieldBaseName($entity_type_id);
     // Geolocation is our dependency, assuming that its field is always
     // available.
-    $display_is_hidden = empty(array_diff([
-      'map_link',
-      'coords',
-    ], $hidden_display_props));
-    $widget_is_hidden = empty(array_diff([
-      'locpick',
-    ], $hidden_form_props));
+    $display_is_hidden = empty(
+          array_diff(
+              [
+                'map_link',
+                'coords',
+              ], $hidden_display_props
+          )
+      );
+    $widget_is_hidden = empty(
+          array_diff(
+              [
+                'locpick',
+              ], $hidden_form_props
+          )
+      );
     $items = [
       [
         'field_name' => LocationMigration::getGeolocationFieldName($base_field_name),
         'type' => 'geolocation',
         'widget_type' => 'geolocation_latlng',
         'formatter_type' => 'geolocation_latlng',
-        'field_label' => (string) $this->t('@field-label of @entity-label', $field_label_args + [
-          '@field-label' => LocationMigration::GEOLOCATION_FIELD_LABEL_PREFIX,
-        ]),
+        'field_label' => (string) $this->t(
+          '@field-label of @entity-label', $field_label_args + [
+            '@field-label' => LocationMigration::GEOLOCATION_FIELD_LABEL_PREFIX,
+          ]
+        ),
         'display_hidden' => $display_is_hidden,
         'widget_hidden' => $widget_is_hidden,
       ] + $migration_source_row,
     ];
     // Add an extra "email" field.
     if ($this->moduleExists('location_email')) {
-      $display_is_hidden = empty(array_diff([
-        'email',
-      ], $hidden_display_props));
-      $widget_is_hidden = empty(array_diff([
-        'email',
-      ], $hidden_form_props));
+      $display_is_hidden = empty(
+            array_diff(
+                [
+                  'email',
+                ], $hidden_display_props
+            )
+        );
+      $widget_is_hidden = empty(
+            array_diff(
+                [
+                  'email',
+                ], $hidden_form_props
+            )
+        );
       $items[] = [
         'field_name' => LocationMigration::getEmailFieldName($base_field_name),
         'type' => 'email',
         'widget_type' => 'email_default',
         'formatter_type' => 'email_mailto',
-        'field_label' => (string) $this->t('@field-label of @entity-label', $field_label_args + [
-          '@field-label' => LocationMigration::EMAIL_FIELD_LABEL_PREFIX,
-        ]),
+        'field_label' => (string) $this->t(
+            '@field-label of @entity-label', $field_label_args + [
+              '@field-label' => LocationMigration::EMAIL_FIELD_LABEL_PREFIX,
+            ]
+        ),
         'display_hidden' => $display_is_hidden,
         'widget_hidden' => $widget_is_hidden,
       ] + $migration_source_row;
@@ -113,39 +133,59 @@ trait DestinationFieldTrait {
     $telephone_definition = $this->fieldTypePluginManager->getDefinition('telephone', FALSE);
     if ($telephone_definition && $telephone_definition['provider'] === 'telephone') {
       if ($this->moduleExists('location_fax')) {
-        $display_is_hidden = empty(array_diff([
-          'fax',
-        ], $hidden_display_props));
-        $widget_is_hidden = empty(array_diff([
-          'fax',
-        ], $hidden_form_props));
+        $display_is_hidden = empty(
+              array_diff(
+                  [
+                    'fax',
+                  ], $hidden_display_props
+              )
+          );
+        $widget_is_hidden = empty(
+              array_diff(
+                  [
+                    'fax',
+                  ], $hidden_form_props
+              )
+          );
         $items[] = [
           'field_name' => LocationMigration::getFaxFieldName($base_field_name),
           'type' => 'telephone',
           'widget_type' => 'telephone_default',
           'formatter_type' => 'basic_string',
-          'field_label' => (string) $this->t('@field-label of @entity-label', $field_label_args + [
-            '@field-label' => LocationMigration::FAX_FIELD_LABEL_PREFIX,
-          ]),
+          'field_label' => (string) $this->t(
+              '@field-label of @entity-label', $field_label_args + [
+                '@field-label' => LocationMigration::FAX_FIELD_LABEL_PREFIX,
+              ]
+          ),
           'display_hidden' => $display_is_hidden,
           'widget_hidden' => $widget_is_hidden,
         ] + $migration_source_row;
       }
       if ($this->moduleExists('location_phone')) {
-        $display_is_hidden = empty(array_diff([
-          'phone',
-        ], $hidden_display_props));
-        $widget_is_hidden = empty(array_diff([
-          'phone',
-        ], $hidden_form_props));
+        $display_is_hidden = empty(
+              array_diff(
+                  [
+                    'phone',
+                  ], $hidden_display_props
+              )
+          );
+        $widget_is_hidden = empty(
+              array_diff(
+                  [
+                    'phone',
+                  ], $hidden_form_props
+              )
+          );
         $items[] = [
           'field_name' => LocationMigration::getPhoneFieldName($base_field_name),
           'type' => 'telephone',
           'widget_type' => 'telephone_default',
           'formatter_type' => 'basic_string',
-          'field_label' => (string) $this->t('@field-label of @entity-label', $field_label_args + [
-            '@field-label' => LocationMigration::PHONE_FIELD_LABEL_PREFIX,
-          ]),
+          'field_label' => (string) $this->t(
+              '@field-label of @entity-label', $field_label_args + [
+                '@field-label' => LocationMigration::PHONE_FIELD_LABEL_PREFIX,
+              ]
+          ),
           'display_hidden' => $display_is_hidden,
           'widget_hidden' => $widget_is_hidden,
         ] + $migration_source_row;
@@ -153,25 +193,34 @@ trait DestinationFieldTrait {
     }
     // "WWW" is migrated when the "link" field is available.
     $link_definition = $this->fieldTypePluginManager->getDefinition('link', FALSE);
-    if (
-      $this->moduleExists('location_www') &&
-      $link_definition &&
-      $link_definition['provider'] === 'link'
-    ) {
-      $display_is_hidden = empty(array_diff([
-        'www',
-      ], $hidden_display_props));
-      $widget_is_hidden = empty(array_diff([
-        'www',
-      ], $hidden_form_props));
+    if ($this->moduleExists('location_www')
+          && $link_definition
+          && $link_definition['provider'] === 'link'
+      ) {
+      $display_is_hidden = empty(
+            array_diff(
+                [
+                  'www',
+                ], $hidden_display_props
+            )
+        );
+      $widget_is_hidden = empty(
+            array_diff(
+                [
+                  'www',
+                ], $hidden_form_props
+            )
+        );
       $items[] = [
         'field_name' => LocationMigration::getWwwFieldName($base_field_name),
         'type' => 'link',
         'widget_type' => 'link_default',
         'formatter_type' => 'link',
-        'field_label' => (string) $this->t('@field-label of @entity-label', $field_label_args + [
-          '@field-label' => LocationMigration::WWW_FIELD_LABEL_PREFIX,
-        ]),
+        'field_label' => (string) $this->t(
+            '@field-label of @entity-label', $field_label_args + [
+              '@field-label' => LocationMigration::WWW_FIELD_LABEL_PREFIX,
+            ]
+        ),
         'field_instance_settings' => [
           'link_type' => LinkItemInterface::LINK_GENERIC,
           'title' => DRUPAL_DISABLED,
@@ -202,10 +251,12 @@ trait DestinationFieldTrait {
       'www' => $default_config,
     ];
     return array_keys(
-      array_filter($config, function ($conf) {
-        return $conf['collect'] === '0';
-      })
-    );
+          array_filter(
+              $config, function ($conf) {
+                  return $conf['collect'] === '0';
+              }
+          )
+      );
   }
 
   /**
@@ -225,10 +276,12 @@ trait DestinationFieldTrait {
       'www' => 0,
     ];
     return array_keys(
-      array_filter($config, function ($conf) {
-        return !empty($conf);
-      })
-    );
+          array_filter(
+              $config, function ($conf) {
+                  return !empty($conf);
+              }
+          )
+      );
   }
 
 }

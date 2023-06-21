@@ -77,9 +77,11 @@ class ApiManager {
         $ret = $this->requester->createInstance($item_type);
       }
       catch (\Throwable $e) {
-        $this->logger->error('Failed to instantiate plugin @name (@type)', [
-          '@name' => $item_type,
-        ]);
+        $this->logger->error(
+              'Failed to instantiate plugin @name (@type)', [
+                '@name' => $item_type,
+              ]
+          );
         $ret = NULL;
       }
       $this->allRequesters[$item_type] = $ret;
@@ -162,14 +164,18 @@ class ApiManager {
   public function getStatuteFull(string $book, string $location, string $history = ''): Statute {
     $param = ['history' => $history];
 
-    /** @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\StatuteTree $tree */
+    /**
+     * @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\StatuteTree $tree
+     */
     $tree = $this->get('statute', $book, $param + ['location' => $location]);
 
     if (!$location && $tree->success()) {
       $location = $tree->location();
     }
 
-    /** @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\StatuteDetail $detail */
+    /**
+     * @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\StatuteDetail $detail
+     */
     $detail = $this->get('statute', $book . '/' . $location, $param);
 
     // If location is empty, only a tree will be returned.  This next part is

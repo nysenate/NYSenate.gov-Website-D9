@@ -2,14 +2,14 @@
 
 namespace Drupal\nys_openleg_imports;
 
-use Drupal\nys_openleg\Api\Request;
-use Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseSearch;
-use Drupal\nys_openleg_imports\Service\OpenlegImportProcessorManager;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Psr\Log\LoggerInterface;
 use Drupal\Core\Logger\LoggerChannel;
-use Drupal\nys_openleg\Service\ApiManager;
+use Drupal\nys_openleg\Api\Request;
 use Drupal\nys_openleg\Api\RequestPluginInterface;
+use Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseSearch;
+use Drupal\nys_openleg\Service\ApiManager;
+use Drupal\nys_openleg_imports\Service\OpenlegImportProcessorManager;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Base class for Openleg importer plugins.
@@ -103,20 +103,22 @@ abstract class ImporterBase implements ImporterInterface {
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
-      $container->get('manager.openleg_api'),
-      $container->get('manager.openleg_import_processors'),
-      $container->get('logger.channel.openleg_imports'),
-      $plugin_definition,
-      $plugin_id,
-      $configuration,
-    );
+          $container->get('manager.openleg_api'),
+          $container->get('manager.openleg_import_processors'),
+          $container->get('logger.channel.openleg_imports'),
+          $plugin_definition,
+          $plugin_id,
+          $configuration,
+      );
   }
 
   /**
    * {@inheritDoc}
    */
   public function importUpdates(string $time_from, string $time_to): ImportResult {
-    /** @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseUpdate $updates */
+    /**
+     * @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseUpdate $updates
+     */
     $updates = $this->requester->retrieveUpdates($time_from, $time_to);
     return $this->import($updates->listIds());
   }
@@ -166,11 +168,13 @@ abstract class ImporterBase implements ImporterInterface {
   public function import(array $items): ImportResult {
     // Init and report.
     $this->results = $this->getResult();
-    $this->logger->info("[@time] Beginning processing of @total @type items", [
-      '@total' => count($items),
-      '@type' => $this->pluginId,
-      '@time' => date(Request::OPENLEG_TIME_SIMPLE, time()),
-    ]);
+    $this->logger->info(
+          "[@time] Beginning processing of @total @type items", [
+            '@total' => count($items),
+            '@type' => $this->pluginId,
+            '@time' => date(Request::OPENLEG_TIME_SIMPLE, time()),
+          ]
+      );
 
     // Iterate the items.  Success/fail/exceptions are tracked.
     foreach ($items as $item_name) {
@@ -178,10 +182,12 @@ abstract class ImporterBase implements ImporterInterface {
         $full_item = $this->requester->retrieve($item_name);
         $processor = $this->getProcessor()->init($full_item);
         if (!$full_item->success()) {
-          $this->logger->error('API call to retrieve @name failed', [
-            '@name' => $item_name,
-            '@response' => var_export($full_item, 1),
-          ]);
+          $this->logger->error(
+                'API call to retrieve @name failed', [
+                  '@name' => $item_name,
+                  '@response' => var_export($full_item, 1),
+                ]
+            );
         }
         $success = $full_item->success() && $processor->process();
       }
@@ -235,22 +241,30 @@ abstract class ImporterBase implements ImporterInterface {
    * Given an Openleg search response, returns a unique array of IDs.
    */
   public function getIdFromSearchList(ResponseSearch $response): array {
-    return array_unique(array_filter(array_map(
-      function ($v) {
-        return $this->id($v->result);
-      },
-      $response->items()
-    )));
+    return array_unique(
+          array_filter(
+              array_map(
+                  function ($v) {
+                        return $this->id($v->result);
+                  },
+                  $response->items()
+              )
+          )
+      );
   }
 
   /**
    * Generates an array of IDs from a list of calendars in a calendar year.
    */
   public function getIdFromYearList(ResponseSearch $response): array {
-    return array_unique(array_filter(array_map(
-      [$this, 'id'],
-      $response->items()
-    )));
+    return array_unique(
+          array_filter(
+              array_map(
+                  [$this, 'id'],
+                  $response->items()
+              )
+          )
+      );
   }
 
   /**

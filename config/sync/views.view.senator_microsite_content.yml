@@ -1313,7 +1313,6 @@ display:
           operator: in
           value:
             article: article
-            honoree: honoree
             petition: petition
             video: video
           group: 1
@@ -1714,6 +1713,11 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
+      pager:
+        type: some
+        options:
+          offset: 0
+          items_per_page: 4
       sorts:
         field_date_range_value:
           id: field_date_range_value
@@ -1829,11 +1833,11 @@ display:
           group_type: group
           admin_label: ''
           plugin_id: datetime
-          operator: '<='
+          operator: '>'
           value:
             min: ''
             max: ''
-            value: '+30 day'
+            value: 'now -1 day'
             type: offset
           group: 1
           exposed: false
@@ -1866,12 +1870,14 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
+          granularity: second
       filter_groups:
         operator: AND
         groups:
           1: AND
       defaults:
         title: false
+        pager: false
         fields: false
         sorts: false
         arguments: false
@@ -2214,6 +2220,11 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
+      pager:
+        type: some
+        options:
+          offset: 0
+          items_per_page: 12
       exposed_form:
         type: bef
         options:
@@ -2429,6 +2440,7 @@ display:
         empty: false
         title: false
         use_ajax: false
+        pager: false
         use_more: false
         use_more_always: false
         use_more_text: false

@@ -1,0 +1,29 @@
+uuid: e7676fd2-afc8-4248-96da-eec5fae0f8f9
+langcode: en
+status: true
+dependencies:
+  module:
+    - job_scheduler
+title: 'Default cron handler'
+id: job_scheduler_cron
+weight: 0
+module: job_scheduler
+callback: job_scheduler_cron
+scheduler:
+  id: simple
+  configuration:
+    rules:
+      - '0+@ */3 * * *'
+launcher:
+  id: serial
+  configuration:
+    timeouts:
+      lock_timeout: 3600
+    launcher:
+      thread: 0
+logger:
+  id: database
+  configuration:
+    method: '3'
+    expire: 1209600
+    retain: 1000

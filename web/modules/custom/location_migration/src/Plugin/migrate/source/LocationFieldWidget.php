@@ -2,10 +2,10 @@
 
 namespace Drupal\location_migration\Plugin\migrate\source;
 
-use Drupal\Core\Field\FieldTypePluginManagerInterface;
-use Drupal\field\Plugin\migrate\source\d7\FieldInstancePerFormDisplay;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\State\StateInterface;
+use Drupal\field\Plugin\migrate\source\d7\FieldInstancePerFormDisplay;
 use Drupal\location_migration\Plugin\migrate\DestinationFieldTrait;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -62,14 +62,14 @@ class LocationFieldWidget extends FieldInstancePerFormDisplay {
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration = NULL) {
     return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $migration,
-      $container->get('state'),
-      $container->get('entity_type.manager'),
-      $container->get('plugin.manager.field.field_type')
-    );
+          $configuration,
+          $plugin_id,
+          $plugin_definition,
+          $migration,
+          $container->get('state'),
+          $container->get('entity_type.manager'),
+          $container->get('plugin.manager.field.field_type')
+      );
   }
 
   /**

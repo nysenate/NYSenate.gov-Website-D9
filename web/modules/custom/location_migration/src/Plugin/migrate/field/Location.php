@@ -61,50 +61,62 @@ class Location extends FieldPluginBase {
    * {@inheritdoc}
    */
   public function defineValueProcessPipeline(MigrationInterface $migration, $field_name, $data) {
-    $migration->mergeProcessOfProperty($field_name, [
-      'plugin' => 'location_to_address',
-      'source' => $field_name,
-    ]);
+    $migration->mergeProcessOfProperty(
+          $field_name, [
+            'plugin' => 'location_to_address',
+            'source' => $field_name,
+          ]
+      );
 
     $migration_dependencies = $migration->getMigrationDependencies() + ['required' => []];
 
     // Address cannot store geographical locations, so we need a separate
     // geolocation field.
-    $migration->mergeProcessOfProperty(LocationMigration::getGeolocationFieldName($field_name), [
-      'plugin' => 'location_to_geolocation',
-      'source' => $field_name,
-    ]);
+    $migration->mergeProcessOfProperty(
+          LocationMigration::getGeolocationFieldName($field_name), [
+            'plugin' => 'location_to_geolocation',
+            'source' => $field_name,
+          ]
+      );
     // These processes only make sense if the corresponding source (and
     // destination) modules are enabled, but it seems that they do not cause any
     // kind of violations.
-    $migration->mergeProcessOfProperty(LocationMigration::getEmailFieldName($field_name), [
-      'plugin' => 'location_email_to_email',
-      'source' => $field_name,
-    ]);
-    $migration->mergeProcessOfProperty(LocationMigration::getFaxFieldName($field_name), [
-      'plugin' => 'location_fax_to_telephone',
-      'source' => $field_name,
-    ]);
-    $migration->mergeProcessOfProperty(LocationMigration::getPhoneFieldName($field_name), [
-      'plugin' => 'location_phone_to_telephone',
-      'source' => $field_name,
-    ]);
-    $migration->mergeProcessOfProperty(LocationMigration::getWwwFieldName($field_name), [
-      'plugin' => 'location_www_to_link',
-      'source' => $field_name,
-    ]);
+    $migration->mergeProcessOfProperty(
+          LocationMigration::getEmailFieldName($field_name), [
+            'plugin' => 'location_email_to_email',
+            'source' => $field_name,
+          ]
+      );
+    $migration->mergeProcessOfProperty(
+          LocationMigration::getFaxFieldName($field_name), [
+            'plugin' => 'location_fax_to_telephone',
+            'source' => $field_name,
+          ]
+      );
+    $migration->mergeProcessOfProperty(
+          LocationMigration::getPhoneFieldName($field_name), [
+            'plugin' => 'location_phone_to_telephone',
+            'source' => $field_name,
+          ]
+      );
+    $migration->mergeProcessOfProperty(
+          LocationMigration::getWwwFieldName($field_name), [
+            'plugin' => 'location_www_to_link',
+            'source' => $field_name,
+          ]
+      );
 
     // Add the extra field's migrations as required dependencies.
     LocationMigration::mergeDerivedRequiredDependencies(
-      $migration_dependencies,
-      ['d7_field_location'],
-      [$data['entity_type']]
-    );
+          $migration_dependencies,
+          ['d7_field_location'],
+          [$data['entity_type']]
+      );
     LocationMigration::mergeDerivedRequiredDependencies(
-      $migration_dependencies,
-      ['d7_field_location_instance'],
-      [$data['entity_type'], $data['bundle']]
-    );
+          $migration_dependencies,
+          ['d7_field_location_instance'],
+          [$data['entity_type'], $data['bundle']]
+      );
     if ($migration instanceof Migration) {
       $migration->set('migration_dependencies', $migration_dependencies);
     }

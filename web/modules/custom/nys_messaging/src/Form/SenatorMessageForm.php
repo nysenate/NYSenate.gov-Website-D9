@@ -2,7 +2,6 @@
 
 namespace Drupal\nys_messaging\Form;
 
-use Drupal\Core\Url;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -11,11 +10,12 @@ use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\Routing\CurrentRouteMatch;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Url;
+use Drupal\nys_users\UsersHelper;
 use Drupal\private_message\Entity\PrivateMessage;
 use Drupal\private_message\Service\PrivateMessageThreadManagerInterface;
-use Drupal\nys_users\UsersHelper;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Form for sending private message to a senator.
@@ -83,12 +83,13 @@ class SenatorMessageForm extends FormBase {
    *   The private_message.thread_manager object.
    */
   public function __construct(
-    CurrentRouteMatch $routematch,
-    AccountProxyInterface $current_user,
-    MessengerInterface $messenger,
-    CurrentPathStack $current_path,
-    EntityTypeManagerInterface $entity_type_manager,
-    PrivateMessageThreadManagerInterface $private_message_thread_manager) {
+        CurrentRouteMatch $routematch,
+        AccountProxyInterface $current_user,
+        MessengerInterface $messenger,
+        CurrentPathStack $current_path,
+        EntityTypeManagerInterface $entity_type_manager,
+        PrivateMessageThreadManagerInterface $private_message_thread_manager
+    ) {
     $this->routeMatch = $routematch;
     $this->currentUser = $current_user;
     $this->messenger = $messenger;
@@ -102,13 +103,13 @@ class SenatorMessageForm extends FormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('current_route_match'),
-      $container->get('current_user'),
-      $container->get('messenger'),
-      $container->get('path.current'),
-      $container->get('entity_type.manager'),
-      $container->get('private_message.thread_manager'),
-    );
+          $container->get('current_route_match'),
+          $container->get('current_user'),
+          $container->get('messenger'),
+          $container->get('path.current'),
+          $container->get('entity_type.manager'),
+          $container->get('private_message.thread_manager'),
+      );
   }
 
   /**
@@ -325,10 +326,12 @@ class SenatorMessageForm extends FormBase {
     }
 
     // Create the private message entity.
-    $message = PrivateMessage::create([
-      'message' => $message,
-      'field_subject' => $subject,
-    ]);
+    $message = PrivateMessage::create(
+          [
+            'message' => $message,
+            'field_subject' => $subject,
+          ]
+      );
     $message->field_to = $values['recipient_uid'];
     $message->save();
 

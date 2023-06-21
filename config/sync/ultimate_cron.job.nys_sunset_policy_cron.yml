@@ -1,0 +1,29 @@
+uuid: 563f20f2-cf25-449c-8445-054a1f41bad0
+langcode: en
+status: true
+dependencies:
+  module:
+    - nys_sunset_policy
+title: 'Default cron handler'
+id: nys_sunset_policy_cron
+weight: 0
+module: nys_sunset_policy
+callback: nys_sunset_policy_cron
+scheduler:
+  id: simple
+  configuration:
+    rules:
+      - '0+@ */3 * * *'
+launcher:
+  id: serial
+  configuration:
+    timeouts:
+      lock_timeout: 3600
+    launcher:
+      thread: 0
+logger:
+  id: database
+  configuration:
+    method: '3'
+    expire: 1209600
+    retain: 1000

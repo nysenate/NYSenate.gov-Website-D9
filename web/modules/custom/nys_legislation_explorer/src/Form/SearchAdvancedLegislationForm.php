@@ -2,12 +2,12 @@
 
 namespace Drupal\nys_legislation_explorer\Form;
 
-use Drupal\Core\Url;
 use Drupal\Core\Form\FormBase;
-use Drupal\taxonomy\Entity\Term;
 use Drupal\Core\Form\FormStateInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Url;
 use Drupal\nys_legislation_explorer\SearchAdvancedLegislationHelper;
+use Drupal\taxonomy\Entity\Term;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -39,9 +39,9 @@ class SearchAdvancedLegislationForm extends FormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('nys_legislation_explorer.helper'),
-      $container->get('request_stack')
-    );
+          $container->get('nys_legislation_explorer.helper'),
+          $container->get('request_stack')
+      );
   }
 
   /**
@@ -225,7 +225,7 @@ class SearchAdvancedLegislationForm extends FormBase {
         'bill' => t('Bills'),
         'resolution' => t('Resolutions'),
         'meeting' => t('Committee Meeting Agendas'),
-        'event' => t('Session Calendars'),
+        'session' => t('Session Calendars'),
         'floor' => t('Session Transcripts'),
         'public_hearing' => t('Public Hearing Transcripts'),
       ],
@@ -243,8 +243,8 @@ class SearchAdvancedLegislationForm extends FormBase {
       '#states' => [
         'visible' => [
           'select[name="type"]' => [
-            ['value' => 'bill'],
-            ['value' => 'resolution'],
+        ['value' => 'bill'],
+        ['value' => 'resolution'],
           ],
         ],
       ],
@@ -270,8 +270,8 @@ class SearchAdvancedLegislationForm extends FormBase {
       '#states' => [
         'visible' => [
           'select[name="type"]' => [
-            ['value' => 'bill'],
-            ['value' => 'resolution'],
+        ['value' => 'bill'],
+        ['value' => 'resolution'],
           ],
         ],
       ],
@@ -289,7 +289,7 @@ class SearchAdvancedLegislationForm extends FormBase {
         'visible' => [
           'select[name="type"]' => [
             ['value' => 'meeting'],
-            ['value' => 'event'],
+            ['value' => 'session'],
             ['value' => 'floor'],
             ['value' => 'public_hearing'],
           ],
@@ -309,7 +309,7 @@ class SearchAdvancedLegislationForm extends FormBase {
         'visible' => [
           'select[name="type"]' => [
             ['value' => 'meeting'],
-            ['value' => 'event'],
+            ['value' => 'session'],
             ['value' => 'floor'],
             ['value' => 'public_hearing'],
           ],
@@ -327,10 +327,10 @@ class SearchAdvancedLegislationForm extends FormBase {
       '#states' => [
         'visible' => [
           'select[name="type"]' => [
-            ['value' => 'bill'],
-            ['value' => 'resolution'],
-            ['value' => 'floor'],
-            ['value' => 'public_hearing'],
+        ['value' => 'bill'],
+        ['value' => 'resolution'],
+        ['value' => 'floor'],
+        ['value' => 'public_hearing'],
           ],
         ],
       ],
@@ -347,8 +347,8 @@ class SearchAdvancedLegislationForm extends FormBase {
       '#states' => [
         'visible' => [
           'select[name="type"]' => [
-            ['value' => 'bill'],
-            ['value' => 'resolution'],
+        ['value' => 'bill'],
+        ['value' => 'resolution'],
           ],
         ],
       ],
@@ -381,7 +381,7 @@ class SearchAdvancedLegislationForm extends FormBase {
       '#states' => [
         'visible' => [
           'select[name="type"]' => [
-            ['value' => 'bill'],
+        ['value' => 'bill'],
           ],
         ],
       ],
@@ -398,8 +398,8 @@ class SearchAdvancedLegislationForm extends FormBase {
       '#states' => [
         'visible' => [
           'select[name="type"]' => [
-            ['value' => 'bill'],
-            ['value' => 'meeting'],
+        ['value' => 'bill'],
+        ['value' => 'meeting'],
           ],
         ],
       ],
@@ -420,7 +420,7 @@ class SearchAdvancedLegislationForm extends FormBase {
       '#states' => [
         'visible' => [
           'select[name="type"]' => [
-            ['value' => 'bill'],
+        ['value' => 'bill'],
           ],
         ],
       ],
@@ -497,7 +497,7 @@ class SearchAdvancedLegislationForm extends FormBase {
         ];
         break;
 
-      case 'event':
+      case 'session':
         $params = [
           'type' => $values['type'] ?: '',
           'date' => $date_range ?: '',
@@ -523,9 +523,11 @@ class SearchAdvancedLegislationForm extends FormBase {
     }
 
     // Filter out any empty values.
-    $params = array_filter($params, function ($value) {
-      return $value !== '';
-    });
+    $params = array_filter(
+          $params, function ($value) {
+              return $value !== '';
+          }
+      );
 
     $url = Url::fromRoute('nys_legislation_explorer.searchLegislation', [], ['query' => $params]);
 

@@ -20,10 +20,12 @@ class Offices extends SqlBase {
    */
   public function query() {
     $query = $this->select('field_data_field_offices', 'ofc')
-      ->fields('ofc', [
-        'entity_id',
-        'field_offices_lid',
-      ]);
+      ->fields(
+              'ofc', [
+                'entity_id',
+                'field_offices_lid',
+              ]
+          );
 
     return $query;
   }

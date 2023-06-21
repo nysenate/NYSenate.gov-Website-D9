@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.landing.field_block_instance
     - field.field.node.landing.field_date
     - field.field.node.landing.field_issues
     - field.field.node.landing.field_landing_blocks
@@ -12,6 +13,7 @@ dependencies:
     - field.field.node.landing.field_summary
     - node.type.landing
   module:
+    - block_field
     - datetime
     - entity_reference_revisions
     - user
@@ -22,6 +24,13 @@ targetEntityType: node
 bundle: landing
 mode: default
 content:
+  field_block_instance:
+    type: block_field
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 6
+    region: content
   field_date:
     type: datetime_custom
     label: hidden
@@ -50,7 +59,7 @@ content:
     region: content
   field_show_date:
     type: boolean
-    label: above
+    label: hidden
     settings:
       format: default
       format_custom_false: ''
@@ -60,7 +69,7 @@ content:
     region: content
   field_show_issues:
     type: boolean
-    label: above
+    label: hidden
     settings:
       format: default
       format_custom_false: ''

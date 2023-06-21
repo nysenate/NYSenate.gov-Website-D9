@@ -117,9 +117,12 @@ class SubscriptionQueueItem {
       catch (\Throwable $e) {
         $this->readyToSend = FALSE;
         $this->queue->logger->error(
-          "Failed to populate item tokens for queue item @id",
-          ['@id' => $this->queueItem->item_id, '@message' => $e->getMessage()]
-        );
+              "Failed to populate item tokens for queue item @id",
+              [
+                '@id' => $this->queueItem->item_id,
+                '@message' => $e->getMessage(),
+              ]
+          );
       }
     }
 
@@ -136,14 +139,14 @@ class SubscriptionQueueItem {
       catch (\Throwable $e) {
         $this->readyToSend = FALSE;
         $this->queue->logger->error(
-          "Failed to populate subscriber tokens for queue item @id",
-          [
-            '@id' => $this->queueItem->item_id,
-            '@message' => $e->getMessage(),
-            '@subscriber' => $subscriber ?? 'No Subscriber available',
-            '@count' => count($this->queueItem->data['recipients']),
-          ]
-        );
+              "Failed to populate subscriber tokens for queue item @id",
+              [
+                '@id' => $this->queueItem->item_id,
+                '@message' => $e->getMessage(),
+                '@subscriber' => $subscriber ?? 'No Subscriber available',
+                '@count' => count($this->queueItem->data['recipients']),
+              ]
+          );
       }
     }
 
@@ -172,14 +175,14 @@ class SubscriptionQueueItem {
    */
   public function createMail(): bool {
     $message = $this->queue->mailer()->mail(
-      'nys_subscriptions',
-      $this->mailKey,
-      '',
-      $this->queue->lang()->getCurrentLanguage()->getId(),
-      ['queue_item' => $this],
-      NULL,
-      $this->readyToSend
-    );
+          'nys_subscriptions',
+          $this->mailKey,
+          '',
+          $this->queue->lang()->getCurrentLanguage()->getId(),
+          ['queue_item' => $this],
+          NULL,
+          $this->readyToSend
+      );
 
     // @todo recreate subscription logging facility.
     if ($ret = ($message['result'] ?? FALSE)) {

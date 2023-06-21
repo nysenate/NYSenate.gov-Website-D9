@@ -53,10 +53,10 @@ class PetitionsManagementController extends ControllerBase {
    */
   public static function create(ContainerInterface $container): self {
     return new static(
-      $container->get('database'),
-      $container->get('nys_senators.senators_helper'),
-      $container->get('renderer')
-    );
+          $container->get('database'),
+          $container->get('nys_senators.senators_helper'),
+          $container->get('renderer')
+      );
   }
 
   /**
@@ -80,14 +80,14 @@ class PetitionsManagementController extends ControllerBase {
 
     // If the senator is not the owner, set a filter for the senator's district.
     $district = $owner->id() == $taxonomy_term->id()
-      ? NULL
-      : $this->senatorsHelper->loadDistrict($taxonomy_term);
+        ? NULL
+        : $this->senatorsHelper->loadDistrict($taxonomy_term);
 
     // Build each row based on the query return.
     $rows = array_map(
-      [$this, 'buildSubmissionRow'],
-      $this->getSignatories($node, $district)
-    );
+          [$this, 'buildSubmissionRow'],
+          $this->getSignatories($node, $district)
+      );
 
     // Finish the render array, and render it.
     if (count($rows)) {
@@ -151,10 +151,11 @@ class PetitionsManagementController extends ControllerBase {
     $query->join('user__field_first_name', 'ufn', 'u.uid=ufn.entity_id');
     $query->join('user__field_last_name', 'uln', 'u.uid=uln.entity_id');
     $query->join('user__field_district', 'ud', 'u.uid=ud.entity_id');
-    $query->join('taxonomy_term__field_district_number', 'fdn',
-      'ud.field_district_target_id=fdn.entity_id and fdn.bundle=:district',
-      [':district' => 'districts']
-    );
+    $query->join(
+          'taxonomy_term__field_district_number', 'fdn',
+          'ud.field_district_target_id=fdn.entity_id and fdn.bundle=:district',
+          [':district' => 'districts']
+      );
 
     // Fields to be returned.
     $query->addExpression($node->id(), 'nid');
@@ -180,22 +181,24 @@ class PetitionsManagementController extends ControllerBase {
     try {
       $ret = $query->execute()->fetchAllAssoc('id', \PDO::FETCH_ASSOC);
       $this->getLogger('nys_petitions')
-        ->debug('Query for petition signatures', [
-          '@query' => (string) $query,
-          '@nid' => $node->id(),
-          '@district' => $district ? $district->id() : 'none',
-        ]);
+        ->debug(
+                'Query for petition signatures', [
+                  '@query' => (string) $query,
+                  '@nid' => $node->id(),
+                  '@district' => $district ? $district->id() : 'none',
+                ]
+            );
     }
     catch (\Throwable $e) {
       $this->getLogger('nys_petitions')->error(
-        "Failed to query for petition signatures",
-        [
-          '@query' => (string) $query,
-          '@nid' => $node->id(),
-          '@district' => $district ? $district->id() : 'none',
-          '@excp' => $e->getMessage(),
-        ]
-      );
+            "Failed to query for petition signatures",
+            [
+              '@query' => (string) $query,
+              '@nid' => $node->id(),
+              '@district' => $district ? $district->id() : 'none',
+              '@excp' => $e->getMessage(),
+            ]
+        );
       $ret = [];
     }
 

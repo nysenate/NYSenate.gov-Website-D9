@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.token
+    - field.field.node.landing.field_block_instance
     - field.field.node.landing.field_date
     - field.field.node.landing.field_issues
     - field.field.node.landing.field_landing_blocks
@@ -70,6 +71,7 @@ content:
     weight: 5
     region: content
 hidden:
+  field_block_instance: true
   field_meta_tags: true
   field_summary: true
   langcode: true

@@ -6,11 +6,11 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Drupal\Core\StringTranslation\TranslationInterface;
-use Drupal\Core\Url;
 
 /**
  * Defines a confirmation form to confirm deletion of school submissions.
@@ -69,11 +69,11 @@ class SchoolFormDeleteForm extends ConfirmFormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('tempstore.private'),
-      $container->get('entity_type.manager'),
-      $container->get('current_user'),
-      $container->get('string_translation')
-    );
+          $container->get('tempstore.private'),
+          $container->get('entity_type.manager'),
+          $container->get('current_user'),
+          $container->get('string_translation')
+      );
   }
 
   /**
@@ -122,9 +122,11 @@ class SchoolFormDeleteForm extends ConfirmFormBase {
 
     $form['files'] = [
       '#theme' => 'item_list',
-      '#items' => array_map(function ($file) {
-        return $file->getFilename();
-      }, $this->files),
+      '#items' => array_map(
+          function ($file) {
+              return $file->getFilename();
+          }, $this->files
+      ),
     ];
     return parent::buildForm($form, $form_state);
   }

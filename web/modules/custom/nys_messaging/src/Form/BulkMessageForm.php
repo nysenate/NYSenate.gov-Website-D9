@@ -2,19 +2,19 @@
 
 namespace Drupal\nys_messaging\Form;
 
-use Drupal\Core\Url;
-use Drupal\Core\Form\FormBase;
-use Drupal\Core\Path\CurrentPathStack;
-use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Routing\CurrentRouteMatch;
-use Drupal\Core\Messenger\MessengerInterface;
-use Drupal\Core\Session\AccountProxyInterface;
-use Drupal\private_message\Entity\PrivateMessage;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\Path\CurrentPathStack;
+use Drupal\Core\Routing\CurrentRouteMatch;
+use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Url;
+use Drupal\private_message\Entity\PrivateMessage;
 use Drupal\private_message\Service\PrivateMessageThreadManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Form for sending private message to a group of recipients.
@@ -82,12 +82,13 @@ class BulkMessageForm extends FormBase {
    *   The private_message.thread_manager object.
    */
   public function __construct(
-    CurrentRouteMatch $routematch,
-    AccountProxyInterface $current_user,
-    MessengerInterface $messenger,
-    CurrentPathStack $current_path,
-    EntityTypeManagerInterface $entity_type_manager,
-    PrivateMessageThreadManagerInterface $private_message_thread_manager) {
+        CurrentRouteMatch $routematch,
+        AccountProxyInterface $current_user,
+        MessengerInterface $messenger,
+        CurrentPathStack $current_path,
+        EntityTypeManagerInterface $entity_type_manager,
+        PrivateMessageThreadManagerInterface $private_message_thread_manager
+    ) {
     $this->routeMatch = $routematch;
     $this->currentUser = $current_user;
     $this->messenger = $messenger;
@@ -101,13 +102,13 @@ class BulkMessageForm extends FormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('current_route_match'),
-      $container->get('current_user'),
-      $container->get('messenger'),
-      $container->get('path.current'),
-      $container->get('entity_type.manager'),
-      $container->get('private_message.thread_manager'),
-    );
+          $container->get('current_route_match'),
+          $container->get('current_user'),
+          $container->get('messenger'),
+          $container->get('path.current'),
+          $container->get('entity_type.manager'),
+          $container->get('private_message.thread_manager'),
+      );
   }
 
   /**
@@ -254,10 +255,12 @@ class BulkMessageForm extends FormBase {
 
     // Create the private message entity for each recipient.
     foreach ($values['recipient_uid'] as $recipient) {
-      $message = PrivateMessage::create([
-        'message' => $message,
-        'field_subject' => $subject,
-      ]);
+      $message = PrivateMessage::create(
+            [
+              'message' => $message,
+              'field_subject' => $subject,
+            ]
+        );
       $message->field_to = $recipient;
       $message->save();
 

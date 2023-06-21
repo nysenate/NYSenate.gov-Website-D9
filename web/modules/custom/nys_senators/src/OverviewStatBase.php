@@ -62,11 +62,11 @@ abstract class OverviewStatBase implements OverviewStatInterface {
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): self {
     return new static(
-      $plugin_definition,
-      $container->get('entity_type.manager'),
-      $container->get('nys_senators.senators_helper'),
-      $container->get('database')
-    );
+          $plugin_definition,
+          $container->get('entity_type.manager'),
+          $container->get('nys_senators.senators_helper'),
+          $container->get('database')
+      );
   }
 
   /**

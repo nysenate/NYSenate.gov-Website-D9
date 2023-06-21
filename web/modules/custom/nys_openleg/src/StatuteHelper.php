@@ -63,11 +63,11 @@ class StatuteHelper {
       // Each law type comes pre-formatted as a list item template structure.
       foreach (static::getLawBooks() as $v) {
         $ret[$v->lawType] = $ret[$v->lawType]
-          ?? [
-            'name' => ucwords(strtolower(str_replace('_', ' ', $v->lawType ?: 'no description'))),
-            'description' => self::LAW_TYPE_NAMES[$v->lawType] ?? 'no description',
-            'url' => static::baseUrl() . '/' . $v->lawType,
-          ];
+                ?? [
+                  'name' => ucwords(strtolower(str_replace('_', ' ', $v->lawType ?: 'no description'))),
+                  'description' => self::LAW_TYPE_NAMES[$v->lawType] ?? 'no description',
+                  'url' => static::baseUrl() . '/' . $v->lawType,
+                ];
       }
 
       // Store for posterity.
@@ -169,11 +169,11 @@ class StatuteHelper {
    */
   public static function getBooksByType(string $type, $sort = self::SORT_BY_CODE): array {
     $books = array_filter(
-      static::getLawBooks(),
-      function ($v) use ($type) {
-        return $v->lawType == $type;
-      }
-    );
+          static::getLawBooks(),
+          function ($v) use ($type) {
+              return $v->lawType == $type;
+          }
+      );
     return static::sortList($books, $sort);
   }
 
@@ -208,11 +208,11 @@ class StatuteHelper {
         break;
     }
     uasort(
-      $list,
-      function ($a, $b) use ($sort_prop) {
-        return strcmp($a->{$sort_prop}, $b->{$sort_prop});
-      }
-    );
+          $list,
+          function ($a, $b) use ($sort_prop) {
+              return strcmp($a->{$sort_prop}, $b->{$sort_prop});
+          }
+      );
     return $list;
   }
 

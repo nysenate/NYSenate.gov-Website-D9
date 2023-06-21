@@ -93,8 +93,8 @@ class NysBillNotificationsCommands extends DrushCommands {
       $this->logger()->warning("Process lock detected ...");
       if (!$this->options['force']) {
         $message = "Process lock in place since " .
-          date(Request::OPENLEG_TIME_SIMPLE, $has_lock) .
-          ".  Wait for release, or use option --force to ignore it.";
+                date(Request::OPENLEG_TIME_SIMPLE, $has_lock) .
+                ".  Wait for release, or use option --force to ignore it.";
         $this->logger()->critical($message);
         return DRUSH_FRAMEWORK_ERROR;
       }

@@ -59,19 +59,21 @@ class ManagementPageIssues extends ManagementPageBase {
     $query = $this->connection->select('taxonomy_term_field_data', 'tt');
 
     // Join to the flagging table.
-    $query->join('flagging', 'f',
-      'f.entity_id=tt.tid AND f.entity_type=:taxonomy_term',
-      [':taxonomy_term' => 'taxonomy_term']
-    );
+    $query->join(
+          'flagging', 'f',
+          'f.entity_id=tt.tid AND f.entity_type=:taxonomy_term',
+          [':taxonomy_term' => 'taxonomy_term']
+      );
 
     // Join for the user's district.
     $query->join('user__field_district', 'ufd', 'ufd.entity_id=f.uid');
 
     // Join to the user's district's senator.
-    $query->join('taxonomy_term__field_senator', 'ttfs',
-      'ttfs.entity_id=ufd.field_district_target_id AND ttfs.bundle=:districts',
-      [':districts' => 'districts']
-    );
+    $query->join(
+          'taxonomy_term__field_senator', 'ttfs',
+          'ttfs.entity_id=ufd.field_district_target_id AND ttfs.bundle=:districts',
+          [':districts' => 'districts']
+      );
 
     // Add "normal" fields to select.
     $query->addField('tt', 'tid');
@@ -93,9 +95,9 @@ class ManagementPageIssues extends ManagementPageBase {
     }
     catch (\Throwable $e) {
       $this->logger->error(
-        'Query failed for issues follower count',
-        ['@excp' => $e->getMessage(), '@query' => (string) $query]
-      );
+            'Query failed for issues follower count',
+            ['@excp' => $e->getMessage(), '@query' => (string) $query]
+        );
       $rows = [];
     }
 

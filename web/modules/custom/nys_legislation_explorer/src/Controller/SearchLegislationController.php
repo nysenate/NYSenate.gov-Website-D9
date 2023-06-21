@@ -2,9 +2,9 @@
 
 namespace Drupal\nys_legislation_explorer\Controller;
 
-use Drupal\views\Views;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\nys_legislation_explorer\SearchAdvancedLegislationHelper;
+use Drupal\views\Views;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -50,8 +50,8 @@ class SearchLegislationController extends ControllerBase {
             $content['search_legislation_results'] = $view->buildRenderable('search_results_block_bills');
             break;
 
-          case 'event':
-            $content['search_legislation_results'] = $view->buildRenderable('search_results_block_events');
+          case 'session':
+            $content['search_legislation_results'] = $view->buildRenderable('search_results_block_sessions');
             break;
 
           case 'resolution':

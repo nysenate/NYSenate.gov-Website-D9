@@ -38,6 +38,10 @@
             <div class="c-newsroom-image">
               <a href="{{ item.news_url }}">{{ item.news_image }}</a>
             </div>
+          {% elseif item.video_src %}
+            <div class="c-newsroom-image">
+              <a href="{{ item.news_url }}"><img src="{{ item.video_src }}"></a>
+            </div>
           {% endif %}
           <h3 class="c-newsroom-name">
             <a href="{{ item.news_url }}">{{ item.news_name }}</a>

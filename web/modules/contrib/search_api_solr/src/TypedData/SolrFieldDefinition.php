@@ -71,7 +71,7 @@ class SolrFieldDefinition extends DataDefinition implements SolrFieldDefinitionI
   public function getSchema() {
     if (!isset($this->schema)) {
       foreach (str_split(str_replace('-', '', $this->definition['schema'])) as $key) {
-        $this->schema[$key] = isset(self::$schemaLabels[$key]) ? self::$schemaLabels[$key] : $key;
+        $this->schema[$key] = self::$schemaLabels[$key] ?? $key;
       }
     }
     return $this->schema;
@@ -81,7 +81,7 @@ class SolrFieldDefinition extends DataDefinition implements SolrFieldDefinitionI
    * {@inheritdoc}
    */
   public function getDynamicBase() {
-    return isset($this->field['dynamicBase']) ? $this->field['dynamicBase'] : NULL;
+    return $this->field['dynamicBase'] ?? NULL;
   }
 
   /**

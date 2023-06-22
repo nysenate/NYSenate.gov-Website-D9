@@ -158,7 +158,6 @@ class WebformLikert extends FormElement {
         // to required.
         if ($element['#required']) {
           $answer_attributes['required'] = 'required';
-          $answer_attributes['aria-required'] = 'true';
         }
 
         $row[$answer_key] = [

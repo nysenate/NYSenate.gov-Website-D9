@@ -148,9 +148,7 @@ class SettingsForm extends SimpleSitemapFormBase {
       '#options' => $language_options,
       '#description' => !empty($language_options)
         ? $this->t('There will be no links generated for languages checked here.')
-        : $this->t('There are no languages other than the default language <a href="@url">available</a>.',
-          ['@url' => Url::fromRoute('entity.configurable_language.collection')->toString()]
-        ),
+        : $this->t('There are no languages other than the default language available.'),
       '#default_value' => $this->settings->get('excluded_languages', []),
     ];
 

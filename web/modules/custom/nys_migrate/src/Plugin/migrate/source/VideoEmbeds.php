@@ -27,16 +27,20 @@ class VideoEmbeds extends SqlBase {
     ];
     $query = $this->select('field_data_field_yt', 'f');
     $query->join('node', 'n', 'f.entity_id = n.nid');
-    $query->fields('f', [
-      'entity_id',
-      'field_yt_video_url',
-    ])
-      ->fields('n', [
-        'title',
-        'created',
-        'changed',
-        'uid',
-      ])
+    $query->fields(
+          'f', [
+            'entity_id',
+            'field_yt_video_url',
+          ]
+      )
+      ->fields(
+              'n', [
+                'title',
+                'created',
+                'changed',
+                'uid',
+              ]
+          )
       ->condition('bundle', $content_types, 'IN');
     return $query;
   }

@@ -188,7 +188,6 @@ class WebformDevelSchema implements WebformDevelSchemaInterface {
     $data['options_text'] = [];
     $data['options_value'] = [];
 
-
     return $data;
   }
 

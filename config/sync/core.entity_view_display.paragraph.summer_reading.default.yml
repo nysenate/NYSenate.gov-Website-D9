@@ -1,0 +1,50 @@
+uuid: 7ce6b4f4-3288-4efb-b8ff-d62910d52433
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.summer_reading.field_grade
+    - field.field.paragraph.summer_reading.field_school
+    - field.field.paragraph.summer_reading.field_student_books
+    - field.field.paragraph.summer_reading.field_student_name
+    - paragraphs.paragraphs_type.summer_reading
+  module:
+    - options
+id: paragraph.summer_reading.default
+targetEntityType: paragraph
+bundle: summer_reading
+mode: default
+content:
+  field_grade:
+    type: list_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_school:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_student_books:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_student_name:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  search_api_excerpt: true

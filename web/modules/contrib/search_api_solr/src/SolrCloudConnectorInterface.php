@@ -107,7 +107,7 @@ interface SolrCloudConnectorInterface extends SolrConnectorInterface {
    * Creates collection.
    *
    * @param array $options
-   *  The options array.
+   *   The options array.
    * @param string|null $collection
    *   Collection.
    *

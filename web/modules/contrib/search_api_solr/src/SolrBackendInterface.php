@@ -22,12 +22,12 @@ interface SolrBackendInterface extends AutocompleteBackendInterface {
    *
    * @todo replace by an automatic detection when core provides module versions.
    */
-  public const SEARCH_API_SOLR_SCHEMA_VERSION = '4.2.10';
+  public const SEARCH_API_SOLR_SCHEMA_VERSION = '4.2.11';
 
   /**
    * The minimum required Solr schema version.
    */
-  public const SEARCH_API_SOLR_MIN_SCHEMA_VERSION = '4.2.8';
+  public const SEARCH_API_SOLR_MIN_SCHEMA_VERSION = '4.2.11';
 
   /**
    * The separator to indicate the start of a language ID.
@@ -204,7 +204,7 @@ interface SolrBackendInterface extends AutocompleteBackendInterface {
    * In case of Solr Cloud an index might use a different Solr collection.
    *
    * @param \Drupal\search_api\IndexInterface $index
-   *  The Search API index.
+   *   The Search API index.
    *
    * @return \Solarium\Core\Client\Endpoint
    *   The solarium endpoint.

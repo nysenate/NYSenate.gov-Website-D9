@@ -9,17 +9,24 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\search_api\Utility\Utility;
 
 /**
- * Common formatter settings for SearchApiSolrHighlighted* formatters
+ * Common formatter settings for SearchApiSolrHighlighted* formatters.
  */
 trait SearchApiSolrHighlightedFormatterSettingsTrait {
 
+  /**
+   *
+   */
   public static function defaultSettings() {
     return [
-        'prefix' => '<strong>',
-        'suffix' => '</strong>',
-      ] + parent::defaultSettings();
+      'prefix' => '<strong>',
+      'suffix' => '</strong>',
+      'strict' => FALSE,
+    ] + parent::defaultSettings();
   }
 
+  /**
+   *
+   */
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $form = parent::settingsForm($form, $form_state);
 
@@ -35,6 +42,13 @@ trait SearchApiSolrHighlightedFormatterSettingsTrait {
       '#type' => 'textfield',
       '#default_value' => $this->getSetting('suffix'),
       '#description' => t('The suffix for a highlighted snippet, usually a closing HTML tag. Ensure that the selected text format for this field allows this tag.'),
+    ];
+
+    $form['strict'] = [
+      '#title' => t('Strict'),
+      '#type' => 'checkbox',
+      '#default_value' => $this->getSetting('strict'),
+      '#description' => t('Be more strict when highlighting. Depending on the Solr configuration details some highlighted fragments could be false positives, for example substring matches etc. Using this strict setting, some redundant or false positives could be avoided. But in general it is recommended to configure Solr correctly.'),
     ];
 
     return $form;
@@ -78,25 +92,69 @@ trait SearchApiSolrHighlightedFormatterSettingsTrait {
         $id_langcode = $langcode;
       }
     }
-    $item_id = Utility::createCombinedId('entity:' . $entity->getEntityTypeId(),$entity->id() . ':' . $id_langcode);
+    $item_id = Utility::createCombinedId('entity:' . $entity->getEntityTypeId(), $entity->id() . ':' . $id_langcode);
     $highlighted_keys = [];
+    $strict_keys = [];
 
     $cacheableMetadata->addCacheableDependency($entity);
 
     foreach ($queryHelper->getAllResults() as $resultSet) {
+      $query_keys = $resultSet->getQuery()->getKeys() ?: [];
+      foreach ($query_keys as $index => $key) {
+        if (is_numeric($index)) {
+          $strict_keys[] = mb_strtolower($key);
+        }
+      }
+
+      if (empty($strict_keys)) {
+        continue;
+      }
+
       foreach ($resultSet->getResultItems() as $resultItem) {
         if ($resultItem->getId() === $item_id) {
           $cacheableMetadata->addCacheableDependency($resultSet->getQuery());
           if ($highlighted_keys_tmp = $resultItem->getExtraData('highlighted_keys')) {
-            $highlighted_keys = $highlighted_keys_tmp;
-            break 2;
+            $highlighted_keys = array_merge($highlighted_keys, $highlighted_keys_tmp);
+          }
+        }
+      }
+    }
+
+    $highlighted_keys = array_unique($highlighted_keys);
+
+    if ($this->getSetting('strict')) {
+      foreach ($highlighted_keys as $index => $key) {
+        $key_lower = mb_strtolower($key);
+
+        // Remove keys that are not part of strict keys.
+        if (!empty($strict_keys) && !in_array($key_lower, $strict_keys)) {
+          $contains = FALSE;
+          foreach ($strict_keys as $strict_key) {
+            if (str_contains($key_lower, $strict_key)) {
+              $contains = TRUE;
+              break;
+            }
+          }
+
+          if (!$contains) {
+            unset($highlighted_keys[$index]);
+            continue;
+          }
+        }
+
+        // Remove keys that are part of other keys.
+        foreach ($highlighted_keys as $key2) {
+          $key2_lower = mb_strtolower($key2);
+          if (mb_strlen($key_lower) < mb_strlen($key2_lower) && str_contains($key2_lower, $key_lower)) {
+            unset($highlighted_keys[$index]);
+            continue 2;
           }
         }
       }
     }
 
     foreach ($highlighted_keys as $key) {
-      $value = preg_replace('/'. preg_quote($key, '/') . '/', $this->getSetting('prefix') . $key . $this->getSetting('suffix'), $value);
+      $value = preg_replace('/' . preg_quote($key, '/') . '/i', $this->getSetting('prefix') . $key . $this->getSetting('suffix'), $value);
     }
 
     return $value;

@@ -1882,12 +1882,9 @@ main.l-row--main {
     .nys-senator--thumb a .field {
       width: 100%;
       height: 100%; }
-      .nys-senator--thumb a .field img {
-        -o-object-fit: cover;
-        object-fit: cover; }
   .nys-senator--thumb img {
-    height: 100%;
-    width: 100%;
+    min-height: 46px;
+    width: auto;
     -o-object-fit: cover;
     object-fit: cover; }
 
@@ -2314,6 +2311,57 @@ img[data-align='left'] {
   float: left;
   margin: 40px 30px 20px 0;
   margin-left: -14%; }
+
+#contact-message-summer-reading-form fieldset .fieldset-legend {
+  font-family: 'Proxima Nova SemiBold';
+  font-size: 24px;
+  color: #CB8D37; }
+
+#contact-message-summer-reading-form .form-item .description {
+  color: #2B6990;
+  margin: 0 0 24px; }
+
+#contact-message-summer-reading-form a.tabledrag-handle .handle {
+  width: 24px; }
+
+#contact-message-summer-reading-form input[type="text"],
+#contact-message-summer-reading-form input[type="email"],
+#contact-message-summer-reading-form select {
+  margin-bottom: 3px;
+  background: #EEEEEE;
+  color: #222222; }
+
+#contact-message-summer-reading-form select {
+  margin-bottom: 24px; }
+
+#contact-message-summer-reading-form table[id^="field-children"] {
+  width: 100%; }
+  #contact-message-summer-reading-form table[id^="field-children"] .paragraph-type-label {
+    display: none; }
+  #contact-message-summer-reading-form table[id^="field-children"] h4.label {
+    padding: 6px 0 9px;
+    text-transform: none;
+    font-size: 18px;
+    color: #2B6990;
+    font-family: 'Proxima Nova SemiBold';
+    margin-bottom: 0;
+    border-bottom: 3px solid #888888;
+    text-align: left;
+    display: block; }
+  #contact-message-summer-reading-form table[id^="field-children"] .paragraph-type--summer-reading {
+    border-bottom: 1px solid #000000; }
+  #contact-message-summer-reading-form table[id^="field-children"] .paragraphs-icon-button-collapse,
+  #contact-message-summer-reading-form table[id^="field-children"] .field-add-more-submit:nth-child(2),
+  #contact-message-summer-reading-form table[id^="field-children"] .tabledrag-toggle-weight-wrapper,
+  #contact-message-summer-reading-form table[id^="field-children"] .tabledrag-hide,
+  #contact-message-summer-reading-form table[id^="field-children"] .paragraphs-dropdown {
+    display: none; }
+  #contact-message-summer-reading-form table[id^="field-children"] .field--name-field-school {
+    clear: both; }
+  #contact-message-summer-reading-form table[id^="field-children"] td {
+    padding: 10px 24px 10px 0; }
+  #contact-message-summer-reading-form table[id^="field-children"] table#field-student-books-values {
+    width: 100%; }
 
 .c-block.c-senate-works-container {
   padding-bottom: 60px;

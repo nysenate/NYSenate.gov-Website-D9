@@ -560,7 +560,7 @@ class SolrFieldType extends AbstractSolrEntity implements SolrFieldTypeInterface
    * {@inheritdoc}
    */
   public function getFieldTypeName() {
-    return isset($this->field_type['name']) ? $this->field_type['name'] : '';
+    return $this->field_type['name'] ?? '';
   }
 
   /**

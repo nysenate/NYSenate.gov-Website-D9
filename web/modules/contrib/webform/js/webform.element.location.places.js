@@ -64,7 +64,8 @@
         var placesAutocomplete = window.places(options);
 
         // Disable autocomplete.
-        $input.attr('autocomplete', 'off');
+        var off = /chrom(e|ium)/.test(window.navigator.userAgent.toLowerCase()) ? 'chrome-off-' + Math.floor(Math.random() * 100000000) : 'off';
+        $input.attr('autocomplete', off);
 
         // Sync values on change and clear events.
         placesAutocomplete.on('change', function (e) {

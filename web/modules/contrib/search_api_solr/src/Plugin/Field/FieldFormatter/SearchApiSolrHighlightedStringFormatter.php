@@ -41,7 +41,7 @@ class SearchApiSolrHighlightedStringFormatter extends FormatterBase {
     // The ProcessedText element already handles cache context & tag bubbling.
     // @see \Drupal\filter\Element\ProcessedText::preRenderText()
     foreach ($items as $delta => $item) {
-      $cacheableMetadata = New CacheableMetadata();
+      $cacheableMetadata = new CacheableMetadata();
 
       $elements[$delta] = [
         '#markup' => nl2br($this->getHighlightedValue($item, $twigExtension->escapeFilter($twig, $item->value), $langcode, $cacheableMetadata)),

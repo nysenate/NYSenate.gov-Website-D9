@@ -1048,15 +1048,15 @@ libraries.choices:
 libraries.codemirror.text:
   remote: https://github.com/codemirror/codemirror
   download: https://github.com/components/codemirror
-  version: &webform_codemirror_version '5.65.3'
+  version: &webform_codemirror_version '5.65.12'
   license: &webform_codemirror_license
     name: MIT
     url: http://codemirror.net/LICENSE
     gpl-compatible: true
   directory: &webform_codemirror_directory codemirror
   cdn: &webform_codemirror_cdn
-    /libraries/codemirror/lib/: https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.3/
-    /libraries/codemirror/: https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.3/
+    /libraries/codemirror/lib/: https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/
+    /libraries/codemirror/: https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/
   css:
     component:
       /libraries/codemirror/lib/codemirror.css: {}
@@ -1154,14 +1154,14 @@ libraries.algolia.places:
 
 libraries.jquery.inputmask:
   remote: https://github.com/RobinHerbots/jquery.inputmask
-  version: '5.0.7'
+  version: '5.0.8'
   license:
     name: MIT
     url: http://opensource.org/licenses/mit-license.php
     gpl-compatible: true
   directory: jquery.inputmask
   cdn:
-    /libraries/jquery.inputmask/: https://cdn.jsdelivr.net/gh/RobinHerbots/Inputmask@5.0.7/
+    /libraries/jquery.inputmask/: https://cdn.jsdelivr.net/gh/RobinHerbots/Inputmask@5.0.8/
   js:
     /libraries/jquery.inputmask/dist/jquery.inputmask.min.js: { minified: true }
   dependencies:
@@ -1243,14 +1243,14 @@ libraries.jquery.chosen:
 
 libraries.jquery.textcounter:
   remote: https://github.com/ractoon/jQuery-Text-Counter
-  version: '0.9.0'
+  version: '0.9.1'
   license:
     name: MIT
     url: http://opensource.org/licenses/mit-license.php
     gpl-compatible: true
   directory: jquery.textcounter
   cdn:
-    /libraries/jquery.textcounter/: https://cdn.jsdelivr.net/gh/ractoon/jQuery-Text-Counter@0.9.0/
+    /libraries/jquery.textcounter/: https://cdn.jsdelivr.net/gh/ractoon/jQuery-Text-Counter@0.9.1/
   js:
     /libraries/jquery.textcounter/textcounter.min.js: { minified: true }
   dependencies:

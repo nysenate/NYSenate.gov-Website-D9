@@ -1,0 +1,19 @@
+uuid: c17c228f-3b83-4a9f-8114-9a1bde1c33c2
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_student_name
+    - paragraphs.paragraphs_type.summer_reading
+id: paragraph.summer_reading.field_student_name
+field_name: field_student_name
+entity_type: paragraph
+bundle: summer_reading
+label: 'Student Name'
+description: 'This is the name that will print on certificate from your Senator.'
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

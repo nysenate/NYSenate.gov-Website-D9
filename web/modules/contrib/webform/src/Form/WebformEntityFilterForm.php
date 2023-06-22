@@ -47,7 +47,7 @@ class WebformEntityFilterForm extends FormBase {
       '#title' => $this->t('Keyword'),
       '#title_display' => 'invisible',
       '#autocomplete_route_name' => 'entity.webform.autocomplete' . ($state === WebformInterface::STATUS_ARCHIVED ? '.archived' : ''),
-      '#placeholder' => $this->t('Filter by title, description, elements, user name, or role'),
+      '#placeholder' => $this->t('Filter by keyword'),
       // Allow autocomplete to use long webform titles.
       '#maxlength' => 500,
       '#size' => 45,
@@ -95,7 +95,7 @@ class WebformEntityFilterForm extends FormBase {
     $state = $form_state->getValue('state') ?? '';
     $query = [
       'search' => trim($search),
-      'category ' => trim($category),
+      'category' => trim($category),
       'state' => trim($state),
     ];
     $form_state->setRedirect($this->getRouteMatch()->getRouteName(), $this->getRouteMatch()->getRawParameters()->all(), [

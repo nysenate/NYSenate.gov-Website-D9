@@ -240,7 +240,9 @@ abstract class WebformOtherBase extends FormElement {
     $element_value = (array) $value[$type];
     $other_value = $value['other'];
     if ($element_value) {
-      $element_value = array_filter($element_value);
+      $element_value = array_filter($element_value, function ($value) {
+        return $value !== '';
+      });
       $element_value = array_combine($element_value, $element_value);
     }
     $other_is_empty = (isset($element_value[static::OTHER_OPTION]) && $other_value === '');
@@ -282,7 +284,9 @@ abstract class WebformOtherBase extends FormElement {
     $other_value = $value['other'];
 
     if (static::isMultiple($element)) {
-      $return_value = array_filter($element_value);
+      $return_value = array_filter($element_value, function ($value) {
+        return $value !== '';
+      });
       $return_value = array_combine($return_value, $return_value);
       if (isset($return_value[static::OTHER_OPTION])) {
         unset($return_value[static::OTHER_OPTION]);

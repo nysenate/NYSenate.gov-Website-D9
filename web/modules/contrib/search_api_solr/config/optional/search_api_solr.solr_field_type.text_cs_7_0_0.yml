@@ -41,6 +41,8 @@ field_type:
           stemEnglishPossessive: 0
           preserveOriginal: 1
         -
+          class: solr.FlattenGraphFilterFactory
+        -
           class: solr.LengthFilterFactory
           min: 2
           max: 100
@@ -120,6 +122,8 @@ unstemmed_field_type:
           catenateAll: 0
           stemEnglishPossessive: 0
           preserveOriginal: 1
+        -
+          class: solr.FlattenGraphFilterFactory
         -
           class: solr.LengthFilterFactory
           min: 2

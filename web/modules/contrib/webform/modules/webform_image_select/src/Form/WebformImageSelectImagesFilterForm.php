@@ -68,7 +68,7 @@ class WebformImageSelectImagesFilterForm extends FormBase {
     $category = $form_state->getValue('category') ?? '';
     $query = [
       'search' => trim($search),
-      'category ' => trim($category),
+      'category' => trim($category),
     ];
     $form_state->setRedirect($this->getRouteMatch()->getRouteName(), $this->getRouteMatch()->getRawParameters()->all(), [
       'query' => $query ,

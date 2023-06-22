@@ -35,12 +35,12 @@ class DashboardPageManager extends DefaultPluginManager implements FallbackPlugi
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
     parent::__construct(
-      'Plugin/NysDashboard',
-      $namespaces,
-      $module_handler,
-      'Drupal\nys_senators\ManagementPageInterface',
-      'Drupal\nys_senators\Annotation\SenatorManagementPage'
-    );
+          'Plugin/NysDashboard',
+          $namespaces,
+          $module_handler,
+          'Drupal\nys_senators\ManagementPageInterface',
+          'Drupal\nys_senators\Annotation\SenatorManagementPage'
+      );
     $this->setCacheBackend($cache_backend, 'nys_senators.dashboard.pages');
   }
 

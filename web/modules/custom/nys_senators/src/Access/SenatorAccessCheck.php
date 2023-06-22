@@ -64,13 +64,15 @@ class SenatorAccessCheck implements AccessInterface {
     $senator = $this->currentRoute->getParameter('taxonomy_term') ?? NULL;
     if ($senator instanceof Term) {
       try {
-        /** @var \Drupal\user\Entity\User $user */
+        /**
+         * @var \Drupal\user\Entity\User $user
+         */
         $user = $this->getUser($account);
         $is_manager = UsersHelper::isLcOrMcp($user);
         $assigns = array_merge(
-          array_column($user->get('field_senator_multiref')->getValue() ?? [], 'target_id'),
-          array_column($user->get('field_senator_inbox_access')->getValue() ?? [], 'target_id')
-        );
+              array_column($user->get('field_senator_multiref')->getValue() ?? [], 'target_id'),
+              array_column($user->get('field_senator_inbox_access')->getValue() ?? [], 'target_id')
+          );
         if ($is_manager && in_array($senator->id(), $assigns)) {
           $ret = new AccessResultAllowed();
         }

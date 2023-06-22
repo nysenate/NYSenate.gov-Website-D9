@@ -56,11 +56,11 @@ abstract class TemplatesManager {
    */
   public static function getTemplateByName(string $name): ?Template {
     $search = array_filter(
-      static::getTemplates(),
-      function ($v) use ($name) {
-        return $v->getName() == $name;
-      }
-    );
+          static::getTemplates(),
+          function ($v) use ($name) {
+              return $v->getName() == $name;
+          }
+      );
     return current($search) ?: NULL;
   }
 
@@ -83,7 +83,9 @@ abstract class TemplatesManager {
 
       $templates = [];
 
-      /** @var \SendGrid $sg */
+      /**
+       * @var \SendGrid $sg
+       */
       $sg = \Drupal::service('nys_sendgrid_client');
       $response = $sg->client->templates()
         ->get(NULL, ['generations' => 'legacy,dynamic']);
@@ -97,10 +99,12 @@ abstract class TemplatesManager {
           }
           catch (\Throwable $e) {
             \Drupal::logger('nys_sendgrid')
-              ->error("Failed to create a Template from API response", [
-                '%template' => $val,
-                '%message' => $e->getMessage(),
-              ]);
+              ->error(
+                      "Failed to create a Template from API response", [
+                        '%template' => $val,
+                        '%message' => $e->getMessage(),
+                      ]
+                  );
           }
         }
       }
@@ -112,7 +116,9 @@ abstract class TemplatesManager {
 
         // Send to slack.
         if (!$slack_sent) {
-          /** @var \Drupal\nys_slack\Service\Slack $slack */
+          /**
+           * @var \Drupal\nys_slack\Service\Slack $slack
+           */
           $slack = \Drupal::getContainer()->get('slack_messaging');
           $slack->setTitle($msg)
             ->addAttachment("env\n" . ($_ENV['PANTHEON_ENVIRONMENT'] ?? 'n/a'))

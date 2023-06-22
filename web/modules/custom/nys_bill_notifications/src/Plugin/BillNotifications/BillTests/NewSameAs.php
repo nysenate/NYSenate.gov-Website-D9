@@ -41,7 +41,7 @@ class NewSameAs extends BillTestBase {
    */
   public function getSummary(object $update): string {
     return $update->id->basePrintNoStr . " has a new Same As bill: " .
-      $this->getSameAsPrint($update);
+        $this->getSameAsPrint($update);
   }
 
   /**

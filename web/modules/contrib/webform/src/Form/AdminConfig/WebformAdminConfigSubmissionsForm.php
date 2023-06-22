@@ -96,6 +96,7 @@ class WebformAdminConfigSubmissionsForm extends WebformAdminConfigBaseForm {
       '#type' => 'textfield',
       '#title' => $this->t('Default submission label'),
       '#required' => TRUE,
+      '#maxlength' => NULL,
       '#default_value' => $settings['default_submission_label'],
     ];
     $form['submission_settings']['token_tree_link'] = $this->tokenManager->buildTreeElement();

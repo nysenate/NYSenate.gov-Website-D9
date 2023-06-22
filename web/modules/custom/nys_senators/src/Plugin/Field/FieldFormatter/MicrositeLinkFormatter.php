@@ -44,15 +44,15 @@ class MicrositeLinkFormatter extends UriLinkFormatter {
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): self {
     return new static(
-      $container->get('nys_senators.senators_helper'),
-      $plugin_id,
-      $plugin_definition,
-      $configuration['field_definition'],
-      $configuration['settings'],
-      $configuration['label'],
-      $configuration['view_mode'],
-      $configuration['third_party_settings']
-    );
+          $container->get('nys_senators.senators_helper'),
+          $plugin_id,
+          $plugin_definition,
+          $configuration['field_definition'],
+          $configuration['settings'],
+          $configuration['label'],
+          $configuration['view_mode'],
+          $configuration['third_party_settings']
+      );
   }
 
   /**
@@ -63,12 +63,13 @@ class MicrositeLinkFormatter extends UriLinkFormatter {
    */
   public function viewElements(FieldItemListInterface $item, $langcode): array {
     // This formatter only applies to the senator bundle of taxonomy terms.
-    /** @var \Drupal\taxonomy\Entity\Term $entity */
+    /**
+     * @var \Drupal\taxonomy\Entity\Term $entity
+     */
     $entity = $item->getEntity();
-    if (!(
-      ($entity->bundle() == 'senator')
-      && ($entity->getEntityTypeId() == 'taxonomy_term')
-    )) {
+    if (!(($entity->bundle() == 'senator')
+          && ($entity->getEntityTypeId() == 'taxonomy_term'))
+      ) {
       throw new ContextException('The microsite_link format may only be applied to a Senator taxonomy term');
     }
 

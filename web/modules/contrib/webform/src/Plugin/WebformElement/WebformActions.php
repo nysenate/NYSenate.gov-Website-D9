@@ -202,7 +202,7 @@ class WebformActions extends ContainerBase {
         $form[$name . '_settings'][$name . '_hide_message'] = [
           '#type' => 'webform_message',
           '#access' => TRUE,
-          '#message_message' => $this->t("Hiding the %label button can cause unexpected issues, please make sure to include the %label button using another 'Submit button(s)' element.", $t_args),
+          '#message_message' => $this->t("Hiding the %label button can cause unexpected issues. If checked, make sure there is another 'Submit button(s)' element in your form.", $t_args),
           '#message_type' => 'warning',
           '#states' => [
             'visible' => [':input[name="properties[' . $name . '_hide]"]' => ['checked' => TRUE]],

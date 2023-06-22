@@ -29,12 +29,16 @@ class PublicHearings extends ImportProcessorBase {
 
     $committees = $item->committees ?? [];
     if (count($committees)) {
-      $comm_names = array_filter(array_unique(array_map(
-        function ($v) {
-          return $v->name ?? '';
-        },
-        $committees
-      )));
+      $comm_names = array_filter(
+            array_unique(
+                array_map(
+                    function ($v) {
+                            return $v->name ?? '';
+                    },
+                    $committees
+                )
+            )
+        );
       try {
         $refs = $this->entityTypeManager
           ->getStorage('taxonomy_term')

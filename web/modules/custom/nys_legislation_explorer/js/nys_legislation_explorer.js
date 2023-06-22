@@ -7,4 +7,3 @@
      // Custom return handler for AJAX legislation submission.
 
  })(jQuery, Drupal, drupalSettings);
- 

@@ -48,6 +48,13 @@ abstract class FieldGroupFormatterBase extends PluginSettingsBase implements Fie
   protected $context;
 
   /**
+   * Translated options for description_display, keyed by machine names.
+   *
+   * @var array
+   */
+  protected $descriptionDisplayOptions;
+
+  /**
    * Constructs a FieldGroupFormatterBase object.
    *
    * @param string $plugin_id
@@ -68,6 +75,11 @@ abstract class FieldGroupFormatterBase extends PluginSettingsBase implements Fie
     $this->settings = $settings;
     $this->label = $label;
     $this->context = $group->context;
+    $this->descriptionDisplayOptions = [
+      'after' => $this->t('After'),
+      'before' => $this->t('Before'),
+      'invisible' => $this->t('Invisible'),
+    ];
   }
 
   /**
@@ -237,6 +249,43 @@ abstract class FieldGroupFormatterBase extends PluginSettingsBase implements Fie
     if (!empty($form_state_values['fields'][$plugin_name]['settings_edit_form']['settings']['id']) && !preg_match('!^[A-Za-z0-9-_]+$!', $form_state_values['fields'][$plugin_name]['settings_edit_form']['settings']['id'])) {
       $form_state->setError($element, t('The id must include only letters, numbers, underscores and dashes.'));
     }
+  }
+
+  /**
+   * Gets the settings form element for the description_display property.
+   *
+   * @param int $weight
+   *   The #weight to set on the form element. Defaults to 0.
+   *
+   * @return array
+   *   Form element array for the description_display setting.
+   */
+  protected function getSettingsFormElementDescriptionDisplay($weight = 0) {
+    return [
+      '#title' => $this->t('Description display'),
+      '#type' => 'select',
+      '#options' => $this->descriptionDisplayOptions,
+      '#default_value' => $this->getSetting('description_display'),
+      '#weight' => $weight,
+    ];
+  }
+
+  /**
+   * Gets the settings summary for description_display, if any.
+   *
+   * @return string
+   *   The summary for the description_display setting, or an empty string if
+   *   the value is the default ('after').
+   */
+  protected function getSettingsSummaryDescriptionDisplay() {
+    $description = $this->getSetting('description');
+    $description_display = $this->getSetting('description_display');
+    // Only print a summary if there is a description, and description_display
+    // has been customized.
+    if (!empty($description) && $description_display !== 'after') {
+      return $this->t('Description display: @value', ['@value' => $this->descriptionDisplayOptions[$description_display]]);
+    }
+    return '';
   }
 
 }

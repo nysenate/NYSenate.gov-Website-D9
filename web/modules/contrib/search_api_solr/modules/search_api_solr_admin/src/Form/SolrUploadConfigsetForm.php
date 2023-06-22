@@ -27,12 +27,18 @@ class SolrUploadConfigsetForm extends SolrAdminFormBase {
     $this->searchApiServer = $search_api_server;
 
     $connector = Utility::getSolrCloudConnector($this->searchApiServer);
+
+    $collection_name = $connector->getCollectionName();
+    if (!$collection_name) {
+      $this->messenger->addError($this->t("Upload isn't possible! There's no default collection specified for this server. Edit this server and provide the default collection's name."));
+    }
+
     $configset = $connector->getConfigSetName();
     if (!$configset) {
       $this->messenger->addWarning($this->t('No existing configset name could be detected on the Solr server for this collection. That is fine if you just create a new collection. Otherwise you should check the logs.'));
     }
 
-    $form['#title'] = $this->t('Upload Configset for %collection?', ['%collection' => $connector->getCollectionName()]);
+    $form['#title'] = $collection_name ? $this->t('Upload Configset for %collection?', ['%collection' => $collection_name]) : $this->t('Upload Configset requires a default collection to be specified for this server.');
 
     if (!$configset) {
       $form['numShards'] = [
@@ -110,12 +116,14 @@ class SolrUploadConfigsetForm extends SolrAdminFormBase {
       ];
     }
 
-    $form['actions'] = [
-      'submit' => [
-        '#type' => 'submit',
-        '#value' => $configset ? $this->t('Upload') : $this->t('Upload and create collection'),
-      ],
-    ];
+    if ($collection_name) {
+      $form['actions'] = [
+        'submit' => [
+          '#type' => 'submit',
+          '#value' => $configset ? $this->t('Upload') : $this->t('Upload and create collection'),
+        ],
+      ];
+    }
 
     return $form;
   }

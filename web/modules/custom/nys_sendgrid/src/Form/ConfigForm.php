@@ -47,8 +47,8 @@ class ConfigForm extends ConfigFormBase {
     $apikey = $this->configFactory->get('nys_sendgrid.settings')
       ->get('api_key');
     $apikey_text = $apikey
-      ? "An API key is already saved.  Leave the box blank to keep it, or input a new one to change it."
-      : "<h2><b>No API key has been configured.  The API key is required before attempting to send mail.</b></h2>";
+        ? "An API key is already saved.  Leave the box blank to keep it, or input a new one to change it."
+        : "<h2><b>No API key has been configured.  The API key is required before attempting to send mail.</b></h2>";
     $apikey_required = !((boolean) $apikey);
 
     $base_select = $this->constructTemplateSelect();
@@ -86,11 +86,13 @@ class ConfigForm extends ConfigFormBase {
         '#title' => 'Templates',
         '#description' => $this->t('Manage how the module behaves with template-related options.'),
         '#description_display' => 'before',
-        'default_template' => array_merge($base_select, [
-          '#title' => 'Default Template',
-          '#description' => $this->t('The template ID to attach to SendGrid requests when one is not specified by the caller or matched to an assignment.'),
-          '#default_value' => $this->localConfig->get('default_template') ?? 0,
-        ]),
+        'default_template' => array_merge(
+          $base_select, [
+            '#title' => 'Default Template',
+            '#description' => $this->t('The template ID to attach to SendGrid requests when one is not specified by the caller or matched to an assignment.'),
+            '#default_value' => $this->localConfig->get('default_template') ?? 0,
+          ]
+        ),
 
         'nys_sendgrid_add_assignment' => [
           '#prefix' => '<div class="nys_sendgrid_template_wrapper"><div>Add a template assignment to a specific mail key/ID.  The mail ID is generated as &quot;<i>&lt;module&gt;_&lt;mail_name&gt;</i>&quot;. <br />Wildcards using just &quot;<i>&lt;module&gt;</i>&quot; are acceptable as well.</div>',
@@ -143,10 +145,12 @@ class ConfigForm extends ConfigFormBase {
     $assigns = [];
     $assigned = $this->localConfig->get('template_assignments') ?: [];
     foreach ($assigned as $t_name => $t_id) {
-      $ctrl = array_merge($base_select, [
-        '#default_value' => $t_id,
-        '#title' => 'Template',
-      ]);
+      $ctrl = array_merge(
+            $base_select, [
+              '#default_value' => $t_id,
+              '#title' => 'Template',
+            ]
+        );
       $input = [
         '#type' => 'textfield',
         '#default_value' => $t_name,

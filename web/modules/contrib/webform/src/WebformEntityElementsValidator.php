@@ -150,7 +150,9 @@ class WebformEntityElementsValidator implements WebformEntityElementsValidatorIn
       'rendering' => TRUE,
     ];
 
-    $this->webform = $webform;
+    // Clone the webform to prevent the webform's settings from being
+    // unexpectedly updated or overridden.
+    $this->webform = clone $webform;
 
     $this->elementsRaw = $webform->getElementsRaw();
     $this->originalElementsRaw = $webform->getElementsOriginalRaw();

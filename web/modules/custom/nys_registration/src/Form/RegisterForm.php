@@ -8,12 +8,12 @@ use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\file\Entity\File;
+use Drupal\media\Entity\Media;
 use Drupal\nys_registration\RegistrationHelper;
 use Drupal\nys_senators\SenatorsHelper;
 use Drupal\user\RegisterForm as UserRegisterForm;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\media\Entity\Media;
-use Drupal\file\Entity\File;
 
 /**
  * Custom multi-step registration form.
@@ -48,13 +48,13 @@ class RegisterForm extends UserRegisterForm {
    */
   public static function create(ContainerInterface $container): self {
     return new static(
-      $container->get('entity.repository'),
-      $container->get('language_manager'),
-      $container->get('nys_registration.helper'),
-      $container->get('nys_senators.senators_helper'),
-      $container->get('entity_type.bundle.info'),
-      $container->get('datetime.time')
-    );
+          $container->get('entity.repository'),
+          $container->get('language_manager'),
+          $container->get('nys_registration.helper'),
+          $container->get('nys_senators.senators_helper'),
+          $container->get('entity_type.bundle.info'),
+          $container->get('datetime.time')
+      );
   }
 
   /**
@@ -217,8 +217,8 @@ class RegisterForm extends UserRegisterForm {
 
             $title_text = 'Message Sen. ' . $senator_name;
             $help_text = t('To send a message to NY State Sen.') .
-              ' ' . trim($family) . ', ' .
-              t('please create a profile using the form below or <a href="/user/login">login</a>.');
+                        ' ' . trim($family) . ', ' .
+                        t('please create a profile using the form below or <a href="/user/login">login</a>.');
           }
 
           $form['registration_teaser'] = [
@@ -321,9 +321,9 @@ class RegisterForm extends UserRegisterForm {
       $fid = $media->get('field_image')->target_id;
       $file = File::load($fid);
       $senator['image'] = empty($file) ?
-        '/themes/custom/nysenate_theme/src/assets/default-avatar.png' :
-        \Drupal::service('file_url_generator')
-          ->generateAbsoluteString($file->getFileUri());
+            '/themes/custom/nysenate_theme/src/assets/default-avatar.png' :
+            \Drupal::service('file_url_generator')
+              ->generateAbsoluteString($file->getFileUri());
       $senator['party'] = $this->senatorsHelper->getPartyNames($senator_term);
       $senator['location'] = $this->helper->getMicrositeDistrictAlias($senator_term);
       $senator['name'] = $senator_name[0]['given'] . ' ' . $senator_name[0]['family'];

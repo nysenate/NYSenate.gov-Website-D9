@@ -19,4 +19,5 @@ use Drupal\search_api_solr_autocomplete\Plugin\search_api_autocomplete\suggester
  */
 trait BackendTrait {
   use BackendTraitOriginal;
+
 }

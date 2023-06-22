@@ -186,21 +186,19 @@ function _webform_library_info_alter_recursive(array &$library, array $cdn) {
 function webform_css_alter(&$css, AttachedAssetsInterface $assets) {
   // Remove the stable.theme's off-canvas CSS reset for webform admin routes.
   // @see https://www.drupal.org/project/drupal/issues/2826722
-  //
-  // NOTE: Most admin themes correctly style jQuery UI dialogs because Drupal's
-  // admin UI, especially Views, relies on them.
-  $use_off_canvas = WebformDialogHelper::useOffCanvas();
-  // @todo Remove once Claro theme support offcanvas tray.
-  $route_name = \Drupal::routeMatch()->getRouteName();
-  $is_claro_theme = \Drupal::service('webform.theme_manager')->isActiveTheme('claro');
-  $is_admin_route = \Drupal::service('router.admin_context')->isAdminRoute();
-  $is_webform_route = ($route_name && preg_match('/(^webform|^entity\.webform|^entity\.node\.webform)/', $route_name));
-  if ($is_claro_theme || ($use_off_canvas && $is_admin_route && $is_webform_route)) {
-    foreach ($css as $key => $item) {
-      // @see 'core/misc/dialog/off-canvas
-      // @see core/themes/stable/css/core/dialog/off-canvas
-      if (strpos($key, '/off-canvas.') !== FALSE) {
-        unset($css[$key]);
+  if (WebformDialogHelper::useOffCanvas()) {
+    $has_webform_css = FALSE;
+    foreach (array_keys($css) as $key) {
+      if (str_contains($key, '/webform.admin.css')) {
+        $has_webform_css = TRUE;
+        break;
+      }
+    }
+    if ($has_webform_css) {
+      foreach ($css as $key => $item) {
+        if (str_contains($key, '/off-canvas')) {
+          unset($css[$key]);
+        }
       }
     }
   }

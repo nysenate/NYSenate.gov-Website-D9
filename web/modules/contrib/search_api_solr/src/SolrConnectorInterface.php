@@ -326,7 +326,7 @@ interface SolrConnectorInterface extends ConfigurableInterface {
   /**
    * Creates a new Solarium more like this query.
    *
-   * @return \Solarium\QueryType\MorelikeThis\Query
+   * @return \Solarium\QueryType\MoreLikeThis\Query
    *   The MoreLikeThis query.
    */
   public function getMoreLikeThisQuery();
@@ -659,7 +659,7 @@ interface SolrConnectorInterface extends ConfigurableInterface {
   /**
    * Alter the zip archive of newly assembled Solr configuration files.
    *
-   * @param ZipStream $zip
+   * @param \ZipStream\ZipStream $zip
    *   Zip archive.
    * @param string $lucene_match_version
    *   Lucene (Solr) minor version string.

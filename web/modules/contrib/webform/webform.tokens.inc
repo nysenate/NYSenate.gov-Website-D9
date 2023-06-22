@@ -77,7 +77,7 @@ function webform_token_info() {
   ];
   $webform_submission['source-url'] = [
     'name' => t('Source URL'),
-    'description' => t('The URL the user submitted the webform submission.'),
+    'description' => t('The URL where the user submitted the webform submission.'),
     'type' => 'url',
   ];
   $webform_submission['token-view-url'] = [

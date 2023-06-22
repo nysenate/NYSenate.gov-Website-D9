@@ -491,12 +491,10 @@ function webform_cards_form_webform_settings_form_form_alter(array &$form, FormS
 function webform_cards_form_webform_settings_submissions_form_alter(array &$form, FormStateInterface $form_state) {
   $has_cards = _webform_cards_form_state_has_cards($form_state);
   if ($has_cards) {
-    $form['draft_settings']['draft_container']['draft_auto_save']['#default_value'] = 0;
-    $form['draft_settings']['draft_container']['draft_auto_save']['#disabled'] = TRUE;
     $form['draft_settings']['draft_container']['draft_multiple']['#weight'] = -1;
     $form['draft_settings']['draft_container']['draft_auto_save_message'] = [
       '#type' => 'webform_message',
-      '#message_message' => t('The automatic saving of drafts is not supported by cards. Please try using the <a href=":href">Webform autosave module</a>.', [':href' => 'https://www.drupal.org/project/webformautosave']),
+      '#message_message' => t('The automatic saving of drafts only applies to previewing when using cards. Please try using the <a href=":href">Webform autosave module</a>.', [':href' => 'https://www.drupal.org/project/webformautosave']),
       '#message_type' => 'info',
       '#message_close' => TRUE,
       '#message_storage' => WebformMessage::STORAGE_SESSION,

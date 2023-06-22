@@ -2,8 +2,8 @@
 
 namespace Drupal\nys_comment\Plugin\Validation\Constraint;
 
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Validator\Constraint;
@@ -46,9 +46,9 @@ class CommentsBanConstraintValidator extends ConstraintValidator implements Cont
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('current_user'),
-      $container->get('entity_type.manager')
-    );
+          $container->get('current_user'),
+          $container->get('entity_type.manager')
+      );
   }
 
   /**

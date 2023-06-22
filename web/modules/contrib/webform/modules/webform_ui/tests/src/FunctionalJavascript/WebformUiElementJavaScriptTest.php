@@ -43,8 +43,8 @@ class WebformUiElementJavaScriptTest extends WebformWebDriverTestBase {
 
     // Check 'form_id' element key warning.
     $title = $page->findField('properties[title]');
-    $title->setValue('destination');
-    $assert_session->waitForText("Please avoid using the reserved word 'destination' as the element's key.");
+    $title->setValue('form_id');
+    $assert_session->waitForText("Please avoid using the reserved word 'form_id' as the element's key.");
   }
 
 }

@@ -49,6 +49,13 @@ class StreamingExpressionTest extends KernelTestBase {
   protected $exp;
 
   /**
+   * The search index.
+   *
+   * @var \Drupal\search_api\Entity\Index
+   */
+  protected $index;
+
+  /**
    * {@inheritdoc}
    */
   public function setUp(): void {

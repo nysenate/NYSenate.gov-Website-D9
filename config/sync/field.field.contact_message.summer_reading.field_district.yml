@@ -1,0 +1,29 @@
+uuid: 037be099-c053-4641-87df-b9adcd2f7424
+langcode: en
+status: true
+dependencies:
+  config:
+    - contact.form.summer_reading
+    - field.storage.contact_message.field_district
+    - taxonomy.vocabulary.districts
+id: contact_message.summer_reading.field_district
+field_name: field_district
+entity_type: contact_message
+bundle: summer_reading
+label: District
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      districts: districts
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

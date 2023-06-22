@@ -4,6 +4,34 @@ All notable changes to the Solarium library will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [6.3.0]
+### Added
+- Support for Luke queries
+- Solarium\Component\QueryElevation::setExcludeTags()
+- Solarium\Core\Query\Result\QueryType::getStatus() and getQueryTime(), inherited by all Solarium\QueryType Results
+- Solarium\QueryType\CoreAdmin\Result\Result::getInitFailureResults()
+- Solarium\QueryType\Ping\Result::getPingStatus() and getZkConnected()
+- Fluent interface methods for adding/removing excludes in Solarium\Component\Facet\AbstractFacet
+- Fluent interface methods for adding/removing terms in Solarium\Component\Facet\Field
+
+### Fixed
+- JSON serialization of arrays with non-consecutive indices in multivalue fields
+- PHP 8.2 deprecations
+- Handling of escaped literal commas in local parameters for faceting
+
+### Changed
+- Update queries use the JSON request format by default
+- Ping queries set omitHeader=false by default
+
+### Removed
+- Removed deprecated class constant Client::Version. Use Client::getVersion() instead.
+
+### Deprecated
+- Solarium\QueryType\Server\Collections\Result\CreateResult::getStatus(), use getCreateStatus() instead
+- Solarium\QueryType\Server\Collections\Result\DeleteResult::getStatus(), use getDeleteStatus() instead
+- Solarium\QueryType\Server\Collections\Result\ReloadResult::getStatus(), use getReloadStatus() instead
+- LocalParameters::removeTerms(), use removeTerm() instead
+
 
 ## [6.2.8]
 ### Added

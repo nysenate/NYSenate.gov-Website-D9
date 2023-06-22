@@ -31,6 +31,7 @@ class Details extends FieldGroupFormatterBase {
       '#open' => $this->getSetting('open'),
       '#show_empty_fields' => $this->getSetting('show_empty_fields'),
       '#description' => $this->getSetting('description'),
+      '#description_display' => $this->getSetting('description_display'),
     ];
 
     if ($this->getSetting('id')) {
@@ -72,6 +73,8 @@ class Details extends FieldGroupFormatterBase {
       '#weight' => -4,
     ];
 
+    $form['description_display'] = $this->getSettingsFormElementDescriptionDisplay(-3);
+
     $form['open'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Display element open by default.'),
@@ -103,6 +106,10 @@ class Details extends FieldGroupFormatterBase {
       $summary[] = $this->t('Default state closed');
     }
 
+    if ($description_display = $this->getSettingsSummaryDescriptionDisplay()) {
+      $summary[] = $description_display;
+    }
+
     if ($this->getSetting('required_fields')) {
       $summary[] = $this->t('Mark as required');
     }
@@ -117,6 +124,7 @@ class Details extends FieldGroupFormatterBase {
     $defaults = [
       'open' => FALSE,
       'required_fields' => $context == 'form',
+      'description_display' => 'after',
     ] + parent::defaultSettings($context);
 
     if ($context == 'form') {

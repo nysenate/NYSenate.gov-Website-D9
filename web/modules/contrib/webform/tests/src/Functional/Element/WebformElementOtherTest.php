@@ -128,6 +128,11 @@ checkboxes_other_advanced:
   - One
   - Two
   - Four
+checkboxes_other_indexed:
+  - '0'
+  - '1'
+  - '2'
+  - '3'
 radios_other_basic: Four
 radios_other_advanced: Four
 wrapper_other_fieldset: ''

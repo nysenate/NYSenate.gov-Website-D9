@@ -182,8 +182,7 @@ class HtmlFilterTest extends ProcessorTestBase {
     $query->sort('search_api_id');
     $query->getParseMode()->setConjunction('OR');
     $result = $query->execute();
-    $this->assertEquals([
-    ], array_keys($result->getResultItems()));
+    $this->assertEquals([], array_keys($result->getResultItems()));
 
     $this->createNode([
       'type' => 'page',
@@ -198,8 +197,7 @@ class HtmlFilterTest extends ProcessorTestBase {
     $query->sort('search_api_id');
     $query->getParseMode()->setConjunction('OR');
     $result = $query->execute();
-    $this->assertEquals([
-    ], array_keys($result->getResultItems()));
+    $this->assertEquals([], array_keys($result->getResultItems()));
   }
 
 }

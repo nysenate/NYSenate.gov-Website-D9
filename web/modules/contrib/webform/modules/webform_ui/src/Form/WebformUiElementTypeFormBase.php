@@ -226,7 +226,7 @@ abstract class WebformUiElementTypeFormBase extends FormBase {
       '#prefix' => '<span class="webform-form-filter-text-source">',
       '#suffix' => '</span>',
     ];
-    if ($this->config('webform.settings')->get('description_help')) {
+    if ($this->config('webform.settings')->get('ui.description_help')) {
       $row['type']['help'] = [
         '#type' => 'webform_help',
         '#help' => $webform_element->getPluginDescription(),

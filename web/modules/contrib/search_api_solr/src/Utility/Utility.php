@@ -943,7 +943,7 @@ class Utility {
    * @param array|string $keys
    *   The keys array to flatten, formatted as specified by
    *   \Drupal\search_api\Query\QueryInterface::getKeys() or a phrase string.
-   * @param ParseModeInterface $parse_mode
+   * @param \Drupal\search_api\ParseMode\ParseModeInterface $parse_mode
    *   (optional) The parse mode. Defaults to "terms" if null.
    *
    * @return string
@@ -1226,7 +1226,7 @@ class Utility {
    */
   public static function getSolrConnector(ServerInterface $server): SolrConnectorInterface {
     $backend = $server->getBackend();
-     if (!($backend instanceof SolrBackendInterface)) {
+    if (!($backend instanceof SolrBackendInterface)) {
       throw new SearchApiSolrException(sprintf('Server %s is not a Solr server', $server->label()));
     }
 
@@ -1250,7 +1250,7 @@ class Utility {
       throw new SearchApiSolrException(sprintf('The configured connector for server %s (%s) is not a cloud connector.', $server->label(), $server->id()));
     }
 
-    /** @var SolrCloudConnectorInterface $connector */
+    /** @var \Drupal\search_api_solr\SolrCloudConnectorInterface $connector */
     return $connector;
   }
 
@@ -1313,12 +1313,21 @@ class Utility {
       // LanguageInterface::LANGCODE_NOT_SPECIFIED above.
     }
 
-
     if (empty($fallback_languages)) {
       $query->setLanguages(array_unique($language_ids));
     }
 
-    return array_unique(array_merge($language_ids, $fallback_languages));
+    $language_ids = array_unique(array_merge($language_ids, $fallback_languages));
+
+    // In case of wrong configurations of the site, it could happen that an
+    // index is limited to some languages but the fallback processor or an old
+    // link might request another language. Instead of returning an empty array
+    // we set language undefined to avoid exceptions.
+    if (empty($language_ids)) {
+      $language_ids[] = LanguageInterface::LANGCODE_NOT_SPECIFIED;
+    }
+
+    return $language_ids;
   }
 
 }

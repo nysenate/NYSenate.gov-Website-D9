@@ -1,0 +1,25 @@
+uuid: d9fc8731-1a5b-4922-a3e3-ca131d6e18cd
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_block_instance
+    - node.type.landing
+  module:
+    - block_field
+id: node.landing.field_block_instance
+field_name: field_block_instance
+entity_type: node
+bundle: landing
+label: 'Custom Block'
+description: 'This is only set up for Summer Reading form.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  selection: blocks
+  selection_settings:
+    plugin_ids:
+      contact_block: contact_block
+field_type: block_field

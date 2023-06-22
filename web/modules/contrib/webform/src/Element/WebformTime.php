@@ -11,11 +11,11 @@ use Drupal\Core\Form\FormStateInterface;
  * Provides a webform element for time selection.
  *
  * @code
- * $form['time'] = array(
+ * $form['time'] = [
  *   '#type' => 'webform_time',
  *   '#title' => $this->t('Time'),
  *   '#default_value' => '12:00 AM'
- * );
+ * ];
  * @endcode
  *
  * @FormElement("webform_time")

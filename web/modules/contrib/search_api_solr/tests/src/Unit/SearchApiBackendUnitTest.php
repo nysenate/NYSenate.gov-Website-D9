@@ -248,4 +248,5 @@ class SearchApiBackendUnitTest extends Drupal10CompatibilityUnitTestCase {
       [NULL, 'text', SolrBackendInterface::EMPTY_TEXT_FIELD_DUMMY_VALUE],
     ];
   }
+
 }

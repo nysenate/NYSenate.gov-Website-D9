@@ -12,6 +12,7 @@ final class PostFieldMappingEvent extends Event {
 
   /**
    * The Search API index.
+   *
    * @var \Drupal\search_api\IndexInterface
    */
   protected $index;
@@ -24,7 +25,7 @@ final class PostFieldMappingEvent extends Event {
   protected $fieldMapping;
 
   /**
-   * The language ID
+   * The language ID.
    *
    * @var string
    */

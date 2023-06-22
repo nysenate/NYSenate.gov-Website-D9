@@ -35,7 +35,7 @@ class WebformElementLikertTest extends WebformElementBrowserTestBase {
     // Check advanced likert element with N/A.
     $assert_session->responseMatches('#<tr>\s+<th><span class="visually-hidden">Questions</span></th>\s+<th>Option 1</th>\s+<th>Option 2</th>\s+<th>Option 3</th>\s+<th>Not applicable</th>\s+</tr>#');
     $assert_session->responseContains('<td><div class="js-form-item form-item js-form-type-radio form-item-likert-advanced-q1 js-form-item-likert-advanced-q1">');
-    $assert_session->responseContains('<input aria-labelledby="edit-likert-advanced-table-q1-likert-question" required="required" aria-required="true" data-drupal-selector="edit-likert-advanced-q1" type="radio" id="edit-likert-advanced-q1--4" name="likert_advanced[q1]" value="N/A" class="form-radio" />');
+    $assert_session->responseContains('<input aria-labelledby="edit-likert-advanced-table-q1-likert-question" required="required" data-drupal-selector="edit-likert-advanced-q1" type="radio" id="edit-likert-advanced-q1--4" name="likert_advanced[q1]" value="N/A" class="form-radio" />');
     $assert_session->responseContains('<label for="edit-likert-advanced-q1--4" class="option"><span class="webform-likert-label visually-hidden">Not applicable</span></label>');
 
     // Check likert with description.

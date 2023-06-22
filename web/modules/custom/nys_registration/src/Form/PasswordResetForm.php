@@ -42,12 +42,12 @@ class PasswordResetForm extends ProfileForm {
    */
   public static function create(ContainerInterface $container): self {
     return new static(
-      $container->get('entity.repository'),
-      $container->get('language_manager'),
-      $container->get('module_handler'),
-      $container->get('entity_type.bundle.info'),
-      $container->get('datetime.time')
-    );
+          $container->get('entity.repository'),
+          $container->get('language_manager'),
+          $container->get('module_handler'),
+          $container->get('entity_type.bundle.info'),
+          $container->get('datetime.time')
+      );
   }
 
   /**

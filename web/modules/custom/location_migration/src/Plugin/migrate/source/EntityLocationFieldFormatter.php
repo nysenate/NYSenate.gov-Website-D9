@@ -19,9 +19,11 @@ class EntityLocationFieldFormatter extends EntityLocationFieldInstance {
   protected function initializeIterator() {
     $rows = [];
     foreach (parent::initializeIterator() as $parent_iterator_row) {
-      $view_mode_configs = array_filter($parent_iterator_row['location_settings']['display'], function ($key) {
-        return !in_array($key, ['hide', 'weight']);
-      }, ARRAY_FILTER_USE_KEY);
+      $view_mode_configs = array_filter(
+            $parent_iterator_row['location_settings']['display'], function ($key) {
+                return !in_array($key, ['hide', 'weight']);
+            }, ARRAY_FILTER_USE_KEY
+        );
       // Taxonomy term and user entity location configuration does not store
       // view mode configuration.
       $view_mode_configs += ['full' => 1];

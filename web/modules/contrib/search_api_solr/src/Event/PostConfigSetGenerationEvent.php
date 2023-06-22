@@ -34,7 +34,7 @@ final class PostConfigSetGenerationEvent extends AbstractServerAwareEvent {
   /**
    * Retrieves the files array.
    *
-   * @return ZipStream
+   * @return \ZipStream\ZipStream
    *   The zip stream.
    */
   public function getZipStream(): ZipStream {

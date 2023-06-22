@@ -139,6 +139,20 @@ class WebformEntityAddForm extends BundleEntityFormBase {
       '#options_display' => 'side_by_side',
     ];
 
+    if ($this->moduleHandler->moduleExists('config_translation')) {
+      $langcode_options = [];
+      foreach ($this->languageManager->getLanguages() as $language) {
+        $langcode_options[$language->getId()] = $language->getName();
+      }
+      $form['langcode'] = [
+        '#type' => 'select',
+        '#title' => $this->t('Language'),
+        '#options' => $langcode_options,
+        '#default_value' => $this->languageManager->getCurrentLanguage()->getId(),
+        '#access' => (count($langcode_options) > 1),
+      ];
+    }
+
     $form = $this->protectBundleIdElement($form);
 
     return parent::form($form, $form_state);

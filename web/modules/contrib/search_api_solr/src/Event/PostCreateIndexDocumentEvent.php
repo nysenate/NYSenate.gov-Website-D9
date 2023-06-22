@@ -10,6 +10,5 @@ namespace Drupal\search_api_solr\Event;
  *   $document = $event->getSolariumDocument();
  *   $document->setField('foo', 'bar');
  * @endcode
- *
  */
 final class PostCreateIndexDocumentEvent extends AbstractSearchApiItemSolariumDocumentEvent {}

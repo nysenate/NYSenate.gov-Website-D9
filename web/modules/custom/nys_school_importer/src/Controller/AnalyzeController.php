@@ -2,12 +2,12 @@
 
 namespace Drupal\nys_school_importer\Controller;
 
-use Drupal\Core\Database\Connection;
-use Drupal\Core\Messenger\Messenger;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\nys_school_importer\ImporterHelper;
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Extension\ExtensionPathResolver;
+use Drupal\Core\Messenger\Messenger;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\nys_school_importer\ImporterHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -58,11 +58,11 @@ class AnalyzeController extends ControllerBase {
    *   The path resolver class.
    */
   public function __construct(
-    ImporterHelper $importer_helper,
-    Connection $connection,
-    Messenger $messenger,
-    ExtensionPathResolver $path_resolver
-  ) {
+        ImporterHelper $importer_helper,
+        Connection $connection,
+        Messenger $messenger,
+        ExtensionPathResolver $path_resolver
+    ) {
     $this->importerHelper = $importer_helper;
     $this->connection = $connection;
     $this->messenger = $messenger;
@@ -74,11 +74,11 @@ class AnalyzeController extends ControllerBase {
    */
   public static function create(ContainerInterface $container_interface) {
     return new static(
-      $container_interface->get('nys_school_importer.importer'),
-      $container_interface->get('database'),
-      $container_interface->get('messenger'),
-      $container_interface->get('extension.path.resolver')
-    );
+          $container_interface->get('nys_school_importer.importer'),
+          $container_interface->get('database'),
+          $container_interface->get('messenger'),
+          $container_interface->get('extension.path.resolver')
+      );
   }
 
   /**
@@ -136,10 +136,12 @@ class AnalyzeController extends ControllerBase {
     }
     else {
       $error_operation = reset($operations);
-      $message = $this->t('An error occurred while processing %error_operation with arguments: @arguments', [
-        '%error_operation' => $error_operation[0],
-        '@arguments' => var_export($error_operation[1], TRUE),
-      ]);
+      $message = $this->t(
+            'An error occurred while processing %error_operation with arguments: @arguments', [
+              '%error_operation' => $error_operation[0],
+              '@arguments' => var_export($error_operation[1], TRUE),
+            ]
+        );
       $this->messenger->addError($message);
     }
   }

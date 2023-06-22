@@ -102,7 +102,7 @@
 
     var message = Drupal.t('File upload in progress. Uploaded file may be lost.') +
       '\n' +
-      Drupal.t('Do you want to continue?');
+      Drupal.t('Click OK to submit the form without finishing the file upload or cancel to return to form.');
     var result = !window.confirm(message);
 
     // If submit once behavior is available, make sure to clear it if the form

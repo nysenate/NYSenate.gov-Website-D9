@@ -3,6 +3,7 @@
 namespace Drupal\Tests\webform\Functional;
 
 use Drupal\Core\Serialization\Yaml;
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\webform\Entity\Webform;
 
 /**
@@ -345,6 +346,16 @@ class WebformEntityTranslationTest extends WebformBrowserTestBase {
     // Check duplicate French translation.
     $this->drupalGet('/webform/duplicate', ['language' => $language_manager->getLanguage('fr')]);
     $assert_session->responseContains('<label for="edit-textfield">French</label>');
+
+    // Check that add webform display langcode dropdown.
+    $this->drupalGet('/admin/structure/webform/add');
+    $assert_session->fieldValueEquals('langcode', 'en');
+
+    // Check that add webform display langcode dropdown is NOT display when there is one language..
+    ConfigurableLanguage::load('es')->delete();
+    ConfigurableLanguage::load('fr')->delete();
+    $this->drupalGet('/admin/structure/webform/add');
+    $assert_session->fieldNotExists('langcode');
   }
 
   /**

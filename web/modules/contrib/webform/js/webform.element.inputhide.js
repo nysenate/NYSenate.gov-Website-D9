@@ -38,7 +38,8 @@
           $(this)
             .on('blur', function () {
               this.type = 'password';
-              $(this).attr('autocomplete', 'off');
+              var off = /chrom(e|ium)/.test(window.navigator.userAgent.toLowerCase()) ? 'chrome-off-' + Math.floor(Math.random() * 100000000) : 'off';
+              $(this).attr('autocomplete', off);
             })
             .on('focus', function () {
               this.type = type;

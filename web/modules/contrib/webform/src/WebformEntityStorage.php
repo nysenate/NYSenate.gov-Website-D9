@@ -344,15 +344,7 @@ class WebformEntityStorage extends ConfigEntityStorage implements WebformEntityS
   }
 
   /**
-   * Get total number of results for specified webform or all webforms.
-   *
-   * @param string|null $webform_id
-   *   (optional) A webform id.
-   *
-   * @return array|int
-   *   If no webform id is passed, an associative array keyed by webform id
-   *   contains total results for all webforms, otherwise the total number of
-   *   results for specified webform
+   * {@inheritdoc}
    */
   public function getTotalNumberOfResults($webform_id = NULL) {
     if ($webform_id) {

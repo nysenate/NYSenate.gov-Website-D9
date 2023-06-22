@@ -52,7 +52,7 @@ class SolrDocumentDefinition extends ComplexDataDefinitionBase implements SolrDo
    * {@inheritdoc}
    */
   public function getIndexId() {
-    return isset($this->definition['constraints']['Index']) ? $this->definition['constraints']['Index'] : NULL;
+    return $this->definition['constraints']['Index'] ?? NULL;
   }
 
   /**

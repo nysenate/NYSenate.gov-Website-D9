@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.search_index
+    - field.field.node.landing.field_block_instance
     - field.field.node.landing.field_date
     - field.field.node.landing.field_issues
     - field.field.node.landing.field_landing_blocks
@@ -50,6 +51,7 @@ content:
     weight: 0
     region: content
 hidden:
+  field_block_instance: true
   field_meta_tags: true
   field_show_date: true
   field_show_issues: true

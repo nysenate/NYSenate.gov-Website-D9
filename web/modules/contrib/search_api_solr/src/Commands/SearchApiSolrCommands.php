@@ -100,7 +100,7 @@ class SearchApiSolrCommands extends DrushCommands implements StdinAwareInterface
    * @throws \ZipStream\Exception\OverflowException
    */
   public function getServerConfig($server_id, $file_name = NULL, $solr_version = NULL, array $options = []) {
-    if (!$options['pipe'] && ($file_name === NULL)) {
+    if ((!isset($options['pipe']) || !$options['pipe']) && ($file_name === NULL)) {
       throw new ConsoleException('Required argument missing ("file_name"), and no --pipe option specified.');
     }
     $this->commandHelper->getServerConfigCommand($server_id, $file_name, $solr_version);

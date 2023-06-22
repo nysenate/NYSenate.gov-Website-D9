@@ -93,14 +93,14 @@ class Slack {
       $payload = [
         'text' => "$title\n$message",
         'blocks' => [
-          [
-            'type' => 'header',
-            'text' => ['type' => 'plain_text', 'text' => $title],
-          ],
-          [
-            'type' => 'section',
-            'text' => ['type' => 'plain_text', 'text' => $message],
-          ],
+        [
+          'type' => 'header',
+          'text' => ['type' => 'plain_text', 'text' => $title],
+        ],
+        [
+          'type' => 'section',
+          'text' => ['type' => 'plain_text', 'text' => $message],
+        ],
         ],
       ];
       if (count($this->attachments)) {
@@ -132,11 +132,13 @@ class Slack {
         $code = 'n/a';
         $phrase = 'no response found';
       }
-      $this->logger->error('Failed to send Slack message, status=%status, phrase=%phrase, message=%message', [
-        '%status' => $code,
-        '%phrase' => $phrase,
-        '%message' => $message,
-      ]);
+      $this->logger->error(
+            'Failed to send Slack message, status=%status, phrase=%phrase, message=%message', [
+              '%status' => $code,
+              '%phrase' => $phrase,
+              '%message' => $message,
+            ]
+        );
     }
 
     $this->init();

@@ -58,7 +58,7 @@ function webform_devel_form_config_single_export_form_alter(&$form, FormStateInt
   $form['export']['#type'] = 'webform_codemirror';
   $form['export']['#mode'] = 'yaml';
 
-  $form['config_name']['#ajax']['callback'] = '_webform_form_config_single_export_form_update_export';
+  $form['config_name']['#ajax']['callback'] = '_webform_devel_form_config_single_export_form_update_export';
 }
 
 /**
@@ -66,7 +66,7 @@ function webform_devel_form_config_single_export_form_alter(&$form, FormStateInt
  *
  * Copied from: \Drupal\config\Form\ConfigSingleExportForm::updateExport.
  */
-function _webform_form_config_single_export_form_update_export($form, FormStateInterface $form_state) {
+function _webform_devel_form_config_single_export_form_update_export($form, FormStateInterface $form_state) {
   // Determine the full config name for the selected config entity.
   if ($form_state->getValue('config_type') !== 'system.simple') {
     $definition = \Drupal::entityTypeManager()->getDefinition($form_state->getValue('config_type'));

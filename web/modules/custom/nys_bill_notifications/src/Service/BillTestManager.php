@@ -32,12 +32,12 @@ class BillTestManager extends DefaultPluginManager {
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, LoggerChannel $logger) {
     parent::__construct(
-      'Plugin/BillNotifications/BillTests',
-      $namespaces,
-      $module_handler,
-      'Drupal\nys_bill_notifications\BillTestInterface',
-      'Drupal\nys_bill_notifications\Annotation\BillTest'
-    );
+          'Plugin/BillNotifications/BillTests',
+          $namespaces,
+          $module_handler,
+          'Drupal\nys_bill_notifications\BillTestInterface',
+          'Drupal\nys_bill_notifications\Annotation\BillTest'
+      );
     $this->setCacheBackend($cache_backend, 'nys_bill_notifications.billtests');
     $this->logger = $logger;
   }

@@ -28,6 +28,11 @@ class SenatorsJson {
   const NYS_SENATORS_JSON_CACHE_CID = 'nys_senators:json_feed';
 
   /**
+   * Canary value for senator shortname to get all senators.
+   */
+  const NYS_SENATORS_JSON_ALL_SENATORS = '__all';
+
+  /**
    * NYS SenatorsHelper service.
    *
    * @var \Drupal\nys_senators\SenatorsHelper
@@ -82,27 +87,51 @@ class SenatorsJson {
   }
 
   /**
-   * Get the senator JSON feed as an HTTP response object.
+   * A wrapper around getFeed() to produce a Drupal JSON response.
    *
    * @see static::getFeed()
    */
-  public function getJsonResponse(bool $refresh = FALSE): JsonResponse {
-    return new JsonResponse($this->getFeed($refresh), 200);
+  public function getFeedJson(string $shortname = self::NYS_SENATORS_JSON_ALL_SENATORS, bool $refresh = FALSE): JsonResponse {
+    return new JsonResponse($this->getFeed($shortname, $refresh), 200);
   }
 
   /**
    * Gets the active senators as a JSON-able array.
    *
+   * @param string $shortname
+   *   An optional senator shortname.  If supplied, only that senator will be
+   *   included in the feed.
    * @param bool $refresh
    *   If true, cache is ignored and the feed is recompiled.
    */
-  public function getFeed(bool $refresh = FALSE): array {
+  public function getFeed(string $shortname = self::NYS_SENATORS_JSON_ALL_SENATORS, bool $refresh = FALSE): array {
+    // Load from cache, or get a fresh compilation.
     $cache = $this->cache->get(static::NYS_SENATORS_JSON_CACHE_CID);
-    $feed = (!$refresh && $cache) ? $cache->data : '';
+    $feed = (!$refresh && $cache) ? $cache?->data : '';
     if (!$feed) {
       $feed = $this->compile();
     }
-    return $feed;
+
+    // Pick a return based on the value of $shortname.
+    if (!$shortname) {
+      $shortname = self::NYS_SENATORS_JSON_ALL_SENATORS;
+    }
+    if ($shortname === self::NYS_SENATORS_JSON_ALL_SENATORS) {
+      $ret = $feed;
+    }
+    else {
+      $n = strtolower($shortname);
+      $ret = current(
+            array_filter(
+                $feed,
+                function ($s) use ($n) {
+                    return $n == $s['short_name'];
+                }
+            )
+        ) ?: [];
+    }
+
+    return $ret;
   }
 
   /**
@@ -118,11 +147,11 @@ class SenatorsJson {
     }
     if ($set_cache) {
       $this->cache->set(
-        static::NYS_SENATORS_JSON_CACHE_CID,
-        $feed,
-        time() + static::NYS_SENATORS_JSON_MAX_CACHE_AGE,
-        ['taxonomy_term_list:senator']
-      );
+            static::NYS_SENATORS_JSON_CACHE_CID,
+            $feed,
+            time() + static::NYS_SENATORS_JSON_MAX_CACHE_AGE,
+            ['taxonomy_term_list:senator']
+        );
     }
     return $feed;
   }
@@ -131,9 +160,17 @@ class SenatorsJson {
    * Transcribes an office field entry to a JSON-suitable array.
    */
   protected function transcribeOffice(Paragraph $office): array {
-    $address = $office->field_office_address;
+    try {
+      /**
+       * @var \Drupal\address\Plugin\Field\FieldType\AddressItem $address
+      */
+      $address = $office->field_office_address->first();
+    }
+    catch (\Throwable) {
+      $address = NULL;
+    }
     $ret = [];
-    if ($address && property_exists($address, 'country_code')) {
+    if ($address && ($country = $address->getCountryCode())) {
       // Some fields are missing from D9's implementation of location.  The
       // Java model does not appear to need them.  Leaving them here for
       // future reference.
@@ -141,21 +178,22 @@ class SenatorsJson {
       // "is_primary" => <0|1>.
       try {
         $country_name = $this->countryRepo
-          ->get($address->country_code)
+          ->get($country)
           ->getName();
       }
       catch (\Throwable) {
         $country_name = '';
       }
+      $admin_area = $address->getAdministrativeArea() ?? '';
       $ret = [
-        "name" => $address->organization ?? '',
-        "street" => $address->address_line1 ?? '',
-        "additional" => $address->address_line2 ?? '',
-        "city" => $address->locality ?? '',
-        "province" => $address->administrative_area ?? '',
-        "postal_code" => $address->postal_code ?? '',
-        "country" => $address->country_code ?? '',
-        "province_name" => $this->statesList()[$address->administrative_area ?? ''] ?? '',
+        "name" => $address->getOrganization() ?? '',
+        "street" => $address->getAddressLine1() ?? '',
+        "additional" => $address->getAddressLine2() ?? '',
+        "city" => $address->getLocality() ?? '',
+        "province" => $admin_area,
+        "postal_code" => $address->getPostalCode() ?? '',
+        "country" => $$country,
+        "province_name" => $this->statesList()[$admin_area] ?? '',
         "country_name" => $country_name,
         "fax" => $office->field_fax->value ?? '',
         "phone" => $office->field_office_contact_phone->value ?? '',
@@ -251,9 +289,9 @@ class SenatorsJson {
     else {
       $os = match ($number % 10) {
         1 => 'st',
-        2 => 'nd',
-        3 => 'rd',
-        default => 'th',
+                2 => 'nd',
+                3 => 'rd',
+                default => 'th',
       };
     }
 
@@ -267,11 +305,11 @@ class SenatorsJson {
     static $list = [];
     if (!$list || $refresh) {
       $list = array_map(
-        function ($v) {
-          return $v->getName();
-        },
-        $this->stateRepo->getAll(['US'])
-      );
+            function ($v) {
+                return $v->getName();
+            },
+            $this->stateRepo->getAll(['US'])
+        );
     }
     return $list;
   }
@@ -280,9 +318,11 @@ class SenatorsJson {
    * Flattens a FieldItemList array.
    */
   protected function getFlatValue(FieldItemList $list): array {
-    return array_map(function ($v) {
-      return $v['value'];
-    }, $list->getValue());
+    return array_map(
+          function ($v) {
+              return $v['value'];
+          }, $list->getValue()
+      );
   }
 
 }

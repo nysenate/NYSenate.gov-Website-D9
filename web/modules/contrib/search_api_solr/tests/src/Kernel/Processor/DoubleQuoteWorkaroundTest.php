@@ -23,6 +23,27 @@ class DoubleQuoteWorkaroundTest extends ProcessorTestBase {
   protected $nodes;
 
   /**
+   * The query helper.
+   *
+   * @var \Drupal\search_api_solr\Utility\StreamingExpressionQueryHelper
+   */
+  protected $queryHelper;
+
+  /**
+   * The Search API query.
+   *
+   * @var \Drupal\search_api\Query\Query
+   */
+  protected $query;
+
+  /**
+   * The streaming expression builder.
+   *
+   * @var \Drupal\search_api_solr\Utility\StreamingExpressionBuilder
+   */
+  protected $expressionBuilder;
+
+  /**
    * {@inheritdoc}
    */
   protected static $modules = [
@@ -44,7 +65,7 @@ class DoubleQuoteWorkaroundTest extends ProcessorTestBase {
     $backend->setConfiguration($config);
     $this->queryHelper = \Drupal::getContainer()->get('search_api_solr.streaming_expression_query_helper');
     $this->query = $this->queryHelper->createQuery($this->index);
-    $this->exp = $this->queryHelper->getStreamingExpressionBuilder($this->query);
+    $this->expressionBuilder = $this->queryHelper->getStreamingExpressionBuilder($this->query);
   }
 
   /**
@@ -67,12 +88,12 @@ class DoubleQuoteWorkaroundTest extends ProcessorTestBase {
     $this->index->save();
 
     $streaming_expression =
-      $this->exp->search(
-        $this->exp->_collection(),
-        'q=' . $this->exp->_field_escaped_value('search_api_datasource', 'entity:entity_test_mulrev_changed'),
-        'fq="' . $this->exp->_field_escaped_value('title', 'double "quotes" within the text', /* phrase */FALSE) . '"',
-        'fl="' . $this->exp->_field('title') . '"',
-        'sort="' . $this->exp->_field('search_api_id') . ' DESC"',
+      $this->expressionBuilder->search(
+        $this->expressionBuilder->_collection(),
+        'q=' . $this->expressionBuilder->_field_escaped_value('search_api_datasource', 'entity:entity_test_mulrev_changed'),
+        'fq="' . $this->expressionBuilder->_field_escaped_value('title', 'double "quotes" within the text', /* phrase */FALSE) . '"',
+        'fl="' . $this->expressionBuilder->_field('title') . '"',
+        'sort="' . $this->expressionBuilder->_field('search_api_id') . ' DESC"',
         'qt="/export"'
       );
 

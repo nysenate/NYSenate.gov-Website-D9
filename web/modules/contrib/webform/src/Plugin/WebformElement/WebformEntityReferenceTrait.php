@@ -660,7 +660,7 @@ trait WebformEntityReferenceTrait {
    *   The elements to trigger the Ajax update.
    */
   protected function buildAjaxElementTriggerRecursive($id, array &$element) {
-    $element['#access'] = TRUE;
+    $element += ['#access' => TRUE];
     foreach (Element::children($element) as $key) {
       // Replace #ajax = TRUE with custom ajax element trigger attribute.
       if (isset($element[$key]['#ajax']) && $element[$key]['#ajax'] === TRUE) {

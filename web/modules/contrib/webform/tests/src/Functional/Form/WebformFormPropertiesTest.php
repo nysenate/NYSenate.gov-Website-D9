@@ -48,7 +48,6 @@ class WebformFormPropertiesTest extends WebformBrowserTestBase {
     $assert_session->responseContains('This webform has no elements added to it.');
     $this->drupalLogout();
 
-
     // Check element's root properties moved to the webform's properties.
     $this->drupalGet('/webform/test_form_properties');
     $assert_session->responseMatches('/Form prefix<form /');

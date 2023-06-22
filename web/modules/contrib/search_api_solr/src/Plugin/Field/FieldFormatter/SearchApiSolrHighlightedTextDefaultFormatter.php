@@ -38,7 +38,7 @@ class SearchApiSolrHighlightedTextDefaultFormatter extends FormatterBase {
     // The ProcessedText element already handles cache context & tag bubbling.
     // @see \Drupal\filter\Element\ProcessedText::preRenderText()
     foreach ($items as $delta => $item) {
-      $cacheableMetadata = New CacheableMetadata();
+      $cacheableMetadata = new CacheableMetadata();
 
       $elements[$delta] = [
         '#type' => 'processed_text',

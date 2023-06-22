@@ -1378,6 +1378,26 @@ class WebformSubmissionStorage extends SqlContentEntityStorage implements Webfor
   protected function loadData(array &$webform_submissions) {
     // Load webform submission data.
     if ($sids = array_keys($webform_submissions)) {
+      $submissions_data = [];
+
+      // Initialize all multiple value elements to make sure a value is defined.
+      $webform_default_data = [];
+      foreach ($webform_submissions as $sid => $webform_submission) {
+        /** @var \Drupal\webform\WebformInterface $webform */
+        $webform = $webform_submissions[$sid]->getWebform();
+        $webform_id = $webform->id();
+        if (!isset($webform_default_data[$webform_id])) {
+          $webform_default_data[$webform_id] = [];
+          $elements = ($webform) ? $webform->getElementsInitializedFlattenedAndHasValue() : [];
+          foreach ($elements as $element_key => $element) {
+            if (!empty($element['#webform_multiple'])) {
+              $webform_default_data[$webform_id][$element_key] = [];
+            }
+          }
+        }
+        $submissions_data[$sid] = $webform_default_data[$webform_id];
+      }
+
       /** @var \Drupal\Core\Database\StatementInterface $result */
       $result = $this->database->select('webform_submission_data', 'sd')
         ->fields('sd', ['webform_id', 'sid', 'name', 'property', 'delta', 'value'])
@@ -1387,7 +1407,6 @@ class WebformSubmissionStorage extends SqlContentEntityStorage implements Webfor
         ->orderBy('sd.property', 'ASC')
         ->orderBy('sd.delta', 'ASC')
         ->execute();
-      $submissions_data = [];
       while ($record = $result->fetchAssoc()) {
         $sid = $record['sid'];
         $name = $record['name'];

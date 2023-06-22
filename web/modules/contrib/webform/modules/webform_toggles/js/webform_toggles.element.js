@@ -66,7 +66,7 @@
         var $wrapper = $toggle.parent();
         var $checkbox = $wrapper.find('input[type="checkbox"]');
         var isDisabled = ($checkbox.attr('disabled') || $checkbox.attr('readonly'));
-        $toggle[isDisabled ? 'disabled' : 'disabled']();
+        $toggle[isDisabled ? 'disabled' : 'enabled']();
       });
     });
   }

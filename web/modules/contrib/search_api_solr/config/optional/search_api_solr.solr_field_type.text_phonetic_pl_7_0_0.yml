@@ -38,6 +38,8 @@ field_type:
           stemEnglishPossessive: 0
           preserveOriginal: 1
         -
+          class: solr.FlattenGraphFilterFactory
+        -
           class: solr.LengthFilterFactory
           min: 2
           max: 100

@@ -79,7 +79,7 @@ class SolrFieldTypeListBuilder extends AbstractSolrEntityListBuilder {
     // returns as we provide language fallbacks. For example, 'de' should be
     // used for 'de-at' if there's no dedicated 'de-at' field type.
     array_walk($active_languages, function (&$value) {
-      list($value,) = explode('-', $value);
+      [$value] = explode('-', $value);
     });
     $active_languages[] = LanguageInterface::LANGCODE_NOT_SPECIFIED;
 
@@ -122,7 +122,7 @@ class SolrFieldTypeListBuilder extends AbstractSolrEntityListBuilder {
         /** @var \Drupal\search_api_solr\SolrFieldTypeInterface $solr_field_type */
         $version = $solr_field_type->getMinimumSolrVersion();
         $domains = $solr_field_type->getDomains();
-        list($language,) = explode('-', $solr_field_type->getFieldTypeLanguageCode());
+        [$language] = explode('-', $solr_field_type->getFieldTypeLanguageCode());
         if (
           $solr_field_type->requiresManagedSchema() != $this->getBackend()->isManagedSchema() ||
           version_compare($version, $solr_version, '>') ||

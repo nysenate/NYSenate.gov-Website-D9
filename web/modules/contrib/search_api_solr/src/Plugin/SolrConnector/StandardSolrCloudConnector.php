@@ -59,7 +59,7 @@ class StandardSolrCloudConnector extends SolrConnectorPluginBase implements Solr
     $form['path']['#description'] = $this->t('The path that identifies the Solr instance to use on the node.');
 
     $form['core']['#title'] = $this->t('Default Solr collection');
-    $form['core']['#description'] = $this->t('The name that identifies the Solr default collection to use. The concrete collection to use could be overwritten per index.');
+    $form['core']['#description'] = $this->t('The name that identifies the Solr default collection to use. The concrete collection to use could be overwritten per index. The most common use-case is to leverage this default collection. Only sophisticated multi-site setups or foreign indexes accessed via Solr Document Datasources or specific requirements of your Solr hosting provider might require to leave this field empty. Because of that, the field is not marked as required as it should be for most use-cases.');
     $form['core']['#required'] = FALSE;
 
     $form['timeout']['#description'] = $this->t('The timeout in seconds for search queries sent to the Solr collection.');
@@ -72,14 +72,14 @@ class StandardSolrCloudConnector extends SolrConnectorPluginBase implements Solr
       '#type' => 'textfield',
       '#title' => $this->t('Solr host context'),
       '#description' => $this->t('The context path for the Solr web application. Defaults to "solr" in any Solr Cloud installation.'),
-      '#default_value' => isset($this->configuration['context']) ? $this->configuration['context'] : 'solr',
+      '#default_value' => $this->configuration['context'] ?? 'solr',
     ];
 
     $form['advanced']['checkpoints_collection'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Checkpoints Collection'),
       '#description' => $this->t("The collection where topic checkpoints are stored. Not required if you don't work with topic() streaming expressions."),
-      '#default_value' => isset($this->configuration['checkpoints_collection']) ? $this->configuration['checkpoints_collection'] : '',
+      '#default_value' => $this->configuration['checkpoints_collection'] ?? '',
     ];
 
     $form['advanced']['stats_cache'] = [
@@ -92,7 +92,7 @@ class StandardSolrCloudConnector extends SolrConnectorPluginBase implements Solr
         'org.apache.solr.search.stats.LRUStatsCache' => 'LRUStatsCache',
       ],
       '#description' => $this->t('Document and term statistics are needed in order to calculate relevancy. Solr provides four implementations out of the box when it comes to document stats calculation. LocalStatsCache: This only uses local term and document statistics to compute relevance. In cases with uniform term distribution across shards, this works reasonably well. ExactStatsCache: This implementation uses global values (across the collection) for document frequency. ExactSharedStatsCache: This is exactly like the exact stats cache in its functionality but the global stats are reused for subsequent requests with the same terms. LRUStatsCache: This implementation uses an LRU cache to hold global stats, which are shared between requests. Formerly a limitation was that TF/IDF relevancy computations only used shard-local statistics. This is still the case by default or if LocalStatsCache is used. If your data isn’t randomly distributed, or if you want more exact statistics, then remember to configure the ExactStatsCache (or "better").'),
-      '#default_value' => isset($this->configuration['stats_cache']) ? $this->configuration['stats_cache'] : 'org.apache.solr.search.stats.LRUStatsCache',
+      '#default_value' => $this->configuration['stats_cache'] ?? 'org.apache.solr.search.stats.LRUStatsCache',
     ];
 
     $form['advanced']['distrib'] = [

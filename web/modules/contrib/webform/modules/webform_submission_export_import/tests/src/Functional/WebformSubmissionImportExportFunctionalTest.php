@@ -305,6 +305,7 @@ class WebformSubmissionImportExportFunctionalTest extends WebformBrowserTestBase
         'title' => 'Loremipsum',
         'url' => 'http://test.com',
       ],
+      'composites' => [],
       'email' => 'test@test.com',
       'emails' => [
         0 => 'random@random.com',
@@ -314,6 +315,7 @@ class WebformSubmissionImportExportFunctionalTest extends WebformBrowserTestBase
       'entity_reference' => '',
       'entity_references' => '',
       'file' => '',
+      'files' => [],
       'likert' => [
         'q1' => '3',
         'q2' => '3',

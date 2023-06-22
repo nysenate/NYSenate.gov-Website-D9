@@ -36,6 +36,7 @@ class Tab extends FieldGroupFormatterBase {
       '#type' => 'details',
       '#title' => $this->getLabel(),
       '#description' => $this->getSetting('description'),
+      '#description_display' => $this->getSetting('description_display'),
       '#group' => $this->group->parent_name,
     ];
 
@@ -88,6 +89,8 @@ class Tab extends FieldGroupFormatterBase {
       '#weight' => -4,
     ];
 
+    $form['description_display'] = $this->getSettingsFormElementDescriptionDisplay(-3);
+
     $form['formatter'] = [
       '#title' => $this->t('Default state'),
       '#type' => 'select',
@@ -115,6 +118,7 @@ class Tab extends FieldGroupFormatterBase {
     $defaults = [
       'formatter' => 'closed',
       'description' => '',
+      'description_display' => 'after',
       'show_empty_fields' => FALSE,
     ] + parent::defaultSettings($context);
 

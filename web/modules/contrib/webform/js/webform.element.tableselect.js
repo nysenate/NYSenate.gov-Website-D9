@@ -46,10 +46,14 @@
       });
     }
 
-    // Add click event handler to the table row that toggles the
-    // checkbox or radio.
+    // Add click event handler to the table row that toggles the checkbox or
+    // radio.
     $table.find('tr').on('click', function (event) {
-      if ($.inArray(event.target.tagName, ['A', 'BUTTON', 'INPUT', 'SELECT']) !== -1) {
+
+      // Elements of table row.
+      var $tableRowElements = ['A', 'BUTTON', 'INPUT', 'SELECT', 'LABEL'];
+
+      if ($.inArray(event.target.tagName, $tableRowElements) !== -1) {
         return true;
       }
 

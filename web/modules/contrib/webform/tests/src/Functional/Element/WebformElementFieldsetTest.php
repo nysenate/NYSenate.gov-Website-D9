@@ -32,13 +32,7 @@ class WebformElementFieldsetTest extends WebformElementBrowserTestBase {
     $assert_session->responseContains('<span class="field-prefix">prefix</span>');
     $assert_session->responseContains('<span class="field-suffix">suffix</span>');
     $assert_session->responseContains('<div class="description">');
-    if (floatval(\Drupal::VERSION) >= 9) {
-      $assert_session->responseContains('<div id="edit-fieldset--description" data-drupal-field-elements="description" class="webform-element-description">This is a description.</div>');
-    }
-    else {
-      $assert_session->responseContains('<div id="edit-fieldset--description" class="webform-element-description">This is a description.</div>');
-    }
-    $assert_session->responseContains('<div id="edit-fieldset--more" class="js-webform-element-more webform-element-more">');
+    $assert_session->responseContains('<div id="edit-fieldset--description" data-drupal-field-elements="description" class="webform-element-description">This is a description.</div>');
 
     // Check fieldset title_display: invisible.
     $assert_session->responseContains('<span class="visually-hidden fieldset-legend">fieldset_title_invisible</span>');
@@ -48,12 +42,7 @@ class WebformElementFieldsetTest extends WebformElementBrowserTestBase {
     $assert_session->responseContains('<span class="fieldset-legend"></span>');
 
     // Check fieldset description_display: before.
-    if (floatval(\Drupal::VERSION) >= 9) {
-      $assert_session->responseContains('<span class="field-prefix">prefix<div id="edit-fieldset-description-before--description" data-drupal-field-elements="description" class="webform-element-description">This is a description before.</div>');
-    }
-    else {
-      $assert_session->responseContains('<span class="field-prefix">prefix<div id="edit-fieldset-description-before--description" class="webform-element-description">This is a description before.</div>');
-    }
+    $assert_session->responseContains('<div class="description"><div id="edit-fieldset-description-before--description" data-drupal-field-elements="description" class="webform-element-description">This is a description before.</div>');
   }
 
 }

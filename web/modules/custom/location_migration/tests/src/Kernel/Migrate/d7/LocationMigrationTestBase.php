@@ -93,67 +93,72 @@ abstract class LocationMigrationTestBase extends MigrateDrupalTestBase {
 
     // Ignore irrelevant errors.
     $this->startCollectingMessages();
-    $this->executeMigrations([
-      'd7_view_modes',
-      'd7_field',
-      'd7_node_type',
-      'd7_field_instance',
-      'd7_field_formatter_settings',
-      'd7_field_instance_widget_settings',
-    ]);
+    $this->executeMigrations(
+          [
+            'd7_view_modes',
+            'd7_field',
+            'd7_node_type',
+            'd7_field_instance',
+            'd7_field_formatter_settings',
+            'd7_field_instance_widget_settings',
+          ]
+      );
     $this->stopCollectingMessages();
 
-    $this->executeMigrations($with_entity_locations
-      ? [
-        'd7_taxonomy_vocabulary',
-        'd7_entity_location_field:taxonomy_term',
-        'd7_entity_location_field_instance:taxonomy_term:vocabulary_1',
-        'd7_entity_location_field_widget:taxonomy_term:vocabulary_1',
-        'd7_entity_location_field_formatter:taxonomy_term:vocabulary_1',
-        'd7_taxonomy_term:vocabulary_1',
-      ]
-      : [
-        'd7_taxonomy_vocabulary',
-        'd7_taxonomy_term:vocabulary_1',
-      ]
-    );
+    $this->executeMigrations(
+          $with_entity_locations
+          ? [
+            'd7_taxonomy_vocabulary',
+            'd7_entity_location_field:taxonomy_term',
+            'd7_entity_location_field_instance:taxonomy_term:vocabulary_1',
+            'd7_entity_location_field_widget:taxonomy_term:vocabulary_1',
+            'd7_entity_location_field_formatter:taxonomy_term:vocabulary_1',
+            'd7_taxonomy_term:vocabulary_1',
+          ]
+          : [
+            'd7_taxonomy_vocabulary',
+            'd7_taxonomy_term:vocabulary_1',
+          ]
+      );
 
-    $this->executeMigrations($with_entity_locations
-      ? [
-        'd7_user_role',
-        'd7_entity_location_field:user',
-        'd7_entity_location_field_instance:user:user',
-        'd7_entity_location_field_widget:user:user',
-        'd7_entity_location_field_formatter:user:user',
-        'd7_user',
-      ]
-      : [
-        'd7_user_role',
-        'd7_user',
-      ]
-    );
+    $this->executeMigrations(
+          $with_entity_locations
+          ? [
+            'd7_user_role',
+            'd7_entity_location_field:user',
+            'd7_entity_location_field_instance:user:user',
+            'd7_entity_location_field_widget:user:user',
+            'd7_entity_location_field_formatter:user:user',
+            'd7_user',
+          ]
+          : [
+            'd7_user_role',
+            'd7_user',
+          ]
+      );
 
     $node_migration_base = $classic_node_migration ? 'd7_node' : 'd7_node_complete';
-    $this->executeMigrations($with_entity_locations
-      ? [
-        'd7_field_location:node',
-        'd7_field_location_instance:node',
-        'd7_entity_location_field:node',
-        'd7_entity_location_field_instance:node',
-        'd7_entity_location_field_widget:node',
-        'd7_entity_location_field_formatter:node',
-        $node_migration_base,
-        'd7_field_location_widget:node',
-        'd7_field_location_formatter:node',
-      ]
-      : [
-        'd7_field_location:node',
-        'd7_field_location_instance:node',
-        $node_migration_base,
-        'd7_field_location_widget:node',
-        'd7_field_location_formatter:node',
-      ]
-    );
+    $this->executeMigrations(
+          $with_entity_locations
+          ? [
+            'd7_field_location:node',
+            'd7_field_location_instance:node',
+            'd7_entity_location_field:node',
+            'd7_entity_location_field_instance:node',
+            'd7_entity_location_field_widget:node',
+            'd7_entity_location_field_formatter:node',
+            $node_migration_base,
+            'd7_field_location_widget:node',
+            'd7_field_location_formatter:node',
+          ]
+          : [
+            'd7_field_location:node',
+            'd7_field_location_instance:node',
+            $node_migration_base,
+            'd7_field_location_widget:node',
+            'd7_field_location_formatter:node',
+          ]
+      );
   }
 
 }

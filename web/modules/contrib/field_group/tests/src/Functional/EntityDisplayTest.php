@@ -211,6 +211,13 @@ class EntityDisplayTest extends BrowserTestBase {
     // Test group ids and classes.
     $this->assertCount(1, $this->xpath("//fieldset[contains(@id, 'fieldset-id')]"), 'Correct id set on the fieldset');
     $this->assertCount(1, $this->xpath("//fieldset[contains(@class, 'test-class')]"), 'Test class set on the fieldset');
+
+    // Test that the fieldset description is present.
+    $this->assertSession()->elementContains('css', 'fieldset#fieldset-id div#fieldset-id--description', 'test description');
+    // Until core 9.3.x this setting doesn't reliably work (unless the site is
+    // patched with [#2396145]), so we don't want to actually test the placement
+    // of the description. It's pointless to try anything more specific, yet.
+    // @todo Make this more specific once we require at least 9.3.x core.
   }
 
   /**

@@ -44,9 +44,11 @@ search_api_solr_admin sub-module and configure the Search API Server to use
 the Solr Cloud Connector with Basic Auth. The username "solr" and the password
 "SolrRocks" are pre-configured in `.ddev/solr-cloud/security.json`. Now you
 create or update your collection any time by clicking the "Upload Configset"
-button on the Serch API server details page. Or automate things using
+button on the Serch API server details page. Or automate things with this,
+where `SERVER_ID` is the machine name of the server, for example `solr_server`:
+
 ```
-ddev drush search_api_solr:upload-configset SERVER_ID
+ddev drush search-api-solr:upload-configset SERVER_ID
 ```
 
 Check the

@@ -134,7 +134,7 @@ abstract class SolrConnectorPluginBase extends ConfigurablePluginBase implements
       '#type' => 'select',
       '#title' => $this->t('HTTP protocol'),
       '#description' => $this->t('The HTTP protocol to use for sending queries.'),
-      '#default_value' => isset($this->configuration['scheme']) ? $this->configuration['scheme'] : 'http',
+      '#default_value' => $this->configuration['scheme'] ?? 'http',
       '#options' => [
         'http' => 'http',
         'https' => 'https',
@@ -145,7 +145,7 @@ abstract class SolrConnectorPluginBase extends ConfigurablePluginBase implements
       '#type' => 'textfield',
       '#title' => $this->t('Solr host'),
       '#description' => $this->t('The host name or IP of your Solr server, e.g. <code>localhost</code> or <code>www.example.com</code>.'),
-      '#default_value' => isset($this->configuration['host']) ? $this->configuration['host'] : '',
+      '#default_value' => $this->configuration['host'] ?? '',
       '#required' => TRUE,
     ];
 
@@ -153,7 +153,7 @@ abstract class SolrConnectorPluginBase extends ConfigurablePluginBase implements
       '#type' => 'textfield',
       '#title' => $this->t('Solr port'),
       '#description' => $this->t('The Jetty example server is at port 8983, while Tomcat uses 8080 by default.'),
-      '#default_value' => isset($this->configuration['port']) ? $this->configuration['port'] : '',
+      '#default_value' => $this->configuration['port'] ?? '',
       '#required' => TRUE,
     ];
 
@@ -161,14 +161,14 @@ abstract class SolrConnectorPluginBase extends ConfigurablePluginBase implements
       '#type' => 'textfield',
       '#title' => $this->t('Solr path'),
       '#description' => $this->t('The path that identifies the Solr instance to use on the server.'),
-      '#default_value' => isset($this->configuration['path']) ? $this->configuration['path'] : '/',
+      '#default_value' => $this->configuration['path'] ?? '/',
     ];
 
     $form['core'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Solr core'),
       '#description' => $this->t('The name that identifies the Solr core to use on the server.'),
-      '#default_value' => isset($this->configuration['core']) ? $this->configuration['core'] : '',
+      '#default_value' => $this->configuration['core'] ?? '',
       '#required' => TRUE,
     ];
 
@@ -178,7 +178,7 @@ abstract class SolrConnectorPluginBase extends ConfigurablePluginBase implements
       '#max' => 180,
       '#title' => $this->t('Query timeout'),
       '#description' => $this->t('The timeout in seconds for search queries sent to the Solr server.'),
-      '#default_value' => isset($this->configuration['timeout']) ? $this->configuration['timeout'] : 5,
+      '#default_value' => $this->configuration['timeout'] ?? 5,
       '#required' => TRUE,
     ];
 
@@ -188,7 +188,7 @@ abstract class SolrConnectorPluginBase extends ConfigurablePluginBase implements
       '#max' => 180,
       '#title' => $this->t('Index timeout'),
       '#description' => $this->t('The timeout in seconds for indexing requests to the Solr server.'),
-      '#default_value' => isset($this->configuration[self::INDEX_TIMEOUT]) ? $this->configuration[self::INDEX_TIMEOUT] : 5,
+      '#default_value' => $this->configuration[self::INDEX_TIMEOUT] ?? 5,
       '#required' => TRUE,
     ];
 
@@ -198,7 +198,7 @@ abstract class SolrConnectorPluginBase extends ConfigurablePluginBase implements
       '#max' => 180,
       '#title' => $this->t('Optimize timeout'),
       '#description' => $this->t('The timeout in seconds for background index optimization queries on a Solr server.'),
-      '#default_value' => isset($this->configuration[self::OPTIMIZE_TIMEOUT]) ? $this->configuration[self::OPTIMIZE_TIMEOUT] : 10,
+      '#default_value' => $this->configuration[self::OPTIMIZE_TIMEOUT] ?? 10,
       '#required' => TRUE,
     ];
 
@@ -208,7 +208,7 @@ abstract class SolrConnectorPluginBase extends ConfigurablePluginBase implements
       '#max' => 180,
       '#title' => $this->t('Finalize timeout'),
       '#description' => $this->t('The timeout in seconds for index finalization queries on a Solr server.'),
-      '#default_value' => isset($this->configuration[self::FINALIZE_TIMEOUT]) ? $this->configuration[self::FINALIZE_TIMEOUT] : 30,
+      '#default_value' => $this->configuration[self::FINALIZE_TIMEOUT] ?? 30,
       '#required' => TRUE,
     ];
 
@@ -217,7 +217,7 @@ abstract class SolrConnectorPluginBase extends ConfigurablePluginBase implements
       '#min' => 0,
       '#title' => $this->t('Commit within'),
       '#description' => $this->t('The limit in milliseconds within a (soft) commit on Solr is forced after any updating the index in any way. Setting the value to "0" turns off this dynamic enforcement and lets Solr behave like configured solrconf.xml.'),
-      '#default_value' => isset($this->configuration['commit_within']) ? $this->configuration['commit_within'] : 1000,
+      '#default_value' => $this->configuration['commit_within'] ?? 1000,
       '#required' => TRUE,
     ];
 
@@ -281,7 +281,7 @@ abstract class SolrConnectorPluginBase extends ConfigurablePluginBase implements
       '#type' => 'textfield',
       '#title' => $this->t('solr.install.dir'),
       '#description' => $this->t('The path where Solr is installed on the server, relative to the configuration or absolute. Some examples are "../../.." for Solr downloaded from apache.org, "/usr/local/opt/solr" for installations via homebrew on macOS or "/opt/solr" for some linux distributions and for the official Solr docker container. If you use different systems for development, testing and production you can use drupal config overwrites to adjust the value per environment or adjust the generated solrcore.properties per environment or use java virtual machine options (-D) to set the property. Modern Solr installations should set that virtual machine option correctly in their start script by themselves. In this case this field should be left empty!'),
-      '#default_value' => isset($this->configuration['solr_install_dir']) ? $this->configuration['solr_install_dir'] : '',
+      '#default_value' => $this->configuration['solr_install_dir'] ?? '',
     ];
 
     return $form;
@@ -437,11 +437,13 @@ abstract class SolrConnectorPluginBase extends ConfigurablePluginBase implements
           // search_api_solr_legacy module.
           $version = '3.6.0';
           break;
+
         case '4.0.0':
           // 4.5.0 is the minimum supported Solr 4 version by the
           // search_api_solr_legacy module.
           $version = '4.5.0';
           break;
+
         case '6.0.0':
           // 6.4.0 is the minimum supported Solr version. Earlier Solr 6
           // versions should run in Solr 5 compatibility mode using the
@@ -685,13 +687,16 @@ abstract class SolrConnectorPluginBase extends ConfigurablePluginBase implements
         $max_time = (int) $update_handler_stats['autocommit maxTime'];
         $summary['@deletes_by_id'] = (int) $update_handler_stats['deletesById'];
         $summary['@deletes_by_query'] = (int) $update_handler_stats['deletesByQuery'];
-        $summary['@core_name'] = $stats['solr-mbeans']['CORE']['core']['stats']['coreName'] ?? $this->t('No information available.');;
+        $summary['@core_name'] = $stats['solr-mbeans']['CORE']['core']['stats']['coreName'] ?? $this->t('No information available.');
+        ;
         if (version_compare($solr_version, '6.4', '>=')) {
           // @see https://issues.apache.org/jira/browse/SOLR-3990
-          $summary['@index_size'] = $stats['solr-mbeans']['CORE']['core']['stats']['size'] ?? $this->t('No information available.');;
+          $summary['@index_size'] = $stats['solr-mbeans']['CORE']['core']['stats']['size'] ?? $this->t('No information available.');
+          ;
         }
         else {
-          $summary['@index_size'] = $stats['solr-mbeans']['QUERYHANDLER']['/replication']['stats']['indexSize'] ?? $this->t('No information available.');;
+          $summary['@index_size'] = $stats['solr-mbeans']['QUERYHANDLER']['/replication']['stats']['indexSize'] ?? $this->t('No information available.');
+          ;
         }
       }
 
@@ -933,7 +938,6 @@ abstract class SolrConnectorPluginBase extends ConfigurablePluginBase implements
     return $this->execute($query, $endpoint);
   }
 
-
   /**
    * {@inheritdoc}
    */
@@ -1011,7 +1015,8 @@ abstract class SolrConnectorPluginBase extends ConfigurablePluginBase implements
     $body = $e->getBody();
     $response_code = (int) $e->getCode();
     switch ((string) $response_code) {
-      case '400': // Bad Request.
+      // Bad Request.
+      case '400':
         $description = 'bad request';
         $response_decoded = Json::decode($body);
         if ($response_decoded && isset($response_decoded['error'])) {
@@ -1019,16 +1024,20 @@ abstract class SolrConnectorPluginBase extends ConfigurablePluginBase implements
         }
         break;
 
-      case '404': // Not Found.
+      // Not Found.
+      case '404':
         $description = 'not found';
         break;
 
-      case '401': // Unauthorized.
-      case '403': // Forbidden.
+      // Unauthorized.
+      case '401':
+        // Forbidden.
+      case '403':
         $description = 'access denied';
         break;
 
-      case '500': // Internal Server Error.
+      // Internal Server Error.
+      case '500':
       case '0':
         $description = 'internal Solr server error';
         break;
@@ -1096,6 +1105,7 @@ abstract class SolrConnectorPluginBase extends ConfigurablePluginBase implements
    *   (optional) The configured timeout to use. Default is self::QUERY_TIMEOUT.
    * @param \Solarium\Core\Client\Endpoint|null $endpoint
    *   (optional) The Solarium endpoint object.
+   *
    * @return mixed
    */
   protected function useTimeout(string $timeout = self::QUERY_TIMEOUT, ?Endpoint $endpoint = NULL) {
@@ -1269,4 +1279,5 @@ abstract class SolrConnectorPluginBase extends ConfigurablePluginBase implements
    */
   public function alterConfigZip(ZipStream $zip, string $lucene_match_version, string $server_id = '') {
   }
+
 }

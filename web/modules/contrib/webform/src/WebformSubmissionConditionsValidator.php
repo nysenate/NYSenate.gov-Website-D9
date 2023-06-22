@@ -463,7 +463,15 @@ class WebformSubmissionConditionsValidator implements WebformSubmissionCondition
 
       // Set data to empty array or string for any webform element that is hidden.
       if (!$element_visible && !empty($element['#webform_key']) && isset($data[$key])) {
-        $data[$key] = (is_array($data[$key])) ? [] : '';
+        switch ($element['#type']) {
+          case 'text_format':
+            $data[$key]['value'] = '';
+            break;
+
+          default:
+            $data[$key] = (is_array($data[$key])) ? [] : '';
+            break;
+        }
       }
 
       $this->processFormRecursive($element, $webform_submission, $data, $check_access, $element_visible);

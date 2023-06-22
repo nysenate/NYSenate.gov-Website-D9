@@ -27,12 +27,9 @@ class ResponseParser extends AbstractResponseParser implements ResponseParserInt
       }
     }
 
-    return $this->addHeaderInfo(
-      $data,
-      [
-        'components' => $components,
-      ]
-    );
+    return [
+      'components' => $components,
+    ];
   }
 
 }

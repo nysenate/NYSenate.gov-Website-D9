@@ -32,11 +32,12 @@ class StreamDocument extends AbstractDocument {
   }
 
   #[\ReturnTypeWillChange]
+
   /**
    * {@inheritdoc}
    */
-  public function jsonSerialize()
-  {
+  public function jsonSerialize() {
     return $this->getFields();
   }
+
 }

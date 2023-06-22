@@ -15,14 +15,15 @@ class WebformUiPathProcessor implements OutboundPathProcessorInterface {
    * {@inheritdoc}
    */
   public function processOutbound($path, &$options = [], Request $request = NULL, BubbleableMetadata $bubbleable_metadata = NULL) {
-    if ((strpos($path, '/webform/') === FALSE)
-      || is_null($request)
-      || is_null($request->getQueryString())
-    ) {
+
+    $is_webform_path = (!empty($path) && str_contains($path, '/webform/'));
+    $has_query_string = (!empty($request) && !empty($request->getQueryString()));
+
+    if (!$is_webform_path || !$has_query_string) {
       return $path;
     }
 
-    if (strpos($request->getQueryString(), '_wrapper_format=') === FALSE) {
+    if (!str_contains($request->getQueryString(), '_wrapper_format=')) {
       return $path;
     }
 

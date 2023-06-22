@@ -104,8 +104,6 @@ class WebformTokenManager implements WebformTokenManagerInterface {
     $this->configFactory = $config_factory;
     $this->moduleHandler = $module_handler;
     $this->token = $token;
-
-    $this->config = $this->configFactory->get('webform.settings');
   }
 
   /**
@@ -257,7 +255,8 @@ class WebformTokenManager implements WebformTokenManagerInterface {
     ];
 
     if ($description) {
-      if ($this->config->get('ui.description_help')) {
+      $config = $this->configFactory->get('webform.settings');
+      if ($config->get('ui.description_help')) {
         return [
           '#type' => 'container',
           'token_tree_link' => $build,

@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * @file
+ * Module file for contact_permissions module.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Check our permission before enabling the personal contact form on an
+ * individual user's account page.
+ *
+ * @see contact_form_user_form_alter()
+ */
+function contact_permissions_form_user_form_alter(&$form, FormStateInterface $form_state) {
+  /* @var $account \Drupal\Core\Session\AccountInterface */
+  $account = $form_state->getFormObject()->getEntity();
+  if ($account->hasPermission('have a personal contact form')) {
+    return;
+  }
+  if (isset($form['contact'])) {
+    $form['contact']['#access'] = FALSE;
+  }
+}

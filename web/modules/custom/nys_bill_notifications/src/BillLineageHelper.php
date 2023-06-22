@@ -87,11 +87,15 @@ class BillLineageHelper {
     if ($session && $print) {
       $name = $session . '-' . $print;
       try {
-        /** @var \Drupal\taxonomy\Entity\Term $ret */
-        $ret = static::storage()->create([
-          'vid' => 'prev_ver',
-          'name' => $name,
-        ]);
+        /**
+         * @var \Drupal\taxonomy\Entity\Term $ret
+         */
+        $ret = static::storage()->create(
+              [
+                'vid' => 'prev_ver',
+                'name' => $name,
+              ]
+          );
         $ret->save();
       }
       catch (\Throwable $e) {
@@ -149,8 +153,9 @@ class BillLineageHelper {
 
     // Try to load that term.  If none is found, create one with that name.
     if (!($term = static::loadRootByName($root_name))) {
-      if (($bill->hasField('field_ol_base_print_no') && !$bill->get('field_ol_base_print_no')->isEmpty()) &&
-        ($bill->hasField('field_ol_session') && !$bill->get('field_ol_session')->isEmpty())) {
+      if (($bill->hasField('field_ol_base_print_no') && !$bill->get('field_ol_base_print_no')->isEmpty())
+            && ($bill->hasField('field_ol_session') && !$bill->get('field_ol_session')->isEmpty())
+        ) {
         $term = static::createRoot($bill->field_ol_session->value, $bill->field_ol_print_no->value);
       }
     }

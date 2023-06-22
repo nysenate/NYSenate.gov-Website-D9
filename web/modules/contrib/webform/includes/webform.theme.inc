@@ -446,29 +446,6 @@ function webform_preprocess_fieldset(&$variables) {
 
   $element = &$variables['element'];
 
-  // @todo [Drupal 9.3] Remove the below code
-  // Fieldset elements now respect the #description_display option
-  // @see https://www.drupal.org/node/3143489
-  //
-  // If the description is displayed 'before' we need to move it to the
-  // fieldset's prefix.
-  // @see fieldset.html.twig
-  if (isset($element['#description_display']) && $element['#description_display'] === 'before' && !empty($variables['description']['content'])) {
-    if (isset($variables['prefix'])) {
-      if (is_array($variables['prefix'])) {
-        $variables['prefix'] = ['prefix' => $variables['prefix']];
-      }
-      else {
-        $variables['prefix'] = ['prefix' => ['#markup' => $variables['prefix']]];
-      }
-    }
-    else {
-      $variables['prefix'] = [];
-    }
-    $variables['prefix']['description'] = $variables['description']['content'];
-    unset($variables['description']['content']);
-  }
-
   // Apply inline title defined by radios, checkboxes, and buttons.
   // @see \Drupal\webform\Plugin\WebformElement\OptionsBase::prepare
   if (isset($element['#_title_display'])) {

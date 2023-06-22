@@ -155,7 +155,7 @@ class WebformOptionsCustom extends FormElement implements WebformOptionsCustomIn
         '#template' => $element['#template'],
         '#context' => $template_context,
         '#prefix' => '<div class="webform-options-custom-template">',
-        '#suffic' => '</div>',
+        '#suffix' => '</div>',
       ];
     }
     else {
@@ -163,7 +163,7 @@ class WebformOptionsCustom extends FormElement implements WebformOptionsCustomIn
       $element['template'] = [
         '#markup' => Markup::create($element['#template']),
         '#prefix' => '<div class="webform-options-custom-template">',
-        '#suffic' => '</div>',
+        '#suffix' => '</div>',
       ];
     }
 

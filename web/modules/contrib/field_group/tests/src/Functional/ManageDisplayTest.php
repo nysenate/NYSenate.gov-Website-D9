@@ -87,6 +87,8 @@ class ManageDisplayTest extends BrowserTestBase {
     $this->submitForm([], 'Create group');
 
     $this->assertSession()->responseContains(t('New group %label successfully created.', ['%label' => $group_label]));
+    // Unless we customize the #description_display setting, we shouldn't see it in the summary.
+    $this->assertSession()->responseNotContains('Description display');
 
     // Test if group is in the $groups array.
     $this->group = field_group_load_field_group($group_name, 'node', $this->type, 'form', 'default');
@@ -94,6 +96,28 @@ class ManageDisplayTest extends BrowserTestBase {
 
     // Test if region key is set.
     $this->assertEquals('hidden', $this->group->region);
+
+    // Setup another new group for testing #description_display.
+    $group_2 = [
+      'group_formatter' => $group_formatter,
+      'label' => $this->randomString(8),
+      'group_name' => mb_strtolower($this->randomMachineName()),
+    ];
+
+    // Add the other new group on the 'Manage form display' page.
+    $this->drupalGet($add_form_display);
+    $this->submitForm($group_2, 'Save and continue');
+    $details_settings = [
+      'format_settings[description_display]' => 'before',
+      // We must set a description for the description_display setting to matter.
+      'format_settings[description]' => 'Details test description',
+    ];
+    $this->submitForm($details_settings, 'Create group');
+    $this->assertSession()->responseContains(t('New group %label successfully created.', ['%label' => $group_2['label']]));
+
+    // Now that #description has a value and #description_display is 'before',
+    // we should see that in the summary.
+    $this->assertSession()->responseContains('Description display: Before');
 
     // Add new group on the 'Manage display' page.
     $this->drupalGet('admin/structure/types/manage/' . $this->type . '/display/add-group');

@@ -4,7 +4,6 @@ namespace Drupal\webform\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\Render\Markup;
 use Drupal\webform\Element\WebformMessage;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -79,7 +78,7 @@ class WebformAddonsController extends ControllerBase implements ContainerInjecti
         'name' => 'text',
         'class' => ['webform-form-filter-text'],
         'data-summary' => '.webform-addons-summary',
-        'data-item-singlular' => $this->t('add-on'),
+        'data-item-singular' => $this->t('add-on'),
         'data-item-plural' => $this->t('add-ons'),
         'data-no-results' => '.webform-addons-no-results',
         'data-element' => '.admin-list',
@@ -139,10 +138,6 @@ class WebformAddonsController extends ControllerBase implements ContainerInjecti
         // Append (Experimental) to title.
         if (!empty($project['experimental'])) {
           $project['title'] .= ' [' . $this->t('EXPERIMENTAL') . ']';
-        }
-        // Prepend logo to title.
-        if (isset($project['logo'])) {
-          $project['title'] = Markup::create('<img src="' . $project['logo']->toString() . '" alt="' . $project['title'] . '"/>' . $project['title']);
         }
         $project['description'] .= '<br /><small>' . $project['url']->toString() . '</small>';
 

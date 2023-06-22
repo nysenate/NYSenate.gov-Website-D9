@@ -59,7 +59,9 @@
       // Hide the element.
       $element[hideEffect]();
       // Save the input's value.
-      $input.data('webform-value', $input.val());
+      if ($input.val() !== '') {
+        $input.data('webform-value', $input.val());
+      }
       // Empty and un-required the input.
       $input.val('').prop('required', false).removeAttr('aria-required');
     }

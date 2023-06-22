@@ -184,13 +184,16 @@ class SolrDocument extends DatasourcePluginBase implements PluginFormInterface {
   public function loadMultiple(array $ids) {
     $documents = [];
     try {
+      foreach ($ids as $i => $id) {
+        $ids[$i] = "solr_document/$id";
+      }
       // Query the index for the Solr documents.
       $results = $this->index->query()
         ->addCondition('search_api_id', $ids, 'IN')
         ->execute()
         ->getResultItems();
       foreach ($results as $id => $result) {
-        $documents[$id] = $this->solrDocumentFactory->create($result);
+        $documents[$id] = $this->getSolrDocumentFactory()->create($result);
       }
     }
     catch (SearchApiException $e) {

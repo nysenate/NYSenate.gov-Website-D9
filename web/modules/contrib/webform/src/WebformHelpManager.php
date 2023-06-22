@@ -1640,7 +1640,7 @@ class WebformHelpManager implements WebformHelpManagerInterface {
     $help['webforms_manage'] = [
       'group' => 'forms',
       'title' => $this->t('Forms'),
-      'content' => $this->t('The <strong>Forms</strong> management page lists all available webforms, which can be filtered by the following: title, description, elements, category and status.'),
+      'content' => $this->t('The <strong>Forms</strong> management page lists all available webforms, which can be filtered by the following: keyword (including title, description, elements, user name, or role), category, and status.'),
       'video_id' => 'forms',
       'routes' => [
         // @see /admin/structure/webform

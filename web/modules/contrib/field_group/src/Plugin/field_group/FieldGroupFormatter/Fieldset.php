@@ -30,7 +30,7 @@ class Fieldset extends FieldGroupFormatterBase {
       '#title' => $this->getLabel(),
       '#attributes' => [],
       '#description' => $this->getSetting('description'),
-      '#description_display' => 'after',
+      '#description_display' => $this->getSetting('description_display'),
       // Prevent \Drupal\content_translation\ContentTranslationHandler::addTranslatabilityClue()
       // from adding an incorrect suffix to the field group title.
       '#multilingual' => TRUE,
@@ -79,6 +79,8 @@ class Fieldset extends FieldGroupFormatterBase {
       '#weight' => -4,
     ];
 
+    $form['description_display'] = $this->getSettingsFormElementDescriptionDisplay(-3);
+
     if ($this->context == 'form') {
       $form['required_fields'] = [
         '#type' => 'checkbox',
@@ -102,6 +104,10 @@ class Fieldset extends FieldGroupFormatterBase {
       $summary[] = $this->t('Mark as required');
     }
 
+    if ($description_display = $this->getSettingsSummaryDescriptionDisplay()) {
+      $summary[] = $description_display;
+    }
+
     return $summary;
   }
 
@@ -111,6 +117,7 @@ class Fieldset extends FieldGroupFormatterBase {
   public static function defaultContextSettings($context) {
     $defaults = [
       'description' => '',
+      'description_display' => 'after',
     ] + parent::defaultSettings($context);
 
     if ($context == 'form') {

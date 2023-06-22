@@ -1001,6 +1001,13 @@ class WebformSubmissionExporter implements WebformSubmissionExporterInterface {
       $query->sort('sid', $export_options['order'] ?? 'ASC');
     }
 
+    // Do not check access to submissions via Drush CLI.
+    // There is already submission access checking being applied.
+    // @see webform_query_webform_submission_access_alter()
+    if (PHP_SAPI === 'cli') {
+      $query->accessCheck(FALSE);
+    }
+
     return $query;
   }
 

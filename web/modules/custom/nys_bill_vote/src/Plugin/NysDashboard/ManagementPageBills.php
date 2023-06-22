@@ -65,26 +65,30 @@ class ManagementPageBills extends ManagementPageBase {
 
     // Start from the node.  Add the summary and sponsor fields.
     $query = $this->connection->select('node_field_data', 'n');
-    $query->join('node__field_ol_summary', 'olsum',
-      'n.nid=olsum.entity_id AND olsum.bundle=:bill_bundle',
-      [':bill_bundle' => 'bill']
-    );
-    $query->join('node__field_ol_sponsor', 'ols',
-      'n.nid=ols.entity_id AND ols.bundle=:bill_bundle',
-      [':bill_bundle' => 'bill']
-    );
+    $query->join(
+          'node__field_ol_summary', 'olsum',
+          'n.nid=olsum.entity_id AND olsum.bundle=:bill_bundle',
+          [':bill_bundle' => 'bill']
+      );
+    $query->join(
+          'node__field_ol_sponsor', 'ols',
+          'n.nid=ols.entity_id AND ols.bundle=:bill_bundle',
+          [':bill_bundle' => 'bill']
+      );
 
     // Join the districts' senator field.
-    $query->leftJoin('taxonomy_term__field_senator', 'ttfs',
-      'ttfs.field_senator_target_id=ols.field_ol_sponsor_target_id AND ttfs.bundle=:district_bundle',
-      [':district_bundle' => 'districts']
-    );
+    $query->leftJoin(
+          'taxonomy_term__field_senator', 'ttfs',
+          'ttfs.field_senator_target_id=ols.field_ol_sponsor_target_id AND ttfs.bundle=:district_bundle',
+          [':district_bundle' => 'districts']
+      );
 
     // Join the voting table.
-    $query->leftJoin('votingapi_vote', 'v',
-      'v.entity_id=n.nid AND v.entity_type=:node_type AND v.`type`=:vote_type',
-      [':node_type' => 'node', ':vote_type' => 'nys_bill_vote']
-    );
+    $query->leftJoin(
+          'votingapi_vote', 'v',
+          'v.entity_id=n.nid AND v.entity_type=:node_type AND v.`type`=:vote_type',
+          [':node_type' => 'node', ':vote_type' => 'nys_bill_vote']
+      );
 
     // Join the users' district field.
     $query->leftJoin('user__field_district', 'ufd', 'ufd.entity_id=v.user_id');
@@ -104,7 +108,7 @@ class ManagementPageBills extends ManagementPageBase {
     $query->fields('n', ['nid', 'title']);
     // The abridged summary.
     $expr = 'CONCAT(SUBSTRING(olsum.field_ol_summary_value,1,' . $max . '),' .
-      'IF(LENGTH(olsum.field_ol_summary_value) > ' . $max . ", '...', ''))";
+        'IF(LENGTH(olsum.field_ol_summary_value) > ' . $max . ", '...', ''))";
     $query->addExpression($expr, 'summary');
     // The lists of issues and their taxonomy ids.
     $query->addExpression("COALESCE(issues.issues_tid, '')", 'issues_tid');
@@ -140,14 +144,16 @@ class ManagementPageBills extends ManagementPageBase {
     // Execute the query.
     try {
       $ret = $query->execute()->fetchAllAssoc('nid', \PDO::FETCH_ASSOC) ?? [];
-      $this->logger->debug('Query for sponsored bills',
-        ['@query' => (string) $query]);
+      $this->logger->debug(
+            'Query for sponsored bills',
+            ['@query' => (string) $query]
+        );
     }
     catch (\Throwable $e) {
       $this->logger->error(
-        'Query failed for sponsored bills',
-        ['@query' => (string) $query, '@excp' => $e->getMessage()]
-      );
+            'Query failed for sponsored bills',
+            ['@query' => (string) $query, '@excp' => $e->getMessage()]
+        );
       $ret = [];
     }
     return $ret;

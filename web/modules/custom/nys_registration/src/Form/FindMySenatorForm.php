@@ -4,7 +4,11 @@ namespace Drupal\nys_registration\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\file\Entity\File;
+use Drupal\media\Entity\Media;
 use Drupal\nys_registration\RegistrationHelper;
+use Drupal\nys_senators\SenatorsHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -20,10 +24,26 @@ class FindMySenatorForm extends FormBase {
   protected RegistrationHelper $helper;
 
   /**
+   * NYS Senators Helper service.
+   *
+   * @var \Drupal\nys_senators\SenatorsHelper
+   */
+  protected SenatorsHelper $senatorsHelper;
+
+  /**
+   * Default object for messenger serivce.
+   *
+   * @var \Drupal\Core\Messenger\MessengerInterface
+   */
+  protected $messenger;
+
+  /**
    * Constructor for service injection.
    */
-  public function __construct(RegistrationHelper $helper) {
+  public function __construct(RegistrationHelper $helper, SenatorsHelper $senatorsHelper, MessengerInterface $messenger) {
     $this->helper = $helper;
+    $this->senatorsHelper = $senatorsHelper;
+    $this->messenger = $messenger;
   }
 
   /**
@@ -31,8 +51,10 @@ class FindMySenatorForm extends FormBase {
    */
   public static function create(ContainerInterface $container): self {
     return new static(
-          $container->get('nys_registration.helper')
-      );
+      $container->get('nys_registration.helper'),
+      $container->get('nys_senators.senators_helper'),
+      $container->get('messenger'),
+    );
   }
 
   /**
@@ -100,9 +122,63 @@ class FindMySenatorForm extends FormBase {
 
     if ($form_state->isSubmitted()) {
       $district = $form_state->get('district');
-      $form['result']['#markup'] = $district
-            ? '<h3>This address belongs to district ' . $district . '</h3>'
-            : 'A district assignment could not be made.  Please verify the address.';
+
+      if ($district) {
+        // Set Senator and District markup.
+        $party = [];
+        $district_term = $form_state->get('district_term');
+        $senator_term = $district_term ? $district_term->get('field_senator')->entity : 0;
+        $senator_name = $senator_term->get('field_senator_name')->getValue();
+        $senator_name = $senator_name[0]['given'] . ' ' . $senator_name[0]['family'];
+        $mid = $senator_term->get('field_member_headshot')->target_id;
+        $media = Media::load($mid);
+        $fid = $media->get('field_image')->target_id;
+        $file = File::load($fid);
+        $image = empty($file) ?
+          '/themes/custom/nysenate_theme/src/assets/default-avatar.png' :
+          \Drupal::service('file_url_generator')
+            ->generateAbsoluteString($file->getFileUri());
+
+        $parties = $this->senatorsHelper->getPartyNames($senator_term);
+        foreach ($parties as $value) {
+          $party[] = $value;
+        }
+
+        $location = $this->helper->getMicrositeDistrictAlias($senator_term);
+
+        // Senator microsite link.
+        $senator_link = \Drupal::service('nys_senators.microsites')
+          ->getMicrosite($senator_term);
+
+        $form['#attached']['library'][] = 'nysenate_theme/nysenate-user-profile';
+        $form['result']['#markup'] = '
+          <div class="c-login">
+            <div class="c-login-left">
+              <div class="nys-senator--thumb">
+                <img src="'. $image .'" alt="Senator ' . $senator_name . ' avatar"/>
+              </div>
+              <ul class="c-senator--info">
+                <li>Your Senator</li>
+                <li>' . $senator_name . '</li>
+                <li>' . $party[0] . '</li>
+                <li>
+                  NY Senate District ' . $district . ' ' .
+                  ($location ? '(<a href="' . $location . '">Map</a>)' : '') . '
+                </li>
+              </ul>
+            </div>
+            <a class="c-msg-senator icon-before__contact" href="'. $senator_link .'/contact">Message Senator</a>
+          </div>';
+          // dump($form['result']['#markup']);die;
+      }
+      else {
+        // Set error message.
+        // dump($this);
+        $this->messenger->addError('A district assignment could not be made.  Please verify the address.');
+      }
+      // $form['result']['#markup'] = $district
+      //       ? '<h3>This address belongs to district ' . $district . '</h3>'
+      //       : 'A district assignment could not be made.  Please verify the address.';
     }
 
     return $form;

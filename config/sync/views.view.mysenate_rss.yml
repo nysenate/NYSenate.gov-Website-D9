@@ -233,8 +233,8 @@ display:
           label: ''
           exclude: false
           alter:
-            alter_text: false
-            text: ''
+            alter_text: true
+            text: '{{ field_date_range__value|date("Y-m-d H:i:s", "America/New_York") }}'
             make_link: false
             path: ''
             absolute: false
@@ -275,7 +275,7 @@ display:
           type: daterange_custom
           settings:
             timezone_override: ''
-            date_format: 'm-d-Y H:i:s'
+            date_format: 'Y-m-d H:i:s'
             separator: '-'
           group_column: value
           group_columns: {  }
@@ -376,7 +376,21 @@ display:
         type: tag
         options: {  }
       empty: {  }
-      sorts: {  }
+      sorts:
+        field_date_range_value:
+          id: field_date_range_value
+          table: node__field_date_range
+          field: field_date_range_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: datetime
+          order: ASC
+          expose:
+            label: ''
+            field_identifier: ''
+          exposed: false
+          granularity: second
       arguments: {  }
       filters:
         status:

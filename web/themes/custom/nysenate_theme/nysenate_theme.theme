@@ -5,7 +5,6 @@
  * Functions to support theming in the rain_theme theme.
  */
 
-use Drupal\address\Plugin\Field\FieldType\AddressItem;
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Html;
@@ -1474,67 +1473,6 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
 
     $variables['cta_url'] = $aliased_path . '/newsroom';
     $variables['items'] = $items;
-  }
-
-  // Events Landing.
-  elseif ($view->id() == 'senator_microsite_content' && $view->current_display == 'microsite_events_landing') {
-    $items = [];
-    foreach ($view->result as $row) {
-      /** @var \Drupal\node\Entity\Node $node */
-      $node = $row->_entity;
-      $start_date = NULL;
-      $end_date = NULL;
-      if ($node->hasField('field_date_range') && !$node->get('field_date_range')->isEmpty()) {
-        $start_date = $node->get('field_date_range')->getValue()[0]['value'];
-        $end_date = $node->get('field_date_range')->getValue()[0]['end_value'];
-      }
-      $states = \Drupal::service('address.subdivision_repository')->getList(['US']);
-
-      $address = '';
-      $location_url = '';
-      $location_name = '';
-      /** @var Drupal\address\Plugin\Field\FieldType\AddressItem $field_location */
-      $field_location = ($node->hasField('field_location') && !$node->get('field_location')->isEmpty()) ? $node->get('field_location')->first() : '';
-      if ($field_location instanceof AddressItem) {
-        $location_name = $field_location->getOrganization() ?? '';
-
-        if ($field_location->getAddressLine1()) {
-          $address = $field_location->getAddressLine1() . '<br>';
-        }
-
-        if ($field_location->getLocality()) {
-          $address .= $field_location->getLocality() . ', ';
-        }
-
-        if ($field_location->getAdministrativeArea()) {
-          $address .= $states[$field_location->getAdministrativeArea()] . ' ';
-        }
-
-        if ($field_location->getPostalCode()) {
-          $address .= $field_location->getPostalCode();
-        }
-      }
-
-      if (!empty($address)) {
-        $location_url = str_replace('<br>', ' ', $address);
-        $location_url = 'http://maps.google.com/?q=' . urlencode($location_url);
-      }
-
-      $items[] = [
-        'event_date' => !empty($start_date) ? \Drupal::service('date.formatter')->format(strtotime($start_date), '', 'd') : '',
-        'event_month' => !empty($start_date) ? \Drupal::service('date.formatter')->format(strtotime($start_date), '', 'M') : '',
-        'event_url' => $node->toUrl()->toString(),
-        'event_name' => $node->getTitle(),
-        'event_location_url' => $location_url,
-        'event_location_name' => $location_name,
-        'event_address' => $address,
-        'event_time_start' => !empty($start_date) ? \Drupal::service('date.formatter')->format(strtotime($start_date), '', 'g:i A') : '',
-        'event_time_end' => !empty($end_date) ? \Drupal::service('date.formatter')->format(strtotime($end_date), '', 'g:i A') : '',
-      ];
-
-      $variables['cta_url'] = $aliased_path . '/calendar';
-      $variables['items'] = $items;
-    }
   }
 
   // Legislation Landing.

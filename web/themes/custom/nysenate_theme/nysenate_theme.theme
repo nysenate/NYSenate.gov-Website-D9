@@ -1453,6 +1453,7 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
       }
 
       $news_image = NULL;
+      $video_image = NULL;
       if ($node->hasField('field_image_main') && !$node->get('field_image_main')->isEmpty()) {
         $media = !empty($node->field_image_main->target_id) ? $media_storage->load($node->field_image_main->target_id) : NULL;
         if (!empty($media)) {

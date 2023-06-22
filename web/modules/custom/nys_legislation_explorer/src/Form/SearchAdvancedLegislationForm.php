@@ -225,7 +225,7 @@ class SearchAdvancedLegislationForm extends FormBase {
         'bill' => t('Bills'),
         'resolution' => t('Resolutions'),
         'meeting' => t('Committee Meeting Agendas'),
-        'session' => t('Session Calendars'),
+        'event' => t('Session Calendars'),
         'floor' => t('Session Transcripts'),
         'public_hearing' => t('Public Hearing Transcripts'),
       ],
@@ -289,7 +289,7 @@ class SearchAdvancedLegislationForm extends FormBase {
         'visible' => [
           'select[name="type"]' => [
             ['value' => 'meeting'],
-            ['value' => 'session'],
+            ['value' => 'event'],
             ['value' => 'floor'],
             ['value' => 'public_hearing'],
           ],
@@ -309,7 +309,7 @@ class SearchAdvancedLegislationForm extends FormBase {
         'visible' => [
           'select[name="type"]' => [
             ['value' => 'meeting'],
-            ['value' => 'session'],
+            ['value' => 'event'],
             ['value' => 'floor'],
             ['value' => 'public_hearing'],
           ],
@@ -497,7 +497,7 @@ class SearchAdvancedLegislationForm extends FormBase {
         ];
         break;
 
-      case 'session':
+      case 'event':
         $params = [
           'type' => $values['type'] ?: '',
           'date' => $date_range ?: '',

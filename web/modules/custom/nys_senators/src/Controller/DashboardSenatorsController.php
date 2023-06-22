@@ -31,16 +31,18 @@ class DashboardSenatorsController extends ControllerBase {
     foreach ($to_add as $perm => $field) {
       if (UsersHelper::{$perm}($user)) {
         $senators = array_merge(
-          $senators,
-          $user->{$field}->referencedEntities() ?? []
-        );
+              $senators,
+              $user->{$field}->referencedEntities() ?? []
+          );
       }
     }
     SenatorsHelper::sortByName($senators);
 
     $content = [];
     $viewer = $this->entityTypeManager()->getViewBuilder('taxonomy_term');
-    /** @var \Drupal\taxonomy\Entity\Term $senator */
+    /**
+     * @var \Drupal\taxonomy\Entity\Term $senator
+     */
     foreach ($senators as $senator) {
       $content['senator_' . $senator->id()] = [
         '#attributes' => ['class' => ['senator_management_link']],

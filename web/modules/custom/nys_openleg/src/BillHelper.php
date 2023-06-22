@@ -46,17 +46,17 @@ class BillHelper {
   public static function findSenatorsByMemberInfo(array $items): array {
     $ret = [];
     $member_ids = array_map(
-      function ($v) {
-        return $v->memberId ?? '';
-      },
-      $items
-    );
+          function ($v) {
+              return $v->memberId ?? '';
+          },
+          $items
+      );
     $shortnames = array_map(
-      function ($v) {
-        return $v->shortName ?? '';
-      },
-      $items
-    );
+          function ($v) {
+              return $v->shortName ?? '';
+          },
+          $items
+      );
     if (count($member_ids) || count($shortnames)) {
       try {
         $query = \Drupal::entityQuery('taxonomy_term');

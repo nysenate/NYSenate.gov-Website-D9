@@ -145,8 +145,8 @@ class SageLogger {
     // Time is always now. Fields are limited to the ones known in $fields.
     // The "optional" fields receive a sane default if not present.
     $data = ['timestamp' => time(), 'uid' => $this->currentUser->id()]
-      + array_intersect_key($data, static::$fields)
-      + static::getDefaults();
+        + array_intersect_key($data, static::$fields)
+        + static::getDefaults();
 
     // Encode all the fields that may hold objects or arrays.
     $encode = ['params_rcvd', 'environ', 'args', 'response', 'short_response'];
@@ -161,11 +161,11 @@ class SageLogger {
    */
   public static function getDefaults(): array {
     return array_filter(
-      static::$fields,
-      function ($v) {
-        return !is_null($v);
-      }
-    );
+          static::$fields,
+          function ($v) {
+              return !is_null($v);
+          }
+      );
   }
 
   /**

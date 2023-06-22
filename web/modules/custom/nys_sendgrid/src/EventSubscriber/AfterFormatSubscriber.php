@@ -2,25 +2,25 @@
 
 namespace Drupal\nys_sendgrid\EventSubscriber;
 
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Config\ImmutableConfig;
 use Drupal\Core\Logger\LoggerChannelTrait;
 use Drupal\Core\Messenger\MessengerTrait;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\Core\Config\ConfigFactory;
-use Drupal\Core\Config\ImmutableConfig;
-use Drupal\nys_sendgrid\Events;
-use Drupal\nys_sendgrid\TemplatesManager;
 use Drupal\nys_sendgrid\Event\AfterFormatEvent;
+use Drupal\nys_sendgrid\Events;
 use Drupal\nys_sendgrid\Helper;
+use Drupal\nys_sendgrid\TemplatesManager;
 use Psr\Log\LoggerInterface;
-use SendGrid\Mail\Mail;
-use SendGrid\Mail\TemplateId;
 use SendGrid\Mail\ClickTracking;
 use SendGrid\Mail\Ganalytics;
+use SendGrid\Mail\Mail;
 use SendGrid\Mail\MimeType;
 use SendGrid\Mail\OpenTracking;
 use SendGrid\Mail\Subject;
+use SendGrid\Mail\TemplateId;
 use SendGrid\Mail\TrackingSettings;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Subscriber for nys_sendgrid after.format event.
@@ -74,8 +74,8 @@ class AfterFormatSubscriber implements EventSubscriberInterface {
       // Get a reference to the template.
       $template_id = $sgm->getTemplateId();
       $template_id = ($template_id instanceof TemplateId)
-        ? $template_id->getTemplateId()
-        : '';
+            ? $template_id->getTemplateId()
+            : '';
       $template = TemplatesManager::getTemplate($template_id);
 
       // Add the site substitutions, if configured.
@@ -173,8 +173,8 @@ class AfterFormatSubscriber implements EventSubscriberInterface {
         // Get the personalized subject, or the global subject.
         $subject = $person->getSubject() ?: $g_subject;
         $subj_content = ($subject instanceof Subject)
-          ? $subject->getSubject()
-          : '';
+                ? $subject->getSubject()
+                : '';
 
         // Add the body/subject substitutions.
         $person->addSubstitution($body_token, $body_content);
@@ -214,11 +214,11 @@ class AfterFormatSubscriber implements EventSubscriberInterface {
 
       // Prepare Track Settings Object.
       $alert_tracking = new TrackingSettings(
-        $click_tracking,
-        $open_tracking,
-        NULL,
-        $g_analytics
-      );
+            $click_tracking,
+            $open_tracking,
+            NULL,
+            $g_analytics
+        );
 
       // Add the tracking.
       $this->getMail($event)->setTrackingSettings($alert_tracking);

@@ -2,14 +2,6 @@
 
 namespace Drupal\nys_sendgrid\Plugin\Mail;
 
-use Drupal\nys_sendgrid\Event\AfterFormatEvent;
-use Drupal\nys_sendgrid\Event\AfterSendEvent;
-use Drupal\nys_sendgrid\Events;
-use Drupal\nys_sendgrid\Helper;
-use Drupal\nys_sendgrid\TemplatesManager;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Extension\ModuleHandler;
 use Drupal\Core\Logger\LoggerChannelTrait;
@@ -17,11 +9,19 @@ use Drupal\Core\Mail\MailInterface;
 use Drupal\Core\Messenger\MessengerTrait;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\nys_sendgrid\Event\AfterFormatEvent;
+use Drupal\nys_sendgrid\Event\AfterSendEvent;
+use Drupal\nys_sendgrid\Events;
+use Drupal\nys_sendgrid\Helper;
+use Drupal\nys_sendgrid\TemplatesManager;
 use Drupal\reroute_email\Constants\RerouteEmailConstants;
-use SendGrid\Mail\Mail;
+use Psr\Log\LoggerInterface;
 use SendGrid\Mail\From;
+use SendGrid\Mail\Mail;
 use SendGrid\Mail\MimeType;
 use SendGrid\Mail\To;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Defines a Drupal mail plugin leveraging the Sendgrid API.
@@ -151,11 +151,11 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
-      $container->get('nys_sendgrid_client'),
-      $container->get('module_handler'),
-      $container->get('config.factory'),
-      $container->get('event_dispatcher')
-    );
+          $container->get('nys_sendgrid_client'),
+          $container->get('module_handler'),
+          $container->get('config.factory'),
+          $container->get('event_dispatcher')
+      );
   }
 
   /**
@@ -246,7 +246,7 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
     // Check if template assignment is suppressed.  Suppression could be in
     // the message params (preferred), or the global setting.
     $suppressed = ($this->message['params']['suppress_template'] ?? FALSE)
-      || ($this->localConfig->get('suppress_template') ?? FALSE);
+        || ($this->localConfig->get('suppress_template') ?? FALSE);
 
     // Templates pre-assigned by the caller take precedence.  If no template,
     // and not suppressed, discover and assign a template.
@@ -281,10 +281,12 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
           $this->mailObj->setTemplateId($actual);
         }
         catch (\Throwable $e) {
-          $this->failSending('Email failed while assigning template (id=%id, actual=%actual)', [
-            'message' => $e->getMessage(),
-            '%actual' => $actual,
-          ]);
+          $this->failSending(
+                'Email failed while assigning template (id=%id, actual=%actual)', [
+                  'message' => $e->getMessage(),
+                  '%actual' => $actual,
+                ]
+            );
         }
       }
     }
@@ -351,33 +353,37 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
     if ($this->message['module'] ?? '') {
       // Check for suppression, which can be in config or message params.
       $suppressed = ($this->message['params']['suppress_categories'] ?? FALSE)
-        || $this->localConfig->get('suppress_categories');
+            || $this->localConfig->get('suppress_categories');
       if (!$suppressed) {
         // Get the list of current categories.
         $categories = array_map(
-          function ($v) {
-            return $v->getCategory();
-          },
-          $this->mailObj->getCategories() ?? []
-        );
+              function ($v) {
+                  return $v->getCategory();
+              },
+              $this->mailObj->getCategories() ?? []
+          );
 
         // Build which keys will be added.
-        $add = array_filter([
-          $this->message['module'] ?? '',
-          $this->message['key'] ?? '',
-          $this->message['id'] ?? '',
-        ]);
+        $add = array_filter(
+              [
+                $this->message['module'] ?? '',
+                $this->message['key'] ?? '',
+                $this->message['id'] ?? '',
+              ]
+          );
 
         // Categories must be unique; ensure no duplicates are added.
         try {
           $this->mailObj->addCategories(array_diff($add, $categories));
         }
         catch (\Throwable $e) {
-          $this->failSending('Email failed while validating categories (id=%id)', [
+          $this->failSending(
+          'Email failed while validating categories (id=%id)', [
             'message' => $e->getMessage(),
             'add' => $add,
             'categories' => $categories,
-          ]);
+          ]
+            );
         }
       }
     }
@@ -396,17 +402,20 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
       // If the preferred body is not populated, fallback to the alternate
       // style from D7 legacy.
       $body = ($this->message['body'] ?? [])
-        ?: ($this->message['params']['body'] ?? []);
+            ?: ($this->message['params']['body'] ?? []);
 
       // Typecast each body part to string so addContent() doesn't cry.
       if (!is_array($body)) {
         $body = [$body];
       }
-      $body = implode("\n\n",
-        array_map(function ($i) {
-          return (string) $i;
-        }, $body)
-      );
+      $body = implode(
+            "\n\n",
+            array_map(
+                function ($i) {
+                    return (string) $i;
+                }, $body
+            )
+        );
 
       // Use content type from params, or assume HTML email.
       $content_type = $this->message['params']['Content-Type'] ?? MimeType::HTML;
@@ -416,11 +425,13 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
         $this->mailObj->addContent($content_type, $body ?: 'blank content');
       }
       catch (\Throwable $e) {
-        $this->failSending('Email failed while validating body (id=%id, ct=%ct)', [
-          '%message' => $e->getMessage(),
-          '%body' => $body,
-          '%ct' => $content_type,
-        ]);
+        $this->failSending(
+          'Email failed while validating body (id=%id, ct=%ct)', [
+            '%message' => $e->getMessage(),
+            '%body' => $body,
+            '%ct' => $content_type,
+          ]
+          );
       }
     }
 
@@ -440,10 +451,12 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
         $this->mailObj->setGlobalSubject($subject);
       }
       catch (\Throwable $e) {
-        $this->failSending('Email failed while validating subject (id=%id, subj=%subj)', [
-          'message' => $e->getMessage(),
-          '%subj' => $subject,
-        ]);
+        $this->failSending(
+              'Email failed while validating subject (id=%id, subj=%subj)', [
+                'message' => $e->getMessage(),
+                '%subj' => $subject,
+              ]
+          );
       }
     }
 
@@ -489,17 +502,19 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
               elseif (!$recipient->getName()) {
                 $original_email = $this->message['headers']['X-Rerouted-Original-to'] ?? '';
                 $new_name = 'reroute_email ' .
-                  ($original_email ? 'from ' . $original_email : '<unknown>');
+                                ($original_email ? 'from ' . $original_email : '<unknown>');
                 $recipient->setName($new_name);
               }
             }
           }
         }
         catch (\Throwable $e) {
-          $this->failSending('Email failed during rerouting attempt. (id=%id, dest=%dest)', [
-            'message' => $e->getMessage(),
-            '%dest' => $dest,
-          ]);
+          $this->failSending(
+                'Email failed during rerouting attempt. (id=%id, dest=%dest)', [
+                  'message' => $e->getMessage(),
+                  '%dest' => $dest,
+                ]
+            );
         }
       }
     }
@@ -535,10 +550,12 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
         $this->mailObj->addTo(new To($to_addr[0], $to_addr[1]));
       }
       catch (\Throwable $e) {
-        $this->failSending('Email failed due to poorly-formed "To" address (id=%id, addr=%addr)', [
-          'message' => $e->getMessage(),
-          '%addr' => $to_addr,
-        ]);
+        $this->failSending(
+              'Email failed due to poorly-formed "To" address (id=%id, addr=%addr)', [
+                'message' => $e->getMessage(),
+                '%addr' => $to_addr,
+              ]
+          );
       }
     }
 
@@ -553,10 +570,9 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
   protected function validateFrom(): self {
 
     // If a "From" address is not found, make one.
-    if (!(
-      ($this->mailObj->getFrom() instanceof From)
-      && $this->mailObj->getFrom()->getEmail()
-    )) {
+    if (!(($this->mailObj->getFrom() instanceof From)
+          && $this->mailObj->getFrom()->getEmail())
+      ) {
       // Parse the email address from the message.
       $full_from = $this->message['params']['from'] ?? $this->message['from'];
       $from_email = Helper::parseAddress($full_from);
@@ -566,10 +582,12 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
         $this->mailObj->setFrom(new From($from_email[0], $from_email[1]));
       }
       catch (\Throwable $e) {
-        $this->failSending('Email failed due to poorly-formed "From" address (id=%id, addr=%addr)', [
-          'message' => $e->getMessage(),
-          '%addr' => $from_email,
-        ]);
+        $this->failSending(
+              'Email failed due to poorly-formed "From" address (id=%id, addr=%addr)', [
+                'message' => $e->getMessage(),
+                '%addr' => $from_email,
+              ]
+          );
       }
     }
 

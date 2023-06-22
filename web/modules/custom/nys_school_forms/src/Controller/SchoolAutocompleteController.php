@@ -2,11 +2,11 @@
 
 namespace Drupal\nys_school_forms\Controller;
 
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Drupal\Component\Utility\Xss;
 
 /**
  * Defines a route controller for watches autocomplete form elements.
@@ -65,10 +65,11 @@ class SchoolAutocompleteController extends ControllerBase {
 
       default:
         $terms = $this->entityTypeManager->getStorage('taxonomy_term')->loadByProperties(
-          [
-            'vid' => 'school_form_type',
-            'name' => $form_type,
-          ]);
+              [
+                'vid' => 'school_form_type',
+                'name' => $form_type,
+              ]
+          );
         if ($terms !== NULL) {
           $term = reset($terms);
           $webform_id = $term->field_school_form->target_id;

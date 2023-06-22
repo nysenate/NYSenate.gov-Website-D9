@@ -25,10 +25,12 @@ class MigrationPluginAlterer {
    *   ID.
    */
   public static function alterMigrationPlugins(array &$definitions) {
-    $d7_definitions = array_filter($definitions, function (array $migration_plugin) {
-      $migration_tags = $migration_plugin['migration_tags'] ?? [];
-      return in_array('Drupal 7', $migration_tags, TRUE);
-    });
+    $d7_definitions = array_filter(
+          $definitions, function (array $migration_plugin) {
+              $migration_tags = $migration_plugin['migration_tags'] ?? [];
+              return in_array('Drupal 7', $migration_tags, TRUE);
+          }
+      );
     static::refineMigrationDependencies($d7_definitions);
     static::refineOptionallyDerivedMigrationDependencies($d7_definitions);
 
@@ -48,10 +50,12 @@ class MigrationPluginAlterer {
     // Location Migration creates "user", "node" or "taxonomy_term" derivatives
     // for migrations using "d7_entity_location" source only when the
     // corresponding location submodule is enabled.
-    $entity_location_migrations = array_filter($d7_definitions, function (array $migration_plugin) {
-      $migration_tags = $migration_plugin['migration_tags'] ?? [];
-      return in_array(LocationMigration::ENTITY_LOCATION_MIGRATION_TAG, $migration_tags, TRUE);
-    });
+    $entity_location_migrations = array_filter(
+          $d7_definitions, function (array $migration_plugin) {
+              $migration_tags = $migration_plugin['migration_tags'] ?? [];
+              return in_array(LocationMigration::ENTITY_LOCATION_MIGRATION_TAG, $migration_tags, TRUE);
+          }
+      );
     $entity_location_migrations_per_type_and_bundle = [];
     foreach ($entity_location_migrations as $entity_location_migration_plugin_definition) {
       $entity_type_id = $entity_location_migration_plugin_definition['source']['entity_type'];
@@ -63,36 +67,44 @@ class MigrationPluginAlterer {
     }
 
     $node_migration_ids = array_keys(
-      array_filter($d7_definitions, function (array $migration_plugin) {
-        $migration_tags = $migration_plugin['migration_tags'] ?? [];
-        $destination_plugin = $migration_plugin['destination']['plugin'] ?? NULL;
-        return $destination_plugin &&
-          !in_array(LocationMigration::LOCATION_MIGRATION_ALTER_DONE, $migration_tags, TRUE) &&
-          in_array($destination_plugin, [
-            'entity:node',
-            'entity_revision:node',
-            'entity_complete:node',
-          ], TRUE);
-      })
-    );
+          array_filter(
+              $d7_definitions, function (array $migration_plugin) {
+                  $migration_tags = $migration_plugin['migration_tags'] ?? [];
+                  $destination_plugin = $migration_plugin['destination']['plugin'] ?? NULL;
+                  return $destination_plugin &&
+                  !in_array(LocationMigration::LOCATION_MIGRATION_ALTER_DONE, $migration_tags, TRUE) &&
+                  in_array(
+                      $destination_plugin, [
+                        'entity:node',
+                        'entity_revision:node',
+                        'entity_complete:node',
+                      ], TRUE
+                  );
+              }
+          )
+      );
     $taxonomy_migration_ids = array_keys(
-      array_filter($d7_definitions, function (array $migration_plugin) {
-        $migration_tags = $migration_plugin['migration_tags'] ?? [];
-        $destination_plugin = $migration_plugin['destination']['plugin'] ?? NULL;
-        return $destination_plugin &&
-          !in_array(LocationMigration::LOCATION_MIGRATION_ALTER_DONE, $migration_tags, TRUE) &&
-          $destination_plugin === 'entity:taxonomy_term';
-      })
-    );
+          array_filter(
+              $d7_definitions, function (array $migration_plugin) {
+                  $migration_tags = $migration_plugin['migration_tags'] ?? [];
+                  $destination_plugin = $migration_plugin['destination']['plugin'] ?? NULL;
+                  return $destination_plugin &&
+                  !in_array(LocationMigration::LOCATION_MIGRATION_ALTER_DONE, $migration_tags, TRUE) &&
+                  $destination_plugin === 'entity:taxonomy_term';
+              }
+          )
+      );
     $user_migration_ids = array_keys(
-      array_filter($d7_definitions, function (array $migration_plugin) {
-        $migration_tags = $migration_plugin['migration_tags'] ?? [];
-        $destination_plugin = $migration_plugin['destination']['plugin'] ?? NULL;
-        return $destination_plugin &&
-          !in_array(LocationMigration::LOCATION_MIGRATION_ALTER_DONE, $migration_tags, TRUE) &&
-          $destination_plugin === 'entity:user';
-      })
-    );
+          array_filter(
+              $d7_definitions, function (array $migration_plugin) {
+                  $migration_tags = $migration_plugin['migration_tags'] ?? [];
+                  $destination_plugin = $migration_plugin['destination']['plugin'] ?? NULL;
+                  return $destination_plugin &&
+                  !in_array(LocationMigration::LOCATION_MIGRATION_ALTER_DONE, $migration_tags, TRUE) &&
+                  $destination_plugin === 'entity:user';
+              }
+          )
+      );
 
     $node_migration_ids_per_bundle = [];
     foreach ($node_migration_ids as $node_migration_id) {
@@ -132,11 +144,11 @@ class MigrationPluginAlterer {
           else {
             foreach ($entity_location_migrations_per_type_and_bundle['node'] as $node_type) {
               $migration_ids_to_extend = array_unique(
-                array_merge(
-                  $migration_ids_to_extend,
-                  $node_migration_ids_per_bundle[$node_type]
-                )
-              );
+                    array_merge(
+                        $migration_ids_to_extend,
+                        $node_migration_ids_per_bundle[$node_type]
+                    )
+                );
             }
           }
           break;
@@ -148,11 +160,11 @@ class MigrationPluginAlterer {
           else {
             foreach ($entity_location_migrations_per_type_and_bundle['taxonomy_term'] as $vocabulary_id) {
               $migration_ids_to_extend = array_unique(
-                array_merge(
-                  $migration_ids_to_extend,
-                  $taxonomy_migration_ids_per_bundle[$vocabulary_id]
-                )
-              );
+                    array_merge(
+                        $migration_ids_to_extend,
+                        $taxonomy_migration_ids_per_bundle[$vocabulary_id]
+                    )
+                );
             }
           }
           break;
@@ -165,15 +177,15 @@ class MigrationPluginAlterer {
       if (!empty($migration_ids_to_extend)) {
         $preexisting_ids = $entity_migration_plugin_ids_with_entity_location[$entity_type_id] ?? [];
         $entity_migration_plugin_ids_with_entity_location[$entity_type_id] = array_unique(
-          array_merge($preexisting_ids, $migration_ids_to_extend)
-        );
+              array_merge($preexisting_ids, $migration_ids_to_extend)
+          );
       }
       foreach ($migration_ids_to_extend as $migration_id_to_extend) {
         $definition_tags = $d7_definitions[$migration_id_to_extend]['migration_tags'] ?? [];
         $d7_definitions[$migration_id_to_extend]['migration_dependencies']['required'][] = $entity_location_migration_plugin_id;
         $d7_definitions[$migration_id_to_extend]['migration_tags'] = array_unique(
-          array_merge($definition_tags, [LocationMigration::LOCATION_MIGRATION_ALTER_DONE])
-        );
+              array_merge($definition_tags, [LocationMigration::LOCATION_MIGRATION_ALTER_DONE])
+          );
       }
     }
 
@@ -242,15 +254,19 @@ class MigrationPluginAlterer {
    *   their ID.
    */
   public static function refineOptionallyDerivedMigrationDependencies(array &$d7_definitions) {
-    $entity_location_migrations = array_filter($d7_definitions, function (array $migration_plugin) {
-      $migration_tags = $migration_plugin['migration_tags'] ?? [];
-      return in_array(LocationMigration::ENTITY_LOCATION_MIGRATION_TAG, $migration_tags, TRUE) ||
-        in_array(LocationMigration::FIELD_LOCATION_MIGRATION_TAG, $migration_tags, TRUE);
-    });
+    $entity_location_migrations = array_filter(
+          $d7_definitions, function (array $migration_plugin) {
+              $migration_tags = $migration_plugin['migration_tags'] ?? [];
+              return in_array(LocationMigration::ENTITY_LOCATION_MIGRATION_TAG, $migration_tags, TRUE) ||
+              in_array(LocationMigration::FIELD_LOCATION_MIGRATION_TAG, $migration_tags, TRUE);
+          }
+      );
 
-    $node_type_migrations = array_filter($d7_definitions, function (array $migration_plugin) {
-      return $migration_plugin['id'] === 'd7_node_type';
-    });
+    $node_type_migrations = array_filter(
+          $d7_definitions, function (array $migration_plugin) {
+              return $migration_plugin['id'] === 'd7_node_type';
+          }
+      );
     $node_type_migrations_per_bundle = [];
     foreach ($node_type_migrations as $id => $definition) {
       if (!empty($definition['source']['node_type'])) {
@@ -258,9 +274,11 @@ class MigrationPluginAlterer {
       }
     }
 
-    $vocabulary_migrations = array_filter($d7_definitions, function (array $migration_plugin) {
-      return $migration_plugin['id'] === 'd7_taxonomy_vocabulary';
-    });
+    $vocabulary_migrations = array_filter(
+          $d7_definitions, function (array $migration_plugin) {
+              return $migration_plugin['id'] === 'd7_taxonomy_vocabulary';
+          }
+      );
     $vocabulary_migrations_per_bundle = [];
     foreach ($vocabulary_migrations as $id => $definition) {
       if (!empty($definition['source']['bundle'])) {
@@ -270,9 +288,11 @@ class MigrationPluginAlterer {
 
     // View mode migrations are a bit special. It is possible that e.g. user
     // does not have related view mode migrations.
-    $view_mode_migrations = array_filter($d7_definitions, function (array $migration_plugin) {
-      return $migration_plugin['id'] === 'd7_view_modes' && !empty($migration_plugin['source']['entity_type']);
-    });
+    $view_mode_migrations = array_filter(
+          $d7_definitions, function (array $migration_plugin) {
+              return $migration_plugin['id'] === 'd7_view_modes' && !empty($migration_plugin['source']['entity_type']);
+          }
+      );
     $view_mode_migrations_per_entity_type = [];
     foreach ($view_mode_migrations as $id => $definition) {
       $view_mode_migrations_per_entity_type[$definition['source']['entity_type']][] = $id;
@@ -314,11 +334,11 @@ class MigrationPluginAlterer {
             if (!empty($node_type_migrations_per_bundle[$bundle])) {
               unset($original_dependencies[$dependency_key]);
               $new_dependencies = array_unique(
-                array_merge(
-                  $new_dependencies,
-                  $node_type_migrations_per_bundle[$bundle]
-                )
-              );
+                    array_merge(
+                        $new_dependencies,
+                        $node_type_migrations_per_bundle[$bundle]
+                    )
+                );
             }
             break;
 
@@ -326,11 +346,11 @@ class MigrationPluginAlterer {
             if (!empty($vocabulary_migrations_per_bundle[$bundle])) {
               unset($original_dependencies[$dependency_key]);
               $new_dependencies = array_unique(
-                array_merge(
-                  $new_dependencies,
-                  $vocabulary_migrations_per_bundle[$bundle]
-                )
-              );
+                    array_merge(
+                        $new_dependencies,
+                        $vocabulary_migrations_per_bundle[$bundle]
+                    )
+                );
             }
             break;
 
@@ -341,22 +361,22 @@ class MigrationPluginAlterer {
             elseif (!empty($view_mode_migrations_per_entity_type[$entity_type])) {
               unset($original_dependencies[$dependency_key]);
               $new_dependencies = array_unique(
-                array_merge(
-                  $new_dependencies,
-                  $view_mode_migrations_per_entity_type[$entity_type]
-                )
-              );
+                    array_merge(
+                        $new_dependencies,
+                        $view_mode_migrations_per_entity_type[$entity_type]
+                    )
+                );
             }
             break;
         }
       }
 
       $d7_definitions[$elm_plugin_id]['migration_dependencies']['required'] = array_unique(
-        array_merge(
-          $original_dependencies,
-          $new_dependencies
-        )
-      );
+            array_merge(
+                $original_dependencies,
+                $new_dependencies
+            )
+        );
     }
   }
 

@@ -42,14 +42,14 @@ class ManagementPageOverview extends ManagementPageBase {
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): ManagementPageInterface {
     return new static(
-      $container->get('entity_type.manager'),
-      $container->get('database'),
-      $container->get('nys_senators.senators_helper'),
-      $container->get('nys_senators.dashboard.stats_manager'),
-      $plugin_id,
-      $plugin_definition,
-      $configuration
-    );
+          $container->get('entity_type.manager'),
+          $container->get('database'),
+          $container->get('nys_senators.senators_helper'),
+          $container->get('nys_senators.dashboard.stats_manager'),
+          $plugin_id,
+          $plugin_definition,
+          $configuration
+      );
   }
 
   /**
@@ -71,8 +71,8 @@ class ManagementPageOverview extends ManagementPageBase {
       $session = NULL;
     }
     $active_list = $session
-      ? views_embed_view('upcoming_legislation', 'session_active', $session->id())
-      : ['#markup' => 'No session was found for ' . $date];
+        ? views_embed_view('upcoming_legislation', 'session_active', $session->id())
+        : ['#markup' => 'No session was found for ' . $date];
     $active_list['#attributes']['class'][] = 'management-overview-active-list';
 
     return [

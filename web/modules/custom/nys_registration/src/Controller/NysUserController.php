@@ -32,7 +32,9 @@ class NysUserController extends UserController {
    *   If $uid is for a blocked user or invalid user ID.
    */
   public function resetPassLogin($uid, $timestamp, $hash, Request $request) {
-    /** @var \Drupal\user\UserInterface $user */
+    /**
+     * @var \Drupal\user\UserInterface $user
+     */
     $user = $this->userStorage->load($uid);
     if ($redirect = $this->determineErrorRedirect($user, $timestamp, $hash)) {
       return $redirect;
@@ -50,11 +52,13 @@ class NysUserController extends UserController {
     $this->flood->clear('user.http_login', $identifier);
 
     user_login_finalize($user);
-    $this->logger->notice('User %name used one-time login link at time %timestamp.',
-      [
-        '%name' => $user->getDisplayName(),
-        '%timestamp' => $timestamp,
-      ]);
+    $this->logger->notice(
+          'User %name used one-time login link at time %timestamp.',
+          [
+            '%name' => $user->getDisplayName(),
+            '%timestamp' => $timestamp,
+          ]
+      );
     $this->messenger()->addStatus($this->t('You have just used your one-time login link. It is no longer necessary to use this link to log in. Please set your password.'));
     // Let the user's password be changed without the current password
     // check.
@@ -63,13 +67,13 @@ class NysUserController extends UserController {
     // Clear any flood events for this user.
     $this->flood->clear('user.password_request_user', $uid);
     return $this->redirect(
-      'nys_registration.password_reset',
-      ['user' => $user->id()],
-      [
-        'query' => ['pass-reset-token' => $token],
-        'absolute' => TRUE,
-      ]
-    );
+          'nys_registration.password_reset',
+          ['user' => $user->id()],
+          [
+            'query' => ['pass-reset-token' => $token],
+            'absolute' => TRUE,
+          ]
+      );
   }
 
 }

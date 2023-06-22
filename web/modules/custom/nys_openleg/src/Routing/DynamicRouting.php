@@ -4,10 +4,10 @@ namespace Drupal\nys_openleg\Routing;
 
 use Drupal\Core\Config\Config;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\nys_openleg\StatuteHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
-use Drupal\nys_openleg\StatuteHelper;
 
 /**
  * Provides for dynamic route generation for Openleg.
@@ -34,8 +34,10 @@ class DynamicRouting implements ContainerInjectionInterface {
    * @return static
    */
   public static function create(ContainerInterface $container): DynamicRouting {
-    return new static($container->get('config.factory')
-      ->getEditable('nys_openleg.settings'));
+    return new static(
+          $container->get('config.factory')
+            ->getEditable('nys_openleg.settings')
+      );
   }
 
   /**

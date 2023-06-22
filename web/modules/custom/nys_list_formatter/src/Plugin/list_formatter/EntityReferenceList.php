@@ -2,12 +2,12 @@
 
 namespace Drupal\nys_list_formatter\Plugin\list_formatter;
 
-use Drupal\Core\Field\FieldFilteredMarkup;
-use Drupal\nys_list_formatter\Plugin\ListFormatterListInterface;
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterInterface;
-use Drupal\Component\Utility\Html;
+use Drupal\nys_list_formatter\Plugin\ListFormatterListInterface;
 
 /**
  * Plugin implementation of the 'entity_reference' list formatter.

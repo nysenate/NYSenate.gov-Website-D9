@@ -33,10 +33,10 @@ trait LocationMigrationAssertionsTrait {
       'status' => [['value' => 1]],
       'name' => [['value' => 'Taxonomy Term 1']],
       'description' => [
-        [
-          'value' => 'Description of Taxonomy Term 1',
-          'format' => 'plain_text',
-        ],
+      [
+        'value' => 'Description of Taxonomy Term 1',
+        'format' => 'plain_text',
+      ],
       ],
       'weight' => [['value' => 0]],
       'parent' => [['target_id' => 0]],
@@ -210,11 +210,11 @@ trait LocationMigrationAssertionsTrait {
       'uid' => [['target_id' => 1]],
       'title' => [['value' => 'Node title with "Location node"']],
       'body' => [
-        [
-          'value' => 'Integer urna nisi, pellentesque id justo ac, vulputate mollis neque. Proin sagittis dignissim eros, et mattis sapien volutpat ut.',
-          'summary' => '',
-          'format' => 'plain_text',
-        ],
+      [
+        'value' => 'Integer urna nisi, pellentesque id justo ac, vulputate mollis neque. Proin sagittis dignissim eros, et mattis sapien volutpat ut.',
+        'summary' => '',
+        'format' => 'plain_text',
+      ],
       ],
     ];
     if ($expected_features['entity']) {
@@ -278,38 +278,38 @@ trait LocationMigrationAssertionsTrait {
       'uid' => [['target_id' => 1]],
       'title' => [['value' => 'Node with "Location field"']],
       'body' => [
-        [
-          'value' => 'Ut eu nibh placerat, condimentum dui eget, efficitur tortor. Duis quis sem elit. Aliquam hendrerit tortor est, ut interdum ante euismod eu.',
-          'summary' => '',
-          'format' => 'plain_text',
-        ],
+      [
+        'value' => 'Ut eu nibh placerat, condimentum dui eget, efficitur tortor. Duis quis sem elit. Aliquam hendrerit tortor est, ut interdum ante euismod eu.',
+        'summary' => '',
+        'format' => 'plain_text',
+      ],
       ],
       'field_location' => [
-        [
-          'langcode' => NULL,
-          'country_code' => 'GN',
-          'administrative_area' => '',
-          'locality' => '',
-          'dependent_locality' => NULL,
-          'postal_code' => '',
-          'sorting_code' => '',
-          'address_line1' => '',
-          'address_line2' => '',
-          'organization' => 'Gulf of Guinea',
-          'given_name' => NULL,
-          'additional_name' => NULL,
-          'family_name' => NULL,
-        ],
+      [
+        'langcode' => NULL,
+        'country_code' => 'GN',
+        'administrative_area' => '',
+        'locality' => '',
+        'dependent_locality' => NULL,
+        'postal_code' => '',
+        'sorting_code' => '',
+        'address_line1' => '',
+        'address_line2' => '',
+        'organization' => 'Gulf of Guinea',
+        'given_name' => NULL,
+        'additional_name' => NULL,
+        'family_name' => NULL,
+      ],
       ],
       'field_location_geoloc' => [
-        [
-          'lat' => $destination_is_sqlite ? '0.0' : '0',
-          'lng' => $destination_is_sqlite ? '0.0' : '0',
-          'lat_sin' => 0.0,
-          'lat_cos' => 1.0,
-          'lng_rad' => 0.0,
-          'value' => $destination_is_sqlite ? '0.0, 0.0' : '0, 0',
-        ],
+      [
+        'lat' => $destination_is_sqlite ? '0.0' : '0',
+        'lng' => $destination_is_sqlite ? '0.0' : '0',
+        'lat_sin' => 0.0,
+        'lat_cos' => 1.0,
+        'lng_rad' => 0.0,
+        'value' => $destination_is_sqlite ? '0.0, 0.0' : '0, 0',
+      ],
       ],
     ];
 
@@ -352,11 +352,11 @@ trait LocationMigrationAssertionsTrait {
       'uid' => [['target_id' => 1]],
       'title' => [['value' => 'Node with multiple entity- and field locations']],
       'body' => [
-        [
-          'value' => 'Aenean in nibh congue, vulputate lectus vel, facilisis arcu.',
-          'summary' => '',
-          'format' => 'plain_text',
-        ],
+      [
+        'value' => 'Aenean in nibh congue, vulputate lectus vel, facilisis arcu.',
+        'summary' => '',
+        'format' => 'plain_text',
+      ],
       ],
       'field_location_multi' => [
         0 => [
@@ -620,18 +620,18 @@ trait LocationMigrationAssertionsTrait {
     $entity_type_id = $entity->getEntityTypeId();
     $exploded = explode('_', $entity_type_id);
     $prop_prefix = count($exploded) > 1
-      ? $exploded[0] . implode('', array_map('ucfirst', array_slice($exploded, 1)))
-      : $entity_type_id;
+        ? $exploded[0] . implode('', array_map('ucfirst', array_slice($exploded, 1)))
+        : $entity_type_id;
     $property_filter_preset_property = "{$prop_prefix}UnconcernedProperties";
     $entity_array = $entity->toArray();
     $unconcerned_properties = property_exists(get_class($this), $property_filter_preset_property)
-      ? $this->$property_filter_preset_property
-      : [
-        'uuid',
-        'langcode',
-        'dependencies',
-        '_core',
-      ];
+        ? $this->$property_filter_preset_property
+        : [
+          'uuid',
+          'langcode',
+          'dependencies',
+          '_core',
+        ];
 
     foreach ($unconcerned_properties as $item) {
       unset($entity_array[$item]);

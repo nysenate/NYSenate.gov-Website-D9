@@ -25,10 +25,12 @@ class Chapters extends SqlBase {
     ];
     $query = $this->select('node', 'n');
     $query->join('field_data_field_chapters', 'fc', 'fc.entity_id = n.nid');
-    $query->fields('n', [
-      'nid',
-      'title',
-    ])
+    $query->fields(
+          'n', [
+            'nid',
+            'title',
+          ]
+      )
       ->condition('bundle', $content_types, 'IN');
     $query->groupBy('n.nid');
     return $query;

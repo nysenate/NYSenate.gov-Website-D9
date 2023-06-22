@@ -2,10 +2,10 @@
 
 namespace Drupal\nys_school_forms\Controller;
 
-use Drupal\file\Entity\File;
 use Drupal\Core\Controller\ControllerBase;
-use Symfony\Component\HttpFoundation\Response;
+use Drupal\file\Entity\File;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Route controller for School Form submissions.
@@ -192,20 +192,22 @@ class SchoolFormsController extends ControllerBase {
     ];
     $results = $this->schoolFormsService->getResults($params);
     $handle = fopen('php://temp', 'w+');
-    fputcsv($handle, [
-      'Date submitted',
-      'Student\'s Name',
-      'Grade',
-      'Teacher',
-      'School Name',
-      'Street',
-      'City, State',
-      'Zip Code',
-      'School Phone',
-      'Senator',
-      'District Number',
-      'Student Submission',
-    ], ',');
+    fputcsv(
+          $handle, [
+            'Date submitted',
+            'Student\'s Name',
+            'Grade',
+            'Teacher',
+            'School Name',
+            'Street',
+            'City, State',
+            'Zip Code',
+            'School Phone',
+            'Senator',
+            'District Number',
+            'Student Submission',
+          ], ','
+      );
 
     foreach ($results as $result) {
       $file = File::load($result['student']['student_submission']);
@@ -246,7 +248,7 @@ class SchoolFormsController extends ControllerBase {
     $webformSubmissionStorage = $this->entityTypeManager->getStorage('webform_submission');
     $webform_type = match ($form_type) {
       'thankful' => 'school_form_thanksgiving',
-      'earth_day' => 'school_form_earth_day',
+            'earth_day' => 'school_form_earth_day',
     };
     // Query the last 5 webform submissions with webform ID = form type.
     $query = $webformSubmissionStorage->getQuery()

@@ -2,21 +2,21 @@
 
 namespace Drupal\nys_school_forms\Form;
 
-use Drupal\Core\Form\FormBase;
-use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Url;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Extension\ModuleHandler;
+use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormBuilder;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Pager\PagerManagerInterface;
 use Drupal\Core\Pager\PagerParametersInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\StreamWrapper\StreamWrapperManager;
+use Drupal\Core\Url;
+use Drupal\path_alias\AliasManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Drupal\Core\Form\FormBuilder;
-use Drupal\path_alias\AliasManagerInterface;
-use Drupal\Core\StreamWrapper\StreamWrapperManager;
-use Drupal\Core\Entity\EntityTypeManager;
-use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
  * Builds a Form for search school form submissions.
@@ -129,17 +129,18 @@ class SchoolFormSearchForm extends FormBase {
    *   Current route match.
    */
   public function __construct(
-    RequestStack $request,
-    ModuleHandler $moduleHandler,
-    Connection $database,
-    MessengerInterface $messenger,
-    PagerParametersInterface $pager_param,
-    PagerManagerInterface $pager_manager,
-    FormBuilder $form_builder,
-    AliasManagerInterface $alias_manager,
-    StreamWrapperManager $streamWrapperManager,
-    EntityTypeManager $entityTypeManager,
-    RouteMatchInterface $current_route_match) {
+        RequestStack $request,
+        ModuleHandler $moduleHandler,
+        Connection $database,
+        MessengerInterface $messenger,
+        PagerParametersInterface $pager_param,
+        PagerManagerInterface $pager_manager,
+        FormBuilder $form_builder,
+        AliasManagerInterface $alias_manager,
+        StreamWrapperManager $streamWrapperManager,
+        EntityTypeManager $entityTypeManager,
+        RouteMatchInterface $current_route_match
+    ) {
     $this->request = $request;
     $this->moduleHandler = $moduleHandler;
     $this->database = $database;
@@ -158,18 +159,18 @@ class SchoolFormSearchForm extends FormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('request_stack'),
-      $container->get('module_handler'),
-      $container->get('database'),
-      $container->get('messenger'),
-      $container->get('pager.parameters'),
-      $container->get('pager.manager'),
-      $container->get('form_builder'),
-      $container->get('path_alias.manager'),
-      $container->get('stream_wrapper_manager'),
-      $container->get('entity_type.manager'),
-      $container->get('current_route_match')
-    );
+          $container->get('request_stack'),
+          $container->get('module_handler'),
+          $container->get('database'),
+          $container->get('messenger'),
+          $container->get('pager.parameters'),
+          $container->get('pager.manager'),
+          $container->get('form_builder'),
+          $container->get('path_alias.manager'),
+          $container->get('stream_wrapper_manager'),
+          $container->get('entity_type.manager'),
+          $container->get('current_route_match')
+      );
   }
 
   /**
@@ -268,17 +269,19 @@ class SchoolFormSearchForm extends FormBase {
     $sort_order = $form_state->getValue('sort_order');
     $from_date = $form_state->getValue('from_date');
     $to_date = $form_state->getValue('to_date');
-    $url = Url::fromRoute($this->currentRouteMatch->getRouteName(), [], [
-      'query' => [
-        'senator' => $senator,
-        'school' => $school,
-        'teacher_name' => $teacher_name,
-        'from_date' => $from_date,
-        'to_date' => $to_date,
-        'sort_by' => $sort_by,
-        'sort_order' => $sort_order,
-      ],
-    ]);
+    $url = Url::fromRoute(
+          $this->currentRouteMatch->getRouteName(), [], [
+            'query' => [
+              'senator' => $senator,
+              'school' => $school,
+              'teacher_name' => $teacher_name,
+              'from_date' => $from_date,
+              'to_date' => $to_date,
+              'sort_by' => $sort_by,
+              'sort_order' => $sort_order,
+            ],
+          ]
+      );
     $form_state->setRedirectUrl($url);
   }
 

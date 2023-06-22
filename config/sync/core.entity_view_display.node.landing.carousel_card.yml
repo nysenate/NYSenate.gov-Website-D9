@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.carousel_card
+    - field.field.node.landing.field_block_instance
     - field.field.node.landing.field_date
     - field.field.node.landing.field_issues
     - field.field.node.landing.field_landing_blocks
@@ -29,6 +30,7 @@ content:
     weight: 2
     region: content
 hidden:
+  field_block_instance: true
   field_date: true
   field_exclude_title: true
   field_issues: true

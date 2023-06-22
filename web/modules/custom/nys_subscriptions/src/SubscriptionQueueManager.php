@@ -57,11 +57,11 @@ class SubscriptionQueueManager extends QueueDatabaseFactory implements Container
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('database'),
-      $container->get('event_dispatcher'),
-      $container->get('plugin.manager.mail'),
-      $container->get('language_manager')
-    );
+          $container->get('database'),
+          $container->get('event_dispatcher'),
+          $container->get('plugin.manager.mail'),
+          $container->get('language_manager')
+      );
   }
 
   /**
@@ -114,13 +114,13 @@ class SubscriptionQueueManager extends QueueDatabaseFactory implements Container
    */
   public function queueFactory(string $queue_name, string $queue_subject = ''): SubscriptionQueueInterface {
     return new SubscriptionQueue(
-      $queue_name,
-      $queue_subject,
-      $this->connection,
-      $this->dispatcher,
-      $this->mail,
-      $this->language
-    );
+          $queue_name,
+          $queue_subject,
+          $this->connection,
+          $this->dispatcher,
+          $this->mail,
+          $this->language
+      );
   }
 
 }

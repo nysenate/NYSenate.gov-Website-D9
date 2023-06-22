@@ -71,12 +71,16 @@ class Calendars extends ImportProcessorBase {
     // Try to attach the node id to the title.
     $bill_storage = $this->entityTypeManager->getStorage('node');
     if (count($bills)) {
-      $nodes = $bill_storage->loadByProperties([
-        'title' => array_keys($bills),
-        'type' => 'bill',
-      ]);
+      $nodes = $bill_storage->loadByProperties(
+            [
+              'title' => array_keys($bills),
+              'type' => 'bill',
+            ]
+        );
       foreach ($nodes as $nid => $node) {
-        /** @var \Drupal\node\Entity\Node $node */
+        /**
+         * @var \Drupal\node\Entity\Node $node
+         */
         $title = $node->get('title')->value;
         if (array_key_exists($title, $bills)) {
           $bills[$title]['nid'] = $nid;
@@ -112,11 +116,11 @@ class Calendars extends ImportProcessorBase {
 
     // Note the current paragraphs for later and initialize the "new" list.
     $old_ids = array_map(
-      function ($v) {
-        return $v['target_id'];
-      },
-      $node->get('field_ol_cal')->getValue()
-    );
+          function ($v) {
+              return $v['target_id'];
+          },
+          $node->get('field_ol_cal')->getValue()
+      );
     $new_ids = [];
 
     $to_import = [
@@ -146,7 +150,9 @@ class Calendars extends ImportProcessorBase {
 
     foreach ($to_import as $one_import) {
       if (count(get_object_vars($one_import['items']))) {
-        /** @var \Drupal\paragraphs\Entity\Paragraph $new_pg */
+        /**
+         * @var \Drupal\paragraphs\Entity\Paragraph $new_pg
+         */
         $new_pg = $storage->create(['type' => 'calendar']);
         $all_bills = [];
         foreach ($one_import['items'] as $reading) {

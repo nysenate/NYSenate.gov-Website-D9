@@ -2,17 +2,17 @@
 
 namespace Drupal\nys_school_importer\Form;
 
-use Drupal\Core\Link;
-use Drupal\Core\State\State;
-use Drupal\Core\Form\FormBase;
-use Drupal\Core\File\FileSystem;
-use Drupal\Core\Messenger\Messenger;
-use Drupal\Core\Form\FormStateInterface;
-use Drupal\nys_school_importer\ImporterHelper;
 use Drupal\Core\Extension\ExtensionPathResolver;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Drupal\Core\File\FileSystem;
+use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
+use Drupal\Core\Messenger\Messenger;
+use Drupal\Core\State\State;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\nys_school_importer\ImporterHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Form class for NYSED importer.
@@ -71,12 +71,12 @@ class NysedPageForm extends FormBase {
    *   The file system class.
    */
   public function __construct(
-    ImporterHelper $importer_helper,
-    State $state,
-    ExtensionPathResolver $path_resolver,
-    Messenger $messenger,
-    FileSystem $file_system
-  ) {
+        ImporterHelper $importer_helper,
+        State $state,
+        ExtensionPathResolver $path_resolver,
+        Messenger $messenger,
+        FileSystem $file_system
+    ) {
     $this->importerHelper = $importer_helper;
     $this->state = $state;
     $this->pathResolver = $path_resolver;
@@ -89,12 +89,12 @@ class NysedPageForm extends FormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('nys_school_importer.importer'),
-      $container->get('state'),
-      $container->get('extension.path.resolver'),
-      $container->get('messenger'),
-      $container->get('file_system')
-    );
+          $container->get('nys_school_importer.importer'),
+          $container->get('state'),
+          $container->get('extension.path.resolver'),
+          $container->get('messenger'),
+          $container->get('file_system')
+      );
   }
 
   /**
@@ -136,12 +136,12 @@ class NysedPageForm extends FormBase {
         '#id' => 'continue_button',
         '#value' => $this->t('Completed NYSED Uploads - Continue To School Import'),
         '#submit' => [
-          [$this, 'continueToSchoolUpload'],
+      [$this, 'continueToSchoolUpload'],
         ],
       ],
       '#validate' => [
-        [$this, 'validateFileupload'],
-        [$this, 'formValidate'],
+      [$this, 'validateFileupload'],
+      [$this, 'formValidate'],
       ],
     ];
 
@@ -264,26 +264,28 @@ class NysedPageForm extends FormBase {
   public function importSchoolNamesLine($line, $session_nid, &$context = NULL) {
     $line = $cleaned_line = array_map('base64_decode', $line);
     if (is_numeric($line[0]) == TRUE && is_numeric($line[2]) == TRUE) {
-      $this->importerHelper->insertOrUpdateNysedData($line[0],
-                                                      $line[1],
-                                                      $line[2],
-                                                      $line[3],
-                                                      $line[4],
-                                                      $line[5],
-                                                      $line[6],
-                                                      $line[7],
-                                                      $line[8],
-                                                      $line[9],
-                                                      $line[10],
-                                                      $line[11],
-                                                      $line[12],
-                                                      $line[13],
-                                                      $line[14],
-                                                      $line[15],
-                                                      $line[16],
-                                                      $line[17],
-                                                      $line[18],
-                                                      $line[19]);
+      $this->importerHelper->insertOrUpdateNysedData(
+            $line[0],
+            $line[1],
+            $line[2],
+            $line[3],
+            $line[4],
+            $line[5],
+            $line[6],
+            $line[7],
+            $line[8],
+            $line[9],
+            $line[10],
+            $line[11],
+            $line[12],
+            $line[13],
+            $line[14],
+            $line[15],
+            $line[16],
+            $line[17],
+            $line[18],
+            $line[19]
+        );
     }
   }
 

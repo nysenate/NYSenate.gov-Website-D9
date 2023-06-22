@@ -6,14 +6,14 @@
  */
 
 use Drupal\block_content\Entity\BlockContent;
-use Drupal\Core\Database\Database;
-use Drupal\taxonomy\Entity\Term;
-use Drupal\Core\Config\FileStorage;
-use Drupal\Core\Site\Settings;
 use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\ConfigImporterException;
+use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Config\StorageComparer;
+use Drupal\Core\Database\Database;
+use Drupal\Core\Site\Settings;
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\taxonomy\Entity\Term;
 
 /**
  * Implements hook_install().

@@ -320,7 +320,7 @@ function nysenate_theme_preprocess_block_content__microsite_hero(&$variables) {
   elseif (!empty($node) && in_array($node->bundle(), $node_types)) {
     $senator_link = \Drupal::service('nys_senators.microsites')
       ->getMicrosite($senator);
-    $variables['message_senator_link'] = $senator_link . '/message';
+    $variables['message_senator_link'] = $senator_link . '/contact';
   }
 
   // Senator name.

@@ -155,7 +155,7 @@ class FindMySenatorForm extends FormBase {
           <div class="c-login">
             <div class="c-login-left">
               <div class="nys-senator--thumb">
-                <img src="'. $image .'" alt="Senator ' . $senator_name . ' avatar"/>
+                <img src="' . $image . '" alt="Senator ' . $senator_name . ' avatar"/>
               </div>
               <ul class="c-senator--info">
                 <li>Your Senator</li>
@@ -167,18 +167,13 @@ class FindMySenatorForm extends FormBase {
                 </li>
               </ul>
             </div>
-            <a class="c-msg-senator icon-before__contact" href="'. $senator_link .'/contact">Message Senator</a>
+            <a class="c-msg-senator icon-before__contact" href="' . $senator_link . '/contact">Message Senator</a>
           </div>';
-          // dump($form['result']['#markup']);die;
       }
       else {
         // Set error message.
-        // dump($this);
         $this->messenger->addError('A district assignment could not be made.  Please verify the address.');
       }
-      // $form['result']['#markup'] = $district
-      //       ? '<h3>This address belongs to district ' . $district . '</h3>'
-      //       : 'A district assignment could not be made.  Please verify the address.';
     }
 
     return $form;

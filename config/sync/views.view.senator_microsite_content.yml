@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_view_mode.node.upcoming_event
     - field.storage.node.field_category
     - field.storage.node.field_date_range
     - field.storage.node.field_image_main
@@ -1875,9 +1876,19 @@ display:
         operator: AND
         groups:
           1: AND
+      style:
+        type: default
+        options: {  }
+      row:
+        type: 'entity:node'
+        options:
+          relationship: none
+          view_mode: upcoming_event
       defaults:
         title: false
         pager: false
+        style: false
+        row: false
         fields: false
         sorts: false
         arguments: false

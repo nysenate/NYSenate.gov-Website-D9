@@ -1268,8 +1268,12 @@ display:
         type: none
         options: {  }
       cache:
-        type: search_api_tag
-        options: {  }
+        type: search_api_time
+        options:
+          results_lifespan: 3600
+          results_lifespan_custom: 0
+          output_lifespan: 3600
+          output_lifespan_custom: 0
       empty:
         area_text_custom:
           id: area_text_custom

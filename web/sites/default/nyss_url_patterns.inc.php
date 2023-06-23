@@ -10,6 +10,12 @@
  * Date: 2017-12-30
  * Revised: 2018-02-09 - converted to functions; added committees
  * Revised: 2018-05-29 - added virtual host patterns
+ * Revised: 2019-01-11 - updated 17 entries for the 2019-2020 session
+ * Revised: 2019-12-11 - added pattern for Senator Borrello
+ * Revised: 2021-01-04 - updated 14 entries for the 2021-2022 session
+ * Revised: 2022-02-22 - added pattern for Senator Cleare
+ * Revised: 2023-01-06 - updated 14 entries for the 2023-2024 session
+ * Revised: 2023-06-23 - updated microsite URL for Senator Harckham
  *
  */
 
@@ -18,9 +24,11 @@
 // microsites.
 function get_nyss_url_patterns()
 {
-  return [ 'senators'   => get_nyss_senator_patterns(),
-           'committees' => get_nyss_committee_patterns(),
-           'vhosts'     => get_nyss_vhost_patterns() ];
+  return [
+    'senators'   => get_nyss_senator_patterns(),
+    'committees' => get_nyss_committee_patterns(),
+    'vhosts'     => get_nyss_vhost_patterns()
+  ];
 } // get_nyss_url_patterns()
 
 
@@ -33,42 +41,41 @@ function get_nyss_senator_patterns()
   return array(
     'john-doe'                => '(john)?doe',
     'joseph-p-addabbo-jr'     => '(joseph|joe)?addabbo',
-    'frederick-j-akshar-ii'   => '(frederick|fred)?akshar',
+    'jacob-ashby'             => '(jacob|jake)?ashby',
     'jamaal-bailey'           => '(jamaal)?bailey',
-    'alessandra-biaggi'       => '(alessandra)?biaggi',
     'george-borrello'         => '(george)?borrello',
-    'phil-boyle'              => '(phil(ip)?|p)?boyle',
     'neil-d-breslin'          => '(neil)?breslin',
     'jabari-brisport'         => '(jabari)?brisport',
-    'john-e-brooks'           => '(john)?brooks',
     'samra-g-brouk'           => '(samra)?brouk',
+    'patricia-canzoneri-fitzpatrick' => '(patricia|pat)?canzoneri',
+    'iwen-chu'                => '(iwen)?chu',
     'cordell-cleare'          => '(cordell)?cleare',
     'leroy-comrie'            => '(leroy)?comrie',
     'jeremy-cooney'           => '(jeremy)?cooney',
     'simcha-felder'           => '(simcha)?felder',
+    'nathalia-fernandez'      => '(nathalia)?fernandez',
     'patrick-m-gallivan'      => '(pat(rick)?)?gallivan',
-    'james-gaughran'          => '(james)?gaughran',
     'michael-gianaris'        => '(michael)?gianaris',
+    'kristen-gonzalez'        => '(kristen)?gonzalez',
     'andrew-gounardes'        => '(andrew)?gounardes',
     'joseph-griffo'           => '(joseph|joe)?griffo',
-    'peter-harckham'          => '(peter)?harckham',
+    'pete-harckham'           => '(peter)?harckham',
     'pamela-helming'          => '(pamela|pam)?helming',
     'michelle-hinchey'        => '(michelle)?hinchey',
     'brad-hoylman'            => '(brad)?hoylman',
     'robert-jackson'          => '(robert)?jackson',
-    'daphne-jordan'           => '(daphne)?jordan',
-    'todd-kaminsky'           => '(todd)?kaminsky',
-    'anna-kaplan'             => '(anna)?kaplan',
     'brian-kavanagh'          => '(brian)?kavanagh',
     'timothy-m-kennedy'       => '(tim(othy)?)?kennedy',
     'liz-krueger'             => '(liz)?krueger',
     'andrew-j-lanza'          => '(andrew)?lanza',
     'john-liu'                => '(john)?liu',
     'john-w-mannion'          => '(john)?mannion',
-    'mike-martucci'           => '(michael|mike)?martucci',
+    'monica-r-martinez'       => '(monica)?martinez',
+    'jack-m-martins'          => '(jack)?martins',
     'mario-r-mattera'         => '(mario)?mattera',
     'rachel-may'              => '(rachel)?may',
     'shelley-mayer'           => '(shelley)?mayer',
+    'dean-murray'             => '(dean)?murray',
     'zellnor-myrie'           => '(zellnor)?myrie',
     'peter-oberacker'         => '(peter)?oberacker',
     'thomas-f-omara'          => '(thomas)?omara',
@@ -77,23 +84,24 @@ function get_nyss_senator_patterns()
     'kevin-s-parker'          => '(kevin)?parker',
     'roxanne-j-persaud'       => '(roxanne)?persaud',
     'jessica-ramos'           => '(jessica)?ramos',
-    'edward-rath-iii'         => '(ed(ward)?)?rath',
-    'elijah-reichlin-melnick' => '(elijah)?reichlin(\-?melnick)?',
-    'patty-ritchie'           => '(patricia|patty)?ritchie',
+    'steven-d-rhoads'         => '(steven)?rhoads',
     'gustavo-rivera'          => '(gustavo)?rivera',
+    'robert-rolison'          => '(robert)?rolison',
     'sean-m-ryan'             => '(sean)?ryan',
     'julia-salazar'           => '(julia)?salazar',
     'james-sanders-jr'        => '(james)?sanders',
-    'diane-j-savino'          => '(diane)?savino',
     'luis-r-sepulveda'        => '(luis)?sepulveda',
-    'sue-serino'              => '(susan|sue)?serino',
     'jose-m-serrano'          => '(jose)?serrano',
     'james-skoufis'           => '(james)?skoufis',
+    'jessica-scarcella-spanton' => '(jessica)?spanton',
     'toby-ann-stavisky'       => '(toby(ann)?)?stavisky',
     'daniel-g-stec'           => '(dan(iel)?)?stec',
     'andrea-stewart-cousins'  => '(andrea)?stewart\-?cousins',
     'james-tedisco'           => '(james|jim)?tedisco',
     'kevin-thomas'            => '(kevin)?thomas',
+    'mark-walczyk'            => '(mark)?walczyk',
+    'lea-webb'                => '(lea)?webb',
+    'bill-weber'              => '(william|bill)?weber',
     'alexis-weik'             => '(alexis)?weik',
   );
 } // get_nyss_senator_patterns()
@@ -159,4 +167,3 @@ function get_nyss_vhost_patterns()
     '/nyread'    => '^((www\.)?nyread.com|summerreading.nysenate.gov)$',
   );
 } // get_nyss_vhost_patterns()
-

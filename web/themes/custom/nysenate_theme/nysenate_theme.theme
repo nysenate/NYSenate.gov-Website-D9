@@ -1630,7 +1630,7 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
           $image_main = \Drupal::entityTypeManager()->getViewBuilder('media')->view($media, 'default');
         }
       }
-      elseif (!empty($node) && $node->bundle() === 'video') {
+      if ($node->bundle() === 'video') {
         $video_id = $node->field_yt->target_id;
         $video = $video_id ? $media_storage->load($video_id) : NULL;
         if ($video) {

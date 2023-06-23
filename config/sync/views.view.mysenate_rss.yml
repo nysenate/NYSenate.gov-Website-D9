@@ -234,7 +234,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: '{{ field_date_range__value|date("Y-m-d H:i:s", "America/New_York") }}'
+            text: '{{ field_date_range__value|gmdate("Y-m-d H:i:s") }}'
             make_link: false
             path: ''
             absolute: false
@@ -274,7 +274,7 @@ display:
           click_sort_column: value
           type: daterange_custom
           settings:
-            timezone_override: ''
+            timezone_override: America/New_York
             date_format: 'Y-m-d H:i:s'
             separator: '-'
           group_column: value

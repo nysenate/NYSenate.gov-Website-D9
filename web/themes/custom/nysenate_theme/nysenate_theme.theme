@@ -1457,19 +1457,15 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
       if ($node->hasField('field_image_main') && !$node->get('field_image_main')->isEmpty()) {
         $media = !empty($node->field_image_main->target_id) ? $media_storage->load($node->field_image_main->target_id) : NULL;
         if (!empty($media)) {
-          $news_image = \Drupal::entityTypeManager()->getViewBuilder('media')->view($media, 'default');
+          $news_image = \Drupal::entityTypeManager()->getViewBuilder('media')->view($media, '380x215');
         }
       }
 
-      if ($node->bundle() === 'video') {
+      elseif (!empty($node) && $node->bundle() === 'video') {
         $video_id = $node->field_yt->target_id;
         $video = $video_id ? $media_storage->load($video_id) : NULL;
         if ($video) {
-          $video->enforceMetadataUpdate();
-          $media_storage->save($video);
-          $image_file = File::load($video->thumbnail->target_id);
-          $image_uri = $image_file->uri->value;
-          $video_image = \Drupal::service('file_url_generator')->generateAbsoluteString($image_uri);
+          $video_image = \Drupal::entityTypeManager()->getViewBuilder('media')->view($video, 'thumbnail');
         }
       }
 

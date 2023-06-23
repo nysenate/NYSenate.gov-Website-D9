@@ -804,6 +804,7 @@ display:
             operator: ''
             operator_limit_selection: false
             operator_list: {  }
+          accept_null: false
         type:
           id: type
           table: node_field_data
@@ -1300,6 +1301,7 @@ display:
             operator: ''
             operator_limit_selection: false
             operator_list: {  }
+          accept_null: false
         type:
           id: type
           table: node_field_data
@@ -1313,6 +1315,7 @@ display:
           operator: in
           value:
             article: article
+            in_the_news: in_the_news
             petition: petition
             video: video
           group: 1
@@ -1352,8 +1355,8 @@ display:
           group_type: group
           admin_label: ''
           plugin_id: boolean
-          operator: '!='
-          value: '1'
+          operator: '='
+          value: '0'
           group: 1
           exposed: false
           expose:
@@ -1382,6 +1385,7 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
+          accept_null: 1
       filter_groups:
         operator: AND
         groups:
@@ -1821,6 +1825,7 @@ display:
             operator: ''
             operator_limit_selection: false
             operator_list: {  }
+          accept_null: false
         type:
           id: type
           table: node_field_data
@@ -2375,6 +2380,7 @@ display:
             operator: ''
             operator_limit_selection: false
             operator_list: {  }
+          accept_null: false
         type:
           id: type
           table: node_field_data
@@ -2928,6 +2934,7 @@ display:
             operator: ''
             operator_limit_selection: false
             operator_list: {  }
+          accept_null: false
         type:
           id: type
           table: node_field_data
@@ -3547,6 +3554,7 @@ display:
             operator: ''
             operator_limit_selection: false
             operator_list: {  }
+          accept_null: false
         type:
           id: type
           table: node_field_data
@@ -3797,6 +3805,11 @@ display:
           multi_type: separator
           separator: ''
           field_api_classes: false
+      pager:
+        type: some
+        options:
+          offset: 0
+          items_per_page: 1
       arguments:
         nid:
           id: nid
@@ -3890,6 +3903,7 @@ display:
             operator: ''
             operator_limit_selection: false
             operator_list: {  }
+          accept_null: false
         type:
           id: type
           table: node_field_data
@@ -3947,6 +3961,7 @@ display:
           separator: ''
           hide_empty: false
       defaults:
+        pager: false
         style: false
         row: false
         relationships: false

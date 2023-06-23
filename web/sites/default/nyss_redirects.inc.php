@@ -28,8 +28,7 @@ function get_server_value($server_param, $default_value = null)
 {
   if (isset($_SERVER[$server_param])) {
     return $_SERVER[$server_param];
-  }
-  else {
+  } else {
     return $default_value;
   }
 } // get_server_value()
@@ -44,9 +43,15 @@ $url_patterns = get_nyss_url_patterns();
 // Set the primary domain based on the Pantheon environment.
 $primary_domain = $url_hostname;
 switch ($site_env) {
-  case 'dev':  $primary_domain = 'www-dev.nysenate.gov';  break;
-  case 'test': $primary_domain = 'www-test.nysenate.gov'; break;
-  case 'live': $primary_domain = 'www.nysenate.gov';      break;
+  case 'dev':
+    $primary_domain = 'www-dev.nysenate.gov';
+    break;
+  case 'test':
+    $primary_domain = 'www-test.nysenate.gov';
+    break;
+  case 'live':
+    $primary_domain = 'www.nysenate.gov';
+    break;
 }
 
 // If the request scheme is not using SSL, flag the request for redirection.
@@ -67,8 +72,7 @@ foreach ($url_patterns as $page_type => $url_map) {
   foreach ($url_map as $microsite => $pattern) {
     if ($pattern[0] == '^') {
       $full_pattern = "/$pattern/";
-    }
-    else {
+    } else {
       $full_pattern = "/^(www\.)?$pattern\.nysenate\.gov$/";
     }
 
@@ -86,8 +90,7 @@ foreach ($url_patterns as $page_type => $url_map) {
       // prefix it with the page type.
       if ($microsite[0] == '/') {
         $url_path = "$microsite$url_path";
-      }
-      else {
+      } else {
         $url_path = "/$page_type/$microsite$url_path";
       }
       break 2;
@@ -139,4 +142,3 @@ if ($must_redirect) {
   header("Location: https://$url_hostname$url_path");
   exit();
 }
-

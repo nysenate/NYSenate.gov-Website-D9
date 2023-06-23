@@ -1460,8 +1460,7 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
           $news_image = \Drupal::entityTypeManager()->getViewBuilder('media')->view($media, '380x215');
         }
       }
-
-      elseif (!empty($node) && $node->bundle() === 'video') {
+      elseif (!empty($node) && $node->bundle() == 'video') {
         $video_id = $node->field_yt->target_id;
         $video = $video_id ? $media_storage->load($video_id) : NULL;
         if ($video) {

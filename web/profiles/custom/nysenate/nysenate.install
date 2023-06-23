@@ -477,3 +477,44 @@ function nysenate_update_9012() {
     }
   }
 }
+
+/**
+ * NYSD9-908: Assign the Upcoming Legislation views to Session contents.
+ */
+function nysenate_update_9013() {
+  $node_storage = \Drupal::entityTypeManager()->getStorage('node');
+
+  // Search Session contents without field_upcoming_legislation value.
+  $query = $node_storage->getQuery();
+  $query->condition('type', 'session');
+  $query->notExists('field_upcoming_legislation');
+  $nids = $query->execute();
+  $nodes = $node_storage->loadMultiple($nids);
+
+  foreach ($nodes as $node) {
+    $node->set('field_upcoming_legislation', [
+      [
+        'target_id' => 'upcoming_legislation',
+        'display_id' => 'session_active',
+        'argument' => NULL,
+        'title' => '0',
+        'data' => NULL,
+      ],
+      [
+        'target_id' => 'upcoming_legislation',
+        'display_id' => 'session_floor_cal',
+        'argument' => NULL,
+        'title' => '0',
+        'data' => NULL,
+      ],
+      [
+        'target_id' => 'upcoming_legislation',
+        'display_id' => 'session_sup_cal',
+        'argument' => NULL,
+        'title' => '0',
+        'data' => NULL,
+      ],
+    ]);
+    $node->save();
+  }
+}

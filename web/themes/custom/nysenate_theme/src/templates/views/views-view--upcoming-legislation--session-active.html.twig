@@ -37,82 +37,84 @@
 {{ attach_library('nysenate_theme/nysenate-accordion') }}
 {% import '@rain_theme/icons/_icons-macro.twig' as icons %}
 
-<article class="nysenate-accordion">
-  <button type="button" class="nysenate-accordion__toggle" aria-controls="nysenate-accordion__content" aria-expanded="false" id="nysenate-accordion__toggle" aria-selected="false">
-    <span class="nysenate-accordion__heading no-count">
-      <span class="indicator"></span>Active List
-    </span>
-    {{ icons.get('accordion__arrow'|lower) }}
-  </button>
-  <div class="nysenate-accordion__content" id="nysenate-accordion__content" aria-hidden="true" aria-labelledby="nysenate-accordion__content">
-    {%
-      set classes = [
-        'view',
-        'view-' ~ id|clean_class,
-        'view-' ~ display_id|clean_class ~ '-block',
-        'view-id-' ~ id,
-        'view-display-id-' ~ display_id,
-        dom_id ? 'js-view-dom-id-' ~ dom_id,
-        'container',
-        'c-updates-container',
-      ]
-    %}
-    <div{{ attributes.addClass(classes) }}>
-      {{ title_prefix }}
-      {% if title %}
-        {{ title }}
-      {% endif %}
-      {{ title_suffix }}
-      {% if header %}
-        <div class="view-header">
-          {{ header }}
-        </div>
-      {% endif %}
-      {% if exposed %}
-        <div class="view-filters">
-          {{ exposed }}
-        </div>
-      {% endif %}
-      {% if attachment_before %}
-        <div class="attachment attachment-before">
-          {{ attachment_before }}
-        </div>
-      {% endif %}
-      {% if rows %}
-        <div class="c-panel--header">
-          <h4 class="l-panel-col l-panel-col--lft">Bill #</h4>
-          <h4 class="l-panel-col l-panel-col--ctr">Title & Sponsor</h4>
-          <h4 class="l-panel-col l-panel-col--rgt">Votes / Cal No</h4>
-        </div>
-        <div class="view-content">
-          {{ rows }}
-        </div>
-      {% elseif empty %}
-        <div class="view-empty">
-          {{ empty }}
-        </div>
-      {% endif %}
-      {% if pager %}
-        {{ pager }}
-      {% endif %}
-      {% if attachment_after %}
-        <div class="attachment attachment-after">
-          {{ attachment_after }}
-        </div>
-      {% endif %}
-      {% if more %}
-        {{ more }}
-      {% endif %}
-      {% if footer %}
-        <div class="view-footer">
-          {{ footer }}
-        </div>
-      {% endif %}
-      {% if feed_icons %}
-        <div class="feed-icons">
-          {{ feed_icons }}
-        </div>
-      {% endif %}
+{% if rows %}
+  <article class="nysenate-accordion">
+    <button type="button" class="nysenate-accordion__toggle" aria-controls="nysenate-accordion__content" aria-expanded="false" id="nysenate-accordion__toggle" aria-selected="false">
+      <span class="nysenate-accordion__heading no-count">
+        <span class="indicator"></span>Active List
+      </span>
+      {{ icons.get('accordion__arrow'|lower) }}
+    </button>
+    <div class="nysenate-accordion__content" id="nysenate-accordion__content" aria-hidden="true" aria-labelledby="nysenate-accordion__content">
+      {%
+        set classes = [
+          'view',
+          'view-' ~ id|clean_class,
+          'view-' ~ display_id|clean_class ~ '-block',
+          'view-id-' ~ id,
+          'view-display-id-' ~ display_id,
+          dom_id ? 'js-view-dom-id-' ~ dom_id,
+          'container',
+          'c-updates-container',
+        ]
+      %}
+      <div{{ attributes.addClass(classes) }}>
+        {{ title_prefix }}
+        {% if title %}
+          {{ title }}
+        {% endif %}
+        {{ title_suffix }}
+        {% if header %}
+          <div class="view-header">
+            {{ header }}
+          </div>
+        {% endif %}
+        {% if exposed %}
+          <div class="view-filters">
+            {{ exposed }}
+          </div>
+        {% endif %}
+        {% if attachment_before %}
+          <div class="attachment attachment-before">
+            {{ attachment_before }}
+          </div>
+        {% endif %}
+        {% if rows %}
+          <div class="c-panel--header">
+            <h4 class="l-panel-col l-panel-col--lft">Bill #</h4>
+            <h4 class="l-panel-col l-panel-col--ctr">Title & Sponsor</h4>
+            <h4 class="l-panel-col l-panel-col--rgt">Votes / Cal No</h4>
+          </div>
+          <div class="view-content">
+            {{ rows }}
+          </div>
+        {% elseif empty %}
+          <div class="view-empty">
+            {{ empty }}
+          </div>
+        {% endif %}
+        {% if pager %}
+          {{ pager }}
+        {% endif %}
+        {% if attachment_after %}
+          <div class="attachment attachment-after">
+            {{ attachment_after }}
+          </div>
+        {% endif %}
+        {% if more %}
+          {{ more }}
+        {% endif %}
+        {% if footer %}
+          <div class="view-footer">
+            {{ footer }}
+          </div>
+        {% endif %}
+        {% if feed_icons %}
+          <div class="feed-icons">
+            {{ feed_icons }}
+          </div>
+        {% endif %}
+      </div>
     </div>
-  </div>
-</article>
+  </article>
+{% endif %}

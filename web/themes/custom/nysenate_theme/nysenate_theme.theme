@@ -1452,10 +1452,18 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
       }
 
       $news_image = NULL;
+      $video_image = NULL;
       if ($node->hasField('field_image_main') && !$node->get('field_image_main')->isEmpty()) {
         $media = !empty($node->field_image_main->target_id) ? $media_storage->load($node->field_image_main->target_id) : NULL;
         if (!empty($media)) {
-          $news_image = \Drupal::entityTypeManager()->getViewBuilder('media')->view($media, 'default');
+          $news_image = \Drupal::entityTypeManager()->getViewBuilder('media')->view($media, '380x215');
+        }
+      }
+      if ($node->bundle() == 'video') {
+        $video_id = $node->field_yt->target_id;
+        $video = $video_id ? $media_storage->load($video_id) : NULL;
+        if ($video) {
+          $video_image = \Drupal::entityTypeManager()->getViewBuilder('media')->view($video, 'thumbnail');
         }
       }
 
@@ -1463,6 +1471,7 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
         'news_title' => !empty($allowed_values) ? $allowed_values[$node->field_category->value] : $bundle_info[$node->getEntityTypeId()][$node->bundle()]['label'],
         'news_url' => $node->toUrl()->toString(),
         'news_image' => $news_image,
+        'video_src' => $video_image,
         'news_name' => $node->getTitle(),
         'news_topic' => [
           'url' => !empty($term) ? $term->toUrl()->toString() : '',

@@ -78,11 +78,11 @@ abstract class RequestPluginBase implements RequestPluginInterface {
     $options = $configuration['request_options'] ?? [];
     unset($configuration['request_options']);
     return new static(
-          $plugin_definition,
-          new Request($plugin_definition['endpoint'], $options),
-          $container->get('manager.openleg_responses'),
-          $container->get('logger.channel.openleg_api')
-      );
+      $plugin_definition,
+      new Request($plugin_definition['endpoint'], $options),
+      $container->get('manager.openleg_responses'),
+      $container->get('logger.channel.openleg_api')
+    );
   }
 
   /**
@@ -116,24 +116,27 @@ abstract class RequestPluginBase implements RequestPluginInterface {
     // Only accept 'offset', 'limit', and 'detail' as parameters.
     // Default the limit parameter to '0'.
     $params = array_intersect_key(
-          $this->prepParams($params) + ['limit' => '0'],
-          ['offset' => '', 'limit' => '', 'detail' => '']
-      );
+      $this->prepParams($params) + ['limit' => '0'],
+      ['offset' => '', 'limit' => '', 'detail' => '']
+    );
 
-    // If no end time was passed, set it to now.
-    $time_to = $this->normalizeTimestamp($time_to ?: microtime(TRUE));
-    $f_time_to = $this->formatTimestamp($time_to);
-    // From time defaults to one day ago.
-    $time_from = $time_from
-        ? $this->normalizeTimestamp($time_from)
-        : $time_to->sub(new \DateInterval('P1D'));
-    $f_time_from = $this->formatTimestamp($time_from);
+    // If end time cannot be parsed, set it to now.
+    $datetime_to = $this->normalizeTimestamp($time_to ?: microtime(TRUE))
+      ?: $this->normalizeTimestamp('now');
+
+    // If from time cannot be parsed, set it to 1 day ago.
+    $datetime_from = $this->normalizeTimestamp($time_from)
+      ?: $datetime_to->sub(new \DateInterval('P1D'));
+
+    // Create the resource part of the URL.
+    $f_time_to = $this->formatTimestamp($datetime_to);
+    $f_time_from = $this->formatTimestamp($datetime_from);
     $resource = "updates/$f_time_from/$f_time_to";
 
     return $this->generateResponse(
-          $this->request->get($resource, $params),
-          ApiResponseManager::OPENLEG_RESPONSE_TYPE_UPDATE
-      );
+      $this->request->get($resource, $params),
+      ApiResponseManager::OPENLEG_RESPONSE_TYPE_UPDATE
+    );
   }
 
   /**
@@ -162,9 +165,9 @@ abstract class RequestPluginBase implements RequestPluginInterface {
     ];
 
     return $this->generateResponse(
-          $this->request->get("search", $params),
-          ApiResponseManager::OPENLEG_RESPONSE_TYPE_SEARCH
-      );
+      $this->request->get("search", $params),
+      ApiResponseManager::OPENLEG_RESPONSE_TYPE_SEARCH
+    );
   }
 
   /**
@@ -194,13 +197,13 @@ abstract class RequestPluginBase implements RequestPluginInterface {
    *   standard OpenLeg format, or is an epoch timestamp with a decimal portion,
    *   microseconds will be preserved.
    */
-  protected function normalizeTimestamp(string $timestamp = ''): \DateTimeImmutable {
+  protected function normalizeTimestamp(string $timestamp = ''): \DateTimeImmutable|false {
     // If timestamp is numeric, avoid the "true zero" edge case.
     if (is_numeric($timestamp)) {
       $normalize = $timestamp . (str_contains($timestamp, '.') ? '' : '.000000');
       $format = 'U.u';
     }
-    // If not numeric, try the OpenLeg format first.
+    // If not numeric, try using the OpenLeg format.
     else {
       $normalize = str_replace(' ', 'T', $timestamp);
       $format = $this->request::OPENLEG_TIME_FULL;
@@ -208,14 +211,24 @@ abstract class RequestPluginBase implements RequestPluginInterface {
 
     try {
       // Try to create using the detected format.  On failure, let DateTime
-      // try to figure it out (and lose microsecond precision).
-      $tz = new \DateTimeZone(date_default_timezone_get());
-      $dt = \DateTimeImmutable::createFromFormat($format, $normalize, $tz)
-            ?: new \DateTimeImmutable($timestamp, $tz);
+      // try to figure it out (while losing microsecond precision).
+      $dt = \DateTimeImmutable::createFromFormat($format, $normalize)
+        ?: new \DateTimeImmutable($timestamp);
+
+      // If successful, ensure the timestamp is set to system's default.
+      if ($dt) {
+        $dt->setTimezone(new \DateTimeZone(date_default_timezone_get()));
+      }
+      else {
+        throw new \InvalidArgumentException('DateTime could not parse the timestamp');
+      }
     }
     catch (\Throwable $e) {
       // No options left.  Everyone out of the pool.
-      throw new \InvalidArgumentException('Could not parse timestamp: ' . $timestamp);
+      $parts = ['@ts' => $timestamp, '@msg' => $e->getMessage()];
+      $msg = 'Could not normalize timestamp (@ts) @msg';
+      $this->logger->error($msg, $parts);
+      $dt = FALSE;
     }
 
     return $dt;
@@ -252,9 +265,9 @@ abstract class RequestPluginBase implements RequestPluginInterface {
    * @see \Drupal\nys_openleg\Service\ApiResponseManager
    */
   protected function generateResponse(
-        object $response,
-        string $type = ApiResponseManager::OPENLEG_RESPONSE_TYPE_ITEM
-    ): ResponsePluginBase {
+    object $response,
+    string $type = ApiResponseManager::OPENLEG_RESPONSE_TYPE_ITEM
+  ): ResponsePluginBase {
 
     // Check if a response-specific plugin exists.  Look for definitions named
     // after the responseType value (preferred), or the alternate comprised of
@@ -278,15 +291,15 @@ abstract class RequestPluginBase implements RequestPluginInterface {
     }
     catch (PluginException $e) {
       $this->logger->error(
-            "Failed to instantiate response object",
-            [
-              '@by_type' => $names['by_type'],
-              '@by_name' => $names['by_name'],
-              '@fallback' => $names['fallback'],
-              '@last_try' => $name,
-              '@message' => $e->getMessage(),
-            ]
-        );
+        "Failed to instantiate response object",
+        [
+          '@by_type' => $names['by_type'],
+          '@by_name' => $names['by_name'],
+          '@fallback' => $names['fallback'],
+          '@last_try' => $name,
+          '@message' => $e->getMessage(),
+        ]
+      );
       $ret = NULL;
     }
     /**

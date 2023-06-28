@@ -2,6 +2,7 @@
 
 /**
  * @file
+ * Custom functionality for the nys_school_forms module.
  */
 
 use Drupal\Core\Access\AccessResult;
@@ -34,6 +35,8 @@ function nys_school_forms_theme() {
 
 /**
  * Implements hook_ENTITY_TYPE_access() for webform submission entity.
+ *
+ * Provides access control for the webform submission entity.
  */
 function nys_school_forms_webform_submission_access(WebformSubmissionInterface $webform_submission, $op, $account) {
   // Check if the user is anonymous.

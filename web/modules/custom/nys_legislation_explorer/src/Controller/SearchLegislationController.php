@@ -40,6 +40,7 @@ class SearchLegislationController extends ControllerBase {
    * Response for the bills page.
    */
   public function page() {
+    $content['#cache']['contexts'][] = 'url.query_args';
     $results_page = $this->helper->isResultsPage();
     $request = \Drupal::service('request_stack')->getCurrentRequest();
     if ($results_page) {

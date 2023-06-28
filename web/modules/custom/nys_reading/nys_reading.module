@@ -13,7 +13,7 @@ use Drupal\Core\Form\FormStateInterface;
  * Custom validation and submit handler for Summer Reading Form.
  */
 function nys_reading_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  if ($form_id == 'q') {
+  if ($form_id == 'contact_message_summer_reading_form') {
     array_unshift($form['#validate'], 'nys_reading_validation');
     array_unshift($form['actions']['submit']['#submit'], 'nys_reading_form_submit');
   }

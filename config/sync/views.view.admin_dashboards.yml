@@ -19,6 +19,7 @@ dependencies:
     - taxonomy.vocabulary.microsite_page_type
     - taxonomy.vocabulary.senator
     - user.role.administrator
+    - user.role.frontpage_editor
     - user.role.student_programs
   module:
     - datetime
@@ -651,6 +652,12 @@ display:
     display_plugin: page
     position: 1
     display_options:
+      access:
+        type: role
+        options:
+          role:
+            administrator: administrator
+            frontpage_editor: frontpage_editor
       filters:
         field_accessible_sitewide_value:
           id: field_accessible_sitewide_value
@@ -889,6 +896,7 @@ display:
         groups:
           1: AND
       defaults:
+        access: false
         filters: false
         filter_groups: false
       display_description: ''
@@ -1210,6 +1218,12 @@ display:
           text: edit
           output_url_as_text: false
           absolute: false
+      access:
+        type: role
+        options:
+          role:
+            administrator: administrator
+            student_programs: student_programs
       filters:
         title:
           id: title
@@ -1362,6 +1376,7 @@ display:
         groups:
           1: AND
       defaults:
+        access: false
         title: false
         fields: false
         filters: false
@@ -1750,6 +1765,11 @@ display:
           empty_zero: false
           hide_alter_empty: true
           destination: false
+      access:
+        type: role
+        options:
+          role:
+            administrator: administrator
       sorts:
         field_ol_last_status_date_value:
           id: field_ol_last_status_date_value
@@ -2070,6 +2090,7 @@ display:
         groups:
           1: AND
       defaults:
+        access: false
         title: false
         fields: false
         sorts: false
@@ -2472,6 +2493,11 @@ display:
           empty_zero: false
           hide_alter_empty: true
           destination: false
+      access:
+        type: role
+        options:
+          role:
+            administrator: administrator
       sorts:
         field_ol_last_status_date_value:
           id: field_ol_last_status_date_value
@@ -2792,6 +2818,7 @@ display:
         groups:
           1: AND
       defaults:
+        access: false
         title: false
         fields: false
         sorts: false
@@ -3201,6 +3228,11 @@ display:
           empty_zero: false
           hide_alter_empty: true
           destination: false
+      access:
+        type: role
+        options:
+          role:
+            administrator: administrator
       sorts:
         field_senator_name_family:
           id: field_senator_name_family
@@ -3471,6 +3503,7 @@ display:
         groups:
           1: AND
       defaults:
+        access: false
         title: false
         relationships: false
         fields: false

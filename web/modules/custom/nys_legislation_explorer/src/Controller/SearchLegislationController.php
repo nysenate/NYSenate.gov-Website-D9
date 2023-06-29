@@ -40,6 +40,7 @@ class SearchLegislationController extends ControllerBase {
    * Response for the bills page.
    */
   public function page() {
+    $content['#cache']['contexts'][] = 'url.query_args';
     $results_page = $this->helper->isResultsPage();
     $request = \Drupal::service('request_stack')->getCurrentRequest();
     if ($results_page) {
@@ -50,8 +51,8 @@ class SearchLegislationController extends ControllerBase {
             $content['search_legislation_results'] = $view->buildRenderable('search_results_block_bills');
             break;
 
-          case 'event':
-            $content['search_legislation_results'] = $view->buildRenderable('search_results_block_events');
+          case 'session':
+            $content['search_legislation_results'] = $view->buildRenderable('search_results_block_sessions');
             break;
 
           case 'resolution':

@@ -17,7 +17,8 @@
       var closeBtn = $('.close');
 
       modalToggle.on('click', function() {
-        modal.css('display', 'block');
+        // Comment next line to prevent modal from displaying.
+        // modal.css('display', 'block');
       });
 
       closeBtn.on('click', function() {

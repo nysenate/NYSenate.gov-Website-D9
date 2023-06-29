@@ -1268,8 +1268,12 @@ display:
         type: none
         options: {  }
       cache:
-        type: search_api_tag
-        options: {  }
+        type: search_api_time
+        options:
+          results_lifespan: 3600
+          results_lifespan_custom: 0
+          output_lifespan: 3600
+          output_lifespan_custom: 0
       empty:
         area_text_custom:
           id: area_text_custom
@@ -2014,7 +2018,7 @@ display:
               agenda: search_teaser
               article: default
               bill: search_teaser
-              event: search_teaser
+              calendar: default
               honoree: default
               in_the_news: teaser
               landing: default
@@ -2067,249 +2071,13 @@ display:
         - 'config:field.storage.taxonomy_term.field_current_duties'
         - 'config:search_api.index.core_search'
         - 'search_api_list:core_search'
-  search_results_block_events:
-    id: search_results_block_events
-    display_title: 'Search Results Block - Events'
-    display_plugin: block
-    position: 2
-    display_options:
-      title: 'Advanced Legislation Search - Events'
-      sorts:
-        field_date_range:
-          id: field_date_range
-          table: search_api_index_core_search
-          field: field_date_range
-          relationship: none
-          group_type: group
-          admin_label: ''
-          plugin_id: search_api
-          order: DESC
-          expose:
-            label: ''
-            field_identifier: ''
-          exposed: false
-      arguments:
-        type:
-          id: type
-          table: search_api_index_core_search
-          field: type
-          relationship: none
-          group_type: group
-          admin_label: ''
-          plugin_id: search_api
-          default_action: default
-          exception:
-            value: all
-            title_enable: false
-            title: All
-          title_enable: false
-          title: ''
-          default_argument_type: query_parameter
-          default_argument_options:
-            query_param: type
-            fallback: all
-            multiple: and
-          default_argument_skip_url: false
-          summary_options: {  }
-          summary:
-            sort_order: asc
-            number_of_records: 0
-            format: default_summary
-          specify_validation: true
-          validate:
-            type: none
-            fail: ignore
-          validate_options: {  }
-          break_phrase: false
-          not: false
-        field_date_range:
-          id: field_date_range
-          table: search_api_index_core_search
-          field: field_date_range
-          relationship: none
-          group_type: group
-          admin_label: ''
-          plugin_id: search_api_date
-          default_action: default
-          exception:
-            value: all
-            title_enable: false
-            title: All
-          title_enable: false
-          title: ''
-          default_argument_type: query_parameter
-          default_argument_options:
-            query_param: date
-            fallback: all
-            multiple: and
-          default_argument_skip_url: false
-          summary_options: {  }
-          summary:
-            sort_order: asc
-            number_of_records: 0
-            format: default_summary
-          specify_validation: false
-          validate:
-            type: none
-            fail: 'not found'
-          validate_options: {  }
-          break_phrase: false
-          not: false
-      filters:
-        status:
-          id: status
-          table: search_api_index_core_search
-          field: status
-          relationship: none
-          group_type: group
-          admin_label: ''
-          plugin_id: search_api_boolean
-          operator: '='
-          value: '1'
-          group: 1
-          exposed: false
-          expose:
-            operator_id: ''
-            label: ''
-            description: ''
-            use_operator: false
-            operator: ''
-            operator_limit_selection: false
-            operator_list: {  }
-            identifier: ''
-            required: true
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-        type:
-          id: type
-          table: search_api_index_core_search
-          field: type
-          relationship: none
-          group_type: group
-          admin_label: ''
-          plugin_id: search_api_options
-          operator: or
-          value:
-            event: event
-          group: 1
-          exposed: false
-          expose:
-            operator_id: ''
-            label: ''
-            description: ''
-            use_operator: false
-            operator: ''
-            operator_limit_selection: false
-            operator_list: {  }
-            identifier: ''
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-            reduce: false
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          reduce_duplicates: false
-      filter_groups:
-        operator: AND
-        groups:
-          1: AND
-      style:
-        type: default
-        options: {  }
-      row:
-        type: search_api
-        options:
-          view_modes:
-            'entity:node':
-              agenda: search_teaser
-              article: default
-              bill: search_teaser
-              event: search_teaser
-              honoree: default
-              in_the_news: teaser
-              landing: default
-              meeting: default
-              microsite_page: default
-              petition: default
-              public_hearing: teaser
-              resolution: search_teaser
-              session: default
-              student_program: default
-              transcript: teaser
-              video: default
-              webform: default
-            'entity:taxonomy_term':
-              committees: default
-              districts: default
-              issues: default
-              senator: default
-      defaults:
-        title: false
-        style: false
-        row: false
-        sorts: false
-        arguments: false
-        filters: false
-        filter_groups: false
-      display_description: ''
-      display_extenders: {  }
-      block_description: 'Legislation Search Results - Events'
-    cache_metadata:
-      max-age: -1
-      contexts:
-        - 'languages:language_content'
-        - 'languages:language_interface'
-        - url
-        - url.query_args
-        - 'user.node_grants:view'
-      tags:
-        - 'config:field.storage.node.field_committee'
-        - 'config:field.storage.node.field_date_range'
-        - 'config:field.storage.node.field_issues'
-        - 'config:field.storage.node.field_ol_base_print_no'
-        - 'config:field.storage.node.field_ol_last_status'
-        - 'config:field.storage.node.field_ol_latest_status_committee'
-        - 'config:field.storage.node.field_ol_name'
-        - 'config:field.storage.node.field_ol_publish_date'
-        - 'config:field.storage.node.field_ol_session'
-        - 'config:field.storage.node.field_ol_sponsor'
-        - 'config:field.storage.node.field_senator_multiref'
-        - 'config:field.storage.taxonomy_term.field_current_duties'
-        - 'config:search_api.index.core_search'
-        - 'search_api_list:core_search'
   search_results_block_meetings:
     id: search_results_block_meetings
     display_title: 'Search Results Block - Meetings'
     display_plugin: block
     position: 2
     display_options:
-      title: 'Advanced Legislation Search - Meetings'
+      title: 'Advanced Legislation Search - Agendas'
       sorts:
         field_date_range:
           id: field_date_range
@@ -2398,7 +2166,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          plugin_id: numeric_range
+          plugin_id: search_api_date
           default_action: default
           exception:
             value: all
@@ -2412,11 +2180,7 @@ display:
             fallback: all
             multiple: and
           default_argument_skip_url: false
-          summary_options:
-            base_path: ''
-            count: true
-            override: false
-            items_per_page: 25
+          summary_options: {  }
           summary:
             sort_order: asc
             number_of_records: 0
@@ -2427,7 +2191,7 @@ display:
             fail: 'not found'
           validate_options: {  }
           break_phrase: false
-          not: 0
+          not: false
       filters:
         status:
           id: status
@@ -2520,18 +2284,18 @@ display:
         options:
           view_modes:
             'entity:node':
-              agenda: teaser
+              agenda: search_teaser
               article: default
-              bill: teaser
-              event: search_teaser
+              bill: search_teaser
+              calendar: search_index
               honoree: default
               in_the_news: teaser
               landing: default
-              meeting: search_teaser
+              meeting: search_index
               microsite_page: default
               petition: default
               public_hearing: teaser
-              resolution: default
+              resolution: search_teaser
               session: default
               student_program: default
               transcript: teaser
@@ -2691,8 +2455,8 @@ display:
             'entity:node':
               agenda: teaser
               article: default
-              bill: teaser
-              event: search_teaser
+              bill: search_teaser
+              calendar: teaser
               honoree: default
               in_the_news: teaser
               landing: default
@@ -2721,6 +2485,286 @@ display:
       display_description: ''
       display_extenders: {  }
       block_description: 'Legislation Search Results - Resolutions'
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - url
+        - url.query_args
+        - 'user.node_grants:view'
+      tags:
+        - 'config:field.storage.node.field_committee'
+        - 'config:field.storage.node.field_date_range'
+        - 'config:field.storage.node.field_issues'
+        - 'config:field.storage.node.field_ol_base_print_no'
+        - 'config:field.storage.node.field_ol_last_status'
+        - 'config:field.storage.node.field_ol_latest_status_committee'
+        - 'config:field.storage.node.field_ol_name'
+        - 'config:field.storage.node.field_ol_publish_date'
+        - 'config:field.storage.node.field_ol_session'
+        - 'config:field.storage.node.field_ol_sponsor'
+        - 'config:field.storage.node.field_senator_multiref'
+        - 'config:field.storage.taxonomy_term.field_current_duties'
+        - 'config:search_api.index.core_search'
+        - 'search_api_list:core_search'
+  search_results_block_sessions:
+    id: search_results_block_sessions
+    display_title: 'Search Results Block - Sessions'
+    display_plugin: block
+    position: 2
+    display_options:
+      title: 'Advanced Legislation Search - Sessions'
+      sorts:
+        field_date_range:
+          id: field_date_range
+          table: search_api_index_core_search
+          field: field_date_range
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: search_api
+          order: DESC
+          expose:
+            label: ''
+            field_identifier: ''
+          exposed: false
+      arguments:
+        type:
+          id: type
+          table: search_api_index_core_search
+          field: type
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: search_api
+          default_action: default
+          exception:
+            value: all
+            title_enable: false
+            title: All
+          title_enable: false
+          title: ''
+          default_argument_type: query_parameter
+          default_argument_options:
+            query_param: type
+            fallback: all
+            multiple: and
+          default_argument_skip_url: false
+          summary_options: {  }
+          summary:
+            sort_order: asc
+            number_of_records: 0
+            format: default_summary
+          specify_validation: true
+          validate:
+            type: none
+            fail: ignore
+          validate_options: {  }
+          break_phrase: false
+          not: false
+        field_date_range:
+          id: field_date_range
+          table: search_api_index_core_search
+          field: field_date_range
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: search_api_date
+          default_action: default
+          exception:
+            value: all
+            title_enable: false
+            title: All
+          title_enable: false
+          title: ''
+          default_argument_type: query_parameter
+          default_argument_options:
+            query_param: date
+            fallback: all
+            multiple: and
+          default_argument_skip_url: false
+          summary_options: {  }
+          summary:
+            sort_order: asc
+            number_of_records: 0
+            format: default_summary
+          specify_validation: false
+          validate:
+            type: none
+            fail: 'not found'
+          validate_options: {  }
+          break_phrase: false
+          not: false
+      filters:
+        status:
+          id: status
+          table: search_api_index_core_search
+          field: status
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: search_api_boolean
+          operator: '='
+          value: '1'
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: true
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+        type:
+          id: type
+          table: search_api_index_core_search
+          field: type
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: search_api_options
+          operator: or
+          value:
+            session: session
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+        field_session_calendars:
+          id: field_session_calendars
+          table: search_api_index_core_search
+          field: field_session_calendars
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: search_api_numeric
+          operator: 'not empty'
+          value:
+            min: ''
+            max: ''
+            value: ''
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            min_placeholder: ''
+            max_placeholder: ''
+            placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
+      style:
+        type: default
+        options: {  }
+      row:
+        type: search_api
+        options:
+          view_modes:
+            'entity:node':
+              agenda: teaser
+              article: default
+              bill: search_teaser
+              calendar: search_teaser
+              honoree: default
+              in_the_news: teaser
+              landing: default
+              meeting: default
+              microsite_page: default
+              petition: default
+              public_hearing: search_teaser
+              resolution: search_teaser
+              session: search_teaser
+              student_program: default
+              transcript: teaser
+              video: default
+              webform: default
+            'entity:taxonomy_term':
+              committees: default
+              districts: default
+              issues: default
+              senator: default
+      defaults:
+        title: false
+        style: false
+        row: false
+        sorts: false
+        arguments: false
+        filters: false
+        filter_groups: false
+      display_description: ''
+      display_extenders: {  }
+      block_description: 'Legislation Search Results - Sessions'
     cache_metadata:
       max-age: -1
       contexts:
@@ -3000,7 +3044,7 @@ display:
               agenda: teaser
               article: default
               bill: teaser
-              event: search_teaser
+              calendar: teaser
               honoree: default
               in_the_news: teaser
               landing: default

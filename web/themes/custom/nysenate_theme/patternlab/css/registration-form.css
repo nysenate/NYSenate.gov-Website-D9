@@ -2698,10 +2698,14 @@ img[data-align='left'] {
 
 .nys-registration-password-reset-form .form-item-pass {
   text-align: center; }
-  .nys-registration-password-reset-form .form-item-pass > .form-item {
+  .nys-registration-password-reset-form .form-item-pass > .password-parent {
     float: left;
-    width: 22em;
-    margin: 0 3.5% 0 0;
+    margin-right: 4%; }
+  .nys-registration-password-reset-form .form-item-pass > .confirm-parent {
+    float: right;
+    margin-right: 0; }
+  .nys-registration-password-reset-form .form-item-pass > .form-item {
+    width: 48%;
     clear: none; }
   .nys-registration-password-reset-form .form-item-pass * {
     text-align: initial; }
@@ -2709,10 +2713,10 @@ img[data-align='left'] {
     clear: both; }
 
 .nys-registration-password-reset-form .password-suggestions {
-  width: 46%;
-  top: -1rem;
+  float: left;
+  width: 100%;
   position: relative;
-  margin: 0 0 .5em; }
+  max-width: 48.1%; }
   .nys-registration-password-reset-form .password-suggestions ul {
     padding-left: 1.5em;
     margin-top: .5em; }
@@ -2724,11 +2728,10 @@ img[data-align='left'] {
 .nys-registration-password-reset-form .password-strength,
 .nys-registration-password-reset-form .password-confirm {
   margin-top: 0;
-  text-align: right; }
+  text-align: left; }
 
 .nys-registration-password-reset-form .password-strength-text {
   width: 6em;
-  text-align: right;
   padding: 0 .5em 0 0; }
 
 .nys-registration-password-reset-form .password-confirm {

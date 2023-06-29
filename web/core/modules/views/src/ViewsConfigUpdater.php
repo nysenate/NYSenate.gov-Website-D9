@@ -10,6 +10,8 @@ use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\Sql\DefaultTableMapping;
+use Drupal\views\Plugin\views\filter\BooleanOperator;
+use Drupal\views\Plugin\ViewsHandlerManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -58,6 +60,13 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
   protected $multivalueBaseFieldsUpdateTableInfo;
 
   /**
+   * The Views filter plugin manager service.
+   *
+   * @var \Drupal\views\Plugin\ViewsHandlerManager
+   */
+  protected $filterPluginManager;
+
+  /**
    * Flag determining whether deprecations should be triggered.
    *
    * @var bool
@@ -82,17 +91,21 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
    *   The typed config manager.
    * @param \Drupal\views\ViewsData $views_data
    *   The views data service.
+   * @param \Drupal\views\Plugin\ViewsHandlerManager $filter_plugin_manager
+   *   The Views filter plugin manager service.
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
     EntityFieldManagerInterface $entity_field_manager,
     TypedConfigManagerInterface $typed_config_manager,
-    ViewsData $views_data
+    ViewsData $views_data,
+    ViewsHandlerManager $filter_plugin_manager
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->entityFieldManager = $entity_field_manager;
     $this->typedConfigManager = $typed_config_manager;
     $this->viewsData = $views_data;
+    $this->filterPluginManager = $filter_plugin_manager;
   }
 
   /**
@@ -103,7 +116,8 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
       $container->get('entity_type.manager'),
       $container->get('entity_field.manager'),
       $container->get('config.typed'),
-      $container->get('views.views_data')
+      $container->get('views.views_data'),
+      $container->get('plugin.manager.views.filter')
     );
   }
 
@@ -142,6 +156,9 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
         $changed = TRUE;
       }
       if ($this->processImageLazyLoadFieldHandler($handler, $handler_type, $view)) {
+        $changed = TRUE;
+      }
+      if ($this->processBooleanFilterAcceptNull($handler, $handler_type, $view)) {
         $changed = TRUE;
       }
       return $changed;
@@ -559,6 +576,59 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
       return TRUE;
     }
     return FALSE;
+  }
+
+  /**
+   * Update boolean filter settings.
+   *
+   * @param \Drupal\views\ViewEntityInterface $view
+   *   The View to update.
+   *
+   * @return bool
+   *   Whether the view was updated.
+   */
+  public function needsBooleanFilterAcceptNullUpdate(ViewEntityInterface $view): bool {
+    return $this->processDisplayHandlers($view, TRUE, function (array &$handler, string $handler_type) use ($view) {
+      return $this->processBooleanFilterAcceptNull($handler, $handler_type, $view);
+    });
+  }
+
+  /**
+   * Processes the boolean filter settings to accept null.
+   *
+   * @param array $handler
+   *   A display handler.
+   * @param string $handler_type
+   *   The handler type.
+   * @param \Drupal\views\ViewEntityInterface $view
+   *   The View to update.
+   *
+   * @return bool
+   *   Whether the handler was updated.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
+   *   If the filter plugin instance cannot be created.
+   */
+  protected function processBooleanFilterAcceptNull(array &$handler, string $handler_type, ViewEntityInterface $view): bool {
+    $changed = FALSE;
+    $displays = $view->get('display');
+    foreach ($displays as &$display) {
+      if (isset($display['display_options']['filters'])) {
+        foreach ($display['display_options']['filters'] as &$filter) {
+          // Any of the children of the modified classes will also be inheriting
+          // the new settings.
+          $filter_instance = $this->filterPluginManager->getHandler($filter);
+          if (($filter_instance instanceof BooleanOperator) && !isset($filter['accept_null'])) {
+            $filter['accept_null'] = FALSE;
+            $changed = TRUE;
+          }
+        }
+      }
+    }
+    if ($changed) {
+      $view->set('display', $displays);
+    }
+    return $changed;
   }
 
 }

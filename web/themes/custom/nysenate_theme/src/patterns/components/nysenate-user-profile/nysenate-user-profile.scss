@@ -103,6 +103,28 @@
       height: 45px;
     }
   }
+
+  .c-msg-senator {
+    cursor: pointer;
+    appearance: none;
+    border: 0;
+    padding: 0 5px;
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    font-family: $font-sans-bold;
+    width: 185px;
+    display: block;
+    color: $color-white;
+    text-decoration: none;
+    text-align: center;
+    background-color: $gen_blue_med;
+
+    &::before {
+      margin-right: 0;
+      font-size: 18px;
+    }
+  }
 }
 
 @include breakpoint($bp-sm) {

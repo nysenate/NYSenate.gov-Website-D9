@@ -539,10 +539,18 @@
 	.form-item-pass {
 		text-align: center;
 
-		> .form-item {
+		> .password-parent {
 			float: left;
-			width: 22em;
-			margin: 0 3.5% 0 0;
+			margin-right: 4%;
+		}
+
+		> .confirm-parent {
+			float: right;
+			margin-right: 0;
+		}
+
+		> .form-item {
+			width: 48%;
 			clear: none;
 		}
 
@@ -556,10 +564,10 @@
 	}
 
 	.password-suggestions {
-		width: 46%;
-		top: -1rem;
+		float: left;
+		width: 100%;
 		position: relative;
-		margin: 0 0 .5em;
+		max-width: 48.1%;
 
 		ul {
 			padding-left: 1.5em;
@@ -576,12 +584,11 @@
 	.password-strength,
 	.password-confirm {
 		margin-top: 0;
-		text-align: right;
+		text-align: left;
 	}
 
 	.password-strength-text {
 		width: 6em;
-		text-align: right;
 		padding: 0 .5em 0 0;
 	}
 

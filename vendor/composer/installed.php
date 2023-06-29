@@ -3,7 +3,7 @@
         'name' => 'mediacurrent/drupal-project',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => 'a6ff98a30634601e195a45c97112839142f97746',
+        'reference' => '1984e4caf388215e43ae9ff2bc033e3857f600d1',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -1280,6 +1280,15 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'drupal/override_node_options' => array(
+            'pretty_version' => '2.7.0',
+            'version' => '2.7.0.0',
+            'reference' => '8.x-2.7',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../web/modules/contrib/override_node_options',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'drupal/pantheon_advanced_page_cache' => array(
             'pretty_version' => '2.1.2',
             'version' => '2.1.2.0',
@@ -2129,7 +2138,7 @@
         'mediacurrent/drupal-project' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'a6ff98a30634601e195a45c97112839142f97746',
+            'reference' => '1984e4caf388215e43ae9ff2bc033e3857f600d1',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

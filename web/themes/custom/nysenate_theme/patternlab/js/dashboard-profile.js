@@ -15,8 +15,8 @@
       var modal = $('.msg-senator-modal');
       var modalToggle = $('.c-dash-msg-senator');
       var closeBtn = $('.close');
-      modalToggle.on('click', function () {
-        modal.css('display', 'block');
+      modalToggle.on('click', function () {// Comment next line to prevent modal from displaying.
+        // modal.css('display', 'block');
       });
       closeBtn.on('click', function () {
         modal.css('display', 'none');

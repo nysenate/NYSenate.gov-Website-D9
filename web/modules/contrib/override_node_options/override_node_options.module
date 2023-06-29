@@ -1,0 +1,40 @@
+<?php
+
+/**
+ * @file
+ * Main module file for override_node_options.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\override_node_options\Access\FieldAccess\GrantAuthoredByAccess;
+use Drupal\override_node_options\Access\FieldAccess\GrantCreatedAccess;
+use Drupal\override_node_options\Access\FieldAccess\GrantPromoteAccess;
+use Drupal\override_node_options\Access\FieldAccess\GrantPublishedStatusAccess;
+use Drupal\override_node_options\Access\FieldAccess\GrantRevisionLogAccess;
+use Drupal\override_node_options\Access\FieldAccess\GrantStickyAccess;
+use Drupal\override_node_options\Access\FormAccess\GrantRevisionAccess;
+
+/**
+ * Implements hook_form_alter().
+ */
+function override_node_options_form_alter(array &$form, FormStateInterface $form_state) {
+  GrantRevisionAccess::access($form, $form_state);
+}
+
+/**
+ * Implements hook_entity_field_access_alter().
+ */
+function override_node_options_entity_field_access_alter(array &$grants, array $context) {
+  $fieldAccessOverrides = [
+    GrantAuthoredByAccess::class,
+    GrantCreatedAccess::class,
+    GrantPromoteAccess::class,
+    GrantPublishedStatusAccess::class,
+    GrantRevisionLogAccess::class,
+    GrantStickyAccess::class,
+  ];
+
+  foreach ($fieldAccessOverrides as $override) {
+    $override::access($grants, $context);
+  }
+}

@@ -50,7 +50,7 @@ class ViewsMultiValueFieldUpdateTest extends UpdatePathTestBase {
     $this->assertSession()->pageTextContainsOnce('Updates failed for the entity type View, for test_another_broken_config_multi_value, test_broken_config_multi_value. Check the logs.');
     $this->drupalLogin($this->rootUser);
     $this->drupalGet('admin/reports/dblog', ['query' => ['type[]' => 'update']]);
-    $this->assertSession()->pageTextMatchesCount(2, '/Unable to update view test_broken_config_multi_value/');
+    $this->assertSession()->pageTextMatchesCount(3, '/Unable to update view test_broken_config_multi_value/');
   }
 
 }

@@ -72,7 +72,7 @@ class BooleanOperator extends FilterPluginBase {
    * @return array
    */
   protected function operators() {
-    return [
+    $operators = [
       '=' => [
         'title' => $this->t('Is equal to'),
         'method' => 'queryOpBoolean',
@@ -88,6 +88,25 @@ class BooleanOperator extends FilterPluginBase {
         'query_operator' => self::NOT_EQUAL,
       ],
     ];
+
+    // If the definition allows for the empty operator, add it.
+    if (!empty($this->definition['allow empty'])) {
+      $operators += [
+        'empty' => [
+          'title' => $this->t('Is empty (NULL)'),
+          'method' => 'opEmpty',
+          'short' => $this->t('empty'),
+          'values' => 0,
+        ],
+        'not empty' => [
+          'title' => $this->t('Is not empty (NOT NULL)'),
+          'method' => 'opEmpty',
+          'short' => $this->t('not empty'),
+          'values' => 0,
+        ],
+      ];
+    }
+    return $operators;
   }
 
   /**
@@ -105,13 +124,17 @@ class BooleanOperator extends FilterPluginBase {
       $this->value_value = $this->definition['title'];
     }
 
-    if (isset($this->definition['accept null'])) {
-      $this->accept_null = (bool) $this->definition['accept null'];
-    }
-    elseif (isset($this->definition['accept_null'])) {
-      $this->accept_null = (bool) $this->definition['accept_null'];
+    foreach (['accept_null', 'accept null'] as $key) {
+      foreach ([$this->options, $this->definition] as $array) {
+        if (isset($array[$key])) {
+          $this->accept_null = (bool) $array[$key];
+          break;
+        }
+      }
     }
     $this->valueOptions = NULL;
+
+    $this->definition['allow empty'] = TRUE;
   }
 
   /**
@@ -148,12 +171,14 @@ class BooleanOperator extends FilterPluginBase {
   protected function defineOptions() {
     $options = parent::defineOptions();
 
-    $options['value']['default'] = FALSE;
+    $options['accept_null']['default'] = FALSE;
 
     return $options;
   }
 
   protected function valueForm(&$form, FormStateInterface $form_state) {
+    $form['value'] = [];
+
     if (empty($this->valueOptions)) {
       // Initialize the array of possible values for this filter.
       $this->getValueOptions();
@@ -166,14 +191,37 @@ class BooleanOperator extends FilterPluginBase {
       // Configuring a filter: use radios for clarity.
       $filter_form_type = 'radios';
     }
-    $form['value'] = [
-      '#type' => $filter_form_type,
-      '#title' => $this->value_value,
-      '#options' => $this->valueOptions,
-      '#default_value' => $this->value,
-    ];
-    if (!empty($this->options['exposed'])) {
+
+    $which = 'all';
+    if (!empty($form['operator'])) {
+      $source = ':input[name="options[operator]"]';
+      $value = ':input[name="options[value]"]';
+    }
+    if ($exposed) {
       $identifier = $this->options['expose']['identifier'];
+
+      if (empty($this->options['expose']['use_operator']) || empty($this->options['expose']['operator_id'])) {
+        // exposed and locked.
+        $which = in_array($this->operator, $this->operatorValues(1)) ? 'value' : 'none';
+      }
+      else {
+        $source = ':input[name="' . $this->options['expose']['operator_id'] . '"]';
+      }
+    }
+
+    if ($which == 'all' || $which == 'value') {
+      $form['value'] = [
+        '#type' => $filter_form_type,
+        '#title' => $this->value_value,
+        '#options' => $this->valueOptions,
+        '#default_value' => $this->value,
+      ];
+      $form['accept_null'] = [
+        '#type' => 'checkbox',
+        '#title' => $this->t('Include empty (NULL) values as False'),
+        '#description' => $this->t('Include records without values in this filter as False.'),
+        '#default_value' => $this->accept_null,
+      ];
       $user_input = $form_state->getUserInput();
       if ($exposed && !isset($user_input[$identifier])) {
         $user_input[$identifier] = $this->value;
@@ -182,6 +230,21 @@ class BooleanOperator extends FilterPluginBase {
       // If we're configuring an exposed filter, add an - Any - option.
       if (!$exposed || empty($this->options['expose']['required'])) {
         $form['value']['#options'] = ['All' => $this->t('- Any -')] + $form['value']['#options'];
+      }
+
+      if ($which == 'all') {
+        // Setup #states for operators with a value.
+        foreach ($this->operatorValues(1) as $operator) {
+          $form['value']['#states']['visible'][] = [
+            $source => ['value' => $operator],
+          ];
+          if (isset($form['accept_null'])) {
+            $form['accept_null']['#states']['visible'][] = [
+              $source => ['value' => $operator],
+              $value => ['value' => 0],
+            ];
+          }
+        }
       }
     }
   }
@@ -200,13 +263,17 @@ class BooleanOperator extends FilterPluginBase {
       return $this->t('exposed');
     }
     if (empty($this->valueOptions)) {
-      $this->getValueOptions();
+      if (in_array($this->operator, $this->operatorValues(1))) {
+        $this->getValueOptions();
+        // Now that we have the valid options for this filter, just return the
+        // human-readable label based on the current value.  The valueOptions
+        // array is keyed with either 0 or 1, so if the current value is not
+        // empty, use the label for 1, and if it's empty, use the label for 0.
+        return $this->operator . ' ' . $this->valueOptions[!empty($this->value)];
+      }
+
+      return $this->operator;
     }
-    // Now that we have the valid options for this filter, just return the
-    // human-readable label based on the current value.  The valueOptions
-    // array is keyed with either 0 or 1, so if the current value is not
-    // empty, use the label for 1, and if it's empty, use the label for 0.
-    return $this->operator . ' ' . $this->valueOptions[!empty($this->value)];
   }
 
   public function defaultExposeOptions() {
@@ -225,7 +292,7 @@ class BooleanOperator extends FilterPluginBase {
 
     $info = $this->operators();
     if (!empty($info[$this->operator]['method'])) {
-      call_user_func([$this, $info[$this->operator]['method']], $field, $info[$this->operator]['query_operator']);
+      call_user_func([$this, $info[$this->operator]['method']], $field, isset($info[$this->operator]['query_operator']) ? $info[$this->operator]['query_operator'] : NULL);
     }
   }
 
@@ -272,6 +339,28 @@ class BooleanOperator extends FilterPluginBase {
         $this->query->addWhere($this->options['group'], $field, 1, $query_operator);
       }
     }
+  }
+
+  protected function opEmpty($field) {
+    if ($this->operator == 'empty') {
+      $operator = "IS NULL";
+    }
+    else {
+      $operator = "IS NOT NULL";
+    }
+
+    $this->query->addWhere($this->options['group'], $field, NULL, $operator);
+  }
+
+  protected function operatorValues($values = 1) {
+    $options = [];
+    foreach ($this->operators() as $id => $info) {
+      if (isset($info['values']) && $info['values'] == $values) {
+        $options[] = $id;
+      }
+    }
+
+    return $options;
   }
 
 }

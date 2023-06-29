@@ -54,6 +54,17 @@ function views_post_update_configuration_entity_relationships() {
 }
 
 /**
+ * Update boolean filter settings.
+ */
+function views_post_update_boolean_filter_accept_null(?array &$sandbox = NULL) {
+  /** @var \Drupal\views\ViewsConfigUpdater $view_config_updater */
+  $view_config_updater = \Drupal::classResolver(ViewsConfigUpdater::class);
+  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'view', function (ViewEntityInterface $view) use ($view_config_updater) {
+    return $view_config_updater->needsBooleanFilterAcceptNullUpdate($view);
+  }, TRUE);
+}
+
+/**
  * Rename the setting for showing the default display to 'default_display'.
  */
 function views_post_update_rename_default_display_setting() {

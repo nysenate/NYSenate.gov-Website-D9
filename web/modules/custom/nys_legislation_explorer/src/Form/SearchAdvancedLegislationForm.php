@@ -180,6 +180,7 @@ class SearchAdvancedLegislationForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     // Build your form here.
+    $form['#cache']['contexts'][] = 'url.query_args';
     $results_page = $this->helper->isResultsPage();
     $markup = 'Fill out one or more of the following filter criteria to perform a search.';
     $form['advanced_search'] = [

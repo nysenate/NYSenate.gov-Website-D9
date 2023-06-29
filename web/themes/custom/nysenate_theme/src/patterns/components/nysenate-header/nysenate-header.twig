@@ -2,6 +2,11 @@
 {% import '@nysenate_theme/icons/_icons-macro.twig' as icons %}
 
 {% set error_page = false or is_error_page %}
+{% set mcp = 'microsite_content_producer' in user.getroles %}
+{% set lc = 'legislative_correspondent' in user.getroles %}
+{% set student = 'student_programs' in user.getroles %}
+{% set frontpage = 'frontpage_editor' in user.getroles %}
+{% set admin = 'admin' in user.getroles %}
 
 <header
   id="js-sticky" role="banner" class="l-header {{ error_page ? 'error-page-header' : '' }}" style="z-index: 100;">
@@ -50,9 +55,19 @@
                   <a class="c-header--btn" href="/user/logout">Logout</a>
                 </li>
 
-                {% if is_admin %}
+                {% if is_admin or admin or frontpage or mcp or lc or student %}
                   <li class="c-login--admin">
-                    <a class="c-header--btn" href="/admin/dashboard">Admin</a>
+                    {% if admin or is_admin %}
+                      <a class="c-header--btn" href="/admin">Admin</a>
+                    {% elseif frontpage  %}
+                      <a class="c-header--btn" href="/admin/frontpage-editors">Admin</a>
+                    {% elseif student  %}
+                      <a class="c-header--btn" href="/admin/student-programs">Admin</a>
+                    {% elseif mcp %}
+                      <a class="c-header--btn" href="/admin/content/my-senator">Admin</a>
+                    {% elseif lc %}
+                      <a class="c-header--btn" href="/dashboard/senators">Admin</a>
+                    {% endif %}
                   </li>
                 {% endif %}
               </ul>

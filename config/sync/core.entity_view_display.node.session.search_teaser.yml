@@ -1,0 +1,85 @@
+uuid: 332f68f2-579f-4656-90b7-c7b1ae60413a
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.search_teaser
+    - field.field.node.session.body
+    - field.field.node.session.field_calendar_number
+    - field.field.node.session.field_date_range
+    - field.field.node.session.field_issues
+    - field.field.node.session.field_live_message_override
+    - field.field.node.session.field_live_message_status
+    - field.field.node.session.field_location
+    - field.field.node.session.field_meeting_location
+    - field.field.node.session.field_session_calendars
+    - field.field.node.session.field_transcript
+    - field.field.node.session.field_upcoming_legislation
+    - field.field.node.session.field_ustream
+    - field.field.node.session.field_video_redirect
+    - field.field.node.session.field_video_status
+    - field.field.node.session.field_yt
+    - node.type.session
+  module:
+    - address
+    - datetime_range
+    - user
+id: node.session.search_teaser
+targetEntityType: node
+bundle: session
+mode: search_teaser
+content:
+  field_calendar_number:
+    type: number_integer
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_date_range:
+    type: daterange_default
+    label: hidden
+    settings:
+      timezone_override: ''
+      format_type: html_datetime
+      separator: '-'
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_location:
+    type: address_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_session_calendars:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  body: true
+  field_issues: true
+  field_live_message_override: true
+  field_live_message_status: true
+  field_meeting_location: true
+  field_transcript: true
+  field_upcoming_legislation: true
+  field_ustream: true
+  field_video_redirect: true
+  field_video_status: true
+  field_yt: true
+  langcode: true
+  private_message_link: true
+  search_api_excerpt: true

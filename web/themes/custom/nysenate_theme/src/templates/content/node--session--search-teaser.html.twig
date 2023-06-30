@@ -1,0 +1,21 @@
+{{ attach_library('nysenate_theme/nysenate-search-results-listing') }}
+
+{% set meeting_date = content.field_date_range['#items'].value|date('F j, Y') %}
+{% set session_title = 'Floor Calendar ' ~ content.field_calendar_number['#items'].value %}
+
+{% include "@nysenate_theme/nysenate-search-results-listing/nysenate-search-results-listing.twig" with {
+  "article": {
+    "bill": true,
+    "is_full_width": true,
+    "is_dynamic_color": true,
+    "bill_title": {
+      "url": url,
+      "text": session_title
+    },
+    "topics": [
+      {
+        "name": meeting_date
+      }
+    ]
+  }
+} only %}

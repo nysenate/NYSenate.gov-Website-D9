@@ -282,12 +282,55 @@ handlers:
     label: 'Email notification'
     notes: ''
     status: true
-    conditions: {  }
+    conditions:
+      enabled:
+        ':input[name="inquiry"]':
+          value: website_feedback
     weight: 2
     settings:
       states:
         - completed
-      to_mail: _default
+      to_mail: webadmin@nysenate.gov
+      to_options: {  }
+      bcc_mail: ''
+      bcc_options: {  }
+      cc_mail: ''
+      cc_options: {  }
+      from_mail: '[webform_submission:values:email:raw]'
+      from_options: {  }
+      from_name: '[webform_submission:values:name:raw]'
+      reply_to: ''
+      return_path: ''
+      sender_mail: ''
+      sender_name: ''
+      subject: '[webform_submission:values:subject:raw]'
+      body: '[webform_submission:values:message:value]'
+      excluded_elements: {  }
+      ignore_access: false
+      exclude_empty: true
+      exclude_empty_checkbox: false
+      exclude_attachments: false
+      html: false
+      attachments: false
+      twig: false
+      theme_name: ''
+      parameters: {  }
+      debug: false
+  email_notification_1:
+    id: email
+    handler_id: email_notification_1
+    label: 'Email notification - General'
+    notes: ''
+    status: true
+    conditions:
+      enabled:
+        ':input[name="inquiry"]':
+          value: general_inquiry
+    weight: 2
+    settings:
+      states:
+        - completed
+      to_mail: info@nysenate.gov
       to_options: {  }
       bcc_mail: ''
       bcc_options: {  }

@@ -68,18 +68,16 @@ function nys_users_user_presave(UserInterface $user): void {
     }
   }
 
-  if (in_array('administrator', $current_user_roles, FALSE)) {
-    if (!empty($user->id())) {
-      // Get updated fields.
-      $updated = array_keys(DiffArray::diffAssocRecursive($user->toArray(), $user->original->toArray()));
+  if (!empty($user->id())) {
+    // Get updated fields.
+    $updated = array_keys(DiffArray::diffAssocRecursive($user->toArray(), $user->original->toArray()));
 
-      // Check if field_address is updated.
-      if (in_array('field_address', $updated)) {
-        $address = $user->field_address->getValue()[0];
-        $district = \Drupal::service('nys_registration.helper')->getDistrictFromAddress($address);
-        $district_id = $district?->id();
-        $user->set('field_district', $district_id);
-      }
+    // Check if field_address is updated.
+    if (in_array('field_address', $updated)) {
+      $address = $user->field_address->getValue()[0];
+      $district = \Drupal::service('nys_registration.helper')->getDistrictFromAddress($address);
+      $district_id = $district?->id();
+      $user->set('field_district', $district_id);
     }
   }
 }

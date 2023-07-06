@@ -1,0 +1,36 @@
+# Generated on 2020-04-01 using generator-mc-d8-theme 2.2.1
+
+# Drupal's .info.yml files allow themers to easily specify some of the static
+# properties of your theme. Properties such as its name, libraries of style
+# sheets and javascripts, and block regions.
+#
+# Drupal 8 stores a cache of the data in this .info.yml files. If you modify any
+# lines in this file, you MUST refresh Drupal 8's cache. You can do this with
+# the "drush cr" command or by simply visiting the Appearance page at
+# admin/appearance.
+
+name: NY Senate Admin Theme Overrides
+type: theme
+description: Admin theme for Rain distribution.
+package: Other
+core: 8.x
+core_version_requirement: '^8 || ^9'
+base theme: rain_admin
+
+# This section controls the libraries for your theme. For full documentation,
+# see https://www.drupal.org/node/2216195
+
+# The "libraries:" section will add a library to _all_ pages.
+libraries:
+  - nysen_admin/global-styling
+
+regions:
+  header: 'Header'
+  pre_content: 'Pre-content'
+  highlighted: Highlighted
+  content: Content
+  page_top: 'Page top'
+  page_bottom: 'Page bottom'
+  sidebar_first: 'First sidebar'
+regions_hidden:
+  - sidebar_first

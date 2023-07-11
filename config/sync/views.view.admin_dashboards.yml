@@ -697,6 +697,7 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
+          accept_null: false
         title:
           id: title
           table: node_field_data
@@ -849,6 +850,7 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
+          accept_null: false
         type:
           id: type
           table: node_field_data
@@ -899,7 +901,20 @@ display:
         access: false
         filters: false
         filter_groups: false
+        header: false
       display_description: ''
+      header:
+        area_text_custom:
+          id: area_text_custom
+          table: views
+          field: area_text_custom
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text_custom
+          empty: false
+          content: "<h3>Actions</h3>\r\n<div>\r\n<p><ul>\r\n<li><a href=\"/node/add/events\">Create Events</a></li>\r\n<li><a href=\"/admin/structure/entityqueue/homepage_hero/homepage_hero\">Manage Homepage Hero</a></li>\r\n<li><a href=\"/admin/structure/entityqueue/frontpage_news/frontpage_news\">Manage Frontpage News</a></li>\r\n<li><a href=\"/admin/structure/entityqueue/homepage_featured_story/homepage_featured_story\">Manage Featured Stories Homepage</a></li>\r\n<li><a href=\"/admin/structure/entityqueue/global_promo_banner/global_promo_banner\">Manage Sitewide Promotional Banners</a></li>\r\n</ul>\r\n</p>\r\n</div>\r\n<h3>Manage Content</h3>"
+          tokenize: false
       display_extenders: {  }
       path: admin/frontpage-editors
     cache_metadata:
@@ -1329,6 +1344,7 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
+          accept_null: false
         type:
           id: type
           table: node_field_data
@@ -1890,6 +1906,7 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
+          accept_null: false
         type:
           id: type
           table: node_field_data
@@ -2618,6 +2635,7 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
+          accept_null: false
         type:
           id: type
           table: node_field_data
@@ -3498,6 +3516,7 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
+          accept_null: false
       filter_groups:
         operator: AND
         groups:

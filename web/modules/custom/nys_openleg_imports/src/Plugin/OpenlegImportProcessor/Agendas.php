@@ -28,7 +28,6 @@ class Agendas extends ImportProcessorBase {
    * is reported only if all addenda were saved successfully.
    */
   public function process(): bool {
-
     $ret = TRUE;
     foreach (($this->item->result()->committeeAgendas->items ?? []) as $agenda) {
       foreach (($agenda->addenda->items ?? []) as $addendum) {
@@ -51,12 +50,12 @@ class Agendas extends ImportProcessorBase {
       catch (\Throwable $e) {
         $ret = FALSE;
         $this->logger->error(
-              'Failed to save imported agenda @title',
-              [
-                '@title' => $this->getId(),
-                '@message' => $e->getMessage(),
-              ]
-          );
+          'Failed to save imported agenda @title',
+          [
+            '@title' => $this->getId(),
+            '@message' => $e->getMessage(),
+          ]
+        );
       }
     }
 
@@ -72,14 +71,13 @@ class Agendas extends ImportProcessorBase {
   public function transcribeToNode(object $item, Node $node): bool {
     $success = TRUE;
 
-    $values = [];
     $comm_name = $item->committeeId->name ?? '';
     try {
       $committee = $this->entityTypeManager
         ->getStorage('taxonomy_term')
         ->loadByProperties(['vid' => 'committees', 'name' => $comm_name]);
     }
-    catch (\Throwable $e) {
+    catch (\Throwable) {
       $committee = [];
     }
     $committee = reset($committee);
@@ -105,20 +103,18 @@ class Agendas extends ImportProcessorBase {
       foreach ($values as $field => $val) {
         $node->set($field, $val);
       }
-      if ($item->hasVotes ?? FALSE) {
-        $this->populateBillVotes($node, $item);
-      }
+      $this->populateBillVotes($node, $item);
     }
     catch (\Throwable $e) {
       $success = FALSE;
       $this->logger->error(
-            'Failed to set properties for node @node from @item',
-            [
-              '@node' => $node->id(),
-              '@item' => $node->get('title')->getValue(),
-              '@message' => $e->getMessage(),
-            ]
-        );
+        'Failed to set properties for node @node from @item',
+        [
+          '@node' => $node->id(),
+          '@item' => $node->get('title')->getValue(),
+          '@message' => $e->getMessage(),
+        ]
+      );
     }
 
     return $success;
@@ -150,8 +146,8 @@ class Agendas extends ImportProcessorBase {
     $time = $meeting->meeting->meetingDateTime ?? '';
 
     return ($year && $week && $time && $committee)
-        ? "$year Week $week $committee ($time)"
-        : '';
+      ? "$year Week $week $committee ($time)"
+      : '';
   }
 
   /**
@@ -170,9 +166,10 @@ class Agendas extends ImportProcessorBase {
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  protected function populateBillVotes(Node $node, object $item) {
+  protected function populateBillVotes(Node $node, object $item): void {
     // For reference.
     $storage = $this->entityTypeManager->getStorage('paragraph');
+    $bill_storage = $this->entityTypeManager->getStorage('node');
     $vote_types = [
       'EXC' => 'excused',
       'AYEWR' => 'aye_wr',
@@ -184,63 +181,56 @@ class Agendas extends ImportProcessorBase {
 
     // Note the current paragraphs for later and initialize the "new" list.
     $old_votes = array_map(
-          function ($v) {
-              return $v['target_id'];
-          },
-          $node->get('field_ol_agenda_bills')->getValue()
-      );
+      function($v) {
+        return $v['target_id'];
+      },
+      $node->get('field_ol_agenda_bills')->getValue()
+    );
     $new_votes = [];
 
     // Organize the bill and vote objects for easier reference.
     $bills = [];
     foreach (($item->bills->items ?? []) as $bill) {
       $name = BillHelper::formatTitle($bill->billId);
-      $bills[$name] = $bill;
+      $bills[$name] = [
+        'bill' => $bill,
+        'vote' => NULL,
+        'nid' => NULL,
+      ];
     }
-    $votes = [];
     foreach (($item->voteInfo->votesList->items ?? []) as $vote) {
       $name = BillHelper::formatTitle($vote->bill);
-      $votes[$name] = $vote;
+      if (array_key_exists('$name', $bills)) {
+        $bills[$name]['vote'] = $vote;
+      }
     }
 
     // Resolve the node id references for each bill.
     if (count($bills)) {
-      $bill_storage = $this->entityTypeManager->getStorage('node');
       $bill_refs = $bill_storage->loadByProperties(
-            [
-              'type' => 'bill',
-              'title' => array_keys($bills),
-            ]
-        );
+        ['type' => 'bill', 'title' => array_keys($bills)]
+      );
       foreach ($bill_refs as $nid => $bill_node) {
-        /**
-         * @var \Drupal\node\Entity\Node $bill_node
-         */
-        $title = $bill_node->getTitle();
-        if (array_key_exists($title, $votes)) {
-          $votes[$title]->nid = $nid;
+        /** @var \Drupal\node\Entity\Node $bill_node */
+        $key = $bill_node->getTitle();
+        if (array_key_exists($key, $bills)) {
+          $bills[$key]['nid'] = $nid;
         }
       }
     }
 
-    foreach ($votes as $bill_key => $vote) {
-      if ($vote->nid ?? 0) {
-        /**
-         * @var \Drupal\paragraphs\Entity\Paragraph $new_pg
-         */
-        $new_pg = $storage->create(['type' => 'agenda_bills']);
-        $new_pg->set('field_ol_bill', $vote->nid);
-        $new_pg->set('field_ol_bill_message', $bills[$bill_key]->message);
-        $new_pg->set('field_ol_bill_name', json_encode($bills[$bill_key]));
-        foreach ($vote_types as $prop => $field) {
-          $value = $vote->vote->memberVotes->items->{$prop}->size ?? 0;
-          if ($value) {
-            $new_pg->set('field_ol_' . $field . '_count', $value);
-          }
-        }
-        $new_pg->save();
-        $new_votes[] = $new_pg;
+    foreach ($bills as $data) {
+      /** @var \Drupal\paragraphs\Entity\Paragraph $new_pg */
+      $new_pg = $storage->create(['type' => 'agenda_bills']);
+      $new_pg->set('field_ol_bill', $data['nid']);
+      $new_pg->set('field_ol_bill_message', $data['bill']->message ?? '');
+      $new_pg->set('field_ol_bill_name', json_encode($data['bill']));
+      foreach ($vote_types as $prop => $field) {
+        $value = ($data['vote']?->vote?->memberVotes?->items?->{$prop}?->size) ?? 0;
+        $new_pg->set('field_ol_' . $field . '_count', $value);
       }
+      $new_pg->save();
+      $new_votes[] = $new_pg;
     }
 
     // Delete the now-obsolete paragraphs.

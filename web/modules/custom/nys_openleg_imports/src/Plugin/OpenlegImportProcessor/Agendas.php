@@ -181,7 +181,7 @@ class Agendas extends ImportProcessorBase {
 
     // Note the current paragraphs for later and initialize the "new" list.
     $old_votes = array_map(
-      function($v) {
+      function ($v) {
         return $v['target_id'];
       },
       $node->get('field_ol_agenda_bills')->getValue()

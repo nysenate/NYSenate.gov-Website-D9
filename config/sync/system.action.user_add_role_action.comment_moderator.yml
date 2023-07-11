@@ -1,0 +1,14 @@
+uuid: 4ad2c010-df7f-4fbd-a92c-704659b4d777
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.comment_moderator
+  module:
+    - user
+id: user_add_role_action.comment_moderator
+label: 'Add the Comment Moderator role to the selected user(s)'
+type: user
+plugin: user_add_role_action
+configuration:
+  rid: comment_moderator

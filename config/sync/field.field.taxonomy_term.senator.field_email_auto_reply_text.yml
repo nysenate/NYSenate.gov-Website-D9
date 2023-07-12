@@ -1,12 +1,12 @@
-uuid: e38585df-de85-4788-982c-d698cc3cd9fc
+uuid: 96161bc3-82e7-4004-becd-b1ab1c04394e
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.taxonomy_term.field_email_autoreply_text
+    - field.storage.taxonomy_term.field_email_auto_reply_text
     - taxonomy.vocabulary.senator
-id: taxonomy_term.senator.field_email_autoreply_text
-field_name: field_email_autoreply_text
+id: taxonomy_term.senator.field_email_auto_reply_text
+field_name: field_email_auto_reply_text
 entity_type: taxonomy_term
 bundle: senator
 label: 'Contact Form Auto-Reply'
@@ -16,4 +16,4 @@ translatable: false
 default_value: {  }
 default_value_callback: ''
 settings: {  }
-field_type: string
+field_type: string_long

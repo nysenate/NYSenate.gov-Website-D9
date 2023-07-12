@@ -110,11 +110,11 @@ class FindMySenatorForm extends FormBase {
     $title = $this->getRouteMatch()->getRouteObject()->getDefault('_title');
     $form = [
       'title' => [
-        '#markup' => '<h1>' . $title . '</h1>',
+        '#markup' => '<h2 class="nys-title">' . $title . '</h2>',
         '#weight' => 1,
       ],
       'intro' => [
-        '#markup' => 'Please enter your street address and zip code to find out who your Senator is.',
+        '#markup' => '<p>Please enter your street address and zip code to find out who your Senator is.</p>',
         '#weight' => 10,
       ],
       'field_address' => $this->getAddressDefinition(),
@@ -126,6 +126,8 @@ class FindMySenatorForm extends FormBase {
       'result' => ['#markup' => '', '#weight' => 100],
     ];
     $form['#attached']['library'][] = 'nysenate_theme/nysenate-user-profile';
+    $form['#prefix'] = '<div class="c-login"><div class="c-find-my-senator">';
+    $form['#suffix'] = '</div></div>';
 
     if ($form_state->isSubmitted()) {
       $district = $form_state->get('district');
@@ -175,7 +177,11 @@ class FindMySenatorForm extends FormBase {
                   </p>
                   <p>NY Senate District ' . $district . '</p>
                 </div>
-                <a class="c-msg-senator icon-before__contact" href="' . $senator_link . '/contact">Message Senator</a>
+                <div>
+                  <p class="c-login-create">
+                    <a class="c-msg-senator icon-before__contact" href="' . $senator_link . '/contact">Message Senator</a>
+                  </p>
+                </div>
               </div>
               <div class="columns medium-6 r-padded-column">
                 <h2 class="c-container--title">Matched Address</h2>

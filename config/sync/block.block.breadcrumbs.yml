@@ -1,0 +1,20 @@
+uuid: 716cd1f5-1b61-4c9e-807d-5f9f323d2faf
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - nysen_admin
+id: breadcrumbs
+theme: nysen_admin
+region: header
+weight: -1
+provider: null
+plugin: system_breadcrumb_block
+settings:
+  id: system_breadcrumb_block
+  label: Breadcrumbs
+  label_display: '0'
+  provider: system
+visibility: {  }

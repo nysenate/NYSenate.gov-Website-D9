@@ -287,7 +287,7 @@ class NysSubscriptionsEventSubscriber implements EventSubscriberInterface {
       }
 
       // Add the governor's name.
-      $subs['%governor.full_name%'] = $this->siteConfig->get('governor_name');
+      $subs['%governor.full_name%'] = $this->siteConfig->get('governor_full_name');
     }
 
   }

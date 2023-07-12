@@ -825,6 +825,10 @@ if (isset($_ENV['PANTHEON_ENVIRONMENT'])) {
       $config['environment_indicator.indicator']['name'] = 'Live';
       $config['environment_indicator.indicator']['bg_color'] = '#000000';
       $config['environment_indicator.indicator']['fg_color'] = '#FFFFFF';
+
+      // Temp fix for canonical URL on live.  See line 777, above.
+      $_ENV['site_host'] = 'www.nysenate.gov';
+      $_ENV['site_url'] = 'https://www.nysenate.gov';
       break;
 
     default:

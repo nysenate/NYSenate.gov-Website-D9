@@ -2,8 +2,6 @@
 
 namespace Drupal\field_validation\Plugin\Validation\Constraint;
 
-use Drupal\Core\Entity\Entity;
-use Drupal\Core\Url;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
@@ -22,7 +20,7 @@ class FieldValidationConstraintValidator extends ConstraintValidator {
       return;
     }
 
-    //For base field validation, we limit it to attached bundle.
+    // For base field validation, we limit it to attached bundle.
     $entity = $items->getEntity();
     $bundle = $entity->bundle();
 
@@ -41,7 +39,13 @@ class FieldValidationConstraintValidator extends ConstraintValidator {
     $field_name = $items->getFieldDefinition()->getName();
 
     foreach ($rules as $rule) {
-      if ($rule->getFieldName() == $field_name) {
+      if ($rule->getFieldName() == $field_name
+      && (
+        !($applicable_roles = $rule->getApplicableRoles())
+        || array_intersect($applicable_roles, \Drupal::currentUser()->getRoles()))
+      && (
+        $rule->checkCondition($entity))
+      ) {
         $rules_available[] = $rule;
       }
     }
@@ -69,7 +73,8 @@ class FieldValidationConstraintValidator extends ConstraintValidator {
         }
       }
 
-    }else {
+    }
+    else {
       $validator_manager = \Drupal::service('plugin.manager.field_validation.field_validation_rule');
       // You can hard code configuration or you load from settings.
       foreach ($rules_available as $rule) {

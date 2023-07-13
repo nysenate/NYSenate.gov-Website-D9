@@ -633,6 +633,7 @@ class MediaTest extends WebDriverTestBase {
 
     // Ensure that caption can be linked.
     $this->assertNotEmpty($figcaption = $assert_session->waitForElement('css', '.drupal-media figcaption'));
+    $figcaption->click();
     $this->selectTextInsideElement('.drupal-media figcaption');
     $this->assertNotEmpty($assert_session->waitForElement('css', '.drupal-media figcaption.ck-editor__nested-editable'));
     $this->pressEditorButton('Link');
@@ -1059,6 +1060,12 @@ class MediaTest extends WebDriverTestBase {
 
     $this->assertNotEmpty($drupalmedia = $assert_session->waitForElementVisible('css', '.ck-content .ck-widget.drupal-media'));
     $drupalmedia->click();
+    $this->assertVisibleBalloon('.ck-toolbar[aria-label="Drupal Media toolbar"]');
+
+    // Turn off caption, so we don't accidentally put our link in that text
+    // field instead of on the actual media.
+    $this->getBalloonButton('Toggle caption off')->click();
+    $assert_session->assertNoElementAfterWait('css', 'figure.drupal-media > figcaption');
 
     $this->assertVisibleBalloon('.ck-toolbar[aria-label="Drupal Media toolbar"]');
     $this->getBalloonButton('Link media')->click();
@@ -1501,7 +1508,7 @@ class MediaTest extends WebDriverTestBase {
     $drupal_media_element = $editor_dom->getElementsByTagName('drupal-media')
       ->item(0);
     $this->assertFalse($drupal_media_element->hasAttribute('data-view-mode'));
-    $assert_session->elementExists('css', 'article.media--view-mode-view-mode-1');
+    $assert_session->waitForElement('css', 'article.media--view-mode-view-mode-1');
 
     // Test that setting allowed_view_modes back to two items restores the
     // field.
@@ -1544,7 +1551,7 @@ class MediaTest extends WebDriverTestBase {
     $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
     $this->getBalloonButton('View Mode 1')->click();
     $this->getBalloonButton('View Mode 2 has Numeric ID')->click();
-    $assert_session->elementExists('css', 'article.media--view-mode-_2222');
+    $assert_session->waitForElement('css', 'article.media--view-mode-_2222');
     $this->assertEmpty($assert_session->waitForElementVisible('css', '.drupal-media figcaption'));
 
     // Test that a media with no view modes configured will be

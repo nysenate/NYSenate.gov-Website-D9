@@ -68,8 +68,8 @@ class FieldValidationRuleDeleteForm extends ConfirmFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->fieldValidationRuleSet->deleteFieldValidationRule($this->fieldValidationRule);
-	  $this->messenger()->addMessage($this->t('The rule %name has been deleted.', ['%name' => $this->fieldValidationRule->label()]));
-	  $form_state->setRedirectUrl($this->fieldValidationRuleSet->toUrl('edit-form'));
+    $this->messenger()->addMessage($this->t('The rule %name has been deleted.', ['%name' => $this->fieldValidationRule->label()]));
+    $form_state->setRedirectUrl($this->fieldValidationRuleSet->toUrl('edit-form'));
   }
 
 }

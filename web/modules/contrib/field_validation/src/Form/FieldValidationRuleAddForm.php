@@ -6,6 +6,8 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\field_validation\FieldValidationRuleManager;
 use Drupal\field_validation\FieldValidationRuleSetInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
+use Drupal\Core\Plugin\CachedDiscoveryClearerInterface;
 
 /**
  * Provides an add form for field validation rule.
@@ -25,7 +27,9 @@ class FieldValidationRuleAddForm extends FieldValidationRuleFormBase {
    * @param \Drupal\field_validation\FieldValidationRuleManager $field_validation_rule_manager
    *   The fieldValidationRule manager.
    */
-  public function __construct(FieldValidationRuleManager $field_validation_rule_manager) {
+  public function __construct(EntityFieldManagerInterface $entity_field_manager, CachedDiscoveryClearerInterface $plugin_cache_clearer, FieldValidationRuleManager $field_validation_rule_manager) {
+    $this->entityFieldManager = $entity_field_manager;
+    $this->pluginCacheClearer = $plugin_cache_clearer;   
     $this->fieldValidationRuleManager = $field_validation_rule_manager;
   }
 
@@ -34,6 +38,8 @@ class FieldValidationRuleAddForm extends FieldValidationRuleFormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
+      $container->get('entity_field.manager'),
+      $container->get('plugin.cache_clearer'),	
       $container->get('plugin.manager.field_validation.field_validation_rule')
     );
   }
@@ -41,7 +47,7 @@ class FieldValidationRuleAddForm extends FieldValidationRuleFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, FieldValidationRuleSetInterface $field_validation_rule_set = NULL, $field_validation_rule = NULL, $field_name='') {
+  public function buildForm(array $form, FormStateInterface $form_state, FieldValidationRuleSetInterface $field_validation_rule_set = NULL, $field_validation_rule = NULL, $field_name = '') {
     $form = parent::buildForm($form, $form_state, $field_validation_rule_set, $field_validation_rule);
 
     $form['#title'] = $this->t('Add %label field validation rule', ['%label' => $this->fieldValidationRule->label()]);

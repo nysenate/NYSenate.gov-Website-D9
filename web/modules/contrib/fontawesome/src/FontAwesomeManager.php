@@ -51,7 +51,7 @@ class FontAwesomeManager implements FontAwesomeManagerInterface {
   protected $moduleExtensionList;
 
   /**
-   * Constructs a FontAwesomeManager object.
+   * Constructs a new Drupal\fontawesome\FontAwesomeManager object.
    *
    * @param \Drupal\Core\Cache\CacheBackendInterface $data_cache
    *   The data cache.
@@ -61,6 +61,8 @@ class FontAwesomeManager implements FontAwesomeManagerInterface {
    *   The theme handler.
    * @param \Drupal\Core\File\FileSystemInterface $file_system
    *   The file system helper.
+   * @param \Drupal\Core\Extension\ModuleExtensionList $module_extension_list
+   *   The module extension list.
    */
   public function __construct(CacheBackendInterface $data_cache, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, FileSystemInterface $file_system, ModuleExtensionList $module_extension_list) {
     $this->dataCache = $data_cache;
@@ -140,7 +142,8 @@ class FontAwesomeManager implements FontAwesomeManagerInterface {
       }
 
       // Cache the icons array.
-      $this->dataCache->set('fontawesome.iconcategorylist', $icons, strtotime('+1 week'), ['fontawesome', 'iconcategorylist']);
+      $this->dataCache->set('fontawesome.iconcategorylist', $icons, strtotime('+1 week'),
+      ['fontawesome', 'iconcategorylist']);
     }
     else {
       $icons = $icons->data;
@@ -162,7 +165,8 @@ class FontAwesomeManager implements FontAwesomeManagerInterface {
       $categories = $this->getCategoryMetadata();
 
       // Cache the categories array.
-      $this->dataCache->set('fontawesome.categorylist', $categories, strtotime('+1 week'), ['fontawesome', 'categorylist']);
+      $this->dataCache->set('fontawesome.categorylist', $categories, strtotime('+1 week'),
+      ['fontawesome', 'categorylist']);
     }
     else {
       $categories = $categories->data;
@@ -190,6 +194,10 @@ class FontAwesomeManager implements FontAwesomeManagerInterface {
             $type = 'brands';
             break;
           }
+          // Add the sharp types.
+          if (in_array($style, ['regular', 'solid', 'light'])) {
+            $icon['styles'][] = 'sharp' . $style;
+          }
         }
         // Add the aliases into the search terms.
         if (isset($icon['aliases']['names'])) {
@@ -205,7 +213,8 @@ class FontAwesomeManager implements FontAwesomeManagerInterface {
       }
 
       // Cache the icons array.
-      $this->dataCache->set('fontawesome.iconlist', $icons, strtotime('+1 week'), ['fontawesome', 'iconlist']);
+      $this->dataCache->set('fontawesome.iconlist', $icons, strtotime('+1 week'),
+      ['fontawesome', 'iconlist']);
     }
     else {
       $icons = $icons->data;

@@ -16,18 +16,21 @@ class FieldValidationConstraint extends Constraint {
   public $ruleset_name;
   public $rule_uuid;
 
-  public function __construct($options = null){
+  /**
+   *
+   */
+  public function __construct($options = NULL) {
     if (is_array($options)) {
-      if (key_exists('ruleset_name',$options)) {
+      if (key_exists('ruleset_name', $options)) {
         $this->ruleset_name = $options['ruleset_name'];
       }
 
-      if (key_exists('rule_uuid',$options)) {
+      if (key_exists('rule_uuid', $options)) {
         $this->rule_uuid = $options['rule_uuid'];
       }
     }
 
-    if (null !== $options && !is_array($options)) {
+    if (NULL !== $options && !is_array($options)) {
       $options = [
         'ruleset_name' => $options,
         'rule_uuid' => $options,

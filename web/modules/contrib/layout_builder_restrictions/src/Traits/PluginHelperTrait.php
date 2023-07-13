@@ -176,13 +176,20 @@ trait PluginHelperTrait {
    *   A string representing the untranslated block category.
    */
   public function getUntranslatedCategory($category) {
+
     if ($category instanceof TranslatableMarkup) {
       $output = $category->getUntranslatedString();
       // Rename to match Layout Builder Restrictions naming.
       if ($output == '@entity fields') {
         $output = 'Content fields';
       }
-      if ($output == "Custom") {
+      if ($output === "Custom") {
+        $output = "Custom blocks";
+      }
+      // Add affordance for name change in Drupal 10.1. "Custom blocks" are now
+      // "Content block". We use the legacy name for compatibility reasons.
+      // See #3363076.
+      if ($output === "Content block") {
         $output = "Custom blocks";
       }
     }

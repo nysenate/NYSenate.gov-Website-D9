@@ -264,10 +264,10 @@ class AllowedBlocksForm extends FormBase {
         ];
       }
 
-      if ($category == 'Custom blocks' || $category == 'Custom block types') {
+      if ($category == 'Custom blocks' || $category == 'Content block' || $category == 'Custom block types') {
         $category_form['description'] = [
           '#type' => 'container',
-          '#children' => $this->t('<p>In the event both <em>Custom Block Types</em> and <em>Custom Blocks</em> restrictions are enabled, <em>Custom Block Types</em> restrictions are disregarded.</p>'),
+          '#children' => $this->t('<p>In the event both <em>Custom Block Types</em> and <em>Content Blocks</em> restrictions are enabled, <em>Custom Block Types</em> restrictions are disregarded.</p>'),
           '#states' => [
             'visible' => [
               ':input[name="allowed_blocks[' . $category . '][restriction]"]' => ['value' => "restricted"],

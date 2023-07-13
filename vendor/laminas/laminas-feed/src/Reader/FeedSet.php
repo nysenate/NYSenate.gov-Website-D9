@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\Feed\Reader;
 
 use ArrayObject;
@@ -18,6 +20,7 @@ use function sprintf;
 use function strtolower;
 use function trim;
 
+/** @template-extends ArrayObject<array-key, FeedSet|Feed\FeedInterface|string|null> */
 class FeedSet extends ArrayObject
 {
     /** @var null|string */
@@ -163,11 +166,10 @@ class FeedSet extends ArrayObject
     }
 
     /**
+     * @inheritDoc
+     *
      * Supports lazy loading of feeds using Reader::import() but
      * delegates any other operations to the parent class.
-     *
-     * @param  string $offset
-     * @return mixed
      */
     #[ReturnTypeWillChange]
     public function offsetGet($offset)

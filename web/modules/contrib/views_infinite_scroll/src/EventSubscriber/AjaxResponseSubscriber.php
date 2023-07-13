@@ -4,7 +4,7 @@ namespace Drupal\views_infinite_scroll\EventSubscriber;
 
 use Drupal\views\Ajax\ViewAjaxResponse;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
@@ -26,7 +26,10 @@ class AjaxResponseSubscriber implements EventSubscriberInterface {
         $command['method'] = 'infiniteScrollInsertView';
       }
       // Stop the view from scrolling to the top of the page.
-      if ($command['command'] === 'viewsScrollTop') {
+      // We need to check for both commands as "viewsScrollTop" is deprecated
+      // and not used in views_ajax.js for Drupal 10.1 anymore and replaced
+      // by "scrollTop".
+      if (in_array($command['command'], ['scrollTop', 'viewsScrollTop'])) {
         unset($commands[$delta]);
       }
     }
@@ -38,7 +41,7 @@ class AjaxResponseSubscriber implements EventSubscriberInterface {
    * @param \Symfony\Component\HttpKernel\Event\ResponseEvent $event
    *   The response event, which contains the possible AjaxResponse object.
    */
-  public function onResponse(\Symfony\Component\HttpKernel\Event\ResponseEvent $event) {
+  public function onResponse(ResponseEvent $event) {
     $response = $event->getResponse();
 
     // Only alter views ajax responses.

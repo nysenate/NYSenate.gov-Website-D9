@@ -41,8 +41,24 @@ field_validation.rule_set.*:
             type: string
             label: 'Field column'
           error_message:
-            type: label
+            type: string
             label: 'Error message'
+          roles:
+            type: sequence
+            sequence:
+              type: string
+          condition:
+            type: mapping
+            mapping:
+              field:
+                type: string
+                label: 'Field name'
+              operator:
+                type: string
+                label: 'Operator'
+              value:
+                type: string
+                label: 'Value'
 
 field_validation.rule.*:
   type: mapping
@@ -172,6 +188,17 @@ field_validation.rule.words_field_validation_rule:
     max:
       type: string
       label: 'Maximum number of words'
+
+field_validation.rule.item_count_field_validation_rule:
+  type: mapping
+  label: 'Min/max item count field validation rule'
+  mapping:
+    min:
+      type: integer
+      label: 'Minimum field values'
+    max:
+      type: integer
+      label: 'Maximum field values'
 
 field_validation.rule.url_field_validation_rule:
   type: mapping

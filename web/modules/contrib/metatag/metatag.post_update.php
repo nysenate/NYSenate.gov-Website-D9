@@ -5,8 +5,88 @@
  * Post update functions for Metatag.
  */
 
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
 use Drupal\metatag\Entity\MetatagDefaults;
+
+/**
+ * Get a list of all metatag field tables.
+ *
+ * @return array
+ *   A list of meta tag field tables with the table name as the key and the
+ *   field value column as the value, e.g.:
+ *   - node__field_meta_tags: field_meta_tags_value
+ *   - node_revision__field_meta_tags: field_meta_tags_value
+ */
+function _metatag_list_entity_field_tables(): array {
+  static $drupal_static_fast;
+  if (!isset($drupal_static_fast)) {
+    $drupal_static_fast[__FUNCTION__] = &drupal_static(__FUNCTION__);
+  }
+  $tables = &$drupal_static_fast[__FUNCTION__];
+
+  if (is_null($tables)) {
+    $tables = [];
+    $entity_type_manager = \Drupal::entityTypeManager();
+    $database = \Drupal::database();
+
+    // Get all of the field storage entities of type metatag.
+    /** @var \Drupal\field\FieldStorageConfigInterface[] $field_storage_configs */
+    $field_storage_configs = $entity_type_manager
+      ->getStorage('field_storage_config')
+      ->loadByProperties(['type' => 'metatag']);
+
+    foreach ($field_storage_configs as $field_storage) {
+      $field_name = $field_storage->getName();
+
+      // Get the individual fields (field instances) associated with bundles.
+      // This query can result in an exception if a field configuration is
+      // faulty.
+      // @see https://www.drupal.org/project/metatag/issues/3366933
+      try {
+        $fields = $entity_type_manager
+          ->getStorage('field_config')
+          ->loadByProperties([
+            'field_name' => $field_name,
+            'entity_type' => $field_storage->getTargetEntityTypeId(),
+          ]);
+      }
+      catch (PluginNotFoundException $e) {
+        throw new \Exception("There is a problem in the field configuration, see https://www.drupal.org/node/3366933 for discussion on how to resolve it.\nOriginal message: " . $e->getMessage());
+      }
+
+      $tables = [];
+      foreach ($fields as $field) {
+        $entity_type_id = $field->getTargetEntityTypeId();
+        $entity_type = $entity_type_manager->getDefinition($entity_type_id);
+
+        // Determine the table and "value" field names.
+        $table_mapping = $entity_type_manager->getStorage($entity_type_id)
+          ->getTableMapping();
+        $field_table = $table_mapping->getFieldTableName($field_name);
+        $field_value_field = $table_mapping->getFieldColumnName($field_storage, 'value');
+
+        $tables[$field_table] = $field_value_field;
+        if ($entity_type->isRevisionable() && $field_storage->isRevisionable()) {
+          if ($table_mapping->requiresDedicatedTableStorage($field_storage)) {
+            $revision_table = $table_mapping->getDedicatedRevisionTableName($field_storage);
+            if ($database->schema()->tableExists($revision_table)) {
+              $tables[$revision_table] = $field_value_field;
+            }
+          }
+          elseif ($table_mapping->allowsSharedTableStorage($field_storage)) {
+            $revision_table = $entity_type->getRevisionDataTable() ?: $entity_type->getRevisionTable();
+            if ($database->schema()->tableExists($revision_table)) {
+              $tables[$revision_table] = $field_value_field;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  return $tables;
+}
 
 /**
  * Convert mask-icon to array values.
@@ -62,84 +142,32 @@ function metatag_post_update_convert_author_data(&$sandbox) {
     // by number rather than name.
     $field_counter = 0;
 
-    // Get all of the field storage entities of type metatag.
-    /** @var \Drupal\field\FieldStorageConfigInterface[] $field_storage_configs */
-    $field_storage_configs = $entity_type_manager
-      ->getStorage('field_storage_config')
-      ->loadByProperties(['type' => 'metatag']);
+    // Look for the appropriate data in all metatag field tables.
+    foreach (_metatag_list_entity_field_tables() as $table => $field_value_field) {
+      $query = $database->select($table);
+      $query->addField($table, 'entity_id');
+      $query->addField($table, 'revision_id');
+      $query->addField($table, 'langcode');
+      $query->addField($table, $field_value_field);
+      $db_or = $query->orConditionGroup();
+      $db_or->condition($field_value_field, '%google_plus_author%', 'LIKE');
+      $query->condition($db_or);
+      $result = $query->execute();
+      $records = $result->fetchAll();
 
-    foreach ($field_storage_configs as $field_storage) {
-      $field_name = $field_storage->getName();
-
-      // Get the individual fields (field instances) associated with bundles.
-      $fields = $entity_type_manager
-        ->getStorage('field_config')
-        ->loadByProperties([
-          'field_name' => $field_name,
-          'entity_type' => $field_storage->getTargetEntityTypeId(),
-        ]);
-
-      foreach ($fields as $field) {
-        // Get the bundle this field is attached to.
-        $bundle = $field->getTargetBundle();
-        $entity_type_id = $field->getTargetEntityTypeId();
-        $entity_type = $entity_type_manager->getDefinition($entity_type_id);
-
-        // Determine the table and "value" field names.
-        // @todo The class path to getTableMapping() seems to be invalid?
-        $table_mapping = $entity_type_manager->getStorage($entity_type_id)
-          ->getTableMapping();
-        $field_table = $table_mapping->getFieldTableName($field_name);
-        $field_value_field = $table_mapping->getFieldColumnName($field_storage, 'value');
-
-        $tables = [];
-        $tables[] = $field_table;
-        if ($entity_type->isRevisionable() && $field_storage->isRevisionable()) {
-          if ($table_mapping->requiresDedicatedTableStorage($field_storage)) {
-            $revision_table = $table_mapping->getDedicatedRevisionTableName($field_storage);
-            if ($database->schema()->tableExists($revision_table)) {
-              $tables[] = $revision_table;
-            }
-          }
-          elseif ($table_mapping->allowsSharedTableStorage($field_storage)) {
-            $revision_table = $entity_type->getRevisionDataTable() ?: $entity_type->getRevisionTable();
-            if ($database->schema()->tableExists($revision_table)) {
-              $tables[] = $revision_table;
-            }
-          }
-        }
-
-        if ($tables) {
-          $tables = array_unique($tables);
-          foreach ($tables as $table) {
-            $query = $database->select($table);
-            $query->addField($table, 'entity_id');
-            $query->addField($table, 'revision_id');
-            $query->addField($table, 'langcode');
-            $query->addField($table, $field_value_field);
-            $query->condition('bundle', $bundle, '=');
-            $db_or = $query->orConditionGroup();
-            $db_or->condition($field_value_field, '%google_plus_author%', 'LIKE');
-            $query->condition($db_or);
-            $result = $query->execute();
-            $records = $result->fetchAll();
-
-            if (empty($records)) {
-              continue;
-            }
-
-            // Fill in all the sandbox information
-            // so we can batch the individual
-            // record comparing and updating.
-            $sandbox['fields'][$field_counter]['field_table'] = $table;
-            $sandbox['fields'][$field_counter]['field_value_field'] = $field_value_field;
-            $sandbox['fields'][$field_counter]['records'] = $records;
-
-            $sandbox['total_records'] += count($records);
-            $field_counter++;
-          }
-        }
+      if (empty($records)) {
+        continue;
       }
+
+      // Fill in all the sandbox information
+      // so we can batch the individual
+      // record comparing and updating.
+      $sandbox['fields'][$field_counter]['field_table'] = $table;
+      $sandbox['fields'][$field_counter]['field_value_field'] = $field_value_field;
+      $sandbox['fields'][$field_counter]['records'] = $records;
+
+      $sandbox['total_records'] += count($records);
+      $field_counter++;
     }
   }
 
@@ -149,7 +177,7 @@ function metatag_post_update_convert_author_data(&$sandbox) {
   }
   else {
     // Begin the batch processing of individual field records.
-    $max_per_batch = 10;
+    $max_per_batch = 100;
     $counter = 1;
 
     $current_field = $sandbox['current_field'];
@@ -231,82 +259,32 @@ function metatag_post_update_remove_robots_noydir_noodp(&$sandbox) {
     // by number rather than name.
     $field_counter = 0;
 
-    // Get all of the field storage entities of type metatag.
-    /** @var \Drupal\field\FieldStorageConfigInterface[] $field_storage_configs */
-    $field_storage_configs = $entity_type_manager
-      ->getStorage('field_storage_config')
-      ->loadByProperties(['type' => 'metatag']);
+    // Look for the appropriate data in all metatag field tables.
+    foreach (_metatag_list_entity_field_tables() as $table => $field_value_field) {
+      $query = $database->select($table);
+      $query->addField($table, 'entity_id');
+      $query->addField($table, 'revision_id');
+      $query->addField($table, 'langcode');
+      $query->addField($table, $field_value_field);
+      $db_or = $query->orConditionGroup();
+      $db_or->condition($field_value_field, '%noodp%', 'LIKE');
+      $db_or->condition($field_value_field, '%noydir%', 'LIKE');
+      $query->condition($db_or);
+      $result = $query->execute();
+      $records = $result->fetchAll();
 
-    foreach ($field_storage_configs as $field_storage) {
-      $field_name = $field_storage->getName();
-
-      // Get the individual fields (field instances) associated with bundles.
-      $fields = $entity_type_manager
-        ->getStorage('field_config')
-        ->loadByProperties([
-          'field_name' => $field_name,
-          'entity_type' => $field_storage->getTargetEntityTypeId(),
-        ]);
-
-      foreach ($fields as $field) {
-        // Get the bundle this field is attached to.
-        $bundle = $field->getTargetBundle();
-        $entity_type_id = $field->getTargetEntityTypeId();
-        $entity_type = $entity_type_manager->getDefinition($entity_type_id);
-
-        // Determine the table and "value" field names.
-        $table_mapping = $entity_type_manager->getStorage($entity_type_id)
-          ->getTableMapping();
-        $field_table = $table_mapping->getFieldTableName($field_name);
-        $field_value_field = $table_mapping->getFieldColumnName($field_storage, 'value');
-
-        $tables = [];
-        $tables[] = $field_table;
-        if ($entity_type->isRevisionable() && $field_storage->isRevisionable()) {
-          if ($table_mapping->requiresDedicatedTableStorage($field_storage)) {
-            $revision_table = $table_mapping->getDedicatedRevisionTableName($field_storage);
-            if ($database->schema()->tableExists($revision_table)) {
-              $tables[] = $revision_table;
-            }
-          }
-          elseif ($table_mapping->allowsSharedTableStorage($field_storage)) {
-            $revision_table = $entity_type->getRevisionDataTable() ?: $entity_type->getRevisionTable();
-            if ($database->schema()->tableExists($revision_table)) {
-              $tables[] = $revision_table;
-            }
-          }
-        }
-        if ($tables) {
-          $tables = array_unique($tables);
-          foreach ($tables as $table) {
-            $query = $database->select($table);
-            $query->addField($table, 'entity_id');
-            $query->addField($table, 'revision_id');
-            $query->addField($table, 'langcode');
-            $query->addField($table, $field_value_field);
-            $query->condition('bundle', $bundle, '=');
-            $db_or = $query->orConditionGroup();
-            $db_or->condition($field_value_field, '%noodp%', 'LIKE');
-            $db_or->condition($field_value_field, '%noydir%', 'LIKE');
-            $query->condition($db_or);
-            $result = $query->execute();
-            $records = $result->fetchAll();
-
-            if (empty($records)) {
-              continue;
-            }
-
-            // Fill in all the sandbox information so we can batch the
-            // individual record comparing and updating.
-            $sandbox['fields'][$field_counter]['field_table'] = $table;
-            $sandbox['fields'][$field_counter]['field_value_field'] = $field_value_field;
-            $sandbox['fields'][$field_counter]['records'] = $records;
-
-            $sandbox['total_records'] += count($records);
-            $field_counter++;
-          }
-        }
+      if (empty($records)) {
+        continue;
       }
+
+      // Fill in all the sandbox information so we can batch the
+      // individual record comparing and updating.
+      $sandbox['fields'][$field_counter]['field_table'] = $table;
+      $sandbox['fields'][$field_counter]['field_value_field'] = $field_value_field;
+      $sandbox['fields'][$field_counter]['records'] = $records;
+
+      $sandbox['total_records'] += count($records);
+      $field_counter++;
     }
   }
 
@@ -316,7 +294,7 @@ function metatag_post_update_remove_robots_noydir_noodp(&$sandbox) {
   }
   else {
     // Begin the batch processing of individual field records.
-    $max_per_batch = 10;
+    $max_per_batch = 100;
     $counter = 1;
 
     $current_field = $sandbox['current_field'];

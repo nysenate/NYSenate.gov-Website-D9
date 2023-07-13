@@ -177,7 +177,7 @@ class LinkFieldTest extends WebDriverTestBase {
     $assert_session->elementAttributeContains('xpath', '//article/div/div/div[2]/a', 'target', "_blank");
     $assert_session->linkExists('Foo');
 
-    // Test internal entity targets with anchors.
+    // Test internal entity targets with anchors and query parameters.
     /** @var \Drupal\Core\Entity\EntityInterface $entity */
     $entity2 = EntityTestMul::create(['name' => 'Anchored Entity']);
     $entity2->save();
@@ -202,7 +202,7 @@ class LinkFieldTest extends WebDriverTestBase {
     $this->assertEquals('Anchored Entity', $title_input->getValue());
 
     // Add an anchor to the URL field.
-    $url_input->setValue($entity2->toUrl()->toString() . '#with-anchor');
+    $url_input->setValue($entity2->toUrl()->toString() . '#with-anchor?search=1');
 
     // Give the node a title and save the page.
     $page->fillField('title[0][value]', 'Host test node 2');
@@ -211,8 +211,13 @@ class LinkFieldTest extends WebDriverTestBase {
 
     // Check that we are viewing the node, and the formatter displays what we
     // expect.
-    $assert_session->linkByHrefExists("/entity_test_mul/manage/{$entity2->id()}#with-anchor");
+    $assert_session->linkByHrefExists("/entity_test_mul/manage/{$entity2->id()}#with-anchor?search=1");
     $assert_session->linkExists('Anchored Entity');
+
+    // Verify anchor persists when visiting the edit form.
+    $this->drupalGet('node/2/edit');
+    $url_input = $assert_session->elementExists('css', 'input[name="field_test_link[0][uri]"]', $widget_wrapper);
+    $this->assertEquals($entity2->toUrl()->toString() . '#with-anchor?search=1', $url_input->getValue());
 
     // Test external URLs.
     $this->drupalGet('node/add/page');

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\Feed;
 
 use function in_array;
@@ -73,7 +75,7 @@ class Uri
      * Useful for chained validations
      *
      * @param  string $uri
-     * @return self
+     * @return static
      */
     public static function factory($uri)
     {

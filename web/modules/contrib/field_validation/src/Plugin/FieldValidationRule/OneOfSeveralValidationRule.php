@@ -1,18 +1,14 @@
 <?php
 
-
 namespace Drupal\field_validation\Plugin\FieldValidationRule;
 
-
-use Drupal\Core\Field\Plugin\Field\FieldType\StringItem;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\field_validation\ConfigurableFieldValidationRuleBase;
-use Drupal\field_validation\ConfigurableFieldValidationRuleInterface;
 use Drupal\field_validation\FieldValidationRuleSetInterface;
 
 /**
- * OneOfSeveralValidationRule
+ * OneOfSeveralValidationRule.
  *
  * @FieldValidationRule(
  *   id = "one_of_several_validation_rule",
@@ -76,7 +72,7 @@ class OneOfSeveralValidationRule extends ConfigurableFieldValidationRuleBase {
   public function validate($params) {
     $flag = FALSE;
 
-    /** @var ConfigurableFieldValidationRuleInterface $rule */
+    /** @var \Drupal\field_validation\ConfigurableFieldValidationRuleInterface $rule */
     $rule = $params['rule'] ?? NULL;
     /** @var \Drupal\field_validation\Entity\FieldValidationRuleSet $ruleset */
     $ruleset = $params['ruleset'] ?? NULL;
@@ -116,16 +112,18 @@ class OneOfSeveralValidationRule extends ConfigurableFieldValidationRuleBase {
     }
 
     if (!$flag) {
-      $context->addViolation($rule->getErrorMessage());
+      $context->addViolation($rule->getReplacedErrorMessage($params));
     }
 
     return TRUE;
   }
 
-
+  /**
+   *
+   */
   private function getFieldColumnValue($items, $column = 'value'): array {
     $field_values = [];
-    foreach ($items as $delta => $item) {
+    foreach ($items as $item) {
       if ($item instanceof FieldItemInterface) {
         $item = $item->getValue();
       }
@@ -135,4 +133,5 @@ class OneOfSeveralValidationRule extends ConfigurableFieldValidationRuleBase {
     }
     return $field_values;
   }
+
 }

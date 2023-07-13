@@ -156,7 +156,7 @@ class BlockPlacementCategoryRestrictionTest extends WebDriverTestBase {
     $assert_session->linkExists('Basic Block 2');
     $assert_session->linkExists('Alternate Block 1');
     // Initially, all inline block types are allowed.
-    $this->clickLink('Create custom block');
+    $this->clickLink('Create content block');
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->linkExists('Basic');
     $assert_session->linkExists('Alternate');
@@ -210,7 +210,7 @@ class BlockPlacementCategoryRestrictionTest extends WebDriverTestBase {
     $assert_session->linkNotExists('Basic Block 2');
     $assert_session->linkNotExists('Alternate Block 1');
     // Inline block types are still allowed.
-    $this->clickLink('Create custom block');
+    $this->clickLink('Create content block');
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->linkExists('Basic');
     $assert_session->linkExists('Alternate');
@@ -253,7 +253,7 @@ class BlockPlacementCategoryRestrictionTest extends WebDriverTestBase {
     $element->click();
     $assert_session->assertWaitOnAjaxRequest();
     // Inline block types are restricted.
-    $assert_session->linkNotExists('Create custom block');
+    $assert_session->linkNotExists('Create content block');
 
     // Verify configuration isn't lost with two layouts, one using all regions.
     // See #3301668

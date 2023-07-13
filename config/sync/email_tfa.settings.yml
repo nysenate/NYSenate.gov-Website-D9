@@ -5,9 +5,10 @@ subject: 'One Time Password'
 body: "Dear [user:name],\r\n    \r\nYour One Time Passcode for completing your NY Senate TFA Verification is: [user:email_tfa]\r\n    \r\nPlease use this Passcode to complete your transaction. Do not share this Passcode with anyone.\r\n    \r\nThank you,\r\n[site:name] team"
 routes: "email_tfa.verifiy\r\nuser.logout"
 timeouts: 300
-status: false
+status: true
 tracks: globally_enabled
 user_one: false
+role_exclusion_type: disable_for
 ignore_role:
   - constituent
 security_code_label_text: 'One-time security code'

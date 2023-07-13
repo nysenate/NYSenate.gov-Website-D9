@@ -25,15 +25,15 @@ function field_validation_entity_bundle_field_info_alter(&$fields, EntityTypeInt
     /*
     $rules = $ruleset->getFieldValidationRules();
     foreach ($rules as $field_validation_rule) {
-      $field_name = $field_validation_rule->getFieldName();
-      if (isset($fields[$field_name])) {
-      $fields[$field_name]->addConstraint('FieldValidationConstraint', [
-        'ruleset_name' => $ruleset_name,
-        'rule_uuid' =>$field_validation_rule->getUuid(),
-      ]);
-      }
+    $field_name = $field_validation_rule->getFieldName();
+    if (isset($fields[$field_name])) {
+    $fields[$field_name]->addConstraint('FieldValidationConstraint', [
+    'ruleset_name' => $ruleset_name,
+    'rule_uuid' =>$field_validation_rule->getUuid(),
+    ]);
     }
-    */
+    }
+     */
   }
 
 }

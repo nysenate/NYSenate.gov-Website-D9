@@ -39,7 +39,7 @@ trait BackendTrait {
   protected $reset = FALSE;
 
   /**
-   * Sets the Search API server and calls setBackend() afterwards.
+   * Sets the Search API server and calls setBackend() afterward.
    *
    * @param \Drupal\search_api\ServerInterface $server
    *   The Search API server entity.
@@ -67,7 +67,7 @@ trait BackendTrait {
   /**
    * Returns the Search API server backend.
    *
-   * @return \Drupal\search_api_solr\SolrBackendInterface
+   * @return \Drupal\search_api_solr\SolrBackendInterface|null
    *   The Search API server backend.
    */
   protected function getBackend() {
@@ -77,7 +77,7 @@ trait BackendTrait {
   /**
    * Set assumed minimum version.
    *
-   * @param \Drupal\search_api_solr\Controller\string $assumedMinimumVersion
+   * @param string $assumedMinimumVersion
    *   Assumed minimum version.
    */
   public function setAssumedMinimumVersion(string $assumedMinimumVersion) {

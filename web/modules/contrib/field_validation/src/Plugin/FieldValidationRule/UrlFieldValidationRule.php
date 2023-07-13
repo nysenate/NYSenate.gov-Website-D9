@@ -8,7 +8,7 @@ use Drupal\field_validation\ConfigurableFieldValidationRuleBase;
 use Drupal\field_validation\FieldValidationRuleSetInterface;
 
 /**
- * UrlFieldValidationRule.
+ * Prodives the Url Field Validation Rule.
  *
  * @FieldValidationRule(
  *   id = "url_field_validation_rule",
@@ -41,7 +41,7 @@ class UrlFieldValidationRule extends ConfigurableFieldValidationRuleBase {
   public function defaultConfiguration() {
     return [
       'external' => FALSE,
-	  'internal' => FALSE,
+      'internal' => FALSE,
     ];
   }
 
@@ -62,7 +62,7 @@ class UrlFieldValidationRule extends ConfigurableFieldValidationRuleBase {
       '#default_value' => $this->configuration['internal'],
     ];
     $form['help'] = [
-      '#markup' => t("If both of External URL and Internal path are checked, it means that both of them are allowed."),
+      '#markup' => $this->t("If both of External URL and Internal path are checked, it means that both of them are allowed."),
     ];
     return $form;
   }
@@ -77,12 +77,15 @@ class UrlFieldValidationRule extends ConfigurableFieldValidationRuleBase {
     $this->configuration['internal'] = $form_state->getValue('internal');
   }
 
+  /**
+   * Validate the url.
+   */
   public function validate($params) {
     $value = $params['value'] ?? '';
-	$rule = $params['rule'] ?? null;
-	$context = $params['context'] ?? null;
-	$settings = [];
-    if(!empty($rule) && !empty($rule->configuration)){
+    $rule = $params['rule'] ?? NULL;
+    $context = $params['context'] ?? NULL;
+    $settings = [];
+    if (!empty($rule) && !empty($rule->configuration)) {
       $settings = $rule->configuration;
     }
 
@@ -99,7 +102,7 @@ class UrlFieldValidationRule extends ConfigurableFieldValidationRuleBase {
       if (!$flag && !empty($settings['internal'])) {
         $normal_path = \Drupal::service('path_alias.manager')->getPathByAlias($value);
         if (!UrlHelper::isExternal($normal_path)) {
-          $parsed_link = UrlHelper::parse($normal_path); 
+          $parsed_link = UrlHelper::parse($normal_path);
           if ($normal_path != $parsed_link['path']) {
             $normal_path = $parsed_link['path'];
           }
@@ -108,8 +111,9 @@ class UrlFieldValidationRule extends ConfigurableFieldValidationRuleBase {
       }
 
       if (!$flag) {
-        $context->addViolation($rule->getErrorMessage());
+        $context->addViolation($rule->getReplacedErrorMessage($params));
       }
     }
   }
+
 }

@@ -462,10 +462,12 @@ function metatag_preprocess_html(&$variables) {
   if (!empty($metatag_attachments['#attached']['html_head'])) {
     foreach ($metatag_attachments['#attached']['html_head'] as $attachment) {
       if (!empty($attachment[1]) && $attachment[1] == 'title') {
-        // Empty head_title to avoid the site name and slogan to be appended to
-        // the meta title.
-        $variables['head_title'] = [];
-        $variables['head_title']['title'] = html_entity_decode($attachment[0]['#attributes']['content'], ENT_QUOTES);
+        if (!empty($attachment[0]['#attributes']['content'])) {
+          // Empty head_title to avoid the site name and slogan being appended
+          // to the meta title.
+          $variables['head_title'] = [];
+          $variables['head_title']['title'] = html_entity_decode($attachment[0]['#attributes']['content'], ENT_QUOTES);
+        }
 
         // No need to do anything else after this.
         break;

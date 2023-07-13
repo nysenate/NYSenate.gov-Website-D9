@@ -49,10 +49,9 @@ class FieldValidationRuleSetEditForm extends FieldValidationRuleSetFormBase {
    */
   public function form(array $form, FormStateInterface $form_state) {
     $user_input = $form_state->getUserInput();
-    $form['#title'] = $this->t('Edit field validation rule set %name', array('%name' => $this->entity->label()));
+    $form['#title'] = $this->t('Edit field validation rule set %name', ['%name' => $this->entity->label()]);
     $form['#tree'] = TRUE;
-    //$form['#attached']['library'][] = 'field_validation/admin';
-
+    // $form['#attached']['library'][] = 'field_validation/admin';
     // Build the list of existing field validation rule for this rule set.
     $form['rules'] = [
       '#type' => 'table',
@@ -65,10 +64,10 @@ class FieldValidationRuleSetEditForm extends FieldValidationRuleSetFormBase {
       ],
       '#tabledrag' => [
        [
-          'action' => 'order',
-          'relationship' => 'sibling',
-          'group' => 'rule-order-weight',
-        ],
+         'action' => 'order',
+         'relationship' => 'sibling',
+         'group' => 'rule-order-weight',
+       ],
       ],
       '#attributes' => [
         'id' => 'field-validation-rule-set-rules',
@@ -77,7 +76,7 @@ class FieldValidationRuleSetEditForm extends FieldValidationRuleSetFormBase {
       // Render tabs below parent elements.
       '#weight' => 5,
     ];
-	$field_validation_rules =  $this->entity->getFieldValidationRules();
+    $field_validation_rules = $this->entity->getFieldValidationRules();
 
     foreach ($field_validation_rules as $field_validation_rule) {
       $key = $field_validation_rule->getUuid();
@@ -98,7 +97,7 @@ class FieldValidationRuleSetEditForm extends FieldValidationRuleSetFormBase {
         '#title_display' => 'invisible',
         '#default_value' => $field_validation_rule->getWeight(),
         '#attributes' => [
-          'class' =>['rule-order-weight'],
+          'class' => ['rule-order-weight'],
         ],
       ];
 
@@ -107,7 +106,7 @@ class FieldValidationRuleSetEditForm extends FieldValidationRuleSetFormBase {
       ];
 
       $form['rules'][$key]['field'] = [
-	    '#type' => 'markup',
+        '#type' => 'markup',
         '#markup' => $field_validation_rule->getFieldName(),
       ];
 
@@ -147,7 +146,7 @@ class FieldValidationRuleSetEditForm extends FieldValidationRuleSetFormBase {
     }
     $form['rules']['new'] = [
       '#tree' => FALSE,
-      '#weight' => isset($user_input['weight']) ? $user_input['weight'] : NULL,
+      '#weight' => $user_input['weight'] ?? NULL,
       '#attributes' => ['class' => ['draggable']],
     ];
     $form['rules']['new']['rule'] = [
@@ -227,8 +226,8 @@ class FieldValidationRuleSetEditForm extends FieldValidationRuleSetFormBase {
       ];
       $field_validation_rule_id = $this->entity->addFieldValidationRule($field_validation_rule);
       $this->entity->save();
-      if (!empty($tab_id)) {
-	      $this->messenger()->addMessage($this->t('The rule was successfully added.'));
+      if (!empty($field_validation_rule_id)) {
+        $this->messenger()->addMessage($this->t('The rule was successfully added.'));
       }
     }
   }
@@ -251,7 +250,7 @@ class FieldValidationRuleSetEditForm extends FieldValidationRuleSetFormBase {
    */
   public function save(array $form, FormStateInterface $form_state) {
     parent::save($form, $form_state);
-	  $this->messenger()->addMessage($this->t('Changes to the field validation rule set have been saved.'));
+    $this->messenger()->addMessage($this->t('Changes to the field validation rule set have been saved.'));
   }
 
   /**
@@ -278,4 +277,5 @@ class FieldValidationRuleSetEditForm extends FieldValidationRuleSetFormBase {
       }
     }
   }
+
 }

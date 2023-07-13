@@ -7,6 +7,7 @@ use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\search_api_solr\Controller\SolrConfigSetController;
 use Drupal\search_api_solr\SearchApiSolrException;
 use Drupal\search_api_solr\Utility\SolrCommandHelper;
 use Drupal\search_api_solr\Utility\Utility;
@@ -44,8 +45,8 @@ class SolrAdminCommandHelper extends SolrCommandHelper {
    *   The file system.
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The messenger.
-   * @param \Drupal\Core\Extension\ModuleExtensionList $module_extension_list
-   *   The module extension list.
+   * @param \Drupal\search_api_solr\Controller\SolrConfigSetController $configset_controller
+   *   The configset controller.
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    *   Thrown if the "search_api_index" or "search_api_server" entity types'
@@ -54,8 +55,8 @@ class SolrAdminCommandHelper extends SolrCommandHelper {
    *   Thrown if the "search_api_index" or "search_api_server" entity types are
    *   unknown.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, ModuleHandlerInterface $module_handler, EventDispatcherInterface $event_dispatcher, ModuleExtensionList $module_extension_list, FileSystemInterface $fileSystem, MessengerInterface $messenger) {
-    parent::__construct($entity_type_manager, $module_handler, $event_dispatcher, $module_extension_list);
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, ModuleHandlerInterface $module_handler, EventDispatcherInterface $event_dispatcher, SolrConfigSetController $configset_controller, FileSystemInterface $fileSystem, MessengerInterface $messenger) {
+    parent::__construct($entity_type_manager, $module_handler, $event_dispatcher, $configset_controller);
     $this->fileSystem = $fileSystem;
     $this->messenger = $messenger;
   }

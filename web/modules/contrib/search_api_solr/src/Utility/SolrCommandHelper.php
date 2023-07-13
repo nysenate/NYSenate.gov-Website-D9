@@ -3,7 +3,6 @@
 namespace Drupal\search_api_solr\Utility;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\search_api\ServerInterface;
 use Drupal\search_api_solr\Controller\SolrConfigSetController;
@@ -18,11 +17,11 @@ use Drupal\search_api\Utility\CommandHelper;
 class SolrCommandHelper extends CommandHelper {
 
   /**
-   * The module extension list.
+   * The configset controller.
    *
-   * @var \Drupal\Core\Extension\ModuleExtensionList
+   * @var \Drupal\search_api_solr\Controller\SolrConfigSetController
    */
-  protected $moduleExtensionList;
+  protected $configsetController;
 
   /**
    * Constructs a CommandHelper object.
@@ -33,8 +32,8 @@ class SolrCommandHelper extends CommandHelper {
    *   The module handler.
    * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   The event dispatcher.
-   * @param \Drupal\Core\Extension\ModuleExtensionList $module_extension_list
-   *   The module extension list.
+   * @param \Drupal\search_api_solr\Controller\SolrConfigSetController $configset_controller
+   *   The configset controller.
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    *   Thrown if the "search_api_index" or "search_api_server" entity types'
@@ -43,9 +42,9 @@ class SolrCommandHelper extends CommandHelper {
    *   Thrown if the "search_api_index" or "search_api_server" entity types are
    *   unknown.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, ModuleHandlerInterface $module_handler, EventDispatcherInterface $event_dispatcher, ModuleExtensionList $module_extension_list) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, ModuleHandlerInterface $module_handler, EventDispatcherInterface $event_dispatcher, SolrConfigSetController $configset_controller) {
     parent::__construct($entity_type_manager, $module_handler, $event_dispatcher);
-    $this->moduleExtensionList = $module_extension_list;
+    $this->configsetController = $configset_controller;
   }
 
   /**
@@ -79,8 +78,7 @@ class SolrCommandHelper extends CommandHelper {
       $config['connector_config']['solr_version'] = $solr_version;
       $server->setBackendConfig($config);
     }
-    $solr_configset_controller = new SolrConfigSetController($this->moduleExtensionList);
-    $solr_configset_controller->setServer($server);
+    $this->configsetController->setServer($server);
 
     $stream = NULL;
     if ($file_name !== NULL) {
@@ -98,7 +96,7 @@ class SolrCommandHelper extends CommandHelper {
       $archive_options_or_ressource = $stream;
     }
 
-      $zip = $solr_configset_controller->getConfigZip($archive_options_or_ressource);
+    $zip = $this->configsetController->getConfigZip($archive_options_or_ressource);
     $zip->finish();
 
     if ($stream) {

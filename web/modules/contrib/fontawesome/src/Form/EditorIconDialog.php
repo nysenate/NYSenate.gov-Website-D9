@@ -117,28 +117,24 @@ class EditorIconDialog extends FormBase {
     ];
 
     // Allow user to determine style.
-    $style_options = [
-      'fas' => $this->t('Solid'),
-      'far' => $this->t('Regular'),
-      'fal' => $this->t('Light'),
-      'fad' => $this->t('Duotone'),
-      'fat' => $this->t('Thin'),
-      'fak' => $this->t('Kit Uploads'),
-    ];
-    if (is_bool($configuration_settings->get('use_solid_file')) && !$configuration_settings->get('use_solid_file')) {
-      unset($style_options['fas']);
-    }
-    if (is_bool($configuration_settings->get('use_regular_file')) && !$configuration_settings->get('use_regular_file')) {
-      unset($style_options['far']);
-    }
-    if (is_bool($configuration_settings->get('use_light_file')) && !$configuration_settings->get('use_light_file')) {
-      unset($style_options['fal']);
-    }
-    if (is_bool($configuration_settings->get('use_duotone_file')) && !$configuration_settings->get('use_duotone_file')) {
-      unset($style_options['fad']);
-    }
-    if (is_bool($configuration_settings->get('use_thin_file')) && !$configuration_settings->get('use_thin_file')) {
-      unset($style_options['fat']);
+    $style_options = [];
+    foreach ([
+      'solid',
+      'regular',
+      'light',
+      'brands',
+      'duotone',
+      'thin',
+      'sharpregular',
+      'sharplight',
+      'sharpsolid',
+      'custom',
+    ] as $iconType) {
+      // Exclude if setting is turned off.
+      $settingName = 'use_' . $iconType . '_file';
+      if (is_null($configuration_settings->get($settingName)) || $configuration_settings->get($settingName)) {
+        $style_options[$iconType] = ucwords(str_replace('sharp', 'sharp ', $iconType));
+      }
     }
     $form['settings']['style'] = [
       '#type' => 'select',
@@ -494,6 +490,51 @@ class EditorIconDialog extends FormBase {
       $metadata = $this->fontAwesomeManager->getIconMetadata($item['icon_name']);
       $item['style'] = $this->fontAwesomeManager->determinePrefix($metadata['styles'], $item['settings']['style']);
       unset($item['settings']['style']);
+
+      // Determine the prefix.
+      switch ($item['style']) {
+
+        case 'brands':
+          $item['style'] = 'fa-brands';
+          break;
+
+        case 'light':
+          $item['style'] = 'fa-light';
+          break;
+
+        case 'regular':
+          $item['style'] = 'fa-regular';
+          break;
+
+        case 'duotone':
+          $item['style'] = 'fa-duotone';
+          break;
+
+        case 'thin':
+          $item['style'] = 'fa-thin';
+          break;
+
+        case 'sharpregular':
+          $item['style'] = 'fa-sharp fa-regular';
+          break;
+
+        case 'sharpsolid':
+          $item['style'] = 'fa-sharp fa-solid';
+          break;
+
+        case 'sharplight':
+          $item['style'] = 'fa-sharp fa-light';
+          break;
+
+        case 'kit_uploads':
+          $item['style'] = 'fa-kit';
+          break;
+
+        default:
+        case 'solid':
+          $item['style'] = 'fa-solid';
+          break;
+      }
 
       // Remove blank data.
       $item['settings'] = array_filter($item['settings']);

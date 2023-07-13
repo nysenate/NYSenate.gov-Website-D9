@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\Feed\Reader;
 
 use DOMDocument;
@@ -12,7 +14,6 @@ use Laminas\Stdlib\ErrorHandler;
 use function array_unique;
 use function file_get_contents;
 use function function_exists;
-use function get_class;
 use function gettype;
 use function in_array;
 use function ini_restore;
@@ -128,7 +129,7 @@ class Reader implements ReaderImportInterface
     public static function disableEntityLoader($flag = true)
     {
         if (LIBXML_VERSION < 20900) {
-            return libxml_disable_entity_loader($flag);
+            return libxml_disable_entity_loader($flag); // phpcs:ignore
         }
         return $flag;
     }
@@ -329,7 +330,7 @@ class Reader implements ReaderImportInterface
             throw new Exception\RuntimeException(sprintf(
                 'Did not receive a %s\Http\ResponseInterface from the provided HTTP client; received "%s"',
                 __NAMESPACE__,
-                is_object($response) ? get_class($response) : gettype($response)
+                is_object($response) ? $response::class : gettype($response)
             ));
         }
 
@@ -478,7 +479,7 @@ class Reader implements ReaderImportInterface
             $dom = $feed;
         } elseif (is_string($feed) && ! empty($feed)) {
             ErrorHandler::start(E_NOTICE | E_WARNING);
-            ini_set('track_errors', 1);
+            ini_set('track_errors', '1');
             $disableEntityLoaderFlag = self::disableEntityLoader();
             $dom                     = new DOMDocument();
             $status                  = $dom->loadXML($feed);
@@ -603,10 +604,13 @@ class Reader implements ReaderImportInterface
      */
     public static function getExtensionManager()
     {
-        if (! isset(static::$extensionManager)) {
-            static::setExtensionManager(new StandaloneExtensionManager());
+        $manager = static::$extensionManager;
+        if (! $manager instanceof ExtensionManagerInterface) {
+            $manager = new StandaloneExtensionManager();
+            static::setExtensionManager($manager);
         }
-        return static::$extensionManager;
+
+        return $manager;
     }
 
     /**
@@ -750,7 +754,9 @@ class Reader implements ReaderImportInterface
      * Utility method to apply array_unique operation to a multidimensional
      * array.
      *
-     * @return array
+     * @template TInput of array
+     * @param TInput $array
+     * @return TInput
      */
     public static function arrayUnique(array $array)
     {

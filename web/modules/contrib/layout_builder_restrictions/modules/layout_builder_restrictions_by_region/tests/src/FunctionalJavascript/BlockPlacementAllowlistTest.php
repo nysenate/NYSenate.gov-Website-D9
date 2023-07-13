@@ -37,6 +37,7 @@ class BlockPlacementAllowlistTest extends LayoutBuilderRestrictionsTestBase {
       'administer node fields',
       'configure any layout',
       'configure layout builder restrictions',
+      'administer block content',
       'create and edit custom blocks',
     ]));
 
@@ -222,7 +223,7 @@ class BlockPlacementAllowlistTest extends LayoutBuilderRestrictionsTestBase {
     $assert_session->linkExists('Basic Block 2');
     $assert_session->linkExists('Alternate Block 1');
     // Initially, all inline block types are allowed.
-    $this->clickLink('Create custom block');
+    $this->clickLink('Create content block');
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->linkExists('Basic');
     $assert_session->linkExists('Alternate');
@@ -267,7 +268,7 @@ class BlockPlacementAllowlistTest extends LayoutBuilderRestrictionsTestBase {
     $assert_session->linkNotExists('Basic Block 2');
     $assert_session->linkNotExists('Alternate Block 1');
     // Inline block types are still allowed.
-    $this->clickLink('Create custom block');
+    $this->clickLink('Create content block');
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->linkExists('Basic');
     $assert_session->linkExists('Alternate');
@@ -306,7 +307,7 @@ class BlockPlacementAllowlistTest extends LayoutBuilderRestrictionsTestBase {
     $assert_session->linkNotExists('Basic Block 2');
     $assert_session->linkNotExists('Alternate Block 1');
     // Inline block types are not longer allowed.
-    $assert_session->linkNotExists('Create custom block');
+    $assert_session->linkNotExists('Create content block');
 
     // Allowlist some blocks / block types.
     $this->navigateToManageDisplay();
@@ -336,13 +337,13 @@ class BlockPlacementAllowlistTest extends LayoutBuilderRestrictionsTestBase {
     // ... but other 'content' fields aren't.
     $assert_session->linkNotExists('Promoted to front page');
     $assert_session->linkNotExists('Sticky at top of lists');
-    // "Basic" Custom blocks are allowed.
+    // "Basic" Content blocks are allowed.
     $assert_session->linkExists('Basic Block 1');
     $assert_session->linkExists('Basic Block 2');
-    // ... but "alternate" Custom blocks are disallowed.
+    // ... but "alternate" Content block are disallowed.
     $assert_session->linkNotExists('Alternate Block 1');
     // Only the basic inline block type is allowed.
-    $this->clickLink('Create custom block');
+    $this->clickLink('Create content block');
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->linkNotExists('Basic');
     $assert_session->linkExists('Alternate');

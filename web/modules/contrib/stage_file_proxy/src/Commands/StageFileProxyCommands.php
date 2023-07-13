@@ -77,18 +77,28 @@ class StageFileProxyCommands extends DrushCommands {
    * @command stage_file_proxy:dl
    * @aliases stage-file-proxy-dl,sfdl
    * @option skip-progress-bar Skip displaying a progress bar.
+   * @option fid Only download the file that has this file id.
    */
-  public function dl(array $command_options = ['skip-progress-bar' => FALSE]) {
+  public function dl(array $command_options = [
+    'skip-progress-bar' => FALSE,
+    'fid' => 0,
+  ]) {
     $logger = $this->logger();
     $server = $this->moduleConfig->get('origin');
     if (empty($server)) {
       throw new \Exception('Configure stage_file_proxy.settings.origin in your settings.php (see INSTALL.txt).');
     }
 
-    $query = $this->database->select('file_managed', 'fm');
-    $results = $query->fields('fm', ['uri'])
-      ->orderBy('fm.fid', 'DESC')
-      ->execute()
+    $query = $this->database->select('file_managed', 'fm')
+      ->fields('fm', ['uri'])
+      ->orderBy('fm.fid', 'DESC');
+
+    $fid = $command_options['fid'];
+    if ($fid > 0) {
+      $query->condition('fm.fid', $fid);
+    }
+
+    $results = $query->execute()
       ->fetchCol();
 
     $fileDir = $this->fetchManager->filePublicPath();

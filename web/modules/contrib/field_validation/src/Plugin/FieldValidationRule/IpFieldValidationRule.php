@@ -63,10 +63,10 @@ class IpFieldValidationRule extends ConfigurableFieldValidationRuleBase {
         '4_public' => $this->t('V4_ONLY_PUBLIC'),
         '6_public' => $this->t('V6_ONLY_PUBLIC'),
         'all_public' => $this->t('ALL_ONLY_PUBLIC'),
-      ],  
+      ],
       '#default_value' => $this->configuration['version'],
     ];
-	
+
     return $form;
   }
 
@@ -78,17 +78,20 @@ class IpFieldValidationRule extends ConfigurableFieldValidationRuleBase {
 
     $this->configuration['version'] = $form_state->getValue('version');
   }
-  
+
+  /**
+   *
+   */
   public function validate($params) {
     $value = $params['value'] ?? '';
-	$rule = $params['rule'] ?? null;
-	$context = $params['context'] ?? null;
-	$settings = [];
-    if(!empty($rule) && !empty($rule->configuration)){
+    $rule = $params['rule'] ?? NULL;
+    $context = $params['context'] ?? NULL;
+    $settings = [];
+    if (!empty($rule) && !empty($rule->configuration)) {
       $settings = $rule->configuration;
     }
     if ($value !== '' && !is_null($value)) {
-      $version = isset($settings['version']) ? $settings['version'] : '';
+      $version = $settings['version'] ?? '';
       switch ($version) {
         case '4':
           $flag = FILTER_FLAG_IPV4;
@@ -137,11 +140,12 @@ class IpFieldValidationRule extends ConfigurableFieldValidationRuleBase {
         default:
           $flag = NULL;
           break;
-        }
+      }
 
       if (!filter_var($value, FILTER_VALIDATE_IP, $flag)) {
-        $context->addViolation($rule->getErrorMessage());
+        $context->addViolation($rule->getReplacedErrorMessage($params));
       }
     }
   }
+
 }

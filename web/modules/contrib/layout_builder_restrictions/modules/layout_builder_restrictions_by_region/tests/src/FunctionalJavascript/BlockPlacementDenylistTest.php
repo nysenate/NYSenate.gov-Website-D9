@@ -37,6 +37,7 @@ class BlockPlacementDenylistTest extends LayoutBuilderRestrictionsTestBase {
       'administer node fields',
       'configure any layout',
       'configure layout builder restrictions',
+      'administer block content',
       'create and edit custom blocks',
     ]));
 
@@ -222,7 +223,7 @@ class BlockPlacementDenylistTest extends LayoutBuilderRestrictionsTestBase {
     $assert_session->linkExists('Basic Block 2');
     $assert_session->linkExists('Alternate Block 1');
     // Initially, all inline block types are allowed.
-    $this->clickLink('Create custom block');
+    $this->clickLink('Create content block');
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->linkExists('Basic');
     $assert_session->linkExists('Alternate');
@@ -266,7 +267,7 @@ class BlockPlacementDenylistTest extends LayoutBuilderRestrictionsTestBase {
     $assert_session->linkExists('Basic Block 2');
     $assert_session->linkExists('Alternate Block 1');
     // Inline block types are still allowed.
-    $this->clickLink('Create custom block');
+    $this->clickLink('Create content block');
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->linkExists('Basic');
     $assert_session->linkExists('Alternate');
@@ -304,7 +305,8 @@ class BlockPlacementDenylistTest extends LayoutBuilderRestrictionsTestBase {
     }
     $element = $page->find('xpath', '//*[starts-with(@id,"edit-submit--")]');
     $element->click();
-    $assert_session->assertWaitOnAjaxRequest();
+
+    $this->assertTrue($assert_session->waitForElementRemoved('css', 'ui-dialog-title'));
     $page->pressButton('Save');
 
     // Check independent restrictions on Custom block and Inline blocks.
@@ -318,7 +320,7 @@ class BlockPlacementDenylistTest extends LayoutBuilderRestrictionsTestBase {
     $assert_session->linkNotExists('Basic Block 2');
     $assert_session->linkNotExists('Alternate Block 1');
     // Inline block types are not longer allowed.
-    $assert_session->linkNotExists('Create custom block');
+    $assert_session->linkNotExists('Create content block');
 
     // Denylist some blocks / block types.
     $this->navigateToManageDisplay();
@@ -333,7 +335,7 @@ class BlockPlacementDenylistTest extends LayoutBuilderRestrictionsTestBase {
     $page->uncheckField('allowed_blocks[Content fields][allowed_blocks][field_block:node:bundle_with_section_field:body]');
     // Un-denylist "basic" Custom block types.
     $page->uncheckField('allowed_blocks[Custom block types][allowed_blocks][basic]');
-    // Un-denylist all custom blocks.
+    // Un-denylist all content blocks.
     $custom_blocks = $page->findAll('xpath', '//*[starts-with(@id, "edit-allowed-blocks-custom-blocks-allowed-blocks-")]');
     foreach ($custom_blocks as $block) {
       $block->click();
@@ -351,11 +353,11 @@ class BlockPlacementDenylistTest extends LayoutBuilderRestrictionsTestBase {
     // ... but other 'content' fields aren't.
     $assert_session->linkNotExists('Promoted to front page');
     $assert_session->linkNotExists('Sticky at top of lists');
-    // "Basic" Custom blocks are allowed.
+    // "Basic" Content blocks are allowed.
     $assert_session->linkExists('Basic Block 1');
     $assert_session->linkExists('Basic Block 2');
     // Only the basic inline block type is allowed.
-    $this->clickLink('Create custom block');
+    $this->clickLink('Create content block');
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->linkNotExists('Basic');
     $assert_session->linkExists('Alternate');

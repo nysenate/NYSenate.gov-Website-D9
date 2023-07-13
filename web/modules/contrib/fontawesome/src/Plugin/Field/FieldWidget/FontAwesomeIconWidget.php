@@ -106,7 +106,7 @@ class FontAwesomeIconWidget extends WidgetBase implements ContainerFactoryPlugin
     ];
 
     // Get current settings.
-    $iconSettings = unserialize($items[$delta]->get('settings')->getValue() ?? '');
+    $iconSettings = unserialize($items[$delta]->get('settings')->getValue() ?? '', ['allowed_classes' => FALSE]);
     // Build additional settings.
     $element['settings'] = [
       '#type' => 'details',
@@ -162,7 +162,7 @@ class FontAwesomeIconWidget extends WidgetBase implements ContainerFactoryPlugin
         '' => $this->t('Classic'),
         'fa-sharp' => $this->t('Sharp'),
       ],
-      '#default_value' => isset($iconSettings['iconset']) ? $iconSettings['iconset'] : '',
+      '#default_value' => $iconSettings['iconset'] ?? '',
     ];
     // Allow user to determine size.
     $element['settings']['size'] = [
@@ -184,14 +184,14 @@ class FontAwesomeIconWidget extends WidgetBase implements ContainerFactoryPlugin
         'fa-9x' => $this->t('9x'),
         'fa-10x' => $this->t('10x'),
       ],
-      '#default_value' => isset($iconSettings['size']) ? $iconSettings['size'] : '',
+      '#default_value' => $iconSettings['size'] ?? '',
     ];
     // Set icon to fixed width.
     $element['settings']['fixed-width'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Fixed Width?'),
       '#description' => $this->t('Use to set icons at a fixed width. Great to use when different icon widths throw off vertical alignment. Especially useful in things like nav lists and list groups.'),
-      '#default_value' => isset($iconSettings['fixed-width']) ? $iconSettings['fixed-width'] : FALSE,
+      '#default_value' => $iconSettings['fixed-width'] ?? FALSE,
       '#return_value' => 'fa-fw',
     ];
     // Add border.
@@ -199,7 +199,7 @@ class FontAwesomeIconWidget extends WidgetBase implements ContainerFactoryPlugin
       '#type' => 'checkbox',
       '#title' => $this->t('Border?'),
       '#description' => $this->t('Adds a border to the icon.'),
-      '#default_value' => isset($iconSettings['border']) ? $iconSettings['border'] : FALSE,
+      '#default_value' => $iconSettings['border'] ?? FALSE,
       '#return_value' => 'fa-border',
     ];
     // Invert color.
@@ -207,7 +207,7 @@ class FontAwesomeIconWidget extends WidgetBase implements ContainerFactoryPlugin
       '#type' => 'checkbox',
       '#title' => $this->t('Invert color?'),
       '#description' => $this->t('Inverts the color of the icon (black becomes white, etc.)'),
-      '#default_value' => isset($iconSettings['invert']) ? $iconSettings['invert'] : FALSE,
+      '#default_value' => $iconSettings['invert'] ?? FALSE,
       '#return_value' => 'fa-inverse',
     ];
     // Animated the icon.
@@ -226,7 +226,7 @@ class FontAwesomeIconWidget extends WidgetBase implements ContainerFactoryPlugin
         'fa-spin' => $this->t('Spin'),
         'fa-pulse' => $this->t('Pulse'),
       ],
-      '#default_value' => isset($iconSettings['animation']) ? $iconSettings['animation'] : '',
+      '#default_value' => $iconSettings['animation'] ?? '',
     ];
 
     // Pull the icons.
@@ -239,14 +239,14 @@ class FontAwesomeIconWidget extends WidgetBase implements ContainerFactoryPlugin
         'fa-pull-left' => $this->t('Left'),
         'fa-pull-right' => $this->t('Right'),
       ],
-      '#default_value' => isset($iconSettings['pull']) ? $iconSettings['pull'] : '',
+      '#default_value' => $iconSettings['pull'] ?? '',
     ];
 
     // Allow to use CSS Classes for any purpose eg background color.
     $element['settings']['additional_classes'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Additional Classes'),
-      '#default_value' => isset($iconSettings['additional_classes']) ? $iconSettings['additional_classes'] : '',
+      '#default_value' => $iconSettings['additional_classes'] ?? '',
       '#description' => $this->t('Use space separated classes for additional manual icon tagging / settings.'),
     ];
 
@@ -266,7 +266,7 @@ class FontAwesomeIconWidget extends WidgetBase implements ContainerFactoryPlugin
         '#type' => 'checkbox',
         '#title' => $this->t('Swap Opacity?'),
         '#description' => $this->t('Use to swap the default opacity of each duotone icon’s layers. This will make an icon’s primary layer have the default opacity of 40% rather than its secondary layer.'),
-        '#default_value' => isset($iconSettings['duotone']['swap-opacity']) ? $iconSettings['duotone']['swap-opacity'] : '',
+        '#default_value' => $iconSettings['duotone']['swap-opacity'] ?? '',
         '#return_value' => 'fa-swap-opacity',
       ];
       // Manual opacity.
@@ -284,15 +284,21 @@ class FontAwesomeIconWidget extends WidgetBase implements ContainerFactoryPlugin
         '#type' => 'number',
         '#title' => $this->t('Primary Layer Opacity'),
         '#step' => 0.01,
-        '#default_value' => isset($iconSettings['duotone']['opacity']['primary']) ? $iconSettings['duotone']['opacity']['primary'] : '',
+        '#default_value' => $iconSettings['duotone']['opacity']['primary'] ?? '',
         '#description' => $this->t('Opacity of the primary duotone layer.'),
       ];
       $element['settings']['duotone']['opacity']['secondary'] = [
         '#type' => 'number',
         '#title' => $this->t('Secondary Layer Opacity'),
         '#step' => 0.01,
-        '#default_value' => isset($iconSettings['duotone']['opacity']['secondary']) ? $iconSettings['duotone']['opacity']['secondary'] : '',
+        '#default_value' => $iconSettings['duotone']['opacity']['secondary'] ?? '',
         '#description' => $this->t('Opacity of the secondary duotone layer.'),
+      ];
+      $element['settings']['duotone']['inherit-color'] = [
+        '#type' => 'checkbox',
+        '#title' => $this->t('Inherit Duotone Colors?'),
+        '#description' => $this->t('Check this box to inherit the duotone colors from CSS. Uncheck to manually set the colors below.'),
+        '#default_value' => $iconSettings['duotone']['inherit-color'] ?? FALSE,
       ];
       // Manual opacity.
       $element['settings']['duotone']['color'] = [
@@ -309,15 +315,25 @@ class FontAwesomeIconWidget extends WidgetBase implements ContainerFactoryPlugin
         '#type' => 'color',
         '#title' => $this->t('Primary Layer Color'),
         '#step' => 0.01,
-        '#default_value' => isset($iconSettings['duotone']['color']['primary']) ? $iconSettings['duotone']['color']['primary'] : '',
+        '#default_value' => $iconSettings['duotone']['color']['primary'] ?? '',
         '#description' => $this->t('Opacity of the primary duotone layer.'),
+        '#states' => [
+          'disabled' => [
+            ':input[name="' . $field_name . '[' . $delta . '][settings][duotone][inherit-color]"]' => ['checked' => TRUE],
+          ],
+        ],
       ];
       $element['settings']['duotone']['color']['secondary'] = [
         '#type' => 'color',
         '#title' => $this->t('Secondary Layer Color'),
         '#step' => 0.01,
-        '#default_value' => isset($iconSettings['duotone']['color']['secondary']) ? $iconSettings['duotone']['color']['secondary'] : '',
+        '#default_value' => $iconSettings['duotone']['color']['secondary'] ?? '',
         '#description' => $this->t('Opacity of the secondary duotone layer.'),
+        '#states' => [
+          'disabled' => [
+            ':input[name="' . $field_name . '[' . $delta . '][settings][duotone][inherit-color]"]' => ['checked' => TRUE],
+          ],
+        ],
       ];
     }
 
@@ -341,7 +357,7 @@ class FontAwesomeIconWidget extends WidgetBase implements ContainerFactoryPlugin
       '#title' => $this->t('Icon Name'),
       '#size' => 50,
       '#field_prefix' => 'fa-',
-      '#default_value' => isset($iconSettings['masking']['mask']) ? $iconSettings['masking']['mask'] : '',
+      '#default_value' => $iconSettings['masking']['mask'] ?? '',
       '#description' => $this->t('Name of the Font Awesome Icon. See @iconsLink for valid icon names, or begin typing for an autocomplete list.', [
         '@iconsLink' => Link::fromTextAndUrl($this->t('the Font Awesome icon list'), Url::fromUri('https://fontawesome.com/icons', [
           'attributes' => [
@@ -365,7 +381,7 @@ class FontAwesomeIconWidget extends WidgetBase implements ContainerFactoryPlugin
         ]))->toString(),
       ]),
       '#options' => $style_options,
-      '#default_value' => isset($iconSettings['masking']['style']) ? $iconSettings['masking']['style'] : '',
+      '#default_value' => $iconSettings['masking']['style'] ?? '',
     ];
 
     // Build new power-transforms.
@@ -390,21 +406,21 @@ class FontAwesomeIconWidget extends WidgetBase implements ContainerFactoryPlugin
       '#title' => $this->t('Rotate'),
       '#step' => 0.01,
       '#field_suffix' => '&deg;',
-      '#default_value' => isset($iconSettings['power_transforms']['rotate']['value']) ? $iconSettings['power_transforms']['rotate']['value'] : '',
+      '#default_value' => $iconSettings['power_transforms']['rotate']['value'] ?? '',
       '#description' => $this->t('Power Transform rotating effects icon angle without changing or moving the container. To rotate icons use any arbitrary value. Units are degrees with negative numbers allowed.'),
     ];
     // Flip the icon.
     $element['settings']['power_transforms']['flip-h']['value'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Flip Horizontal?'),
-      '#default_value' => isset($iconSettings['power_transforms']['flip-h']['value']) ? $iconSettings['power_transforms']['flip-h']['value'] : FALSE,
+      '#default_value' => $iconSettings['power_transforms']['flip-h']['value'] ?? FALSE,
       '#description' => $this->t('Power Transform flipping effects icon reflection without changing or moving the container.'),
       '#return_value' => 'h',
     ];
     $element['settings']['power_transforms']['flip-v']['value'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Flip Vertical?'),
-      '#default_value' => isset($iconSettings['power_transforms']['flip-v']['value']) ? $iconSettings['power_transforms']['flip-v']['value'] : FALSE,
+      '#default_value' => $iconSettings['power_transforms']['flip-v']['value'] ?? FALSE,
       '#description' => $this->t('Power Transform flipping effects icon reflection without changing or moving the container.'),
       '#return_value' => 'v',
     ];
@@ -426,14 +442,14 @@ class FontAwesomeIconWidget extends WidgetBase implements ContainerFactoryPlugin
         'shrink' => $this->t('Shrink'),
         'grow' => $this->t('Grow'),
       ],
-      '#default_value' => isset($iconSettings['power_transforms']['scale']['type']) ? $iconSettings['power_transforms']['scale']['type'] : '',
+      '#default_value' => $iconSettings['power_transforms']['scale']['type'] ?? '',
     ];
     $element['settings']['power_transforms']['scale']['value'] = [
       '#type' => 'number',
       '#title' => $this->t('Scale Value'),
       '#min' => 0,
       '#step' => 0.01,
-      '#default_value' => isset($iconSettings['power_transforms']['scale']['value']) ? $iconSettings['power_transforms']['scale']['value'] : '',
+      '#default_value' => $iconSettings['power_transforms']['scale']['value'] ?? '',
       '#states' => [
         'disabled' => [
           ':input[name="' . $field_name . '[' . $delta . '][settings][power_transforms][scale][type]"]' => ['value' => ''],
@@ -458,14 +474,14 @@ class FontAwesomeIconWidget extends WidgetBase implements ContainerFactoryPlugin
         'up' => $this->t('Up'),
         'down' => $this->t('Down'),
       ],
-      '#default_value' => isset($iconSettings['power_transforms']['position_y']['type']) ? $iconSettings['power_transforms']['position_y']['type'] : '',
+      '#default_value' => $iconSettings['power_transforms']['position_y']['type'] ?? '',
     ];
     $element['settings']['power_transforms']['position_y']['value'] = [
       '#type' => 'number',
       '#title' => $this->t('Position Value'),
       '#min' => 0,
       '#step' => 0.01,
-      '#default_value' => isset($iconSettings['power_transforms']['position_y']['value']) ? $iconSettings['power_transforms']['position_y']['value'] : '',
+      '#default_value' => $iconSettings['power_transforms']['position_y']['value'] ?? '',
       '#states' => [
         'disabled' => [
           ':input[name="' . $field_name . '[' . $delta . '][settings][power_transforms][position_y][type]"]' => ['value' => ''],
@@ -489,14 +505,14 @@ class FontAwesomeIconWidget extends WidgetBase implements ContainerFactoryPlugin
         'left' => $this->t('Left'),
         'right' => $this->t('Right'),
       ],
-      '#default_value' => isset($iconSettings['power_transforms']['position_x']['type']) ? $iconSettings['power_transforms']['position_x']['type'] : '',
+      '#default_value' => $iconSettings['power_transforms']['position_x']['type'] ?? '',
     ];
     $element['settings']['power_transforms']['position_x']['value'] = [
       '#type' => 'number',
       '#title' => $this->t('Position Value'),
       '#min' => 0,
       '#step' => 0.01,
-      '#default_value' => isset($iconSettings['power_transforms']['position_x']['value']) ? $iconSettings['power_transforms']['position_x']['value'] : '',
+      '#default_value' => $iconSettings['power_transforms']['position_x']['value'] ?? '',
       '#states' => [
         'disabled' => [
           ':input[name="' . $field_name . '[' . $delta . '][settings][power_transforms][position_x][type]"]' => ['value' => ''],

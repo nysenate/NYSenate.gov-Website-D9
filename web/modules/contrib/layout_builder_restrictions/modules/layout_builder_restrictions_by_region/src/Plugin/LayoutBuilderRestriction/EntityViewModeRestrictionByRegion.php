@@ -115,9 +115,9 @@ class EntityViewModeRestrictionByRegion extends LayoutBuilderRestrictionBase {
           foreach ($definitions as $delta => $definition) {
             $original_delta = $delta;
             $category = $this->getUntranslatedCategory($definition['category']);
-            // Custom blocks get special treatment.
+            // Content blocks get special treatment.
             if ($definition['provider'] == 'block_content') {
-              // 'Custom block types' are disregarded if 'Custom blocks'
+              // 'Custom block types' are disregarded if 'Content blocks'
               // restrictions are enabled.
               if (isset($allowlisted_blocks[$region]['Custom blocks']) || isset($denylisted_blocks[$region]['Custom blocks'])) {
                 $category = 'Custom blocks';

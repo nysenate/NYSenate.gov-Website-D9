@@ -140,7 +140,7 @@ class FieldValidationRuleSet extends ConfigEntityBase implements FieldValidation
    * {@inheritdoc}
    */
   public function getPluginCollections() {
-    return array('field_validation_rules' => $this->getFieldValidationRules());
+    return ['field_validation_rules' => $this->getFieldValidationRules()];
   }
 
   /**
@@ -206,4 +206,5 @@ class FieldValidationRuleSet extends ConfigEntityBase implements FieldValidation
     $this->set('bundle', $bundle);
     return $this;
   }
+
 }

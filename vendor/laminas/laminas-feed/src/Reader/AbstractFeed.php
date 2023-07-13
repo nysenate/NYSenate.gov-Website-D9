@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\Feed\Reader;
 
 use DOMDocument;
@@ -15,7 +17,10 @@ use function method_exists;
 use function strpos;
 
 /**
- * @deprecated This (abstract) class is deprecated. Use \Laminas\Feed\Reader\Feed\AbstractFeed instead.
+ * @deprecated This (abstract) class is deprecated. Use \Laminas\Feed\Reader\Feed\AbstractFeed instead.]
+ *
+ * @template TItem of Entry\AbstractEntry
+ * @template-implements Feed\FeedInterface<int, TItem>
  */
 abstract class AbstractFeed implements Feed\FeedInterface
 {

@@ -66,6 +66,9 @@ class SettingsForm extends ConfigFormBase {
       '#default_value' => $config->get('origin'),
       '#description' => $this->t("The origin website. For example: 'http://example.com'. If the site is using HTTP Basic Authentication (the browser popup for username and password) you can embed those in the url. Be sure to URL encode any special characters:<br/><br/>For example, setting a user name of 'myusername' and password as, 'letme&in' the configuration would be the following: <br/><br/>'http://myusername:letme%26in@example.com';"),
       '#required' => FALSE,
+      '#config' => [
+        'key' => 'stage_file_proxy.settings:origin',
+      ],
     ];
 
     $form['verify'] = [
@@ -74,6 +77,9 @@ class SettingsForm extends ConfigFormBase {
       '#default_value' => $config->get('verify'),
       '#description' => $this->t('Verifies the validity of the SSL certificate presented by the server when checked (if HTTPS is used).'),
       '#required' => FALSE,
+      '#config' => [
+        'key' => 'stage_file_proxy.settings:verify',
+      ],
     ];
 
     $stage_file_proxy_origin_dir = $config->get('origin_dir');
@@ -89,6 +95,9 @@ class SettingsForm extends ConfigFormBase {
       '#default_value' => $stage_file_proxy_origin_dir,
       '#description' => $this->t('If this is set then Stage File Proxy will use a different path for the remote files. This is useful for multisite installations where the sites directory contains different names for each url. If this is not set, it defaults to the same path as the local site.'),
       '#required' => FALSE,
+      '#config' => [
+        'key' => 'stage_file_proxy.settings:origin_dir',
+      ],
     ];
 
     $form['use_imagecache_root'] = [
@@ -97,6 +106,9 @@ class SettingsForm extends ConfigFormBase {
       '#default_value' => $config->get('use_imagecache_root'),
       '#description' => $this->t("When checked, Stage File Proxy will look for /styles/ in the URL, determine the original file, and request that rather than the processed file. It will then send a header to the browser to refresh the image and let the image module create the derived image. This will speed up future requests for other derived images for the same original file."),
       '#required' => FALSE,
+      '#config' => [
+        'key' => 'stage_file_proxy.settings:use_imagecache_root',
+      ],
     ];
 
     $form['hotlink'] = [
@@ -105,6 +117,9 @@ class SettingsForm extends ConfigFormBase {
       '#default_value' => $config->get('hotlink'),
       '#description' => $this->t("When checked Stage File Proxy will not transfer the remote file to the local machine, it will just serve a 301 to the remote file and let the origin webserver handle it."),
       '#required' => FALSE,
+      '#config' => [
+        'key' => 'stage_file_proxy.settings:hotlink',
+      ],
     ];
 
     $form['excluded_extensions'] = [
@@ -113,6 +128,9 @@ class SettingsForm extends ConfigFormBase {
       '#default_value' => $config->get('excluded_extensions'),
       '#description' => $this->t("A comma separated list of the extensions that will not be fetched by Stage File Proxy if Hotlinking is disabled. For example: 'mp3,ogg'"),
       '#required' => FALSE,
+      '#config' => [
+        'key' => 'stage_file_proxy.settings:excluded_extensions',
+      ],
     ];
 
     return parent::buildForm($form, $form_state);

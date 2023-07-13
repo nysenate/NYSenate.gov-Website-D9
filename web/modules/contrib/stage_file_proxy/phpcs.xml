@@ -1,0 +1,8 @@
+<ruleset name="stage_file_proxy">
+  <description>PHP CodeSniffer configuration for Stage File Proxy.</description>
+  <file>.</file>
+  <rule ref="Drupal"/>
+  <rule ref="DrupalPractice"/>
+  <!-- Exclude the Composer Vendor directory. -->
+  <exclude-pattern>/vendor/*</exclude-pattern>
+</ruleset>

@@ -101,6 +101,7 @@ class FontAwesomeIconpickerWidget extends FontAwesomeIconWidget {
       '#type' => 'textfield',
       '#title' => $cardinality == 1 ? $this->fieldDefinition->getLabel() : $this->t('Icon Name'),
       '#required' => $element['#required'],
+      '#description' => $element['#description'],
       '#default_value' => $icon_default,
       '#attributes' => [
         'class' => ['fontawesome-iconpicker-icon'],
@@ -125,7 +126,7 @@ class FontAwesomeIconpickerWidget extends FontAwesomeIconWidget {
     ];
     // Get current settings.
     $settings = $items[$delta]->get('settings')->getValue() ?? '';
-    $iconSettings = unserialize($settings);
+    $iconSettings = unserialize($settings, ['allowed_classes' => FALSE]);
 
     $mask_icon = '';
     $mask_style = NULL;

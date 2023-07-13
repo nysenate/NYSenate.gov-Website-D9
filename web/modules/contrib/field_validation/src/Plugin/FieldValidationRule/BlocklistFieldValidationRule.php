@@ -7,7 +7,7 @@ use Drupal\field_validation\ConfigurableFieldValidationRuleBase;
 use Drupal\field_validation\FieldValidationRuleSetInterface;
 
 /**
- * BlocklistFieldValidationRule.
+ * Provides functaionality for BlocklistFieldValidationRule.
  *
  * @FieldValidationRule(
  *   id = "blocklist_field_validation_rule",
@@ -78,13 +78,13 @@ class BlocklistFieldValidationRule extends ConfigurableFieldValidationRuleBase {
     if (!empty($rule) && !empty($rule->configuration)) {
       $settings = $rule->configuration;
     }
-    $setting = isset($settings['setting']) ? $settings['setting'] : '';
+    $setting = $settings['setting'] ?? '';
     $blocklist = explode(',', $setting);
     $blocklist = array_map('trim', $blocklist);
     $blocklist_regex = implode('|', $blocklist);
     // $settings = $this->rule->settings;
     if ($value !== '' && !is_null($value) && preg_match("/$blocklist_regex/i", $value)) {
-      $context->addViolation($rule->getErrorMessage());
+      $context->addViolation($rule->getReplacedErrorMessage($params));
     }
   }
 

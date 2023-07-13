@@ -66,12 +66,12 @@ active at `/admin/config/content/layout-builder-restrictions`
 
 ### Disambiguation: block types, individual custom blocks, and inline blocks
 This module provides separate restrictions for "CUSTOM BLOCK TYPES",
-"CUSTOM BLOCKS", and "INLINE BLOCKS."
+"CONTENT BLOCKS", and "INLINE BLOCKS."
 
 Restrictions for "CUSTOM BLOCK TYPES" will prevent *any* individual blocks of a
 restricted type, created through the block library, from being placed.
 
-If, on the other hand, the "CUSTOM BLOCKS" restriction section is used -- i.e.,
+If, on the other hand, the "CONTENT BLOCKS" restriction section is used -- i.e.,
 restrictions are placed on *specific instances* of blocks -- this restriction
 will take precedence over those defined in "CUSTOM BLOCK TYPES." For most site
 configurations, you will likely use either block type-level restrictions or

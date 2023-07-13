@@ -63,6 +63,7 @@
    *   False to prevent further handlers.
    */
   function selectHandler(event, ui) {
+    var linkSelector = event.target.getAttribute('data-drupal-selector');
     var $context = $(event.target).closest('form,fieldset,tr');
 
     if (!ui.item.path) {
@@ -85,10 +86,16 @@
       // Automatically set the link title.
       var $linkTitle = $('*[data-linkit-widget-title-autofill-enabled]', $context);
       if ($linkTitle.length > 0) {
+        var titleSelector = $linkTitle.attr('data-drupal-selector');
+        if (titleSelector === undefined || linkSelector === undefined) {
+          return false;
+        }
+        if (titleSelector.replace('-title', '') !== linkSelector.replace('-uri', '')) {
+          return false;
+        }
         if (!$linkTitle.val() || $linkTitle.hasClass('link-widget-title--auto')) {
           // Set value to the label.
           $linkTitle.val(ui.item.label);
-
           // Flag title as being automatically set.
           $linkTitle.addClass('link-widget-title--auto');
         }
@@ -148,7 +155,9 @@
       }
 
       $.each(items, function (index, item) {
-        self._renderItemData(ul, item);
+        if ( $.isFunction(self._renderItemData) ) {
+          self._renderItemData(ul, item);
+        }
       });
     });
   }

@@ -160,10 +160,21 @@ class LinkitWidget extends LinkWidget {
     // Display entity URL consistently across all entity types.
     if ($entity instanceof FileInterface) {
       // File entities are anomalies, so we handle them differently.
-      $element['uri']['#default_value'] = $entity->getFilename();
+      $element['uri']['#default_value'] = \Drupal::service('file_url_generator')->generateString($entity->getFileUri());
     }
     elseif ($entity instanceof EntityInterface) {
-      $element['uri']['#default_value'] = $entity->toUrl()->toString();
+      $uri_parts = parse_url($uri);
+      $uri_options = [];
+      // Extract query parameters and fragment and merge them into $uri_options.
+      if (isset($uri_parts['fragment']) && $uri_parts['fragment'] !== '') {
+        $uri_options += ['fragment' => $uri_parts['fragment']];
+      }
+      if (!empty($uri_parts['query'])) {
+        $uri_query = [];
+        parse_str($uri_parts['query'], $uri_query);
+        $uri_options['query'] = isset($uri_options['query']) ? $uri_options['query'] + $uri_query : $uri_query;
+      }
+      $element['uri']['#default_value'] = $entity->toUrl()->setOptions($uri_options)->toString();
     }
     // Change the URI field to use the linkit profile.
     $element['uri']['#type'] = 'linkit';

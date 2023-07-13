@@ -29,7 +29,7 @@ class RetainLayoutRestrictionsTest extends WebDriverTestBase {
    *
    * @var string
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'olivero';
 
   /**
    * {@inheritdoc}

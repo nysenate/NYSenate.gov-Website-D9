@@ -2,9 +2,10 @@
 
 namespace Drupal\Tests\stage_file_proxy\Kernel;
 
-use GuzzleHttp\Client;
-use Drupal\stage_file_proxy\FetchManager;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\stage_file_proxy\DownloadManager;
+use Drupal\stage_file_proxy\FetchManager;
+use GuzzleHttp\Client;
 
 /**
  * Test stage file proxy module.
@@ -58,6 +59,13 @@ class FetchManagerTest extends KernelTestBase {
   protected $configFactory;
 
   /**
+   * The download manager.
+   *
+   * @var \Drupal\stage_file_proxy\DownloadManagerInterface
+   */
+  protected DownloadManager $downloadManager;
+
+  /**
    * Before a test method is run, setUp() is invoked.
    *
    * Create new fetchManager object.
@@ -70,8 +78,9 @@ class FetchManagerTest extends KernelTestBase {
     $this->client = new Client();
     $this->logger = \Drupal::logger('test_logger');
     $this->configFactory = $this->container->get('config.factory');
+    $this->downloadManager = new DownloadManager($this->client, $this->fileSystem, $this->logger, $this->configFactory, \Drupal::lock());
 
-    $this->fetchManager = new FetchManager($this->client, $this->fileSystem, $this->logger, $this->configFactory);
+    $this->fetchManager = new FetchManager($this->client, $this->fileSystem, $this->logger, $this->configFactory, $this->downloadManager);
   }
 
   /**

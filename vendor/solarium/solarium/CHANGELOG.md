@@ -4,6 +4,21 @@ All notable changes to the Solarium library will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [6.3.1]
+### Added
+- Loadbalancer plugin can failover on an optional list of HTTP status codes
+- Solarium\QueryType\Extract\Query::setFile() now supports file pointer resources
+- Solarium\QueryType\Extract\Result::getFile() and getFileMetadata() to access the retrieved data for `extractOnly=true`
+
+### Fixed
+- Solarium\Core\Query\Helper::escapeTerm() has to quote reserved terms `AND`, `OR`, `TO`
+
+### Changed
+- Solarium\Core\Client\Endpoint::setAuthentication() marks $password as #[\SensitiveParameter] (PHP 8 >= 8.2.0)
+- Solarium\Core\Client\Endpoint::setAuthorizationToken() marks $token as #[\SensitiveParameter] (PHP 8 >= 8.2.0)
+- Solarium\Core\Client\Request::setAuthentication() marks $password as #[\SensitiveParameter] (PHP 8 >= 8.2.0)
+
+
 ## [6.3.0]
 ### Added
 - Support for Luke queries
@@ -24,7 +39,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Ping queries set omitHeader=false by default
 
 ### Removed
-- Removed deprecated class constant Client::Version. Use Client::getVersion() instead.
+- Removed deprecated class constant Client::Version. Use Client::getVersion() instead
+- Removed Core/Query/AbstractResponseParser::addHeaderInfo()
 
 ### Deprecated
 - Solarium\QueryType\Server\Collections\Result\CreateResult::getStatus(), use getCreateStatus() instead

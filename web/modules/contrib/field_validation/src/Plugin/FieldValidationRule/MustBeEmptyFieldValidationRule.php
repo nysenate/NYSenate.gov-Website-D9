@@ -57,13 +57,17 @@ class MustBeEmptyFieldValidationRule extends ConfigurableFieldValidationRuleBase
 
   }
 
+  /**
+   *
+   */
   public function validate($params) {
     $value = $params['value'] ?? '';
-	$rule = $params['rule'] ?? null;
-	$context = $params['context'] ?? null;
+    $rule = $params['rule'] ?? NULL;
+    $context = $params['context'] ?? NULL;
 
     if ($value != '') {
-      $context->addViolation($rule->getErrorMessage());
+      $context->addViolation($rule->getReplacedErrorMessage($params));
     }
   }
+
 }

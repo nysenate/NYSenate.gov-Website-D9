@@ -43,7 +43,24 @@ This module requires no modules outside of Drupal core.
     (Drush 9)
     `$ drush fa:download`
 
-2. Manually
+2. [Using Composer](https://getcomposer.org/)
+
+   a. Install the "Font Awesome" module as normal
+
+   b. Install merge plugin using `composer require wikimedia/composer-merge-plugin`
+
+   c. Edit your site's composer.json file and add the following under the "extra" section:
+      ```
+      "merge-plugin": {
+        "include": [
+          "web/modules/contrib/fontawesome/composer.libraries.json"
+        ]
+      },
+      ```
+
+   d. Run `composer update --lock`
+
+3. Manually
 
     a. Install the "Font Awesome" library following one of these 2 options:
        - run `drush fa-download` (recommended,it will download the right

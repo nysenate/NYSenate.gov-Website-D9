@@ -58,7 +58,17 @@ function fontawesome_library_info_alter(&$libraries, $extension) {
       }
 
       // Modify settings for individual included files.
-      foreach (['solid', 'regular', 'light', 'brands'] as $libraryType) {
+      foreach ([
+        'solid',
+        'regular',
+        'light',
+        'brands',
+        'duotone',
+        'sharpregular',
+        'sharplight',
+        'sharpsolid',
+        'custom',
+      ] as $libraryType) {
         if (isset($libraries['fontawesome.' . $configuration_settings->get('method') . '.' . $libraryType])) {
           $cdnBase = $cdnComponents;
           $cdnBase['path'] .= $libraryType . '.' . ($configuration_settings->get('method') == 'webfonts' ? 'css' : 'js');
@@ -107,6 +117,10 @@ function _fontawesome_modify_library(array &$libraries, $librarySuffix, $type, $
     $libraryName .= '.' . $librarySuffix;
   }
 
+  // Handle sharps/custom having distinct filenames.
+  $cdnLocation = str_replace('/sharp', '/sharp-', $cdnLocation);
+  $cdnLocation = str_replace('/custom.', '/custom-icons.', $cdnLocation);
+
   // Load the configuration settings.
   $configuration_settings = \Drupal::config('fontawesome.settings');
 
@@ -127,7 +141,7 @@ function _fontawesome_modify_library(array &$libraries, $librarySuffix, $type, $
   elseif ($type == 'webfonts') {
     $librarySettings = array_shift($libraries[$libraryName]['css']['theme']);
     $librarySettings['type'] = 'external';
-    // TODO: add integrity and crossorigin to CSS.
+    // @todo add integrity and crossorigin to CSS.
     // See https://www.drupal.org/project/drupal/issues/2716115.
     $libraries[$libraryName]['css']['theme'] = [
       $cdnLocation => $librarySettings,
@@ -146,7 +160,7 @@ function _fontawesome_modify_library(array &$libraries, $librarySuffix, $type, $
  */
 function _fontawesome_unparse_url(array $parsed) {
   $get = function ($key) use ($parsed) {
-    return isset($parsed[$key]) ? $parsed[$key] : '';
+    return $parsed[$key] ?? '';
   };
 
   $pass = $get('pass');
@@ -244,14 +258,22 @@ function fontawesome_page_attachments(array &$page) {
   }
 
   // Determine which files we are using.
-  $activeFiles = [
-    'use_solid_file' => is_null($configuration_settings->get('use_solid_file')) === TRUE ? TRUE : $configuration_settings->get('use_solid_file'),
-    'use_regular_file' => is_null($configuration_settings->get('use_regular_file')) === TRUE ? TRUE : $configuration_settings->get('use_regular_file'),
-    'use_light_file' => is_null($configuration_settings->get('use_light_file')) === TRUE ? TRUE : $configuration_settings->get('use_light_file'),
-    'use_brands_file' => is_null($configuration_settings->get('use_brands_file')) === TRUE ? TRUE : $configuration_settings->get('use_brands_file'),
-    'use_duotone_file' => is_null($configuration_settings->get('use_duotone_file')) === TRUE ? TRUE : $configuration_settings->get('use_duotone_file'),
-    'use_thin_file' => is_null($configuration_settings->get('use_thin_file')) === TRUE ? TRUE : $configuration_settings->get('use_thin_file'),
+  $iconStyleTypes = [
+    'solid',
+    'regular',
+    'light',
+    'brands',
+    'duotone',
+    'thin',
+    'sharpregular',
+    'sharplight',
+    'sharpsolid',
+    'custom',
   ];
+  foreach ($iconStyleTypes as $iconType) {
+    $settingName = 'use_' . $iconType . '_file';
+    $activeFiles[$settingName] = is_null($configuration_settings->get($settingName)) === TRUE ? TRUE : $configuration_settings->get($settingName);
+  }
 
   // First check if we're using everything.
   if (count(array_unique($activeFiles)) == 1) {
@@ -260,23 +282,11 @@ function fontawesome_page_attachments(array &$page) {
   }
   // Else we attach the libraries piecemeal.
   else {
-    if ($activeFiles['use_solid_file']) {
-      $page['#attached']['library'][] = 'fontawesome/fontawesome.' . $configuration_settings->get('method') . '.solid';
-    }
-    if ($activeFiles['use_regular_file']) {
-      $page['#attached']['library'][] = 'fontawesome/fontawesome.' . $configuration_settings->get('method') . '.regular';
-    }
-    if ($activeFiles['use_light_file']) {
-      $page['#attached']['library'][] = 'fontawesome/fontawesome.' . $configuration_settings->get('method') . '.light';
-    }
-    if ($activeFiles['use_brands_file']) {
-      $page['#attached']['library'][] = 'fontawesome/fontawesome.' . $configuration_settings->get('method') . '.brands';
-    }
-    if ($activeFiles['use_duotone_file']) {
-      $page['#attached']['library'][] = 'fontawesome/fontawesome.' . $configuration_settings->get('method') . '.duotone';
-    }
-    if ($activeFiles['use_thin_file']) {
-      $page['#attached']['library'][] = 'fontawesome/fontawesome.' . $configuration_settings->get('method') . '.thin';
+    foreach ($iconStyleTypes as $iconType) {
+      $settingName = 'use_' . $iconType . '_file';
+      if ($activeFiles[$settingName]) {
+        $page['#attached']['library'][] = 'fontawesome/fontawesome.' . $configuration_settings->get('method') . '.' . $iconType;
+      }
     }
   }
 
@@ -384,7 +394,7 @@ function fontawesome_preprocess_icon_sprite(&$variables) {
       unset($variables['attributes']['class'][$key]);
     }
 
-    // TODO: need to add the correct class depending on icon type.
+    // @todo need to add the correct class depending on icon type.
     // Add the necessary FA identifier class.
     $variables['attributes']['class'][] = 'fas';
 
@@ -396,7 +406,7 @@ function fontawesome_preprocess_icon_sprite(&$variables) {
 /**
  * Implements hook_icon_bundles().
  *
- * TODO: this is waiting on an 8.x release of Icon API.
+ * @todo this is waiting on an 8.x release of Icon API.
  */
 function fontawesome_icon_bundles() {
   $bundles['fontawesome'] = [
@@ -428,7 +438,7 @@ function fontawesome_entity_presave(EntityInterface $entity) {
           foreach ($fields as $field) {
             // Find and replace SVG strings with original icon HTML.
             $fieldValue = $field->getValue();
-            $fieldValue['value'] = preg_replace('%<svg .*?class="svg-inline--fa.*?<\/svg><!--\s?(<(span|i).*?<\/(span|i)>).*\s?-->%', '$1', $fieldValue['value']);
+            $fieldValue['value'] = preg_replace('%<svg .*?class="svg-inline--fa.*?<\/svg><!--\s?(<(span|i).*?<\/(span|i)>).*?\s?-->%', '$1', $fieldValue['value'] ?? '');
             $field->setValue($fieldValue);
           }
         }

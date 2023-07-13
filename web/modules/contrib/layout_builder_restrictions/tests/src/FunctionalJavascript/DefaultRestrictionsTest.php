@@ -35,8 +35,8 @@ class DefaultRestrictionsTest extends LayoutBuilderRestrictionsTestBase {
     $assert_session->linkNotExists('Help');
     // Other blocks are allowed because they are listed in the allowed_blocks
     // schema.
-    $this->clickLink('Create custom block');
-    $this->assertNotEmpty($assert_session->waitForText('Add a new custom block'));
+    $this->clickLink('Create content block');
+    $this->assertNotEmpty($assert_session->waitForText('Add a new content block'));
     $assert_session->linkExists('Basic');
     $assert_session->linkExists('Alternate');
   }
@@ -73,8 +73,8 @@ class DefaultRestrictionsTest extends LayoutBuilderRestrictionsTestBase {
     $assert_session->linkExists('Help');
     // Other blocks are allowed because they are listed in the allowed_blocks
     // schema.
-    $this->clickLink('Create custom block');
-    $this->assertNotEmpty($assert_session->waitForText('Add a new custom block'));
+    $this->clickLink('Create content block');
+    $this->assertNotEmpty($assert_session->waitForText('Add a new content block'));
     $assert_session->linkExists('Basic');
     $assert_session->linkExists('Alternate');
   }

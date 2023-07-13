@@ -918,29 +918,33 @@ class SearchApiSolrBackend extends BackendPluginBase implements SolrBackendInter
                 // Collect the stats.
                 $stats_summary = $connector->getStatsSummary();
 
-                $pending_msg = $stats_summary['@pending_docs'] ? $this->t('(@pending_docs sent but not yet processed)', $stats_summary) : '';
-                $index_msg = $stats_summary['@index_size'] ? $this->t('(@index_size on disk)', $stats_summary) : '';
-                $indexed_message = $this->t('@num items @pending @index_msg', [
-                  '@num' => $data['index']['numDocs'],
-                  '@pending' => $pending_msg,
-                  '@index_msg' => $index_msg,
-                ]);
-                $info[] = [
-                  'label' => $this->t('%key: Indexed', ['%key' => $key]),
-                  'info' => $indexed_message,
-                ];
-
-                if (!empty($stats_summary['@deletes_total'])) {
+                if ($data['index']['numDocs'] !== -1) {
+                  $pending_msg = $stats_summary['@pending_docs'] ? $this->t('(@pending_docs sent but not yet processed)', $stats_summary) : '';
+                  $index_msg = $stats_summary['@index_size'] ? $this->t('(@index_size on disk)', $stats_summary) : '';
+                  $indexed_message = $this->t('@num items @pending @index_msg', [
+                    '@num' => $data['index']['numDocs'],
+                    '@pending' => $pending_msg,
+                    '@index_msg' => $index_msg,
+                  ]);
                   $info[] = [
-                    'label' => $this->t('%key: Pending Deletions', ['%key' => $key]),
-                    'info' => $stats_summary['@deletes_total'],
+                    'label' => $this->t('%key: Indexed', ['%key' => $key]),
+                    'info' => $indexed_message,
                   ];
-                }
 
-                $info[] = [
-                  'label' => $this->t('%key: Delay', ['%key' => $key]),
-                  'info' => $this->t('@autocommit_time before updates are processed.', $stats_summary),
-                ];
+                  if (!empty($stats_summary['@deletes_total'])) {
+                    $info[] = [
+                      'label' => $this->t('%key: Pending Deletions', ['%key' => $key]),
+                      'info' => $stats_summary['@deletes_total'],
+                    ];
+                  }
+
+                  if (!empty($stats_summary['@autocommit_time'])) {
+                    $info[] = [
+                      'label' => $this->t('%key: Delay', ['%key' => $key]),
+                      'info' => $this->t('@autocommit_time before updates are processed.', $stats_summary),
+                    ];
+                  }
+                }
                 $status = 'ok';
                 if (!$this->isNonDrupalOrOutdatedConfigSetAllowed()) {
                   $variables[':url'] = Url::fromUri('internal:/' . $this->moduleExtensionList->getPath('search_api_solr') . '/README.md')->toString();
@@ -1438,8 +1442,10 @@ class SearchApiSolrBackend extends BackendPluginBase implements SolrBackendInter
       // _root_ field which assures children (nested) documents will be removed
       // too. The field _root_ is assigned to the ID of the top-level document
       // across an entire block of parent + children.
-      $update_query->addDeleteQuery('_root_:("' . implode('" OR "', $solr_ids) . '")');
-      $update_query->addDeleteByIds($solr_ids);
+      foreach (array_chunk($solr_ids, 30) as $solr_ids_chunk) {
+        $update_query->addDeleteQuery('{!terms f=_root_}("' . implode('","', $solr_ids_chunk) . '")');
+        $update_query->addDeleteByIds($solr_ids_chunk);
+      }
       $connector->update($update_query, $this->getCollectionEndpoint($index));
       $this->state->set('search_api_solr.' . $index->id() . '.last_update', $this->time->getCurrentTime());
     }

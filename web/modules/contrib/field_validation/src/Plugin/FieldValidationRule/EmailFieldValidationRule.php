@@ -7,7 +7,7 @@ use Drupal\field_validation\ConfigurableFieldValidationRuleBase;
 use Drupal\field_validation\FieldValidationRuleSetInterface;
 
 /**
- * EmailFieldValidationRule.
+ * Provides funcationality for EmailFieldValidationRule.
  *
  * @FieldValidationRule(
  *   id = "email_field_validation_rule",
@@ -20,7 +20,6 @@ class EmailFieldValidationRule extends ConfigurableFieldValidationRuleBase {
   /**
    * {@inheritdoc}
    */
-
   public function addFieldValidationRule(FieldValidationRuleSetInterface $field_validation_rule_set) {
 
     return TRUE;
@@ -58,13 +57,17 @@ class EmailFieldValidationRule extends ConfigurableFieldValidationRuleBase {
 
   }
 
+  /**
+   * Validate the Email.
+   */
   public function validate($params) {
     $value = $params['value'] ?? '';
-	$rule = $params['rule'] ?? null;
-	$context = $params['context'] ?? null;
+    $rule = $params['rule'] ?? NULL;
+    $context = $params['context'] ?? NULL;
 
     if ($value != '' && (!\Drupal::service('email.validator')->isValid($value))) {
-      $context->addViolation($rule->getErrorMessage());
+      $context->addViolation($rule->getReplacedErrorMessage($params));
     }
   }
+
 }

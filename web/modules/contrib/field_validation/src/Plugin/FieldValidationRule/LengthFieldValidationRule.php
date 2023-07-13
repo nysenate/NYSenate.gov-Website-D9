@@ -7,7 +7,7 @@ use Drupal\field_validation\ConfigurableFieldValidationRuleBase;
 use Drupal\field_validation\FieldValidationRuleSetInterface;
 
 /**
- * LengthFieldValidationRule.
+ * Provides the length field validation rule.
  *
  * @FieldValidationRule(
  *   id = "length_field_validation_rule",
@@ -40,7 +40,7 @@ class LengthFieldValidationRule extends ConfigurableFieldValidationRuleBase {
   public function defaultConfiguration() {
     return [
       'min' => NULL,
-	  'max' => NULL,
+      'max' => NULL,
       'strip_tags' => FALSE,
       'trim' => FALSE,
     ];
@@ -87,42 +87,49 @@ class LengthFieldValidationRule extends ConfigurableFieldValidationRuleBase {
     $this->configuration['trim'] = $form_state->getValue('trim');
   }
 
+  /**
+   * Validate the length.
+   */
   public function validate($params) {
     $value = $params['value'] ?? '';
-	$rule = $params['rule'] ?? null;
-	$context = $params['context'] ?? null;
-	$settings = [];
-    if(!empty($rule) && !empty($rule->configuration)){
+    $rule = $params['rule'] ?? NULL;
+    $context = $params['context'] ?? NULL;
+    $settings = [];
+    if (!empty($rule) && !empty($rule->configuration)) {
       $settings = $rule->configuration;
     }
 
     if ($value != '') {
       $flag = TRUE;
 
-      if(!empty($settings['strip_tags'])){
-        $value = strip_tags($value);		  
+      if (!empty($settings['strip_tags'])) {
+        $value = strip_tags($value);
       }
-      if(!empty($settings['trim'])){
-        $value = trim($value);		  
+      if (!empty($settings['trim'])) {
+        $value = trim($value);
       }
 
       $length = mb_strlen($value, 'UTF-8');
+      $token_data = $this->getTokenData($params);
       if (isset($settings['min']) && $settings['min'] != '') {
-    	$min = $settings['min'];
+        $settings['min'] = $this->tokenService->replace($settings['min'], $token_data);
+        $min = $settings['min'];
         if ($length < $min) {
           $flag = FALSE;
         }
       }
       if (isset($settings['max']) && $settings['max'] != '') {
+        $settings['max'] = $this->tokenService->replace($settings['max'], $token_data);
         $max = $settings['max'];
         if ($length > $max) {
           $flag = FALSE;
         }
-      } 
+      }
 
       if (!$flag) {
-        $context->addViolation($rule->getErrorMessage());
+        $context->addViolation($rule->getReplacedErrorMessage($params));
       }
     }
   }
+
 }

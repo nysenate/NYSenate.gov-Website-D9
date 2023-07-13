@@ -65,7 +65,7 @@ class PlainTextFieldValidationRule extends ConfigurableFieldValidationRuleBase {
     $context = $params['context'] ?? NULL;
 
     if ($value != '' && (strcmp($value, strip_tags($value)))) {
-      $context->addViolation($rule->getErrorMessage());
+      $context->addViolation($rule->getReplacedErrorMessage($params));
     }
   }
 

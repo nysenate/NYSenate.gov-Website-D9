@@ -12,6 +12,7 @@ use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Entity\Sql\SqlEntityStorageInterface;
 use Drupal\Core\Extension\ExtensionDiscovery;
+use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Test\TestDatabase;
@@ -193,6 +194,13 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    * @var \Drupal\Core\Config\ConfigImporter
    */
   protected $configImporter;
+
+  /**
+   * The key_value service that must persist between container rebuilds.
+   *
+   * @var \Drupal\Core\KeyValueStore\KeyValueMemoryFactory
+   */
+  protected $keyValue;
 
   /**
    * The app root.
@@ -543,12 +551,14 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
       ->register('lock', 'Drupal\Core\Lock\NullLockBackend');
     $container
       ->register('cache_factory', 'Drupal\Core\Cache\MemoryBackendFactory');
-    $container
-      ->register('keyvalue.memory', 'Drupal\Core\KeyValueStore\KeyValueMemoryFactory')
-      // Must persist container rebuilds, or all data would vanish otherwise.
-      ->addTag('persist');
-    $container
-      ->setAlias('keyvalue', 'keyvalue.memory');
+
+    // Use memory for key value storages to avoid database queries. Store the
+    // key value factory on the test object so that key value storages persist
+    // container rebuilds, otherwise all state data would vanish.
+    if (!isset($this->keyValue)) {
+      $this->keyValue = new KeyValueMemoryFactory();
+    }
+    $container->set('keyvalue', $this->keyValue);
 
     // Set the default language on the minimal container.
     $container->setParameter('language.default_values', Language::$defaultValues);

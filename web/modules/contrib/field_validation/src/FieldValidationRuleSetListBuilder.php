@@ -26,7 +26,7 @@ class FieldValidationRuleSetListBuilder extends ConfigEntityListBuilder {
   /**
    * Constructs a new FieldValidationRuleSetListBuilder object.
    *
-   * @param EntityTypeInterface $entity_type
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type definition.
    * @param \Drupal\Core\Entity\EntityStorageInterface $entity_storage
    *   The blocktabs entity storage class.

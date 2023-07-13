@@ -1,0 +1,14 @@
+uuid: a68ec60d-810f-461a-9e2a-c426dbb6dd99
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.comment_moderator
+  module:
+    - user
+id: user_remove_role_action.comment_moderator
+label: 'Remove the Comment Moderator role from the selected user(s)'
+type: user
+plugin: user_remove_role_action
+configuration:
+  rid: comment_moderator

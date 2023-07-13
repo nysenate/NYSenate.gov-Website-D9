@@ -132,10 +132,10 @@ class FormAlter implements ContainerInjectionInterface {
       $denylisted_blocks = (isset($third_party_settings['denylisted_blocks'])) ? $third_party_settings['denylisted_blocks'] : [];
       $restricted_categories = (isset($third_party_settings['restricted_categories'])) ? $third_party_settings['restricted_categories'] : [];
       $allowed_block_categories = $display->getThirdPartySetting('layout_builder_restrictions', 'allowed_block_categories', []);
-
       foreach ($this->getBlockDefinitions($display) as $category => $data) {
+        $category = $this->getUntranslatedCategory($category);
         $title = $data['label'];
-        if (!empty($data['translated_label'])) {
+        if (!empty($data['translated_label']) && $category != 'Custom blocks') {
           $title = $data['translated_label'];
         }
         $category_form = [
@@ -212,7 +212,7 @@ class FormAlter implements ContainerInjectionInterface {
         if ($category == 'Custom blocks' || $category == 'Custom block types') {
           $category_form['description'] = [
             '#type' => 'container',
-            '#children' => $this->t('<p>In the event both <em>Custom Block Types</em> and <em>Custom Blocks</em> restrictions are enabled, <em>Custom Block Types</em> restrictions are disregarded.</p>'),
+            '#children' => $this->t('<p>In the event both <em>Custom Block Types</em> and <em>Content Blocks</em> restrictions are enabled, <em>Custom Block Types</em> restrictions are disregarded.</p>'),
             '#states' => [
               'visible' => [
                 ':input[name="layout_builder_restrictions[allowed_blocks][' . $category . '][restriction]"]' => ['value' => "restricted"],

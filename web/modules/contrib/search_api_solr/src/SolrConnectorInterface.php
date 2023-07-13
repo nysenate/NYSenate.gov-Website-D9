@@ -546,7 +546,7 @@ interface SolrConnectorInterface extends ConfigurableInterface {
    *   the directory contents are instead listed and returned. NULL represents
    *   the root config directory.
    *
-   * @return \Solarium\Core\Client\Response
+   * @return \Solarium\Core\Client\Response|array
    *   A Solarium response object containing either the file contents or a file
    *   list.
    *

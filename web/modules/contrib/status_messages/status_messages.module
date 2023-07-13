@@ -34,7 +34,7 @@ function status_messages_page_attachments(array &$attachments) {
  * Implements hook_theme_registry_alter().
  */
 function status_messages_theme_registry_alter(&$theme_registry) {
-  $theme_registry['status_messages']['path'] = drupal_get_path('module', 'status_messages') . '/templates/misc';
+  $theme_registry['status_messages']['path'] = \Drupal::service('extension.list.module')->getPath('status_messages') . '/templates/misc';
 }
 
 /**

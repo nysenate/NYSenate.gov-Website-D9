@@ -5,11 +5,11 @@ dependencies:
   config:
     - field.field.taxonomy_term.senator.field_about
     - field.field.taxonomy_term.senator.field_active_senator
-    - field.field.taxonomy_term.senator.field_autoreply_text
+    - field.field.taxonomy_term.senator.field_auto_reply_text
     - field.field.taxonomy_term.senator.field_conference
     - field.field.taxonomy_term.senator.field_current_duties
     - field.field.taxonomy_term.senator.field_email
-    - field.field.taxonomy_term.senator.field_email_autoreply_text
+    - field.field.taxonomy_term.senator.field_email_auto_reply_text
     - field.field.taxonomy_term.senator.field_facebook_url
     - field.field.taxonomy_term.senator.field_image_hero
     - field.field.taxonomy_term.senator.field_inactive_senator_message
@@ -51,6 +51,20 @@ content:
     third_party_settings: {  }
     weight: 1
     region: content
+  field_auto_reply_text:
+    type: basic_string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_email_auto_reply_text:
+    type: basic_string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
   field_senator_name:
     type: microsite_link
     label: hidden
@@ -67,11 +81,9 @@ hidden:
   admin_microsite_questionnaires_senator_admin_q_eva_form: true
   description: true
   field_active_senator: true
-  field_autoreply_text: true
   field_conference: true
   field_current_duties: true
   field_email: true
-  field_email_autoreply_text: true
   field_facebook_url: true
   field_image_hero: true
   field_inactive_senator_message: true

@@ -7,7 +7,7 @@ use Drupal\field_validation\ConfigurableFieldValidationRuleBase;
 use Drupal\field_validation\FieldValidationRuleSetInterface;
 
 /**
- * NumericFieldValidationRule.
+ * Provides the numeric field validation rule.
  *
  * @FieldValidationRule(
  *   id = "numeric_field_validation_rule",
@@ -40,8 +40,8 @@ class NumericFieldValidationRule extends ConfigurableFieldValidationRuleBase {
   public function defaultConfiguration() {
     return [
       'min' => NULL,
-	  'max' => NULL,
-	  'step' => NULL,
+      'max' => NULL,
+      'step' => NULL,
     ];
   }
 
@@ -81,12 +81,15 @@ class NumericFieldValidationRule extends ConfigurableFieldValidationRuleBase {
     $this->configuration['step'] = $form_state->getValue('step');
   }
 
+  /**
+   * Validate the field.
+   */
   public function validate($params) {
     $value = $params['value'] ?? '';
-    $rule = $params['rule'] ?? null;
-    $context = $params['context'] ?? null;
-    $settings =  [];
-    if(!empty($rule) && !empty($rule->configuration)){
+    $rule = $params['rule'] ?? NULL;
+    $context = $params['context'] ?? NULL;
+    $settings = [];
+    if (!empty($rule) && !empty($rule->configuration)) {
       $settings = $rule->configuration;
     }
 
@@ -95,32 +98,36 @@ class NumericFieldValidationRule extends ConfigurableFieldValidationRuleBase {
       if (!is_numeric($value)) {
         $flag = FALSE;
       }
-      else{
+      else {
+        $token_data = $this->getTokenData($params);
         if (isset($settings['min']) && $settings['min'] != '') {
+          $settings['min'] = $this->tokenService->replace($settings['min'], $token_data);
           $min = $settings['min'];
           if ($value < $min) {
             $flag = FALSE;
           }
         }
         if (isset($settings['max']) && $settings['max'] != '') {
+          $settings['max'] = $this->tokenService->replace($settings['max'], $token_data);
           $max = $settings['max'];
           if ($value > $max) {
             $flag = FALSE;
           }
         }
         if (isset($settings['step']) && strtolower($settings['step']) != 'any') {
-          // Check that the input is an allowed multiple of #step (offset by #min if
-          // #min is set).
-          $offset = isset($settings['min']) ? $settings['min'] : 0.0;
+          // Check that the input is an allowed multiple
+          // of #step (offset by #min if #min is set).
+          $offset = $settings['min'] ?? 0.0;
+          $settings['step'] = $this->tokenService->replace($settings['step'], $token_data);
           $step = $settings['step'];
-          //The logic code was copied from Drupal 8 core.
+          // The logic code was copied from Drupal 8 core.
           if ($step > 0 && !$this->valid_number_step($value, $step, $offset)) {
-           $flag = FALSE;
+            $flag = FALSE;
           }
         }
       }
       if (!$flag) {
-        $context->addViolation($rule->getErrorMessage());
+        $context->addViolation($rule->getReplacedErrorMessage($params));
       }
     }
   }
@@ -149,11 +156,16 @@ class NumericFieldValidationRule extends ConfigurableFieldValidationRuleBase {
   public function valid_number_step($value, $step, $offset = 0.0) {
     $double_value = (double) abs($value - $offset);
 
-    // The fractional part of a double has 53 bits. The greatest number that could
-    // be represented with that is 2^53. If the given value is even bigger than
-    // $step * 2^53, then dividing by $step will result in a very small remainder.
-    // Since that remainder can't even be represented with a single precision
-    // float the following computation of the remainder makes no sense and we can
+    // The fractional part of a double has 53 bits.
+    // The greatest number that could
+    // be represented with that is 2^53. If the given
+    // value is even bigger than
+    // $step * 2^53, then dividing by $step will result
+    // in a very small remainder.
+    // Since that remainder can't even be represented
+    // with a single precision
+    // float the following computation of the remainder
+    // makes no sense and we can
     // safely ignore it instead.
     if ($double_value / pow(2.0, 53) > $step) {
       return TRUE;
@@ -162,12 +174,14 @@ class NumericFieldValidationRule extends ConfigurableFieldValidationRuleBase {
     // Now compute that remainder of a division by $step.
     $remainder = (double) abs($double_value - $step * round($double_value / $step));
 
-    // $remainder is a double precision floating point number. Remainders that
-    // can't be represented with single precision floats are acceptable. The
-    // fractional part of a float has 24 bits. That means remainders smaller than
+    // $remainder is a double precision floating point number.
+    // Remainders that can't be represented with single precision
+    // floats are acceptable. The fractional part of a float has 24 bits.
+    // That means remainders smaller than
     // $step * 2^-24 are acceptable.
-    $computed_acceptable_error = (double)($step / pow(2.0, 24));
+    $computed_acceptable_error = (double) ($step / pow(2.0, 24));
 
     return $computed_acceptable_error >= $remainder || $remainder >= ($step - $computed_acceptable_error);
-  }  
+  }
+
 }

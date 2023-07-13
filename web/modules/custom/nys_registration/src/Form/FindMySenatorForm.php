@@ -2,6 +2,7 @@
 
 namespace Drupal\nys_registration\Form;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
@@ -109,16 +110,24 @@ class FindMySenatorForm extends FormBase {
     $title = $this->getRouteMatch()->getRouteObject()->getDefault('_title');
     $form = [
       'title' => [
-        '#markup' => '<h1>' . $title . '</h1>',
+        '#markup' => '<h2 class="nys-title">' . $title . '</h2>',
+        '#weight' => 1,
       ],
       'intro' => [
-        '#markup' => 'Please enter your street address and zip code to find out who your Senator is.',
+        '#markup' => '<p>Please enter your street address and zip code to find out who your Senator is.</p>',
         '#weight' => 10,
       ],
       'field_address' => $this->getAddressDefinition(),
-      'submit' => ['#type' => 'submit', '#value' => 'Submit', '#weight' => 60],
+      'submit' => [
+        '#type' => 'submit',
+        '#value' => 'Find My Senator',
+        '#weight' => 60,
+      ],
       'result' => ['#markup' => '', '#weight' => 100],
     ];
+    $form['#attached']['library'][] = 'nysenate_theme/nysenate-user-profile';
+    $form['#prefix'] = '<div class="c-login"><div class="c-find-my-senator">';
+    $form['#suffix'] = '</div></div>';
 
     if ($form_state->isSubmitted()) {
       $district = $form_state->get('district');
@@ -126,7 +135,9 @@ class FindMySenatorForm extends FormBase {
       if ($district) {
         // Set Senator and District markup.
         $party = [];
+        $address = $form_state->getValue('field_address') ?? [];
         $district_term = $form_state->get('district_term');
+        $district_map = $district_term->get('field_map_url')->value;
         $senator_term = $district_term ? $district_term->get('field_senator')->entity : 0;
         $senator_name = $senator_term->get('field_senator_name')->getValue();
         $senator_name = $senator_name[0]['given'] . ' ' . $senator_name[0]['family'];
@@ -151,28 +162,71 @@ class FindMySenatorForm extends FormBase {
           ->getMicrosite($senator_term);
 
         $form['#attached']['library'][] = 'nysenate_theme/nysenate-user-profile';
-        $form['result']['#markup'] = '
-          <div class="c-login">
-            <div class="c-login-left">
-              <div class="nys-senator--thumb">
-                <img src="' . $image . '" alt="Senator ' . $senator_name . ' avatar"/>
+        $form['result']['#markup'] = new FormattableMarkup('
+          <div class="c-find-my-senator--results">
+            <div class="row c-find-my-senator--row">
+              <div class="columns medium-6 l-padded-column">
+                <h2 class="c-container--title">Your Senator</h2>
+                <hr class="c-find-my-senator--divider"/>
+                <img class="c-find-my-senator--senator-img" src="' . $image . '"/>
+                <div class="c-find-my-senator--district-info">
+                  <p>
+                    <a class="c-find-my-senator--senator-link" href="' . $senator_link . '">
+                       ' . $senator_name . '
+                    </a>
+                  </p>
+                  <p>NY Senate District ' . $district . '</p>
+                </div>
+                <div>
+                  <p class="c-login-create">
+                    <a class="c-msg-senator icon-before__contact" href="' . $senator_link . '/contact">Message Senator</a>
+                  </p>
+                </div>
               </div>
-              <ul class="c-senator--info">
-                <li>Your Senator</li>
-                <li>' . $senator_name . '</li>
-                <li>' . $party[0] . '</li>
-                <li>
-                  NY Senate District ' . $district . ' ' .
-                  ($location ? '(<a href="' . $location . '">Map</a>)' : '') . '
-                </li>
-              </ul>
+              <div class="columns medium-6 r-padded-column">
+                <h2 class="c-container--title">Matched Address</h2>
+                <hr class="c-find-my-senator--divider"/>
+                <p class="c-find-my-senator--address-line">
+                  ' . $address['address_line1'] . '
+                </p>
+                <p class="c-find-my-senator--address-line">
+                  ' . $address['locality'] . ', ' . $address['administrative_area'] . ' ' .
+                  $address['postal_code'] . '
+                </p>
+              </div>
             </div>
-            <a class="c-msg-senator icon-before__contact" href="' . $senator_link . '/contact">Message Senator</a>
-          </div>';
+            <div class="row c-find-my-senator--row">
+              <div class="columns large-12">
+                <h2 class="c-container--title">Senate District Map</h2>
+                <hr class="c-find-my-senator--divider"/>
+                <iframe class="c-find-my-senator--map-frame" src="' . $district_map . '">
+                </iframe>
+              </div>
+            </div>
+            <div class="row">
+              <div class="columns large-12">
+                <h2 class="c-container--title">Connect</h2>
+                <hr/>
+                <p><a class="c-find-my-senator--senator-link" href="/user/register">
+                  Create an account</a> on nysenate.gov so you can share your thoughts and feedback with
+                  your senator.
+                </p>
+              </div>
+            </div>
+          </div>',
+          []
+        );
+        $form['result']['#weight'] = 9;
       }
       else {
         // Set error message.
-        $this->messenger->addError('A district assignment could not be made.  Please verify the address.');
+        $form['result']['#markup'] = '
+          <div class="c-find-my-senator--results">
+            <p>Sorry we couldn\'t find a matching senate district based on the address you provided. Please
+              check the address and try again.
+            </p>
+          </div>';
+        $form['result']['#weight'] = 9;
       }
     }
 

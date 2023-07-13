@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\Feed\Writer\Extension\GooglePlayPodcast;
 
 use Laminas\Feed\Uri;
@@ -73,7 +75,7 @@ class Feed
      * Set a block value of "yes" or "no". You may also set an empty string.
      *
      * @param string $value
-     * @return self
+     * @return $this
      * @throws Writer\Exception\InvalidArgumentException
      */
     public function setPlayPodcastBlock($value)

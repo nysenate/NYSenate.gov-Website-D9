@@ -80,7 +80,7 @@ class RegexFieldValidationRule extends ConfigurableFieldValidationRuleBase {
     }
     $pattern = $settings['setting'] ?? '';
     if ($value != '' && (!preg_match($pattern, $value))) {
-      $context->addViolation($rule->getErrorMessage());
+      $context->addViolation($rule->getReplacedErrorMessage($params));
     }
   }
 

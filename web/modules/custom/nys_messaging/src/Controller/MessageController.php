@@ -126,10 +126,12 @@ class MessageController extends ControllerBase {
 
     if (in_array('legislative_correspondent', $current_user->getRoles()) && $user_id != $this->currentUser->id()) {
       if ($current_user->hasField('field_senator_inbox_access') && !$current_user->get('field_senator_inbox_access')->isEmpty()) {
-        // @phpstan-ignore-next-line
-        $senator = $current_user->field_senator_inbox_access->first()->entity;
+        $senator = [];
+        foreach ($current_user->field_senator_inbox_access as $senator_inbox_access) {
+          $senator[] = $senator_inbox_access->entity;
+        }
 
-        if ($user_id != $senator->field_user_account->target_id) {
+        if (!in_array($user_id, $senator)) {
           $content['error'] = [
             '#markup' => '<p>You dont have access to this message</p>',
           ];

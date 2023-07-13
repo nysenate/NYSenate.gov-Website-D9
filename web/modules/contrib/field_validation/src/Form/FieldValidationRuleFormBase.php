@@ -10,6 +10,9 @@ use Drupal\field_validation\ConfigurableFieldValidationRuleInterface;
 use Drupal\field_validation\FieldValidationRuleSetInterface;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
+use Drupal\Core\Plugin\CachedDiscoveryClearerInterface;
 
 /**
  * Provides a base form for FieldValidationRule.
@@ -31,6 +34,43 @@ abstract class FieldValidationRuleFormBase extends FormBase {
   protected $fieldValidationRule;
 
   /**
+   * The entity field manager.
+   *
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
+   */
+  protected $entityFieldManager;
+
+  /**
+   * The plugin cache clearer.
+   *
+   * @var \Drupal\Core\Plugin\CachedDiscoveryClearerInterface
+   */
+  protected $pluginCacheClearer;
+
+  /**
+   * Constructs a new FieldValidationRuleForm.
+   *
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
+   *   The entity field manager.
+   * @param \Drupal\Core\Plugin\CachedDiscoveryClearerInterface $plugin_cache_clearer
+   *   The plugin cache clearer.
+   */
+  public function __construct(EntityFieldManagerInterface $entity_field_manager, CachedDiscoveryClearerInterface $plugin_cache_clearer) {
+    $this->entityFieldManager = $entity_field_manager;
+    $this->pluginCacheClearer = $plugin_cache_clearer;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('entity_field.manager'),
+      $container->get('plugin.cache_clearer')
+    );
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function getFormId() {
@@ -40,17 +80,23 @@ abstract class FieldValidationRuleFormBase extends FormBase {
   /**
    * {@inheritdoc}
    *
+   * @param array $form
+   *   An associative array containing the structure of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    * @param \Drupal\field_validation\FieldValidationRuleSetInterface $field_validation_rule_set
    *   The field_validation_rule_set.
    * @param string $field_validation_rule
    *   The field_validation_rule ID.
+   * @param string $field_name
+   *   The field name.
    *
    * @return array
    *   The form structure.
    *
    * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
    */
-  public function buildForm(array $form, FormStateInterface $form_state, FieldValidationRuleSetInterface $field_validation_rule_set = NULL, $field_validation_rule = NULL, $field_name='') {
+  public function buildForm(array $form, FormStateInterface $form_state, FieldValidationRuleSetInterface $field_validation_rule_set = NULL, $field_validation_rule = NULL, $field_name = '') {
     $this->fieldValidationRuleSet = $field_validation_rule_set;
     try {
       $this->fieldValidationRule = $this->prepareFieldValidationRule($field_validation_rule);
@@ -64,7 +110,7 @@ abstract class FieldValidationRuleFormBase extends FormBase {
       throw new NotFoundHttpException();
     }
 
-    //$form['#attached']['library'][] = 'field_validation/admin';
+    // $form['#attached']['library'][] = 'field_validation/admin';
     $form['uuid'] = [
       '#type' => 'hidden',
       '#value' => $this->fieldValidationRule->getUuid(),
@@ -80,55 +126,55 @@ abstract class FieldValidationRuleFormBase extends FormBase {
       '#default_value' => $this->fieldValidationRule->getTitle(),
       '#required' => TRUE,
     ];
-	$entity_type_id = $this->fieldValidationRuleSet->getAttachedEntityType();
-	$bundle = $this->fieldValidationRuleSet->getAttachedBundle();
-	//$field_options = array();
-    $field_options = array(
+    $entity_type_id = $this->fieldValidationRuleSet->getAttachedEntityType();
+    $bundle = $this->fieldValidationRuleSet->getAttachedBundle();
+    // $field_options = array();
+    $field_options = [
       '' => $this->t('- Select -'),
-    );
+    ];
 
-	$baseFieldDefinitions = \Drupal::service('entity_field.manager')->getBaseFieldDefinitions($entity_type_id);
+    $baseFieldDefinitions = $this->entityFieldManager->getBaseFieldDefinitions($entity_type_id);
     foreach ($baseFieldDefinitions as $base_field_name => $base_field_definition) {
       $field_options[$base_field_name] = $base_field_definition->getLabel();
     }
 
-	$fieldDefinitions = \Drupal::service('entity_field.manager')->getFieldDefinitions($entity_type_id, $bundle);
-	foreach ($fieldDefinitions as $fieldname => $field_definition) {
+    $fieldDefinitions = $this->entityFieldManager->getFieldDefinitions($entity_type_id, $bundle);
+    foreach ($fieldDefinitions as $fieldname => $field_definition) {
       if (!empty($field_definition->getTargetBundle())) {
         $field_options[$fieldname] = $field_definition->getLabel();
       }
-	}
+    }
     $default_field_name = $this->fieldValidationRule->getFieldName();
-	if(!empty($field_name)){
-	  $default_field_name = $field_name;
-	}
+    if (!empty($field_name)) {
+      $default_field_name = $field_name;
+    }
     $user_input = $form_state->getUserInput();
-    $default_field_name =  isset($user_input['field_name']) ? $user_input['field_name'] : $default_field_name;
+    $default_field_name = $user_input['field_name'] ?? $default_field_name;
 
     $form['field_name'] = [
       '#type' => 'select',
       '#title' => $this->t('Field name'),
-	  '#options' => $field_options,
+      '#options' => $field_options,
       '#default_value' => $default_field_name,
       '#required' => TRUE,
       '#ajax' => [
         'callback' => [$this, 'updateColumn'],
         'wrapper' => 'edit-field-name-wrapper',
-		'event' => 'change',
+        'event' => 'change',
       ],
     ];
 
     $default_column = $this->fieldValidationRule->getColumn();
-    $default_column =  isset($user_input['column']) ? $user_input['column'] : $default_column;
+    $default_column = $user_input['column'] ?? $default_column;
     $column_options = $this->findColumn($default_field_name);
-    if(!in_array($default_column, $column_options)){
+    if (!in_array($default_column, $column_options)) {
       $default_column = "";
     }
 
     $form['column'] = [
       '#type' => 'select',
       '#title' => $this->t('Column of field'),
-	  '#options' => $column_options,
+      '#options' => $column_options,
       '#default_value' => $default_column,
       '#required' => TRUE,
       '#prefix' => '<div id="edit-field-name-wrapper">',
@@ -144,11 +190,74 @@ abstract class FieldValidationRuleFormBase extends FormBase {
       '#maxlength' => 255,
     ];
     $form['data']['#tree'] = TRUE;
-
-    // Check the URL for a weight, then the fieldValidationRule, otherwise use default.
+    // Add a token link.
+    if (\Drupal::moduleHandler()->moduleExists('token')) {
+      //Some entity not use entity_type_id as token type, we need change it.
+      switch ($entity_type_id) {
+        case 'taxonomy_term':
+          $entity_type_id = str_replace('taxonomy_', '', $entity_type_id);
+          break;
+      }
+      // Show the token help link.
+      $form['pattern_container']['token_help'] = [
+        '#theme' => 'token_tree_link',
+        '#token_types' => [$entity_type_id],
+      ];
+    }
+	  
+    // Check the URL for a weight, then the fieldValidationRule
+    // otherwise use default.
     $form['weight'] = [
       '#type' => 'hidden',
       '#value' => $request->query->has('weight') ? (int) $request->query->get('weight') : $this->fieldValidationRule->getWeight(),
+    ];
+
+    $test_roles = $this->fieldValidationRule->getApplicableRoles();
+    $form['roles'] = [
+      '#type' => 'checkboxes',
+      '#title' => $this->t('Apply to this roles'),
+      '#default_value' => $test_roles,
+      '#options' => array_map('\Drupal\Component\Utility\Html::escape', user_role_names()),
+      '#description' => $this->t('If you select no roles, the rule will be applicable for all users.'),
+    ];
+
+    $condition = $this->fieldValidationRule->getCondition();
+    $form['condition'] = [
+      '#type' => 'details',
+      '#open' => FALSE,
+      '#tree' => TRUE,
+      '#title' => $this->t('Condition'),
+    ];
+
+    $form['condition']['field'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Field name'),
+      '#options' => $field_options,
+      '#default_value' => $condition['field'] ?? "",
+    ];
+
+    $operator_options = [
+      '' => $this->t('- Select -'),
+      'equals' => $this->t('Equals'),
+      'not_equals' => $this->t('Not equals'),
+      'greater_than' => $this->t('Greater than'),
+      'less_than' => $this->t('Less than'),
+      'greater_or_equal' => $this->t('Greater or equal'),
+      'less_or_equal' => $this->t('Less or equal'),
+      'empty' => $this->t('Empty'),
+      'not_empty' => $this->t('Not empty'),
+    ];
+    $form['condition']['operator'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Operator'),
+      '#options' => $operator_options,
+      '#default_value' => $condition['operator'] ?? "",
+    ];
+
+    $form['condition']['value'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Value'),
+      '#default_value' => $condition['value'] ?? "",
     ];
 
     $form['actions'] = ['#type' => 'actions'];
@@ -171,6 +280,7 @@ abstract class FieldValidationRuleFormBase extends FormBase {
   public function updateColumn($form, FormStateInterface $form_state) {
     return $form['column'];
   }
+
   /**
    * Handles switching the configuration type selector.
    */
@@ -178,26 +288,27 @@ abstract class FieldValidationRuleFormBase extends FormBase {
     $column_options = [
       '' => $this->t('- Select -'),
     ];
-	if(empty($field_name)){
-	  return $column_options;
-	}
-	$entity_type_id = $this->fieldValidationRuleSet->getAttachedEntityType();
-	$baseFieldDefinitions = \Drupal::service('entity_field.manager')->getBaseFieldDefinitions($entity_type_id);
+    if (empty($field_name)) {
+      return $column_options;
+    }
+    $entity_type_id = $this->fieldValidationRuleSet->getAttachedEntityType();
+    $baseFieldDefinitions = $this->entityFieldManager->getBaseFieldDefinitions($entity_type_id);
     $schema = [];
-	if(isset($baseFieldDefinitions[$field_name])){
+    if (isset($baseFieldDefinitions[$field_name])) {
       $field_info = $baseFieldDefinitions[$field_name];
       $schema = $field_info->getSchema();
-	}else{
+    }
+    else {
       $field_info = FieldStorageConfig::loadByName($entity_type_id, $field_name);
       $schema = $field_info->getSchema();
-	}
+    }
 
-	if(!empty($schema['columns'])){
-	  $columns = $schema['columns'];
-	  foreach($columns as $key=>$value){
-	    $column_options[$key] = $key;
-	  }
-	}
+    if (!empty($schema['columns'])) {
+      $columns = $schema['columns'];
+      foreach ($columns as $key => $value) {
+        $column_options[$key] = $key;
+      }
+    }
     return $column_options;
   }
 
@@ -205,10 +316,11 @@ abstract class FieldValidationRuleFormBase extends FormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    // The fieldValidationRule configuration is stored in the 'data' key in the form,
+    // The fieldValidationRule configuration is stored
+    // in the 'data' key in the form,
     // pass that through for validation.
     $data = $form_state->getValue('data');
-    if(empty($data)){
+    if (empty($data)) {
       $data = [];
     }
     $field_validation_rule_data = (new FormState())->setValues($data);
@@ -222,11 +334,12 @@ abstract class FieldValidationRuleFormBase extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $form_state->cleanValues();
-    //drupal_flush_all_caches();
+    // drupal_flush_all_caches();
     // Clear all plugin caches.
-    \Drupal::service('plugin.cache_clearer')->clearCachedDefinitions();
+    $this->pluginCacheClearer->clearCachedDefinitions();
 
-    // The fieldValidationRule configuration is stored in the 'data' key in the form,
+    // The fieldValidationRule configuration is stored
+    // in the 'data' key in the form,
     // pass that through for submission.
     $field_validation_rule_data = (new FormState())->setValues($form_state->getValue('data'));
     $this->fieldValidationRule->submitConfigurationForm($form, $field_validation_rule_data);
@@ -238,9 +351,13 @@ abstract class FieldValidationRuleFormBase extends FormBase {
     $this->fieldValidationRule->setFieldName($form_state->getValue('field_name'));
     $this->fieldValidationRule->setColumn($form_state->getValue('column'));
     $this->fieldValidationRule->setErrorMessage($form_state->getValue('error_message'));
+    // Update the rule applicable roles.
+    $this->fieldValidationRule->setApplicableRoles(array_filter($form_state->getValue('roles')));
+    $this->fieldValidationRule->setCondition($form_state->getValue('condition'));
     if (!$this->fieldValidationRule->getUuid()) {
       $this->fieldValidationRuleSet->addFieldValidationRule($this->fieldValidationRule->getConfiguration());
-    }else{
+    }
+    else {
       $this->fieldValidationRuleSet->deleteFieldValidationRule($this->fieldValidationRule);
       $this->fieldValidationRuleSet->addFieldValidationRule($this->fieldValidationRule->getConfiguration());
     }

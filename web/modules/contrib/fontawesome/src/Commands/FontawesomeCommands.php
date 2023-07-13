@@ -56,8 +56,8 @@ class FontawesomeCommands extends DrushCommands {
   public function download($path = '') {
 
     if (empty($path)) {
-      // We have dependencies on libraries module so no need to check for that
-      // TODO: any way to get path for libraries directory?
+      // We have dependencies on libraries module so no need to check for that.
+      // @todo any way to get path for libraries directory?
       // Just in case if it is site specific? e.g. sites/domain.com/libraries ?
       $path = DRUPAL_ROOT . '/libraries/fontawesome';
     }

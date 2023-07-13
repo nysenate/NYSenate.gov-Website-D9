@@ -40,7 +40,7 @@ class IntegerFieldValidationRule extends ConfigurableFieldValidationRuleBase {
   public function defaultConfiguration() {
     return [
       'min' => NULL,
-	  'max' => NULL,
+      'max' => NULL,
     ];
   }
 
@@ -70,15 +70,18 @@ class IntegerFieldValidationRule extends ConfigurableFieldValidationRuleBase {
     parent::submitConfigurationForm($form, $form_state);
 
     $this->configuration['min'] = $form_state->getValue('min');
-	$this->configuration['max'] = $form_state->getValue('max');
+    $this->configuration['max'] = $form_state->getValue('max');
   }
-  
+
+  /**
+   *
+   */
   public function validate($params) {
     $value = $params['value'] ?? '';
-	$rule = $params['rule'] ?? null;
-	$context = $params['context'] ?? null;
+    $rule = $params['rule'] ?? NULL;
+    $context = $params['context'] ?? NULL;
     $settings = [];
-	if(!empty($rule) && !empty($rule->configuration)){
+    if (!empty($rule) && !empty($rule->configuration)) {
       $settings = $rule->configuration;
     }
 
@@ -91,12 +94,13 @@ class IntegerFieldValidationRule extends ConfigurableFieldValidationRuleBase {
       if (isset($settings['max']) && $settings['max'] != '') {
         $max = $settings['max'];
         $options['options']['max_range'] = $max;
-      }  
+      }
 
       if (FALSE === filter_var($value, FILTER_VALIDATE_INT, $options)) {
-        $context->addViolation($rule->getErrorMessage());
+        $context->addViolation($rule->getReplacedErrorMessage($params));
       }
 
     }
   }
+
 }

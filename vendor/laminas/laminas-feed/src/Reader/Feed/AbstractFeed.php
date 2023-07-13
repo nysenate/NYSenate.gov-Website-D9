@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\Feed\Reader\Feed;
 
 use DOMDocument;
@@ -18,6 +20,10 @@ use function method_exists;
 use function sprintf;
 use function strpos;
 
+/**
+ * @template TItem of Reader\Entry\Rss|Reader\Entry\Atom
+ * @template-implements FeedInterface<TItem>
+ */
 abstract class AbstractFeed implements FeedInterface
 {
     /**

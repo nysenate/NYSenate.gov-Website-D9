@@ -28,8 +28,8 @@ class DenylistedRestrictionsTest extends LayoutBuilderRestrictionsTestBase {
     $assert_session->linkExists('Basic Block 2');
     $assert_session->linkExists('Alternate Block 1');
     // Initially, all inline block types are allowed.
-    $this->clickLink('Create custom block');
-    $this->assertNotEmpty($assert_session->waitForText('Add a new custom block'));
+    $this->clickLink('Create content block');
+    $this->assertNotEmpty($assert_session->waitForText('Add a new content block'));
     $assert_session->linkExists('Basic');
     $assert_session->linkExists('Alternate');
 
@@ -58,8 +58,8 @@ class DenylistedRestrictionsTest extends LayoutBuilderRestrictionsTestBase {
     $assert_session->linkExists('Basic Block 2');
     $assert_session->linkExists('Alternate Block 1');
     // Inline block types are still allowed.
-    $this->clickLink('Create custom block');
-    $this->assertNotEmpty($assert_session->waitForText('Add a new custom block'));
+    $this->clickLink('Create content block');
+    $this->assertNotEmpty($assert_session->waitForText('Add a new content block'));
     $assert_session->linkExists('Basic');
     $assert_session->linkExists('Alternate');
 
@@ -85,7 +85,7 @@ class DenylistedRestrictionsTest extends LayoutBuilderRestrictionsTestBase {
     $assert_session->linkExists('Basic Block 2');
     $assert_session->linkExists('Alternate Block 1');
     // Inline block types are still allowed.
-    $assert_session->linkExists('Create custom block');
+    $assert_session->linkExists('Create content block');
 
     // Denylist some blocks / block types.
     $this->navigateToManageDisplay();
@@ -112,8 +112,8 @@ class DenylistedRestrictionsTest extends LayoutBuilderRestrictionsTestBase {
     // ... but "alternate" Custom blocks are allowed.
     $assert_session->linkExists('Alternate Block 1');
     // Only the basic inline block type is allowed.
-    $this->clickLink('Create custom block');
-    $this->assertNotEmpty($assert_session->waitForText('Add a new custom block'));
+    $this->clickLink('Create content block');
+    $this->assertNotEmpty($assert_session->waitForText('Add a new content block'));
     $assert_session->linkExists('Basic');
     $assert_session->linkNotExists('Alternate');
 

@@ -7,7 +7,7 @@ use Drupal\field_validation\ConfigurableFieldValidationRuleBase;
 use Drupal\field_validation\FieldValidationRuleSetInterface;
 
 /**
- * SpecificValueFieldValidationRule.
+ * Provides functionality for SpecificvalueFieldValidationRule.
  *
  * @FieldValidationRule(
  *   id = "specific_value_field_validation_rule",
@@ -66,12 +66,15 @@ class SpecificValueFieldValidationRule extends ConfigurableFieldValidationRuleBa
     $this->configuration['setting'] = $form_state->getValue('setting') ?: "";
   }
 
+  /**
+   * Validate the field Specific value.
+   */
   public function validate($params) {
     $value = $params['value'] ?? '';
-	$rule = $params['rule'] ?? null;
-	$context = $params['context'] ?? null;
-	$settings = [];
-    if(!empty($rule) && !empty($rule->configuration)){
+    $rule = $params['rule'] ?? NULL;
+    $context = $params['context'] ?? NULL;
+    $settings = [];
+    if (!empty($rule) && !empty($rule->configuration)) {
       $settings = $rule->configuration;
     }
 
@@ -85,8 +88,9 @@ class SpecificValueFieldValidationRule extends ConfigurableFieldValidationRuleBa
       }
 
       if (!$flag) {
-        $context->addViolation($rule->getErrorMessage());
+        $context->addViolation($rule->getReplacedErrorMessage($params));
       }
     }
   }
+
 }

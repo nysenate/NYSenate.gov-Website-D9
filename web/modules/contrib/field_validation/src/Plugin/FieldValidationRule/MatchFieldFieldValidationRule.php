@@ -105,17 +105,17 @@ class MatchFieldFieldValidationRule extends ConfigurableFieldValidationRuleBase 
     $this->configuration['reverse'] = $form_state->getValue('reverse') ?: FALSE;
   }
 
+  /**
+   *
+   */
   public function validate($params) {
     $value = $params['value'] ?? '';
-    $rule = $params['rule'] ?? null;
-    $context = $params['context'] ?? null;
-    $items = $params['items'] ?? [];
-    $delta = $params['delta'] ?? '';
+    $rule = $params['rule'] ?? NULL;
+    $context = $params['context'] ?? NULL;
     $column = $rule->getColumn();
 
-	
     $settings = [];
-    if(!empty($rule) && !empty($rule->configuration)){
+    if (!empty($rule) && !empty($rule->configuration)) {
       $settings = $rule->configuration;
     }
 
@@ -124,9 +124,9 @@ class MatchFieldFieldValidationRule extends ConfigurableFieldValidationRuleBase 
     $field_name = $settings['field_name'] ?? '';
     $column = $settings['column'] ?? '';
     $reverse = $settings['reverse'] ?? FALSE;
-    if(empty($entity_type) || empty($bundle) || empty($field_name)){
+    if (empty($entity_type) || empty($bundle) || empty($field_name)) {
       return;
-	}
+    }
 
     $count = 0;
     $flag = TRUE;
@@ -134,33 +134,34 @@ class MatchFieldFieldValidationRule extends ConfigurableFieldValidationRuleBase 
     $query = \Drupal::entityQuery($entity_type);
     $query->addTag('field_validation');
     $query->accessCheck(FALSE);
-    //Add bundle condition
-	$entity_type_plugin = \Drupal::entityTypeManager()->getDefinition($entity_type, false);
+    // Add bundle condition.
+    $entity_type_plugin = \Drupal::entityTypeManager()->getDefinition($entity_type, FALSE);
     $bundle_key = $entity_type_plugin->getKey('bundle');
-    if(!empty($bundle_key)){
+    if (!empty($bundle_key)) {
       $query->condition($bundle_key, $bundle);
-	}
-    //Support column if not empty
-    if(!empty($column)){
+    }
+    // Support column if not empty.
+    if (!empty($column)) {
       $field_name = $field_name . "." . $column;
     }
-    //Add field condition
+    // Add field condition.
     $query->condition($field_name, $value);
     $count = $query->range(0, 1)
-        ->count()
-        ->execute();
+      ->count()
+      ->execute();
 
     if (!$count) {
       $flag = FALSE;
     }
 
-    //reverse
+    // Reverse.
     if ($reverse) {
       $flag = $flag ? FALSE : TRUE;
     }
 
     if (!$flag) {
-      $context->addViolation($rule->getErrorMessage());
+      $context->addViolation($rule->getReplacedErrorMessage($params));
     }
   }
+
 }

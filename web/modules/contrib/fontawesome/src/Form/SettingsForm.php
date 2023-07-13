@@ -205,6 +205,30 @@ class SettingsForm extends ConfigFormBase {
         '#description' => $this->t('Checking this box will cause the Font Awesome library to load the file containing the thin icon declarations (<i>thin.js/thin.css</i>)'),
         '#default_value' => is_null($fontawesome_config->get('use_thin_file')) === TRUE ? TRUE : $fontawesome_config->get('use_thin_file'),
       ],
+      'use_sharpregular_file' => [
+        '#type' => 'checkbox',
+        '#title' => $this->t('Load sharp regular icons'),
+        '#description' => $this->t('Checking this box will cause the Font Awesome library to load the file containing the sharp regular icon declarations (<i>sharp-regular.js/sharp-regular.css</i>)'),
+        '#default_value' => is_null($fontawesome_config->get('use_sharpregular_file')) === TRUE ? TRUE : $fontawesome_config->get('use_sharpregular_file'),
+      ],
+      'use_sharplight_file' => [
+        '#type' => 'checkbox',
+        '#title' => $this->t('Load sharp light icons'),
+        '#description' => $this->t('Checking this box will cause the Font Awesome library to load the file containing the sharp light icon declarations (<i>sharp-light.js/sharp-light.css</i>)'),
+        '#default_value' => is_null($fontawesome_config->get('use_sharplight_file')) === TRUE ? TRUE : $fontawesome_config->get('use_sharplight_file'),
+      ],
+      'use_sharpsolid_file' => [
+        '#type' => 'checkbox',
+        '#title' => $this->t('Load sharp solid icons'),
+        '#description' => $this->t('Checking this box will cause the Font Awesome library to load the file containing the sharp solid icon declarations (<i>sharp-solid.js/sharp-solid.css</i>)'),
+        '#default_value' => is_null($fontawesome_config->get('use_sharpsolid_file')) === TRUE ? TRUE : $fontawesome_config->get('use_sharpsolid_file'),
+      ],
+      'use_custom_file' => [
+        '#type' => 'checkbox',
+        '#title' => $this->t('Load custom icons'),
+        '#description' => $this->t('Checking this box will cause the Font Awesome library to load the file containing the custom icon declarations (<i>custom-icons.js/custom-icons.css</i>)'),
+        '#default_value' => is_null($fontawesome_config->get('use_custom_file')) === TRUE ? TRUE : $fontawesome_config->get('use_custom_file'),
+      ],
     ];
 
     $form['shim'] = [
@@ -315,6 +339,10 @@ class SettingsForm extends ConfigFormBase {
       ->set('use_duotone_file', $values['use_duotone_file'])
       ->set('use_thin_file', $values['use_thin_file'])
       ->set('bypass_validation', $values['bypass_validation'])
+      ->set('use_sharpregular_file', $values['use_sharpregular_file'])
+      ->set('use_sharplight_file', $values['use_sharplight_file'])
+      ->set('use_sharpsolid_file', $values['use_sharpsolid_file'])
+      ->set('use_custom_file', $values['use_custom_file'])
       ->save();
 
     parent::submitForm($form, $form_state);

@@ -44,7 +44,7 @@ content:
     third_party_settings: {  }
   field_children:
     type: paragraphs
-    weight: 4
+    weight: 9
     region: content
     settings:
       title: Child
@@ -64,12 +64,12 @@ content:
       paragraphs_features:
         add_in_between: false
         add_in_between_link_count: 3
-        delete_confirmation: true
+        delete_confirmation: false
         split_text: false
-        show_drag_and_drop: false
+        show_drag_and_drop: true
   field_district:
     type: entity_reference_autocomplete
-    weight: 5
+    weight: 4
     region: content
     settings:
       match_operator: CONTAINS

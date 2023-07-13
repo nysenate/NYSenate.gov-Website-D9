@@ -1,4 +1,4 @@
-uuid: ad4b5ff5-5516-481f-b844-b02766297b02
+uuid: c8799a35-64c8-4c91-8d2e-a1a57746f83a
 langcode: en
 status: true
 dependencies:
@@ -19,13 +19,13 @@ default_value:
   -
     langcode: null
     country_code: US
-    administrative_area: NY
-    locality: ''
+    administrative_area: null
+    locality: null
     dependent_locality: null
-    postal_code: ''
+    postal_code: null
     sorting_code: null
-    address_line1: ''
-    address_line2: ''
+    address_line1: null
+    address_line2: null
     organization: null
     given_name: null
     additional_name: null
@@ -45,6 +45,8 @@ settings:
     organization:
       override: hidden
     sortingCode:
+      override: hidden
+    dependentLocality:
       override: hidden
   fields: {  }
 field_type: address

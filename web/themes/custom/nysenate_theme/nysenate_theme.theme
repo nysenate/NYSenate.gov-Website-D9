@@ -1727,10 +1727,12 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
         foreach ($node->field_issues as $value) {
           /** @var \Drupal\taxonomy\Entity\Term $term */
           $term = $value->entity;
-          $issues[] = [
-            'text' => $term->getName(),
-            'url' => $term->toUrl()->toString(),
-          ];
+          if ($term instanceof TermInterface) {
+            $issues[] = [
+              'text' => $term->getName(),
+              'url' => $term->toUrl()->toString(),
+            ];
+          }
         }
       }
       asort($issues);
@@ -1822,10 +1824,12 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
             $node->field_issues->entity;
             foreach ($node->field_issues as $value) {
               $term = $value->entity;
-              $issues[] = [
-                'name' => $term->getName(),
-                'url' => $term->toUrl()->toString(),
-              ];
+              if ($term instanceof TermInterface) {
+                $issues[] = [
+                  'name' => $term->getName(),
+                  'url' => $term->toUrl()->toString(),
+                ];
+              }
             }
           }
 
@@ -2843,11 +2847,12 @@ function nysenate_theme_preprocess_semanticviews_style__constituent_petitions_an
       $node->field_issues->entity;
       foreach ($node->field_issues as $key => $value) {
         $term = $value->entity;
-
-        $issues[] = [
-          'name' => $term->getName(),
-          'url' => $term->toUrl()->toString(),
-        ];
+        if ($term instanceof TermInterface) {
+          $issues[] = [
+            'name' => $term->getName(),
+            'url' => $term->toUrl()->toString(),
+          ];
+        }
         $tids[] = '&f[' . ($key + 1) . ']=im_field_issues%3A' . $term->id();
       }
     }

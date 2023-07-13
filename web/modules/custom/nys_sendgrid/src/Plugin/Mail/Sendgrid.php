@@ -417,14 +417,13 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
             )
         );
 
-      // Use content type from params, or assume HTML email.
-      $content_type = $this->message['params']['Content-Type'] ?? MimeType::HTML;
-
-      // Ensure $body uses proper line breaks based on content type.
-      if ($content_type == MimeType::HTML) {
+      $content_type = $this->message['params']['Content-Type'] ?? '';
+      if (!$content_type) {
+        $content_type = MimeType::HTML;
         // For conversion to HTML line breaks, removing comments is helpful.
         $body = preg_replace('/<!-- .* -->/', '', $body);
-        $body = preg_replace('/\n+/', '<br /><br />', $body);
+        $body = preg_replace('/\n{2,}/', '<br /><br />', $body);
+        $body = preg_replace('/\n/', '<br />', $body);
       }
 
       // Add body (or fallback) as content. API will break if body is empty.

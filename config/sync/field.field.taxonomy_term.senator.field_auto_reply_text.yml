@@ -1,12 +1,12 @@
-uuid: 97d1b913-00d1-42a9-9ad1-08147179b734
+uuid: 4d5f8e7d-64df-4434-b8e9-378167a6b6aa
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.taxonomy_term.field_autoreply_text
+    - field.storage.taxonomy_term.field_auto_reply_text
     - taxonomy.vocabulary.senator
-id: taxonomy_term.senator.field_autoreply_text
-field_name: field_autoreply_text
+id: taxonomy_term.senator.field_auto_reply_text
+field_name: field_auto_reply_text
 entity_type: taxonomy_term
 bundle: senator
 label: 'Direct Message Auto-reply Text'
@@ -16,4 +16,4 @@ translatable: false
 default_value: {  }
 default_value_callback: ''
 settings: {  }
-field_type: string
+field_type: string_long

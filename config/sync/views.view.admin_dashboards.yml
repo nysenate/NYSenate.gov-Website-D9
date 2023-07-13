@@ -19,6 +19,7 @@ dependencies:
     - taxonomy.vocabulary.microsite_page_type
     - taxonomy.vocabulary.senator
     - user.role.administrator
+    - user.role.frontpage_editor
     - user.role.student_programs
   module:
     - datetime
@@ -651,6 +652,12 @@ display:
     display_plugin: page
     position: 1
     display_options:
+      access:
+        type: role
+        options:
+          role:
+            administrator: administrator
+            frontpage_editor: frontpage_editor
       filters:
         field_accessible_sitewide_value:
           id: field_accessible_sitewide_value
@@ -690,6 +697,7 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
+          accept_null: false
         title:
           id: title
           table: node_field_data
@@ -842,6 +850,7 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
+          accept_null: false
         type:
           id: type
           table: node_field_data
@@ -889,9 +898,23 @@ display:
         groups:
           1: AND
       defaults:
+        access: false
         filters: false
         filter_groups: false
+        header: false
       display_description: ''
+      header:
+        area_text_custom:
+          id: area_text_custom
+          table: views
+          field: area_text_custom
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text_custom
+          empty: false
+          content: "<h3>Actions</h3>\r\n<div>\r\n<p><ul>\r\n<li><a href=\"/node/add/events\">Create Events</a></li>\r\n<li><a href=\"/admin/structure/entityqueue/homepage_hero/homepage_hero\">Manage Homepage Hero</a></li>\r\n<li><a href=\"/admin/structure/entityqueue/frontpage_news/frontpage_news\">Manage Frontpage News</a></li>\r\n<li><a href=\"/admin/structure/entityqueue/homepage_featured_story/homepage_featured_story\">Manage Featured Stories Homepage</a></li>\r\n<li><a href=\"/admin/structure/entityqueue/global_promo_banner/global_promo_banner\">Manage Sitewide Promotional Banners</a></li>\r\n</ul>\r\n</p>\r\n</div>\r\n<h3>Manage Content</h3>"
+          tokenize: false
       display_extenders: {  }
       path: admin/frontpage-editors
     cache_metadata:
@@ -1210,6 +1233,12 @@ display:
           text: edit
           output_url_as_text: false
           absolute: false
+      access:
+        type: role
+        options:
+          role:
+            administrator: administrator
+            student_programs: student_programs
       filters:
         title:
           id: title
@@ -1315,6 +1344,7 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
+          accept_null: false
         type:
           id: type
           table: node_field_data
@@ -1362,6 +1392,7 @@ display:
         groups:
           1: AND
       defaults:
+        access: false
         title: false
         fields: false
         filters: false
@@ -1750,6 +1781,11 @@ display:
           empty_zero: false
           hide_alter_empty: true
           destination: false
+      access:
+        type: role
+        options:
+          role:
+            administrator: administrator
       sorts:
         field_ol_last_status_date_value:
           id: field_ol_last_status_date_value
@@ -1870,6 +1906,7 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
+          accept_null: false
         type:
           id: type
           table: node_field_data
@@ -2070,6 +2107,7 @@ display:
         groups:
           1: AND
       defaults:
+        access: false
         title: false
         fields: false
         sorts: false
@@ -2472,6 +2510,11 @@ display:
           empty_zero: false
           hide_alter_empty: true
           destination: false
+      access:
+        type: role
+        options:
+          role:
+            administrator: administrator
       sorts:
         field_ol_last_status_date_value:
           id: field_ol_last_status_date_value
@@ -2592,6 +2635,7 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
+          accept_null: false
         type:
           id: type
           table: node_field_data
@@ -2792,6 +2836,7 @@ display:
         groups:
           1: AND
       defaults:
+        access: false
         title: false
         fields: false
         sorts: false
@@ -3201,6 +3246,11 @@ display:
           empty_zero: false
           hide_alter_empty: true
           destination: false
+      access:
+        type: role
+        options:
+          role:
+            administrator: administrator
       sorts:
         field_senator_name_family:
           id: field_senator_name_family
@@ -3466,11 +3516,13 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
+          accept_null: false
       filter_groups:
         operator: AND
         groups:
           1: AND
       defaults:
+        access: false
         title: false
         relationships: false
         fields: false

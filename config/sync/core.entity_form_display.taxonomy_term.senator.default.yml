@@ -5,11 +5,11 @@ dependencies:
   config:
     - field.field.taxonomy_term.senator.field_about
     - field.field.taxonomy_term.senator.field_active_senator
-    - field.field.taxonomy_term.senator.field_autoreply_text
+    - field.field.taxonomy_term.senator.field_auto_reply_text
     - field.field.taxonomy_term.senator.field_conference
     - field.field.taxonomy_term.senator.field_current_duties
     - field.field.taxonomy_term.senator.field_email
-    - field.field.taxonomy_term.senator.field_email_autoreply_text
+    - field.field.taxonomy_term.senator.field_email_auto_reply_text
     - field.field.taxonomy_term.senator.field_facebook_url
     - field.field.taxonomy_term.senator.field_image_hero
     - field.field.taxonomy_term.senator.field_inactive_senator_message
@@ -97,12 +97,14 @@ third_party_settings:
       region: content
       parent_name: group_microsite_settings
       weight: 10
-      format_type: fieldset
+      format_type: details
       format_settings:
         classes: ''
         show_empty_fields: false
         id: ''
+        open: false
         description: ''
+        description_display: after
         required_fields: true
     group_key_staff:
       children:
@@ -110,27 +112,31 @@ third_party_settings:
       label: 'Key Staff'
       region: content
       parent_name: group_contact_page
-      weight: 32
-      format_type: fieldset
+      weight: 31
+      format_type: details
       format_settings:
         classes: ''
         show_empty_fields: false
         id: ''
+        open: false
         description: ''
+        description_display: after
         required_fields: true
     group_office_addresses:
       children:
         - field_offices
       label: 'Office Addresses'
-      region: content
+      region: hidden
       parent_name: group_contact_page
-      weight: 33
-      format_type: fieldset
+      weight: 32
+      format_type: details
       format_settings:
         classes: ''
         show_empty_fields: false
         id: ''
+        open: false
         description: ''
+        description_display: after
         required_fields: true
     group_direct_messaging:
       children:
@@ -139,28 +145,32 @@ third_party_settings:
       label: 'Direct Messaging'
       region: content
       parent_name: ''
-      weight: 6
-      format_type: fieldset
+      weight: 5
+      format_type: details
       format_settings:
         classes: ''
         show_empty_fields: false
         id: ''
+        open: false
         description: ''
+        description_display: after
         required_fields: true
     group_autoreply:
       children:
-        - field_email_autoreply_text
-        - field_autoreply_text
+        - field_auto_reply_text
+        - field_email_auto_reply_text
       label: 'Auto-Reply Settings'
       region: content
       parent_name: ''
-      weight: 7
-      format_type: fieldset
+      weight: 6
+      format_type: details
       format_settings:
         classes: ''
         show_empty_fields: false
         id: ''
+        open: false
         description: ''
+        description_display: after
         required_fields: true
     group_contact_page:
       children:
@@ -172,12 +182,14 @@ third_party_settings:
       region: content
       parent_name: ''
       weight: 4
-      format_type: fieldset
+      format_type: details
       format_settings:
         classes: ''
         show_empty_fields: false
         id: ''
+        open: false
         description: ''
+        description_display: after
         required_fields: true
     group_media_inquiries:
       children:
@@ -190,12 +202,14 @@ third_party_settings:
       region: content
       parent_name: ''
       weight: 3
-      format_type: fieldset
+      format_type: details
       format_settings:
         classes: ''
         show_empty_fields: false
         id: ''
+        open: false
         description: ''
+        description_display: after
         required_fields: true
     group_manage_promotional_banners:
       children:
@@ -211,6 +225,26 @@ third_party_settings:
         id: ''
         open: false
         description: 'Top 4 promotional banners will show on all footers but your home page.'
+        required_fields: true
+    group_admin_fields:
+      children:
+        - field_active_senator
+        - field_ol_shortname
+        - field_ol_member_id
+        - field_store_settings
+        - field_inactive_senator_message
+      label: 'Admin Fields'
+      region: content
+      parent_name: ''
+      weight: 7
+      format_type: details
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        open: false
+        description: ''
+        description_display: after
         required_fields: true
 id: taxonomy_term.senator.default
 targetEntityType: taxonomy_term
@@ -232,12 +266,12 @@ content:
     settings:
       display_label: true
     third_party_settings: {  }
-  field_autoreply_text:
-    type: string_textfield
-    weight: 20
+  field_auto_reply_text:
+    type: string_textarea
+    weight: 39
     region: content
     settings:
-      size: 60
+      rows: 5
       placeholder: ''
     third_party_settings: {  }
   field_conference:
@@ -262,12 +296,12 @@ content:
       placeholder: ''
       size: 60
     third_party_settings: {  }
-  field_email_autoreply_text:
-    type: string_textfield
-    weight: 19
+  field_email_auto_reply_text:
+    type: string_textarea
+    weight: 40
     region: content
     settings:
-      size: 60
+      rows: 5
       placeholder: ''
     third_party_settings: {  }
   field_facebook_url:
@@ -287,7 +321,7 @@ content:
     third_party_settings: {  }
   field_inactive_senator_message:
     type: string_textfield
-    weight: 38
+    weight: 12
     region: content
     settings:
       size: 60
@@ -340,7 +374,7 @@ content:
     third_party_settings: {  }
   field_message_notification_email:
     type: email_default
-    weight: 23
+    weight: 9
     region: content
     settings:
       placeholder: ''
@@ -373,7 +407,7 @@ content:
         show_drag_and_drop: true
   field_offices:
     type: entity_reference_paragraphs
-    weight: 37
+    weight: 7
     region: content
     settings:
       title: Paragraph
@@ -435,6 +469,7 @@ content:
       collapsible: false
       collapsed: false
       revision: false
+      removed_reference: optional
     third_party_settings: {  }
   field_senator_name:
     type: name_default
@@ -469,7 +504,7 @@ content:
     third_party_settings: {  }
   field_store_settings:
     type: boolean_checkbox
-    weight: 12
+    weight: 11
     region: content
     settings:
       display_label: true
@@ -494,7 +529,7 @@ content:
     third_party_settings: {  }
   field_user_account:
     type: entity_reference_autocomplete
-    weight: 28
+    weight: 11
     region: content
     settings:
       match_operator: CONTAINS
@@ -519,7 +554,7 @@ content:
       placeholder: ''
     third_party_settings: {  }
   simple_sitemap:
-    weight: 11
+    weight: 9
     region: content
     settings: {  }
     third_party_settings: {  }

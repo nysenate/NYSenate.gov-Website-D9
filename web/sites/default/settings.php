@@ -778,6 +778,11 @@ $_ENV['default_site_host'] = 'www.nysenate.gov';
 $_ENV['site_host'] = $_ENV['DRUSH_OPTIONS_URI'] ?? $_ENV['default_site_host'];
 $_ENV['site_url'] = 'https://' . $_ENV['site_host'];
 
+// Handle URL rewrites for NYSS.
+if (isset($_SERVER['PANTHEON_ENVIRONMENT']) && php_sapi_name() != 'cli') {
+  require_once 'nyss_redirects.inc.php';
+}
+
 // Pantheon environment-specific config.
 if (isset($_ENV['PANTHEON_ENVIRONMENT'])) {
 
@@ -820,6 +825,10 @@ if (isset($_ENV['PANTHEON_ENVIRONMENT'])) {
       $config['environment_indicator.indicator']['name'] = 'Live';
       $config['environment_indicator.indicator']['bg_color'] = '#000000';
       $config['environment_indicator.indicator']['fg_color'] = '#FFFFFF';
+
+      // Temp fix for canonical URL on live.  See line 777, above.
+      $_ENV['site_host'] = 'www.nysenate.gov';
+      $_ENV['site_url'] = 'https://www.nysenate.gov';
       break;
 
     default:
@@ -989,10 +998,5 @@ if ((file_exists(__DIR__ . '/settings.ddev.redis.php') && getenv('IS_DDEV_PROJEC
 $migrate_settings = __DIR__ . "/settings.migrate-on-pantheon.php";
 if (file_exists($migrate_settings) && isset($_ENV['PANTHEON_ENVIRONMENT'])) {
   include $migrate_settings;
-}
-
-// Handle URL rewrites for NYSS.
-if (isset($_SERVER['PANTHEON_ENVIRONMENT']) && php_sapi_name() != 'cli') {
-  require_once 'nyss_redirects.inc.php';
 }
 

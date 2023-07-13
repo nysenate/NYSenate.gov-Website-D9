@@ -287,7 +287,7 @@ class NysSubscriptionsEventSubscriber implements EventSubscriberInterface {
       }
 
       // Add the governor's name.
-      $subs['%governor.full_name%'] = $this->siteConfig->get('governor_name');
+      $subs['%governor.full_name%'] = $this->siteConfig->get('governor_full_name');
     }
 
   }
@@ -403,7 +403,7 @@ class NysSubscriptionsEventSubscriber implements EventSubscriberInterface {
         $tokens['%senator.full_name%'] = $senator->field_full_name->value ?? '';
         if ($page_url) {
           $tokens['%senator.page_url%'] = $page_url;
-          $tokens['%senator.message_url%'] = $page_url . '/message';
+          $tokens['%senator.message_url%'] = $page_url . '/contact';
         }
         if ($district) {
           $tokens['%senator.district_number%'] = $district->field_district_number->value ?? '';

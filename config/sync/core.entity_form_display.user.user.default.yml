@@ -42,33 +42,33 @@ content:
     third_party_settings: {  }
   email_tfa_status:
     type: boolean_checkbox
-    weight: 24
+    weight: 22
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_address:
     type: address_default
-    weight: 5
+    weight: 4
     region: content
     settings: {  }
     third_party_settings: {  }
   field_agree_to_terms:
     type: boolean_checkbox
-    weight: 8
+    weight: 6
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_dateofbirth:
     type: datetime_default
-    weight: 9
+    weight: 7
     region: content
     settings: {  }
     third_party_settings: {  }
   field_district:
     type: options_select
-    weight: 12
+    weight: 10
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -82,7 +82,7 @@ content:
     third_party_settings: {  }
   field_gender_user:
     type: options_select
-    weight: 10
+    weight: 8
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -96,13 +96,13 @@ content:
     third_party_settings: {  }
   field_last_password_reset:
     type: datetime_default
-    weight: 20
+    weight: 18
     region: content
     settings: {  }
     third_party_settings: {  }
   field_ldap_username:
     type: string_textfield
-    weight: 16
+    weight: 14
     region: content
     settings:
       size: 60
@@ -110,14 +110,14 @@ content:
     third_party_settings: {  }
   field_password_expiration:
     type: boolean_checkbox
-    weight: 19
+    weight: 17
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_profile_picture:
     type: image_image
-    weight: 25
+    weight: 23
     region: content
     settings:
       progress_indicator: throbber
@@ -125,19 +125,19 @@ content:
     third_party_settings: {  }
   field_senator_inbox_access:
     type: options_select
-    weight: 14
+    weight: 12
     region: content
     settings: {  }
     third_party_settings: {  }
   field_senator_multiref:
     type: options_select
-    weight: 13
+    weight: 11
     region: content
     settings: {  }
     third_party_settings: {  }
   field_top_issue:
     type: entity_reference_autocomplete
-    weight: 11
+    weight: 9
     region: content
     settings:
       match_operator: CONTAINS
@@ -147,28 +147,28 @@ content:
     third_party_settings: {  }
   field_user_banned_comments:
     type: boolean_checkbox
-    weight: 23
+    weight: 21
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_user_phone_no:
     type: telephone_default
-    weight: 6
+    weight: 5
     region: content
     settings:
       placeholder: ''
     third_party_settings: {  }
   field_user_receive_emails:
     type: boolean_checkbox
-    weight: 15
+    weight: 13
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_voting_auto_subscribe:
     type: boolean_checkbox
-    weight: 17
+    weight: 15
     region: content
     settings:
       display_label: true
@@ -179,13 +179,13 @@ content:
     settings: {  }
     third_party_settings: {  }
   language:
-    weight: 18
+    weight: 16
     region: content
     settings: {  }
     third_party_settings: {  }
   path:
     type: path
-    weight: 22
+    weight: 20
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -195,10 +195,11 @@ content:
     settings: {  }
     third_party_settings: {  }
   timezone:
-    weight: 21
+    weight: 19
     region: content
     settings: {  }
     third_party_settings: {  }
 hidden:
+  contact: true
   field_pending_expire_sent: true
   langcode: true

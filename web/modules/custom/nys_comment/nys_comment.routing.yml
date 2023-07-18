@@ -5,7 +5,7 @@ comment.ban_user:
     _controller: '\Drupal\nys_comment\Controller\CommentController::banUser'
     entity_type: 'comment'
   requirements:
-    _permission: 'administer users'
+    _permission: 'administer users+administer comments'
     _csrf_token: 'TRUE'
     comment: \d+
 
@@ -16,6 +16,6 @@ comment.reject:
     _controller: '\Drupal\nys_comment\Controller\CommentController::reject'
     entity_type: 'comment'
   requirements:
-    _permission: 'administer users'
+    _permission: 'administer users+administer comments'
     _csrf_token: 'TRUE'
     comment: \d+

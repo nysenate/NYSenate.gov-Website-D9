@@ -152,7 +152,7 @@ abstract class RequestPluginBase implements RequestPluginInterface {
     $params = $this->prepParams($params);
 
     $page = $params['page'] ?? 1;
-    $limit = $params['limit'] ?? 0;
+    $limit = $params['limit'] ?? ($params['per_page'] ?? 0);
     $offset = $params['offset'] ?? 0;
     if (!$offset) {
       $offset = (($page - 1) * $limit) + 1;

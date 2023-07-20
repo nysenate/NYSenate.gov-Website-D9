@@ -2,19 +2,25 @@
 /**
  * @file nys-openleg-search-results.html.twig
  *
- * @var $search_results string
+ * @var $search_form string
+ * @var $results string
  * @var $pager string
+ * @var $total int
+ * @var $term string
  */
 #}
 <div class="nys-openleg-statute-search-container">
-    {{ search_form }}
-    <div class="nys-openleg-search-results-container">
-        {% if results is iterable and results|length > 0 %}
-            {% for val in results %}
-                {{ include('nys-openleg-search-result.html.twig', val) }}
-                {# <pre>{{ dump(val) }}</pre> #}
-            {% endfor %}
-            {{ pager }}
-        {% endif %}
-    </div>
+  {{ search_form }}
+  <div class="nys-openleg-search-results-container">
+    {% if term %}
+      <div class="nys-openleg-search-results-total">{{ total }} total results.</div>
+    {% endif %}
+    {% if results is iterable and results|length > 0 %}
+      {% for val in results %}
+        {{ include('nys-openleg-search-result.html.twig', val) }}
+        {# <pre>{{ dump(val) }}</pre> #}
+      {% endfor %}
+      {{ pager }}
+    {% endif %}
+  </div>
 </div>

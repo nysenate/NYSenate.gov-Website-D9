@@ -19,7 +19,7 @@ class ResponseSearch extends ResponsePluginBase {
    * Gets the response's "total" data point.
    */
   public function total(): int {
-    return $this->result()->total ?? 0;
+    return $this->response->total ?? 0;
   }
 
   /**
@@ -27,8 +27,8 @@ class ResponseSearch extends ResponsePluginBase {
    */
   public function offset(): array {
     return [
-      'start' => $this->result()->offsetStart ?? 1,
-      'end' => $this->result()->offsetEnd ?? 1,
+      'start' => $this->response->offsetStart ?? 1,
+      'end' => $this->response->offsetEnd ?? 1,
       'total' => $this->total(),
     ];
   }

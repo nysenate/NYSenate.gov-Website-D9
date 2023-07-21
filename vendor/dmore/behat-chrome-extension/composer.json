@@ -1,0 +1,34 @@
+{
+    "name": "dmore/behat-chrome-extension",
+    "description": "Behat extension for controlling Chrome without Selenium",
+    "license": "MIT",
+    "type": "library",
+    "keywords": [
+        "chrome",
+        "behat",
+        "driver",
+        "headless"
+    ],
+    "authors": [
+        {
+            "name": "Dorian More",
+            "email": "doriancmore@gmail.com"
+        }
+    ],
+    "homepage": "https://gitlab.com/behat-chrome/chrome-mink-driver",
+    "require": {
+        "php": ">=7.1",
+        "behat/behat": "^3.0.4",
+        "friends-of-behat/mink-extension": "^2.0",
+        "dmore/chrome-mink-driver": "^2.4.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.5 || ^9.5"
+    },
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {
+            "DMore\\ChromeExtension\\": "src/"
+        }
+    }
+}

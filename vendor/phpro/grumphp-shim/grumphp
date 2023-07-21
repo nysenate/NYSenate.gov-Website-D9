@@ -1,0 +1,13 @@
+#!/usr/bin/env php
+<?php
+if (!in_array('phar', stream_get_wrappers(), true)) {
+    throw new \RuntimeException(
+        'GrumPHP-shim requires PHAR to be enabled. Please enable the extension or use the regular GrumPHP version.'
+    );
+}
+
+
+$phar = __DIR__ . '/grumphp.phar';
+
+require "phar://$phar/.box/bin/check-requirements.php";
+require "phar://$phar/bin/grumphp";

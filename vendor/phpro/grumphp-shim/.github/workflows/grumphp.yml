@@ -1,0 +1,32 @@
+name: GrumPHP
+
+on: [push, pull_request]
+jobs:
+    run:
+        runs-on: ${{ matrix.operating-system }}
+        strategy:
+            matrix:
+                operating-system: [ubuntu-latest]
+                php-versions: ['8.0', '8.1', '8.2']
+            fail-fast: false
+        name: PHP ${{ matrix.php-versions }} @ ${{ matrix.operating-system }}
+        steps:
+            - name: Checkout
+              uses: actions/checkout@master
+            - name: Install PHP
+              uses: shivammathur/setup-php@master
+              with:
+                  php-version: ${{ matrix.php-versions }}
+                  tools: 'composer:v2'
+                  extensions: xdebug, mbstring, posix
+            - name: Check Versions
+              run: |
+                php -v
+                php -m
+                composer --version
+            - name: Verify signature
+              run: |
+                gpg --keyserver keys.openpgp.org --recv-keys 1954FD4AFA65C82E40CB1A13AA36B9960B5B823D
+                gpg --verify grumphp.phar.asc grumphp.phar
+            - name: Verify it can execute the grumphp command
+              run: php grumphp.phar

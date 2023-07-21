@@ -1,0 +1,22 @@
+# This configuration file only contains variables for usage with DDEV-local.
+
+vagrant_hostname: example.mcdev
+
+drupal_composer_install_dir: "/var/www/html"
+drupal_db_user: db
+drupal_db_password: db
+drupal_db_name: db
+drupal_db_host: db
+drupal_mysql_user: db
+drupal_mysql_password: db
+drupal_site_name: "Drupal"
+drupal_install_profile: ignite_demo
+drupal_account_name: admin
+drupal_account_pass: admin
+
+command:
+  site:
+    options:
+      env: false
+      multisite: false
+      settings_file: settings.local.php

@@ -1,0 +1,71 @@
+default:
+  suites:
+    default:
+      contexts:
+        - FeatureContext
+        - Drupal\DrupalExtension\Context\DrupalContext
+        - Drupal\DrupalExtension\Context\MinkContext
+        - Drupal\DrupalExtension\Context\MessageContext
+        - Drupal\DrupalExtension\Context\DrushContext
+  gherkin:
+    filters:
+      tags: '~@bug&&~@wip'
+  extensions:
+    DMore\ChromeExtension\Behat\ServiceContainer\ChromeExtension: ~
+    Behat\MinkExtension:
+      goutte:
+        guzzle_parameters:
+          verify: false
+      selenium2: ~
+      javascript_session: chrome_session
+      sessions:
+        chrome_session:
+          chrome:
+            api_url: "http://localhost:9222"
+            validate_certificate: false
+    Drupal\DrupalExtension:
+      blackbox: ~
+      api_driver: 'drupal'
+      drush:
+        root: '../../web'
+        binary: '../../bin/drush'
+      text:
+        username_field: 'Username'
+      drupal:
+        drupal_root: '../../web'
+
+# run all 'ready' tests
+ci:
+  suites:
+    default:
+      filters:
+        tags: 'ci&&~@bug&&~@wip'
+
+# run tests that are still in dev
+wip:
+  suites:
+    default:
+      filters:
+        tags: '@wip&&~@bug'
+
+# run key tests (fast test)
+smoke:
+  suites:
+    default:
+      filters:
+        tags: '@smoke-test,@smoke'
+
+# dont run slow tests
+no-slow:
+  suites:
+    default:
+      filters:
+        tags: '@~bug&&~@slow'
+
+chrome:
+  extensions:
+    Behat\MinkExtension:
+      default_session: chrome_session
+
+imports:
+  - behat.local.yml

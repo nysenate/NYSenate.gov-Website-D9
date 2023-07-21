@@ -1,0 +1,88 @@
+{
+  "name": "drupal/drupal-driver",
+  "type": "library",
+  "description": "A collection of reusable Drupal drivers",
+  "keywords": ["drupal", "web", "test"],
+  "homepage": "http://github.com/jhedstrom/DrupalDriver",
+  "license": "GPL-2.0-or-later",
+  "authors": [
+     {
+       "name": "Jonathan Hedstrom",
+       "email": "jhedstrom@gmail.com"
+     }
+  ],
+  "require": {
+    "php": ">=7.4",
+    "symfony/process": "~2.5|~3.0|~4.4|^6",
+    "symfony/dependency-injection": "~2.6|~3.0|~4.4|^6",
+    "drupal/core-utility": "^8.4 || ^9 || ^10@beta"
+  },
+  "require-dev": {
+    "composer/installers": "^2.1",
+    "drupal/coder": "~8.3.0",
+    "phpspec/phpspec": "~2.0 || ~4.0 || ~6.1 || dev-main",
+    "phpunit/phpunit": "~6.0 || ~7.0 || ^9",
+    "mockery/mockery": "^1.5",
+    "drupal/core-composer-scaffold": "^8.4 || ^9 || ^10@beta",
+    "drupal/core-recommended": "^8.4 || ^9 || ^10@beta",
+    "drupal/mailsystem": "^4.4",
+    "drush-ops/behat-drush-endpoint": "*",
+    "php-parallel-lint/php-parallel-lint": "^1.0",
+    "dms/phpunit-arraysubset-asserts": "^0.4.0",
+    "mglaman/drupal-check": "^1",
+    "palantirnet/drupal-rector": "^0.13",
+    "symfony/phpunit-bridge": "^6.1"
+  },
+  "conflict": {
+    "drupal/core": ">=8.0 <9.3"
+  },
+  "scripts": {
+    "test": [
+      "composer validate --no-interaction",
+      "parallel-lint src spec tests",
+      "phpunit",
+      "phpspec run -f pretty --no-interaction",
+      "phpcs --standard=./phpcs-ruleset.xml .",
+      "./vendor/bin/drupal-check --drupal-root=drupal ./src/Drupal/Driver/Cores/Drupal8.php ./src/Drupal/Driver/Fields/Drupal8",
+      "cp ./vendor/palantirnet/drupal-rector/rector.php drupal/.",
+      "cd drupal && ../vendor/bin/rector process ../src/Drupal/Driver/Cores/Drupal8.php --dry-run",
+      "cd drupal && ../vendor/bin/rector process ../src/Drupal/Driver/Fields/Drupal8 --dry-run"
+    ]
+  },
+  "autoload": {
+    "psr-0": {
+      "Drupal\\Driver": "src/",
+      "Drupal\\Tests\\Driver" : "tests/"
+    }
+  },
+  "repositories": {
+    "drupal": {
+      "type": "composer",
+      "url": "https://packages.drupal.org/8"
+    }
+  },
+  "prefer-stable": true,
+  "minimum-stability": "beta",
+  "extra": {
+    "installer-paths": {
+      "drupal/core": [
+        "type:drupal-core"
+      ],
+      "drupal/modules/{$name}": [
+        "type:drupal-module"
+      ]
+    },
+    "drupal-scaffold": {
+      "locations": {
+        "web-root": "drupal/"
+      }
+    }
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "drupal/core-composer-scaffold": true,
+      "composer/installers": true
+    }
+  }
+}

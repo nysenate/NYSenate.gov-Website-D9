@@ -4,9 +4,15 @@ status: true
 dependencies:
   module:
     - comment
+    - field_permissions
 id: comment_moderator
 label: 'Comment Moderator'
 weight: 11
 is_admin: null
 permissions:
   - 'administer comments'
+  - 'create field_user_banned_comments'
+  - 'edit field_user_banned_comments'
+  - 'edit own field_user_banned_comments'
+  - 'view field_user_banned_comments'
+  - 'view own field_user_banned_comments'

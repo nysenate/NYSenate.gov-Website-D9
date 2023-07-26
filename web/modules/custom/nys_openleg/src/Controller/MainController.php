@@ -12,6 +12,7 @@ use Drupal\nys_openleg\Service\ApiManager;
 use Drupal\nys_openleg\StatuteHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class MainController.
@@ -102,12 +103,12 @@ class MainController extends ControllerBase {
    */
   public static function create(ContainerInterface $container): MainController {
     return new static(
-          $container->get('request_stack'),
-          $container->get('config.factory'),
-          $container->get('form_builder'),
-          $container->get('pager.manager'),
-          $container->get('manager.openleg_api')
-      );
+      $container->get('request_stack'),
+      $container->get('config.factory'),
+      $container->get('form_builder'),
+      $container->get('pager.manager'),
+      $container->get('manager.openleg_api')
+    );
   }
 
   /**
@@ -139,7 +140,7 @@ class MainController extends ControllerBase {
     // Initialize important paths.
     $base_share_path = $this->request->getSchemeAndHttpHost() . StatuteHelper::baseUrl();
     $share_path = $base_share_path . '/' .
-        implode('/', array_filter([$book, $location]));
+      implode('/', array_filter([$book, $location]));
 
     // Initialize the return.
     $ret = [
@@ -166,15 +167,15 @@ class MainController extends ControllerBase {
       $ret['#title'] = StatuteHelper::LAW_TYPE_NAMES[$book] ?? '';
       $ret['#title_parts'] = [$ret['#title']];
       $ret['#list_items'] = array_map(
-            function ($v) use ($base_share_path) {
-                return [
-                  'name' => $v->lawId,
-                  'description' => $v->name,
-                  'url' => $base_share_path . '/' . $v->lawId,
-                ];
-            },
-            StatuteHelper::getBooksByType($book)
-        );
+        function ($v) use ($base_share_path) {
+          return [
+            'name' => $v->lawId,
+            'description' => $v->name,
+            'url' => $base_share_path . '/' . $v->lawId,
+          ];
+        },
+        StatuteHelper::getBooksByType($book)
+      );
     }
     // CONDITION THREE: not either of the other two conditions.
     else {
@@ -203,15 +204,15 @@ class MainController extends ControllerBase {
 
       // Set the navigation references.
       $ret['#nav'] = array_map(
-            function ($v) use ($base_share_path) {
-                return $v ? [
-                  'name' => $v->docType . ' ' . $v->docLevelId,
-                  'description' => $v->title,
-                  'url' => $base_share_path . '/' . $v->lawId . '/' . $v->locationId,
-                ] : [];
-            },
-            $statute->siblings() + ['up' => end($parents)]
-        );
+        function ($v) use ($base_share_path) {
+          return $v ? [
+            'name' => $v->docType . ' ' . $v->docLevelId,
+            'description' => $v->title,
+            'url' => $base_share_path . '/' . $v->lawId . '/' . $v->locationId,
+          ] : [];
+        },
+        $statute->siblings() + ['up' => end($parents)]
+      );
 
       // Include the milestone selection form.
       // @phpstan-ignore-next-line
@@ -220,23 +221,23 @@ class MainController extends ControllerBase {
 
       // Generate the list_items from the statute children.
       $ret['#list_items'] = array_map(
-            function ($v) use ($base_share_path) {
-                return [
-                  'name' => $v->docType . ' ' . $v->docLevelId,
-                  'description' => $v->title,
-                  'url' => $base_share_path . '/' . $v->lawId . '/' . $v->locationId,
-                ];
-            },
-            $statute->children()
-        );
+        function ($v) use ($base_share_path) {
+          return [
+            'name' => $v->docType . ' ' . $v->docLevelId,
+            'description' => $v->title,
+            'url' => $base_share_path . '/' . $v->lawId . '/' . $v->locationId,
+          ];
+        },
+        $statute->children()
+      );
     }
 
     // Set up the email sharing variables.
     $ret['#mail_title'] = (is_array($ret['#title']))
-        ? reset($ret['#title'])
-        : $ret['#title'];
+      ? reset($ret['#title'])
+      : $ret['#title'];
     $ret['#mail_link'] = "mailto:?subject=" . $ret['#mail_title'] .
-        " | NY State Senate&body=Check out this law: " . $ret['#share_path'];
+      " | NY State Senate&body=Check out this law: " . $ret['#share_path'];
 
     // Get the breadcrumbs.
     $ret['#breadcrumbs'] = StatuteHelper::breadcrumbs($law_type, $parents);
@@ -253,15 +254,18 @@ class MainController extends ControllerBase {
   /**
    * Route handler for searching statutes.  Returns a renderable array.
    */
-  public function search($search_term = ''): array {
+  public function search($search_term = ''): array|Response {
+    // If search_term is not in the URL, try to find it in form POST or the
+    // query string.
+    if (!$search_term) {
+      $search_term = $this->request->request->get('search_term')
+        ?? ($this->request->query->get('search_term') ?? '');
 
-    // If search_term is not already populated, look in the request's
-    // post and get, in that order.
-    $search_term = $search_term
-        ?: (
-      $this->request->request->get('search_term')
-      ?? ($this->request->query->get('search_term') ?? '')
-      );
+      // If one has been found, redirect to ensure the URL is proper.
+      if ($search_term) {
+        return $this->redirect('nys_openleg.search', ['search_term' => $search_term]);
+      }
+    }
 
     // Get the search form.
     // @phpstan-ignore-next-line
@@ -273,6 +277,7 @@ class MainController extends ControllerBase {
     $page = $this->pager->findPage() + 1;
     $per_page = (int) $this->request->query->get('per_page', 10);
     $results = [];
+    $total = 0;
 
     // Execute the search and reformat into the results array.
     if ($search_term) {
@@ -280,13 +285,14 @@ class MainController extends ControllerBase {
        * @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseSearch $search
        */
       $search = $this->apiManager->getSearch(
-            'statute',
-            $search_term,
-            [
-              'page' => $page,
-              'per_page' => $per_page,
-            ]
-        );
+        'statute',
+        $search_term,
+        [
+          'page' => $page,
+          'per_page' => $per_page,
+        ]
+      );
+      $total = $search->total();
       foreach ($search->items() as $item) {
         // Find the important data points.
         $lawId = $item->result->lawId ?? '';
@@ -300,7 +306,7 @@ class MainController extends ControllerBase {
         if ($lawId && $docType && $docLevelId && $title) {
           // Create the data structure for the template.
           $url = StatuteHelper::baseUrl() . '/' .
-                      implode('/', array_filter([$lawId, $locationId]));
+            implode('/', array_filter([$lawId, $locationId]));
           $results[] = [
             'name' => implode(' ', [$lawId, $docType, $docLevelId]),
             'title' => $title,
@@ -323,6 +329,8 @@ class MainController extends ControllerBase {
       '#search_form' => $form,
       '#results' => $results,
       '#pager' => $use_pager ? ['#type' => 'pager'] : '',
+      '#total' => $total,
+      '#term' => $search_term,
     ];
   }
 

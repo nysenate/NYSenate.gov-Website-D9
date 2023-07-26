@@ -167,7 +167,7 @@ class MainController extends ControllerBase {
       $ret['#title'] = StatuteHelper::LAW_TYPE_NAMES[$book] ?? '';
       $ret['#title_parts'] = [$ret['#title']];
       $ret['#list_items'] = array_map(
-        function($v) use ($base_share_path) {
+        function ($v) use ($base_share_path) {
           return [
             'name' => $v->lawId,
             'description' => $v->name,
@@ -204,7 +204,7 @@ class MainController extends ControllerBase {
 
       // Set the navigation references.
       $ret['#nav'] = array_map(
-        function($v) use ($base_share_path) {
+        function ($v) use ($base_share_path) {
           return $v ? [
             'name' => $v->docType . ' ' . $v->docLevelId,
             'description' => $v->title,
@@ -221,7 +221,7 @@ class MainController extends ControllerBase {
 
       // Generate the list_items from the statute children.
       $ret['#list_items'] = array_map(
-        function($v) use ($base_share_path) {
+        function ($v) use ($base_share_path) {
           return [
             'name' => $v->docType . ' ' . $v->docLevelId,
             'description' => $v->title,

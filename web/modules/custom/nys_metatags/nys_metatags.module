@@ -5,7 +5,6 @@
  * Contains custom code for Metatags.
  */
 
-use Drupal\file\Entity\File;
 use Drupal\node\NodeInterface;
 
 /**
@@ -60,7 +59,7 @@ function nys_metatags_metatags_attachments_alter(array &$metatag_attachments) {
     }
 
     if (isset($senator->name->value) && !empty($senator->name->value)) {
-      $senator_name = $senator->name->value;
+      $senator_name = $senator->name->value ?? '';
     }
 
     foreach ($metatag_attachments['#attached']['html_head'] as $id => $attachment) {
@@ -84,18 +83,18 @@ function nys_metatags_metatags_attachments_alter(array &$metatag_attachments) {
     }
 
     if (!empty($node->field_thumbnail[0]->target_id)) {
-      $mid = $node->field_thumbnail[0]->target_id;
+      $mid = $node->field_thumbnail[0]->target_id ?? NULL;
+      $media = \Drupal::entityTypeManager()->getStorage('media')
+        ->load($mid);
+      $file_alt = $media->field_image[0]->alt;
+      $file = $media->field_image[0]->entity ?? NULL;
+      /** @var \Drupal\Core\File\FileUrlGenerator::FileUrlGenerator $file_url_generator */
       try {
-        $media = \Drupal::entityTypeManager()->getStorage('media')
-          ->load($mid);
+        $file_url_generator = \Drupal::service('file_url_generator');
       }
       catch (\Throwable) {
-        $media = NULL;
+        $file_url_generator = NULL;
       }
-      $fid = $media->field_image[0]->target_id;
-      $file_alt = $media->field_image[0]->alt;
-      $file = File::load($fid);
-      $file_url_generator = \Drupal::service('file_url_generator');
       $file_uri = $file_url_generator->generateAbsoluteString($file->getFileUri());
       $file_type = $file->getMimeType();
 
@@ -123,19 +122,18 @@ function nys_metatags_metatags_attachments_alter(array &$metatag_attachments) {
       }
     }
     if (!empty($node->field_social_image[0]->target_id)) {
-      $mid = $node->field_social_image[0]->target_id;
+      $mid = $node->field_social_image[0]->target_id ?? NULL;
+      $media = \Drupal::entityTypeManager()->getStorage('media')
+        ->load($mid);
+      $file_alt = $media->field_image[0]->alt;
+      $file = $media->field_image[0]->entity ?? NULL;
+      /** @var \Drupal\Core\File\FileUrlGenerator::FileUrlGenerator $file_url_generator */
       try {
-        $media = \Drupal::entityTypeManager()->getStorage('media')
-          ->load($mid);
+        $file_url_generator = \Drupal::service('file_url_generator');
       }
       catch (\Throwable) {
-        $media = NULL;
+        $file_url_generator = NULL;
       }
-
-      $fid = $media->field_image[0]->target_id;
-      $file_alt = $media->field_image[0]->alt;
-      $file = File::load($fid);
-      $file_url_generator = \Drupal::service('file_url_generator');
       $file_uri = $file_url_generator->generateAbsoluteString($file->getFileUri());
       $file_type = $file->getMimeType();
       foreach ($metatag_attachments['#attached']['html_head'] as $id => $attachment) {

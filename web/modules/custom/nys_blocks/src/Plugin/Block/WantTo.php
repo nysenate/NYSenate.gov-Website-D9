@@ -5,6 +5,7 @@ namespace Drupal\nys_blocks\Plugin\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Url;
 use Drupal\taxonomy\TermInterface;
+use Drupal\user\Entity\User;
 
 /**
  * Block for How a Bill Becomes a Law.
@@ -27,19 +28,20 @@ class WantTo extends BlockBase {
    * {@inheritdoc}
    */
   public function build(): array {
-
     if (\Drupal::currentUser()->isAuthenticated()) {
       /** @var \Drupal\user\Entity\User $user */
-      $user = \Drupal::currentUser()->getAccount();
+      $user = User::load(\Drupal::currentUser()->id());
       $senator = $user->get('field_district')->entity->field_senator->entity ?? NULL;
       $senator_link = ($senator instanceof TermInterface)
         ? \Drupal::service('nys_senators.microsites')->getMicrosite($senator)
         : NULL;
       $image = $user->get('field_district')->entity->field_senator
-        ->entity->field_member_headshot->entity;
-      $headshot = \Drupal::entityTypeManager()
-        ->getViewBuilder('media')
-        ->view($image, 'thumbnail');
+        ->entity->field_member_headshot->entity ?? NULL;
+      $headshot = $image
+        ? \Drupal::entityTypeManager()
+          ->getViewBuilder('media')
+          ->view($image, 'thumbnail')
+        : NULL;
     }
     $register = Url::fromRoute('user.register')->toString();
 

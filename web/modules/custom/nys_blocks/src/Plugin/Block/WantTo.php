@@ -4,7 +4,7 @@ namespace Drupal\nys_blocks\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Url;
-use Drupal\user\Entity\User;
+use Drupal\taxonomy\TermInterface;
 
 /**
  * Block for How a Bill Becomes a Law.
@@ -26,28 +26,20 @@ class WantTo extends BlockBase {
   /**
    * {@inheritdoc}
    */
-  public function build() {
-    $logged_in = \Drupal::currentUser()->isAuthenticated();
-    if ($logged_in) {
-      $current_user = \Drupal::currentUser();
-      $user = User::load($current_user->id());
-      if ($user->hasField('field_district') && !$user->get('field_district')->isEmpty()
-        ) {
-        // @phpstan-ignore-next-line
-        $senator = $user->field_district->entity->field_senator->entity ?? NULL;
-        // @phpstan-ignore-next-line
-        $senator_link = \Drupal::service('nys_senators.microsites')
-          ->getMicrosite($senator);
-        // @phpstan-ignore-next-line
-        $headshot_id = $user->field_district->entity->field_senator
-          ->entity->field_member_headshot->target_id;
-        // @phpstan-ignore-next-line
-        $headshot = \Drupal::entityTypeManager()->getStorage('media')
-          ->load($headshot_id);
-        $headshot = \Drupal::entityTypeManager()
-          ->getViewBuilder('media')
-          ->view($headshot, 'thumbnail');
-      }
+  public function build(): array {
+
+    if (\Drupal::currentUser()->isAuthenticated()) {
+      /** @var \Drupal\user\Entity\User $user */
+      $user = \Drupal::currentUser()->getAccount();
+      $senator = $user->get('field_district')->entity->field_senator->entity ?? NULL;
+      $senator_link = ($senator instanceof TermInterface)
+        ? \Drupal::service('nys_senators.microsites')->getMicrosite($senator)
+        : NULL;
+      $image = $user->get('field_district')->entity->field_senator
+        ->entity->field_member_headshot->entity;
+      $headshot = \Drupal::entityTypeManager()
+        ->getViewBuilder('media')
+        ->view($image, 'thumbnail');
     }
     $register = Url::fromRoute('user.register')->toString();
 

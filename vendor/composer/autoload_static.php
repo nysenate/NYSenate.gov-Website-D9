@@ -308,8 +308,8 @@ class ComposerStaticInitcfe1ff8587a3eacdec9f20af85157174
         'phpDocumentor\\Reflection\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
-            1 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
-            2 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
+            1 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
+            2 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
         ),
         'mglaman\\PHPStanDrupal\\' => 
         array (
@@ -855,9 +855,9 @@ class ComposerStaticInitcfe1ff8587a3eacdec9f20af85157174
         ),
         'Doctrine\\Common\\' => 
         array (
-            0 => __DIR__ . '/..' . '/doctrine/reflection/lib/Doctrine/Common',
+            0 => __DIR__ . '/..' . '/doctrine/common/src',
             1 => __DIR__ . '/..' . '/doctrine/event-manager/src',
-            2 => __DIR__ . '/..' . '/doctrine/common/src',
+            2 => __DIR__ . '/..' . '/doctrine/reflection/lib/Doctrine/Common',
         ),
         'Dflydev\\DotAccessData\\' => 
         array (
@@ -957,9 +957,9 @@ class ComposerStaticInitcfe1ff8587a3eacdec9f20af85157174
         ),
         'Behat\\Mink\\Driver\\' => 
         array (
-            0 => __DIR__ . '/..' . '/friends-of-behat/mink-browserkit-driver/src',
+            0 => __DIR__ . '/..' . '/behat/mink-goutte-driver/src',
             1 => __DIR__ . '/..' . '/behat/mink-selenium2-driver/src',
-            2 => __DIR__ . '/..' . '/behat/mink-goutte-driver/src',
+            2 => __DIR__ . '/..' . '/friends-of-behat/mink-browserkit-driver/src',
         ),
         'Behat\\Mink\\' => 
         array (
@@ -980,8 +980,8 @@ class ComposerStaticInitcfe1ff8587a3eacdec9f20af85157174
     );
 
     public static $fallbackDirsPsr4 = array (
-        0 => __DIR__ . '/..' . '/phrity/util-errorhandler/src',
-        1 => __DIR__ . '/..' . '/phrity/net-uri/src',
+        0 => __DIR__ . '/..' . '/phrity/net-uri/src',
+        1 => __DIR__ . '/..' . '/phrity/util-errorhandler/src',
     );
 
     public static $prefixesPsr0 = array (

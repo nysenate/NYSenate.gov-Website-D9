@@ -5478,21 +5478,13 @@ function nysenate_theme_preprocess_page(&$variables) {
     }
   }
 
-  // Variables for logged-in user's senator,
-  // link and headshot for my senator in header.
-  $logged_in = \Drupal::currentUser()->isAuthenticated();
-  if ($logged_in) {
-    if ($user->hasField('field_district') && !$user->get('field_district')->isEmpty()) {
+  // If logged in, populate variables for user's senator link and headshot.
+  if (\Drupal::currentUser()->isAuthenticated()) {
+    $senator = $user->get('field_district')->entity->field_senator->entity ?? NULL;
+    $headshot = $senator->field_member_headshot->entity ?? NULL;
+    if (($senator instanceof TermInterface) && $headshot) {
       $variables['has_senator'] = TRUE;
-
-      // @phpstan-ignore-next-line
-      $senator = $user->field_district->entity->field_senator->entity;
-
       $variables['senator_link'] = \Drupal::service('nys_senators.microsites')->getMicrosite($senator);
-
-      $headshot_id = $senator->field_member_headshot->target_id;
-      $headshot = \Drupal::entityTypeManager()->getStorage('media')
-        ->load($headshot_id);
       $variables['headshot'] = \Drupal::entityTypeManager()
         ->getViewBuilder('media')
         ->view($headshot, 'thumbnail');

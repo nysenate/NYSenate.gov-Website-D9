@@ -1,0 +1,170 @@
+<?php
+
+/**
+ * @file
+ * Contains custom code for Metatags.
+ */
+
+use Drupal\node\NodeInterface;
+
+/**
+ * Alter the meta tags for any page prior to page attachment.
+ *
+ * @param array $metatag_attachments
+ *   An array of metatag objects to be attached to the current page.
+ */
+function nys_metatags_metatags_attachments_alter(array &$metatag_attachments) {
+  $node = \Drupal::routeMatch()->getParameter('node');
+  if (!($node instanceof NodeInterface)) {
+    return;
+  }
+  if ($node->bundle() === 'honoree') {
+    $title = $node->title->value ?? '';
+    if (!$title) {
+      return;
+    }
+    $type = $node->field_honoree_type[0]->value ?? '';
+    foreach ($metatag_attachments['#attached']['html_head'] as $id => $attachment) {
+      if ($attachment[1] == 'title') {
+        if ($type === 'women') {
+          $metatag_attachments['#attached']['html_head'][$id][0]['#attributes']['content'] = $title . ' | Women of Distinction | NYSenate.gov';
+        }
+        elseif ($type === 'veteran') {
+          $metatag_attachments['#attached']['html_head'][$id][0]['#attributes']['content'] = $title . ' | Veteran\'s Hall of Fame | NYSenate.gov';
+        }
+      }
+      if ($attachment[1] == 'og_title' || $attachment[1] == 'twitter_cards_title') {
+        if ($type === 'women') {
+          $metatag_attachments['#attached']['html_head'][$id][0]['#attributes']['content'] = $title . ' | Women of Distinction';
+        }
+        elseif ($type === 'veteran') {
+          $metatag_attachments['#attached']['html_head'][$id][0]['#attributes']['content'] = $title . ' | Veteran\'s Hall of Fame';
+        }
+      }
+    }
+  }
+  if ($node->bundle() === 'microsite_page') {
+    $title = $node->title->value ?? '';
+    if (!$title) {
+      return;
+    }
+    $type = $node->field_microsite_page_type[0]->target_id;
+    $senator_id = $node->field_senator_multiref[0]->target_id;
+    try {
+      $senator = \Drupal::entityTypeManager()->getStorage('taxonomy_term')
+        ->load($senator_id);
+    }
+    catch (\Throwable) {
+      $senator = NULL;
+    }
+
+    $senator_name = $senator->name->value ?? '';
+    if ($senator_name) {
+      foreach ($metatag_attachments['#attached']['html_head'] as $id => $attachment) {
+        if ($attachment[1] == 'title') {
+          if ($type == '200002' || $type == '200003' || $type == '200004') {
+            $metatag_attachments['#attached']['html_head'][$id][0]['#attributes']['content'] = 'Senator ' . $senator_name . '\'s ' . $title . ' | NYSenate.gov';
+          }
+          elseif ($type == '200005') {
+            $metatag_attachments['#attached']['html_head'][$id][0]['#attributes']['content'] = 'Senator ' . $senator_name . ' | NYSenate.gov';
+          }
+        }
+
+        if ($attachment[1] == 'og_title' || $attachment[1] == 'twitter_cards_title') {
+          if ($type == '200002' || $type == '200003' || $type == '200004') {
+            $metatag_attachments['#attached']['html_head'][$id][0]['#attributes']['content'] = 'Senator ' . $senator_name . '\'s ' . $title;
+          }
+          elseif ($type == '200005') {
+            $metatag_attachments['#attached']['html_head'][$id][0]['#attributes']['content'] = 'Senator ' . $senator_name;
+          }
+        }
+      }
+    }
+
+    if (!empty($node->field_thumbnail[0]->target_id)) {
+      $mid = $node->field_thumbnail[0]->target_id ?? NULL;
+      $media = \Drupal::entityTypeManager()->getStorage('media')
+        ->load($mid);
+      $file_alt = $media->field_image[0]->alt ?? '';
+      $file = $media->field_image[0]->entity ?? NULL;
+      /** @var \Drupal\Core\File\FileUrlGenerator::FileUrlGenerator $file_url_generator */
+      $file_url_generator = \Drupal::service('file_url_generator');
+      try {
+        $file_uri = $file_url_generator->generateAbsoluteString($file->getFileUri());
+        $file_type = $file->getMimeType();
+      }
+      catch (\Throwable) {
+        $file_uri = '';
+        $file_type = '';
+      }
+
+      if ($file_uri && $file_alt && $file_type) {
+        foreach ($metatag_attachments['#attached']['html_head'] as $id => $attachment) {
+          if ($attachment[1] == 'twitter_cards_image' || $attachment[1] == 'og_image_0') {
+            $metatag_attachments['#attached']['html_head'][$id][0]['#attributes']['content'] = $file_uri;
+          }
+          if ($attachment[1] == 'og_image_alt' || $attachment[1] == 'twitter_cards_image_alt') {
+            $metatag_attachments['#attached']['html_head'][$id][0]['#attributes']['content'] = $file_alt;
+          }
+          if ($attachment[1] == 'og_image_type') {
+            $metatag_attachments['#attached']['html_head'][$id][0]['#attributes']['content'] = $file_type;
+          }
+        }
+      }
+    }
+  }
+
+  if ($node->bundle() === 'article') {
+    if (!empty($node->field_social_teaser[0]->value)) {
+      $social_teaser = $node->field_social_teaser[0]->value;
+      foreach ($metatag_attachments['#attached']['html_head'] as $id => $attachment) {
+        if ($attachment[1] == 'og_description' || $attachment[1] == 'twitter_cards_description' || $attachment[1] == 'itemprop_description' || $attachment[1] == 'description') {
+          $metatag_attachments['#attached']['html_head'][$id][0]['#attributes']['content'] = $social_teaser;
+        }
+      }
+    }
+    if (!empty($node->field_social_image[0]->target_id)) {
+      $mid = $node->field_social_image[0]->target_id ?? NULL;
+      $media = \Drupal::entityTypeManager()->getStorage('media')
+        ->load($mid);
+      $file_alt = $media->field_image[0]->alt ?? '';
+      $file = $media->field_image[0]->entity ?? NULL;
+      /** @var \Drupal\Core\File\FileUrlGenerator::FileUrlGenerator $file_url_generator */
+      $file_url_generator = \Drupal::service('file_url_generator');
+      try {
+        $file_uri = $file_url_generator->generateAbsoluteString($file->getFileUri());
+        $file_type = $file->getMimeType();
+      }
+      catch (\Throwable) {
+        $file_uri = '';
+        $file_type = '';
+      }
+      if ($file_type && $file_alt && $file_uri) {
+        foreach ($metatag_attachments['#attached']['html_head'] as $id => $attachment) {
+          if ($attachment[1] == 'og_image_0' || $attachment[1] == 'twitter_cards_image') {
+            $metatag_attachments['#attached']['html_head'][$id][0]['#attributes']['content'] = $file_uri;
+          }
+          if ($attachment[1] == 'og_image_alt' || $attachment[1] == 'twitter_cards_image_alt') {
+            $metatag_attachments['#attached']['html_head'][$id][0]['#attributes']['content'] = $file_alt;
+          }
+          if ($attachment[1] == 'og_image_type') {
+            $metatag_attachments['#attached']['html_head'][$id][0]['#attributes']['content'] = $file_type;
+          }
+        }
+      }
+    }
+  }
+
+  if ($node->bundle() === 'landing') {
+    if (!empty($node->field_summary[0]->value)) {
+      $social_teaser = $node->field_summary[0]->value ?? '';
+      if ($social_teaser) {
+        foreach ($metatag_attachments['#attached']['html_head'] as $id => $attachment) {
+          if ($attachment[1] == 'og_description' || $attachment[1] == 'twitter_cards_description' || $attachment[1] == 'itemprop_description' || $attachment[1] == 'description') {
+            $metatag_attachments['#attached']['html_head'][$id][0]['#attributes']['content'] = $social_teaser;
+          }
+        }
+      }
+    }
+  }
+}

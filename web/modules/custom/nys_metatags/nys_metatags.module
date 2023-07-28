@@ -6,6 +6,7 @@
  */
 
 use Drupal\file\Entity\File;
+use Drupal\node\NodeInterface;
 
 /**
  * Alter the meta tags for any page prior to page attachment.
@@ -15,34 +16,48 @@ use Drupal\file\Entity\File;
  */
 function nys_metatags_metatags_attachments_alter(array &$metatag_attachments) {
   $node = \Drupal::routeMatch()->getParameter('node');
-  if ($node != NULL && is_object($node) && $node->bundle() === 'honoree') {
+  if (!($node instanceof NodeInterface)) {
+    return;
+  }
+  if ($node->bundle() === 'honoree') {
+    $title = $node->title->value ?? '';
+    if (!$title) {
+      return;
+    }
     $type = $node->field_honoree_type[0]->value;
-    $title = $node->title->value;
     foreach ($metatag_attachments['#attached']['html_head'] as $id => $attachment) {
       if ($attachment[1] == 'title') {
-        if (!empty($type) && $type === 'women') {
+        if ($type === 'women') {
           $metatag_attachments['#attached']['html_head'][$id][0]['#attributes']['content'] = $title . ' | Women of Distinction | NYSenate.gov';
         }
-        else {
+        elseif ($type === 'veteran') {
           $metatag_attachments['#attached']['html_head'][$id][0]['#attributes']['content'] = $title . ' | Veteran\'s Hall of Fame | NYSenate.gov';
         }
       }
       if ($attachment[1] == 'og_title' || $attachment[1] == 'twitter_cards_title') {
-        if (!empty($type) && $type === 'women') {
+        if ($type === 'women') {
           $metatag_attachments['#attached']['html_head'][$id][0]['#attributes']['content'] = $title . ' | Women of Distinction';
         }
-        else {
+        elseif ($type === 'veteran') {
           $metatag_attachments['#attached']['html_head'][$id][0]['#attributes']['content'] = $title . ' | Veteran\'s Hall of Fame';
         }
       }
     }
   }
-  if ($node != NULL && is_object($node) && $node->bundle() === 'microsite_page') {
+  if ($node->bundle() === 'microsite_page') {
+    $title = $node->title->value ?? '';
+    if (!$title) {
+      return;
+    }
     $type = $node->field_microsite_page_type[0]->target_id;
     $senator_id = $node->field_senator_multiref[0]->target_id;
-    $title = $node->title->value;
-    $senator = \Drupal::entityTypeManager()->getStorage('taxonomy_term')
-      ->load($senator_id);
+    try {
+      $senator = \Drupal::entityTypeManager()->getStorage('taxonomy_term')
+        ->load($senator_id);
+    }
+    catch (\Throwable) {
+      $senator = NULL;
+    }
 
     if (isset($senator->name->value) && !empty($senator->name->value)) {
       $senator_name = $senator->name->value;
@@ -50,19 +65,19 @@ function nys_metatags_metatags_attachments_alter(array &$metatag_attachments) {
 
     foreach ($metatag_attachments['#attached']['html_head'] as $id => $attachment) {
       if ($attachment[1] == 'title') {
-        if (!empty($type) && ($type == '200002' || $type == '200003' || $type == '200004')) {
+        if ($type == '200002' || $type == '200003' || $type == '200004') {
           $metatag_attachments['#attached']['html_head'][$id][0]['#attributes']['content'] = 'Senator ' . $senator_name . '\'s ' . $title . ' | NYSenate.gov';
         }
-        elseif (!empty($type) && $type == '200005') {
+        elseif ($type == '200005') {
           $metatag_attachments['#attached']['html_head'][$id][0]['#attributes']['content'] = 'Senator ' . $senator_name . ' | NYSenate.gov';
         }
       }
 
       if ($attachment[1] == 'og_title' || $attachment[1] == 'twitter_cards_title') {
-        if (!empty($type) && ($type == '200002' || $type == '200003' || $type == '200004')) {
+        if ($type == '200002' || $type == '200003' || $type == '200004') {
           $metatag_attachments['#attached']['html_head'][$id][0]['#attributes']['content'] = 'Senator ' . $senator_name . '\'s ' . $title;
         }
-        elseif (!empty($type) && $type == '200005') {
+        elseif ($type == '200005') {
           $metatag_attachments['#attached']['html_head'][$id][0]['#attributes']['content'] = 'Senator ' . $senator_name;
         }
       }
@@ -70,8 +85,13 @@ function nys_metatags_metatags_attachments_alter(array &$metatag_attachments) {
 
     if (!empty($node->field_thumbnail[0]->target_id)) {
       $mid = $node->field_thumbnail[0]->target_id;
-      $media = \Drupal::entityTypeManager()->getStorage('media')
-        ->load($mid);
+      try {
+        $media = \Drupal::entityTypeManager()->getStorage('media')
+          ->load($mid);
+      }
+      catch (\Throwable) {
+        $media = NULL;
+      }
       $fid = $media->field_image[0]->target_id;
       $file_alt = $media->field_image[0]->alt;
       $file = File::load($fid);
@@ -93,7 +113,7 @@ function nys_metatags_metatags_attachments_alter(array &$metatag_attachments) {
     }
   }
 
-  if ($node != NULL && is_object($node) && $node->bundle() === 'article') {
+  if ($node->bundle() === 'article') {
     if (!empty($node->field_social_teaser[0]->value)) {
       $social_teaser = $node->field_social_teaser[0]->value;
       foreach ($metatag_attachments['#attached']['html_head'] as $id => $attachment) {
@@ -104,8 +124,14 @@ function nys_metatags_metatags_attachments_alter(array &$metatag_attachments) {
     }
     if (!empty($node->field_social_image[0]->target_id)) {
       $mid = $node->field_social_image[0]->target_id;
-      $media = \Drupal::entityTypeManager()->getStorage('media')
-        ->load($mid);
+      try {
+        $media = \Drupal::entityTypeManager()->getStorage('media')
+          ->load($mid);
+      }
+      catch (\Throwable) {
+        $media = NULL;
+      }
+
       $fid = $media->field_image[0]->target_id;
       $file_alt = $media->field_image[0]->alt;
       $file = File::load($fid);
@@ -126,7 +152,7 @@ function nys_metatags_metatags_attachments_alter(array &$metatag_attachments) {
     }
   }
 
-  if ($node != NULL && is_object($node) && $node->bundle() === 'landing') {
+  if ($node->bundle() === 'landing') {
     if (!empty($node->field_summary[0]->value)) {
       $social_teaser = $node->field_summary[0]->value;
       foreach ($metatag_attachments['#attached']['html_head'] as $id => $attachment) {

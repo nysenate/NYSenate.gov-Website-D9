@@ -5481,12 +5481,13 @@ function nysenate_theme_preprocess_page(&$variables) {
   // If logged in, populate variables for user's senator link and headshot.
   if (\Drupal::currentUser()->isAuthenticated()) {
     $senator = $user->get('field_district')->entity->field_senator->entity ?? NULL;
-    if ($senator instanceof TermInterface) {
+    $headshot = $senator->field_member_headshot->entity ?? NULL;
+    if (($senator instanceof TermInterface) && $headshot) {
       $variables['has_senator'] = TRUE;
       $variables['senator_link'] = \Drupal::service('nys_senators.microsites')->getMicrosite($senator);
       $variables['headshot'] = \Drupal::entityTypeManager()
         ->getViewBuilder('media')
-        ->view($senator->field_member_headshot->target_id->entity, 'thumbnail');
+        ->view($headshot, 'thumbnail');
     }
   }
 }

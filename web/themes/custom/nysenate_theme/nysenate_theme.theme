@@ -3854,129 +3854,13 @@ function nysenate_theme_preprocess_node__bill__teaser(&$variables) {
 /**
  * Generate the bill positions array.
  *
- * @param object $node
- *   The node object.
- *
  * @return array
  *   The positions array.
  */
-function nysenate_bill_positions($node) {
-
-  // If the bill is substituted, load the new bill instead.
-  if ($node->hasField('field_ol_substituted_by') && !$node->get('field_ol_substituted_by')->isEmpty()) {
-    $sub_bill_base_print_no = $node->field_ol_substituted_by->value;
-    $ol_session = '';
-    if ($node->hasField('field_ol_session') && !$node->get('field_ol_session')->isEmpty()) {
-      $ol_session = $node->field_ol_session->value;
-    }
-    $temp_node = \Drupal::entityTypeManager()
-      ->getStorage('node')
-      ->loadByProperties([
-        'field_ol_base_print_no' => $sub_bill_base_print_no,
-        'field_ol_session' => $ol_session,
-      ]);
-    $sub_bill_versions = \Drupal::service('nys_bill.bills_helper')->getBillVersions(reset($temp_node));
-    if (!empty($sub_bill_versions)) {
-      $node = \Drupal::entityTypeManager()->getStorage('node')
-        ->load(reset($sub_bill_versions));
-    }
-  }
-
-  $positions = [];
-
-  // Define default positions.
-  $positions = [
-    [
-      'text' => t('Introduced'),
-      'is_passed' => FALSE,
-    ],
-    [
-      'text' => t('In Committee'),
-      'is_passed' => FALSE,
-    ],
-    [
-      'text' => t('On Floor Calendar'),
-      'is_passed' => FALSE,
-    ],
-    [
-      'is_grouped' => TRUE,
-      'items' => [
-        [
-          'text' => t('Passed Senate'),
-          'is_passed' => FALSE,
-        ],
-        [
-          'text' => t('Passed Assembly'),
-          'is_passed' => FALSE,
-        ],
-      ],
-    ],
-    [
-      'text' => t('Delivered to Governor'),
-      'is_passed' => FALSE,
-    ],
-    [
-      'text' => t('Chaptered/Vetoed'),
-      'is_passed' => FALSE,
-    ],
-  ];
-
-  if ($node->hasField('field_ol_last_status') && isset($node->field_ol_last_status->value)) {
-    // Last status.
-    $last_status = !empty($node->field_ol_last_status->value) ? $node->field_ol_last_status->value : '';
-
-    // Set status indexes.
-    $all_statuses = [
-      'INTRODUCED' => 0,
-      'IN_ASSEMBLY_COMM' => 1,
-      'IN_SENATE_COMM' => 1,
-      'ASSEMBLY_FLOOR' => 2,
-      'SENATE_FLOOR' => 2,
-      'PASSED_ASSEMBLY' => 3,
-      'PASSED_SENATE' => 3,
-      'DELIVERED_TO_GOV' => 4,
-      'SIGNED_BY_GOV' => 5,
-      'VETOED' => 5,
-      'CHAPTERED' => 5,
-    ];
-
-    // Get the current status name and map it.
-    $current_status_index = 0;
-    if (array_key_exists($last_status, $all_statuses)) {
-      $current_status_index = $all_statuses[$last_status];
-    }
-
-    // Arrange the positions value.
-    foreach ($positions as $index => $item) {
-      if ($index === 3) {
-        if ($current_status_index == 3) {
-          if ($last_status === 'PASSED_SENATE') {
-            $positions[3]['items'][0]['is_passed'] = TRUE;
-          }
-          if ($last_status === 'PASSED_ASSEMBLY') {
-            $positions[3]['items'][1]['is_passed'] = TRUE;
-          }
-        }
-        else {
-          $positions[3]['items'][0]['is_passed'] = $current_status_index >= $index;
-          $positions[3]['items'][1]['is_passed'] = $current_status_index >= $index;
-        }
-      }
-      else {
-        $positions[$index]['is_passed'] = $current_status_index >= $index;
-      }
-    }
-
-    if ($current_status_index === 5) {
-      if ($last_status === 'VETOED') {
-        $positions[5]['text'] = 'Vetoed';
-      }
-      else {
-        $positions[5]['text'] = 'Chaptered/Signed by Governor';
-      }
-    }
-  }
-  return $positions;
+function nysenate_bill_positions(NodeInterface $node): array {
+  /** @var \Drupal\nys_bills\BillsHelper $service */
+  $service = \Drupal::service('nys_bill.bills_helper');
+  return $service->calculateMilestones($service->resolveBillSubstitution($node));
 }
 
 /**

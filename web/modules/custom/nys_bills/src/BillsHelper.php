@@ -431,14 +431,14 @@ class BillsHelper {
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public function loadActiveVersion(NodeInterface $node): ?NodeInterface {
-    $title = $this->formatTitle($node, $node->field_ol_active_version->value);
+    $title = $this->formatTitle($node, $node->field_ol_active_version->value ?? '');
     if ($node->getTitle() == $title) {
       $ret = $node;
     }
     else {
       $result = $this->getStorage()
         ->loadByProperties(['title' => $title, 'type' => $node->bundle()]);
-      $ret = current($result) ?: NULL;
+      $ret = current($result) ?: $node;
     }
     return $ret;
   }
@@ -842,6 +842,77 @@ class BillsHelper {
     }
 
     return $ret;
+  }
+
+  /**
+   * Finds the canonical bill version after substitution considerations.
+   *
+   * Attempts to resolve a bill to the most active version, including any
+   * substitutions noted in the metadata.  If any part of the chain cannot
+   * be found/loaded, either the passed bill or the last successfully loaded
+   * bill in the chain will be returned.
+   */
+  public function resolveBillSubstitution(NodeInterface $node): NodeInterface {
+    // Get the active version of the passed bill.
+    try {
+      $ret = $this->loadActiveVersion($node) ?? $node;
+    }
+    catch (\Throwable $e) {
+      $this->log->error(
+        'Could not find active versions for @node',
+        [
+          '@node' => $node->getTitle(),
+          '@nid' => $node->id(),
+          '@msg' => $e->getMessage(),
+        ]
+      );
+      // In the event of a problem, use the passed bill.
+      $ret = $node;
+    }
+
+    // If the bill is substituted, load the substitution.
+    $subbed = $ret->get('field_ol_substituted_by')->value ?? '';
+    $session = $ret->get('field_ol_session')->value ?? '';
+    if ($subbed && $session) {
+      $loaded = $this->loadBillVersions($subbed, $session);
+      $sub_bill = end($loaded);
+      // If the substitution could not be loaded, return the original bill.
+      if (!$sub_bill) {
+        $this->log->error(
+          'Could not find substitution for bill @node',
+          ['@node' => $node->getTitle(), '@nid' => $node->id()]
+        );
+      }
+      else {
+        // Load the substitution's active version.
+        try {
+          $ret = $this->loadActiveVersion($sub_bill);
+        }
+        catch (\Throwable) {
+          $this->log->error(
+            'Could not find active version for substitution bill @node',
+            [
+              '@node' => $node->getTitle(),
+              '@nid' => $node->id(),
+              '@msg' => $e->getMessage(),
+            ]
+          );
+          // On error, return the found version of the substitution.
+          $ret = $sub_bill;
+        }
+      }
+    }
+
+    return $ret;
+  }
+
+  /**
+   * Wrapper to get calculated milestones from a bill node.
+   *
+   * @see \Drupal\nys_bills\Milestones
+   */
+  public function calculateMilestones(NodeInterface $node): array {
+    return (new Milestones($node))->calculate();
   }
 
 }

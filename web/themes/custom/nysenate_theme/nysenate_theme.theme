@@ -1467,12 +1467,18 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
         }
       }
 
+      $date = NULL;
+      if ($node->hasField('field_date') && !$node->get('field_date')->isEmpty()) {
+        $date = \Drupal::service('date.formatter')->format(strtotime($node->field_date->value), '', 'F j, Y');
+      }
+
       $items[] = [
         'news_title' => !empty($allowed_values) ? $allowed_values[$node->field_category->value] : $bundle_info[$node->getEntityTypeId()][$node->bundle()]['label'],
         'news_url' => $node->toUrl()->toString(),
         'news_image' => $news_image,
         'video_src' => $video_image,
         'news_name' => $node->getTitle(),
+        'date' => $date,
         'news_topic' => [
           'url' => !empty($term) ? $term->toUrl()->toString() : '',
           'text' => !empty($term) ? $term->label() : '',
@@ -1482,6 +1488,10 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
 
     $variables['cta_url'] = $aliased_path . '/newsroom';
     $variables['items'] = $items;
+  }
+
+  elseif ($view->id() == 'senator_microsite_content' && $view->current_display == 'microsite_events_landing') {
+    $variables['cta_url'] = $aliased_path . '/calendar';
   }
 
   // Legislation Landing.
@@ -1588,6 +1598,16 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
         $view->current_display == 'news') {
         $image_main = NULL;
       }
+
+      $senator = [];
+
+      if ($node->hasField('field_senator_multiref') && !$node->get('field_senator_multiref')->isEmpty()) {
+        $senator = $node->field_senator_multiref->entity;
+        $senator_link = \Drupal::service('nys_senators.microsites')
+          ->getMicrosite($senator);
+
+      }
+      $variables['senator_link'] = $senator_link;
 
       $contents[] = [
         'title' => ucwords(strtolower(str_replace('_', ' ', $bundle))),
@@ -4637,6 +4657,7 @@ function nysenate_theme_preprocess_node__open_data(&$variables) {
 function nysenate_theme_preprocess_node__article__featured_content(&$variables) {
   $variables['image_main'] = $variables['content']['field_image_main'][0] ?? [];
   $field_issues = $variables['content']['field_issues'];
+  $variables['date'] = $variables['content']['field_date'][0] ?? [];
   foreach ($field_issues as $key => $issue) {
     if (!is_numeric($key)) {
       continue;
@@ -4654,6 +4675,7 @@ function nysenate_theme_preprocess_node__article__featured_content(&$variables) 
  */
 function nysenate_theme_preprocess_node__honoree__featured_content(&$variables) {
   $variables['image_main'] = $variables['content']['field_image_main'][0] ?? [];
+  $variables['date'] = $variables['content']['field_date'][0] ?? [];
   $field_issues = $variables['content']['field_issues'];
   foreach ($field_issues as $key => $issue) {
     if (!is_numeric($key)) {

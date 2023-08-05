@@ -1429,61 +1429,85 @@ function nysenate_theme_preprocess_views_view__senator_microsite_content(&$varia
  */
 function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
   $view = $variables['view'];
+  $entityManager = \Drupal::entityTypeManager();
+  $term_storage = $entityManager->getStorage('taxonomy_term');
+  $media_storage = $entityManager->getStorage('media');
   $parent_node = \Drupal::routeMatch()->getParameter('node');
   $current_path = \Drupal::service('path.current')->getPath();
   $aliased_path = \Drupal::service('path_alias.manager')->getAliasByPath($current_path);
-  $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
-  $media_storage = \Drupal::entityTypeManager()->getStorage('media');
   $bundle_info = \Drupal::service("entity_type.bundle.info")->getAllBundleInfo();
   // Newsroom Landing.
   if ($view->id() == 'senator_microsite_content' && $view->current_display == 'block_1') {
     $items = [];
     foreach ($view->result as $row) {
       /** @var \Drupal\node\Entity\Node $node */
-      $node = $row->_entity;
-      $allowed_values = [];
-      if ($node->hasField('field_category')) {
-        $allowed_values = $node->field_category->getSetting('allowed_values');
-      }
-      $term = NULL;
-      if ($node->hasField('field_issues') && !$node->get('field_issues')->isEmpty()) {
-        /** @var \Drupal\taxonomy\Entity\Term $term */
-        $term = !empty($node->field_issues->target_id) ? $term_storage->load($node->field_issues->target_id) : NULL;
-      }
+      $node = $row->_entity ?? NULL;
+      if ($node instanceof NodeInterface) {
 
-      $news_image = NULL;
-      $video_image = NULL;
-      if ($node->hasField('field_image_main') && !$node->get('field_image_main')->isEmpty()) {
-        $media = !empty($node->field_image_main->target_id) ? $media_storage->load($node->field_image_main->target_id) : NULL;
-        if (!empty($media)) {
-          $news_image = \Drupal::entityTypeManager()->getViewBuilder('media')->view($media, '380x215');
+        try {
+          $term = $node->get('field_issues')->entity ?? NULL;
+          $term_url = $term ? $term->toUrl()->toString() ?? '';
         }
-      }
-      if ($node->bundle() == 'video') {
-        $video_id = $node->field_yt->target_id;
-        $video = $video_id ? $media_storage->load($video_id) : NULL;
-        if ($video) {
-          $video_image = \Drupal::entityTypeManager()->getViewBuilder('media')->view($video, 'thumbnail');
+        catch (\Throwable) {
+          $term = NULL;
+          $term_url = 'Could not build URL';
         }
-      }
 
-      $date = NULL;
-      if ($node->hasField('field_date') && !$node->get('field_date')->isEmpty()) {
-        $date = \Drupal::service('date.formatter')->format(strtotime($node->field_date->value), '', 'F j, Y');
-      }
+        try {
+          $media = $node->get('field_image_main')->entity ?? NULL;
+          $news_image = $media
+            ? $entityManager->getViewBuilder('media')->view($media, '380x215')
+            : NULL;
+        }
+        catch (\Throwable) {
+          $news_image = NULL;
+        }
 
-      $items[] = [
-        'news_title' => !empty($allowed_values) ? $allowed_values[$node->field_category->value] : $bundle_info[$node->getEntityTypeId()][$node->bundle()]['label'],
-        'news_url' => $node->toUrl()->toString(),
-        'news_image' => $news_image,
-        'video_src' => $video_image,
-        'news_name' => $node->getTitle(),
-        'date' => $date,
-        'news_topic' => [
-          'url' => !empty($term) ? $term->toUrl()->toString() : '',
-          'text' => !empty($term) ? $term->label() : '',
-        ],
-      ];
+        try {
+          $video = $node->get('field_yt')->entity ?? NULL;
+          $video_image = $video
+            ? $entityManager->getViewBuilder('media')->view($video, 'thumbnail')
+            : NULL;
+        }
+        catch (\Throwable) {
+          $video_image = NULL;
+        }
+
+        $date = ($value = ($node->get('field_date')->value ?? ''))
+          ? \Drupal::service('date.formatter')->format(strtotime($value), 'custom', 'F j, Y')
+          : NULL;
+
+        try {
+          $field = $node->get('field_category') ?? NULL;
+          $allowed_values = $field?->getSetting('allowed_values') ?? [];
+          $category = $field?->value ?? '';
+          $title = $allowed_values[$category] ??
+            ($bundle_info['node'][$node->bundle()]['label'] ?? 'No Title');
+        }
+        catch (\Throwable) {
+          $title = 'No title';
+        }
+
+        try {
+          $url = $node->toUrl()->toString();
+        }
+        catch (\Throwable) {
+          $url = 'Could not build URL';
+        }
+
+        $items[] = [
+          'news_title' => $title,
+          'news_url' => $url,
+          'news_image' => $news_image,
+          'video_src' => $video_image,
+          'news_name' => $node->getTitle() ?? 'No Title',
+          'date' => $date,
+          'news_topic' => [
+            'url' => $term_url,
+            'text' => $term ? $term->label() : '',
+          ],
+        ];
+      }
     }
 
     $variables['cta_url'] = $aliased_path . '/newsroom';

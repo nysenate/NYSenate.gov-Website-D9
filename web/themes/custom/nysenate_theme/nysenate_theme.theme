@@ -1623,14 +1623,10 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
         $image_main = NULL;
       }
 
-      $senator = [];
-
-      if ($node->hasField('field_senator_multiref') && !$node->get('field_senator_multiref')->isEmpty()) {
-        $senator = $node->field_senator_multiref->entity;
-        $senator_link = \Drupal::service('nys_senators.microsites')
-          ->getMicrosite($senator);
-
-      }
+      $senator = $node->get('field_senator_multiref')->entity ?? NULL;
+      $senator_link = $senator
+        ? \Drupal::service('nys_senators.microsites')->getMicrosite($senator)
+        : '';
       $variables['senator_link'] = $senator_link;
 
       $contents[] = [

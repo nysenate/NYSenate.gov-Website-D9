@@ -91,10 +91,10 @@
       </section>
     {% endif %}
 
-    {% if content.field_bills %}
+    {% if content.field_bills[0] %}
       <div class="c-container--header__top-border">
-				<h2 class="c-container--title">related legislation</h2>
-			</div>
+          <h2 class="c-container--title">related legislation</h2>
+      </div>
       <aside>
         {{ content.field_bills }}
       </aside>
@@ -122,7 +122,10 @@
     {% endif %}
   </div>
 
-  {{ drupal_view('senator_microsite_content', 'article_footer') }}
+    {# News footer for senator microsite nodes #}
+    {% if content.field_senator_multiref.0 %}
+        {{ drupal_view('senator_microsite_content', 'article_footer') }}
+    {% endif %}
 
   {% if content.field_senator_multiref['#items'] %}
     {{ drupal_view('senator_microsite_content', 'promo_footer') }}

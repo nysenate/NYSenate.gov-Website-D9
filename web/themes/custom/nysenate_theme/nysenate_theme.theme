@@ -1429,59 +1429,93 @@ function nysenate_theme_preprocess_views_view__senator_microsite_content(&$varia
  */
 function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
   $view = $variables['view'];
+  $entityManager = \Drupal::entityTypeManager();
+  $term_storage = $entityManager->getStorage('taxonomy_term');
+  $media_storage = $entityManager->getStorage('media');
   $parent_node = \Drupal::routeMatch()->getParameter('node');
   $current_path = \Drupal::service('path.current')->getPath();
   $aliased_path = \Drupal::service('path_alias.manager')->getAliasByPath($current_path);
-  $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
-  $media_storage = \Drupal::entityTypeManager()->getStorage('media');
   $bundle_info = \Drupal::service("entity_type.bundle.info")->getAllBundleInfo();
   // Newsroom Landing.
   if ($view->id() == 'senator_microsite_content' && $view->current_display == 'block_1') {
     $items = [];
     foreach ($view->result as $row) {
       /** @var \Drupal\node\Entity\Node $node */
-      $node = $row->_entity;
-      $allowed_values = [];
-      if ($node->hasField('field_category')) {
-        $allowed_values = $node->field_category->getSetting('allowed_values');
-      }
-      $term = NULL;
-      if ($node->hasField('field_issues') && !$node->get('field_issues')->isEmpty()) {
-        /** @var \Drupal\taxonomy\Entity\Term $term */
-        $term = !empty($node->field_issues->target_id) ? $term_storage->load($node->field_issues->target_id) : NULL;
-      }
+      $node = $row->_entity ?? NULL;
+      if ($node instanceof NodeInterface) {
 
-      $news_image = NULL;
-      $video_image = NULL;
-      if ($node->hasField('field_image_main') && !$node->get('field_image_main')->isEmpty()) {
-        $media = !empty($node->field_image_main->target_id) ? $media_storage->load($node->field_image_main->target_id) : NULL;
-        if (!empty($media)) {
-          $news_image = \Drupal::entityTypeManager()->getViewBuilder('media')->view($media, '380x215');
+        try {
+          $term = $node->get('field_issues')->entity ?? NULL;
+          $term_url = $term ? $term->toUrl()->toString() ?? '';
         }
-      }
-      if ($node->bundle() == 'video') {
-        $video_id = $node->field_yt->target_id;
-        $video = $video_id ? $media_storage->load($video_id) : NULL;
-        if ($video) {
-          $video_image = \Drupal::entityTypeManager()->getViewBuilder('media')->view($video, 'thumbnail');
+        catch (\Throwable) {
+          $term = NULL;
+          $term_url = 'Could not build URL';
         }
-      }
 
-      $items[] = [
-        'news_title' => !empty($allowed_values) ? $allowed_values[$node->field_category->value] : $bundle_info[$node->getEntityTypeId()][$node->bundle()]['label'],
-        'news_url' => $node->toUrl()->toString(),
-        'news_image' => $news_image,
-        'video_src' => $video_image,
-        'news_name' => $node->getTitle(),
-        'news_topic' => [
-          'url' => !empty($term) ? $term->toUrl()->toString() : '',
-          'text' => !empty($term) ? $term->label() : '',
-        ],
-      ];
+        try {
+          $media = $node->get('field_image_main')->entity ?? NULL;
+          $news_image = $media
+            ? $entityManager->getViewBuilder('media')->view($media, '380x215')
+            : NULL;
+        }
+        catch (\Throwable) {
+          $news_image = NULL;
+        }
+
+        try {
+          $video = $node->get('field_yt')->entity ?? NULL;
+          $video_image = $video
+            ? $entityManager->getViewBuilder('media')->view($video, 'thumbnail')
+            : NULL;
+        }
+        catch (\Throwable) {
+          $video_image = NULL;
+        }
+
+        $date = ($value = ($node->get('field_date')->value ?? ''))
+          ? \Drupal::service('date.formatter')->format(strtotime($value), 'custom', 'F j, Y')
+          : NULL;
+
+        try {
+          $field = $node->get('field_category') ?? NULL;
+          $allowed_values = $field?->getSetting('allowed_values') ?? [];
+          $category = $field?->value ?? '';
+          $title = $allowed_values[$category] ??
+            ($bundle_info['node'][$node->bundle()]['label'] ?? 'No Title');
+        }
+        catch (\Throwable) {
+          $title = 'No title';
+        }
+
+        try {
+          $url = $node->toUrl()->toString();
+        }
+        catch (\Throwable) {
+          $url = 'Could not build URL';
+        }
+
+        $items[] = [
+          'news_title' => $title,
+          'news_url' => $url,
+          'news_image' => $news_image,
+          'video_src' => $video_image,
+          'news_name' => $node->getTitle() ?? 'No Title',
+          'date' => $date,
+          'news_topic' => [
+            'url' => $term_url,
+            'text' => $term ? $term->label() : '',
+          ],
+        ];
+      }
     }
 
     $variables['cta_url'] = $aliased_path . '/newsroom';
     $variables['items'] = $items;
+  }
+
+  elseif ($view->id() == 'senator_microsite_content' && $view->current_display == 'microsite_events_landing') {
+    $variables['cta_url'] = $aliased_path . '/calendar';
   }
 
   // Legislation Landing.
@@ -1588,6 +1622,12 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
         $view->current_display == 'news') {
         $image_main = NULL;
       }
+
+      $senator = $node->get('field_senator_multiref')->entity ?? NULL;
+      $senator_link = $senator
+        ? \Drupal::service('nys_senators.microsites')->getMicrosite($senator)
+        : '';
+      $variables['senator_link'] = $senator_link;
 
       $contents[] = [
         'title' => ucwords(strtolower(str_replace('_', ' ', $bundle))),
@@ -4637,6 +4677,7 @@ function nysenate_theme_preprocess_node__open_data(&$variables) {
 function nysenate_theme_preprocess_node__article__featured_content(&$variables) {
   $variables['image_main'] = $variables['content']['field_image_main'][0] ?? [];
   $field_issues = $variables['content']['field_issues'];
+  $variables['date'] = $variables['content']['field_date'][0] ?? [];
   foreach ($field_issues as $key => $issue) {
     if (!is_numeric($key)) {
       continue;
@@ -4654,6 +4695,7 @@ function nysenate_theme_preprocess_node__article__featured_content(&$variables) 
  */
 function nysenate_theme_preprocess_node__honoree__featured_content(&$variables) {
   $variables['image_main'] = $variables['content']['field_image_main'][0] ?? [];
+  $variables['date'] = $variables['content']['field_date'][0] ?? [];
   $field_issues = $variables['content']['field_issues'];
   foreach ($field_issues as $key => $issue) {
     if (!is_numeric($key)) {

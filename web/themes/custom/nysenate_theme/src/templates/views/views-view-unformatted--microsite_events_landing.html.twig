@@ -15,21 +15,15 @@
  * @see template_preprocess_views_view_unformatted()
  */
 #}
-{{ attach_library('nysenate_theme/newsroom-content') }}
-{{ attach_library('nysenate_theme/nysenate-tabs') }}
+<div>
+  <div class="c-container--header c-events--landing">
+    <h2 class="c-container--title">Upcoming Events</h2>
+    <a href="{{ cta_url }}" class="c-container--link">Go to Events</a>
+  </div>
+  {% for row in rows %}
 
-<div class="c-container--header c-events--landing">
-  <h2 class="c-container--title">Newsroom</h2>
-  <a href="{{ senator_link }}/newsroom" class="c-container--link">Go to Newsroom</a>
-</div>
+      {{- row.content -}}
 
-<div class="view-content">
-  {% for content in contents %}
-    <div class="content__item">
-      {% include "@nysenate_theme/nysenate-search-results-listing/nysenate-search-results-listing.twig" with {
-        article: content
-      } only %}
-    </div>
   {% endfor %}
 </div>
 
@@ -45,3 +39,4 @@
     </div>
   </div>
 {% endif %}
+

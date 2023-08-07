@@ -43,6 +43,11 @@
               <a href="{{ item.news_url }}">{{ item.video_src }}</a>
             </div>
           {% endif %}
+          {% if item.date %}
+            <div class="c-newsroom--date">
+              {{ item.date }}
+            </div>
+          {% endif %}
           <h3 class="c-newsroom-name">
             <a href="{{ item.news_url }}">{{ item.news_name }}</a>
           </h3>

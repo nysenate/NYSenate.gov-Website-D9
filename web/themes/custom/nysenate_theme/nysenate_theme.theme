@@ -1446,7 +1446,7 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
 
         try {
           $term = $node->get('field_issues')->entity ?? NULL;
-          $term_url = $term ? $term->toUrl()->toString() ?? '';
+          $term_url = $term ? $term->toUrl()->toString() ?? '' : '';
         }
         catch (\Throwable) {
           $term = NULL;

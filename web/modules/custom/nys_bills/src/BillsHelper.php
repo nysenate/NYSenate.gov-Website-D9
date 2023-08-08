@@ -893,7 +893,7 @@ class BillsHelper {
         try {
           $ret = $this->loadActiveVersion($sub_bill);
         }
-        catch (\Throwable) {
+        catch (\Throwable $e) {
           $this->log->error(
             'Could not find active version for substitution bill @node',
             [

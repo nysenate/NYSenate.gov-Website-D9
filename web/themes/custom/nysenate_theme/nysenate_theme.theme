@@ -1635,6 +1635,8 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
         $senator_link = '';
       }
 
+      $variables['senator_link'] = $senator_link;
+
       $contents[] = [
         'title' => ucwords(strtolower(str_replace('_', ' ', $bundle))),
         'topics' => $issues,

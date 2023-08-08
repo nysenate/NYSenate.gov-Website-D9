@@ -871,8 +871,13 @@ class BillsHelper {
     }
 
     // If the bill is substituted, load the substitution.
-    $subbed = $ret->get('field_ol_substituted_by')->value ?? '';
-    $session = $ret->get('field_ol_session')->value ?? '';
+    try {
+      $subbed = $ret->get('field_ol_substituted_by')->value ?? '';
+      $session = $ret->get('field_ol_session')->value ?? '';
+    }
+    catch (\Throwable) {
+      $subbed = $session = '';
+    }
     if ($subbed && $session) {
       $loaded = $this->loadBillVersions($subbed, $session);
       $sub_bill = end($loaded);

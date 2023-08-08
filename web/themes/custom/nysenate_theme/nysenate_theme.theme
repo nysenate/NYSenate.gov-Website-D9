@@ -1625,11 +1625,15 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
         $image_main = NULL;
       }
 
-      $senator = $node->get('field_senator_multiref')->entity ?? NULL;
-      $senator_link = $senator
-        ? \Drupal::service('nys_senators.microsites')->getMicrosite($senator)
-        : '';
-      $variables['senator_link'] = $senator_link;
+      try {
+        $senator = $node->get('field_senator_multiref')->entity ?? NULL;
+        $senator_link = $senator
+          ? \Drupal::service('nys_senators.microsites')->getMicrosite($senator)
+          : '';
+      }
+      catch (\Throwable) {
+        $senator_link = '';
+      }
 
       $contents[] = [
         'title' => ucwords(strtolower(str_replace('_', ' ', $bundle))),

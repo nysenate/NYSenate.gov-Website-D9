@@ -1274,30 +1274,32 @@ function nysenate_theme_preprocess_paragraph__promotional_banners(&$variables) {
 /**
  * Implements hook_preprocess_views_view__VIEW_ID().
  */
-function nysenate_theme_preprocess_views_view__constituent_updates(&$variables) {
+function nysenate_theme_preprocess_views_view__constituent_updates(&$variables): void {
   if ($variables['view']->current_display == 'constituent_all_bill_updates') {
-    // Get User's District Senator.
-    $current_user = \Drupal::entityTypeManager()->getStorage('user')
-      ->load(\Drupal::currentUser()->id());
-    $senator = UsersHelper::getSenator($current_user);
-
-    $microsite_legislation = \Drupal::entityTypeManager()->getStorage('node')->loadByProperties([
-      'type' => 'microsite_page',
-      // Legislation page.
-      'field_microsite_page_type' => '200003',
-      'field_senator_multiref' => $senator->id(),
-    ]);
-
-    $senator_microsite_link = '';
-    if (!empty($microsite_legislation)) {
+    // Get the senator for the current user.
+    $senator = UsersHelper::getSenator(\Drupal::currentUser()->id());
+    // URL generation and getStorage() can throw exceptions.
+    try {
+      $microsite_legislation = \Drupal::entityTypeManager()
+        ->getStorage('node')
+        ->loadByProperties([
+          'type' => 'microsite_page',
+          // Legislation page.
+          'field_microsite_page_type' => '200003',
+          'field_senator_multiref' => $senator->id(),
+        ]);
       $legislation = reset($microsite_legislation);
-      $legislation_link = $legislation->toUrl()->toString();
-      $senator_microsite_link = ' or <a href="' . $legislation_link . '"> browse legislation that your Senator\'s been working on</a>';
+      $senator_text = ' or <a href="' . $legislation->toUrl()->toString() .
+        '"> browse legislation your Senator\'s been working on</a>';
+    }
+    catch (\Throwable) {
+      $senator_text = '';
     }
 
-    $variables['empty'] = [
-      '#markup' => '<p>No Updates to show.<br />To get updates on bills that matter to you, <a href="/legislation">search all Senate legislation</a>' . $senator_microsite_link . '.</p>',
-    ];
+    $empty = '<p>No Updates to show.<br />To get updates on bills that ' .
+      'matter to you, <a href="/legislation">search all Senate legislation</a>' .
+      $senator_text . '.</p>';
+    $variables['empty'] = ['#markup' => $empty];
   }
 }
 

@@ -194,7 +194,7 @@ class Milestones {
      *   - Set the final step text based on last status.
      */
     $data['INTRODUCED']['pass'] = TRUE;
-    $last_status = $node->get('field_ol_last_status')->value;
+    $last_status = $this->findLastStatus($node);
     switch ($last_status) {
       case 'VETOED':
       case 'POCKET_APPROVAL':
@@ -204,7 +204,6 @@ class Milestones {
 
       default:
         break;
-
     }
 
     // Build the 6-pip array.
@@ -213,6 +212,40 @@ class Milestones {
       if (($item['pos'] ?? -1) !== -1) {
         $ret[$item['pos']][] = $item;
       }
+    }
+
+    return $ret;
+  }
+
+  /**
+   * Find the last status of a bill or resolution node.
+   *
+   * @return string
+   *   The text (key) of the detected last status.  On error, an empty string.
+   */
+  protected function findLastStatus(NodeInterface $node):string {
+    try {
+      switch ($node->bundle()) {
+        // We don't track milestones on resolutions.  This field is the saved
+        // JSON of all actions.  The detected status may not be an actionable
+        // status at all.
+        case 'resolution':
+          $statuses = json_decode($node->get('field_ol_all_statuses')->value ?? '');
+          $last_status = is_array($statuses->items) ? end($statuses->items) : NULL;
+          $ret = $last_status ? $last_status->text : '';
+          break;
+
+        case 'bill':
+          $ret = $node->get('field_ol_last_status')->value;
+          break;
+
+        default:
+          $ret = '';
+          break;
+      }
+    }
+    catch (\Throwable) {
+      $ret = '';
     }
 
     return $ret;

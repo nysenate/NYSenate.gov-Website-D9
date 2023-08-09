@@ -1014,12 +1014,24 @@ a:hover.c-header--btn.c-header--btn__taking_action {
   padding: 30px 20px 20px 20px;
   margin: 0;
 
+  @include breakpoint($bp-sm) {
+    display: block;
+  }
+
   & > div {
     display: flex;
+
+    @include breakpoint($bp-sm) {
+      display: block;
+    }
   }
 
   .container-inline.form-wrapper {
     position: relative;
+
+    @include breakpoint($bp-sm) {
+      position: unset;
+    }
   }
 
   .c-site-search--box {

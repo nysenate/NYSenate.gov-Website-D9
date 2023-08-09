@@ -47,13 +47,6 @@
           });
 
           // place origin Nav
-          nav
-            .prependTo('.page')
-            .css({
-              'z-index': '100'
-            })
-            .addClass('l-header__collapsed');
-
           origNav
             .prependTo('.page')
             .css({
@@ -61,6 +54,13 @@
             })
             .addClass('l-header__collapsed')
             .css('visibility', 'hidden');
+
+          nav
+            .prependTo('.page')
+            .css({
+              'z-index': '100'
+            })
+            .addClass('l-header__collapsed');
 
           menu = nav.find('.c-nav--wrap');
           headerBar = nav.find('.c-header-bar');

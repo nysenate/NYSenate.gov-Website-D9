@@ -1007,18 +1007,38 @@ a:hover.c-header--btn.c-header--btn__taking_action {
 }
 
 .c-site-search {
+  display: flex;
   position: absolute;
   top: 60px;
   width: 100%;
   padding: 30px 20px 20px 20px;
   margin: 0;
 
+  @include breakpoint($bp-sm) {
+    display: block;
+  }
+
+  & > div {
+    display: flex;
+
+    @include breakpoint($bp-sm) {
+      display: block;
+    }
+  }
+
+  .container-inline.form-wrapper {
+    position: relative;
+
+    @include breakpoint($bp-sm) {
+      position: unset;
+    }
+  }
+
   .c-site-search--box {
     display: block;
-    background: none;
     border: 0;
     height: 45px;
-    margin: 0 45px 0 0;
+    margin: 0;
     padding: 0 0 0 20px;
     box-shadow: none;
     @extend .med-text;

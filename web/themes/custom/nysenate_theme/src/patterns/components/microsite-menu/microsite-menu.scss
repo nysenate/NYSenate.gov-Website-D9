@@ -14,9 +14,14 @@
       padding: 0;
       top: 0;
       bottom: 0;
-      margin: auto;
+      right: 0;
+      left: auto;
       @extend .icon-replace__search;
       @extend .med-text;
+
+      @include breakpoint($bp-sm) {
+        margin: auto;
+      }
 
       &::after {
         width: 100%;
@@ -30,7 +35,9 @@
     top: 0;
 
     .c-site-search--btn {
-      top: 10px;
+      @include breakpoint($bp-sm) {
+        top: 10px;
+      }
     }
   }
 
@@ -44,7 +51,7 @@
     .c-site-search--btn {
       cursor: pointer;
       position: absolute;
-			top: 10px;
+			top: 0;
       @extend .icon-replace__x;
     }
 
@@ -53,6 +60,8 @@
         cursor: pointer;
         position: relative;
         top: -45px;
+        left: auto;
+        right: 20px;
         @extend .icon-replace__search;
       }
     }
@@ -114,7 +123,8 @@
           padding: 20px 0 20px 10px;
           width: 100%;
           height: 100%;
-          display: block;
+          display: flex;
+          align-items: center;
         }
       }
     }

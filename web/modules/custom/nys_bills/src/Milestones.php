@@ -223,7 +223,7 @@ class Milestones {
    * @return string
    *   The text (key) of the detected last status.  On error, an empty string.
    */
-  protected function findLastStatus(NodeInterface $node):string {
+  protected function findLastStatus(NodeInterface $node): string {
     try {
       switch ($node->bundle()) {
         // We don't track milestones on resolutions.  This field is the saved
@@ -232,11 +232,11 @@ class Milestones {
         case 'resolution':
           $statuses = json_decode($node->get('field_ol_all_statuses')->value ?? '');
           $last_status = is_array($statuses->items) ? end($statuses->items) : NULL;
-          $ret = $last_status ? $last_status->text : '';
+          $ret = $last_status->text ?? '';
           break;
 
         case 'bill':
-          $ret = $node->get('field_ol_last_status')->value;
+          $ret = $node->get('field_ol_last_status')->value ?? '';
           break;
 
         default:

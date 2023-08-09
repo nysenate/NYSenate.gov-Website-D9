@@ -341,10 +341,19 @@
 
   .c-site-search {
     .c-site-search--btn, .search__submit {
-      cursor: pointer;
+      padding: 0;
       position: relative;
       top: -45px;
+      left: 20px;
+      right: auto;
+      float: right;
       @extend .icon-replace__search;
+
+      &::after {
+        width: 100%;
+        padding: 0;
+        line-height: 45px;
+      }
     }
   }
 }
@@ -1152,14 +1161,11 @@ a:hover.c-header--btn.c-header--btn__taking_action {
   }
 
   .search-open .c-site-search .c-site-search--btn,
-  .search-open .c-site-search .search__submit,
   .search-open .c-site-search .c-site-search--btn:focus,
-  .search-open .c-site-search .search__submit:focus,
-  .search__submit:focus
   .c-site-search--btn:focus {
     position: absolute;
     height: 45px;
-    width: 30px;
+    width: 45px;
     top: 15px;
     right: 15px;
     color: $grey08;

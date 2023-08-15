@@ -87,7 +87,7 @@ function nys_metatags_metatags_attachments_alter(array &$metatag_attachments) {
         ->load($mid);
       $file_alt = $media->field_image[0]->alt ?? '';
       $file = $media->field_image[0]->entity ?? NULL;
-      /** @var \Drupal\Core\File\FileUrlGenerator::FileUrlGenerator $file_url_generator */
+      /** @var \Drupal\Core\File\FileUrlGenerator $file_url_generator */
       $file_url_generator = \Drupal::service('file_url_generator');
       try {
         $file_uri = $file_url_generator->generateAbsoluteString($file->getFileUri());
@@ -129,7 +129,7 @@ function nys_metatags_metatags_attachments_alter(array &$metatag_attachments) {
         ->load($mid);
       $file_alt = $media->field_image[0]->alt ?? '';
       $file = $media->field_image[0]->entity ?? NULL;
-      /** @var \Drupal\Core\File\FileUrlGenerator::FileUrlGenerator $file_url_generator */
+      /** @var \Drupal\Core\File\FileUrlGenerator $file_url_generator */
       $file_url_generator = \Drupal::service('file_url_generator');
       try {
         $file_uri = $file_url_generator->generateAbsoluteString($file->getFileUri());

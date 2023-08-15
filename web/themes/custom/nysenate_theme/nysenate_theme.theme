@@ -5923,13 +5923,18 @@ function nysenate_theme_preprocess_node__landing__explore_issues(&$variables) {
  * Implements hook_preprocess_HOOK().
  */
 function nysenate_theme_preprocess_node__video(&$variables) {
-  $current_node = \Drupal::routeMatch()->getParameter('node');
-  if (!empty($current_node->field_senator_multiref)) {
-    $senator = $current_node->field_senator_multiref->entity;
-    $senator_link = \Drupal::service('nys_senators.microsites')
-      ->getMicrosite($senator);
-    $variables['senator_link'] = $senator_link;
+  $node = \Drupal::routeMatch()->getParameter('node');
+  try {
+    $senator = $node->get('field_senator_multiref')->entity ?? NULL;
+    $senator_link = $senator
+      ? \Drupal::service('nys_senators.microsites')->getMicrosite($senator)
+      : '';
   }
+  catch (\Throwable) {
+    $senator_link = '';
+  }
+  $variables['senator_link'] = $senator_link;
+
 }
 
 /**

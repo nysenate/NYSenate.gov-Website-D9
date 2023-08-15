@@ -180,7 +180,7 @@ class Milestones {
     $data = $this->initialize($positions);
 
     // For each node milestone, set the pass state and item data.
-    $milestones = $this->getFromNode($node);
+    $milestones = $this->getFromNode();
     foreach ($milestones as $key => $item) {
       if (array_key_exists($key, $data)) {
         $data[$key]['pass'] = TRUE;

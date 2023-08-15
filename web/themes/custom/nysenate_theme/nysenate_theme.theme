@@ -1479,15 +1479,17 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
           ? \Drupal::service('date.formatter')->format(strtotime($value), 'custom', 'F j, Y')
           : NULL;
 
-        try {
-          $field = $node->get('field_category') ?? NULL;
-          $allowed_values = $field?->getSetting('allowed_values') ?? [];
-          $category = $field?->value ?? '';
-          $title = $allowed_values[$category] ??
-            ($bundle_info['node'][$node->bundle()]['label'] ?? 'No Title');
-        }
-        catch (\Throwable) {
-          $title = 'No title';
+        $bundle = $bundle_info['node'][$node->bundle()]['label'] ?? 'No Title';
+        if ($bundle !== 'Article') {
+          try {
+            $field = $node->get('field_category') ?? NULL;
+            $allowed_values = $field->getSetting('allowed_values') ?? [];
+            $category = $field->value ?? '';
+            $title = $allowed_values[$category] ?? $bundle;
+          }
+          catch (\Throwable) {
+            $title = $bundle;
+          }
         }
 
         try {

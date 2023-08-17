@@ -5318,6 +5318,7 @@ display:
         arguments: false
         filters: false
         filter_groups: false
+        header: false
       relationships:
         field_committee:
           id: field_committee
@@ -5329,6 +5330,18 @@ display:
           plugin_id: standard
           required: false
       display_description: ''
+      header:
+        area_text_custom:
+          id: area_text_custom
+          table: views
+          field: area_text_custom
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text_custom
+          empty: false
+          content: "<div class=\"c-container--header top-padding\" style=\"padding-top: 48px;\">\r\n<h3 class=\"c-container--title \">{{ arguments.tid }} committee news</h3>\r\n</div>"
+          tokenize: true
       display_extenders: {  }
       block_description: 'Committee Meeting News'
     cache_metadata:

@@ -15,7 +15,6 @@ dependencies:
     - field.storage.node.field_yt
     - field.storage.taxonomy_term.field_senator_name
     - node.type.article
-    - node.type.bill
     - node.type.event
     - node.type.in_the_news
     - node.type.meeting
@@ -1066,6 +1065,7 @@ display:
             operator: ''
             operator_limit_selection: false
             operator_list: {  }
+          accept_null: false
         type:
           id: type
           table: node_field_data
@@ -1516,20 +1516,7 @@ display:
         options:
           offset: 0
           items_per_page: 1
-      empty:
-        area:
-          id: area
-          table: views
-          field: area
-          relationship: none
-          group_type: group
-          admin_label: ''
-          plugin_id: text
-          empty: true
-          content:
-            value: '<p>There is no news associated to this issue</p>'
-            format: basic_html
-          tokenize: false
+      empty: {  }
       sorts:
         field_date_value:
           id: field_date_value
@@ -1599,6 +1586,7 @@ display:
             operator: ''
             operator_limit_selection: false
             operator_list: {  }
+          accept_null: false
         type:
           id: type
           table: node_field_data
@@ -1681,6 +1669,7 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
+          accept_null: false
       filter_groups:
         operator: AND
         groups:
@@ -1718,6 +1707,7 @@ display:
       use_more_text: 'Load more'
       display_extenders: {  }
       block_description: 'Committee Featured Story'
+      block_hide_empty: true
     cache_metadata:
       max-age: -1
       contexts:
@@ -2091,6 +2081,7 @@ display:
             operator: ''
             operator_limit_selection: false
             operator_list: {  }
+          accept_null: false
         type:
           id: type
           table: node_field_data
@@ -2842,6 +2833,7 @@ display:
             operator: ''
             operator_limit_selection: false
             operator_list: {  }
+          accept_null: false
         type:
           id: type
           table: node_field_data
@@ -3555,6 +3547,7 @@ display:
             operator: ''
             operator_limit_selection: false
             operator_list: {  }
+          accept_null: false
         type:
           id: type
           table: node_field_data
@@ -3740,6 +3733,7 @@ display:
             operator: ''
             operator_limit_selection: false
             operator_list: {  }
+          accept_null: false
         type:
           id: type
           table: node_field_data

@@ -19,6 +19,7 @@ use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\file\Entity\File;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
+use Drupal\nys_search\Form\GlobalSearchForm;
 use Drupal\nys_users\UsersHelper;
 use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\taxonomy\Entity\Term;
@@ -471,6 +472,10 @@ function nysenate_theme_preprocess_senator_microsite_menu_block(&$variables) {
       }
     }
   }
+
+  // Add the Global Search form to the Microsite page.
+  $form = \Drupal::formBuilder()->getForm(GlobalSearchForm::class);
+  $variables['form'] = $form;
 }
 
 /**

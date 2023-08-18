@@ -155,11 +155,28 @@ class FindMySenatorForm extends FormBase {
           $party[] = $value;
         }
 
-        $location = $this->helper->getMicrositeDistrictAlias($senator_term);
-
         // Senator microsite link.
         $senator_link = \Drupal::service('nys_senators.microsites')
           ->getMicrosite($senator_term);
+
+        // Create Account message markup.
+        $create_message = '';
+        if (!\Drupal::currentUser()->isAuthenticated()) {
+          $create_message = '
+            <div class="row">
+              <div class="columns large-12">
+                <h2 class="c-container--title">Connect</h2>
+                <hr/>
+                <p>
+                  <a class="c-find-my-senator--senator-link" href="/user/register">
+                    Create an account
+                  </a>
+                  on nysenate.gov so you can share your thoughts and feedback with
+                  your senator.
+                </p>
+              </div>
+          </div>';
+        }
 
         $form['#attached']['library'][] = 'nysenate_theme/nysenate-user-profile';
         $form['result']['#markup'] = new FormattableMarkup('
@@ -179,7 +196,9 @@ class FindMySenatorForm extends FormBase {
                 </div>
                 <div>
                   <p class="c-login-create">
-                    <a class="c-msg-senator icon-before__contact" href="' . $senator_link . '/contact">Message Senator</a>
+                    <a class="c-msg-senator icon-before__contact" href="' . $senator_link . '/contact">
+                      Message Senator
+                    </a>
                   </p>
                 </div>
               </div>
@@ -203,16 +222,7 @@ class FindMySenatorForm extends FormBase {
                 </iframe>
               </div>
             </div>
-            <div class="row">
-              <div class="columns large-12">
-                <h2 class="c-container--title">Connect</h2>
-                <hr/>
-                <p><a class="c-find-my-senator--senator-link" href="/user/register">
-                  Create an account</a> on nysenate.gov so you can share your thoughts and feedback with
-                  your senator.
-                </p>
-              </div>
-            </div>
+            ' . $create_message . '
           </div>',
           []
         );

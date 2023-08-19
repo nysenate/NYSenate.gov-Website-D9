@@ -8,9 +8,15 @@ timeouts: 300
 status: true
 tracks: globally_enabled
 user_one: false
-role_exclusion_type: disable_for
+role_exclusion_type: force_for
 ignore_role:
-  - constituent
+  - administrator
+  - comment_moderator
+  - frontpage_editor
+  - legislative_correspondent
+  - microsite_content_producer
+  - senator
+  - student_programs
 security_code_label_text: 'One-time security code'
 security_code_description_text: 'We sent you an email containing your one-time security code. Please enter the code provided to proceed.'
 security_code_verify_text: Verify

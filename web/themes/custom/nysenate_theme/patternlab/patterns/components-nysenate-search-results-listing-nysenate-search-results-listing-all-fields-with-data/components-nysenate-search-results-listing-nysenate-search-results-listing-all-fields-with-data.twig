@@ -64,7 +64,7 @@
           {% endif %}
         {% endif %}
         {% if article.positions and article.title != "Resolution" %}
-          {% include '@nysenate_theme/src/templates/includes/nys-bill-status.html.twig' with {positions: article.positions} only %}
+          {% include '@nysenate_theme/src/templates/includes/nys-bill-status.html.twig' with {positions: article.positions, is_small: true} only %}
         {% endif %}
         {% if article.author %}
           <div class="author">

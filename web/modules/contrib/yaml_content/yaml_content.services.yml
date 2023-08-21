@@ -12,6 +12,7 @@ services:
       - '@yaml_content.content_loader'
       - '@logger.channel.yaml_content'
       - '@string_translation'
+      - '@extension.path.resolver'
   yaml_content.entity_load_helper:
     class: Drupal\yaml_content\Service\EntityLoadHelper
     arguments:

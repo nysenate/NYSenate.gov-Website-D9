@@ -190,7 +190,6 @@ class ExistenceCheckingTest extends ContentLoaderTestBase {
     $this->contentLoader->createEntity($entity_type, $test_content);
   }
 
-
   /**
    * Confirm createEntity does check for existing entities when enabled.
    *
@@ -346,23 +345,8 @@ class ExistenceCheckingTest extends ContentLoaderTestBase {
       NULL,
     ];
 
-    // Media and file entities require special handling to identify matches.
-    // @todo Add tests for media and file content.
-    $media_test = [];
-    $file_test = [];
-
-    // Nodes should match regularly based on available property data.
-    // @todo Test node existence checks with an available match.
-    $node_match_test = [];
-    // @todo Test node existence checks without an available match.
-    $node_no_match_test = [];
-
     return [
       $paragraph_test,
-      // $media_test,
-      // $file_test,
-      // $node_match_test,
-      // $node_no_match_test,
     ];
   }
 

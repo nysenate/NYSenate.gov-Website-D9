@@ -5,12 +5,12 @@ namespace Drupal\Tests\yaml_content\Functional\Plugin\yaml_content\process;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldItemList;
 use Drupal\Core\TypedData\DataDefinition;
-use Drupal\file\Entity\File as FileEntity;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\yaml_content\Traits\LoadFixturesTrait;
 use Drupal\yaml_content\ContentLoader\ContentLoader;
 use Drupal\yaml_content\Plugin\ProcessingContext;
 use Drupal\yaml_content\Plugin\yaml_content\process\File;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -25,8 +25,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class FileTest extends BrowserTestBase {
 
+  use ProphecyTrait;
   use LoadFixturesTrait;
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = ['file'];
 
   /**

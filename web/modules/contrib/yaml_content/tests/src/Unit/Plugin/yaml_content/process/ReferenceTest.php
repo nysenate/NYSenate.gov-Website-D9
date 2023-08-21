@@ -7,10 +7,10 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Tests\UnitTestCase;
-use Drupal\Tests\yaml_content\Traits\LoadFixturesTrait;
 use Drupal\yaml_content\Plugin\ProcessingContext;
 use Drupal\yaml_content\Plugin\yaml_content\process\Reference;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 /**
  * Test entity reference processing.
@@ -21,6 +21,7 @@ use Prophecy\Argument;
  */
 class ReferenceTest extends UnitTestCase {
 
+  use ProphecyTrait;
   /**
    * The entity type manager service mock.
    *
@@ -45,7 +46,7 @@ class ReferenceTest extends UnitTestCase {
   /**
    * Setup mocks and a reference plugin for all tests.
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
     $this->entityTypeManager = $this->prophesize(EntityTypeManagerInterface::class);
     $this->entityStorageHandler = $this->prophesize(EntityStorageInterface::class);
@@ -67,7 +68,7 @@ class ReferenceTest extends UnitTestCase {
   public function testProcessExisting() {
     $data = ['#process' => ['callback' => 'reference']];
 
-    // Mock a query so we can control and assert the mapping of arguments to entity.
+    // Mocking a query to control and assert the mapping of arguments to entity.
     $query = $this->prophesize(QueryInterface::class);
     $query->condition('title', 'My First Blog Post')
       ->shouldBeCalled();
@@ -83,7 +84,7 @@ class ReferenceTest extends UnitTestCase {
       ->shouldNotBeCalled();
 
     $this->reference->process(new ProcessingContext(), $data);
-    $this->assertArrayEquals(['target_id' => 1], $data);
+    $this->assertEquals(['target_id' => 1], $data);
   }
 
   /**
@@ -94,7 +95,7 @@ class ReferenceTest extends UnitTestCase {
   public function testProcessCreate() {
     $data = ['#process' => ['callback' => 'reference']];
 
-    // Mock a query so we can control and assert the mapping of arguments to entity.
+    // Mocking a query to control and assert the mapping of arguments to entity.
     $query = $this->prophesize(QueryInterface::class);
     $query->condition('title', 'My First Blog Post')
       ->shouldBeCalled();
@@ -115,7 +116,7 @@ class ReferenceTest extends UnitTestCase {
       ->willReturn($entity);
 
     $this->reference->process(new ProcessingContext(), $data);
-    $this->assertArrayEquals(['target_id' => 2], $data);
+    $this->assertEquals(['target_id' => 2], $data);
   }
 
   /**
@@ -124,7 +125,7 @@ class ReferenceTest extends UnitTestCase {
   public function testProcessCreateFail() {
     $data = ['#process' => ['callback' => 'reference']];
 
-    // Mock a query so we can control and assert the mapping of arguments to entity.
+    // Mocking a query to control and assert the mapping of arguments to entity.
     $query = $this->prophesize(QueryInterface::class);
     $query->condition('title', 'My First Blog Post')
       ->shouldBeCalled();
@@ -146,7 +147,7 @@ class ReferenceTest extends UnitTestCase {
       ->willReturn($entity);
 
     $this->reference->process(new ProcessingContext(), $data);
-    $this->assertArrayEquals(['target_id' => 2], $data);
+    $this->assertEquals(['target_id' => 2], $data);
   }
 
 }

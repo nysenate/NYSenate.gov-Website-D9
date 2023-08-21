@@ -3,8 +3,8 @@
 namespace Drupal\Tests\yaml_content\Unit\ContentLoader;
 
 use Drupal\Tests\UnitTestCase;
-use org\bovigo\vfs\vfsStream;
 use Drupal\yaml_content\ContentLoader\ContentLoader;
+use org\bovigo\vfs\vfsStream;
 
 /**
  * Base test class for all ContentLoader testing.
@@ -34,10 +34,7 @@ abstract class ContentLoaderTestBase extends UnitTestCase {
    */
   protected function getContentLoaderMock($stubbed_methods = NULL) {
     // Partially mock the ContentLoader for testing specific methods.
-    $this->contentLoader = $this->getMockBuilder(ContentLoader::class)
-      ->disableOriginalConstructor()
-      ->setMethods($stubbed_methods)
-      ->getMock();
+    $this->contentLoader = $this->createMock(ContentLoader::class);
 
     return $this->contentLoader;
   }
@@ -63,7 +60,7 @@ abstract class ContentLoaderTestBase extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     // Prepare the directory structure.

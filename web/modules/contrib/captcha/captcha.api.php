@@ -5,8 +5,10 @@
  * Hooks for the captcha module.
  */
 
+use Drupal\Core\Routing\RouteMatchInterface;
+
 /**
- * Implements hook_captcha().
+ * A hook_captcha_captcha implementation example.
  *
  * This documentation is for developers that want to implement their own
  * challenge type and integrate it with the base CAPTCHA module.
@@ -47,8 +49,17 @@
  *
  * We create the challenge 'Foo CAPTCHA', which requires the user to
  * enter "foo" in a textfield.
+ *
+ * @param string $op
+ *   List or generate captcha.
+ * @param string $captcha_type
+ *   Captcha type.
+ * @param null|string $captcha_sid
+ *   The $captcha_sid is a unique identifier for an instance of the captcha.
+ *   State information on each captcha session is stored in captcha_sessions,
+ *   such as is solved status.
  */
-function foo_captcha_captcha($op, $captcha_type = '') {
+function hook_captcha_captcha($op, $captcha_type = '', $captcha_sid = NULL) {
   switch ($op) {
     case 'list':
       return ['Foo CAPTCHA'];
@@ -63,10 +74,10 @@ function foo_captcha_captcha($op, $captcha_type = '') {
           '#required' => TRUE,
         ];
         // The CAPTCHA module provides an option for case sensitive and case
-        // insensitve validation of the responses. If this is not sufficient,
+        // insensitive validation of the responses. If this is not sufficient,
         // you can provide your own validation function with the
         // 'captcha_validate' field, illustrated by the following example:
-        $captcha['captcha_validate'] = 'foo_captcha_custom_validation';
+        $captcha['captcha_validate'] = 'hook_captcha_custom_validation';
         return $captcha;
       }
       break;
@@ -81,7 +92,7 @@ function foo_captcha_captcha($op, $captcha_type = '') {
  * @param array $info
  *   Array of information about the CAPTCHA.
  */
-function hook_captcha_alter(array &$captcha, array $info) {
+function hook_captcha_alter(&$captcha, $info) {
   if ($info['module'] == 'mymodule') {
     $captcha['form']['captcha_response']['#description'] = t('New description.');
   }
@@ -97,7 +108,7 @@ function hook_captcha_alter(array &$captcha, array $info) {
  * normal hook_help() system.
  * For our simple foo CAPTCHA module this would mean:
  */
-function foo_captcha_help($route_name, RouteMatchInterface $route_match) {
+function hook_captcha_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'foo_captcha.settings':
       return '<p>' . t('This is a very simple challenge, which requires users to
@@ -106,12 +117,12 @@ function foo_captcha_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
- * Custom CAPTCHA validation function.
+ * A hook_captcha_custom_advance_validation implementation example.
  *
- * Previous example shows the basic usage for custom validation with only a
- * $solution and $response argument, which should be sufficient for most CAPTCHA
- * modules. More advanced CAPTCHA modules can also use extra provided arguments
- * $element and $form_state:
+ * Custom CAPTCHA validation function. Previous example shows the basic usage
+ * for custom validation with only a $solution and $response argument, which
+ * should be sufficient for most CAPTCHA modules. More advanced CAPTCHA modules
+ * can also use extra provided arguments $element and $form_state.
  *
  * @param string $solution
  *   The solution for the challenge as reported by hook_captcha('generate',...).
@@ -121,16 +132,16 @@ function foo_captcha_help($route_name, RouteMatchInterface $route_match) {
  * @return true
  *   on success and FALSE on failure.
  */
-function foo_captcha_custom_validation($solution, $response) {
+function hook_captcha_custom_validation($solution, $response) {
   return $response == "foo" || $response == "bar";
 }
 
 /**
- * Custom Advance CAPTCHA validation function.
+ * A hook_captcha_custom_advance_validation implementation example.
  *
- * These extra arguments are the $element and $form_state arguments of the
- * validation function of the #captcha element. See captcha_validate() in
- * captcha.module for more info about this.
+ * Custom Advance CAPTCHA validation function. These extra arguments are the
+ * $element and $form_state arguments of the validation function of the #captcha
+ * element. See captcha_validate() in captcha.module for more info about this.
  *
  * @param string $solution
  *   The solution for the challenge as reported by hook_captcha('generate',...).
@@ -144,12 +155,12 @@ function foo_captcha_custom_validation($solution, $response) {
  * @return true
  *   on success and FALSE on failure.
  */
-function foo_captcha_custom_advance_validation($solution, $response, array $element, array $form_state) {
+function hook_captcha_custom_advance_validation($solution, $response, array $element, array $form_state) {
   return $form_state['foo']['#bar'] = 'baz';
 }
 
 /**
- * Implements hook_captcha_placement_map().
+ * A hook_captcha_placement_map implementation example.
  *
  * === Hook into CAPTCHA placement ===
  * The CAPTCHA module attempts to place the CAPTCHA element in an appropriate

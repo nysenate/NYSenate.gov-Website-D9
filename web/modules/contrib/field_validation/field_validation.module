@@ -16,24 +16,24 @@ function field_validation_entity_bundle_field_info_alter(&$fields, EntityTypeInt
   $ruleset = \Drupal::entityTypeManager()->getStorage('field_validation_rule_set')->load($ruleset_name);
 
   if ($ruleset) {
-    foreach ($fields as $field) {
-      $field->addConstraint('FieldValidationConstraint', [
-        'ruleset_name' => $ruleset_name,
-        'rule_uuid' => '',
-      ]);
-    }
-    /*
+    // Remove this code. Replace it with following code.
+    // foreach ($fields as $field) {
+    //  $field->addConstraint('FieldValidationConstraint', [
+    //    'ruleset_name' => $ruleset_name,
+    //    'rule_uuid' => '',
+    //  ]);
+    //}
+
     $rules = $ruleset->getFieldValidationRules();
     foreach ($rules as $field_validation_rule) {
-    $field_name = $field_validation_rule->getFieldName();
-    if (isset($fields[$field_name])) {
-    $fields[$field_name]->addConstraint('FieldValidationConstraint', [
-    'ruleset_name' => $ruleset_name,
-    'rule_uuid' =>$field_validation_rule->getUuid(),
-    ]);
+      $field_name = $field_validation_rule->getFieldName();
+      if (isset($fields[$field_name])) {
+        $fields[$field_name]->addConstraint('FieldValidationConstraint', [
+          'ruleset_name' => $ruleset_name,
+          'rule_uuid' => '',
+        ]);
+      }
     }
-    }
-     */
   }
 
 }

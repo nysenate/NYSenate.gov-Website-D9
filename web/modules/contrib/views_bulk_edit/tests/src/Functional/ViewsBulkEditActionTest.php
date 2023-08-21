@@ -307,7 +307,7 @@ class ViewsBulkEditActionTest extends NodeTestBase {
     $this->assertEquals($page_title . ' ' . $random_title, $page1->getTitle());
     $this->assertEquals([
       ['target_id' => $article1->id()],
-      ['target_id' => $article2->id()]
+      ['target_id' => $article2->id()],
     ], $page1->field_reference->getValue());
   }
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace Drupal\yaml_content\Commands;
 
 use Drupal\yaml_content\Service\LoadHelper;

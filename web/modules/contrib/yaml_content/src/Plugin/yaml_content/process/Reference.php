@@ -36,7 +36,7 @@ class Reference extends YamlContentProcessBase implements YamlContentProcessInte
    *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity manager.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager) {
@@ -74,7 +74,9 @@ class Reference extends YamlContentProcessBase implements YamlContentProcessInte
       $query->condition($property, $value);
     }
 
-    $entity_ids = $query->execute();
+    $entity_ids = $query
+      ->accessCheck(TRUE)
+      ->execute();
 
     if (empty($entity_ids)) {
       $entity = $entity_storage->create($filter_params);

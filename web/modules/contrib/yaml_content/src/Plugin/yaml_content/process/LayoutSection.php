@@ -63,7 +63,7 @@ class LayoutSection extends YamlContentProcessBase implements ContainerFactoryPl
     $layout_section = $this->configuration;
     // Generate uuid for components.
     $components = [];
-    foreach ($layout_section['components'] as $index => $component) {
+    foreach ($layout_section['components'] as $component) {
       $uuid = $this->uuidGenerator->generate();
       $component['uuid'] = $uuid;
       $components[$uuid] = $component;

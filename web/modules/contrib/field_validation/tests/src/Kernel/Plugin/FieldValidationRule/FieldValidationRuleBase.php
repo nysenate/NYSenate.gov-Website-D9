@@ -20,7 +20,7 @@ abstract class FieldValidationRuleBase extends EntityKernelTestBase {
   /**
    * {@inheritDoc}
    */
-  public static $modules = ['node', 'field_validation'];
+  protected static $modules = ['node', 'field_validation', 'path_alias'];
 
   /**
    * NodeStorage interface.
@@ -41,6 +41,7 @@ abstract class FieldValidationRuleBase extends EntityKernelTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+    $this->installEntitySchema('path_alias');
     $this->nodeStorage = $this->entityTypeManager->getStorage('node');
     $this->ruleSetStorage = $this->entityTypeManager->getStorage(
       'field_validation_rule_set'

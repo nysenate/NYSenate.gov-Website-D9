@@ -2,8 +2,8 @@
 
 namespace Drupal\yaml_content\Event;
 
-use Symfony\Component\EventDispatcher\Event;
 use Drupal\yaml_content\ContentLoader\ContentLoaderInterface;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * Base implementation of yaml_content events.

@@ -64,20 +64,11 @@ class CaptchaExamplesForm extends FormBase {
         '#markup' => $this->t('This page gives an overview of all available challenge types, generated with their current settings.'),
       ];
       $challenges = [];
-      if (method_exists($this->moduleHandler, 'invokeAllWith')) {
-        $this->moduleHandler->invokeAllWith('captcha', function (callable $hook, string $module) use (&$challenges) {
-          if ($challenge = $hook('list')) {
-            $challenges[$module] = $challenge;
-          }
-        });
-      }
-      else {
-        // @phpstan-ignore-next-line
-        $modules_list = $this->moduleHandler->getImplementations('captcha');
-        foreach ($modules_list as $mkey => $module) {
-          $challenges[$module] = call_user_func_array($module . '_captcha', ['list']);
+      $this->moduleHandler->invokeAllWith('captcha', function (callable $hook, string $module) use (&$challenges) {
+        if ($challenge = $hook('list')) {
+          $challenges[$module] = $challenge;
         }
-      }
+      });
 
       if ($challenges) {
         foreach ($challenges as $module => $challenge_list) {
@@ -98,10 +89,6 @@ class CaptchaExamplesForm extends FormBase {
             ];
           }
         }
-      }
-      else {
-        // @phpstan-ignore-next-line
-        $additional_data['node_access_modules'] = $this->moduleHandler->getImplementations('node_access');
       }
     }
 

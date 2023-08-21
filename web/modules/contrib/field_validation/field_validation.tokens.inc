@@ -48,7 +48,6 @@ function field_validation_token_info() {
  * Implements hook_tokens().
  */
 function field_validation_tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
-  $token_service = \Drupal::token();
 
   $replacements = [];
 

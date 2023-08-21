@@ -29,7 +29,7 @@ class EntityLoadHelperTest extends UnitTestCase {
   /**
    * Mock the EntityLoadHelper class to support test inspections.
    *
-   * Mock the EntityLoadHelper class with a configurable list of stubbed methods.
+   * Mock the EntityLoadHelper class with configurable list of stubbed methods.
    *
    * @param array|null $stubbed_methods
    *   (Optional) An array of method names to leave active on the mock object.
@@ -42,10 +42,7 @@ class EntityLoadHelperTest extends UnitTestCase {
    */
   protected function getEntityLoadHelperMock($stubbed_methods = NULL) {
     // Partially mock the ContentLoader for testing specific methods.
-    $mock = $this->getMockBuilder(EntityLoadHelper::class)
-      ->disableOriginalConstructor()
-      ->setMethods($stubbed_methods)
-      ->getMock();
+    $mock = $this->createMock(EntityLoadHelper::class);
 
     return $mock;
   }
@@ -149,7 +146,7 @@ class EntityLoadHelperTest extends UnitTestCase {
     $content_data = [
       'entity' => 'test_entity',
       // Include a UUID property.
-      'uuid' => '3c6485e4-69a3-429d-8ab1-3e7df48747bc'
+      'uuid' => '3c6485e4-69a3-429d-8ab1-3e7df48747bc',
     ];
 
     $this->loadHelper->expects($this->once())
@@ -179,7 +176,7 @@ class EntityLoadHelperTest extends UnitTestCase {
     $content_data = [
       'entity' => 'test_entity',
       // Include a UUID property.
-      'uuid' => '3c6485e4-69a3-429d-8ab1-3e7df48747bc'
+      'uuid' => '3c6485e4-69a3-429d-8ab1-3e7df48747bc',
     ];
 
     $this->loadHelper->expects($this->never())
@@ -259,7 +256,7 @@ class EntityLoadHelperTest extends UnitTestCase {
     $content_data = [
       'entity' => 'test_entity',
       // Include a UUID property.
-      'uuid' => '3c6485e4-69a3-429d-8ab1-3e7df48747bc'
+      'uuid' => '3c6485e4-69a3-429d-8ab1-3e7df48747bc',
     ];
 
     // Mock that loadByUuid found no matches.
@@ -274,7 +271,7 @@ class EntityLoadHelperTest extends UnitTestCase {
   }
 
   /**
-   * Test that loadEntity returns matched entity if UUID searching returned a match.
+   * Test that loadEntity returns matched entity if UUID search returns a match.
    *
    * @covers ::loadEntity
    */
@@ -289,7 +286,7 @@ class EntityLoadHelperTest extends UnitTestCase {
     $content_data = [
       'entity' => 'test_entity',
       // Include a UUID property.
-      'uuid' => '3c6485e4-69a3-429d-8ab1-3e7df48747bc'
+      'uuid' => '3c6485e4-69a3-429d-8ab1-3e7df48747bc',
     ];
 
     // Mock that loadByUuid found a match.
@@ -305,7 +302,7 @@ class EntityLoadHelperTest extends UnitTestCase {
   }
 
   /**
-   * Test that loadEntity returns false if property searching returned no matches.
+   * Test that loadEntity returns false if property search returs no matches.
    *
    * @covers ::loadEntity
    */
@@ -334,7 +331,7 @@ class EntityLoadHelperTest extends UnitTestCase {
   }
 
   /**
-   * Test that loadEntity returns matched entity if property searching returned a match.
+   * Test that loadEntity returns entity if property searching returns a match.
    *
    * @covers ::loadEntity
    */
@@ -491,7 +488,7 @@ class EntityLoadHelperTest extends UnitTestCase {
     // Execute the method.
     $actual = $this->loadHelper->categorizeAttributes($entity_type, $content);
 
-    $this->assertArrayEquals($expected['property'], $actual['property']);
+    $this->assertEquals($expected['property'], $actual['property']);
   }
 
   /**
@@ -508,7 +505,7 @@ class EntityLoadHelperTest extends UnitTestCase {
     // Execute the method.
     $actual = $this->loadHelper->categorizeAttributes($entity_type, $content);
 
-    $this->assertArrayEquals($expected['field'], $actual['field']);
+    $this->assertEquals($expected['field'], $actual['field']);
   }
 
   /**
@@ -525,7 +522,7 @@ class EntityLoadHelperTest extends UnitTestCase {
     // Execute the method.
     $actual = $this->loadHelper->categorizeAttributes($entity_type, $content);
 
-    $this->assertArrayEquals($expected['other'], $actual['other']);
+    $this->assertEquals($expected['other'], $actual['other']);
   }
 
   /**
@@ -574,13 +571,13 @@ class EntityLoadHelperTest extends UnitTestCase {
   /**
    * Load fixture data for mapped entity fields.
    *
-   * @param $entity_type
+   * @param string $entity_type
    *   The identifier for the entity type field list being loaded.
    *
    * @return array
    *   An array of fields for the specified entity type.
    */
-  public function getEntityFields($entity_type) {
+  public function getEntityFields(string $entity_type) {
     $field_map = $this->loadFixtureContent('field_list', [$entity_type]);
 
     return $field_map;
@@ -590,6 +587,7 @@ class EntityLoadHelperTest extends UnitTestCase {
    * Get a mock for an entity storage handler.
    *
    * @return \PHPUnit\Framework\MockObject\MockObject|EntityStorageInterface
+   *   Return MockObject.
    */
   protected function getEntityStorageMock() {
     $mock = $this->getMockForAbstractClass(EntityStorageInterface::class);
@@ -601,6 +599,7 @@ class EntityLoadHelperTest extends UnitTestCase {
    * Get a mock for an entity.
    *
    * @return \PHPUnit\Framework\MockObject\MockObject|ContentEntityInterface
+   *   Return MockObject.
    */
   protected function getEntityMock() {
     $mock = $this->getMockForAbstractClass(ContentEntityInterface::class);

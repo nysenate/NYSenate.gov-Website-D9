@@ -207,9 +207,9 @@ function filefield_paths_form_field_config_edit_form_alter(array &$form, FormSta
 }
 
 /**
- * Implements hook_form_alter().
+ * Implements hook_field_widget_single_element_form_alter().
  */
-function filefield_paths_field_widget_form_alter(&$element, FormStateInterface $form_state, $context) {
+function filefield_paths_field_widget_single_element_form_alter(&$element, FormStateInterface $form_state, $context) {
   // Force all File (Field) Paths uploads to go to the temporary file system
   // prior to being processed.
   if (FieldItem::hasConfigurationEnabled(FieldItem::getFromSupportedWidget($element, $context))) {
@@ -254,6 +254,7 @@ function filefield_paths_batch_update(FieldConfig $field_config) {
     ->getDefinition($field_config->getTargetEntityTypeId());
   $query = \Drupal::entityQuery($field_config->getTargetEntityTypeId());
   $result = $query->condition($entity_info->getKey('bundle'), $field_config->getTargetBundle())
+    ->accessCheck(FALSE)
     ->condition("{$field_config->getName()}.target_id", '', '<>')
     ->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT')
     ->execute();

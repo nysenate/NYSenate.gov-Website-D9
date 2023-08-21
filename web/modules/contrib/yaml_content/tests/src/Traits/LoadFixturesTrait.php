@@ -23,7 +23,7 @@ trait LoadFixturesTrait {
   /**
    * Load content from a fixture file.
    *
-   * @param $fixture_name
+   * @param string $fixture_name
    *   The name of the file to load.
    * @param array $collection_path
    *   (optional) An array of keys to extract a subset of content from the file.
@@ -31,7 +31,7 @@ trait LoadFixturesTrait {
    * @return array
    *   Content loaded from the fixture.
    */
-  protected function loadFixtureContent($fixture_name, array $collection_path = []) {
+  protected function loadFixtureContent(string $fixture_name, array $collection_path = []) {
     $fixture = Yaml::decode(file_get_contents($this->getFixturePath() . "/${fixture_name}.yml"));
 
     // Retrieve nested values if the option was provided.

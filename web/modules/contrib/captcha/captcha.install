@@ -5,6 +5,8 @@
  * Install, update and uninstall functions for the CAPTCHA module.
  */
 
+use Drupal\captcha\Constants\CaptchaConstants;
+
 /**
  * Implements hook_schema().
  */
@@ -121,11 +123,11 @@ function captcha_install() {
 
     $captcha_storage = \Drupal::entityTypeManager()
       ->getStorage('captcha_point');
-    foreach ($form_ids as $index=>$form_id) {
+    foreach ($form_ids as $index => $form_id) {
       $values = [
         'label' => $label[$index],
         'formId' => $form_id,
-        'captchaType' => 'default',
+        'captchaType' => CaptchaConstants::CAPTCHA_TYPE_DEFAULT,
         'status' => FALSE,
       ];
       $captcha_storage->create($values)->save();
@@ -148,21 +150,120 @@ function captcha_update_8901(&$sandbox) {
 }
 
 /**
-* Implements hook_update_N().
-*/
+ * Implements hook_update_N().
+ */
 function captcha_update_8902(&$sandbox) {
   $query = \Drupal::entityQuery('captcha_point');
   $query->notExists('label');
   $entity_ids = $query->execute();
 
-if (!empty($entity_ids) && is_array($entity_ids)) {
-  foreach($entity_ids as $entity_id) {
-    $captcha_point_id = $entity_id;
-    $captcha_point = \Drupal::entityTypeManager()
-      ->getStorage('captcha_point')
-      ->load($captcha_point_id);
-    $captcha_point->set('label', $captcha_point->getFormId());
-    $captcha_point->save();
-   }
+  if (!empty($entity_ids) && is_array($entity_ids)) {
+    foreach ($entity_ids as $entity_id) {
+      $captcha_point_id = $entity_id;
+      $captcha_point = \Drupal::entityTypeManager()
+        ->getStorage('captcha_point')
+        ->load($captcha_point_id);
+      $captcha_point->set('label', $captcha_point->getFormId());
+      $captcha_point->save();
+    }
+  }
+}
+
+/**
+ * Implements hook_update_N().
+ *
+ * Handle and delete "add_captcha_description".
+ */
+function captcha_update_8903(&$sandbox) {
+  $config_factory = \Drupal::configFactory();
+  $config = $config_factory->getEditable('captcha.settings');
+  $addDescription = $config->get('add_captcha_description');
+  // If description was disabled before, set 'description' to an empty string,
+  // so it is disabled again in the newest version:
+  if (!$addDescription) {
+    $config->set('description', '')->save();
+  }
+  // Delete old config:
+  $config->clear('add_captcha_description')->save();
+}
+
+/**
+ * Several changes.
+ *
+ * Remove old configuration keys and map to new ones.
+ */
+function captcha_update_8904(&$sandbox) {
+  // Update config:
+  $config_factory = \Drupal::configFactory();
+  $config = $config_factory->getEditable('captcha.settings');
+
+  $config->set('administration_mode_on_admin_routes', FALSE);
+  $config->set('enable_globally_on_admin_routes', FALSE);
+  $config->set('enable_globally', $config->get('enabled_default'));
+
+  if (!empty($config->get('allow_on_admin_pages')) && !empty($config->get('administration_mode'))) {
+    $config->set('administration_mode_on_admin_routes', TRUE);
+  }
+  if (!empty($config->get('allow_on_admin_pages')) && !empty($config->get('enabled_default'))) {
+    $config->set('enable_globally_on_admin_routes', TRUE);
+  }
+  $config
+    ->clear('allow_on_admin_pages')
+    ->clear('enabled_default')
+    ->save();
+}
+
+/**
+ * Add the captcha title, if the user has not set it manually yet.
+ *
+ * Note, that this is needed, because the update hook introducing the title
+ * was originally implemented in the wrong install file (image_captcha.install).
+ * See https://www.drupal.org/project/captcha/issues/3356063 where it was
+ * wrongly added.
+ */
+function captcha_update_8905() {
+  $captchaConfig = \Drupal::configFactory()->getEditable('captcha.settings');
+  if ($captchaConfig->get('title') === NULL) {
+    // Set the title in config, if it wasn't existing before:
+    $captchaConfig->set('title', 'CAPTCHA')->save(TRUE);
+  }  
+}
+
+/**
+ * Ensure caches are cleared with new module folder locations.
+ */
+function captcha_update_8906() {
+  // Remove test modules if they're on the site. They won't rebuild.
+  $extension = \Drupal::configFactory()->getEditable('core.extension');
+  $modules = $extension->get('module');
+  unset($modules['captcha_long_form_id_test']);
+  unset($modules['captcha_test']);
+  $extension->set('module', $modules);
+  $extension->save();
+
+  // Need to flush all caches due to module paths changing.
+  drupal_flush_all_caches();
+}
+
+/**
+ * Fix invalid config added in captcha_update_8906 (2.0.1)
+ */
+function captcha_update_8907() {
+  // Remove test modules if they're on the site. They won't rebuild.
+  $extension = \Drupal::configFactory()->getEditable('core.extension');
+  
+  // Remove invalid config added in 8906 and do the actual removal.
+  if ($extension->get('modules') !== NULL) {
+    $extension->clear('modules');
+
+    $modules = $extension->get('module');
+    unset($modules['captcha_long_form_id_test']);
+    unset($modules['captcha_test']);
+    $extension->set('module', $modules);
+
+    $extension->save();
+
+    // Need to flush all caches due to module paths changing.
+    drupal_flush_all_caches();
   }
 }

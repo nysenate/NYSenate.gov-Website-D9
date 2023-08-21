@@ -16,6 +16,7 @@ class ReleaseBuild extends \Mediacurrent\CiScripts\Task\Base
 
     private $build_path;
     private $commit_msg;
+    private $pathToTheme;
     private $project_docroot;
     private $project_drupal_root;
     private $project_repo_dest;

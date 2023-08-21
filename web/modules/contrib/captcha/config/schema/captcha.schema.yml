@@ -19,27 +19,30 @@ captcha.settings:
   type: config_object
   label: 'CAPTCHA Settings'
   mapping:
-    enabled_default:
+    enable_globally:
       type: integer
       label: 'Add captcha to all forms.'
+    enable_globally_on_admin_routes:
+      type: boolean
+      label: 'Additionally add captcha to admin forms.'
     default_challenge:
       type: string
       label: 'The default challenge for captcha.'
     description:
       type: label
       label: 'The default captcha description.'
+    title:
+      type: label
+      label: 'The default captcha title.'
     administration_mode:
       type: boolean
       label: 'Add CAPTCHA administration links to forms'
-    allow_on_admin_pages:
+    administration_mode_on_admin_routes:
       type: boolean
-      label: 'Allow CAPTCHAs and CAPTCHA administration links on administrative pages'
+      label: 'Additionally add administration links on admin pages'
     whitelist_ips:
       type: string
       label: 'IP addresses list'
-    add_captcha_description:
-      type: boolean
-      label: 'Add a description to the CAPTCHA'
     wrong_captcha_response_message:
       type: label
       label: 'The error message when a user has entered an incorrect CAPTCHA answer.'

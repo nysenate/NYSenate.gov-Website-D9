@@ -13,6 +13,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Plugin\CachedDiscoveryClearerInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 
 /**
  * Provides a base form for FieldValidationRule.
@@ -48,16 +49,26 @@ abstract class FieldValidationRuleFormBase extends FormBase {
   protected $pluginCacheClearer;
 
   /**
+   * The module handler service.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
    * Constructs a new FieldValidationRuleForm.
    *
    * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
    *   The entity field manager.
    * @param \Drupal\Core\Plugin\CachedDiscoveryClearerInterface $plugin_cache_clearer
    *   The plugin cache clearer.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler service.
    */
-  public function __construct(EntityFieldManagerInterface $entity_field_manager, CachedDiscoveryClearerInterface $plugin_cache_clearer) {
+  public function __construct(EntityFieldManagerInterface $entity_field_manager, CachedDiscoveryClearerInterface $plugin_cache_clearer, ModuleHandlerInterface $module_handler) {
     $this->entityFieldManager = $entity_field_manager;
     $this->pluginCacheClearer = $plugin_cache_clearer;
+    $this->moduleHandler = $module_handler;
   }
 
   /**
@@ -66,7 +77,8 @@ abstract class FieldValidationRuleFormBase extends FormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity_field.manager'),
-      $container->get('plugin.cache_clearer')
+      $container->get('plugin.cache_clearer'),
+      $container->get('module_handler')
     );
   }
 
@@ -191,7 +203,7 @@ abstract class FieldValidationRuleFormBase extends FormBase {
     ];
     $form['data']['#tree'] = TRUE;
     // Add a token link.
-    if (\Drupal::moduleHandler()->moduleExists('token')) {
+    if ($this->moduleHandler->moduleExists('token')) {
       //Some entity not use entity_type_id as token type, we need change it.
       switch ($entity_type_id) {
         case 'taxonomy_term':

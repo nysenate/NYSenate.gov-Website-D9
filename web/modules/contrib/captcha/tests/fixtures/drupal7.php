@@ -15,10 +15,6 @@ $connection->insert('variable')
     'value',
   ])
   ->values([
-    'name' => 'captcha_add_captcha_description',
-    'value' => 'i:1;',
-  ])
-  ->values([
     'name' => 'captcha_administration_mode',
     'value' => 'i:1;',
   ])

@@ -8,6 +8,7 @@
 use Drupal\captcha\Entity\CaptchaPoint;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Render\Element;
+use Drupal\captcha\Constants\CaptchaConstants;
 
 /**
  * Helper function for adding/updating a CAPTCHA point.
@@ -18,7 +19,7 @@ use Drupal\Core\Render\Element;
  *   The setting for the given form_id, can be:
  *   - 'default' to use the default challenge type
  *   - NULL to remove the entry for the CAPTCHA type
- *   - something of the form 'image_captcha/Image'
+ *   - something of the form "image_captcha/Image"
  *   - an object with attributes $captcha_type->module
  *   and $captcha_type->captcha_type.
  */
@@ -71,12 +72,12 @@ function captcha_get_form_id_setting($form_id, $symbolic = FALSE) {
  * @param string $form_id
  *   The form_id of the form to add a CAPTCHA to.
  * @param int $status
- *   The initial status of the CAPTHCA session.
+ *   The initial status of the CAPTCHA session.
  *
  * @return string
  *   The session ID of the new CAPTCHA session.
  */
-function _captcha_generate_captcha_session($form_id = NULL, $status = CAPTCHA_STATUS_UNSOLVED) {
+function _captcha_generate_captcha_session($form_id = NULL, $status = CaptchaConstants::CAPTCHA_STATUS_UNSOLVED) {
   $user = \Drupal::currentUser();
 
   // Initialize solution with random data.
@@ -129,7 +130,7 @@ function _captcha_required_for_user($captcha_sid, $form_id) {
     ->get('persistence');
 
   // First check: should we always add a CAPTCHA?
-  if ($captcha_persistence == CAPTCHA_PERSISTENCE_SHOW_ALWAYS) {
+  if ($captcha_persistence == CaptchaConstants::CAPTCHA_PERSISTENCE_SHOW_ALWAYS) {
     return TRUE;
   }
 
@@ -143,28 +144,42 @@ function _captcha_required_for_user($captcha_sid, $form_id) {
 
   // Second check: if the current session is already
   // solved: omit further CAPTCHAs.
-  if ($captcha_session_status == CAPTCHA_STATUS_SOLVED) {
+  if ($captcha_session_status == CaptchaConstants::CAPTCHA_STATUS_SOLVED) {
     return FALSE;
   }
 
   // Third check: look at the persistence level
   // (per form instance, per form or per user).
-  if ($captcha_persistence == CAPTCHA_PERSISTENCE_SKIP_ONCE_SUCCESSFUL_PER_FORM_INSTANCE) {
+  if ($captcha_persistence == CaptchaConstants::CAPTCHA_PERSISTENCE_SKIP_ONCE_SUCCESSFUL_PER_FORM_INSTANCE) {
     return TRUE;
   }
   else {
     $captcha_success_form_ids = isset($_SESSION['captcha_success_form_ids']) ? (array) ($_SESSION['captcha_success_form_ids']) : [];
     switch ($captcha_persistence) {
-      case CAPTCHA_PERSISTENCE_SKIP_ONCE_SUCCESSFUL:
+      case CaptchaConstants::CAPTCHA_PERSISTENCE_SKIP_ONCE_SUCCESSFUL:
         return (count($captcha_success_form_ids) == 0);
 
-      case CAPTCHA_PERSISTENCE_SKIP_ONCE_SUCCESSFUL_PER_FORM_TYPE:
+      case CaptchaConstants::CAPTCHA_PERSISTENCE_SKIP_ONCE_SUCCESSFUL_PER_FORM_TYPE:
         return !isset($captcha_success_form_ids[$form_id]);
     }
   }
 
   // We should never get to this point, but to be sure, we return TRUE.
   return TRUE;
+}
+
+/**
+ * Get the CAPTCHA title.
+ *
+ * @return string
+ *   CAPTCHA title.
+ */
+function _captcha_get_title() {
+  $title = \Drupal::config('captcha.settings')->get('title');
+  if ($title === NULL) {
+    return '';
+  }
+  return Xss::filter($title);
 }
 
 /**
@@ -175,6 +190,9 @@ function _captcha_required_for_user($captcha_sid, $form_id) {
  */
 function _captcha_get_description() {
   $description = \Drupal::config('captcha.settings')->get('description');
+  if ($description === NULL) {
+    return '';
+  }
   return Xss::filter($description);
 }
 
@@ -203,9 +221,9 @@ function _captcha_get_error_message() {
  *   list($captcha_module, $captcha_type).
  */
 function _captcha_parse_captcha_type($captcha_type) {
-  if ($captcha_type == 'default') {
+  if ($captcha_type == CaptchaConstants::CAPTCHA_TYPE_DEFAULT) {
     $captcha_type = \Drupal::config('captcha.settings')
-      ->get('default_challenge', 'captcha/Math');
+      ->get('default_challenge', CaptchaConstants::CAPTCHA_MATH_CAPTCHA_TYPE);
   }
   return explode('/', $captcha_type);
 }
@@ -240,7 +258,7 @@ function _captcha_get_captcha_placement($form_id, $form) {
   }
 
   // Query the placement map.
-  if (array_key_exists($form_id, $placement_map)) {
+  if (array_key_exists($form_id, $placement_map) && $placement_map[$form_id] !== NULL) {
     $placement = $placement_map[$form_id];
   }
   // If no placement info is available in placement map:

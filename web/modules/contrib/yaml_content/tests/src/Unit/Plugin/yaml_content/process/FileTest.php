@@ -7,6 +7,7 @@ use Drupal\Tests\yaml_content\Traits\LoadFixturesTrait;
 use Drupal\yaml_content\ContentLoader\ContentLoader;
 use Drupal\yaml_content\Plugin\ProcessingContext;
 use Drupal\yaml_content\Plugin\yaml_content\process\File;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -21,6 +22,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class FileTest extends UnitTestCase {
 
+  use ProphecyTrait;
   use LoadFixturesTrait;
 
   /**
@@ -33,7 +35,7 @@ class FileTest extends UnitTestCase {
   /**
    * Setup the file process plugin for all tests.
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
     $args = [
       'my_entity',

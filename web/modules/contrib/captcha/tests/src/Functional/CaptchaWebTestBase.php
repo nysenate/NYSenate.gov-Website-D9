@@ -88,27 +88,67 @@ abstract class CaptchaWebTestBase extends BrowserTestBase {
     $this->normalUser = $this->drupalCreateUser($permissions);
 
     // Create an admin user.
-    $permissions[] = 'administer CAPTCHA settings';
-    $permissions[] = 'skip CAPTCHA';
-    $permissions[] = 'administer permissions';
-    $permissions[] = 'administer content types';
-    $this->adminUser = $this->drupalCreateUser($permissions);
+    $this->adminUser = $this->drupalCreateUser([]);
+    $this->adminUser->addRole($this->createAdminRole('admin', 'admin'));
+    $this->adminUser->save();
 
+    // Set default captcha type 'captcha/test':
+    $this->setDefaultChallenge('captcha/test');
+
+    // @todo This should not happen in the base test class. Do this where it's
+    // needed instead:
+    $this->enableComments();
+
+    // @todo do not enable this globally in this base class, only where it's
+    // needed instead. It polutes tests and prevents us from being able to
+    // switch users in tests:
+    $this->enableLoginCaptchaPoint();
+  }
+
+  /**
+   * Helper function to enable comments on nodes for testing captcha.
+   */
+  protected function enableComments($entity_type = 'node', $entity_bundle = 'page') {
     // Open comment for page content type.
-    $this->addDefaultCommentField('node', 'page');
+    $this->addDefaultCommentField($entity_type, $entity_bundle);
 
     // Put comments on page nodes on a separate page.
-    $comment_field = FieldConfig::loadByName('node', 'page', 'comment');
+    $comment_field = FieldConfig::loadByName($entity_type, $entity_bundle, 'comment');
     $comment_field->setSetting('form_location', CommentItemInterface::FORM_SEPARATE_PAGE);
     $comment_field->save();
+  }
 
+  /**
+   * Helper method to enable the captcha point for the Drupal login form.
+   */
+  protected function enableLoginCaptchaPoint() {
     /** @var \Drupal\captcha\Entity\CaptchaPoint $captcha_point */
     $captcha_point = \Drupal::entityTypeManager()
       ->getStorage('captcha_point')
       ->load('user_login_form');
     $captcha_point->enable()->save();
+  }
+
+  /**
+   * Helper method to disable the captcha point for the Drupal login form.
+   */
+  protected function disableLoginCaptchaPoint() {
+    /** @var \Drupal\captcha\Entity\CaptchaPoint $captcha_point */
+    $captcha_point = \Drupal::entityTypeManager()
+      ->getStorage('captcha_point')
+      ->load('user_login_form');
+    $captcha_point->disable()->save();
+  }
+
+  /**
+   * Helper method to set the default captcha challenge.
+   *
+   * @param string $captchaType
+   *   The captcha type, e.g. "captcha/Math" or "captcha/test".
+   */
+  protected function setDefaultChallenge($captchaType) {
     $this->config('captcha.settings')
-      ->set('default_challenge', 'captcha/test')
+      ->set('default_challenge', $captchaType)
       ->save();
   }
 

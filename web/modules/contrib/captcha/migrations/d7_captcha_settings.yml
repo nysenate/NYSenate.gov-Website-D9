@@ -6,7 +6,6 @@ migration_tags:
 source:
   plugin: variable
   variables:
-    - captcha_add_captcha_description
     - captcha_administration_mode
     - captcha_allow_on_admin_pages
     - captcha_default_challenge
@@ -20,12 +19,12 @@ source:
     - captcha_placement_map_cache
   source_module: captcha
 process:
-  enabled_default: captcha_default_challenge_on_nonlisted_forms
+  enable_globally: captcha_default_challenge_on_nonlisted_forms
+  enable_globally_on_admin_routes: captcha_allow_on_admin_pages
   default_challenge: captcha_default_challenge
   description: captcha_description
   administration_mode: captcha_administration_mode
-  allow_on_admin_pages: captcha_allow_on_admin_pages
-  add_captcha_description: captcha_add_captcha_description
+  administration_mode_on_admin_routes: captcha_allow_on_admin_pages
   default_validation: captcha_default_validation
   persistence: captcha_persistence
   enable_stats: captcha_enable_stats

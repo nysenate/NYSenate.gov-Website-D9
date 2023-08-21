@@ -3,6 +3,7 @@
 namespace Drupal\Tests\captcha\Functional;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\captcha\Constants\CaptchaConstants;
 
 /**
  * Tests CAPTCHA main test case sensitivity.
@@ -18,7 +19,11 @@ class CaptchaTest extends CaptchaWebTestBase {
    *
    * @var array
    */
-  protected static $modules = ['block', 'captcha_long_form_id_test'];
+  protected static $modules = [
+    'block',
+    'captcha_long_form_id_test',
+    'captcha_test',
+  ];
 
   /**
    * Testing the protection of the user log in form.
@@ -35,7 +40,7 @@ class CaptchaTest extends CaptchaWebTestBase {
     $captcha_point = \Drupal::entityTypeManager()
       ->getStorage('captcha_point')
       ->load('user_login_form');
-    $captcha_point->setCaptchaType('captcha/Math');
+    $captcha_point->setCaptchaType(CaptchaConstants::CAPTCHA_MATH_CAPTCHA_TYPE);
     $captcha_point->enable()->save();
 
     // Check if there is a CAPTCHA on the login form (look for the title).
@@ -77,7 +82,7 @@ class CaptchaTest extends CaptchaWebTestBase {
     $captcha_point = \Drupal::entityTypeManager()
       ->getStorage('captcha_point')
       ->load('user_login_form');
-    $captcha_point->setCaptchaType('captcha/Math');
+    $captcha_point->setCaptchaType(CaptchaConstants::CAPTCHA_MATH_CAPTCHA_TYPE);
     $captcha_point->enable()->save();
 
     // Check if the menssage is default.
@@ -155,7 +160,7 @@ class CaptchaTest extends CaptchaWebTestBase {
     $this->drupalLogin($this->normalUser);
 
     // Test case sensitive posting.
-    $config->set('default_validation', CAPTCHA_DEFAULT_VALIDATION_CASE_SENSITIVE);
+    $config->set('default_validation', CaptchaConstants::CAPTCHA_DEFAULT_VALIDATION_CASE_SENSITIVE);
     $config->save();
 
     $this->assertCommentPosting('Test 123', TRUE, 'Case sensitive validation of right casing.');
@@ -163,7 +168,7 @@ class CaptchaTest extends CaptchaWebTestBase {
     $this->assertCommentPosting('TEST 123', FALSE, 'Case sensitive validation of wrong casing.');
 
     // Test case insensitive posting (the default).
-    $config->set('default_validation', CAPTCHA_DEFAULT_VALIDATION_CASE_INSENSITIVE);
+    $config->set('default_validation', CaptchaConstants::CAPTCHA_DEFAULT_VALIDATION_CASE_INSENSITIVE);
     $config->save();
 
     $this->assertCommentPosting('Test 123', TRUE, 'Case insensitive validation of right casing.');
@@ -235,7 +240,7 @@ class CaptchaTest extends CaptchaWebTestBase {
     $captcha_point = \Drupal::entityTypeManager()
       ->getStorage('captcha_point')
       ->load('user_login_form');
-    $captcha_point->setCaptchaType('captcha/Math');
+    $captcha_point->setCaptchaType(CaptchaConstants::CAPTCHA_MATH_CAPTCHA_TYPE);
     $captcha_point->enable()->save();
 
     // Enable the user login block.
@@ -266,7 +271,7 @@ class CaptchaTest extends CaptchaWebTestBase {
     $form_values = [
       'label' => $label,
       'formId' => $formId,
-      'captchaType' => 'captcha/Math',
+      'captchaType' => CaptchaConstants::CAPTCHA_MATH_CAPTCHA_TYPE,
     ];
 
     // Create intentionally long id Captcha Point.
@@ -280,6 +285,189 @@ class CaptchaTest extends CaptchaWebTestBase {
     // Navigate to the form with a >64 char id and confirm there is Captcha.
     $this->drupalGet('captcha/test_form/long_id');
     $this->assertCaptchaPresence(TRUE);
+  }
+
+  /**
+   * Test if the correct classes from our twig template are set.
+   */
+  public function testFormCorrectClassesSet() {
+    $session = $this->assertSession();
+
+    // Set default challenge math:
+    $this->config('captcha.settings')
+      ->set('default_challenge', CaptchaConstants::CAPTCHA_MATH_CAPTCHA_TYPE)
+      ->save();
+
+    // Check if there is a CAPTCHA on the login form (look for the title).
+    $this->drupalGet('user');
+    $this->assertCaptchaPresence(TRUE);
+
+    // Check if the correct classes are set from our template with default
+    // challenge type set:
+    // Check if fieldset exists with correct classes set:
+    $session->elementExists('css', '#user-login-form > fieldset');
+    $session->elementAttributeContains('css', '#user-login-form > fieldset', 'class', 'captcha');
+    $session->elementAttributeContains('css', '#user-login-form > fieldset', 'class', 'captcha-type-challenge--math');
+    // The challenge type should NEVER be 'default'.
+    $session->elementAttributeNotContains('css', '#user-login-form > fieldset', 'class', 'captcha-type-challenge--default');
+
+    // Check if title exists with the correct class and standard title value:
+    $session->elementExists('css', '#user-login-form > fieldset > label.captcha__title');
+    $session->elementTextContains('css', '#user-login-form > fieldset > label', 'CAPTCHA');
+
+    // Check if description exists with the correct class and standard title
+    // value:
+    $session->elementExists('css', '#user-login-form > fieldset > div.captcha__description');
+    $session->elementTextContains('css', '#user-login-form > fieldset > div.captcha__description', 'This question is for testing whether or not you are a human visitor and to prevent automated spam submissions.');
+
+    // Check if the element exists with the correct class:
+    $session->elementExists('css', '#user-login-form > fieldset > div.captcha__element');
+
+    // Set challenge type "captcha/Math" explicitly and do the tests again.
+    /** @var \Drupal\captcha\Entity\CaptchaPoint $captcha_point */
+    $captcha_point = \Drupal::entityTypeManager()
+      ->getStorage('captcha_point')
+      ->load('user_login_form');
+    $captcha_point->setCaptchaType(CaptchaConstants::CAPTCHA_MATH_CAPTCHA_TYPE);
+    $captcha_point->enable()->save();
+
+    $this->drupalGet('user');
+
+    // Check if fieldset exists with correct classes set:
+    $session->elementExists('css', '#user-login-form > fieldset');
+    $session->elementAttributeContains('css', '#user-login-form > fieldset', 'class', 'captcha');
+    $session->elementAttributeContains('css', '#user-login-form > fieldset', 'class', 'captcha-type-challenge--math');
+    // The challenge type should NEVER be 'default'.
+    $session->elementAttributeNotContains('css', '#user-login-form > fieldset', 'class', 'captcha-type-challenge--default');
+
+    // Check if title exists with the correct class and standard title value:
+    $session->elementExists('css', '#user-login-form > fieldset > label.captcha__title');
+    $session->elementTextContains('css', '#user-login-form > fieldset > label', 'CAPTCHA');
+
+    // Check if description exists with the correct class and standard title
+    // value:
+    $session->elementExists('css', '#user-login-form > fieldset > div.captcha__description');
+    $session->elementTextContains('css', '#user-login-form > fieldset > div.captcha__description', 'This question is for testing whether or not you are a human visitor and to prevent automated spam submissions.');
+
+    // Check if the element exists with the correct class:
+    $session->elementExists('css', '#user-login-form > fieldset > div.captcha__element');
+  }
+
+  /**
+   * Test if the title element is not present, when title is an empty string.
+   */
+  public function testTitleNotPresent() {
+    $session = $this->assertSession();
+
+    // Set default challenge math:
+    $this->config('captcha.settings')
+      ->set('title', '')
+      ->save();
+
+    $this->drupalGet('user');
+    // Check if the title element does not exist:
+    $session->elementNotExists('css', '#user-login-form > fieldset > label.captcha__title');
+  }
+
+  /**
+   * Test if the description element is not present, when title is empty.
+   */
+  public function testDescriptionNotPresent() {
+    $session = $this->assertSession();
+
+    // Set default challenge math:
+    $this->config('captcha.settings')
+      ->set('description', '')
+      ->save();
+
+    $this->drupalGet('user');
+    // Check if the title element does not exist:
+    $session->elementNotExists('css', '#user-login-form > fieldset > div.captcha__description');
+  }
+
+  /**
+   * Test if the description and title element is not present, when title empty.
+   */
+  public function testDescriptionAndTitleNotPresent() {
+    $session = $this->assertSession();
+
+    // Set default challenge math:
+    $this->config('captcha.settings')
+      ->set('title', '')
+      ->set('description', '')
+      ->save();
+
+    $this->drupalGet('user');
+    // Check if the title element does not exist:
+    $session->elementNotExists('css', '#user-login-form > fieldset > label.captcha__title');
+    // Check if the title element does not exist:
+    $session->elementNotExists('css', '#user-login-form > fieldset > div.captcha__description');
+  }
+
+  /**
+   * Tests the math form element and its structure.
+   */
+  public function testMathFormElement() {
+    $session = $this->assertSession();
+
+    $this->drupalLogin($this->adminUser);
+
+    $this->drupalGet('/captcha-test/test');
+    $session->statusCodeEquals(200);
+
+    $session->elementExists('css', '#captcha-test-test');
+
+    $session->elementExists('css', '#captcha-test-test > fieldset[data-drupal-selector="edit-math-captcha-admin-true"]');
+
+    // Check the first captcha form element and see if it is complete:
+    // Check captcha description:
+    $session->elementExists('css', '#captcha-test-test > fieldset[data-drupal-selector="edit-math-captcha-admin-true"] > div.captcha__description');
+    $session->elementTextContains('css', '#captcha-test-test > fieldset[data-drupal-selector="edit-math-captcha-admin-true"] > div.captcha__description', 'This question is for testing whether or not you are a human visitor and to prevent automated spam submissions.');
+    $session->elementExists('css', '#captcha-test-test > fieldset[data-drupal-selector="edit-math-captcha-admin-true"] > div.captcha__element > div.form-item-captcha-response');
+    // Check Question label:
+    $session->elementExists('css', '#captcha-test-test > fieldset[data-drupal-selector="edit-math-captcha-admin-true"] > div.captcha__element > div.form-item-captcha-response > label.form-required');
+    $session->elementTextContains('css', '#captcha-test-test > fieldset[data-drupal-selector="edit-math-captcha-admin-true"] > div.captcha__element > div.form-item-captcha-response > label.form-required', 'Math question');
+    // Check other elements:
+    $session->elementExists('css', '#captcha-test-test > fieldset[data-drupal-selector="edit-math-captcha-admin-true"] > div.captcha__element > div.form-item-captcha-response > span.field-prefix');
+    $session->elementExists('css', '#captcha-test-test > fieldset[data-drupal-selector="edit-math-captcha-admin-true"] > div.captcha__element > div.form-item-captcha-response > input.form-text');
+    $session->elementExists('css', '#captcha-test-test > fieldset[data-drupal-selector="edit-math-captcha-admin-true"] > div.captcha__element > div.form-item-captcha-response > div#edit-captcha-response--description');
+    $session->elementTextContains('css', '#captcha-test-test > fieldset[data-drupal-selector="edit-math-captcha-admin-true"] > div.captcha__element > div.form-item-captcha-response > div#edit-captcha-response--description', 'Solve this simple math problem and enter the result. E.g. for 1+3, enter 4.');
+  }
+
+  /**
+   * Tests the math form element behaviour.
+   *
+   * @todo This test will fail, because the "skip CAPTCHA" permission doesn't
+   * work for Captcha form elements, but only in conjunction with captcha
+   * points. The problem is the captcha rendering on two seperate levels. For
+   * more informations, see
+   * https://www.drupal.org/project/captcha/issues/2941496
+   */
+  public function todoTestMathFormElementBehaviour() {
+    $session = $this->assertSession();
+
+    $this->drupalLogin($this->adminUser);
+
+    $this->drupalGet('/captcha-test/test');
+    $session->statusCodeEquals(200);
+
+    $session->elementExists('css', '#captcha-test-test');
+
+    // As our admin user has the "skip CAPTCHA" permission, they should only see
+    // the first captcha element on the page:
+    $session->elementExists('css', '#captcha-test-test > fieldset[data-drupal-selector="edit-math-captcha-admin-true"]');
+    $session->elementNotExists('css', '#captcha-test-test > fieldset[data-drupal-selector="edit-math-captcha-admin-false"]');
+    $session->elementNotExists('css', '#captcha-test-test > fieldset[data-drupal-selector="edit-math-captcha-admin-not-set"]');
+
+    $this->drupalLogout();
+    $this->drupalLogin($this->normalUser);
+    $this->drupalGet('/captcha-test/test');
+
+    // As our normal user does not have the "skip CAPTCHA" permission, they
+    // should be able to see all three captchas:
+    $session->elementExists('css', '#captcha-test-test > fieldset[data-drupal-selector="edit-math-captcha-admin-true"]');
+    $session->elementExists('css', '#captcha-test-test > fieldset[data-drupal-selector="edit-math-captcha-admin-false"]');
+    $session->elementExists('css', '#captcha-test-test > fieldset[data-drupal-selector="edit-math-captcha-admin-not-set"]');
   }
 
 }

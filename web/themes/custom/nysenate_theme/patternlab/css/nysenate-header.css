@@ -2708,9 +2708,16 @@ img[data-align='left'] {
     top: 4px; }
 
 .c-nav--wrap.search-open .c-site-search .c-site-search--btn, .c-nav--wrap.search-open .c-site-search .search__submit {
-  cursor: pointer;
+  padding: 0;
   position: relative;
-  top: -45px; }
+  top: -45px;
+  left: 20px;
+  right: auto;
+  float: right; }
+  .c-nav--wrap.search-open .c-site-search .c-site-search--btn::after, .c-nav--wrap.search-open .c-site-search .search__submit::after {
+    width: 100%;
+    padding: 0;
+    line-height: 45px; }
 
 @media screen and (min-width: 768px) {
   .nav-open {
@@ -3175,17 +3182,30 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     transform: rotate(45deg); }
 
 .c-site-search {
+  display: flex;
   position: absolute;
   top: 60px;
   width: 100%;
   padding: 30px 20px 20px 20px;
   margin: 0; }
+  @media screen and (min-width: 768px) {
+    .c-site-search {
+      display: block; } }
+  .c-site-search > div {
+    display: flex; }
+    @media screen and (min-width: 768px) {
+      .c-site-search > div {
+        display: block; } }
+  .c-site-search .container-inline.form-wrapper {
+    position: relative; }
+    @media screen and (min-width: 768px) {
+      .c-site-search .container-inline.form-wrapper {
+        position: unset; } }
   .c-site-search .c-site-search--box {
     display: block;
-    background: none;
     border: 0;
     height: 45px;
-    margin: 0 45px 0 0;
+    margin: 0;
     padding: 0 0 0 20px;
     box-shadow: none;
     background: #fff;
@@ -3286,13 +3306,11 @@ a:hover.c-header--btn.c-header--btn__taking_action {
           font-size: 32px;
           line-height: 100px; }
   .search-open .c-site-search .c-site-search--btn,
-  .search-open .c-site-search .search__submit,
   .search-open .c-site-search .c-site-search--btn:focus,
-  .search-open .c-site-search .search__submit:focus,
-  .search__submit:focus .c-site-search--btn:focus {
+  .c-site-search--btn:focus {
     position: absolute;
     height: 45px;
-    width: 30px;
+    width: 45px;
     top: 15px;
     right: 15px;
     color: #444444;

@@ -120,6 +120,7 @@ class CaptchaPointForm extends EntityForm {
       ]));
     }
     $form_state->setRedirect('captcha_point.list');
+    return $status;
   }
 
 }

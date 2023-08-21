@@ -5,7 +5,7 @@ namespace Drupal\yaml_content\Annotation;
 use Drupal\Component\Annotation\Plugin;
 
 /**
- * Class YamlContentProcess.
+ * A class for extending plugin api.
  *
  * @see plugin_api
  *

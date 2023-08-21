@@ -3,6 +3,7 @@
 namespace Drupal\captcha\Entity;
 
 use Drupal\captcha\CaptchaPointInterface;
+use Drupal\captcha\Constants\CaptchaConstants;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 
 /**
@@ -126,7 +127,7 @@ class CaptchaPoint extends ConfigEntityBase implements CaptchaPointInterface {
    * {@inheritdoc}
    */
   public function setCaptchaType($captcha_type) {
-    $this->captchaType = $captcha_type != 'default' ? $captcha_type : NULL;
+    $this->captchaType = $captcha_type != CaptchaConstants::CAPTCHA_TYPE_DEFAULT ? $captcha_type : NULL;
   }
 
 }

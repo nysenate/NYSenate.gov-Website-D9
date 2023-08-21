@@ -7,15 +7,15 @@ use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\EntityReferenceFieldItemList;
 use Drupal\Core\Field\FieldException;
 use Drupal\Core\TypedData\Exception\MissingDataException;
+use Drupal\yaml_content\Event\ContentParsedEvent;
+use Drupal\yaml_content\Event\EntityImportEvent;
+use Drupal\yaml_content\Event\EntityPostSaveEvent;
+use Drupal\yaml_content\Event\EntityPreSaveEvent;
+use Drupal\yaml_content\Event\FieldImportEvent;
+use Drupal\yaml_content\Event\YamlContentEvents;
 use Drupal\yaml_content\Plugin\ProcessingContext;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Yaml\Parser;
-use Drupal\yaml_content\Event\YamlContentEvents;
-use Drupal\yaml_content\Event\ContentParsedEvent;
-use Drupal\yaml_content\Event\EntityPreSaveEvent;
-use Drupal\yaml_content\Event\EntityPostSaveEvent;
-use Drupal\yaml_content\Event\FieldImportEvent;
-use Drupal\yaml_content\Event\EntityImportEvent;
 
 /**
  * ContentLoader class for parsing and importing YAML content.
@@ -93,6 +93,8 @@ class ContentLoader implements ContentLoaderInterface {
   protected $contentFile;
 
   /**
+   * Yaml content process Manager.
+   *
    * @var \Drupal\yaml_content\Plugin\YamlContentProcessManager
    */
   protected $processManager;
@@ -287,11 +289,11 @@ class ContentLoader implements ContentLoaderInterface {
 
     // Never leave this as null, even on a failed parsing process.
     // @todo Output a warning for empty content files or failed parsing.
-    $this->parsedContent = isset($this->parsedContent) ? $this->parsedContent : [];
+    $this->parsedContent = $this->parsedContent ?? [];
 
     // Dispatch the event notification.
     $content_parsed_event = new ContentParsedEvent($this, $this->contentFile, $this->parsedContent);
-    $this->getEventDispatcher()->dispatch(YamlContentEvents::CONTENT_PARSED, $content_parsed_event);
+    $this->getEventDispatcher()->dispatch($content_parsed_event, YamlContentEvents::CONTENT_PARSED);
 
     return $this->parsedContent;
   }
@@ -311,13 +313,13 @@ class ContentLoader implements ContentLoaderInterface {
 
       // Dispatch the pre-save event.
       $entity_pre_save_event = new EntityPreSaveEvent($this, $entity, $content_item);
-      $this->getEventDispatcher()->dispatch(YamlContentEvents::ENTITY_PRE_SAVE, $entity_pre_save_event);
+      $this->getEventDispatcher()->dispatch($entity_pre_save_event, YamlContentEvents::ENTITY_PRE_SAVE);
 
       $entity->save();
 
       // Dispatch the post-save event.
       $entity_post_save_event = new EntityPostSaveEvent($this, $entity, $content_item);
-      $this->getEventDispatcher()->dispatch(YamlContentEvents::ENTITY_POST_SAVE, $entity_post_save_event);
+      $this->getEventDispatcher()->dispatch($entity_post_save_event, YamlContentEvents::ENTITY_POST_SAVE);
 
       $loaded_content[] = $entity;
     }
@@ -348,7 +350,7 @@ class ContentLoader implements ContentLoaderInterface {
 
     // Dispatch the entity import event.
     $entity_import_event = new EntityImportEvent($this, $entity_definition, $content_data);
-    $this->getEventDispatcher()->dispatch(YamlContentEvents::IMPORT_ENTITY, $entity_import_event);
+    $this->getEventDispatcher()->dispatch($entity_import_event, YamlContentEvents::IMPORT_ENTITY);
 
     // Parse properties for creation and fields for processing.
     $attributes = $this->getContentAttributes($entity_type, $content_data);
@@ -452,7 +454,7 @@ class ContentLoader implements ContentLoaderInterface {
 
           // Dispatch field import event prior to populating fields.
           $field_import_event = new FieldImportEvent($this, $entity, $field_instance, $field_data);
-          $this->getEventDispatcher()->dispatch(YamlContentEvents::IMPORT_FIELD, $field_import_event);
+          $this->getEventDispatcher()->dispatch($field_import_event, YamlContentEvents::IMPORT_FIELD);
 
           $this->populateField($field_instance, $field_data);
         }
@@ -615,7 +617,9 @@ class ContentLoader implements ContentLoaderInterface {
             $query->condition($key, $value);
           }
         }
-        $entity_ids = $query->execute();
+        $entity_ids = $query
+          ->accessCheck(TRUE)
+          ->execute();
 
         if ($entity_ids) {
           $entity_id = array_shift($entity_ids);
@@ -623,7 +627,7 @@ class ContentLoader implements ContentLoaderInterface {
         }
     }
 
-    return isset($entity) ? $entity : FALSE;
+    return $entity ?? FALSE;
   }
 
 }

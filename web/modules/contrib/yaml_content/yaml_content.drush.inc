@@ -114,4 +114,3 @@ function drush_yaml_content_import_profile($profile = NULL, $file = NULL) {
   $load_helper = \Drupal::service('yaml_content.load_helper');
   $load_helper->importProfile($profile, $file);
 }
-

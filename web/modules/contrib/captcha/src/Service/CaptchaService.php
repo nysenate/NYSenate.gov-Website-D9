@@ -2,6 +2,7 @@
 
 namespace Drupal\captcha\Service;
 
+use Drupal\captcha\Constants\CaptchaConstants;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
@@ -46,28 +47,14 @@ class CaptchaService {
     $challenges = [];
 
     if ($add_special_options) {
-      $challenges['default'] = $this->t('Default challenge type');
+      $challenges[CaptchaConstants::CAPTCHA_TYPE_DEFAULT] = $this->t('Default challenge type');
     }
 
     // We do our own version of Drupal's module_invoke_all() here because
     // we want to build an array with custom keys and values.
     $types = [];
-    if (method_exists($this->moduleHandler, 'invokeAllWith')) {
-      $this->moduleHandler->invokeAllWith('captcha', function (callable $hook, string $module) use (&$types) {
-        if ($type = $hook('list')) {
-          if (!is_array($type)) {
-            $types[$module] = [$type];
-          }
-          else {
-            $types[$module] = $type;
-          }
-        }
-      });
-    }
-    else {
-      // @phpstan-ignore-next-line
-      foreach (\Drupal::moduleHandler()->getImplementations('captcha') as $module) {
-        $type = call_user_func_array($module . '_captcha', ['list']);
+    $this->moduleHandler->invokeAllWith('captcha', function (callable $hook, string $module) use (&$types) {
+      if ($type = $hook('list')) {
         if (!is_array($type)) {
           $types[$module] = [$type];
         }
@@ -75,7 +62,7 @@ class CaptchaService {
           $types[$module] = $type;
         }
       }
-    }
+    });
     if (!empty($types)) {
       foreach ($types as $module => $values) {
         foreach ($values as $value) {
@@ -95,7 +82,7 @@ class CaptchaService {
    *
    * @param array $form
    *   the form to add the CAPTCHA element to.
-   * @param array $placement
+   * @param null|array $placement
    *   information where the CAPTCHA element should be inserted.
    *   $placement should be an associative array with fields:
    *     - 'path': path (array of path items) of the container in
@@ -109,7 +96,7 @@ class CaptchaService {
    * @param array $captcha_element
    *   the CAPTCHA element to insert.
    */
-  public function insertCaptchaElement(array &$form, array $placement, array $captcha_element) {
+  public function insertCaptchaElement(array &$form, array $placement = NULL, array $captcha_element = NULL) {
     // Get path, target and target weight or use defaults if not available.
     $target_key = $placement['key'] ?? NULL;
     $target_weight = $placement['weight'] ?? NULL;
@@ -160,6 +147,7 @@ class CaptchaService {
           $form_stepper[$k] = $v;
         }
       }
+
     }
   }
 

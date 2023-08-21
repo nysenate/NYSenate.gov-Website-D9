@@ -6,6 +6,9 @@ use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\RevisionableEntityBundleInterface;
 use Drupal\Core\Entity\RevisionLogInterface;
+use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Plugin\Context\Context;
+use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 
@@ -13,6 +16,13 @@ use Drupal\Core\Render\Element;
  * Common methods for Views Bulk Edit forms.
  */
 trait BulkEditFormTrait {
+
+  /**
+   * A configuration array.
+   *
+   * @var array
+   */
+  protected $configuration;
 
   /**
    * The entity type manager.
@@ -414,8 +424,12 @@ trait BulkEditFormTrait {
     $bundle = $entity->bundle();
     $result = $this->t('No values changed');
 
+    // Get the language context so we load the edit revision with the same language
+    $entityLangcode = $entity->language()->getId();
+    $languageContext = $this->getLanguageContexts($entityLangcode);
+
     // Load the edit revision for safe editing.
-    $entity = $this->entityRepository->getActive($type_id, $entity->id());
+    $entity = $this->entityRepository->getActive($type_id, $entity->id(), $languageContext);
 
     if (isset($this->configuration[$type_id][$bundle])) {
       $values = $this->configuration[$type_id][$bundle]['values'];
@@ -460,6 +474,24 @@ trait BulkEditFormTrait {
       $result = $this->t('Modify field values');
     }
     return $result;
+  }
+
+  /**
+   * Returns a set of language contexts matching the specified language.
+   *
+   * @param string $langcode
+   *   A language code.
+   *
+   * @return \Drupal\Core\Plugin\Context\ContextInterface[]
+   *   An array of contexts.
+   */
+  protected function getLanguageContexts($langcode) {
+    $prefix = '@language.current_language_context:';
+
+    return [
+      $prefix . LanguageInterface::TYPE_INTERFACE => new Context(new ContextDefinition('language'), $langcode),
+      $prefix . LanguageInterface::TYPE_CONTENT => new Context(new ContextDefinition('language'), $langcode),
+    ];
   }
 
 }

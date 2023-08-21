@@ -5,7 +5,7 @@ namespace Drupal\Tests\yaml_content\Unit\ContentLoader;
 use Drupal\Component\EventDispatcher\ContainerAwareEventDispatcher;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldItemList;
-use Drupal\yaml_content\ContentLoader\ContentLoader;
+use PHPUnit\Framework\Error\Warning;
 
 /**
  * Test generic functionality of the ContentLoader class.
@@ -44,19 +44,19 @@ class ContentLoaderTest extends ContentLoaderTestBase {
   /**
    * Tests behavior when a content file is unavailable.
    */
-   public function testMissingContentFile() {
-     $test_file = 'missing.content.yml';
+  public function testMissingContentFile() {
+    $test_file = 'missing.content.yml';
 
-     // Confirm the file is not actually present.
-     $this->assertFalse($this->root->hasChild('content/missing.content.yml'));
+    // Confirm the file is not actually present.
+    $this->assertFalse($this->root->hasChild('content/missing.content.yml'));
 
-     // Prepare the path for the missing content file.
-     $this->contentLoader->setContentPath($this->root->url());
+    // Prepare the path for the missing content file.
+    $this->contentLoader->setContentPath($this->root->url());
 
-     // Parse the test file expecting an error for the missing file.
-     $this->expectException(\PHPUnit\Framework\Error\Warning::class);
-     $this->contentLoader->parseContent($test_file);
-   }
+    // Parse the test file expecting an error for the missing file.
+    $this->expectException(Warning::class);
+    $this->contentLoader->parseContent($test_file);
+  }
 
   /**
    * Tests the correct return value when parsing an empty file.
@@ -81,7 +81,7 @@ class ContentLoaderTest extends ContentLoaderTestBase {
     $parsed_content = $this->contentLoader->parseContent($test_file);
 
     // Confirm an empty array was returned.
-    $this->assertArrayEquals([], $parsed_content, 'Empty content files return an empty array.');
+    $this->assertEquals([], $parsed_content, 'Empty content files return an empty array.');
   }
 
   /**

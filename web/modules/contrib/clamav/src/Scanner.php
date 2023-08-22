@@ -115,12 +115,24 @@ class Scanner {
     $scannable = self::isSchemeScannable($scheme);
 
     // Iterate each module implementing hook_clamav_file_is_scannable().
-    // Modules that do not wish to affact the result should return
+    // Modules that do not wish to affect the result should return
     // FILE_SCANNABLE_IGNORE.
-    foreach (\Drupal::moduleHandler()->getImplementations('clamav_file_is_scannable') as $module) {
-      $result = \Drupal::moduleHandler()->invoke($module, 'clamav_file_is_scannable', array($file));
-      if ($result !== self::FILE_SCANNABLE_IGNORE) {
-        $scannable = $result;
+    $hook = 'clamav_file_is_scannable';
+    if (method_exists(\Drupal::moduleHandler(), 'invokeAllWith')) {
+      \Drupal::moduleHandler()->invokeAllWith($hook, function (callable $hook, string $module) use ($file, &$scannable) {
+          $result = $hook($file);
+          if ($result !== self::FILE_SCANNABLE_IGNORE) {
+            $scannable = $result;
+          }
+        });
+    }
+    else {
+      // BC for Drupal < 9.4.
+      foreach (\Drupal::moduleHandler()->getImplementations($hook) as $module) {
+        $result = \Drupal::moduleHandler()->invoke($module, $hook, array($file));
+        if ($result !== self::FILE_SCANNABLE_IGNORE) {
+          $scannable = $result;
+        }
       }
     }
 

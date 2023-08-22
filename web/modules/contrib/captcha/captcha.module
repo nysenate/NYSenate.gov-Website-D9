@@ -9,6 +9,7 @@
  * to solve.
  */
 
+use Drupal\captcha\Constants\CaptchaConstants;
 use Drupal\captcha\Element\Captcha;
 use Drupal\captcha\Entity\CaptchaPoint;
 use Drupal\Core\Database\Database;
@@ -16,9 +17,8 @@ use Drupal\Core\Form\BaseFormIdInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Url;
 use Drupal\Core\Site\Settings;
-use Drupal\captcha\Constants\CaptchaConstants;
+use Drupal\Core\Url;
 
 /**
  * Implements hook_help().
@@ -338,7 +338,7 @@ function captcha_validate_case_insensitive_equality($solution, $response) {
     // mb_strtolower wouldn't work on NULL and NULL is never a valid solution.
     return FALSE;
   }
-  return mb_strtolower($solution) === mb_strtolower($response);
+  return mb_strtolower($solution ?: '') === mb_strtolower($response ?: '');
 }
 
 /**
@@ -376,7 +376,7 @@ function captcha_validate_case_insensitive_ignore_spaces($solution, $response) {
     // preg_replace wouldn't work on NULL and NULL is never a valid solution.
     return FALSE;
   }
-  return preg_replace('/\s/', '', mb_strtolower($solution)) === preg_replace('/\s/', '', mb_strtolower($response));
+  return preg_replace('/\s/', '', mb_strtolower($solution ?: '')) === preg_replace('/\s/', '', mb_strtolower($response ?: ''));
 }
 
 /**

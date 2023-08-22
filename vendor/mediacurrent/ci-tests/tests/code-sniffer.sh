@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash
 usage()
 {
 cat << EOF
@@ -28,6 +28,8 @@ else
   PHPCS='phpcs --standard=Drupal'
 fi
 
+trap 'rc=$?' ERR
+
 if [ -d ${SITE_PATH}/modules/custom ]; then
   echo "Running coding standards tests for custom modules."
   ${PHPCS} --extensions=php,module,inc,install,test,profile,theme,info,txt,md,yml ${SITE_PATH}/modules/custom
@@ -48,3 +50,5 @@ if [ -d ${SITE_PATH}/themes/custom ]; then
   echo "Running PHP lint for custom themes."
   find ${SITE_PATH}/themes/custom \( -name "*.theme" \) -not -path "*/node_modules/*" -print0 | xargs -0 -n1 -P8 php -l 1>/dev/null
 fi
+
+exit ${rc}

@@ -23,6 +23,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class EntityQueueRelationship extends RelationshipPluginBase implements CacheableDependencyInterface {
 
   /**
+   * The alias for the left table.
+   */
+  public string $first_alias;
+
+  /**
    * The Views join manager.
    *
    * @var \Drupal\views\Plugin\ViewsHandlerManager

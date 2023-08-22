@@ -2,13 +2,13 @@
 
 namespace Drupal\captcha\Element;
 
+use Drupal\captcha\Constants\CaptchaConstants;
+use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Render\Element\FormElement;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Component\Utility\Crypt;
-use Drupal\captcha\Constants\CaptchaConstants;
 
 /**
  * Defines the CAPTCHA form element with default properties.

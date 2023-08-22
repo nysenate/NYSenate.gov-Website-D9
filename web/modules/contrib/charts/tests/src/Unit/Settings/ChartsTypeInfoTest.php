@@ -22,7 +22,7 @@ class ChartsTypeInfoTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     $container = new ContainerBuilder();
@@ -35,7 +35,7 @@ class ChartsTypeInfoTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function tearDown() {
+  public function tearDown(): void {
     parent::tearDown();
     $this->chartsTypeInfo = NULL;
     $container = new ContainerBuilder();

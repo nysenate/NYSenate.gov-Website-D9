@@ -226,7 +226,7 @@ function captcha_update_8905() {
   if ($captchaConfig->get('title') === NULL) {
     // Set the title in config, if it wasn't existing before:
     $captchaConfig->set('title', 'CAPTCHA')->save(TRUE);
-  }  
+  }
 }
 
 /**
@@ -251,7 +251,7 @@ function captcha_update_8906() {
 function captcha_update_8907() {
   // Remove test modules if they're on the site. They won't rebuild.
   $extension = \Drupal::configFactory()->getEditable('core.extension');
-  
+
   // Remove invalid config added in 8906 and do the actual removal.
   if ($extension->get('modules') !== NULL) {
     $extension->clear('modules');

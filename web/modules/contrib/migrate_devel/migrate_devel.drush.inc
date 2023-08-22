@@ -53,7 +53,7 @@ function migrate_devel_rebuild_migrations() {
     migrate_devel_revert_migrate_config($discovery);
   }
 
-  drush_log(dt('Reset Cached Migrations'), LogLevel::DEBUG);
+  \Drupal::logger(dt('Reset Cached Migrations'), LogLevel::DEBUG);
 }
 
 /**
@@ -71,12 +71,12 @@ function migrate_devel_revert_migrate_config($discovery) {
       $config_revert->revert('migration', $definition['id']);
     }
 
-    drush_log(dt('Reverted Existing Migration Configs'));
+    \Drupal::logger(dt('Reverted Existing Migration Configs'));
 
     // Revert missing config
     migrate_devel_revert_missing_config('migration');
   } else {
-    drush_log(dt('Missing config_update for revert.'));
+    \Drupal::logger(dt('Missing config_update for revert.'));
   }
 }
 
@@ -107,7 +107,7 @@ function migrate_devel_revert_missing_config($type) {
     $id_key = $definition->getKey('id');
 
     if ($config_revert->import($config_type, $config[$id_key])) {
-      drush_log(dt('Imported @config', ['@config' => $name]), LogLevel::ALERT);
+      \Drupal::logger(dt('Imported @config', ['@config' => $name]), LogLevel::ALERT);
     }
   }
 }

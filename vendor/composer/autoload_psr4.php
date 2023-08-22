@@ -82,6 +82,7 @@ return array(
     'Psr\\Cache\\' => array($vendorDir . '/psr/cache/src'),
     'Prophecy\\PhpUnit\\' => array($vendorDir . '/phpspec/prophecy-phpunit/src'),
     'Prophecy\\' => array($vendorDir . '/phpspec/prophecy/src/Prophecy'),
+    'Phrity\\Net\\' => array($vendorDir . '/phrity/net-uri/src'),
     'PhpParser\\' => array($vendorDir . '/nikic/php-parser/lib/PhpParser'),
     'PantheonSystems\\CDNBehatHelpers\\' => array($baseDir . '/web/modules/contrib/pantheon_advanced_page_cache/tests/behat/helper_classes'),
     'PHPStan\\PhpDocParser\\' => array($vendorDir . '/phpstan/phpdoc-parser/src'),
@@ -172,5 +173,5 @@ return array(
     'Behat\\Hook\\' => array($vendorDir . '/behat/behat/src/Behat/Hook'),
     'Behat\\Behat\\' => array($vendorDir . '/behat/behat/src/Behat/Behat'),
     'Asm89\\Stack\\' => array($vendorDir . '/asm89/stack-cors/src/Asm89/Stack'),
-    '' => array($vendorDir . '/phrity/net-uri/src', $vendorDir . '/phrity/util-errorhandler/src'),
+    '' => array($vendorDir . '/phrity/util-errorhandler/src'),
 );

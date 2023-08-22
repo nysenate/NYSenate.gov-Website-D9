@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\charts\Unit\Settings;
 
+use Prophecy\PhpUnit\ProphecyTrait;
 use Drupal\charts\Settings\ChartsBaseSettingsForm;
 use Drupal\Tests\UnitTestCase;
 use Drupal\charts\Settings\ChartsDefaultSettings;
@@ -18,6 +19,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  */
 class ChartsBaseSettingsFormTest extends UnitTestCase {
 
+  use ProphecyTrait;
   /**
    * @var \Drupal\charts\Settings\ChartsBaseSettingsForm
    */
@@ -26,7 +28,7 @@ class ChartsBaseSettingsFormTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     $container = new ContainerBuilder();
@@ -50,7 +52,7 @@ class ChartsBaseSettingsFormTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function tearDown() {
+  public function tearDown(): void {
     parent::tearDown();
     $this->chartsBaseSettingsForm = NULL;
   }

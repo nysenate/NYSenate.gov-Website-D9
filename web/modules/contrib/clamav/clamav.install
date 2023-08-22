@@ -31,20 +31,27 @@ function clamav_requirements($phase) {
         $scanner = new Scanner\DaemonUnixSocket($config);
         break;
     }
-  
+
     if ($version = $scanner->version()) {
-      $requirements['clamav'] = array(
+      $requirements['clamav'] = [
         'title' => t('ClamAV version'),
-        'value' => $scanner->version(),
+        'value' => $version,
         'severity' => REQUIREMENT_INFO,
-      );
+      ];
+    }
+    elseif (!$config->enabled()) {
+      $requirements['clamav'] = [
+        'title' => t('ClamAV'),
+        'value' => t('ClamAV is not enabled.'),
+        'severity' => REQUIREMENT_INFO,
+      ];
     }
     else {
-      $requirements['clamav'] = array(
-        'title' => t('ClamAV version'),
+      $requirements['clamav'] = [
+        'title' => t('ClamAV'),
         'value' => t('Unable to connect to ClamAV service.'),
         'severity' => REQUIREMENT_ERROR,
-      );
+      ];
     }
   }
 

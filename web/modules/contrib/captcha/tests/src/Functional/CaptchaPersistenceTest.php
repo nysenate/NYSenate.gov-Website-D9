@@ -2,8 +2,8 @@
 
 namespace Drupal\Tests\captcha\Functional;
 
-use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\captcha\Constants\CaptchaConstants;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Tests CAPTCHA Persistence.

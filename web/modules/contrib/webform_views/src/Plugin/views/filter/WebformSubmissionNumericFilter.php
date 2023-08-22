@@ -83,7 +83,7 @@ class WebformSubmissionNumericFilter extends NumericFilter {
             '#title' => $element['#title'],
             '#default_value' => $default_value,
             '#required' => FALSE,
-            '#states' => $element['#states'],
+            '#states' => isset($element['#states']) ? $element['#states'] : NULL,
           ] + $webform->getElementInitialized($this->definition['webform_submission_field']);
       }
     }

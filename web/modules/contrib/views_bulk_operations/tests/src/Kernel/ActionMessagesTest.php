@@ -39,7 +39,10 @@ class ActionMessagesTest extends ViewsBulkOperationsKernelTestBase {
   }
 
   /**
+   * Data provider.
+   *
    * @return mixed[]
+   *   The test data.
    */
   public function actionDataProvider(): array {
     return [

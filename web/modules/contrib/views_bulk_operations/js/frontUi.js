@@ -3,7 +3,7 @@
  * Select-All Button functionality.
  */
 
-(function ($, Drupal) {
+(function ($, Drupal, drupalSettings) {
 
   'use strict';
 
@@ -27,15 +27,18 @@
       this.view_id = '';
       this.display_id = '';
       this.$summary = null;
+      this.totalCount = 0;
+      this.ajaxing = false;
     }
 
     /**
      * Bind event handlers to an element.
      *
      * @param {jQuery} $element
+     * @param {string} element_type
      * @param {int} index
      */
-    bindEventHandlers($element, index) {
+    bindEventHandlers($element, element_type, index = 0) {
       if ($element.length) {
         var selectionObject = this;
         $element.on('keypress', function (event) {
@@ -43,18 +46,27 @@
           if (event.which === 13) {
             event.preventDefault();
             event.stopPropagation();
-            selectionObject.update(!this.checked, index, $(this).val());
+            selectionObject.update(this, element_type, index);
             $(this).trigger('click');
           }
           if (event.which === 32) {
-            selectionObject.update(!this.checked, index, $(this).val());
+            selectionObject.update(this, element_type, index);
           }
         });
         $element.on('click', function (event) {
           // Act only on left button click.
           if (event.which === 1) {
-            selectionObject.update(this.checked, index, $(this).val());
+            selectionObject.update(this, element_type, index);
           }
+        });
+      }
+    }
+
+    bindActionSelect() {
+      if (this.$actionSelect.length) {
+        var selectionObject = this;
+        this.$actionSelect.on('change', function (event) {
+          selectionObject.toggleButtonsState();
         });
       }
     }
@@ -69,12 +81,18 @@
 
     toggleButtonsState() {
       // If no rows are checked, disable any form submit actions.
-      var checkedCheckboxes = $('.form-checkbox:checked', this.vbo_form);
       var buttons = $('[id^="edit-actions"] input[type="submit"], [id^="edit-actions"] button[type="submit"]', this.vbo_form);
-      var selectedAjaxItems = $('.vbo-info-list-wrapper li', this.vbo_form);
-      var anyItemsSelected = selectedAjaxItems.length || checkedCheckboxes.length;
+      var anyItemsSelected;
+
+      if (this.view_id.length && this.display_id.length) {
+        anyItemsSelected = this.totalCount;
+      }
+      else {
+        anyItemsSelected = $('.form-checkbox:checked', this.vbo_form).length;
+      }
+
       if (this.$actionSelect.length) {
-        var has_selection = anyItemsSelected && this.$actionSelect.val() !== '';
+        let has_selection = anyItemsSelected && this.$actionSelect.val() !== '';
         buttons.prop('disabled', !has_selection);
       }
       else {
@@ -82,71 +100,82 @@
       }
     }
 
-    bindActionSelect() {
-      if (this.$actionSelect.length) {
-        var selectionObject = this;
-        this.$actionSelect.on('change', function (event) {
-          selectionObject.toggleButtonsState();
-        });
-      }
-    }
-
     /**
      * Perform an AJAX request to update selection.
      *
-     * @param {bool} state
-     * @param {mixed} index
-     * @param {string} value
+     * @param {object} element
+     *   The checkbox element.
+     * @param {string} element_type
+     *   Which type of a checkbox is it?
+     * @param {int} index
+     *   Index of the checkbox, used for table select all.
      */
-    update(state, index, value) {
-      if (typeof value === 'undefined') {
-        value = null;
+    update(element, element_type, index) {
+      if (!this.view_id.length || !this.display_id.length) {
+        this.toggleButtonsState();
+        return;
       }
-      if (this.view_id.length && this.display_id.length) {
-        // TODO: prevent form submission when ajaxing.
+      if (this.ajaxing) {
+        return;
+      }
 
-        var selectionObject = this;
-        var list = {};
-        var op = '';
-        if (index === 'selection_method_change') {
-          op = state ? 'method_exclude' : 'method_include';
-          if (state) {
-            list = this.list[index];
+      var list = {};
+      var selectionObject = this;
+      var op = 'update';
+      if (element_type === 'selection_method_change') {
+        op = element.checked ? 'method_exclude' : 'method_include';
+      }
+      else {
+        // Build standard list.
+        $('.form-checkbox', this.vbo_form).each(function () {
+          let dom_value = $(this).val();
+          // All bulk form keys are quite long, it'd be safe to assume
+          // anything above 10 characters to filter out other values.
+          if (dom_value.length < 10) {
+            return;
           }
-        }
-        else {
-          if (value && value !== 'on') {
-            list[value] = this.list[index][value];
-          }
-          else {
-            list = this.list[index];
-          }
-          op = state ? 'add' : 'remove';
-        }
-
-        var $summary = this.$summary;
-        var $selectionInfo = this.$selectionInfo;
-        var target_uri = drupalSettings.path.baseUrl + drupalSettings.path.pathPrefix + 'views-bulk-operations/ajax/' + this.view_id + '/' + this.display_id;
-
-        var ajaxDrupal = Drupal.ajax({
-          url: target_uri,
-          progress: false,
-          submit: {
-            list: list,
-            op: op
-          }
+          list[dom_value] = this.checked;
         });
 
-        ajaxDrupal.original_success = ajaxDrupal.success;
-        ajaxDrupal.success = function (data, status) {
+        // If a table select all was used, update the list according to that.
+        if (element_type === 'table_select_all') {
+          this.list[index].forEach(function (bulk_form_key) {
+            list[bulk_form_key] = element.checked;
+          });
+        }
+      }
+
+      var $summary = this.$summary;
+      var $selectionInfo = this.$selectionInfo;
+      var target_uri = drupalSettings.path.baseUrl + drupalSettings.path.pathPrefix + 'views-bulk-operations/ajax/' + this.view_id + '/' + this.display_id;
+
+      var ajax_options = {
+        url: target_uri,
+        progress: false,
+        submit: {
+          list: list,
+          op: op
+        },
+        success: function (data) {
+          selectionObject.totalCount = data.count;
           $selectionInfo.html(data.selection_info);
           $summary.text(Drupal.formatPlural(data.count, 'Selected 1 item', 'Selected @count items'));
           selectionObject.toggleButtonsState();
-          this.original_success(data, status);
-        };
-        ajaxDrupal.execute();
+          selectionObject.ajaxing = false;
+        }
+      };
 
+      if (
+        Object.prototype.hasOwnProperty.call(drupalSettings, 'vbo') &&
+        Object.prototype.hasOwnProperty.call(drupalSettings.vbo, 'ajax_loader') &&
+        drupalSettings.vbo.ajax_loader
+      ) {
+        ajax_options.progress = {type: 'fullscreen'};
       }
+
+      var ajaxDrupal = Drupal.ajax(ajax_options);
+      this.ajaxing = true;
+      ajaxDrupal.execute();
     }
   };
 
@@ -165,7 +194,7 @@
     // When grouping is enabled, there can be multiple tables.
     if ($viewsTables.length) {
       $viewsTables.each(function (index) {
-        tableSelectAll[index] = $vboForm.find('.select-all input').first();
+        tableSelectAll[index] = $(this).find('.select-all input').first();
       });
     }
 
@@ -177,6 +206,7 @@
       vboSelection.$summary = $multiSelectElement.find('summary').first();
       vboSelection.view_id = $multiSelectElement.attr('data-view-id');
       vboSelection.display_id = $multiSelectElement.attr('data-display-id');
+      vboSelection.totalCount = drupalSettings.vbo_selected_count[vboSelection.view_id][vboSelection.display_id];
 
       // Get the list of all checkbox values and add AJAX callback.
       vboSelection.list = [];
@@ -190,22 +220,26 @@
       }
 
       $contentWrappers.each(function (index) {
-        var $contentWrapper = $(this);
-        vboSelection.list[index] = {};
+        vboSelection.list[index] = [];
 
-        $contentWrapper.find('.views-field-views-bulk-operations-bulk-form input[type="checkbox"]').each(function () {
-          var value = $(this).val();
-          if (value !== 'on') {
-            vboSelection.list[index][value] = value;
-            vboSelection.bindEventHandlers($(this), index);
+        $(this).find('input[type="checkbox"]').each(function () {
+          let value = $(this).val();
+          if (this.id !== 'edit-select-all' && value !== 'on') {
+            vboSelection.list[index].push(value);
+            vboSelection.bindEventHandlers($(this), 'vbo_checkbox');
           }
         });
 
         // Bind event handlers to select all checkbox.
         if ($viewsTables.length && tableSelectAll.length) {
-          vboSelection.bindEventHandlers(tableSelectAll[index], index);
+          vboSelection.bindEventHandlers(tableSelectAll[index], 'table_select_all', index);
         }
       });
+    }
+    // If we don't have multiselect and AJAX calls, we need to toggle button
+    // state on click instead of on AJAX success.
+    else {
+      vboSelection.bindCheckboxes();
     }
 
     // Initialize all selector if the primary select all and
@@ -241,9 +275,8 @@
         vboSelection.bindEventHandlers($primarySelectAll, 'selection_method_change');
       }
     }
-    vboSelection.bindCheckboxes();
     vboSelection.bindActionSelect();
     vboSelection.toggleButtonsState();
   };
 
-})(jQuery, Drupal);
+})(jQuery, Drupal, drupalSettings);

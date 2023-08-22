@@ -8,6 +8,7 @@ use Drupal\field_validation\FieldValidationRuleSetInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Plugin\CachedDiscoveryClearerInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 
 /**
  * Provides an add form for field validation rule.
@@ -27,9 +28,10 @@ class FieldValidationRuleAddForm extends FieldValidationRuleFormBase {
    * @param \Drupal\field_validation\FieldValidationRuleManager $field_validation_rule_manager
    *   The fieldValidationRule manager.
    */
-  public function __construct(EntityFieldManagerInterface $entity_field_manager, CachedDiscoveryClearerInterface $plugin_cache_clearer, FieldValidationRuleManager $field_validation_rule_manager) {
+  public function __construct(EntityFieldManagerInterface $entity_field_manager, CachedDiscoveryClearerInterface $plugin_cache_clearer, ModuleHandlerInterface $module_handler, FieldValidationRuleManager $field_validation_rule_manager) {
     $this->entityFieldManager = $entity_field_manager;
-    $this->pluginCacheClearer = $plugin_cache_clearer;   
+    $this->pluginCacheClearer = $plugin_cache_clearer;
+    $this->moduleHandler = $module_handler;	
     $this->fieldValidationRuleManager = $field_validation_rule_manager;
   }
 
@@ -39,7 +41,8 @@ class FieldValidationRuleAddForm extends FieldValidationRuleFormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity_field.manager'),
-      $container->get('plugin.cache_clearer'),	
+      $container->get('plugin.cache_clearer'),
+      $container->get('module_handler'),
       $container->get('plugin.manager.field_validation.field_validation_rule')
     );
   }

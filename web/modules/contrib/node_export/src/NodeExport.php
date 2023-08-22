@@ -4,6 +4,7 @@ namespace Drupal\node_export;
 
 use Drupal\node\Entity\Node;
 use Drupal\Core\File\FileSystemInterface;
+use Drupal\file\FileRepository;
 
 /**
  * Provides a Node Export function.
@@ -77,7 +78,7 @@ class NodeExport {
         // TODO: Implement XML.
         break;
     }
-    return $save ? file_save_data($data, NodeExport::getFileUri($format), FileSystemInterface::EXISTS_REPLACE) : $data;
+    return $save ? \Drupal::service('file.repository')->writeData($data, NodeExport::getFileUri($format), FileSystemInterface::EXISTS_REPLACE) : $data;
   }
 
   /**

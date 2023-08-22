@@ -2,6 +2,7 @@
 
 namespace Drupal\captcha\Form;
 
+use Drupal\captcha\Constants\CaptchaConstants;
 use Drupal\captcha\Service\CaptchaService;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -11,7 +12,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Drupal\captcha\Constants\CaptchaConstants;
 
 /**
  * Displays the captcha settings form.
@@ -276,7 +276,7 @@ class CaptchaSettingsForm extends ConfigFormBase {
 
       // Checking single ip addresses.
       foreach ($whitelist_ips[CaptchaConstants::CAPTCHA_WHITELIST_IP_ADDRESS] as $ip_address) {
-        if (filter_var($ip_address, FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE) == FALSE) {
+        if (filter_var($ip_address, FILTER_VALIDATE_IP) == FALSE) {
           $form_state->setErrorByName('whitelist_ips', $this->t('IP address %ip_address is not valid.', ['%ip_address' => $ip_address]));
         }
       }
@@ -285,14 +285,14 @@ class CaptchaSettingsForm extends ConfigFormBase {
       foreach ($whitelist_ips[CaptchaConstants::CAPTCHA_WHITELIST_IP_RANGE] as $ip_range) {
         [$ip_lower, $ip_upper] = explode('-', $ip_range, 2);
 
-        if (filter_var($ip_lower, FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE) == FALSE) {
+        if (filter_var($ip_lower, FILTER_VALIDATE_IP) == FALSE) {
           $form_state->setErrorByName('whitelist_ips', $this->t('Lower IP address %ip_address in range %ip_range is not valid.', [
             '%ip_address' => $ip_lower,
             '%ip_range' => $ip_range,
           ]));
         }
 
-        if (filter_var($ip_upper, FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE) == FALSE) {
+        if (filter_var($ip_upper, FILTER_VALIDATE_IP) == FALSE) {
           $form_state->setErrorByName('whitelist_ips', $this->t('Upper IP address %ip_address in range %ip_range is not valid.', [
             '%ip_address' => $ip_upper,
             '%ip_range' => $ip_range,

@@ -4,15 +4,15 @@ namespace Drupal\image_captcha\Form;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\DrupalKernel;
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\File\FileSystemInterface;
 use Drupal\image_captcha\Constants\ImageCaptchaConstants;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Displays the pants settings form.

@@ -5,10 +5,10 @@
  * Implements image CAPTCHA for use with the CAPTCHA module.
  */
 
-use Drupal\Core\Url;
+use Drupal\captcha\Constants\CaptchaConstants;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\captcha\Constants\CaptchaConstants;
+use Drupal\Core\Url;
 use Drupal\image_captcha\Constants\ImageCaptchaConstants;
 use Drupal\image_captcha\Service\ImageCaptchaRenderService;
 
@@ -240,7 +240,8 @@ function _image_captcha_image_size($code) {
   $width = $character_spacing * $font_size * $character_quantity;
   $height = 2 * $font_size;
 
-  return [$width, $height];
+  // Return the values as full pixel values (no floats):
+  return [(int) $width, (int) $height];
 }
 
 /**

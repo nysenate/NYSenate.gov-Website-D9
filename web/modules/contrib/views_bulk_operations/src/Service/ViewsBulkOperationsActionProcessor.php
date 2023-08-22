@@ -219,6 +219,8 @@ class ViewsBulkOperationsActionProcessor implements ViewsBulkOperationsActionPro
 
     $this->view->setItemsPerPage($this->bulkFormData['batch_size']);
     $this->view->setCurrentPage($page);
+    $this->view->style_plugin = Views::pluginManager('style')->createInstance('default');
+    $this->view->style_plugin->init($this->view, $this->view->getDisplay());
     $this->view->build();
 
     $offset = $this->bulkFormData['batch_size'] * $page;

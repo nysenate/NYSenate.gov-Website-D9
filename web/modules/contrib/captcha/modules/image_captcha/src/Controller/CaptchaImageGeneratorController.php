@@ -4,12 +4,12 @@ namespace Drupal\image_captcha\Controller;
 
 use Drupal\Core\Config\Config;
 use Drupal\Core\Database\Connection;
-use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\PageCache\ResponsePolicy\KillSwitch;
 use Drupal\image_captcha\Constants\ImageCaptchaConstants;
 use Drupal\image_captcha\Service\ImageCaptchaRenderService;
 use Psr\Log\LoggerInterface;
-use Drupal\Core\PageCache\ResponsePolicy\KillSwitch;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -105,9 +105,6 @@ class CaptchaImageGeneratorController implements ContainerInjectionInterface {
     }
     $response_headers['cache-control'] = 'no-store, must-revalidate';
 
-    // Get the file format of the image.
-    $file_format = $this->config->get('image_captcha_file_format');
-
     // Check for existing session IDs.
     $session_id = $request->get('session_id');
     $code = $this->connection
@@ -126,7 +123,7 @@ class CaptchaImageGeneratorController implements ContainerInjectionInterface {
         $this->logger->log('error', 'Generation of image CAPTCHA failed. Check your image CAPTCHA configuration and especially the used font.', []);
       }
     }
-    return new StreamedResponse(function() use ($image) {
+    return new StreamedResponse(function () use ($image) {
       if (!$image) {
         return $this;
       }
@@ -134,15 +131,21 @@ class CaptchaImageGeneratorController implements ContainerInjectionInterface {
       // Begin capturing the byte stream.
       ob_start();
 
+      // Get the file format of the image.
       $file_format = $this->config->get('image_captcha_file_format');
       if ($file_format == ImageCaptchaConstants::IMAGE_CAPTCHA_FILE_FORMAT_JPG) {
         imagejpeg($image);
       }
       else {
         imagepng($image);
+
       }
+        // Release image memory.
+      imagedestroy($image);
+      unset($image);
       return $this;
 
     }, 200, $response_headers);
   }
+
 }

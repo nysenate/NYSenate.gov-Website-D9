@@ -97,8 +97,6 @@ class AdminUninstallForm extends ConfirmFormBase {
     $batch = [
       'title' => $this->t('Deleting private message data'),
       'operations' => [
-        [[__CLASS__, 'deletePrivateMessageAccessTimes'], []],
-        [[__CLASS__, 'deletePrivateMessageDeleteTimes'], []],
         [[__CLASS__, 'deletePrivateMessageMessages'], []],
         [[__CLASS__, 'deletePrivateMessageThreads'], []],
       ],
@@ -107,30 +105,6 @@ class AdminUninstallForm extends ConfirmFormBase {
     batch_set($batch);
 
     $this->messenger->addMessage($this->t('Private message data has been deleted.'));
-  }
-
-  /**
-   * Batch callback to delete private message access times.
-   */
-  public static function deletePrivateMessageAccessTimes(&$context) {
-    $access_time_ids = \Drupal::entityQuery('pm_thread_access_time')->accessCheck(FALSE)->range(0, 100)->execute();
-    $storage = \Drupal::entityTypeManager()->getStorage('pm_thread_access_time');
-    if ($access_times = $storage->loadMultiple($access_time_ids)) {
-      $storage->delete($access_times);
-    }
-    $context['finished'] = (int) count($access_times) < 100;
-  }
-
-  /**
-   * Batch callback to delete private message delete times.
-   */
-  public static function deletePrivateMessageDeleteTimes(&$context) {
-    $delete_time_ids = \Drupal::entityQuery('pm_thread_delete_time')->accessCheck(FALSE)->range(0, 100)->execute();
-    $storage = \Drupal::entityTypeManager()->getStorage('pm_thread_delete_time');
-    if ($delete_times = $storage->loadMultiple($delete_time_ids)) {
-      $storage->delete($delete_times);
-    }
-    $context['finished'] = (int) count($delete_times) < 100;
   }
 
   /**

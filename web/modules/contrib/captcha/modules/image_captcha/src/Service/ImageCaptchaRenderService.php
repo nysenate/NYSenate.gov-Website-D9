@@ -2,16 +2,12 @@
 
 namespace Drupal\image_captcha\Service;
 
-use Drupal\captcha\Constants\CaptchaConstants;
-use Drupal\Core\Config\Config;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\File\FileSystemInterface;
-use Drupal\Core\Logger\LoggerChannelFactoryInterface;
-use Drupal\Core\Url;
 use Drupal\Core\Link;
+use Drupal\Core\Url;
 use Drupal\image_captcha\Constants\ImageCaptchaConstants;
-use Psr\Log\LoggerInterface;
 
 /**
  * Helper service to render specific parts of the image captcha.
@@ -40,13 +36,6 @@ class ImageCaptchaRenderService {
   protected $fileSystem;
 
   /**
-   * Watchdog logger channel for captcha.
-   *
-   * @var \Psr\Log\LoggerInterface
-   */
-  protected $logger;
-
-  /**
    * Resource with generated image.
    *
    * @var resource
@@ -56,9 +45,8 @@ class ImageCaptchaRenderService {
   /**
    * {@inheritdoc}
    */
-  public function __construct(ConfigFactory $config_factory, LoggerChannelFactoryInterface $logger, Connection $connection, FileSystemInterface $fileSystem) {
+  public function __construct(ConfigFactory $config_factory, Connection $connection, FileSystemInterface $fileSystem) {
     $this->config = $config_factory->get('image_captcha.settings');
-    $this->logger = $logger->get('captcha');
     $this->connection = $connection;
     $this->fileSystem = $fileSystem;
   }
@@ -379,8 +367,8 @@ class ImageCaptchaRenderService {
       $dev_y = .5 * max(0, $ccage_height - abs($angle_cos) * $bb_height - abs($angle_sin) * $bb_width);
 
       // Add jitter to position.
-      $pos_x = $pos_x + mt_rand(-(int)$dev_x, (int)$dev_x);
-      $pos_y = $pos_y + mt_rand(-(int)$dev_y, (int)$dev_y);
+      $pos_x = $pos_x + mt_rand(-(int) $dev_x, (int) $dev_x);
+      $pos_y = $pos_y + mt_rand(-(int) $dev_y, (int) $dev_y);
 
       // Calculate text color in case of randomness.
       if ($foreground_randomness) {
@@ -393,10 +381,10 @@ class ImageCaptchaRenderService {
 
       // Draw character.
       if ($font == 'BUILTIN') {
-        imagestring($image, 5, (int)$pos_x, (int)$pos_y, $character, $color);
+        imagestring($image, 5, (int) $pos_x, (int) $pos_y, $character, $color);
       }
       else {
-        imagettftext($image, $font_size, $angle, (int)$pos_x, (int)$pos_y, $color, $this->fileSystem->realpath($font), $character);
+        imagettftext($image, $font_size, $angle, (int) $pos_x, (int) $pos_y, $color, $this->fileSystem->realpath($font), $character);
       }
     }
 
@@ -438,4 +426,5 @@ class ImageCaptchaRenderService {
     }
     return $element;
   }
+
 }

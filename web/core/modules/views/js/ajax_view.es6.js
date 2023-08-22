@@ -18,8 +18,8 @@
       const {
         views: { ajaxViews },
       } = settings;
-      Drupal.views.sortByNestingLevel(ajaxViews).forEach(({ key, value }) => {
-        Drupal.views.instances[key] = new Drupal.views.ajaxView(value);
+      Object.keys(ajaxViews || {}).forEach((i) => {
+        Drupal.views.instances[i] = new Drupal.views.ajaxView(ajaxViews[i]);
       });
     }
   };
@@ -51,34 +51,8 @@
   Drupal.views.instances = {};
 
   /**
-   * Sort the view Javascript objects by nesting level.
+   * JavaScript object for a certain view.
    *
-   * @param {object} ajaxViews
-   *   The views JavaScript object.
-   * @param {string} settings.view_dom_id
-   *   The DOM id of the view.
-   * @param {string} settings.selector
-   *   The selector of the view.
-   *
-   * @return {object}
-   *   The sorted ajaxViews object.
-   */
-  Drupal.views.sortByNestingLevel = function (ajaxViews) {
-    const ajaxViewsArray = Object.keys(ajaxViews || {}).map((key) => {
-      ajaxViews[key].selector = `.js-view-dom-id-${ajaxViews[key].view_dom_id}`;
-
-      return {
-        key,
-        value: ajaxViews[key],
-        nestingLevel: $(ajaxViews[key].selector).parents('.view').length,
-      };
-    });
-
-    return ajaxViewsArray.sort((a, b) => b.nestingLevel - a.nestingLevel);
-  };
-
-  /*
-   * Javascript object for a certain view.
    * @constructor
    *
    * @param {object} settings
@@ -87,7 +61,7 @@
    *   The DOM id of the view.
    */
   Drupal.views.ajaxView = function (settings) {
-    const { selector } = settings;
+    const selector = `.js-view-dom-id-${settings.view_dom_id}`;
     this.$view = $(selector);
 
     // Retrieve the path to use for views' ajax.
@@ -136,21 +110,13 @@
     );
 
     // Add the ajax to pagers.
-    if (this.$view.find('.views-infinite-scroll-content-wrapper').length) {
-      this.$pager_links = this.$view.find(
-        'ul.js-pager__items > li > a, th.views-field a, .attachment .views-summary a',
-      );
-      once('ajax-pager', this.$pager_links).forEach(
-        $.proxy(this.attachPagerLinkAjax, this),
-      );
-    } else {
-      once(
-        'ajax-pager',
-        // Don't attach to nested views. Doing so would attach multiple
-        // behaviors to a given element:
-        this.$view.filter($.proxy(this.filterNestedViews, this)),
-      ).forEach($.proxy(this.attachPagerAjax, this));
-    }
+    once(
+      'ajax-pager',
+      this.$view
+        // Don't attach to nested views. Doing so would attach multiple behaviors
+        // to a given element.
+        .filter($.proxy(this.filterNestedViews, this)),
+    ).forEach($.proxy(this.attachPagerAjax, this));
 
     // Add a trigger to update this view specifically. In order to trigger a
     // refresh use the following code.
@@ -163,36 +129,28 @@
       base: this.selector,
       element: this.$view.get(0),
     });
-    // Remove unwanted parameter.
-    delete selfSettings.selector;
     this.refreshViewAjax = Drupal.ajax(selfSettings);
   };
 
   /**
-   * Attach the ajax behavior to exposed form fields.
-   *
-   * @param {HTMLElement} form
-   *   The form element.
+   * @method
    */
-  Drupal.views.ajaxView.prototype.attachExposedFormAjax = function (form) {
-    if (!form) {
-      form = this.$exposed_form;
-    }
+  Drupal.views.ajaxView.prototype.attachExposedFormAjax = function () {
+    const that = this;
     this.exposedFormAjax = [];
     // Exclude the reset buttons so no AJAX behaviors are bound. Many things
     // break during the form reset phase if using AJAX.
-    $('input[type=submit], button[type=submit], input[type=image]', form)
-      .not(
-        '[data-drupal-selector=edit-reset], [data-drupal-selector^="edit-tab-selector"]',
-      )
-      .each((index, element) => {
-        const selfSettings = $.extend({}, this.element_settings, {
-          base: $(element).attr('id'),
-          element,
+    $(
+      'input[type=submit], button[type=submit], input[type=image]',
+      this.$exposed_form,
+    )
+      .not('[data-drupal-selector=edit-reset]')
+      .each(function (index) {
+        const selfSettings = $.extend({}, that.element_settings, {
+          base: $(this).attr('id'),
+          element: this,
         });
-        // Remove unwanted parameter.
-        delete selfSettings.selector;
-        this.exposedFormAjax[index] = Drupal.ajax(selfSettings);
+        that.exposedFormAjax[index] = Drupal.ajax(selfSettings);
       });
   };
 
@@ -244,8 +202,6 @@
       base: false,
       element: link,
     });
-    // Remove unwanted parameter.
-    delete selfSettings.selector;
     this.pagerAjax = Drupal.ajax(selfSettings);
   };
 

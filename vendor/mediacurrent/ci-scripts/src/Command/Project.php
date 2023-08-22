@@ -45,15 +45,20 @@ trait Project
     /**
      * Project task - Create Install Profile.
      *
-     * Create project custom install profile based on mis_profile.
+     * Create project custom install profile. ( Default is based on mis_profile).
+     *
+     * To base the new profile on the ignite_demo theme use the option:
+     * "--template_profile_directory=profiles/contrib/ignite_demo"
      *
      * @option $name Specify install profile name. ( Required)
+     * @option $template_profile_directory Relative path to source profile directory.
      *
      */
     public function projectCreateProfile(
         $opts = [
             'name' => InputOption::VALUE_REQUIRED,
             'description' => InputOption::VALUE_REQUIRED,
+            'template_profile_directory' => 'profiles/contrib/mis_profile'
         ]
     )
     {
@@ -67,7 +72,7 @@ trait Project
         }
 
         $this->taskProjectInit()
-          ->createProfile($name)
+          ->createProfile($opts)
           ->run();
     }
 

@@ -5,10 +5,10 @@
  * General CAPTCHA functionality and helper functions.
  */
 
+use Drupal\captcha\Constants\CaptchaConstants;
 use Drupal\captcha\Entity\CaptchaPoint;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Render\Element;
-use Drupal\captcha\Constants\CaptchaConstants;
 
 /**
  * Helper function for adding/updating a CAPTCHA point.

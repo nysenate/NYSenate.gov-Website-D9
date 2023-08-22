@@ -172,6 +172,7 @@ class ComposerStaticInitcfe1ff8587a3eacdec9f20af85157174
             'Psr\\Cache\\' => 10,
             'Prophecy\\PhpUnit\\' => 17,
             'Prophecy\\' => 9,
+            'Phrity\\Net\\' => 11,
             'PhpParser\\' => 10,
             'PantheonSystems\\CDNBehatHelpers\\' => 32,
             'PHPStan\\PhpDocParser\\' => 21,
@@ -612,6 +613,10 @@ class ComposerStaticInitcfe1ff8587a3eacdec9f20af85157174
         array (
             0 => __DIR__ . '/..' . '/phpspec/prophecy/src/Prophecy',
         ),
+        'Phrity\\Net\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phrity/net-uri/src',
+        ),
         'PhpParser\\' => 
         array (
             0 => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser',
@@ -980,8 +985,7 @@ class ComposerStaticInitcfe1ff8587a3eacdec9f20af85157174
     );
 
     public static $fallbackDirsPsr4 = array (
-        0 => __DIR__ . '/..' . '/phrity/net-uri/src',
-        1 => __DIR__ . '/..' . '/phrity/util-errorhandler/src',
+        0 => __DIR__ . '/..' . '/phrity/util-errorhandler/src',
     );
 
     public static $prefixesPsr0 = array (
@@ -1188,6 +1192,7 @@ class ComposerStaticInitcfe1ff8587a3eacdec9f20af85157174
         'PHPUnit\\Framework\\Constraint\\LogicalXor' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Constraint/Operator/LogicalXor.php',
         'PHPUnit\\Framework\\Constraint\\ObjectEquals' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Constraint/Object/ObjectEquals.php',
         'PHPUnit\\Framework\\Constraint\\ObjectHasAttribute' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Constraint/Object/ObjectHasAttribute.php',
+        'PHPUnit\\Framework\\Constraint\\ObjectHasProperty' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Constraint/Object/ObjectHasProperty.php',
         'PHPUnit\\Framework\\Constraint\\Operator' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Constraint/Operator/Operator.php',
         'PHPUnit\\Framework\\Constraint\\RegularExpression' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Constraint/String/RegularExpression.php',
         'PHPUnit\\Framework\\Constraint\\SameSize' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Constraint/Cardinality/SameSize.php',

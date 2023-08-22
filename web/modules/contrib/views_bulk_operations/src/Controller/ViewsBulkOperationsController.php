@@ -104,42 +104,30 @@ class ViewsBulkOperationsController extends ControllerBase implements ContainerI
 
     $parameters = $request->request->all();
 
-    // Reverse operation when in exclude mode.
-    if (!empty($tempstore_data['exclude_mode'])) {
-      if ($parameters['op'] === 'add') {
-        $parameters['op'] = 'remove';
-      }
-      elseif ($parameters['op'] === 'remove') {
-        $parameters['op'] = 'add';
-      }
+    if ($parameters['op'] === 'method_include') {
+      unset($tempstore_data['exclude_mode']);
+      $tempstore_data['list'] = [];
     }
-
-    switch ($parameters['op']) {
-      case 'add':
-        foreach ($parameters['list'] as $bulkFormKey) {
-          if (!isset($tempstore_data['list'][$bulkFormKey])) {
-            $tempstore_data['list'][$bulkFormKey] = $this->getListItem($bulkFormKey);
+    elseif ($parameters['op'] === 'method_exclude') {
+      $tempstore_data['exclude_mode'] = TRUE;
+      $tempstore_data['list'] = [];
+    }
+    elseif ($parameters['op'] === 'update') {
+      $exclude_mode = \array_key_exists('exclude_mode', $tempstore_data) && $tempstore_data['exclude_mode'] === TRUE;
+      foreach ($parameters['list'] as $bulkFormKey => $state) {
+        if ($exclude_mode) {
+          $state = $state === 'true' ? 'false' : 'true';
+        }
+        if ($state === 'true') {
+          $list_item = $this->getListItem($bulkFormKey);
+          if ($list_item !== NULL) {
+            $tempstore_data['list'][$bulkFormKey] = $list_item;
           }
         }
-        break;
-
-      case 'remove':
-        foreach ($parameters['list'] as $bulkFormKey) {
-          if (isset($tempstore_data['list'][$bulkFormKey])) {
-            unset($tempstore_data['list'][$bulkFormKey]);
-          }
+        else {
+          unset($tempstore_data['list'][$bulkFormKey]);
         }
-        break;
-
-      case 'method_include':
-        unset($tempstore_data['exclude_mode']);
-        $tempstore_data['list'] = [];
-        break;
-
-      case 'method_exclude':
-        $tempstore_data['exclude_mode'] = TRUE;
-        $tempstore_data['list'] = [];
-        break;
+      }
     }
 
     $this->setTempstoreData($tempstore_data);

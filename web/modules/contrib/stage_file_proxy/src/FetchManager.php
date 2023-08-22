@@ -50,12 +50,19 @@ class FetchManager implements FetchManagerInterface {
   /**
    * {@inheritdoc}
    */
-  public function __construct(Client $client, FileSystemInterface $file_system, LoggerInterface $logger, ConfigFactoryInterface $config_factory, DownloadManagerInterface $download_manager) {
+  public function __construct(Client $client, FileSystemInterface $file_system, LoggerInterface $logger, ConfigFactoryInterface $config_factory, DownloadManagerInterface $download_manager = NULL) {
     $this->client = $client;
     $this->fileSystem = $file_system;
     $this->logger = $logger;
     $this->configFactory = $config_factory;
-    $this->downloadManager = $download_manager;
+
+    if (is_null($download_manager)) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $download_manager argument is deprecated in 2.1.0 and will be required in 3.0.0.', E_USER_DEPRECATED);
+      $this->downloadManager = \Drupal::service('stage_file_proxy.download_manager');
+    }
+    else {
+      $this->downloadManager = $download_manager;
+    }
   }
 
   /**

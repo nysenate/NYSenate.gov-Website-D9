@@ -4,7 +4,6 @@ namespace Drupal\image_captcha\Controller;
 
 use Drupal\Core\Config\ImmutableConfig;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\image_captcha\StreamedResponse\CaptchaFontPreviewStreamedResponse;
 use Drupal\Core\PageCache\ResponsePolicy\KillSwitch;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -49,7 +48,7 @@ class CaptchaFontPreviewController implements ContainerInjectionInterface {
   /**
    * Main method that throw ImageResponse object to generate image.
    *
-   * @return StreamedResponse
+   * @return \Symfony\Component\HttpFoundation\StreamedResponse
    *   Make a StreamedResponse with the correct configuration and return it.
    */
   public function getFont($token) {
@@ -97,6 +96,9 @@ class CaptchaFontPreviewController implements ContainerInjectionInterface {
       }
       // Dump image data to client.
       imagepng($image);
+        // Release image memory.
+      imagedestroy($image);
+      unset($image);
     }, 200, ['Content-Type' => 'image/png']);
   }
 

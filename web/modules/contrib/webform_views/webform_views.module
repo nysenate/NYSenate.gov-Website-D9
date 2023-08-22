@@ -29,6 +29,7 @@ use Drupal\webform_views\WebformElementViews\WebformTermCheckboxesViews;
 use Drupal\webform_views\WebformElementViews\WebformDefaultViews;
 use Drupal\webform_views\Plugin\Derivative\ViewsLocalTask;
 use Drupal\Core\Access\AccessResultForbidden;
+use Drupal\webform_views\WebformElementViews\WebformDateTimeViews;
 
 /**
  * Implements hook_module_implements_alter().
@@ -113,6 +114,10 @@ function webform_views_webform_element_info_alter(array &$elements) {
 
       case 'date':
         $views_handler = WebformDateViews::class;
+        break;
+
+      case 'datetime':
+        $views_handler = WebformDateTimeViews::class;
         break;
 
       case 'number':

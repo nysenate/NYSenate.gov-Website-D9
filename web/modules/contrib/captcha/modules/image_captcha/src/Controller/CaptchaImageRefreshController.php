@@ -7,13 +7,13 @@ namespace Drupal\image_captcha\Controller;
  */
 
 use Drupal\Component\Datetime\TimeInterface;
+use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Url;
+use Drupal\image_captcha\Constants\ImageCaptchaConstants;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Drupal\Component\Utility\Crypt;
-use Drupal\image_captcha\Constants\ImageCaptchaConstants;
 
 /**
  * Description of CaptchaImageRefreshController.

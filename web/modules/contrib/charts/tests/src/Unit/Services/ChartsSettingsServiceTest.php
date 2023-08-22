@@ -22,7 +22,7 @@ class ChartsSettingsServiceTest extends UnitTestCase {
   public function testGetChartsSettings(array $config) {
     $chartsSettingsService = $this->createChartsSettingsService($config);
     $chartSettings = $chartsSettingsService->getChartsSettings();
-    $this->assertArrayEquals($config, $chartSettings);
+    $this->assertEquals($config, $chartSettings);
   }
 
   /**

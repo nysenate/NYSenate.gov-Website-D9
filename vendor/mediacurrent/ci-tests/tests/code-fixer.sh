@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash
 usage()
 {
 cat << EOF
@@ -19,6 +19,8 @@ fi
 
 # Set the phpcbf standards config.
 # phpcbf --config-set installed_paths ${HOME}/.composer/vendor/drupal/coder/coder_sniffer
+
+trap 'rc=$?' ERR
 
 if [ -f ./vendor/bin/phpcbf ]; then
   phpcbf='./vendor/bin/phpcbf --standard=./vendor/drupal/coder/coder_sniffer/Drupal'
@@ -42,3 +44,5 @@ if [ -d ${SITE_PATH}/themes/custom ]; then
   echo "Running coding standards fixer for custom themes."
   ${phpcbf} --ignore=/themes/custom/*/node_modules/,/themes/custom/*/src/styleguide/ --extensions=php,module,inc,install,test,profile,theme,info,txt,md,yml ${SITE_PATH}/themes/custom
 fi
+
+exit ${rc}

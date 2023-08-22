@@ -317,6 +317,7 @@ abstract class ViewsBulkOperationsKernelTestBase extends KernelTestBase {
    * Override trait message() method so we can get the output.
    *
    * @return string|null
+   *   The message set previously or NULL.
    */
   public static function message($message = NULL, $type = 'status', $repeat = TRUE) {
     if ($message === NULL) {

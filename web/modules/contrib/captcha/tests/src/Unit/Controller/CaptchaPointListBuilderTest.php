@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\captcha\Unit\Controller;
 
-use Prophecy\PhpUnit\ProphecyTrait;
 use Drupal\captcha\Entity\CaptchaPoint;
 use Drupal\captcha\Entity\Controller\CaptchaPointListBuilder;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -10,6 +9,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Tests\UnitTestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**

@@ -2,8 +2,8 @@
 
 namespace Drupal\Tests\captcha\Functional;
 
-use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\captcha\Constants\CaptchaConstants;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Tests CAPTCHA main test case sensitivity.
@@ -312,8 +312,8 @@ class CaptchaTest extends CaptchaWebTestBase {
     $session->elementAttributeNotContains('css', '#user-login-form > fieldset', 'class', 'captcha-type-challenge--default');
 
     // Check if title exists with the correct class and standard title value:
-    $session->elementExists('css', '#user-login-form > fieldset > label.captcha__title');
-    $session->elementTextContains('css', '#user-login-form > fieldset > label', 'CAPTCHA');
+    $session->elementExists('css', '#user-login-form > fieldset > legend.captcha__title');
+    $session->elementTextContains('css', '#user-login-form > fieldset > legend', 'CAPTCHA');
 
     // Check if description exists with the correct class and standard title
     // value:
@@ -341,8 +341,8 @@ class CaptchaTest extends CaptchaWebTestBase {
     $session->elementAttributeNotContains('css', '#user-login-form > fieldset', 'class', 'captcha-type-challenge--default');
 
     // Check if title exists with the correct class and standard title value:
-    $session->elementExists('css', '#user-login-form > fieldset > label.captcha__title');
-    $session->elementTextContains('css', '#user-login-form > fieldset > label', 'CAPTCHA');
+    $session->elementExists('css', '#user-login-form > fieldset > legend.captcha__title');
+    $session->elementTextContains('css', '#user-login-form > fieldset > legend', 'CAPTCHA');
 
     // Check if description exists with the correct class and standard title
     // value:
@@ -362,11 +362,20 @@ class CaptchaTest extends CaptchaWebTestBase {
     // Set default challenge math:
     $this->config('captcha.settings')
       ->set('title', '')
+      ->set('default_challenge', CaptchaConstants::CAPTCHA_MATH_CAPTCHA_TYPE)
       ->save();
 
     $this->drupalGet('user');
+    $this->assertCaptchaPresence(TRUE);
+
     // Check if the title element does not exist:
-    $session->elementNotExists('css', '#user-login-form > fieldset > label.captcha__title');
+    $session->elementNotExists('css', '#user-login-form > fieldset > legend.captcha__title');
+    // Even the fieldset should not exist:
+    $session->elementNotExists('css', '#user-login-form > fieldset.captcha');
+    // But instead a div should be used:
+    $session->elementExists('css', '#user-login-form > div.captcha');
+    // Containing the captcha element:
+    $session->elementExists('css', '#user-login-form > div.captcha > div.captcha__element');
   }
 
   /**
@@ -378,11 +387,16 @@ class CaptchaTest extends CaptchaWebTestBase {
     // Set default challenge math:
     $this->config('captcha.settings')
       ->set('description', '')
+      ->set('default_challenge', CaptchaConstants::CAPTCHA_MATH_CAPTCHA_TYPE)
       ->save();
 
     $this->drupalGet('user');
-    // Check if the title element does not exist:
-    $session->elementNotExists('css', '#user-login-form > fieldset > div.captcha__description');
+    $this->assertCaptchaPresence(TRUE);
+
+    // Check if the description element does not exist:
+    $session->elementNotExists('css', '#user-login-form > fieldset.captcha > div.captcha__description');
+    // But the captcha element exists:
+    $session->elementExists('css', '#user-login-form > fieldset.captcha > div.captcha__element');
   }
 
   /**
@@ -395,13 +409,23 @@ class CaptchaTest extends CaptchaWebTestBase {
     $this->config('captcha.settings')
       ->set('title', '')
       ->set('description', '')
+      ->set('default_challenge', CaptchaConstants::CAPTCHA_MATH_CAPTCHA_TYPE)
       ->save();
 
     $this->drupalGet('user');
+    $this->assertCaptchaPresence(TRUE);
+
     // Check if the title element does not exist:
     $session->elementNotExists('css', '#user-login-form > fieldset > label.captcha__title');
+    $session->elementNotExists('css', '#user-login-form > div > label.captcha__title');
     // Check if the title element does not exist:
     $session->elementNotExists('css', '#user-login-form > fieldset > div.captcha__description');
+    $session->elementNotExists('css', '#user-login-form > div > div.captcha__description');
+    // Even the fieldset should not exist:
+    $session->elementNotExists('css', '#user-login-form > fieldset');
+    // But instead a div should be used, just containing the captcha element:
+    $session->elementExists('css', '#user-login-form > div.captcha');
+    $session->elementExists('css', '#user-login-form > div.captcha > div.captcha__element');
   }
 
   /**

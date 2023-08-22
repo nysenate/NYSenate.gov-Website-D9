@@ -14,11 +14,18 @@ trait WebformSubmissionSubmittedToTrait {
   use EntityTranslationRenderTrait;
 
   /**
-   * The entity manager.
+   * The entity type manager.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityManager;
+  protected $entityTypeManager;
+
+  /**
+   * The entity repository service.
+   *
+   * @var \Drupal\Core\Entity\EntityRepositoryInterface
+   */
+  protected $entityRepository;
 
   /**
    * The language manager.
@@ -42,16 +49,38 @@ trait WebformSubmissionSubmittedToTrait {
   }
 
   /**
-   * {@inheritdoc}
+   * Get the entity type manager service.
+   *
+   * @return \Drupal\Core\Entity\EntityTypeManagerInterface
+   *   The entity type manager.
    */
-  protected function getEntityManager() {
-    return $this->entityManager;
+  protected function getEntityTypeManager() {
+    if (!$this->entityTypeManager) {
+      $this->entityTypeManager = \Drupal::entityTypeManager();
+    }
+    return $this->entityTypeManager;
+  }
+
+  /**
+   * Get the entity repository service.
+   *
+   * @return \Drupal\Core\Entity\EntityRepositoryInterface
+   *   The entity repository.
+   */
+  protected function getEntityRepository() {
+    if (!$this->entityRepository) {
+      $this->entityRepository = \Drupal::service('entity.repository');
+    }
+    return $this->entityRepository;
   }
 
   /**
    * {@inheritdoc}
    */
   protected function getLanguageManager() {
+    if (!$this->languageManager) {
+      $this->languageManager = \Drupal::languageManager();
+    }
     return $this->languageManager;
   }
 

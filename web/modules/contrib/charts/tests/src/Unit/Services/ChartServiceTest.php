@@ -19,7 +19,7 @@ class ChartServiceTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     $this->chartService = new ChartService();

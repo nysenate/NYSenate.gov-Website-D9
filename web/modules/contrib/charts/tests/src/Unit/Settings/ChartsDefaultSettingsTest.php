@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\charts\Unit\Settings;
 
+use Prophecy\PhpUnit\ProphecyTrait;
 use Drupal\charts\Settings\ChartsDefaultSettings;
 use Drupal\Tests\UnitTestCase;
 use Drupal\charts\Settings\ChartsDefaultColors;
@@ -12,6 +13,7 @@ use Drupal\charts\Settings\ChartsDefaultColors;
  */
 class ChartsDefaultSettingsTest extends UnitTestCase {
 
+  use ProphecyTrait;
   /**
    * @var \Drupal\charts\Settings\ChartsDefaultSettings
    */
@@ -20,7 +22,7 @@ class ChartsDefaultSettingsTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     $chartsDefaultColorsMock = $this->getDefaultColorsMock();
@@ -42,7 +44,7 @@ class ChartsDefaultSettingsTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function tearDown() {
+  public function tearDown(): void {
     parent::tearDown();
     $this->chartsDefaultSettings = NULL;
   }
@@ -64,7 +66,7 @@ class ChartsDefaultSettingsTest extends UnitTestCase {
    */
   public function testDefaults(array $defaults) {
     $this->chartsDefaultSettings->setDefaults($defaults);
-    $this->assertArrayEquals($defaults, $this->chartsDefaultSettings->getDefaults());
+    $this->assertEquals($defaults, $this->chartsDefaultSettings->getDefaults());
   }
 
   /**

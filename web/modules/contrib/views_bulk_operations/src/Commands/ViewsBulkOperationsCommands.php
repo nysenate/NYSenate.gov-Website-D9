@@ -263,7 +263,7 @@ class ViewsBulkOperationsCommands extends DrushCommands {
    *
    * @aliases vbo-list
    */
-  public function vboList($options = ['format' => 'table']): string {
+  public function vboList($options = ['format' => 'table']): RowsOfFields {
     $rows = [];
     $actions = $this->actionManager->getDefinitions(['nocache' => TRUE]);
     foreach ($actions as $id => $definition) {

@@ -19,7 +19,7 @@ class ChartAttachmentServiceTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     $this->chartAttachmentService = new ChartAttachmentService();
@@ -35,7 +35,7 @@ class ChartAttachmentServiceTest extends UnitTestCase {
    */
   public function testAttachmentViews(array $attachmentViews) {
     $this->chartAttachmentService->setAttachmentViews($attachmentViews);
-    $this->assertArrayEquals($attachmentViews, $this->chartAttachmentService->getAttachmentViews());
+    $this->assertEquals($attachmentViews, $this->chartAttachmentService->getAttachmentViews());
   }
 
   /**

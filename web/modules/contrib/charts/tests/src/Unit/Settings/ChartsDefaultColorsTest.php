@@ -21,7 +21,7 @@ class ChartsDefaultColorsTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
     $this->chartsDefaultColors = new ChartsDefaultColors();
   }
@@ -29,7 +29,7 @@ class ChartsDefaultColorsTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function tearDown() {
+  public function tearDown(): void {
     parent::tearDown();
     $this->chartsDefaultColors = NULL;
   }
@@ -51,7 +51,7 @@ class ChartsDefaultColorsTest extends UnitTestCase {
    */
   public function testDefaultColors(array $color) {
     $this->chartsDefaultColors->setDefaultColors($color);
-    $this->assertArrayEquals($color, $this->chartsDefaultColors->getDefaultColors());
+    $this->assertEquals($color, $this->chartsDefaultColors->getDefaultColors());
   }
 
   /**

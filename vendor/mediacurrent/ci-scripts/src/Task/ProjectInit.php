@@ -23,10 +23,10 @@ class ProjectInit extends \Mediacurrent\CiScripts\Task\Base
         parent::__construct();
     }
 
-    public function createProfile($name)
+    public function createProfile($opts)
     {
 
-        $name = strtolower($name);
+        $name = strtolower($opts['name']);
 
         $custom_profiles_directory = $this->getWebRoot() . '/profiles/custom';
 
@@ -44,38 +44,67 @@ class ProjectInit extends \Mediacurrent\CiScripts\Task\Base
                 ->run();
         }
 
-        $template_profile_name = "mis_profile";
-        $template_profile_directory = $this->getWebRoot() . '/profiles/contrib/' . $template_profile_name;
+        $template_profile_name = basename($opts['template_profile_directory']);
 
-        $this->collectionBuilder()->taskWriteToFile($profile_directory . '/' . $name . '.info.yml')
-            ->textFromFile($template_profile_directory . '/' . $template_profile_name . '.info.yml')
-            ->replace($template_profile_name, $name)
-            ->replace("Mediacurrent Profile", $name . ' Profile')
+        $this->collectionBuilder()->taskCopyDir([$this->getWebRoot() . '/' . $opts['template_profile_directory'] => $profile_directory])
+        ->run();
+
+        $find_cmd = "find . -type f -print0 | xargs -0 sed -i'' -e 's/$template_profile_name/$name/g'";
+
+        $result = $this->collectionBuilder()->taskExec($find_cmd)
+            ->dir($profile_directory)
             ->run();
 
-        $this->collectionBuilder()->taskWriteToFile($profile_directory . '/' . $name . '.install')
-            ->textFromFile($template_profile_directory . '/' . $template_profile_name . '.install')
-            ->replace($template_profile_name, $name)
+        if (!$result->wasSuccessful()) {
+            exit(1);
+        }
+
+        $find_cmd = "find . -name '*" . $template_profile_name . "*' -exec bash -c 'mv \$0 \${0/" . $template_profile_name . '/' . $name . "}' {} \; ";
+
+        $result = $this->collectionBuilder()->taskExec($find_cmd)
+            ->dir($profile_directory)
             ->run();
 
-        $this->collectionBuilder()->taskWriteToFile($profile_directory . '/' . $name . '.profile')
-            ->textFromFile($template_profile_directory . '/' . $template_profile_name . '.profile')
-            ->replace($template_profile_name, $name)
-            ->replace('mcprofile', $name)
+        if (!$result->wasSuccessful()) {
+            exit(1);
+        }
+
+        $template_name_string = ucwords(str_replace('_', ' ', $template_profile_name));
+        $name_string = ucwords(str_replace('_', '', $name));
+
+        $find_cmd = "find . -type f -print0 | xargs -0 sed -i'' -e 's/$template_name_string/$name_string/g'";
+
+        $result = $this->collectionBuilder()->taskExec($find_cmd)
+            ->dir($profile_directory)
             ->run();
 
+        if (!$result->wasSuccessful()) {
+            exit(1);
+        }
 
-        $this->collectionBuilder()->taskWriteToFile($profile_directory . '/composer.json')
-            ->textFromFile($template_profile_directory . '/composer.json')
-            ->replace($template_profile_name, $name)
+        $template_name_string = str_replace('_', '-', $template_profile_name);
+        $name_string = str_replace('_', '-', $name);
+
+        $find_cmd = "find . -name '*" . $template_name_string . "*' -exec bash -c 'mv \$0 \${0/" . $template_name_string . '/' . $name_string . "}' {} \; ";
+
+        $result = $this->collectionBuilder()->taskExec($find_cmd)
+            ->dir($profile_directory)
             ->run();
 
-        $this->collectionBuilder()->taskFilesystemStack()
-            ->copy($template_profile_directory . '/LICENSE.txt', $profile_directory . '/LICENSE.txt')
+        if (!$result->wasSuccessful()) {
+            exit(1);
+        }
+
+        $this->collectionBuilder()->taskReplaceInFile($profile_directory . '/' . $name . '.info.yml')
+            ->from("Mediacurrent Profile")
+            ->to($name . ' Profile')
             ->run();
 
-        $this->collectionBuilder()->taskCopyDir([$template_profile_directory . '/config' => $profile_directory . '/config'])
+        $this->collectionBuilder()->taskReplaceInFile($profile_directory . '/' . $name . '.profile')
+            ->from('mcprofile')
+            ->to($name)
             ->run();
+
     }
 
     public function createTheme($opts)

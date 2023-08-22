@@ -1,10 +1,11 @@
 {{ attach_library('nysenate_theme/bill-item') }}
 
-<div class="c-block c-block-legislation {% if bill.featured %} c-block-legislation-featured {% endif %} {% if body %}c-block--half-wrap{% endif %} {{ modifier ? '' ~ modifier }}">
+<div
+    class="c-block c-block-legislation {% if bill.featured %} c-block-legislation-featured {% endif %} {% if body %}c-block--half-wrap{% endif %} {{ modifier ? '' ~ modifier }}">
   <div class="c-legislation-info {% if bill.issues %} with-issues {% endif %}">
-  {% if bill.issues %}
+    {% if bill.issues %}
     <div class="left-col">
-  {% endif %}
+      {% endif %}
       <h3 class="c-bill-num {% if bill.issues %}no-issues{% endif %} {{ bill.number_large ? 'c-bill-num--large' : '' }}">
         <a href="{{ bill.link }}">{{ bill.number }}</a>
       </h3>
@@ -13,14 +14,16 @@
         <div class="bill-type">
           {% for issue in bill.issues %}
             {% if loop.last %}
-              <a href="{{ issue.url }}" class="c-press-release--topic">{{ issue.text }}</a>
+              <a href="{{ issue.url }}"
+                 class="c-press-release--topic">{{ issue.text }}</a>
             {% else %}
-              <a href="{{ issue.url }}" class="c-press-release--topic">{{ issue.text }}</a>,
+              <a href="{{ issue.url }}"
+                 class="c-press-release--topic">{{ issue.text }}</a>,
             {% endif %}
           {% endfor %}
         </div>
       {% endif %}
-    {% if bill.issues %}
+      {% if bill.issues %}
     </div>
     {% endif %}
 
@@ -31,35 +34,17 @@
         </p>
       {% endif %}
       {% if bill.positions %}
-        <ul class="nys-bill-status {% if bill.small %} nys-bill-status__sml {% endif %} {% if bill.featured %} nys-bill-status__drk {% endif %}">
-          <hr/>
-          {% for position in bill.positions %}
-            {% if position.is_grouped %}
-              <li class="nys-bill-status--assem-sen">
-                <ul class="nys-bill-status">
-                  {% for item in position.items %}
-                    <li {% if item.is_passed %} class="passed" {% endif %} title="{{ item.text }}">
-                      <span class="nys-bill-status--text">{{ item.text }}</span>
-                    </li>
-                  {% endfor %}
-                </ul>
-              </li>
-            {% else %}
-              <li {% if position.is_passed == true %} class="passed" {% endif %} title="{{ position.text }}">
-                <span class="nys-bill-status--text">{{ position.text }}</span>
-              </li>
-            {% endif %}
-          {% endfor %}
-          <li class="spacer"></li>
-        </ul>
+        {% include '@nysenate_theme/src/templates/includes/nys-bill-status.html.twig' with {positions: bill.positions, is_small: bill.small, is_featured: bill.featured} only %}
       {% endif %}
+
       {% if bill.description_position == "bottom" %}
         <p class="c-bill-descript">
           {{ bill.description }}
         </p>
       {% endif %}
       {% if bill.resolution %}
-        <div class="c-bill-update {% if bill.small %} bill-status__sml {% endif %}">
+        <div
+            class="c-bill-update {% if bill.small %} bill-status__sml {% endif %}">
           <div>
             <p class="c-bill-update--date">
               <span class="date-display-single">{{ bill.date }}</span>
@@ -69,7 +54,8 @@
                 <span>
                   {{ bill.update_location }}
                   {% if bill.committee_link %}
-                    <a class="committee-link" href="{{ bill.committee_link.url }}">{{ bill.committee_link.text }}</a>
+                    <a class="committee-link"
+                       href="{{ bill.committee_link.url }}">{{ bill.committee_link.text }}</a>
                   {% endif %}
                 </span>
               </p>
@@ -96,7 +82,8 @@
           {% endif %}
         </div>
         {% if bill.committee_link %}
-          <a class="committee-link" href="{{ bill.committee_link.url }}">{{ bill.committee_link.text }}</a>
+          <a class="committee-link"
+             href="{{ bill.committee_link.url }}">{{ bill.committee_link.text }}</a>
         {% endif %}
       {% endif %}
 

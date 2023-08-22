@@ -1279,30 +1279,32 @@ function nysenate_theme_preprocess_paragraph__promotional_banners(&$variables) {
 /**
  * Implements hook_preprocess_views_view__VIEW_ID().
  */
-function nysenate_theme_preprocess_views_view__constituent_updates(&$variables) {
+function nysenate_theme_preprocess_views_view__constituent_updates(&$variables): void {
   if ($variables['view']->current_display == 'constituent_all_bill_updates') {
-    // Get User's District Senator.
-    $current_user = \Drupal::entityTypeManager()->getStorage('user')
-      ->load(\Drupal::currentUser()->id());
-    $senator = UsersHelper::getSenator($current_user);
-
-    $microsite_legislation = \Drupal::entityTypeManager()->getStorage('node')->loadByProperties([
-      'type' => 'microsite_page',
-      // Legislation page.
-      'field_microsite_page_type' => '200003',
-      'field_senator_multiref' => $senator->id(),
-    ]);
-
-    $senator_microsite_link = '';
-    if (!empty($microsite_legislation)) {
+    // Get the senator for the current user.
+    $senator = UsersHelper::getSenator(\Drupal::currentUser()->id());
+    // URL generation and getStorage() can throw exceptions.
+    try {
+      $microsite_legislation = \Drupal::entityTypeManager()
+        ->getStorage('node')
+        ->loadByProperties([
+          'type' => 'microsite_page',
+          // Legislation page.
+          'field_microsite_page_type' => '200003',
+          'field_senator_multiref' => $senator->id(),
+        ]);
       $legislation = reset($microsite_legislation);
-      $legislation_link = $legislation->toUrl()->toString();
-      $senator_microsite_link = ' or <a href="' . $legislation_link . '"> browse legislation that your Senator\'s been working on</a>';
+      $senator_text = ' or <a href="' . $legislation->toUrl()->toString() .
+        '"> browse legislation your Senator\'s been working on</a>';
+    }
+    catch (\Throwable) {
+      $senator_text = '';
     }
 
-    $variables['empty'] = [
-      '#markup' => '<p>No Updates to show.<br />To get updates on bills that matter to you, <a href="/legislation">search all Senate legislation</a>' . $senator_microsite_link . '.</p>',
-    ];
+    $empty = '<p>No Updates to show.<br />To get updates on bills that ' .
+      'matter to you, <a href="/legislation">search all Senate legislation</a>' .
+      $senator_text . '.</p>';
+    $variables['empty'] = ['#markup' => $empty];
   }
 }
 
@@ -1434,59 +1436,95 @@ function nysenate_theme_preprocess_views_view__senator_microsite_content(&$varia
  */
 function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
   $view = $variables['view'];
+  $entityManager = \Drupal::entityTypeManager();
+  $term_storage = $entityManager->getStorage('taxonomy_term');
+  $media_storage = $entityManager->getStorage('media');
   $parent_node = \Drupal::routeMatch()->getParameter('node');
   $current_path = \Drupal::service('path.current')->getPath();
   $aliased_path = \Drupal::service('path_alias.manager')->getAliasByPath($current_path);
-  $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
-  $media_storage = \Drupal::entityTypeManager()->getStorage('media');
   $bundle_info = \Drupal::service("entity_type.bundle.info")->getAllBundleInfo();
   // Newsroom Landing.
   if ($view->id() == 'senator_microsite_content' && $view->current_display == 'block_1') {
     $items = [];
     foreach ($view->result as $row) {
       /** @var \Drupal\node\Entity\Node $node */
-      $node = $row->_entity;
-      $allowed_values = [];
-      if ($node->hasField('field_category')) {
-        $allowed_values = $node->field_category->getSetting('allowed_values');
-      }
-      $term = NULL;
-      if ($node->hasField('field_issues') && !$node->get('field_issues')->isEmpty()) {
-        /** @var \Drupal\taxonomy\Entity\Term $term */
-        $term = !empty($node->field_issues->target_id) ? $term_storage->load($node->field_issues->target_id) : NULL;
-      }
+      $node = $row->_entity ?? NULL;
+      if ($node instanceof NodeInterface) {
 
-      $news_image = NULL;
-      $video_image = NULL;
-      if ($node->hasField('field_image_main') && !$node->get('field_image_main')->isEmpty()) {
-        $media = !empty($node->field_image_main->target_id) ? $media_storage->load($node->field_image_main->target_id) : NULL;
-        if (!empty($media)) {
-          $news_image = \Drupal::entityTypeManager()->getViewBuilder('media')->view($media, '380x215');
+        try {
+          $term = $node->get('field_issues')->entity ?? NULL;
+          $term_url = $term ? $term->toUrl()->toString() ?? '' : '';
         }
-      }
-      if ($node->bundle() == 'video') {
-        $video_id = $node->field_yt->target_id;
-        $video = $video_id ? $media_storage->load($video_id) : NULL;
-        if ($video) {
-          $video_image = \Drupal::entityTypeManager()->getViewBuilder('media')->view($video, 'thumbnail');
+        catch (\Throwable) {
+          $term = NULL;
+          $term_url = 'Could not build URL';
         }
-      }
 
-      $items[] = [
-        'news_title' => !empty($allowed_values) ? $allowed_values[$node->field_category->value] : $bundle_info[$node->getEntityTypeId()][$node->bundle()]['label'],
-        'news_url' => $node->toUrl()->toString(),
-        'news_image' => $news_image,
-        'video_src' => $video_image,
-        'news_name' => $node->getTitle(),
-        'news_topic' => [
-          'url' => !empty($term) ? $term->toUrl()->toString() : '',
-          'text' => !empty($term) ? $term->label() : '',
-        ],
-      ];
+        try {
+          $media = $node->get('field_image_main')->entity ?? NULL;
+          $news_image = $media
+            ? $entityManager->getViewBuilder('media')->view($media, '380x215')
+            : NULL;
+        }
+        catch (\Throwable) {
+          $news_image = NULL;
+        }
+
+        try {
+          $video = $node->get('field_yt')->entity ?? NULL;
+          $video_image = $video
+            ? $entityManager->getViewBuilder('media')->view($video, 'thumbnail')
+            : NULL;
+        }
+        catch (\Throwable) {
+          $video_image = NULL;
+        }
+
+        $date = ($value = ($node->get('field_date')->value ?? ''))
+          ? \Drupal::service('date.formatter')->format(strtotime($value), 'custom', 'F j, Y')
+          : NULL;
+
+        $bundle = $bundle_info['node'][$node->bundle()]['label'] ?? 'No Title';
+        if ($bundle !== 'Article') {
+          try {
+            $field = $node->get('field_category') ?? NULL;
+            $allowed_values = $field->getSetting('allowed_values') ?? [];
+            $category = $field->value ?? '';
+            $title = $allowed_values[$category] ?? $bundle;
+          }
+          catch (\Throwable) {
+            $title = $bundle;
+          }
+        }
+
+        try {
+          $url = $node->toUrl()->toString();
+        }
+        catch (\Throwable) {
+          $url = 'Could not build URL';
+        }
+
+        $items[] = [
+          'news_title' => $title,
+          'news_url' => $url,
+          'news_image' => $news_image,
+          'video_src' => $video_image,
+          'news_name' => $node->getTitle() ?? 'No Title',
+          'date' => $date,
+          'news_topic' => [
+            'url' => $term_url,
+            'text' => $term ? $term->label() : '',
+          ],
+        ];
+      }
     }
 
     $variables['cta_url'] = $aliased_path . '/newsroom';
     $variables['items'] = $items;
+  }
+
+  elseif ($view->id() == 'senator_microsite_content' && $view->current_display == 'microsite_events_landing') {
+    $variables['cta_url'] = $aliased_path . '/calendar';
   }
 
   // Legislation Landing.
@@ -1593,6 +1631,18 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
         $view->current_display == 'news') {
         $image_main = NULL;
       }
+
+      try {
+        $senator = $node->get('field_senator_multiref')->entity ?? NULL;
+        $senator_link = $senator
+          ? \Drupal::service('nys_senators.microsites')->getMicrosite($senator)
+          : '';
+      }
+      catch (\Throwable) {
+        $senator_link = '';
+      }
+
+      $variables['senator_link'] = $senator_link;
 
       $contents[] = [
         'title' => ucwords(strtolower(str_replace('_', ' ', $bundle))),
@@ -3859,129 +3909,13 @@ function nysenate_theme_preprocess_node__bill__teaser(&$variables) {
 /**
  * Generate the bill positions array.
  *
- * @param object $node
- *   The node object.
- *
  * @return array
  *   The positions array.
  */
-function nysenate_bill_positions($node) {
-
-  // If the bill is substituted, load the new bill instead.
-  if ($node->hasField('field_ol_substituted_by') && !$node->get('field_ol_substituted_by')->isEmpty()) {
-    $sub_bill_base_print_no = $node->field_ol_substituted_by->value;
-    $ol_session = '';
-    if ($node->hasField('field_ol_session') && !$node->get('field_ol_session')->isEmpty()) {
-      $ol_session = $node->field_ol_session->value;
-    }
-    $temp_node = \Drupal::entityTypeManager()
-      ->getStorage('node')
-      ->loadByProperties([
-        'field_ol_base_print_no' => $sub_bill_base_print_no,
-        'field_ol_session' => $ol_session,
-      ]);
-    $sub_bill_versions = \Drupal::service('nys_bill.bills_helper')->getBillVersions(reset($temp_node));
-    if (!empty($sub_bill_versions)) {
-      $node = \Drupal::entityTypeManager()->getStorage('node')
-        ->load(reset($sub_bill_versions));
-    }
-  }
-
-  $positions = [];
-
-  // Define default positions.
-  $positions = [
-    [
-      'text' => t('Introduced'),
-      'is_passed' => FALSE,
-    ],
-    [
-      'text' => t('In Committee'),
-      'is_passed' => FALSE,
-    ],
-    [
-      'text' => t('On Floor Calendar'),
-      'is_passed' => FALSE,
-    ],
-    [
-      'is_grouped' => TRUE,
-      'items' => [
-        [
-          'text' => t('Passed Senate'),
-          'is_passed' => FALSE,
-        ],
-        [
-          'text' => t('Passed Assembly'),
-          'is_passed' => FALSE,
-        ],
-      ],
-    ],
-    [
-      'text' => t('Delivered to Governor'),
-      'is_passed' => FALSE,
-    ],
-    [
-      'text' => t('Chaptered/Vetoed'),
-      'is_passed' => FALSE,
-    ],
-  ];
-
-  if ($node->hasField('field_ol_last_status') && isset($node->field_ol_last_status->value)) {
-    // Last status.
-    $last_status = !empty($node->field_ol_last_status->value) ? $node->field_ol_last_status->value : '';
-
-    // Set status indexes.
-    $all_statuses = [
-      'INTRODUCED' => 0,
-      'IN_ASSEMBLY_COMM' => 1,
-      'IN_SENATE_COMM' => 1,
-      'ASSEMBLY_FLOOR' => 2,
-      'SENATE_FLOOR' => 2,
-      'PASSED_ASSEMBLY' => 3,
-      'PASSED_SENATE' => 3,
-      'DELIVERED_TO_GOV' => 4,
-      'SIGNED_BY_GOV' => 5,
-      'VETOED' => 5,
-      'CHAPTERED' => 5,
-    ];
-
-    // Get the current status name and map it.
-    $current_status_index = 0;
-    if (array_key_exists($last_status, $all_statuses)) {
-      $current_status_index = $all_statuses[$last_status];
-    }
-
-    // Arrange the positions value.
-    foreach ($positions as $index => $item) {
-      if ($index === 3) {
-        if ($current_status_index == 3) {
-          if ($last_status === 'PASSED_SENATE') {
-            $positions[3]['items'][0]['is_passed'] = TRUE;
-          }
-          if ($last_status === 'PASSED_ASSEMBLY') {
-            $positions[3]['items'][1]['is_passed'] = TRUE;
-          }
-        }
-        else {
-          $positions[3]['items'][0]['is_passed'] = $current_status_index >= $index;
-          $positions[3]['items'][1]['is_passed'] = $current_status_index >= $index;
-        }
-      }
-      else {
-        $positions[$index]['is_passed'] = $current_status_index >= $index;
-      }
-    }
-
-    if ($current_status_index === 5) {
-      if ($last_status === 'VETOED') {
-        $positions[5]['text'] = 'Vetoed';
-      }
-      else {
-        $positions[5]['text'] = 'Chaptered/Signed by Governor';
-      }
-    }
-  }
-  return $positions;
+function nysenate_bill_positions(NodeInterface $node): array {
+  /** @var \Drupal\nys_bills\BillsHelper $service */
+  $service = \Drupal::service('nys_bill.bills_helper');
+  return $service->calculateMilestones($service->resolveBillSubstitution($node));
 }
 
 /**
@@ -4642,6 +4576,7 @@ function nysenate_theme_preprocess_node__open_data(&$variables) {
 function nysenate_theme_preprocess_node__article__featured_content(&$variables) {
   $variables['image_main'] = $variables['content']['field_image_main'][0] ?? [];
   $field_issues = $variables['content']['field_issues'];
+  $variables['date'] = $variables['content']['field_date'][0] ?? [];
   foreach ($field_issues as $key => $issue) {
     if (!is_numeric($key)) {
       continue;
@@ -4659,6 +4594,7 @@ function nysenate_theme_preprocess_node__article__featured_content(&$variables) 
  */
 function nysenate_theme_preprocess_node__honoree__featured_content(&$variables) {
   $variables['image_main'] = $variables['content']['field_image_main'][0] ?? [];
+  $variables['date'] = $variables['content']['field_date'][0] ?? [];
   $field_issues = $variables['content']['field_issues'];
   foreach ($field_issues as $key => $issue) {
     if (!is_numeric($key)) {
@@ -5483,21 +5419,13 @@ function nysenate_theme_preprocess_page(&$variables) {
     }
   }
 
-  // Variables for logged-in user's senator,
-  // link and headshot for my senator in header.
-  $logged_in = \Drupal::currentUser()->isAuthenticated();
-  if ($logged_in) {
-    if ($user->hasField('field_district') && !$user->get('field_district')->isEmpty()) {
+  // If logged in, populate variables for user's senator link and headshot.
+  if (\Drupal::currentUser()->isAuthenticated()) {
+    $senator = $user->get('field_district')->entity->field_senator->entity ?? NULL;
+    $headshot = $senator->field_member_headshot->entity ?? NULL;
+    if (($senator instanceof TermInterface) && $headshot) {
       $variables['has_senator'] = TRUE;
-
-      // @phpstan-ignore-next-line
-      $senator = $user->field_district->entity->field_senator->entity;
-
       $variables['senator_link'] = \Drupal::service('nys_senators.microsites')->getMicrosite($senator);
-
-      $headshot_id = $senator->field_member_headshot->target_id;
-      $headshot = \Drupal::entityTypeManager()->getStorage('media')
-        ->load($headshot_id);
       $variables['headshot'] = \Drupal::entityTypeManager()
         ->getViewBuilder('media')
         ->view($headshot, 'thumbnail');
@@ -6002,13 +5930,18 @@ function nysenate_theme_preprocess_node__landing__explore_issues(&$variables) {
  * Implements hook_preprocess_HOOK().
  */
 function nysenate_theme_preprocess_node__video(&$variables) {
-  $current_node = \Drupal::routeMatch()->getParameter('node');
-  if (!empty($current_node->field_senator_multiref)) {
-    $senator = $current_node->field_senator_multiref->entity;
-    $senator_link = \Drupal::service('nys_senators.microsites')
-      ->getMicrosite($senator);
-    $variables['senator_link'] = $senator_link;
+  $node = \Drupal::routeMatch()->getParameter('node');
+  try {
+    $senator = $node->get('field_senator_multiref')->entity ?? NULL;
+    $senator_link = $senator
+      ? \Drupal::service('nys_senators.microsites')->getMicrosite($senator)
+      : '';
   }
+  catch (\Throwable) {
+    $senator_link = '';
+  }
+  $variables['senator_link'] = $senator_link;
+
 }
 
 /**

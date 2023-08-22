@@ -18,20 +18,14 @@
     float: none;
   }
 
-  .c-legislation-block {
-
-    .nys-bill-status__sml li {
-      margin-top: -0.9em;
-
-      &.nys-bill-status--assem-sen .nys-bill-status > li:first-child {
-        top: 8px;
-      }
-    }
-  }
-
   .c-news-block {
     img {
       width: 100%;
+    }
+    .c-newsroom--date {
+      color: $color-blue;
+      margin-bottom: 6px;
+      text-transform: uppercase;
     }
   }
 
@@ -72,13 +66,6 @@
       border-top: 1px solid $grey05;
     }
 
-    .c-legislation-block {
-
-      .nys-bill-status__sml li {
-        margin-top: -13px;
-      }
-    }
-
     .c-event-block--list {
 
       .c-event-address {
@@ -89,4 +76,8 @@
       }
     }
   }
+}
+
+.c-container--header.c-events--landing {
+  border-bottom: none;
 }

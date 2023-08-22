@@ -64,27 +64,7 @@
           {% endif %}
         {% endif %}
         {% if article.positions and article.title != "Resolution" %}
-          <ul class="nys-bill-status nys-bill-status__sml">
-            <hr/>
-            {% for position in article.positions %}
-              {% if position.is_grouped %}
-                <li class="nys-bill-status--assem-sen">
-                  <ul class="nys-bill-status">
-                    {% for item in position.items %}
-                      <li {% if item.is_passed %} class="passed" {% endif %} title="{{ item.text }}">
-                        <span class="nys-bill-status--text">{{ item.text }}</span>
-                      </li>
-                    {% endfor %}
-                  </ul>
-                </li>
-              {% else %}
-                <li {% if position.is_passed == true %} class="passed" {% endif %} title="{{ position.text }}">
-                  <span class="nys-bill-status--text">{{ position.text }}</span>
-                </li>
-              {% endif %}
-            {% endfor %}
-            <li class="spacer"></li>
-          </ul>
+          {% include '@nysenate_theme/src/templates/includes/nys-bill-status.html.twig' with {positions: article.positions, is_small: true} only %}
         {% endif %}
         {% if article.author %}
           <div class="author">

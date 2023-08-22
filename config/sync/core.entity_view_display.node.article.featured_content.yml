@@ -26,12 +26,22 @@ dependencies:
     - field.field.node.article.field_subtitle
     - node.type.article
   module:
+    - datetime
     - user
 id: node.article.featured_content
 targetEntityType: node
 bundle: article
 mode: featured_content
 content:
+  field_date:
+    type: datetime_default
+    label: hidden
+    settings:
+      timezone_override: ''
+      format_type: publish_date
+    third_party_settings: {  }
+    weight: 3
+    region: content
   field_image_main:
     type: entity_reference_entity_view
     label: hidden
@@ -64,7 +74,6 @@ hidden:
   field_category: true
   field_committee: true
   field_committee_featured: true
-  field_date: true
   field_image_caption: true
   field_image_hero: true
   field_layout_components: true

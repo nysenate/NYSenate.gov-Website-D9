@@ -96,7 +96,9 @@
     } only %}
   </div>
 
-  {% if content.field_senator_multiref['#items'] %}
+    {{ drupal_view('senator_microsite_content', 'article_footer') }}
+
+    {% if content.field_senator_multiref['#items'] %}
     {{ drupal_view('senator_microsite_content', 'promo_footer') }}
-  {% endif %}
+    {% endif %}
 </article>

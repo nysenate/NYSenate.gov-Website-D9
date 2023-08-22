@@ -1,0 +1,32 @@
+{%- set top_class = ['nys-bill-status'] -%}
+{%- if is_small -%}{%- set top_class = top_class|merge(['nys-bill-status__sml']) -%}{%- endif -%}
+{%- if is_featured -%}{%- set top_class = top_class|merge(['nys-bill-status__drk']) -%}{%- endif -%}
+<ul class="{{ top_class|join(' ') }}">
+  <hr/>
+  {%- for i in 0..5 -%}
+    {%- set is_group = (positions[i]|length > 1) -%}
+    {%- if is_group -%}
+      <li class="nys-bill-status-grouped">
+      <ul class="nys-bill-status nys-bill-status-split-step">
+    {%- endif -%}
+    {%- for j in 0..1 -%}
+      {%- set item = positions[i][j] -%}
+      {%- if item -%}
+        {%- if is_group -%}
+          {%- set class = [(j==0) ? 'nys-bill-status-top-group' : 'nys-bill-status-bottom-group'] -%}
+        {%- else -%}
+          {%- set class = ['nys-bill-status-no-group'] -%}
+        {%- endif -%}
+        {%- if positions[i][j].pass -%}{%- set class = class|merge(['nys-bill-status-passed']) -%}{%- endif -%}
+        <li{%- if class|length %} class="{{ class|join(' ') }}"
+            {%- endif %} title="{{ positions[i][j].text }}">
+          <span class="nys-bill-status-step-text">{{ positions[i][j].text }}</span>
+        </li>
+      {% endif -%}
+    {%- endfor -%}
+    {%- if is_group -%}
+      </ul></li>
+    {% endif -%}
+  {%- endfor %}
+  <li class="nys-justify-spacer"></li>
+</ul>

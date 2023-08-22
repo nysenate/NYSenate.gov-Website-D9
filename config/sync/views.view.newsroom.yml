@@ -15,7 +15,6 @@ dependencies:
     - node
     - options
     - user
-    - views_infinite_scroll
 id: newsroom
 label: Newsroom
 module: views
@@ -397,15 +396,17 @@ display:
           separator: ', '
           field_api_classes: false
       pager:
-        type: infinite_scroll
+        type: full
         options:
           offset: null
           items_per_page: 5
-          total_pages: 5
+          total_pages: null
           id: 0
           tags:
             next: 'Next ›'
             previous: '‹ Previous'
+            first: '« First'
+            last: 'Last »'
           expose:
             items_per_page: false
             items_per_page_label: 'Items per page'
@@ -414,10 +415,7 @@ display:
             items_per_page_options_all_label: '- All -'
             offset: false
             offset_label: Offset
-          views_infinite_scroll:
-            button_text: 'See more news'
-            automatically_load_content: false
-            initially_load_all_pages: false
+          quantity: 9
       exposed_form:
         type: basic
         options:
@@ -636,6 +634,7 @@ display:
             operator: ''
             operator_limit_selection: false
             operator_list: {  }
+          accept_null: false
         type:
           id: type
           table: node_field_data
@@ -716,6 +715,7 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
+          accept_null: false
         field_category_value:
           id: field_category_value
           table: node__field_category

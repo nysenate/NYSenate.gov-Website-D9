@@ -43,6 +43,11 @@
               <a href="{{ item.news_url }}">{{ item.video_src }}</a>
             </div>
           {% endif %}
+          {% if item.date %}
+            <div class="c-newsroom--date">
+              {{ item.date }}
+            </div>
+          {% endif %}
           <h3 class="c-newsroom-name">
             <a href="{{ item.news_url }}">{{ item.news_name }}</a>
           </h3>
@@ -115,27 +120,9 @@
             </div>
             <div class="c-bill-body">
               <h4 class="c-bill-descript">{{ item.bill_description }}</h4>
-              <ul class="nys-bill-status nys-bill-status__sml">
-                <hr>
-                {% for position in item.bill_positions %}
-                  {% if position.is_grouped %}
-                    <li class="nys-bill-status--assem-sen">
-                      <ul class="nys-bill-status">
-                        {% for item in position.items %}
-                          <li {% if item.is_passed %} class="passed" {% endif %} title="{{ item.text }}">
-                            <span class="nys-bill-status--text">{{ item.text }}</span>
-                          </li>
-                        {% endfor %}
-                      </ul>
-                    </li>
-                  {% else %}
-                    <li {% if position.is_passed == true %} class="passed" {% endif %} title="{{ position.text }}">
-                      <span class="nys-bill-status--text">{{ position.text }}</span>
-                    </li>
-                  {% endif %}
-                {% endfor %}
-                <li class="spacer"></li>
-              </ul>
+              {% if item.bill_positions %}
+                {% include '@nysenate_theme/src/templates/includes/nys-bill-status.html.twig' with {positions: item.bill_positions, is_small: true} only %}
+              {% endif %}
               <div class="c-bill-update">
                 <p class="c-bill-update--date">
                   <span class="date-display-single">{{ item.bill_date }}</span>

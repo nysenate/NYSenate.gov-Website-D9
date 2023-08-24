@@ -29,7 +29,7 @@ content:
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 6
+    weight: 5
     region: content
   field_date:
     type: datetime_custom
@@ -38,7 +38,7 @@ content:
       timezone_override: ''
       date_format: 'F j, Y'
     third_party_settings: {  }
-    weight: 3
+    weight: 2
     region: content
   field_issues:
     type: entity_reference_label
@@ -46,7 +46,7 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 2
+    weight: 1
     region: content
   field_landing_blocks:
     type: entity_reference_revisions_entity_view
@@ -55,7 +55,7 @@ content:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    weight: 1
+    weight: 0
     region: content
   field_show_date:
     type: boolean
@@ -65,7 +65,7 @@ content:
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    weight: 4
+    weight: 3
     region: content
   field_show_issues:
     type: boolean
@@ -75,11 +75,17 @@ content:
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    weight: 5
+    weight: 4
+    region: content
+  field_summary:
+    type: basic_string
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 6
     region: content
 hidden:
   field_meta_tags: true
-  field_summary: true
   langcode: true
   links: true
   private_message_link: true

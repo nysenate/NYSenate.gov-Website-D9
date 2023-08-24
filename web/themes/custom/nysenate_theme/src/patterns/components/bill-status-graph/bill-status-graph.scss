@@ -1,0 +1,310 @@
+// Import site utilities.
+@import '../../global/utils/init';
+
+.c-block {
+
+  &.c-block-legislation-featured {
+    .nys-bill-status.nys-bill-status__drk {
+      li {
+        list-style: none;
+
+        &.nys-bill-status-passed {
+          background: $color-white;
+        }
+      }
+    }
+  }
+
+  &.c-block-constituent-bill {
+    .nys-bill-status.nys-bill-status__drk {
+
+      li {
+
+        &.nys-bill-status-passed {
+          background: $grey05;
+        }
+      }
+    }
+  }
+}
+
+.c-bill-update {
+
+  &.nys-bill-status__sml {
+    @include breakpoint($bp-sm) {
+      margin-top: 80px;
+    }
+  }
+}
+
+.nys-bill-status-step-text {
+  display: none;
+  position: absolute;
+  top: -35px;
+  bottom: auto;
+  left: -50px;
+  right: -50px;
+  margin: auto;
+  height: auto;
+  width: 100px;
+
+  color: $grey02;
+  text-align: center;
+  text-transform: capitalize;
+  font-family: $font-sans;
+  font-size: 12px;
+  line-height: 1.4em;
+}
+
+/*----------------------------------------
+/ BILL STATUS
+/ styling for a list denoting a bill's status
+/ list items are circle
+/ add 'passed' class to illustrate we're
+/	passed that step
+/----------------------------------------*/
+
+.c-bill-section {
+  ul.nys-bill-status {
+    margin: 90px 0;
+  }
+}
+
+.nys-bill-status {
+  position: relative;
+  margin: 25px 0;
+  padding: 0;
+  height: 20px;
+  list-style: none;
+  text-align: justify;
+  font-size: 20px;
+
+  hr {
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    height: 2px;
+    width: 90%;
+    border: 0;
+    background: $grey05;
+  }
+
+  li {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    height: 1em;
+    width: 1em;
+    margin-top: -1em;
+    background: $color-white;
+    border: 0.2em solid $grey05;
+    border-radius: 50%;
+
+    &.nys-bill-status-passed {
+      border: 0;
+      background: $blue01;
+    }
+
+    &.nys-bill-status-grouped {
+      height: auto;
+      width: 14%;
+      min-height: 2em;
+      border-width: 2px; // match hr height
+      border-radius: 0;
+      overflow: visible;
+
+      .nys-bill-status {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        margin: 0;
+      }
+
+      li {
+        position: absolute;
+        top: -0.5em;
+        bottom: auto;
+        left: 0;
+        right: 0;
+        margin: auto;
+
+        & + li {
+          top: auto;
+          bottom: -0.5em;
+        }
+      }
+    }
+
+  }
+}
+
+// smaller bill status and/or colored
+.nys-bill-status__sml,
+.nys-bill-status__drk {
+  width: 175px;
+  margin: 15px 0;
+  padding: 0;
+
+  hr {
+    width: 90%;
+    left: -5%;
+  }
+
+  li {
+    width: 10px;
+    height: 10px;
+    background: $grey-dot;
+    border: 0;
+    margin-right: 3px;
+
+    &.nys-bill-status-passed {
+      background: $blue01;
+    }
+
+    &.nys-bill-status-grouped {
+      background: $color-white;
+      min-height: 20px;
+      height: 20px;
+      width: 18%;
+      border: 2px solid $grey-line; // match hr height
+
+      .nys-bill-status {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        margin: 0;
+
+        > li {
+          top: -6px;
+
+          & + li {
+            top: auto;
+            bottom: -6px;
+          }
+        }
+      }
+    }
+  }
+}
+
+// small colors
+.nys-bill-status__sml {
+  hr {
+    background: $grey-line;
+  }
+
+  li {
+    background: $grey07;
+
+    &.nys-bill-status-passed {
+      background: $blue01;
+    }
+
+    &.nys-bill-status-grouped {
+      border: 2px solid $grey-line; // match hr height
+    }
+  }
+}
+
+// colored colors
+.nys-bill-status.nys-bill-status__drk {
+  hr {
+    @extend .drk-bg;
+  }
+
+  li {
+    @extend .med-bg;
+
+    &.nys-bill-status-passed {
+      background: $grey05;
+    }
+
+    &.nys-bill-status-grouped {
+      border: 2px solid;
+      color: $gen_blue_drk;
+      @extend .lgt-bg;
+    }
+  }
+}
+
+@include breakpoint($bp-sm) {
+  .nys-bill-status {
+    padding: 0 20px;
+    margin: 90px 0 100px;
+
+    hr {
+      max-width: 710px;
+    }
+
+    li {
+      overflow: visible;
+      margin-top: -1.55em;
+
+      &.nys-bill-status-grouped {
+        height: 70px;
+
+        li {
+          .nys-bill-status-step-text {
+            top: -35px;
+          }
+
+          & + li {
+            .nys-bill-status-step-text {
+              top: 35px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .nys-bill-status-step-text {
+    display: block;
+    position: absolute;
+    top: 35px;
+    bottom: auto;
+    left: -50px;
+    right: -50px;
+    margin: auto;
+    height: auto;
+    width: 100px;
+
+    color: $grey02;
+    text-align: center;
+    text-transform: capitalize;
+    font-family: $font-sans;
+    font-size: 12px;
+    line-height: 1.4em;
+  }
+
+  .nys-bill-status__sml,
+  .nys-bill-status__drk {
+    padding: 0;
+    margin: 15px 0;
+
+    li {
+      margin-top: -14px;
+
+      &.nys-bill-status-grouped {
+        height: 20px;
+      }
+    }
+
+    .nys-bill-status {
+      padding: 0;
+    }
+
+    .nys-bill-status-step-text {
+      display: none;
+    }
+  }
+
+}

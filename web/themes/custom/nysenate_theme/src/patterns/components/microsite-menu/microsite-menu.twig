@@ -15,19 +15,10 @@
       </ul>
 
       <div class="u-mobile-only">
-        <form class="search-form c-site-search" action="/search/global" method="post" id="search-form" accept-charset="UTF-8">
-          <div>
-            <h2 class="c-site-search--title">{{ search.title }}</h2>
-            <div class="container-inline form-wrapper" id="edit-basic">
-              <div class="form-item form-type-textfield form-item-keys">
-                <input class="c-site-search--box icon_after__search form-text" placeholder="{{ search.placeholder }}" type="text" id="edit-keys" name="keys" value="" size="50" maxlength="255">
-              </div>
-              <button class="c-site-search--btn" id="edit-submit--5" name="op" value="Search" type="submit">{{ search.title }}</button>
-              <a class="c-site-search--link icon-after__right u-tablet-plus" href="{{ search.link.href }}">{{ search.link.text }}</a><input type="hidden" name="get" value="{{ search.value }}">
-            </div><input type="hidden" name="form_build_id" value="form-FC0wF3CvJ0qqbg-Og-28NKW67zlrErO_gu76VIeD9S8">
-            <input type="hidden" name="form_id" value="apachesolr_search_blocks_core_search">
-          </div>
-        </form>
+        {{ form }}
+        <div>
+          <a class="c-site-search--link icon-after__right u-tablet-plus" href="{{ search.link.href }}">{{ search.link.text }}</a>
+        </div>
       </div>
 
       <button class="js-search--toggle u-tablet-plus c-site-search--btn icon-replace__search">search</button>
@@ -53,19 +44,10 @@
     </nav>
   </div>
 
-  <div class="u-tablet-plus">
-    <form class="search-form c-site-search" action="/search/global" method="post" id="search-form" accept-charset="UTF-8">
-      <div>
-        <h2 class="c-site-search--title">{{ search.title }}</h2>
-        <div class="container-inline form-wrapper" id="edit-basic--2">
-          <div class="form-item form-type-textfield form-item-keys">
-            <input class="c-site-search--box icon_after__search form-text" placeholder="{{ search.placeholder }}" type="text" id="edit-keys--2" name="keys" value="" size="50" maxlength="255">
-          </div>
-          <button class="c-site-search--btn" id="edit-submit--6" name="op" value="Search" type="submit">{{ search.title }}</button>
-          <a class="c-site-search--link icon-after__right u-tablet-plus" href="{{ search.link.href }}">{{ search.link.text }}</a><input type="hidden" name="get" value="{{ search.value }}">
-        </div><input type="hidden" name="form_build_id" value="form-gkuK188nles5x0ywuUfhqAHj75yMu5J5FTGzpm7vDdU">
-        <input type="hidden" name="form_id" value="apachesolr_search_blocks_core_search">
-      </div>
-    </form>
+  <div class="u-tablet-plus c-site-search--container">
+    <div>
+      {{ form }}
+    </div>
+    <a class="c-site-search--link icon-after__right u-tablet-plus" href="{{ search.link.href }}">{{ search.link.text }}</a>
   </div>
 </div>

@@ -42,9 +42,10 @@ class GlobalSearchController extends ControllerBase {
   public function page() {
     $content['#cache']['contexts'][] = 'url.query_args';
 
-    $results_page = $this->helper->isResultsPage();
-
+    $content['global_search_form'] = $this->formBuilder->getForm('Drupal\nys_search\Form\GlobalSearchAdvancedForm');
     $request = \Drupal::service('request_stack')->getCurrentRequest();
+
+    $results_page = $this->helper->isResultsPage();
     if ($results_page) {
       try {
         $view = Views::getView('core_search');
@@ -59,7 +60,10 @@ class GlobalSearchController extends ControllerBase {
         \Drupal::service('logger.channel.nys_search')->error($message, $variables);
       }
     }
-    $content['global_search_form'] = $this->formBuilder->getForm('Drupal\nys_search\Form\GlobalSearchAdvancedForm');
+    else {
+      // Redirect to Homepage.
+    }
+
     return $content;
   }
 

@@ -1987,7 +1987,8 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
   }
 
   // Search Global page.
-  if ($view->id() == 'core_search' && $view->current_display == 'page_search') {
+  if ($view->id() == 'core_search' &&
+    in_array($view->current_display, ['page_search', 'search_results_block'])) {
     $entity_type_manager = \Drupal::entityTypeManager();
     $results = $view->result;
     $search_result = [];

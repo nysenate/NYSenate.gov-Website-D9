@@ -3,9 +3,11 @@
 namespace Drupal\nys_search\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Url;
 use Drupal\nys_search\GlobalSearchAdvancedHelper;
 use Drupal\views\Views;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Returns responses for nys_dashboard routes.
@@ -62,6 +64,9 @@ class GlobalSearchController extends ControllerBase {
     }
     else {
       // Redirect to Homepage.
+      $url = Url::fromUserInput('/')->toString();
+      $response = new RedirectResponse($url);
+      $response->send();
     }
 
     return $content;

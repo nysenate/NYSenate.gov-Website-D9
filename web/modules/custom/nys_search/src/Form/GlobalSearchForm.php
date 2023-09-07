@@ -77,8 +77,8 @@ class GlobalSearchForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $keys = $form_state->getValue('keys');
     $senator = $form_state->getValue('senator');
-    $senator_param = $senator ? '?f[0]=senator:' . $senator : '';
-    $url = '/search/global/' . $keys . $senator_param;
+    $senator_param = $senator ? '&senator=' . $senator : '';
+    $url = '/search/global/result?full_text=' . $keys . $senator_param;
     $response = new TrustedRedirectResponse($url);
     $response->send();
   }

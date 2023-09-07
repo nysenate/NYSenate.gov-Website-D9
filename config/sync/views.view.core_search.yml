@@ -712,7 +712,7 @@ display:
           title: ''
           default_argument_type: raw
           default_argument_options:
-            index: 2
+            index: 3
             use_alias: true
           default_argument_skip_url: false
           summary_options: {  }
@@ -752,7 +752,6 @@ display:
             - field_subhead
             - field_subtitle
             - field_summary
-            - field_summary_1
             - rendered_item
       filters:
         search_api_fulltext:
@@ -922,7 +921,7 @@ display:
     position: 1
     display_options:
       display_extenders: {  }
-      path: search/global/result/%
+      path: search/global/%
     cache_metadata:
       max-age: -1
       contexts:
@@ -1023,6 +1022,105 @@ display:
             - field_subtitle
             - field_summary
             - rendered_item
+        field_senator_multiref:
+          id: field_senator_multiref
+          table: search_api_index_core_search
+          field: field_senator_multiref
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: search_api_term
+          default_action: default
+          exception:
+            value: all
+            title_enable: false
+            title: All
+          title_enable: false
+          title: ''
+          default_argument_type: query_parameter
+          default_argument_options:
+            query_param: senator
+            fallback: all
+            multiple: and
+          default_argument_skip_url: false
+          summary_options: {  }
+          summary:
+            sort_order: asc
+            number_of_records: 0
+            format: default_summary
+          specify_validation: true
+          validate:
+            type: none
+            fail: ignore
+          validate_options: {  }
+          break_phrase: false
+          not: false
+        field_committee:
+          id: field_committee
+          table: search_api_index_core_search
+          field: field_committee
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: search_api_term
+          default_action: default
+          exception:
+            value: all
+            title_enable: false
+            title: All
+          title_enable: false
+          title: ''
+          default_argument_type: query_parameter
+          default_argument_options:
+            query_param: committee
+            fallback: all
+            multiple: and
+          default_argument_skip_url: false
+          summary_options: {  }
+          summary:
+            sort_order: asc
+            number_of_records: 0
+            format: default_summary
+          specify_validation: true
+          validate:
+            type: none
+            fail: ignore
+          validate_options: {  }
+          break_phrase: false
+          not: false
+        type:
+          id: type
+          table: search_api_index_core_search
+          field: type
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: search_api
+          default_action: default
+          exception:
+            value: all
+            title_enable: false
+            title: All
+          title_enable: false
+          title: ''
+          default_argument_type: query_parameter
+          default_argument_options:
+            query_param: type
+            fallback: all
+            multiple: and
+          default_argument_skip_url: false
+          summary_options: {  }
+          summary:
+            sort_order: asc
+            number_of_records: 0
+            format: default_summary
+          specify_validation: true
+          validate:
+            type: none
+            fail: ignore
+          validate_options: {  }
+          break_phrase: false
+          not: false
       filters:
         status:
           id: status
@@ -1073,7 +1171,19 @@ display:
         arguments: false
         filters: false
         filter_groups: false
+        header: false
       display_description: ''
+      header:
+        result:
+          id: result
+          table: views
+          field: result
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: result
+          empty: true
+          content: "<h2> Search Results </h2>\r\n<div class='ds-search-extra'>YOUR SEARCH FOR \"\" GAVE BACK @total RESULTS. </div>"
       display_extenders: {  }
       block_description: 'Core Search Results'
     cache_metadata:

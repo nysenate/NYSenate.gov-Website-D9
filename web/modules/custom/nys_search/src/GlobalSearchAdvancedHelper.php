@@ -13,7 +13,7 @@ class GlobalSearchAdvancedHelper {
   public function isResultsPage() {
     $results_page = FALSE;
     $request = \Drupal::service('request_stack')->getCurrentRequest();
-    if ($request->query->get('key')) {
+    if ($request->query->get('full_text')) {
       $results_page = TRUE;
     }
 

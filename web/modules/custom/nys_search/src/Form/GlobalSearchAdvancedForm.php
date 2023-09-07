@@ -86,9 +86,28 @@ class GlobalSearchAdvancedForm extends FormBase {
 
     $result = [];
     $result['all'] = 'Filter By Committee';
-    foreach ($committees as $committe) {
-      $result[ucwords($committe->label())] = $committe->label();
+    foreach ($committees as $committee) {
+      $result[ucwords($committee->id())] = $committee->label();
     }
+    return $result;
+  }
+
+  /**
+   * Returns a list of content types.
+   *
+   * @return array
+   *   Content Type array.
+   */
+  public function getTypeList(): array {
+    $entityTypeManager = \Drupal::service('entity_type.manager');
+
+    $result = [];
+    $result['all'] = 'Filter By Type';
+    $content_types = $entityTypeManager->getStorage('node_type')->loadMultiple();
+    foreach ($content_types as $content_type) {
+      $result[$content_type->id()] = $content_type->label();
+    }
+
     return $result;
   }
 
@@ -146,31 +165,23 @@ class GlobalSearchAdvancedForm extends FormBase {
 
     $form['type'] = [
       '#type' => 'select',
-      '#options' => [
-        'all' => t('Filter By Type'),
-        'bill' => t('Bills'),
-        'resolution' => t('Resolutions'),
-        'meeting' => t('Committee Meeting Agendas'),
-        'session' => t('Session Calendars'),
-        'floor' => t('Session Transcripts'),
-        'public_hearing' => t('Public Hearing Transcripts'),
-      ],
+      '#options' => $this->getTypeList(),
       '#default_value' => $args['type'] ?? NULL,
       '#attributes' => [
         'class' => ['content-type'],
       ],
     ];
 
-    $form['key'] = [
+    $form['full_text'] = [
       '#type' => 'hidden',
-      '#default_value' => $args['key'] ?? NULL,
+      '#default_value' => $args['full_text'] ?? NULL,
     ];
 
     $form['actions']['#type'] = 'actions';
     $form['#attached']['library'][] = 'nys_search/nys_search';
     $form['actions']['submit'] = [
       '#type' => 'submit',
-      '#value' => $this->t('SEARCH'),
+      '#value' => $this->t('FILTER RESULT'),
       '#button_type' => 'small',
     ];
     return $form;
@@ -182,7 +193,7 @@ class GlobalSearchAdvancedForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $values = $form_state->getValues();
     $params = [
-      'key' => $values['key'] ?: '',
+      'full_text' => $values['full_text'] ?: '',
       'senator' => $values['senator'] ?: '',
       'committee' => $values['committee'] ?: '',
       'type' => $values['type'] ?: '',

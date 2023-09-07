@@ -15,6 +15,14 @@ function nys_search_views_pre_render(ViewExecutable $view) {
   if ($view->id() == 'core_search') {
     $path_array = explode('/', trim($_SERVER['REQUEST_URI'], '/'));
     $param_value = $path_array[2] ?? '';
+    if ($view->current_display == 'search_results_block') {
+      $params_array = explode('?full_text=', $param_value);
+      $param_value = $params_array[1] ?? '';
+      if (strpos($param_value, "&senator") > 0) {
+        $params_array = explode('&senator', $param_value);
+        $param_value = $params_array[0] ?? '';
+      }
+    }
     $param_value = strstr($param_value, '?', TRUE) ?: $param_value;
     $param_value = str_replace('""', '"' . strtoupper($param_value) . '"', $view->header['result']->options['content']);
     $view->header['result']->options['content'] = $param_value;

@@ -254,7 +254,7 @@ handlers:
   email_1:
     id: email
     handler_id: email_1
-    label: 'Email 1'
+    label: 'Submission Email'
     notes: ''
     status: true
     conditions: {  }
@@ -283,6 +283,43 @@ handlers:
       exclude_empty_checkbox: false
       exclude_attachments: false
       html: false
+      attachments: false
+      twig: true
+      theme_name: ''
+      parameters: {  }
+      debug: false
+  slack_emails:
+    id: email
+    handler_id: slack_emails
+    label: 'Slack Emails'
+    notes: ''
+    status: true
+    conditions: {  }
+    weight: 2
+    settings:
+      states:
+        - completed
+      to_mail: publicwebsite-support-aaaaaa3sifuzew6odvahjxnef4@nysstech.slack.com
+      to_options: {  }
+      bcc_mail: ''
+      bcc_options: {  }
+      cc_mail: ''
+      cc_options: {  }
+      from_mail: _default
+      from_options: {  }
+      from_name: _default
+      reply_to: ''
+      return_path: ''
+      sender_mail: ''
+      sender_name: ''
+      subject: 'Form submission from: Freedom of Information Request Form'
+      body: "<p>Submitted on {{ webform_token('[webform_submission:created:custom:F j, Y g:i a]', webform_submission, [], options) }}\r\n</p>\r\n<strong>Name:</strong>\r\n{{webform_token('[webform_submission:values:first_name]', webform_submission, [], options) }} {{webform_token('[webform_submission:values:last_name]', webform_submission, [], options) }}<br>\r\n<strong>Email:</strong>\r\n{{webform_token('[webform_submission:values:email_address]', webform_submission, [], options) }}<br>\r\n<strong>Home Address:</strong>\r\n{{webform_token('[webform_submission:values:street_4]', webform_submission, [], options) }}\r\n{{webform_token('[webform_submission:values:city_4]', webform_submission, [], options) }}, {{webform_token('[webform_submission:values:state_4]', webform_submission, [], options) }} {{webform_token('[webform_submission:values:zip_4]', webform_submission, [], options) }}\r\n\r\n{% if webform_token('[webform_submission:values:organization_9:clear]', webform_submission) is not empty %}\r\n<strong>Business Address:</strong>\r\n{{webform_token('[webform_submission:values:organization_9:clear]', webform_submission) }} {% endif %}<br>{% if webform_token('[webform_submission:values:street_9:clear]', webform_submission) is not empty %} {{webform_token('[webform_submission:values:street_9:clear]', webform_submission, [], options) }} {% endif %}\r\n{% if webform_token('[webform_submission:values:city_9:clear]', webform_submission) is not empty %} {{webform_token('[webform_submission:values:city_9:clear]', webform_submission, [], options) }}, {% endif %}{% if webform_token('[webform_submission:values:state_9:clear]', webform_submission) is not empty %} {{webform_token('[webform_submission:values:state_9:clear]', webform_submission, [], options) }} {% endif %} {% if webform_token('[webform_submission:values:postal_code_9:clear]', webform_submission) is not empty %}{{webform_token('[webform_submission:values:postal_code_9:clear]', webform_submission, [], options) }}<br> {% endif %}\r\n    {% if webform_token('[webform_submission:values:phone_number_9:clear]', webform_submission) is not empty %} <strong>Phone:</strong> {{webform_token('[webform_submission:values:phone_number_9:clear]', webform_submission, [], options) }}<br> {% endif %}\r\n\r\n<strong>To the best of your ability, please identify the New York State Senate documents you would like. Use record name, content, committee, date, etc.:</strong><br>\r\n    {{webform_token('[webform_submission:values:request_text:clear]', webform_submission, [], options) }}\r\n\r\n    <strong>Please let us know how you would like your data:</strong><br>\r\n    {{webform_token('[webform_submission:values:preferences:clear]', webform_submission, [], options) }}\r\n\r\n<strong>Contact me in writing if my request is denied for any reason with the legal basis for denial and with information on how to appeal:</strong><br>\r\n    {{webform_token('[webform_submission:values:contact:clear]', webform_submission, [], options) }}\r\n    \r\n<strong>View Submission:</strong><br>\r\n<a href=\"{{webform_token('[webform_submission:url]', webform_submission, [], options) }}\">{{webform_token('[webform_submission:url]', webform_submission, [], options) }}</a>\r\n"
+      excluded_elements: {  }
+      ignore_access: false
+      exclude_empty: true
+      exclude_empty_checkbox: false
+      exclude_attachments: false
+      html: true
       attachments: false
       twig: true
       theme_name: ''

@@ -1987,7 +1987,8 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
   }
 
   // Search Global page.
-  if ($view->id() == 'core_search' && $view->current_display == 'page_search') {
+  if ($view->id() == 'core_search' &&
+    in_array($view->current_display, ['page_search', 'search_results_block'])) {
     $entity_type_manager = \Drupal::entityTypeManager();
     $results = $view->result;
     $search_result = [];
@@ -2010,7 +2011,6 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
         if ($type instanceof EntityInterface) {
           $topics = [];
           $date = '';
-          $senator_multiref = [];
           $bill = ($bundle == 'bill') ? TRUE : NULL;
           $print_no = NULL;
           $positions = NULL;
@@ -2055,12 +2055,14 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
           }
           if ($entity->hasField('field_senator_multiref') && !$entity->field_senator_multiref->isEmpty()) {
             $senator = $entity->field_senator_multiref->entity;
-            $senator_link = [
-              '#type' => 'link',
-              '#url' => Url::fromUri(\Drupal::service('nys_senators.senators_helper')->getMicrositeUrl($senator)),
-              '#title' => $senator->getName(),
-              '#attributes' => ['class' => ['microsite-link']],
-            ];
+            if ($senator) {
+              $senator_link = [
+                '#type' => 'link',
+                '#url' => Url::fromUri(\Drupal::service('nys_senators.senators_helper')->getMicrositeUrl($senator)),
+                '#title' => $senator->getName(),
+                '#attributes' => ['class' => ['microsite-link']],
+              ];
+            }
           }
 
           $search_result[] = [
@@ -2188,7 +2190,7 @@ function nysenate_theme_preprocess_views_view__news_by_issue__news(&$variables) 
   $args = $variables['view']->args;
   $term = Term::load($args[0]);
   $name = $term->name->value;
-  $url = Url::fromUserInput('/search/global/' . $name, ['attributes' => ['class' => 'c-tab--link-more']]);
+  $url = Url::fromUserInput('/search/global/result?full_text=' . $name, ['attributes' => ['class' => 'c-tab--link-more']]);
   $link = Link::fromTextAndUrl('See All News About ' . $name, $url)->toString();
   $variables['footer'] = [
     '#markup' => '<p>' . $link . '</p>',
@@ -2202,7 +2204,7 @@ function nysenate_theme_preprocess_views_view__news_by_issue__meeting_by_issue(&
   $args = $variables['view']->args;
   $term = Term::load($args[0]);
   $name = $term->name->value;
-  $url = Url::fromUserInput('/search/global/' . $name, ['attributes' => ['class' => 'c-tab--link-more']]);
+  $url = Url::fromUserInput('/search/global/result?full_text=' . $name, ['attributes' => ['class' => 'c-tab--link-more']]);
   $link = Link::fromTextAndUrl('See All News About ' . $name, $url)->toString();
   $variables['footer'] = [
     '#markup' => '<p>' . $link . '</p>',

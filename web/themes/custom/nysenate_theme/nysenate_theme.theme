@@ -3861,6 +3861,13 @@ function nysenate_theme_preprocess_node__bill(&$variables) {
 /**
  * Implements hook_preprocess_node__NODE_TYPE__VIEW_MODE().
  */
+function nysenate_theme_preprocess_node__bill__search_teaser(&$variables) {
+  $variables['positions'] = nysenate_bill_positions($variables['node']);
+}
+
+/**
+ * Implements hook_preprocess_node__NODE_TYPE__VIEW_MODE().
+ */
 function nysenate_theme_preprocess_node__bill__teaser(&$variables) {
   $node = $variables['node'];
   $bills = [];

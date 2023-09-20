@@ -4877,6 +4877,11 @@ function nysenate_theme_form_alter(&$form, FormStateInterface $form_state, $form
     $form['private_messages'] = [];
   }
 
+  // Remove the Contact settings fieldset from the User Registration Form Step2.
+  if ($form_id == 'nys_registration_register_form') {
+    $form['contact'] = [];
+  }
+
   if ($form_id == 'views_exposed_form' && $form['#id'] == 'views-exposed-form-issues-listings-explore-issues-alpha') {
     $form['#action'] = '/explore-issues';
   }

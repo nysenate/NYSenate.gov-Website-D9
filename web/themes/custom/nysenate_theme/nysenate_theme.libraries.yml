@@ -333,6 +333,13 @@ bill-item:
   css:
     component:
       dist/css/bill-item.css: {}
+  dependencies:
+    - nysenate_theme/bill-status-graph
+
+bill-status-graph:
+  css:
+    component:
+      dist/css/bill-status-graph.css: {}
 
 featured-bills:
   css:
@@ -380,6 +387,11 @@ gallery-carousel:
     dist/js/gallery-carousel.es6.js: {}
   dependencies:
     - rain_theme/slick
+
+global-search-form:
+  css:
+    component:
+      dist/css/global-search-form.css: {}
 
 hammer:
   js:

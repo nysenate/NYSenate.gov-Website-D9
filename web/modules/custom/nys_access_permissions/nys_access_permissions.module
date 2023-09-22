@@ -96,29 +96,6 @@ function nys_access_permissions_form_alter(&$form, FormStateInterface $form_stat
 }
 
 /**
- * Implements hook_menu_local_tasks_alter().
- *
- * Prevents MCPs from accessing webform's settings tab.
- */
-function nys_access_permissions_menu_local_tasks_alter(&$data, $route_name) {
-  $account = \Drupal::currentUser();
-  // Fetch the User's roles.
-  $user_roles = $account->getRoles();
-  $routes = [
-    'entity.webform.edit_form',
-    'entity.webform.results_submissions',
-    'entity.webform.references',
-    'entity.webform.canonical',
-    'entity.webform.test_form',
-  ];
-  if (in_array('microsite_content_producer', $user_roles, FALSE) and !in_array('administrator', $user_roles, FALSE)) {
-    if (in_array($route_name, $routes)) {
-      unset($data['tabs'][0]['entity.webform.settings']);
-    }
-  }
-}
-
-/**
  * Implements hook_entity_operation_alter().
  *
  * Prevents MCPs from accessing webform settings operation.

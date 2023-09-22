@@ -2113,6 +2113,7 @@ display:
             operator: ''
             operator_limit_selection: false
             operator_list: {  }
+          accept_null: false
         type:
           id: type
           table: node_field_data
@@ -2215,6 +2216,7 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
+          accept_null: false
         field_image_main_target_id:
           id: field_image_main_target_id
           table: node__field_image_main
@@ -3190,10 +3192,9 @@ display:
           separator: ', '
           field_api_classes: false
       pager:
-        type: some
+        type: none
         options:
           offset: 0
-          items_per_page: 4
       exposed_form:
         type: basic
         options:
@@ -3219,6 +3220,7 @@ display:
             operator: ''
             operator_limit_selection: false
             operator_list: {  }
+          accept_null: false
         type:
           id: type
           table: node_field_data
@@ -4208,6 +4210,10 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
+      pager:
+        type: none
+        options:
+          offset: 0
       exposed_form:
         type: bef
         options:
@@ -4285,6 +4291,7 @@ display:
             operator: ''
             operator_limit_selection: false
             operator_list: {  }
+          accept_null: false
         type:
           id: type
           table: node_field_data
@@ -4407,6 +4414,7 @@ display:
           view_mode: upcoming_event
       defaults:
         empty: false
+        pager: false
         exposed_form: false
         style: false
         row: false
@@ -4422,7 +4430,6 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url
-        - url.query_args
         - 'user.node_grants:view'
         - user.permissions
       tags:

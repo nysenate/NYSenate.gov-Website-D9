@@ -41,7 +41,23 @@ third_party_settings:
       children:
         - field_thumbnail
         - field_summary
-      label: Summary
+      label: 'Social Media'
+      region: content
+      parent_name: ''
+      weight: 2
+      format_type: details
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        open: true
+        description: ''
+        description_display: after
+        required_fields: true
+    group_content:
+      children:
+        - field_block
+      label: Content
       region: content
       parent_name: ''
       weight: 1
@@ -53,11 +69,10 @@ third_party_settings:
         open: true
         description: ''
         required_fields: true
-    group_content:
+    group_senator:
       children:
-        - field_block
         - field_senator_multiref
-      label: Content
+      label: Senator
       region: content
       parent_name: ''
       weight: 3
@@ -68,6 +83,7 @@ third_party_settings:
         id: ''
         open: true
         description: ''
+        description_display: after
         required_fields: true
 id: node.microsite_page.default
 targetEntityType: node
@@ -82,7 +98,7 @@ content:
     third_party_settings: {  }
   field_block:
     type: inline_entity_form_complex
-    weight: 28
+    weight: 2
     region: content
     settings:
       form_mode: default
@@ -96,10 +112,11 @@ content:
       collapsible: false
       collapsed: false
       revision: true
+      removed_reference: optional
     third_party_settings: {  }
   field_meta_tags:
     type: metatag_firehose
-    weight: 14
+    weight: 15
     region: content
     settings:
       sidebar: true
@@ -113,7 +130,7 @@ content:
     third_party_settings: {  }
   field_senator_multiref:
     type: entity_reference_autocomplete
-    weight: 29
+    weight: 3
     region: content
     settings:
       match_operator: CONTAINS
@@ -166,7 +183,7 @@ content:
     third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 11
+    weight: 12
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -176,13 +193,13 @@ content:
     settings: {  }
     third_party_settings: {  }
   simple_sitemap:
-    weight: 10
+    weight: 11
     region: content
     settings: {  }
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    weight: 15
+    weight: 16
     region: content
     settings:
       display_label: true
@@ -214,12 +231,12 @@ content:
     third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 12
+    weight: 13
     region: content
     settings: {  }
     third_party_settings: {  }
   url_redirects:
-    weight: 13
+    weight: 14
     region: content
     settings: {  }
     third_party_settings: {  }

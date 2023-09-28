@@ -546,5 +546,7 @@ function contact_storage_contact_form_delete(EntityInterface $entity) {
 function contact_storage_action_info_alter(array &$definitions) {
   // For backwards compatibility, treat 'message_delete_action' as an alias of
   // the 'entity:delete_action:contact_message' plugin provided by core.
-  $definitions['message_delete_action'] = $definitions['entity:delete_action:contact_message'];
+  if (isset($definitions['entity:delete_action:contact_message']) && !isset($definitions['message_delete_action'])) {
+    $definitions['message_delete_action'] = $definitions['entity:delete_action:contact_message'];
+  }
 }

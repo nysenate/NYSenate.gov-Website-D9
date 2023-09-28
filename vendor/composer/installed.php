@@ -3,7 +3,7 @@
         'name' => 'mediacurrent/drupal-project',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '84baebd022864e4a47e4cceb2e3fc09d272bd334',
+        'reference' => 'e3c6ae3052a240de10b03a1ba7d961dcd2e353b5',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -1314,6 +1314,15 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'drupal/media_entity_file_replace' => array(
+            'pretty_version' => '1.1.0',
+            'version' => '1.1.0.0',
+            'reference' => '8.x-1.1',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../web/modules/contrib/media_entity_file_replace',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'drupal/media_library_form_element' => array(
             'pretty_version' => '2.0.6',
             'version' => '2.0.6.0',
@@ -2491,7 +2500,7 @@
         'mediacurrent/drupal-project' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '84baebd022864e4a47e4cceb2e3fc09d272bd334',
+            'reference' => 'e3c6ae3052a240de10b03a1ba7d961dcd2e353b5',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

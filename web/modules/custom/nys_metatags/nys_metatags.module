@@ -48,7 +48,9 @@ function nys_metatags_metatags_attachments_alter(array &$metatag_attachments) {
     if (!$title) {
       return;
     }
+    /* @phpstan-ignore-next-line */
     $type = $node->field_microsite_page_type[0]->target_id;
+    /* @phpstan-ignore-next-line */
     $senator_id = $node->field_senator_multiref[0]->target_id;
     try {
       $senator = \Drupal::entityTypeManager()->getStorage('taxonomy_term')

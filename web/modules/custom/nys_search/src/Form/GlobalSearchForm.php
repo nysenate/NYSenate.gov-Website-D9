@@ -5,7 +5,6 @@ namespace Drupal\nys_search\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\TrustedRedirectResponse;
-use Drupal\Core\Url;
 
 /**
  * Allow for calling the SAGE API and viewing the return.
@@ -37,6 +36,18 @@ class GlobalSearchForm extends FormBase {
       ],
     ];
 
+    $node = \Drupal::routeMatch()->getParameter('node');
+    if (!empty($node) && $node->bundle() == 'microsite_page') {
+      $senator_term = ($node->hasField('field_senator_multiref') && !$node->get('field_senator_multiref')->isEmpty())
+        ? $node->get('field_senator_multiref')->entity : [];
+      if ($senator_term) {
+        $form['senator'] = [
+          '#type' => 'hidden',
+          '#default_value' => $senator_term->id(),
+        ];
+      }
+    }
+
     $form['keys'] = [
       '#type' => 'textfield',
       '#attributes' => [
@@ -65,7 +76,10 @@ class GlobalSearchForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $keys = $form_state->getValue('keys');
-    $response = new TrustedRedirectResponse(Url::fromUri('internal:/search/global/' . $keys)->toString());
+    $senator = $form_state->getValue('senator');
+    $senator_param = $senator ? '&senator=' . $senator : '';
+    $url = '/search/global/result?full_text=' . $keys . $senator_param;
+    $response = new TrustedRedirectResponse($url);
     $response->send();
   }
 

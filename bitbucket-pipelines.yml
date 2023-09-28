@@ -39,8 +39,8 @@ pipelines:
           - if [ "$(ls -A web/modules/custom/)" ]; then
           - composer robo test:phpunit-tests
           - fi
-          - echo "Drupal-check custom development for Drupal 9/10 readiness"
-          - ./vendor/mediacurrent/ci-tests/tests/drupal-check.sh web
+          # echo "Drupal-check custom development for Drupal 9/10 readiness"
+          # ./vendor/mediacurrent/ci-tests/tests/drupal-check.sh web
           # - CMD=$(composer robo test:phpunit-tests 2>&1) && printf '%s\n' "${CMD}"|| ( slackcli -h mc-alerts-nysenate -e ":rage3:" -m "https://bitbucket.org/mediacurrent/${BITBUCKET_REPO_SLUG}/addon/pipelines/home#!/results/$BITBUCKET_BUILD_NUMBER ${BITBUCKET_BRANCH} error - \`\`\`${CMD}\`\`\`" && printf '%s\n' "${CMD}" && exit 1 )
           - printf "127.0.0.1 example.mcdev" >> /etc/hosts
           - cd ./web

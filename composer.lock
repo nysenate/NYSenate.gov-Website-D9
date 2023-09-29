@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e3010f79f44908e7fb3c8da1e2ede097",
+    "content-hash": "b00f489ed4d7668aca6880d1120f09c0",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -6876,6 +6876,50 @@
             }
         },
         {
+            "name": "drupal/media_entity_file_replace",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/media_entity_file_replace.git",
+                "reference": "8.x-1.1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/media_entity_file_replace-8.x-1.1.zip",
+                "reference": "8.x-1.1",
+                "shasum": "4462d41e80de7880e556eb677cd1831a44470dac"
+            },
+            "require": {
+                "drupal/core": "^9 || ^10"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-1.1",
+                    "datestamp": "1665518899",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "bkosborne",
+                    "homepage": "https://www.drupal.org/user/788032"
+                }
+            ],
+            "description": "Allows content editors to easily replace source files associated with any file-based media entity, preserving the original filename.",
+            "homepage": "https://www.drupal.org/project/media_entity_file_replace",
+            "support": {
+                "source": "https://git.drupalcode.org/project/media_entity_file_replace"
+            }
+        },
+        {
             "name": "drupal/media_library_form_element",
             "version": "2.0.6",
             "source": {
@@ -7739,7 +7783,7 @@
                 "reference": "0c88220b671aecdb3f98f4d291b21d8247248758"
             },
             "require": {
-                "drupal/core": "^8.7.10 || ^9"
+                "drupal/core": "^8.7.10 || ^9 || ^10"
             },
             "type": "drupal-module",
             "extra": {
@@ -7747,8 +7791,8 @@
                     "dev-1.x": "1.x-dev"
                 },
                 "drupal": {
-                    "version": "8.x-1.0+6-dev",
-                    "datestamp": "1610046511",
+                    "version": "8.x-1.0+10-dev",
+                    "datestamp": "1692806916",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Dev releases are not covered by Drupal security advisories."
@@ -9935,6 +9979,10 @@
                     "homepage": "https://www.drupal.org/user/972"
                 },
                 {
+                    "name": "ipwa",
+                    "homepage": "https://www.drupal.org/user/130909"
+                },
+                {
                     "name": "johnennew",
                     "homepage": "https://www.drupal.org/user/1150042"
                 },
@@ -9945,6 +9993,10 @@
                 {
                     "name": "VladimirAus",
                     "homepage": "https://www.drupal.org/user/673120"
+                },
+                {
+                    "name": "xiwar",
+                    "homepage": "https://www.drupal.org/user/3309931"
                 }
             ],
             "description": "Limit simultaneous user sessions.",
@@ -22014,7 +22066,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://bitbucket.org/mediacurrent/ci-tests/get/ff9e0ae81dcf2ea3e071282be7d1793bea8da5d2.zip",
+                "url": "https://bitbucket.org/mediacurrent/ci-tests/get/8a85d5be49c3ca5468fbfef72a4bbedf61817257.zip",
                 "reference": "ff9e0ae81dcf2ea3e071282be7d1793bea8da5d2",
                 "shasum": ""
             },
@@ -22035,7 +22087,7 @@
             "homepage": "https://bitbucket.org/mediacurrent/ci-tests",
             "support": {
                 "issues": "https://bitbucket.org/mediacurrent/ci-tests/issues",
-                "source": "https://bitbucket.org/mediacurrent/ci-tests/src/ff9e0ae81dcf2ea3e071282be7d1793bea8da5d2/?at=master"
+                "source": "https://bitbucket.org/mediacurrent/ci-tests/src/8a85d5be49c3ca5468fbfef72a4bbedf61817257/?at=master"
             },
             "time": "2023-07-28T12:25:48+00:00"
         },

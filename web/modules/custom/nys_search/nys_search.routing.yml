@@ -1,0 +1,7 @@
+nys_search.gobalSearch:
+  path: '/search/global/result'
+  defaults:
+    _controller: '\Drupal\nys_search\Controller\GlobalSearchController::page'
+  requirements:
+    _permission: 'access content'
+    _access: 'TRUE'

@@ -93,7 +93,13 @@
       <div class="c-event-image">
         {{ content.field_feature_image }}
       </div>
+      {% else %}
+      <div class="c-event-image--main">
+        {{ content.field_image_main }}
+      </div>
     {% endif %}
+
+    {{ content.field_image_main }}
 
     {% include "@nysenate_theme/nysenate-event-date/nysenate-event-date.twig" with {
       is_multiday: is_multiday,

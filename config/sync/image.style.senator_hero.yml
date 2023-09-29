@@ -1,14 +1,25 @@
 uuid: c883b48c-87ee-4ccc-82a0-693ec6f5b102
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  config:
+    - crop.type.senator_hero
+  module:
+    - crop
 name: senator_hero
 label: 'Senator Hero'
 effects:
-  54df0e30-f12a-47ba-8c80-3fbf863a84d3:
-    uuid: 54df0e30-f12a-47ba-8c80-3fbf863a84d3
-    id: image_scale_and_crop
+  97b0d197-4e6f-497d-ba1e-bc260147b032:
+    uuid: 97b0d197-4e6f-497d-ba1e-bc260147b032
+    id: crop_crop
     weight: 1
+    data:
+      crop_type: senator_hero
+      automatic_crop_provider: null
+  c26115c4-162d-419e-8068-0eed9117e628:
+    uuid: c26115c4-162d-419e-8068-0eed9117e628
+    id: image_scale_and_crop
+    weight: 2
     data:
       width: 810
       height: 608

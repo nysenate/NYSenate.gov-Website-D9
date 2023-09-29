@@ -1,14 +1,26 @@
 uuid: 0a3228ad-aad2-4bd0-ba4c-ad68710afecf
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  config:
+    - crop.type.promo_banner
+  module:
+    - crop
 name: 280_x_280
 label: '280 x 280'
 effects:
-  47b573fc-e7bc-4402-829a-7d5006e7b5be:
-    uuid: 47b573fc-e7bc-4402-829a-7d5006e7b5be
-    id: image_resize
-    weight: 1
+  26d7ba0e-e6f1-470d-a63a-572ad31c1d06:
+    uuid: 26d7ba0e-e6f1-470d-a63a-572ad31c1d06
+    id: image_scale_and_crop
+    weight: -9
     data:
       width: 280
       height: 280
+      anchor: center-center
+  4429786b-92fb-4e94-89ee-e21e352f395c:
+    uuid: 4429786b-92fb-4e94-89ee-e21e352f395c
+    id: crop_crop
+    weight: -10
+    data:
+      crop_type: promo_banner
+      automatic_crop_provider: null

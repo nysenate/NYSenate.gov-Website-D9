@@ -1,14 +1,25 @@
 uuid: b35d28ab-72bf-49ae-8a1c-7b17b43ae7cc
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  config:
+    - crop.type.hero
+  module:
+    - crop
 name: homepage_hero_lg
 label: 'Homepage Hero Large (1280x510)'
 effects:
-  cc7ef2d9-9d7c-4e93-ab37-a577a9984be6:
-    uuid: cc7ef2d9-9d7c-4e93-ab37-a577a9984be6
+  7f7445b3-8aa0-41c5-8027-dc9c7b7b2b3c:
+    uuid: 7f7445b3-8aa0-41c5-8027-dc9c7b7b2b3c
+    id: crop_crop
+    weight: 2
+    data:
+      crop_type: hero
+      automatic_crop_provider: null
+  6ebc1f71-51ca-4f30-aca4-631595f00a98:
+    uuid: 6ebc1f71-51ca-4f30-aca4-631595f00a98
     id: image_scale_and_crop
-    weight: 1
+    weight: 2
     data:
       width: 1280
       height: 510

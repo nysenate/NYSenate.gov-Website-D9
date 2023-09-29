@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e3010f79f44908e7fb3c8da1e2ede097",
+    "content-hash": "5a87d32dc58feb8887470435be6c72d5",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -3508,6 +3508,63 @@
             "time": "2023-09-19T17:58:28+00:00"
         },
         {
+            "name": "drupal/crop",
+            "version": "2.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/crop.git",
+                "reference": "8.x-2.3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/crop-8.x-2.3.zip",
+                "reference": "8.x-2.3",
+                "shasum": "8e109cf60077f4c605c4d1f895cb3dc28613a23a"
+            },
+            "require": {
+                "drupal/core": "^9.3 || ^10"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-2.3",
+                    "datestamp": "1665437894",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Drupal Media Team",
+                    "homepage": "https://www.drupal.org/user/3260690"
+                },
+                {
+                    "name": "phenaproxima",
+                    "homepage": "https://www.drupal.org/user/205645"
+                },
+                {
+                    "name": "slashrsm",
+                    "homepage": "https://www.drupal.org/user/744628"
+                },
+                {
+                    "name": "woprrr",
+                    "homepage": "https://www.drupal.org/user/858604"
+                }
+            ],
+            "description": "Provides storage and API for image crops.",
+            "homepage": "https://www.drupal.org/project/crop",
+            "support": {
+                "source": "https://git.drupalcode.org/project/crop",
+                "issues": "https://www.drupal.org/project/issues/crop"
+            }
+        },
+        {
             "name": "drupal/csv_serialization",
             "version": "2.1.0",
             "source": {
@@ -3900,6 +3957,14 @@
                     "name": "Moshe Weitzman (moshe weitzman)",
                     "homepage": "https://www.drupal.org/u/moshe-weitzman",
                     "role": "Maintainer"
+                },
+                {
+                    "name": "Grevil",
+                    "homepage": "https://www.drupal.org/user/3668491"
+                },
+                {
+                    "name": "moshe weitzman",
+                    "homepage": "https://www.drupal.org/user/23"
                 }
             ],
             "description": "Allows users to register with an email address as their username.",
@@ -4427,6 +4492,10 @@
                 "GPL-2.0-or-later"
             ],
             "authors": [
+                {
+                    "name": "Anybody",
+                    "homepage": "https://www.drupal.org/user/291091"
+                },
                 {
                     "name": "Hydra",
                     "homepage": "https://www.drupal.org/user/647364"
@@ -5556,6 +5625,82 @@
             }
         },
         {
+            "name": "drupal/image_widget_crop",
+            "version": "2.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/image_widget_crop.git",
+                "reference": "8.x-2.4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/image_widget_crop-8.x-2.4.zip",
+                "reference": "8.x-2.4",
+                "shasum": "6fcf4641d730bf1f5afce2a95d58f76094c72d1b"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9 || ^10",
+                "drupal/crop": "^1 || ^2"
+            },
+            "require-dev": {
+                "drupal/bartik": "^1",
+                "drupal/crop": "*",
+                "drupal/ctools": "^3",
+                "drupal/entity_browser": "^2",
+                "drupal/inline_entity_form": "^1"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-2.4",
+                    "datestamp": "1667435355",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Alexandre Mallet",
+                    "homepage": "https://github.com/woprrr",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "Drupal Media Team",
+                    "homepage": "https://www.drupal.org/user/3260690"
+                },
+                {
+                    "name": "phenaproxima",
+                    "homepage": "https://www.drupal.org/user/205645"
+                },
+                {
+                    "name": "slashrsm",
+                    "homepage": "https://www.drupal.org/user/744628"
+                },
+                {
+                    "name": "woprrr",
+                    "homepage": "https://www.drupal.org/user/858604"
+                }
+            ],
+            "description": "Provides an interface for using the features of the Crop API.",
+            "homepage": "https://www.drupal.org/project/image_widget_crop",
+            "keywords": [
+                "Crop",
+                "Drupal",
+                "Drupal Media"
+            ],
+            "support": {
+                "source": "https://www.drupal.org/project/image_widget_crop",
+                "issues": "https://www.drupal.org/project/issues/image_widget_crop",
+                "irc": "irc://irc.freenode.org/drupal-contribute"
+            }
+        },
+        {
             "name": "drupal/imagemagick",
             "version": "3.4.0",
             "source": {
@@ -6643,16 +6788,20 @@
                     "homepage": "https://www.drupal.org/user/582042"
                 },
                 {
-                    "name": "Cottser",
-                    "homepage": "https://www.drupal.org/user/1167326"
-                },
-                {
                     "name": "greggles",
                     "homepage": "https://www.drupal.org/user/36762"
                 },
                 {
                     "name": "jcnventura",
                     "homepage": "https://www.drupal.org/user/122464"
+                },
+                {
+                    "name": "leymannx",
+                    "homepage": "https://www.drupal.org/user/2482808"
+                },
+                {
+                    "name": "star-szr",
+                    "homepage": "https://www.drupal.org/user/1167326"
                 }
             ],
             "description": "Provides information about individual user logins",
@@ -8635,7 +8784,7 @@
                 "reference": "4e0703774c89305165edab9f8ccd84027e9c4b41"
             },
             "require": {
-                "drupal/core": "^8.8.0 || ^9.0 || ^10.0",
+                "drupal/core": "^9.3 || ^10.0",
                 "drupal/message": "^1.0",
                 "drupal/message_notify": "^1.0",
                 "php": ">=7.4"
@@ -8644,7 +8793,7 @@
                 "drupal/message_notify": "*"
             },
             "suggest": {
-                "drush/drush": "^9 || ^10"
+                "drush/drush": "^10 || ^11 || ^12"
             },
             "type": "drupal-module",
             "extra": {
@@ -8652,8 +8801,8 @@
                     "dev-3.0.x": "3.0.x-dev"
                 },
                 "drupal": {
-                    "version": "3.0.0-beta2+15-dev",
-                    "datestamp": "1691262833",
+                    "version": "3.0.0-beta2+17-dev",
+                    "datestamp": "1696872148",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Dev releases are not covered by Drupal security advisories."
@@ -8661,7 +8810,7 @@
                 },
                 "drush": {
                     "services": {
-                        "drush.services.yml": "^9 || ^10"
+                        "drush.services.yml": "^10 || ^11 || ^12"
                     }
                 }
             },
@@ -9923,16 +10072,16 @@
             ],
             "authors": [
                 {
-                    "name": "Scyther",
-                    "homepage": "https://www.drupal.org/user/613694"
-                },
-                {
                     "name": "jpamental",
                     "homepage": "https://www.drupal.org/user/174960"
                 },
                 {
                     "name": "nicxvan",
                     "homepage": "https://www.drupal.org/user/531480"
+                },
+                {
+                    "name": "Scyther",
+                    "homepage": "https://www.drupal.org/user/613694"
                 }
             ],
             "description": "Views plugins for UI management of output markup",
@@ -9979,6 +10128,10 @@
                     "homepage": "https://www.drupal.org/user/972"
                 },
                 {
+                    "name": "ipwa",
+                    "homepage": "https://www.drupal.org/user/130909"
+                },
+                {
                     "name": "johnennew",
                     "homepage": "https://www.drupal.org/user/1150042"
                 },
@@ -9989,6 +10142,10 @@
                 {
                     "name": "VladimirAus",
                     "homepage": "https://www.drupal.org/user/673120"
+                },
+                {
+                    "name": "xiwar",
+                    "homepage": "https://www.drupal.org/user/3309931"
                 }
             ],
             "description": "Limit simultaneous user sessions.",
@@ -22058,7 +22215,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://bitbucket.org/mediacurrent/ci-tests/get/ff9e0ae81dcf2ea3e071282be7d1793bea8da5d2.zip",
+                "url": "https://bitbucket.org/mediacurrent/ci-tests/get/db5b1b0f6a42987856d3d21889bdfb24419081a6.zip",
                 "reference": "ff9e0ae81dcf2ea3e071282be7d1793bea8da5d2",
                 "shasum": ""
             },
@@ -22079,7 +22236,7 @@
             "homepage": "https://bitbucket.org/mediacurrent/ci-tests",
             "support": {
                 "issues": "https://bitbucket.org/mediacurrent/ci-tests/issues",
-                "source": "https://bitbucket.org/mediacurrent/ci-tests/src/ff9e0ae81dcf2ea3e071282be7d1793bea8da5d2/?at=master"
+                "source": "https://bitbucket.org/mediacurrent/ci-tests/src/db5b1b0f6a42987856d3d21889bdfb24419081a6/?at=master"
             },
             "time": "2023-07-28T12:25:48+00:00"
         },

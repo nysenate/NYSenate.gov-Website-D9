@@ -7,8 +7,8 @@ use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Logger\LoggerChannel;
 use Drupal\node\Entity\Node;
-use Drupal\nys_openleg\Api\ResponsePluginBase;
-use Drupal\nys_openleg\Service\ApiManager;
+use Drupal\nys_openleg_api\ResponsePluginInterface;
+use Drupal\nys_openleg_api\Service\Api;
 use Drupal\nys_subscriptions\Entity\Subscription;
 use Drupal\nys_subscriptions\SubscriptionQueue;
 use Drupal\nys_subscriptions\SubscriptionQueueInterface;
@@ -37,9 +37,9 @@ class UpdatesProcessor {
   /**
    * NYS Openleg API Manager service.
    *
-   * @var \Drupal\nys_openleg\Service\ApiManager
+   * @var \Drupal\nys_openleg_api\Service\Api
    */
-  protected ApiManager $apiManager;
+  protected Api $apiManager;
 
   /**
    * The plugin manager for bill notification update tests.
@@ -67,7 +67,7 @@ class UpdatesProcessor {
    *
    * @throws \Drupal\nys_subscriptions\Exception\SubscriptionQueueNotRegistered
    */
-  public function __construct(LoggerChannel $logger, ConfigFactory $config, ApiManager $apiManager, EntityTypeManager $entityTypeManager, BillTestManager $tester, SubscriptionQueueManager $queueManager) {
+  public function __construct(LoggerChannel $logger, ConfigFactory $config, Api $apiManager, EntityTypeManager $entityTypeManager, BillTestManager $tester, SubscriptionQueueManager $queueManager) {
     $this->logger = $logger;
     $this->config = $config->get('nys_bill_notifications.settings');
     $this->apiManager = $apiManager;
@@ -106,13 +106,11 @@ class UpdatesProcessor {
    * @param array $params
    *   Query string parameters to add to the API request.
    *
-   * @return \Drupal\nys_openleg\Api\ResponsePluginBase
+   * @return \Drupal\nys_openleg_api\ResponsePluginBase
    *   The Response object from Openleg.
    */
-  protected function retrieveUpdates(mixed $time_from, mixed $time_to, array $params = []): ResponsePluginBase {
-    return $this->apiManager->getRequest('bill')
-      ->setParams(['detail' => 'true'] + $params)
-      ->retrieveUpdates($time_from, $time_to);
+  protected function retrieveUpdates(mixed $time_from, mixed $time_to, array $params = []): ResponsePluginInterface {
+    return $this->apiManager->getUpdates('bill', $time_from, $time_to, ['detail' => 'true'] + $params);
   }
 
   /**
@@ -160,7 +158,7 @@ class UpdatesProcessor {
        */
       $ret = (count($nodes) == 1) ? current($nodes) : NULL;
     }
-    catch (\Throwable $e) {
+    catch (\Throwable) {
       $ret = NULL;
     }
     return $ret;
@@ -178,7 +176,7 @@ class UpdatesProcessor {
         ->getStorage('taxonomy_term')
         ->load($id);
     }
-    catch (\Throwable $e) {
+    catch (\Throwable) {
       $ret = NULL;
     }
     return $ret;
@@ -247,6 +245,8 @@ class UpdatesProcessor {
    *   The bill receiving the updates.
    * @param \Drupal\taxonomy\Entity\Term $term
    *   The term representing the lineage root of the bill.
+   *
+   * @throws \Exception
    */
   public function queueEvents(array $results, Node $bill, Term $term): void {
     // Ensure the primary_event is populated.
@@ -296,6 +296,8 @@ class UpdatesProcessor {
    *
    * @return array
    *   An array of all match results, keyed by bill print number.
+   *
+   * @throws \Exception
    */
   public function process(mixed $time_from = 0, mixed $time_to = 0, array $params = []): array {
     // Get the updates based on the requested time range.
@@ -317,6 +319,8 @@ class UpdatesProcessor {
    *   An array, keyed by bill print number, with each element being an array
    *   of MatchResults (one results per update block).  Each MatchResult may
    *   have multiple matching tests.
+   *
+   * @throws \Exception
    */
   public function processResults(array $matches): void {
     // For each bill, there could be multiple updates, each with their own test

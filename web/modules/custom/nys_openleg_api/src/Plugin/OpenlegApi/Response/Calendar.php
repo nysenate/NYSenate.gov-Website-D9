@@ -5,7 +5,7 @@ namespace Drupal\nys_openleg_api\Plugin\OpenlegApi\Response;
 /**
  * Openleg API Response plugin for an individual calendar.
  *
- * @OpenlegApiResponseNew(
+ * @OpenlegApiResponse(
  *   id = "calendar",
  *   label = @Translation("Calendar Item"),
  *   description = @Translation("Openleg API Response plugin")

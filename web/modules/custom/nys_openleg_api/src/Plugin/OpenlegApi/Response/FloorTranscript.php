@@ -5,7 +5,7 @@ namespace Drupal\nys_openleg_api\Plugin\OpenlegApi\Response;
 /**
  * Openleg API Response plugin for an individual floor transcript.
  *
- * @OpenlegApiResponseNew(
+ * @OpenlegApiResponse(
  *   id = "transcript",
  *   label = @Translation("Floor Transcript Item"),
  *   description = @Translation("Openleg API Response plugin")

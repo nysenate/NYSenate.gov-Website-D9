@@ -5,7 +5,7 @@ namespace Drupal\nys_openleg_api\Plugin\OpenlegApi\Response;
 /**
  * Openleg API Response plugin for Statute detail, part of Statute items.
  *
- * @OpenlegApiResponseNew(
+ * @OpenlegApiResponse(
  *   id = "law-doc-info-detail",
  *   label = @Translation("Statute Detail"),
  *   description = @Translation("Openleg API Response plugin")

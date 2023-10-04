@@ -5,7 +5,7 @@ namespace Drupal\nys_openleg_api\Plugin\OpenlegApi\Response;
 /**
  * Openleg API Response plugin for an individual bill or resolution item.
  *
- * @OpenlegApiResponseNew(
+ * @OpenlegApiResponse(
  *   id = "bill",
  *   label = @Translation("Bill/Resolution"),
  *   description = @Translation("Openleg API Response plugin")

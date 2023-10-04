@@ -4,7 +4,7 @@ services:
     arguments: ['nys_bill_notifications']
   bill_notifications.processor:
     class: Drupal\nys_bill_notifications\Service\UpdatesProcessor
-    arguments: ['@logger.channel.bill_notifications', '@config.factory', '@manager.openleg_api', '@entity_type.manager', '@bill_notifications.test_manager', '@nys_subscriptions.queue_manager']
+    arguments: ['@logger.channel.bill_notifications', '@config.factory', '@openleg_api', '@entity_type.manager', '@bill_notifications.test_manager', '@nys_subscriptions.queue_manager']
   bill_notifications.test_manager:
     class: Drupal\nys_bill_notifications\Service\BillTestManager
     parent: default_plugin_manager

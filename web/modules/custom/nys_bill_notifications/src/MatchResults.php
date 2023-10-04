@@ -72,7 +72,7 @@ class MatchResults {
    * This indicates the time at which this update was last processed
    * by OpenLeg.  It can change over time.
    *
-   * @see \Drupal\nys_openleg\Api\Request::OPENLEG_TIME_FULL
+   * @see \Drupal\nys_openleg_api\Request::OPENLEG_TIME_FULL
    */
   public function getProcessed(): string {
     return $this->update->processedDateTime;
@@ -84,7 +84,7 @@ class MatchResults {
    * This indicates the time at which the update was officially published
    * by LBDC.  It should remain constant over time.
    *
-   * @see \Drupal\nys_openleg\Api\Request::OPENLEG_TIME_FULL
+   * @see \Drupal\nys_openleg_api\Request::OPENLEG_TIME_FULL
    */
   public function getSourceTime(): string {
     return $this->update->sourceDateTime;

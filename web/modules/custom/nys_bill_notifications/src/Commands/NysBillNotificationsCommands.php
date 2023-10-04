@@ -4,7 +4,7 @@ namespace Drupal\nys_bill_notifications\Commands;
 
 use Drupal\Core\State\State;
 use Drupal\nys_bill_notifications\Service\UpdatesProcessor;
-use Drupal\nys_openleg\Api\Request;
+use Drupal\nys_openleg_api\Request;
 use Drush\Commands\DrushCommands;
 
 /**

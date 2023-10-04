@@ -7,7 +7,7 @@ use Drupal\nys_openleg\BillHelper;
 /**
  * Openleg API Response plugin for a list of calendars in a calendar year.
  *
- * @OpenlegApiResponseNew(
+ * @OpenlegApiResponse(
  *   id = "calendar-simple list",
  *   label = @Translation("Calendar Year List"),
  *   description = @Translation("Openleg API Response plugin")

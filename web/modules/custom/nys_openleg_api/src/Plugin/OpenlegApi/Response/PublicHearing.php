@@ -5,7 +5,7 @@ namespace Drupal\nys_openleg_api\Plugin\OpenlegApi\Response;
 /**
  * Openleg API Response plugin for an individual public hearing transcript.
  *
- * @OpenlegApiResponseNew(
+ * @OpenlegApiResponse(
  *   id = "hearing",
  *   label = @Translation("Public Hearing Transcript Item"),
  *   description = @Translation("Openleg API Response plugin")

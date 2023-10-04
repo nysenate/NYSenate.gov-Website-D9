@@ -2,14 +2,13 @@
 
 namespace Drupal\nys_openleg\Controller;
 
-use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Config\ImmutableConfig;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Http\RequestStack;
 use Drupal\Core\Pager\PagerManagerInterface;
-use Drupal\nys_openleg\Service\ApiManager;
 use Drupal\nys_openleg\StatuteHelper;
+use Drupal\nys_openleg_api\Service\Api;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -59,9 +58,9 @@ class MainController extends ControllerBase {
   /**
    * The Openleg API Manager service.
    *
-   * @var \Drupal\nys_openleg\Service\ApiManager
+   * @var \Drupal\nys_openleg_api\Service\Api
    */
-  protected ApiManager $apiManager;
+  protected Api $apiManager;
 
   /**
    * Constructor.
@@ -69,12 +68,9 @@ class MainController extends ControllerBase {
    * Sets up the request and config objects, and configures the API
    * key to be used by ApiRequest objects.
    */
-  public function __construct(RequestStack $request, ConfigFactory $config, FormBuilderInterface $formBuilder, PagerManagerInterface $pager, ApiManager $apiManager) {
+  public function __construct(RequestStack $request, FormBuilderInterface $formBuilder, PagerManagerInterface $pager, Api $apiManager, ImmutableConfig $openlegConfig) {
     // Set the request context to the current request by default.
     $this->setRequest($request->getCurrentRequest());
-
-    // Set the app config as a local reference.
-    $this->config = $config->get('nys_openleg.settings');
 
     // Set the form builder.
     $this->formBuilder = $formBuilder;
@@ -84,6 +80,9 @@ class MainController extends ControllerBase {
 
     // Set the API Manager service reference.
     $this->apiManager = $apiManager;
+
+    // Set the app config as a local reference.
+    $this->config = $openlegConfig;
   }
 
   /**
@@ -92,7 +91,7 @@ class MainController extends ControllerBase {
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The current request.
    */
-  public function setRequest(Request $request) {
+  public function setRequest(Request $request): void {
     $this->request = $request;
   }
 
@@ -104,10 +103,10 @@ class MainController extends ControllerBase {
   public static function create(ContainerInterface $container): MainController {
     return new static(
       $container->get('request_stack'),
-      $container->get('config.factory'),
       $container->get('form_builder'),
       $container->get('pager.manager'),
-      $container->get('manager.openleg_api')
+      $container->get('openleg_api'),
+      $container->get('openleg_api.config')
     );
   }
 
@@ -135,7 +134,7 @@ class MainController extends ControllerBase {
 
     // Fetch all the types, initialize the search.
     $law_types = StatuteHelper::getLawTypes();
-    $suppress_search = FALSE;
+    $suppress_search = $this->config->get('suppress_search') ?? FALSE;
 
     // Initialize important paths.
     $base_share_path = $this->request->getSchemeAndHttpHost() . StatuteHelper::baseUrl();
@@ -181,8 +180,7 @@ class MainController extends ControllerBase {
     else {
       // Get the statute.  Consider any historical milestone being requested.
       $history = $this->request->request->get('history') ?: '';
-      $statute = $this->apiManager
-        ->getStatuteFull($book, $location, $history);
+      $statute = $this->apiManager->getStatute($book, $location, $history);
 
       // If the entry is not found (or other OL error), render the error page.
       if (!($statute->tree->success())) {
@@ -282,7 +280,7 @@ class MainController extends ControllerBase {
     // Execute the search and reformat into the results array.
     if ($search_term) {
       /**
-       * @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseSearch $search
+       * @var \Drupal\nys_openleg_api\Plugin\OpenlegApi\Response\ResponseSearch $search
        */
       $search = $this->apiManager->getSearch(
         'statute',

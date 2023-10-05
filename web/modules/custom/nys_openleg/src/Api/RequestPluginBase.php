@@ -190,41 +190,21 @@ abstract class RequestPluginBase implements RequestPluginInterface {
   }
 
   /**
-   * Coalesces possible timestamp formats into a DateTimeImmutable object.
-   *
-   * @param string $timestamp
-   *   A timestamp in any format parsable by strtotime().  If this is in the
-   *   standard OpenLeg format, or is an epoch timestamp with a decimal portion,
-   *   microseconds will be preserved.
+   * Coalesces possible timestamp formats into a DateTime object.
    */
-  protected function normalizeTimestamp(string $timestamp = ''): \DateTimeImmutable|false {
-    // If timestamp is numeric, avoid the "true zero" edge case.
+  protected function normalizeTimestamp(string $timestamp = ''): \DateTime|false {
+    // If timestamp is numeric, assume an epoch timestamp.  Prefix with '@'.
+    // Ensure a microseconds portion exists to avoid the "true zero" edge case.
     if (is_numeric($timestamp)) {
-      $normalize = $timestamp . (str_contains($timestamp, '.') ? '' : '.000000');
-      $format = 'U.u';
-    }
-    // If not numeric, try using the OpenLeg format.
-    else {
-      $normalize = str_replace(' ', 'T', $timestamp);
-      $format = $this->request::OPENLEG_TIME_FULL;
+      $timestamp = '@' . $timestamp . (str_contains($timestamp, '.') ? '' : '.000000');
     }
 
+    // Try to create using the detected format.  Failures return FALSE.
     try {
-      // Try to create using the detected format.  On failure, let DateTime
-      // try to figure it out (while losing microsecond precision).
-      $dt = \DateTimeImmutable::createFromFormat($format, $normalize)
-        ?: new \DateTimeImmutable($timestamp);
-
-      // If successful, ensure the timestamp is set to system's default.
-      if ($dt) {
-        $dt->setTimezone(new \DateTimeZone(date_default_timezone_get()));
-      }
-      else {
-        throw new \InvalidArgumentException('DateTime could not parse the timestamp');
-      }
+      $dt = new \DateTime($timestamp);
+      $dt->setTimezone(new \DateTimeZone(date_default_timezone_get()));
     }
     catch (\Throwable $e) {
-      // No options left.  Everyone out of the pool.
       $parts = ['@ts' => $timestamp, '@msg' => $e->getMessage()];
       $msg = 'Could not normalize timestamp (@ts) @msg';
       $this->logger->error($msg, $parts);

@@ -191,6 +191,12 @@ abstract class RequestPluginBase implements RequestPluginInterface {
 
   /**
    * Coalesces possible timestamp formats into a DateTime object.
+   *
+   * @param string $timestamp
+   *   Any timestamp format acceptable by strtotime() or PHP's DateTime objects.
+   *
+   * @return \DateTime|false
+   *   The parsed DateTime object, or FALSE on error.
    */
   protected function normalizeTimestamp(string $timestamp = ''): \DateTime|false {
     // If timestamp is numeric, assume an epoch timestamp.  Prefix with '@'.

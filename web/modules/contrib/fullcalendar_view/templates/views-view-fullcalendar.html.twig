@@ -24,7 +24,7 @@
   ]
 %}
 <div{{ attributes.addClass(classes) }}>
-  <div class="js-drupal-fullcalendar" calendar-view-index="{{ view_index }}" calendar-view-name="{{ view_id }}" calendar-display="{{ display_id }}"></div>
+  <div class="js-drupal-fullcalendar" data-calendar-view-index="{{ view_index }}" data-calendar-view-name="{{ view_id }}" data-calendar-display="{{ display_id }}"></div>
   <div class="bottom-buttons fc-button-group">
     {% if showAddEvent %}
     <div class="fullcalendar-bottom-btn add-event-btn">
@@ -35,7 +35,7 @@
     {% if options.languageSelector == 1 %}
     <div class="fullcalendar-bottom-btn locale-selector">
       <label for="locale-selector">{{ 'Select Language:'|t }}</label>
-      <select id='locale-selector-{{ view_index }}' calendar-view-index="{{ view_index }}"></select>
+      <select id='locale-selector-{{ view_index }}' data-calendar-view-index="{{ view_index }}"></select>
     </div>
     {% endif %}
   </div>

@@ -76,25 +76,26 @@ $(document).bind('state:visible-fade', function (e) {
 // On invisible make empty and unrequired.
 .bind('state:visible', function (e) {
   if (e.trigger) {
-    // Save required property.
-    if (typeof $(e.target).data('conditionalFieldsSavedRequired') === 'undefined') {
-      var field = $(e.target).find('input, select, textarea');
-      if (field) {
-        $(e.target).data('conditionalFieldsSavedRequired', $(field).attr('required'));
+    const fields = $(e.target).find('input, select, textarea');
+    fields.each(function () {
+      const $field = $(this);
+      // Save required property.
+      if (typeof $field.data('conditionalFieldsSavedRequired') === 'undefined') {
+        $field.data('conditionalFieldsSavedRequired', $field.attr('required'));
       }
-    }
-    // Go invisible.
-    if (!e.value) {
-      // Remove required property.
-      $(e.target).trigger({type: 'state:required', value: false, trigger: true});
-    }
-    // Go visible.
-    else {
-      // Restore required if necessary.
-      if ($(e.target).data('conditionalFieldsSavedRequired')) {
-        $(e.target).trigger({type: 'state:required', value: true, trigger: true});
+      // Go invisible.
+      if (!e.value) {
+        // Remove required property.
+        $field.trigger({type: 'state:required', value: false, trigger: true});
       }
-    }
+      // Go visible.
+      else {
+        // Restore required if necessary.
+        if ($field.data('conditionalFieldsSavedRequired')) {
+          $field.trigger({type: 'state:required', value: true, trigger: true});
+        }
+      }
+    });
   }
 })
 // Required/Not-Required.

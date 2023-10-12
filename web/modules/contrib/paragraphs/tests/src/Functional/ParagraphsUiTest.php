@@ -107,7 +107,12 @@ class ParagraphsUiTest extends ParagraphsTestBase {
     ], 'Save and manage fields');
 
     // Add a new paragraphs field to the content type.
-    $this->clickLink('Add field');
+    if (version_compare(\Drupal::VERSION, '10.1', '>=')) {
+      $this->clickLink('Create a new field');
+    }
+    else {
+      $this->clickLink('Add field');
+    }
     $this->submitForm([
       'new_storage_type' => 'field_ui:entity_reference_revisions:paragraph',
       'label' => 'Paragraph',

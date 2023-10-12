@@ -98,6 +98,16 @@ function paragraphs_theme_suggestions_paragraph(array $variables) {
 }
 
 /**
+ * Implements hook_theme_registry_alter().
+ */
+function paragraphs_theme_registry_alter(&$theme_registry) {
+  // Force paragraphs_preprocess_field_multiple_value_form to run last.
+  $key = array_search('paragraphs_preprocess_field_multiple_value_form', $theme_registry['field_multiple_value_form']['preprocess functions']);
+  unset($theme_registry['field_multiple_value_form']['preprocess functions'][$key]);
+  $theme_registry['field_multiple_value_form']['preprocess functions'][] = 'paragraphs_preprocess_field_multiple_value_form';
+}
+
+/**
  * Implements hook_form_FORM_ID_alter().
  */
 function paragraphs_form_entity_form_display_edit_form_alter(&$form, FormStateInterface $form_state, $form_id) {

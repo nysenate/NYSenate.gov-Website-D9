@@ -88,7 +88,7 @@ class FilterWidgetKernelTest extends BetterExposedFiltersKernelTestBase {
     $sorted_options = $options = $output['field_bef_integer_value']['#options'];
     asort($sorted_options);
 
-    $this->assertNotEqual(array_keys($options), array_keys($sorted_options), '"Field BEF integer" options are not sorted alphabetically.');
+    $this->assertNotEquals(array_keys($options), array_keys($sorted_options), '"Field BEF integer" options are not sorted alphabetically.');
 
     $view->destroy();
 
@@ -112,7 +112,7 @@ class FilterWidgetKernelTest extends BetterExposedFiltersKernelTestBase {
     asort($sorted_options);
 
     // Assert our "collapsible" options detail is visible.
-    $this->assertEqual(array_keys($options), array_keys($sorted_options), '"Field BEF integer" options are sorted alphabetically.');
+    $this->assertEquals(array_keys($options), array_keys($sorted_options), '"Field BEF integer" options are sorted alphabetically.');
 
     $view->destroy();
   }

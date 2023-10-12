@@ -15,7 +15,7 @@ use Drupal\views\ViewExecutable;
  *   id = "chart_extension",
  *   title = @Translation("Chart attachment"),
  *   help = @Translation("Display that produces a chart."),
- *   theme = "views_view_charts",
+ *   theme = "views_view",
  *   contextual_links_locations = {""}
  * )
  */
@@ -50,7 +50,7 @@ class ChartsPluginDisplayChart extends Attachment {
     parent::optionsSummary($categories, $options);
 
     $categories['attachment'] = [
-      'title' => t('Chart settings'),
+      'title' => $this->t('Chart settings'),
       'column' => 'second',
       'build' => ['#weight' => -10],
     ];
@@ -76,7 +76,7 @@ class ChartsPluginDisplayChart extends Attachment {
     $options['inherit_yaxis'] = [
       'category' => 'attachment',
       'title' => $this->t('Axis settings'),
-      'value' => $this->getOption('inherit_yaxis') ? t('Use primary Y-axis') : t('Create secondary axis'),
+      'value' => $this->getOption('inherit_yaxis') ? $this->t('Use primary Y-axis') : $this->t('Create secondary axis'),
     ];
 
     unset($options['attachment_position']);
@@ -91,20 +91,20 @@ class ChartsPluginDisplayChart extends Attachment {
 
     switch ($form_state->get('section')) {
       case 'displays':
-        $form['#title'] .= t('Parent display');
+        $form['#title'] .= $this->t('Parent display');
         break;
 
       case 'inherit_yaxis':
-        $form['#title'] .= t('Axis settings');
+        $form['#title'] .= $this->t('Axis settings');
         $form['inherit_yaxis'] = [
-          '#title' => t('Y-Axis settings'),
+          '#title' => $this->t('Y-Axis settings'),
           '#type' => 'radios',
           '#options' => [
-            1 => t('Inherit primary of parent display'),
-            0 => t('Create a secondary axis'),
+            1 => $this->t('Inherit primary of parent display'),
+            0 => $this->t('Create a secondary axis'),
           ],
           '#default_value' => $this->getOption('inherit_yaxis'),
-          '#description' => t('In most charts, the x- and y-axis from the parent display are both shared with each attached child chart. However, if this chart is going to use a different unit of measurement, a secondary axis may be added on the opposite side of the normal y-axis. Only create a secondary y-axis on the first chart attachment. You can rearrange displays if needed.'),
+          '#description' => $this->t('In most charts, the x- and y-axis from the parent display are both shared with each attached child chart. However, if this chart is going to use a different unit of measurement, a secondary axis may be added on the opposite side of the normal y-axis. Only create a secondary y-axis on the first chart attachment. You can rearrange displays if needed.'),
         ];
         break;
     }

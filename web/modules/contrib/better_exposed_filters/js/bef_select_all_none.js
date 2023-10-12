@@ -5,7 +5,7 @@
  * Adds select all/none toggle functionality to an exposed filter.
  */
 
-(function ($) {
+(function ($, once) {
   Drupal.behaviors.betterExposedFiltersSelectAllNone = {
     attach: function (context) {
       /*
@@ -100,7 +100,7 @@
 
   Drupal.behaviors.betterExposedFiltersAllNoneNested = {
     attach:function (context, settings) {
-      $('.bef-select-all-none-nested li').has('ul').once('bef-all-none-nested').each(function () {
+      $(once('bef-all-none-nested', '.bef-select-all-none-nested ul li')).each(function () {
         var $this = $(this);
         // Check/uncheck child terms along with their parent.
         $this.find('input:checkbox:first').change(function () {
@@ -131,4 +131,4 @@
     }
   }
 
-})(jQuery);
+})(jQuery, once);

@@ -94,7 +94,7 @@ class FloodControlUiPageTest extends BrowserTestBase {
   }
 
   /**
-   * Test flood control with admin pages with "administer flood unblock" permission.
+   * Flood control for admin pages with "administer flood unblock" permission.
    */
   public function testAccessAdministerFloodUnblockPermission() {
     $this->drupalLogin($this->settingsUser);

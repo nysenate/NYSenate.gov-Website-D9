@@ -185,6 +185,12 @@ function template_preprocess_bef_links(array &$variables) {
   $element = &$variables['element'];
   $options = $element['#options'];
   $name = $element['#name'];
+  $multiple = $element['#multiple'] ?? FALSE;
+
+  // Set multiple attribute.
+  if ($multiple) {
+    $variables['attributes']['multiple'] = 'multiple';
+  }
 
   // Set element name.
   $variables['attributes']['name'] = $name;
@@ -198,8 +204,18 @@ function template_preprocess_bef_links(array &$variables) {
   // Store selected values.
   $selectedValues = $element['#value'];
   if (!is_array($selectedValues)) {
-    $selectedValues = [$selectedValues];
+    $selectedValues = [$selectedValues => $selectedValues];
   }
+
+  // Set hidden elements array.
+  $hiddens = [];
+  foreach ($options as $k => $v) {
+    if (!empty($selectedValues[$k])) {
+      $hidden_name = $multiple ? $name . '[' . $k . ']' : $name;
+      $hiddens[$hidden_name] = $selectedValues[$k];
+    }
+  }
+  $variables['hiddens'] = $hiddens;
 
   $variables['links'] = [];
   foreach ($options as $optionValue => $optionLabel) {
@@ -215,23 +231,25 @@ function template_preprocess_bef_links(array &$variables) {
     // with the entire options array and remove items from it as needed.
     $urlOptions = $url->getOptions();
 
-    if (isset($element['#multiple']) && $element['#multiple']) {
-      $newQuery = isset($existing_query[$name]) ? $existing_query[$name] : [];
+    if ($multiple) {
+      $newQuery = $existing_query;
+      if (!isset($newQuery[$name])) {
+        $newQuery[$name] = [];
+      }
       if (in_array($optionValue, $selectedValues)) {
         // Allow users to toggle an option using the same link.
-        $newQuery = array_filter($newQuery, function ($value) use ($selectedValues) {
-          return !in_array($value, $selectedValues);
+        $newQuery[$name] = array_filter($newQuery[$name], function ($value) use ($optionValue) {
+          return $value != $optionValue;
         });
       }
       else {
-        $newQuery[] = $optionValue;
+        $newQuery[$name][] = $optionValue;
       }
-      if (empty($newQuery)) {
-        unset($urlOptions['query'][$name]);
+      if (empty($newQuery[$name])) {
+        unset($newQuery[$name]);
       }
-      else {
-        $urlOptions['query'][$name] = $newQuery;
-      }
+
+      $urlOptions['query'] = $newQuery;
     }
     else {
       if (strval($optionValue) === $element['#value']) {

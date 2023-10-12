@@ -46,6 +46,13 @@ class ConfigEventsSubscriber implements EventSubscriberInterface {
    */
   public function configSave(ConfigCrudEvent $event) {
     $config = $event->getConfig();
+    // Keep track of whether or not this config object has already been
+    // processed during the current request. This prevents an infinite loop
+    // that would otherwise result when calling $config->save() from a
+    // ConfigCrudEvent event. In addition to using the method name as the key
+    // for drupal_static(), also use the config name to cover a scenario where
+    // more than one config object is saved during the current request.
+    $config_processed = &drupal_static(__METHOD__ . ':' . $config->getName());
 
     // Only process media type config entities.
     if (substr($config->getName(), 0, 11) !== "media.type.") {
@@ -53,7 +60,7 @@ class ConfigEventsSubscriber implements EventSubscriberInterface {
     }
 
     // Skip if the media config entity has already been processed.
-    if (isset($config->oembedProvidersProcessed)) {
+    if (isset($config_processed)) {
       return;
     }
 
@@ -70,7 +77,7 @@ class ConfigEventsSubscriber implements EventSubscriberInterface {
         $this->removeProviderBucketDependency($data);
 
         $config->setData($data);
-        $config->oembedProvidersProcessed = TRUE;
+        $config_processed = TRUE;
         $config->save();
       }
       // Remove 'oembed_providers' module dependency for oEmbed plugins that
@@ -79,7 +86,7 @@ class ConfigEventsSubscriber implements EventSubscriberInterface {
         $this->removeModuleDependency($data);
 
         $config->setData($data);
-        $config->oembedProvidersProcessed = TRUE;
+        $config_processed = TRUE;
         $config->save();
       }
     }

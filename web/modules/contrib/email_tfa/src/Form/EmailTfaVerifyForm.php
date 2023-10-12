@@ -66,7 +66,12 @@ class EmailTfaVerifyForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('email_tfa.settings');
-
+    if ($this->request->query->get('destination')) {
+      // save the destination in the $form_state to be used on submit.
+      $form_state->set('destination', $this->request->query->get('destination'));
+      // remove the destination from the query string.
+      $this->request->query->remove('destination');
+    }
     $form['email_tfa_verify'] = [
       '#type' => 'textfield',
       '#title' => $config->get('security_code_label_text'),
@@ -102,8 +107,15 @@ class EmailTfaVerifyForm extends FormBase {
       if ($message = $config->get('verification_succeeded_message')) {
         $this->messenger()->addStatus($message);
       }
-      // @todo remove Redirect or check where were the user before.
-      $url = Url::fromRoute('<front>');
+      // get the destination from the $form_state.
+      $destination = $form_state->get('destination');
+      // use the destination from the $form_state if it exists
+      if ($destination) {
+        $url = Url::fromUserInput($destination);
+      }
+      else {
+        $url = Url::fromRoute('<front>');
+      }
       $form_state->setRedirectUrl($url);
     }
     else {

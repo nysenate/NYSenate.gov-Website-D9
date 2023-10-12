@@ -1093,6 +1093,7 @@ class ComposerStaticInitcfe1ff8587a3eacdec9f20af85157174
     public static $classMap = array (
         'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
         'BaseSendGridClientInterface' => __DIR__ . '/..' . '/sendgrid/sendgrid/lib/BaseSendGridClientInterface.php',
+        'CURLStringFile' => __DIR__ . '/..' . '/symfony/polyfill-php81/Resources/stubs/CURLStringFile.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'Drupal' => __DIR__ . '/../..' . '/web/core/lib/Drupal.php',
         'DrupalFinder\\DrupalFinder' => __DIR__ . '/..' . '/webflo/drupal-finder/src/DrupalFinder.php',

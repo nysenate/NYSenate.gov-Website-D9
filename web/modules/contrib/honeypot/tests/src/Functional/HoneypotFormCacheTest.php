@@ -2,8 +2,8 @@
 
 namespace Drupal\Tests\honeypot\Functional;
 
-use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
+use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\contact\Entity\ContactForm;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Entity\Role;

@@ -1,31 +1,17 @@
 google_tag.settings:
   type: config_object
-  label: 'Module settings and default container settings'
+  label: 'Module settings and default tag container settings'
   mapping:
-    uri:
+    use_collection:
+      type: boolean
+      label: 'Allow multiple tag containers'
+    default_google_tag_entity:
       type: string
-      label: 'Snippet base URI'
-    compact_snippet:
-      type: boolean
-      label: 'Compact the JavaScript snippet'
-    include_file:
-      type: boolean
-      label: 'Include the snippet as a file'
-    rebuild_snippets:
-      type: boolean
-      label: 'Recreate snippets on cache rebuild'
-    flush_snippets:
-      type: boolean
-      label: 'Recreate snippet directory on cache rebuild'
-    debug_output:
-      type: boolean
-      label: 'Show debug output'
-    _default_container:
-      type: _google_tag_container
+      label: 'Default Google Tag Entity'
 
 google_tag.container.*:
   type: config_entity
-  label: 'Container settings'
+  label: 'Google Tag settings container'
   mapping:
     id:
       type: string
@@ -36,68 +22,126 @@ google_tag.container.*:
     weight:
       type: integer
       label: 'Weight'
-    #_container:
-      #type: _google_tag_container
-    container_id:
-      type: string
-      label: 'Container ID'
-      #translatable: true
-    data_layer:
-      type: string
-      label: 'Data layer'
-      #translatable: true
-    include_classes:
-      type: boolean
-      label: 'Add classes to the data layer'
-    whitelist_classes:
-      type: string
-      label: 'White-listed classes'
-      #translatable: true
-    blacklist_classes:
-      type: string
-      label: 'Black-listed classes'
-      #translatable: true
-    include_environment:
-      type: boolean
-      label: 'Include an environment'
-    environment_id:
-      type: string
-      label: 'Environment ID'
-      #translatable: true
-    environment_token:
-      type: string
-      label: 'Environment token'
-      #translatable: true
-    path_toggle:
-      type: string
-      label: 'Add snippet on specific paths'
-      #translatable: true
-    path_list:
-      type: string
-      label: 'Listed paths'
-      #translatable: true
-    role_toggle:
-      type: string
-      label: 'Add snippet for specific roles'
-      #translatable: true
-    role_list:
+    tag_container_ids:
       type: sequence
-      label: 'Selected roles'
+      label: 'Tag IDs'
       sequence:
         type: string
-        label: 'Role'
-      #translatable: true
-    status_toggle:
-      type: string
-      label: 'Add snippet for specific statuses'
-      #translatable: true
-    status_list:
-      type: string
-      label: 'Listed statuses'
-      #translatable: true
+        label: 'Tag ID'
+    advanced_settings:
+      type: sequence
+      label: 'Advanced Settings'
+      sequence:
+        type: google_tag.advanced_settings.[%key]
+    dimensions_metrics:
+      type: sequence
+      label: 'Custom dimensions and metrics'
+      sequence:
+        type: mapping
+        label: 'Parameter'
+        mapping:
+          type:
+            type: string
+            label: 'Type'
+            constraints:
+              NotNull: []
+              AllowedValues: ['dimension', 'metric']
+          name:
+            type: string
+            label: 'Name'
+            constraints:
+              NotNull: []
+              # NotNull does not cover empty strings.
+              Length:
+                min: 1
+                minMessage: 'This value cannot be empty.'
+          value:
+            type: string
+            label: 'Value'
+            constraints:
+              NotNull: []
+              # NotNull does not cover empty strings.
+              Length:
+                min: 1
+                minMessage: 'This value cannot be empty.'
     conditions:
       type: sequence
       label: 'Insertion conditions'
       sequence:
         type: condition.plugin.[id]
         label: 'Insertion condition'
+    events:
+      type: sequence
+      label: 'Events'
+      sequence:
+        type: google_tag.google_tag_event.[%key]
+
+google_tag.google_tag_event.*:
+  type: google_tag_event_configuration
+
+google_tag.google_tag_event.login:
+  type: google_tag_event_configuration
+  mapping:
+    method:
+      type: string
+      label: 'Method'
+
+google_tag.google_tag_event.sign_up:
+  type: google_tag_event_configuration
+  mapping:
+    method:
+      type: string
+      label: 'Method'
+
+google_tag.google_tag_event.generate_lead:
+  type: google_tag_event_with_value_configuration
+
+google_tag_event_with_value_configuration:
+  type: google_tag_event_configuration
+  mapping:
+    value:
+      type: string
+      label: 'Value'
+    currency:
+      type: string
+      label: 'Currency'
+
+google_tag_event_configuration:
+  type: mapping
+
+google_tag.advanced_settings.*:
+  type: google_tag_advanced_configuration
+
+google_tag_advanced_configuration:
+  type: mapping
+
+google_tag.advanced_settings.gtm:
+  type: google_tag_advanced_configuration
+  mapping:
+    data_layer:
+      type: string
+      label: 'Data layer ID'
+    include_classes:
+      type: boolean
+      label: 'Add classes to the data layer'
+    allowlist_classes:
+      type: string
+      label: 'Allowed classes'
+    blocklist_classes:
+      type: string
+      label: 'Blocked classes'
+    include_environment:
+      type: boolean
+      label: 'Include an environment'
+    environment_id:
+      type: string
+      label: 'Environment ID'
+    environment_token:
+      type: string
+      label: 'Environment token'
+
+condition.plugin.response_code:
+  type: condition.plugin
+  mapping:
+    response_codes:
+      type: string

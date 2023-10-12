@@ -5,10 +5,10 @@ namespace Drupal\flood_control\Form;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\ConfigFormBase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Administration settings form.

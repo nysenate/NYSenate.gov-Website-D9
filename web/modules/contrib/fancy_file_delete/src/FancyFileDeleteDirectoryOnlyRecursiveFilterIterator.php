@@ -22,8 +22,7 @@ class FancyFileDeleteDirectoryOnlyRecursiveFilterIterator extends \RecursiveFilt
     parent::__construct($iterator);
   }
 
-  #[\ReturnTypeWillChange]
-  public function accept() {
+  public function accept(): bool {
     if ($this->current()->isReadable()) {
       $filename = $this->current()->getFilename();
       // Skip hidden files and directories.

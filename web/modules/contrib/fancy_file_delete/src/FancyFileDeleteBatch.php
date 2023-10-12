@@ -143,6 +143,7 @@ class FancyFileDeleteBatch {
           $controller = $this->entityTypeManager->getStorage('file');
           $entity = $controller->loadMultiple([$fid]);
           $controller->delete($entity);
+          $context['results'][] = $fid;
         }
         else {
           $result = $file->delete();

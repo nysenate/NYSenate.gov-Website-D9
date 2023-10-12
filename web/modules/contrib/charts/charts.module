@@ -5,8 +5,6 @@
  * Charts - Module.
  */
 
-use Drupal\charts\Util\Util;
-use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\views\ViewExecutable;
 
 /**
@@ -25,6 +23,13 @@ function charts_views_data() {
       'id' => 'field_charts_fields_scatter',
     ],
   ];
+  $data['charts_fields']['field_charts_fields_bubble'] = [
+    'title' => t('Bubble Field'),
+    'help' => t('Use this field for your data field in a bubble chart.'),
+    'field' => [
+      'id' => 'field_charts_fields_bubble',
+    ],
+  ];
   $data['charts_fields']['field_exposed_chart_type'] = [
     'title' => t('Exposed Chart Type'),
     'help' => t('Use this field for exposing chart type.'),
@@ -40,16 +45,54 @@ function charts_views_data() {
  * Implements hook_theme().
  */
 function charts_theme($existing, $type, $theme, $path) {
-
   return [
-    'views_view_charts' => [
-      'variables' => [
-        'view' => NULL,
-        'row' => NULL,
-        'options' => '',
-      ],
+    'charts_chart' => [
+      'render element' => 'element',
     ],
   ];
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function template_preprocess_charts_chart(&$variables) {
+  $element = $variables['element'];
+
+  $attributes = $element['#attributes'];
+  $attributes['id'] = $element['#id'];
+  $attributes['class'][] = 'chart';
+
+  $variables['content'] = [
+    '#type' => 'html_tag',
+    '#tag' => 'div',
+    '#attributes' => $attributes,
+    '#value' => $element['#chart'] ?? '',
+  ];
+  $variables['content_prefix'] = $element['#content_prefix'];
+  $variables['content_suffix'] = $element['#content_suffix'];
+  $config = \Drupal::service('config.factory')->getEditable('charts.settings');
+  $variables['debug'] = [];
+  if (!empty($config->get('advanced.debug'))) {
+    $variables['debug'] = [
+      '#type' => 'details',
+      '#title' => t('Chart JSON'),
+      '#open' => FALSE,
+      '#attributes' => [
+        'data-charts-debug-container' => TRUE,
+      ],
+      '#collapsible' => TRUE,
+      'json' => [
+        '#prefix' => '<pre class="language-json">',
+        '#type' => 'html_tag',
+        '#tag' => 'code',
+        '#attributes' => [
+          'class' => ['language-json'],
+        ],
+        '#value' => t('If this is blank, your library will need to implement code in your JavaScript. Please see the README.md.'),
+        '#suffix' => '</pre>',
+      ],
+    ];
+  }
 }
 
 /**
@@ -58,10 +101,11 @@ function charts_theme($existing, $type, $theme, $path) {
 function charts_views_pre_view(ViewExecutable $view, $display_id, array &$args) {
   $hasFields = array_key_exists('fields', $view->display_handler->options);
   if ($hasFields) {
-    $fields = $view->display_handler->options['fields'];
+    $fields = $view->display_handler->getOption('fields');
     $hasViewsFieldsOnOffHandler = FALSE;
     foreach ($fields as $field) {
       if (array_key_exists('plugin_id', $field)) {
+
         if ($field['plugin_id'] == 'field_exposed_chart_type') {
           $hasViewsFieldsOnOffHandler = TRUE;
         }
@@ -83,136 +127,105 @@ function charts_views_pre_view(ViewExecutable $view, $display_id, array &$args) 
       $view->element['#cache']['contexts'][] = 'url';
     }
   }
-
 }
 
 /**
- * Implements template_preprocess_hook().
+ * Implements hook_library_info_alter().
+ *
+ * Adapted from webform_library_info_alter() to add CDN support.
  */
-function template_preprocess_views_view_charts(&$variables) {
-
-  // Define the View.
-  $view = $variables['view'];
-
-  // Information on Chart Attachment displays that might be used.
-  $attachmentService = \Drupal::service('charts.charts_attachment');
-
-  // An array of the Chart Attachment displays.
-  $chartAttachments = $attachmentService->getAttachmentViews();
-  $attachmentCount = count($chartAttachments);
-
-  /**
-   * To build a chart from this View, the following are needed (in this order):
-   * $options, $categories, $seriesData, $attachmentDisplayOptions, $variables,
-   * and $chartId. The $variables are pulled directly from the parameter.
-   */
-
-  // Bring in the options from the View's style plugin.
-  $options = $view->style_plugin->options;
-  if ($view->storage->get('exposed_chart_type')) {
-    $options['type'] = $view->storage->get('exposed_chart_type');
+function charts_library_info_alter(&$libraries, $extension) {
+  // Only process for charts_* modules.
+  if (strpos($extension, 'charts_') !== 0) {
+    return;
   }
 
-  $variables['options'] = $options;
+  // Only try to apply cdn changes if the cdn requirements is on.
+  $config = \Drupal::service('config.factory')
+    ->getEditable('charts.settings');
+  if (!$config->get('advanced.requirements.cdn')) {
+    return;
+  }
 
-  // Get the data from the Chart Attachment displays.
-  $attachmentCategories = [];
-  $attachmentSeriesData = [];
-  for ($i = 0; $i < $attachmentCount; $i++) {
+  foreach ($libraries as &$library) {
+    if (isset($library['cdn']) && is_array($library['cdn'])) {
+      _charts_library_info_alter_recursive($library, $library['cdn']);
+    }
+  }
+}
 
-    // Define the Chart Attachment.
-    $chartAttachment = $chartAttachments[$i];
-    $attachmentId = $chartAttachment->display_handler->display['id'];
-    $attachmentDisplay = $view->storage->getDisplay($attachmentId);
-
-    // Bring in the Value Field from the Chart Attachment.
-    $attachedValueField = $attachmentDisplay['display_options']['style']['options']['data_fields'];
-    $attachedValueField = Util::removeUnselectedFields($attachedValueField);
-    $attachedValueField = Util::removeHiddenFields($view, $attachedValueField);
-
-    // Bring in the Label Field from the Chart Attachment.
-    $attachmentLabelField = $chartAttachment->style_plugin->options['label_field'];
-
-    // Bring in the Colors from the Chart Attachment.
-    $attachmentColor = $chartAttachment->style_plugin->options['field_colors'];
-
-    // Bring in the Chart Type from the Chart Attachment.
-    $attachmentChartType = $attachmentDisplay['display_options']['style']['options']['type'];
-
-    // Create an array of categories and seriesData from the Chart Attachment.
-    $attachmentData = Util::viewsData($chartAttachment, $attachedValueField, $attachmentLabelField, $attachmentColor, $attachmentChartType);
-    $attachmentData = Util::createChartableData($attachmentData);
-
-    // Combine the $categories from each Chart Attachment into one array.
-    for ($j = 0; $j < count($attachmentData[0]); $j++) {
-      array_push($attachmentCategories, $attachmentData[0][$j]);
+/**
+ * Recursive through a charts library.
+ *
+ * @param array $library
+ *   A library defined in a chart module.
+ * @param array $cdn
+ *   A associative array of library paths mapped to CDN URL.
+ *
+ * @note copied from _webform_library_info_alter_recursive().
+ */
+function _charts_library_info_alter_recursive(array &$library, array $cdn) {
+  foreach ($library as $key => &$value) {
+    // CSS and JS files and listed in associative arrays keyed via string.
+    if (!is_string($key) || !is_array($value)) {
+      continue;
     }
 
-    // Combine the $seriesData from each Chart Attachment into one array.
-    for ($j = 0; $j < count($attachmentData[1]); $j++) {
-      if ($i == 0 &&
-        isset($attachmentDisplay['display_options']['inherit_yaxis']) &&
-        $attachmentDisplay['display_options']['inherit_yaxis'] == 0) {
-        $attachmentData[1][$j]['yAxis'] = 1;
+    // Ignore the CDN's associative array.
+    if ($key === 'cdn') {
+      continue;
+    }
+
+    // Replace the CDN sources (i.e. /library/*) with the CDN URL destination
+    // (https://cdnjs.cloudflare.com/ajax/libs/*).
+    foreach ($cdn as $source => $destination) {
+      if (_charts_library_check_source_exists($source)) {
+        continue;
       }
-      array_push($attachmentSeriesData, $attachmentData[1][$j]);
+      if (strpos($key, $source) === 0) {
+        $uri = str_replace($source, $destination, $key);
+        $library[$uri] = $value;
+        $library[$uri]['type'] = 'external';
+        unset($library[$key]);
+        break;
+      }
     }
 
+    // Recurse downward to find nested libraries.
+    _charts_library_info_alter_recursive($value, $cdn);
   }
+}
 
-  // Bring in the Value Field from the View.
-  $valueField = $view->style_plugin->options['data_fields'];
-  $valueField = Util::removeUnselectedFields($valueField);
-  $valueField = Util::removeHiddenFields($view, $valueField);
-  // Bring in the Label Field from the View.
-  $labelField = $view->style_plugin->options['label_field'];
+/**
+ * Checks whether a library source directory or file exists locally.
+ *
+ * @param string $source
+ *   The source directory or file.
+ *
+ * @return bool
+ *   True when the file exist, FALSE otherwise.
+ */
+function _charts_library_check_source_exists(string $source) {
+  $source = rtrim($source, '/');
 
-  // Bring in the colors from the View.
-  $color = $view->style_plugin->options['field_colors'];
+  $container = \Drupal::getContainer();
+  $app_root = $container->getParameter('app.root');
+  $site_path = $container->getParameter('site.path');
 
-  // Create an array of categories and seriesData from the View.
-  $data = Util::viewsData($view, $valueField, $labelField, $color, $options['type']);
-  $data = Util::createChartableData($data);
-  $categories = $data[0];
-  $seriesData = $data[1];
+  // The following logic is taken from libraries_get_libraries()
+  $search_dir = [];
+  $search_dir[] = $app_root;
+  // Similar to 'modules' and 'themes' directories inside an installation
+  // profile, installation profiles may want to place libraries into a
+  // 'libraries' directory.
+  $search_dir[] = 'profiles/' . \Drupal::installProfile();
+  // Also search sites/<domain>/*.
+  $search_dir[] = $site_path;
 
-  // Produce the final array of categories.
-  $categories = array_merge($categories, $attachmentCategories);
-  $categories = array_unique($categories);
-
-  // Produce the final seriesData object.
-  $seriesData = array_merge($seriesData, $attachmentSeriesData);
-
-  // Bring in the Chart Attachment display options.
-  $attachmentDisplayOptions = [];
-  for ($i = 0; $i < $attachmentCount; $i++) {
-    $attachmentId = $chartAttachments[$i]->display_handler->display['id'];
-    $attachmentDisplay = $view->storage->getDisplay($attachmentId);
-    array_push($attachmentDisplayOptions, $attachmentDisplay['display_options']);
-  }
-
-  // Charts override settings applied at this point.
-  $chartOverridePluginManager = \Drupal::service('plugin.manager.charts_override');
-  $plugin_definition = [];
-  $chartOverrideOptions = [];
-  try {
-    $plugin_definition = $chartOverridePluginManager->getDefinition($options['library'] . '_overrides');
-    if (!empty($plugin_definition)) {
-      $chartOverridePlugin = $chartOverridePluginManager->createInstance($plugin_definition['id']);
-      $chartOverrideOptions = $chartOverridePlugin->chartOverrides($variables['options']);
+  foreach ($search_dir as $dir) {
+    if (file_exists($dir . $source) || file_exists($dir . $source)) {
+      return TRUE;
     }
   }
-  catch (PluginNotFoundException $e) {
-    \Drupal::service('messenger')
-      ->addMessage(t('Exception: @error', ['@error', $e->getMessage()]));
-  }
-
-  // Generate a unique chart ID by combining the View and display IDs.
-  $viewId = $view->id();
-  $displayId = $view->display_handler->display['id'];
-  $chartId = $view->dom_id ? 'c' . $view->dom_id : 'c' . $viewId . '__' . $displayId;
-
-  $plugin_manager = \Drupal::service('plugin.manager.charts');
-  $plugin = $plugin_manager->createInstance($options['library']);
-  $plugin->buildVariables($variables['options'], $chartId, $variables, $categories, $seriesData, $attachmentDisplayOptions, $chartOverrideOptions);
+  return FALSE;
 }

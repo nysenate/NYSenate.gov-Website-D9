@@ -29,8 +29,12 @@
     // Find delta for row without interference of unrelated table rows.
     var $anchorRow = $button.closest('tr');
     var delta = $anchorRow.parent().find('> .draggable').index($anchorRow);
+    // If the form table has a layout wrapper use that (see claro / gin).
+    var $table = $button.closest('.field-multiple-table');
+    var $layer_wrapper = $table.closest('.layer-wrapper');
+    $table = $layer_wrapper.length > 0 ? $layer_wrapper : $table;
     // We need the siblings function to avoid finding the 'Add paragraph' button inside a container.
-    var $add_more_wrapper = $button.closest('.field-multiple-table').siblings('.clearfix,.form-actions').find('.paragraphs-add-wrapper');
+    var $add_more_wrapper = $table.siblings('.clearfix,.form-actions,.multiple-value-form-actions').find('.paragraphs-add-wrapper');
 
     // Set delta before opening of dialog.
     $add_more_wrapper.find('.paragraph-type-add-delta').val(delta);
@@ -55,7 +59,11 @@
         var $actions = $(this);
         if ($actions.closest('.paragraph-top').hasClass('add-above-on')) {
           var $add_above = false;
-          var $add_more_wrapper = $actions.closest('.field-multiple-table').siblings('.clearfix,.form-actions').find('.paragraphs-add-wrapper');
+          // If the form table has a layout wrapper use that (see claro / gin).
+          var $table = $actions.closest('.field-multiple-table');
+          var $layer_wrapper = $table.closest('.layer-wrapper');
+          $table = $layer_wrapper.length > 0 ? $layer_wrapper : $table;
+          var $add_more_wrapper = $table.siblings('.clearfix,.form-actions,.multiple-value-form-actions').find('.paragraphs-add-wrapper');
           // The Add Above button is added when the add mode is modal or when
           // there is only one add button in the other add modes.
           if ($add_more_wrapper.find('.paragraph-type-add-delta').hasClass('modal') || $add_more_wrapper.find('.field-add-more-submit').length === 1) {

@@ -1,24 +1,24 @@
 charts_chartjs:
-  remote: 'https://www.chartjs.org/dist/2.7.2/Chart.bundle.js'
+  remote: 'https://github.com/chartjs/Chart.js'
   version: VERSION
   license:
     name: 'Apache 2.0'
-    url: 'http://www.apache.org/licenses/LICENSE-2.0'
+    url: 'https://www.apache.org/licenses/LICENSE-2.0'
     gpl-compatible: false
+  # @todo
+  cdn:
+    /libraries/chartjs/: https://unpkg.com/chart.js@3.7.1/
+    /libraries/chartjs-adapter-date-fns/: https://unpkg.com/chartjs-adapter-date-fns@2.0.0/
   js:
-    /libraries/chartjs/Chart.bundle.js: {  }
-#  @todo: incorporate additional plugins, such as
-#    /libraries/chartjs/chart.scale.lineargauge.js: {  }
-#    /libraries/chartjs/chart.element.gaugerect.js: {  }
-#    /libraries/chartjs/chart.lineargauge.js: {  }
+    /libraries/chartjs/dist/chart.js: { }
+    /libraries/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.js: { }
   dependencies:
-    - core/jquery
-    - core/jquery.once
     - core/drupal
-
+    - core/once
 chartjs:
   version: 1.x
   js:
-    js/charts_chartjs.js: {  }
+    js/charts_chartjs.js: { weight: -1 }
   dependencies:
+    - charts/global
     - charts_chartjs/charts_chartjs

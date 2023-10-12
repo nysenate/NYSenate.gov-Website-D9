@@ -16,7 +16,7 @@ abstract class BetterExposedFiltersKernelTestBase extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'system',
     'field',
     'views',
@@ -33,7 +33,7 @@ abstract class BetterExposedFiltersKernelTestBase extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE) {
+  protected function setUp($import_test_views = TRUE): void {
     parent::setUp();
 
     $this->installSchema('node', ['node_access']);

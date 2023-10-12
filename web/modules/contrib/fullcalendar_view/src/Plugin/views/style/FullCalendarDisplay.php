@@ -143,6 +143,8 @@ class FullCalendarDisplay extends StylePluginBase {
       'default' => 'prev,next today',
     ];
     $options['default_view'] = ['default' => 'dayGridMonth'];
+    $options['default_mobile_view'] = ['default' => 'listYear'];
+    $options['mobile_width'] = ['default' => 768];
     $options['nav_links'] = ['default' => 1];
     $options['timeFormat'] = ['default' => 'hh:mm a'];
     $options['defaultLanguage'] = ['default' => 'en'];
@@ -270,6 +272,22 @@ class FullCalendarDisplay extends StylePluginBase {
       '#options' => $fullcalendar_displays,
       '#default_value' => (empty($this->options['default_view'])) ? 'month' : $this->options['default_view'],
       '#title' => $this->t('Default view'),
+    ];
+    // Default mobile view.
+    $form['default_mobile_view'] = [
+      '#type' => 'radios',
+      '#fieldset' => 'display',
+      '#options' => $fullcalendar_displays,
+      '#default_value' => (empty($this->options['default_mobile_view'])) ? 'month' : $this->options['default_mobile_view'],
+      '#title' => $this->t('Default mobile view'),
+    ];
+    // Mobile width.
+    $form['mobile_width'] = [
+      '#fieldset' => 'display',
+      '#type' => 'textfield',
+      '#title' => $this->t('Mobile maximum width'),
+      '#default_value' => (isset($this->options['mobile_width'])) ? $this->options['mobile_width'] : 768,
+      '#size' => 4,
     ];
     // First day.
     $form['firstDay'] = [
@@ -636,10 +654,19 @@ class FullCalendarDisplay extends StylePluginBase {
     $style_options = &$form_state->getValue('style_options');
     $selected_displays = $style_options['right_buttons'];
     $default_display = $style_options['default_view'];
+    $default_mobile_display = $style_options['default_mobile_view'];
+    $mobile_width = $style_options['mobile_width'];
 
     if (!in_array($default_display, array_filter(array_values($selected_displays)))) {
       $form_state->setErrorByName('style_options][default_view', $this->t('The default view must be one of the selected display toggles.'));
     }
+    if (!in_array($default_mobile_display, array_filter(array_values($selected_displays)))) {
+      $form_state->setErrorByName('style_options][default_mobile_view', $this->t('The default mobile view must be one of the selected display toggles.'));
+    }
+    if (!preg_match('#^\d+$#', $mobile_width)) {
+      $form_state->setErrorByName('style_options][mobile_width', $this->t('Mobile width must be an integer.'));
+    }
+
   }
 
   /**

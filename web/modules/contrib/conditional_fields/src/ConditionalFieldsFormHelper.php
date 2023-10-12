@@ -160,6 +160,7 @@ class ConditionalFieldsFormHelper {
 
       if (isset($this->form[$dependee]['#attributes'])
         && $this->form[$dependee]['#attributes']['class'][0] == 'field--type-list-string'
+        && isset($this->form[$dependee]['widget']['#type'])
         && $this->form[$dependee]['widget']['#type'] == 'checkboxes') {
         array_pop($dependee_info['parents']);
       }
@@ -399,6 +400,7 @@ class ConditionalFieldsFormHelper {
       return;
     }
 
+    $entity_type_id = $form_state->getFormObject()->getEntity()->getEntityTypeId();
     $dependent = $form['#conditional_fields'][reset($element['#array_parents'])];
 
     // Check if this field's dependencies were triggered.
@@ -422,7 +424,7 @@ class ConditionalFieldsFormHelper {
             }
             $input_state = (is_null($input_state)) ? [] : $input_state;
             if (isset($dependent['field_parents'][0])) {
-              $field = FieldStorageConfig::loadByName($form['#entity_type'], $dependent['field_parents'][0]);
+              $field = FieldStorageConfig::loadByName($entity_type_id, $dependent['field_parents'][0]);
             }
             else {
               $field = NULL;

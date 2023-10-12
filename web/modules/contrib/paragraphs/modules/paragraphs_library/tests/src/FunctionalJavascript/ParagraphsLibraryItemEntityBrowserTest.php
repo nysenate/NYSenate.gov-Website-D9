@@ -36,7 +36,7 @@ class ParagraphsLibraryItemEntityBrowserTest extends EntityBrowserWebDriverTestB
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'starterkit_theme';
 
   /**
    * Tests a flow of adding/removing references with paragraphs.

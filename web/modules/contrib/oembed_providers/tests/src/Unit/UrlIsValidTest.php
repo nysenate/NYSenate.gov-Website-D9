@@ -29,12 +29,8 @@ class UrlIsValidTest extends UnitTestCase {
   protected function setUp(): void {
     parent::setUp();
 
-    $entity_type_manager = $this->getMockBuilder('Drupal\Core\Entity\EntityTypeManager')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $messenger = $this->getMockBuilder('Drupal\Core\Messenger\Messenger')
-      ->disableOriginalConstructor()
-      ->getMock();
+    $entity_type_manager = $this->createMock('Drupal\Core\Entity\EntityTypeManager');
+    $messenger = $this->createMock('Drupal\Core\Messenger\Messenger');
     $this->formObject = new OembedProviderForm($entity_type_manager, $messenger);
   }
 

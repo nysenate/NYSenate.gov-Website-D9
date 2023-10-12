@@ -5,7 +5,7 @@
  * Provides a "form auto-submit" feature for the Better Exposed Filters module.
  */
 
-(function ($, Drupal) {
+(function ($, Drupal, once) {
 
   /**
    * To make a form auto submit, all you have to do is 3 things:.
@@ -57,7 +57,7 @@
         var autoSubmitDelay = $form.data('bef-auto-submit-delay') || 500;
 
         // Attach event listeners.
-        $form.once('bef-auto-submit')
+          $(once('bef-auto-submit', $form))
           // On change, trigger the submit immediately.
           .on('change', triggerSubmit)
           // On keyup, wait for a specified number of milliseconds before
@@ -120,4 +120,4 @@
     }
   }
 
-}(jQuery, Drupal));
+}(jQuery, Drupal, once));

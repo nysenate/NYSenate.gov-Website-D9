@@ -393,6 +393,8 @@ class FullcalendarViewPreprocess {
         'plugins' => [ 'moment','interaction', 'dayGrid', 'timeGrid', 'list', 'rrule' ],
         'timeZone' => $timezone,
         'defaultView' => isset($options['default_view']) ? $options['default_view'] : 'dayGridMonth',
+        'defaultMobileView' => isset($options['default_mobile_view']) ? $options['default_mobile_view'] : 'listYear',
+        'mobileWidth' => isset($options['mobile_width']) ? $options['mobile_width'] : 768,
         'defaultDate' => empty($default_date) ? date('Y-m-d') : $default_date,
         'header' => [
           'left' => $left_buttons,

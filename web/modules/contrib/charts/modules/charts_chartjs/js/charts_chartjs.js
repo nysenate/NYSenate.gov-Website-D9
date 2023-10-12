@@ -2,54 +2,44 @@
  * @file
  * JavaScript integration between Chart.js and Drupal.
  */
+(function (Drupal, once) {
 
-(function ($) {
   'use strict';
 
+  function copyAttributes(source, target) {
+    return Array.from(source.attributes).forEach(attribute => {
+      target.setAttribute(
+        attribute.nodeName === 'id' ? 'data-id' : attribute.nodeName,
+        attribute.nodeValue,
+      );
+    });
+  }
+
   Drupal.behaviors.chartsChartjs = {
-    attach: function (context, settings) {
+    attach: function (context) {
+      const contents = new Drupal.Charts.Contents();
+      once('load-charts-chartjs', '.charts-chartjs', context).forEach(function (element) {
+        const chartId = element.id;
+        // Switching div for canvas element.
+        const parent = element.parentNode;
+        const canvas = document.createElement('canvas');
+        // Transferring the attributes of our source element to the canvas.
+        copyAttributes(element, canvas);
+        canvas.id = chartId;
+        parent.replaceChild(canvas, element);
 
-      $('.charts-chartjs').each(function (param) {
-        // Store attributes before switching div for canvas element.
-        var chartId = $(this).attr('id');
-        var dataChart = "data-chart='" + document.getElementById(chartId).getAttribute("data-chart") + "'";
-        var style = 'style="' + document.getElementById(chartId).getAttribute('style') + '"';
-
-        $(this).replaceWith(function (n) {
-          return '<canvas ' + dataChart + style + 'id="' + chartId + '"' + '>' + n + '</canvas>'
+        // Initializing the chart item.
+        const chart = contents.getData(chartId);
+        const options = chart['options'];
+        new Chart(chartId, {
+          type: chart['type'],
+          data: chart['data'],
+          options: options,
         });
-
-        $('#' + chartId).once().each(function () {
-          var chartjsChart = $(this).attr('data-chart');
-          var chart = JSON.parse(chartjsChart);
-
-
-          // For gauge charts
-          if (chart['type'] === 'linearGauge') {
-            var scale = [];
-            scale['range'] = chart['range'];
-            scale['scaleColorRanges'] = chart['scale_color_ranges'];
-          }
-
-          var options;
-          if (chart['type'] === 'linearGauge') {
-            options = {scale: scale}
-          }
-          else {
-            options = chart['options']
-          }
-
-          var myChart = new Chart(chartId, {
-            type: chart['type'],
-            data: chart['data'],
-            options: options
-          });
-
-        });
-
+        if (canvas.nextElementSibling && canvas.nextElementSibling.hasAttribute('data-charts-debug-container')) {
+          canvas.nextElementSibling.querySelector('code').innerText = JSON.stringify(chart, null, ' ');
+        }
       });
-
     }
   };
-
-}(jQuery));
+}(Drupal, once));

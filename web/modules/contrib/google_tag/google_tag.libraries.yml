@@ -1,7 +1,25 @@
-drupal.settings_form:
+gtag:
   js:
-    js/google_tag.admin.js: {}
+    js/gtag.js: { preprocess: false }
+  drupalSettings:
+    gtag:
+      tagId: null
+      otherIds: []
+      events: []
   dependencies:
-    - core/jquery
-    - core/drupal
-    - core/drupal.form
+    - core/drupalSettings
+gtag.ajax:
+  js:
+    js/gtag.ajax.js: { }
+  dependencies:
+    - core/drupal.ajax
+
+gtm:
+  js:
+    js/gtm.js: { preprocess: false }
+  drupalSettings:
+    gtm:
+      tagId: null
+      settings: []
+  dependencies:
+    - core/drupalSettings

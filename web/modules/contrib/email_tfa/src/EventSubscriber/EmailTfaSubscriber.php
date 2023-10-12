@@ -194,7 +194,9 @@ class EmailTfaSubscriber implements EventSubscriberInterface {
       $routes = $this->config->get('routes');
       $routes = array_map('trim', explode("\n", $routes));
       if (!in_array($this->routeMatch->getRouteName(), $routes)) {
-        $url = Url::fromRoute('email_tfa.verifiy')->toString();
+        $url = Url::fromRoute('email_tfa.verifiy');
+        $url = $url->setOption('query', \Drupal::destination()->getAsArray());
+        $url = $url->toString();
         $response = new RedirectResponse($url);
         $response->send();
         exit;

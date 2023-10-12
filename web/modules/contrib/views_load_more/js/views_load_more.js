@@ -3,7 +3,7 @@
  *
  * Handles the AJAX pager for the view_load_more plugin.
  */
-(function ($, Drupal, drupalSettings) {
+(function ($, Drupal, drupalSettings, once) {
 
   "use strict";
 
@@ -43,7 +43,7 @@
     // only use the container DIV created above when it doesn't. For more
     // information, please see http://drupal.org/node/736066.
     if (new_content.length != 1 || new_content.get(0).nodeType != 1) {
-      new_content = new_content_wrapped;
+      new_content = new_content_wrapped.find(wrapper_selector);
     }
 
     // If removing content from the wrapper, detach behaviors first.
@@ -66,7 +66,12 @@
     // Update the pager
     // Find both for the wrapper as the newly loaded content the direct child
     // .item-list in case of nested pagers
-    $wrapper.find(pager_selector).replaceWith(new_content.find(pager_selector));
+    // If there is no pager in newly loaded content, remove old one entirely.
+    if (new_content.find(pager_selector).length == 1) {
+      $wrapper.find(pager_selector).replaceWith(new_content.find(pager_selector));
+    } else {
+      $wrapper.find(pager_selector).remove()
+    }
 
     // Add the new content to the page.
     $wrapper.find(content_selector)[method](new_content.find(content_selector).children());
@@ -80,8 +85,8 @@
     $wrapper.trigger('views_load_more.new_content', new_content.clone());
 
     // Attach all JavaScript behaviors to the new content
-    $wrapper.removeOnce('ajax-pager');
+    once.remove('ajax-pager', $wrapper);
     Drupal.attachBehaviors($wrapper[0], settings);
   };
 
-})(jQuery, Drupal, drupalSettings);
+})(jQuery, Drupal, drupalSettings, once);

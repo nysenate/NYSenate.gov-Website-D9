@@ -6,6 +6,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Flood\FloodInterface;
+use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
@@ -52,6 +53,13 @@ class FloodUnblockManager implements FloodUnblockManagerInterface {
   protected $messenger;
 
   /**
+   * The logger factory.
+   *
+   * @var \Drupal\Core\Logger\LoggerChannelFactory
+   */
+  protected $loggerFactory;
+
+  /**
    * FloodUnblockAdminForm constructor.
    *
    * @param \Drupal\Core\Database\Connection $database
@@ -64,13 +72,16 @@ class FloodUnblockManager implements FloodUnblockManagerInterface {
    *   The Entity Type Manager Interface.
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The Messenger Interface.
+   * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_factory
+   *   The logger factory.
    */
-  public function __construct(Connection $database, FloodInterface $flood, ConfigFactoryInterface $configFactory, EntityTypeManagerInterface $entityTypeManager, MessengerInterface $messenger) {
+  public function __construct(Connection $database, FloodInterface $flood, ConfigFactoryInterface $configFactory, EntityTypeManagerInterface $entityTypeManager, MessengerInterface $messenger, LoggerChannelFactoryInterface $logger_factory) {
     $this->database = $database;
     $this->flood = $flood;
     $this->entityTypeManager = $entityTypeManager;
     $this->config = $configFactory->get('user.flood');
     $this->messenger = $messenger;
+    $this->loggerFactory = $logger_factory->get('flood_control');
   }
 
   /**
@@ -128,8 +139,9 @@ class FloodUnblockManager implements FloodUnblockManagerInterface {
     catch (\Exception $e) {
       // Something went wrong somewhere, so roll back now.
       $txn->rollback();
-      // Log the exception to watchdog.
-      watchdog_exception('type', $e);
+
+      // Log the exception to drupal.
+      $this->loggerFactory->error($e);
       $this->messenger->addMessage($this->t('Error: @error', ['@error' => (string) $e]), 'error');
     }
   }

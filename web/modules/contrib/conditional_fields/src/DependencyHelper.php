@@ -85,6 +85,13 @@ class DependencyHelper {
   protected $inheriting_fields;
 
   /**
+   * The module handler service.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $module_handler;
+
+  /**
    * Constructor method.
    *
    * @param string $entity_type

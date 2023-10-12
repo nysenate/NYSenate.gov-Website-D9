@@ -17,7 +17,7 @@
    * Event render handler
    */
   function eventRender (info) {
-    let viewIndex = parseInt(this.el.getAttribute("calendar-view-index"));
+    let viewIndex = parseInt(this.el.getAttribute("data-calendar-view-index"));
     let viewSettings = drupalSettings.fullCalendarView[viewIndex];
     // Event title html markup.
     let eventTitleEle = info.el.getElementsByClassName('fc-title');
@@ -60,7 +60,7 @@
     const start = info.event.start;
     let strEnd = '';
     let strStart = '';
-    let viewIndex = parseInt(this.el.getAttribute("calendar-view-index"));
+    let viewIndex = parseInt(this.el.getAttribute("data-calendar-view-index"));
     let viewSettings = drupalSettings.fullCalendarView[viewIndex];
     const formatSettings = {
         month: '2-digit',
@@ -140,7 +140,7 @@
     slotDate = null;
     info.jsEvent.preventDefault();
     let thisEvent = info.event;
-    let viewIndex = parseInt(this.el.getAttribute("calendar-view-index"));
+    let viewIndex = parseInt(this.el.getAttribute("data-calendar-view-index"));
     let viewSettings = drupalSettings.fullCalendarView[viewIndex];
     let des = thisEvent.extendedProps.des;
     // Show the event detail in a pop up dialog.
@@ -197,7 +197,7 @@
     const start = info.event.start;
     let strEnd = '';
     let strStart = '';
-    let viewIndex = parseInt(this.el.getAttribute("calendar-view-index"));
+    let viewIndex = parseInt(this.el.getAttribute("data-calendar-view-index"));
     let viewSettings = drupalSettings.fullCalendarView[viewIndex];
     const formatSettings = {
         month: '2-digit',
@@ -281,9 +281,13 @@
     $('.js-drupal-fullcalendar')
     .each(function() {              
       let calendarEl = this;
-      let viewIndex = parseInt(calendarEl.getAttribute("calendar-view-index"));
+      let viewIndex = parseInt(calendarEl.getAttribute("data-calendar-view-index"));
       let viewSettings = drupalSettings.fullCalendarView[viewIndex];
       var calendarOptions = JSON.parse(viewSettings.calendar_options);
+      // Switch default view at mobile widths.
+      if (calendarOptions.mobileWidth !== undefined && calendarOptions.defaultMobileView !== undefined && $(window).width() <= calendarOptions.mobileWidth) {
+       calendarOptions.defaultView = calendarOptions.defaultMobileView;
+      }
       // Bind the render event handler.
       calendarOptions.eventRender = eventRender;
       // Bind the resize event handler.
@@ -330,7 +334,7 @@
           // when the selected option changes, dynamically change the calendar option
           localeSelectorEl.addEventListener('change', function() {
             if (this.value) {
-              let viewIndex = parseInt(this.getAttribute("calendar-view-index")); 
+              let viewIndex = parseInt(this.getAttribute("data-calendar-view-index")); 
               drupalSettings.calendar[viewIndex].setOption('locale', this.value);
             }
           });
@@ -341,7 +345,7 @@
         
         // Double click event.
         calendarEl.addEventListener('dblclick' , function(e) {
-          let viewIndex = parseInt(this.getAttribute("calendar-view-index"));
+          let viewIndex = parseInt(this.getAttribute("data-calendar-view-index"));
           let viewSettings = drupalSettings.fullCalendarView[viewIndex];
           // New event window can be open if following conditions match.
           // * The new event content type are specified.

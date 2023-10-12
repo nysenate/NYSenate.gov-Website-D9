@@ -74,13 +74,6 @@ class ParagraphContentMigrationTest extends ParagraphsMigrationTestBase {
    */
   public function testParagraphContentMigration($migration_to_run) {
     if ($migration_to_run) {
-      // Drupal 8.8.x only has 'classic' node migrations.
-      // @see https://www.drupal.org/node/3105503
-      if (strpos($migration_to_run, 'd7_node_complete') === 0 && version_compare(\Drupal::VERSION, '8.9', '<')) {
-        $this->pass("Drupal 8.8.x has only the 'classic' node migration.");
-        return;
-      }
-
       $this->executeMigration($migration_to_run);
     }
 

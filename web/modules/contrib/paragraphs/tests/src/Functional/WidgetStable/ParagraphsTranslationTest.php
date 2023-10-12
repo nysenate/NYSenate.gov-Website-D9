@@ -69,6 +69,7 @@ class ParagraphsTranslationTest extends ParagraphsTestBase {
       'settings[paragraph][images][translatable]' => TRUE,
       'settings[paragraph][text_image][translatable]' => TRUE,
       'settings[paragraph][text][translatable]' => TRUE,
+      'settings[paragraph][text][fields][field_text_demo]' => TRUE,
       'settings[paragraph][nested_paragraph][translatable]' => TRUE,
       'settings[paragraph][nested_paragraph][fields][field_paragraphs_demo]' => FALSE,
       'settings[paragraph][nested_paragraph][settings][language][language_alterable]' => TRUE,

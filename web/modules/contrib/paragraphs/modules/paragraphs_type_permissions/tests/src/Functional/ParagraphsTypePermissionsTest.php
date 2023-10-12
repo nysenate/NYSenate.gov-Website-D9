@@ -43,6 +43,7 @@ class ParagraphsTypePermissionsTest extends BrowserTestBase {
   protected function setUp(): void {
     parent::setUp();
     $this->drupalPlaceBlock('system_breadcrumb_block');
+    $this->drupalPlaceBlock('local_actions_block');
     ConfigurableLanguage::create(['id' => 'de', 'label' => '1German'])->save();
     ConfigurableLanguage::create(['id' => 'fr', 'label' => '2French'])->save();
     $this->addParagraphedContentType('paragraphed_content_demo', 'field_paragraphs_demo');

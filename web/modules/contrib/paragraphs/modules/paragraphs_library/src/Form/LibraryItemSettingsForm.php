@@ -33,6 +33,6 @@ class LibraryItemSettingsForm extends ConfigFormBase {
       '#markup' => '<p>' . $this->t('There are no settings yet.') . '</p>',
     );
 
-    return $form;
+    return parent::buildForm($form, $form_state);
   }
 }

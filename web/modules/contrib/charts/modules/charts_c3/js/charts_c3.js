@@ -1,22 +1,21 @@
 /**
  * @file
- * JavaScript integration between C3 and Drupal.
+ * JavaScript's integration between C3 and Drupal.
  */
-(function ($) {
+(function (Drupal, once) {
+
   'use strict';
 
   Drupal.behaviors.chartsC3 = {
     attach: function (context, settings) {
-
-      $('.charts-c3').each(function (param) {
-        var chartId = $(this).attr('id');
-        $('#' + chartId).once().each(function () {
-          if ($(this).attr('data-chart')) {
-            var c3Chart = $(this).attr('data-chart');
-            c3.generate(JSON.parse(c3Chart));
-          }
-        });
+      const contents = new Drupal.Charts.Contents();
+      once('charts-c3', '.charts-c3', context).forEach(function (element) {
+        const config = contents.getData(element.id);
+        c3.generate(config);
+        if (element.nextElementSibling && element.nextElementSibling.hasAttribute('data-charts-debug-container')) {
+          element.nextElementSibling.querySelector('code').innerText = JSON.stringify(config, null, ' ');
+        }
       });
     }
   };
-}(jQuery));
+}(Drupal, once));

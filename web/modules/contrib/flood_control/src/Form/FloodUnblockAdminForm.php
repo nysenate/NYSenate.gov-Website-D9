@@ -107,7 +107,7 @@ class FloodUnblockAdminForm extends FormBase {
     // Add link to control settings page if current user has
     // permission to access it.
     if ($this->currentUser->hasPermission('administer flood unblock')) {
-      $top_markup .= $this->t("You can configure the login attempt limits and time windows on the <a href=':url'>Flood Control settings page</a>.</p>", [':url' => Url::fromRoute('flood_control.settings')->toString()]);
+      $top_markup .= $this->t('You can configure the login attempt limits and time windows on the <a href=":url">Flood Control settings page</a>.', [':url' => Url::fromRoute('flood_control.settings')->toString()]);
     }
 
     // Provides introduction to the table.

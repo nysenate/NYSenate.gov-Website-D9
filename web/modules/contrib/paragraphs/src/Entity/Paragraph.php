@@ -741,7 +741,7 @@ class Paragraph extends ContentEntityBase implements ParagraphInterface {
       }
 
       $text = $this->get($field_name)->value ?? '';
-      $summary = Unicode::truncate(trim(strip_tags($text)), 150);
+      $summary = Unicode::truncate(trim(html_entity_decode(strip_tags($text))), 150);
       if (empty($summary)) {
         // Autoescape is applied to the summary when it is rendered with twig,
         // make it a Markup object so HTML tags are displayed correctly.

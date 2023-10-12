@@ -119,6 +119,7 @@ function _fullcalendar_view_use_cdn(array $libraries, $library_name, $type, $rep
           $path = explode('/', $key);
           $end = count($path);
           $plugin_url = $path[$end - 2] . '@' . $libraries[$library_name]['version'] . '/' . $path[$end - 1];
+          $value['type'] = 'external';
           $library_array[$libraries[$library_name]['cdn'] . $plugin_url] = $value;
           $updated = TRUE;
         }
@@ -169,6 +170,7 @@ function _fullcalendar_view_use_cdn_full_path(array $libraries, $library_name, $
         if (!file_exists(DRUPAL_ROOT . $key) || $replace_local) {
           // The js file doesn't exist.
           // Replace it with remote cdn.
+          $value['type'] = 'external';
           $library_array[$libraries[$library_name]['cdn']] = $value;
           $updated = TRUE;
         }

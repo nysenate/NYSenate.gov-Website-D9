@@ -27,7 +27,7 @@ class BetterExposedFiltersTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'block',
     'node',
     'views',

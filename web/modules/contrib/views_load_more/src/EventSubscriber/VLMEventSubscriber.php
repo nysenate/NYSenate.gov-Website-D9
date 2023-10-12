@@ -3,10 +3,10 @@
 namespace Drupal\views_load_more\EventSubscriber;
 
 
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Drupal\views\Ajax\ViewAjaxResponse;
 use Drupal\views_load_more\Ajax\VLMAppendCommand;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 class VLMEventSubscriber implements EventSubscriberInterface {
@@ -21,12 +21,12 @@ class VLMEventSubscriber implements EventSubscriberInterface {
   }
 
   /**
-   * Filter a views AJAX response when the Load More pager is set.  Remove the
-   * scrollTop commane and add in a viewsLoadMoreAppend AJAX command.
+   * Filter a views AJAX response when the Load More pager is set. Remove the
+   * scrollTop and viewsScrollTop command and add in a viewsLoadMoreAppend AJAX command.
    *
-   * @param \Symfony\Component\HttpKernel\Event\FilterResponseEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\ResponseEvent $event
    */
-  public function onResponse(FilterResponseEvent $event) {
+  public function onResponse(ResponseEvent $event) {
     $response = $event->getResponse();
 
     if ($response instanceof ViewAjaxResponse) {
@@ -37,12 +37,12 @@ class VLMEventSubscriber implements EventSubscriberInterface {
         $commands =& $response->getCommands();
 
         foreach ($commands as $key => $command) {
-          // Remove 'viewsScrollTop' command, as this behavior is unnecessary.
-          if ($command['command'] == 'viewsScrollTop') {
+          // Remove 'scrollTop' and 'viewsScrollTop' command, as this behavior is unnecessary.
+          if (in_array($command['command'], ['scrollTop', 'viewsScrollTop'])) {
             unset($commands[$key]);
           }
-          // The replace should the only one, but just in case, we'll make sure.
-          else if ($command['command'] == 'insert' && $command['selector'] == '.js-view-dom-id-' . $view->dom_id) {
+          // The replace should be the only insert command, but just in case, we'll make sure.
+          else if ($command['command'] == 'insert' && $command['method'] == 'replaceWith' && $command['selector'] == '.js-view-dom-id-' . $view->dom_id) {
             $stylePlugin = $view->getStyle();
             // Take the data attribute, which is the content of the view,
             // otherwise discard the insert command for the view, we're

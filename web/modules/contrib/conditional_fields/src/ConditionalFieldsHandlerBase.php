@@ -34,7 +34,7 @@ abstract class ConditionalFieldsHandlerBase implements ConditionalFieldsHandlers
       $values = $value_data;
     }
     elseif (is_string($value_data)) {
-      $values = preg_split("/[\r\n]+/g", $value_data);
+      $values = preg_split("/[\r\n]+/", $value_data);
     }
     else {
       $values = [];

@@ -2,8 +2,8 @@
  * @file
  * JavaScript integration between Google and Drupal.
  */
+(function (Drupal, once) {
 
-(function ($) {
   'use strict';
 
   Drupal.googleCharts = Drupal.googleCharts || {charts: []};
@@ -14,18 +14,30 @@
    * @type {{attach: Drupal.behaviors.chartsGooglecharts.attach}}
    */
   Drupal.behaviors.chartsGooglecharts = {
-    attach: function (context, settings) {
+    attach: function (context) {
+      const globalOptions = drupalSettings.charts.google.global_options;
+      let useMaterialDesign = globalOptions.useMaterialDesign;
+      let chartType = globalOptions.chartType;
+      const materialDesignPackages = ['bar', 'line', 'spline', 'scatter', 'column',];
+      const packages = ['corechart', 'gauge', 'table',];
+      if (useMaterialDesign === 'true' && materialDesignPackages.indexOf(chartType) !== -1) {
+        if (chartType === 'spline') {
+          chartType = 'line';
+        }
+        if (chartType === 'column') {
+          chartType = 'bar';
+        }
+        packages.push(chartType);
+      }
       // Load Google Charts API.
-      google.charts.load('current', {packages: ['corechart', 'gauge']});
+      google.charts.load('current', {packages: packages});
 
-      $(context).find('body').once('load-google-charts').each(function () {
-        // Re-draw charts if viewport size has been changed.
-        $(window).on('resize', function () {
-          Drupal.googleCharts.waitForFinalEvent(function () {
-            // Re-draw Google Charts.
-            Drupal.googleCharts.drawCharts(true);
-          }, 200, 'reload-google-charts');
-        });
+      // Re-draw charts if viewport size has been changed.
+      window.addEventListener('resize', function () {
+        Drupal.googleCharts.waitForFinalEvent(function () {
+          // Re-draw Google Charts.
+          Drupal.googleCharts.drawCharts();
+        }, 200, 'reload-google-charts');
       });
 
       // Draw Google Charts.
@@ -35,32 +47,18 @@
 
   /**
    * Helper function to draw Google Charts.
-   *
-   * @param {boolean} reload - Reload.
    */
-  Drupal.googleCharts.drawCharts = function (reload) {
-    $('.charts-google').each(function () {
-      var chartId = $(this).attr('id');
-      var $charts;
-
-      if (reload === true) {
-        $charts = $('#' + chartId);
-      }
-      else {
-        $charts = $('#' + chartId).once('draw-google-charts');
-      }
-
-      $charts.each(function () {
-        var $chart = $(this);
-
-        if ($chart.attr('data-chart')) {
-          var data = $chart.attr('data-chart');
-          var options = $chart.attr('google-options');
-          var type = $chart.attr('google-chart-type');
-
-          google.charts.setOnLoadCallback(Drupal.googleCharts.drawChart(chartId, type, data, options));
+  Drupal.googleCharts.drawCharts = function () {
+    const contents = new Drupal.Charts.Contents();
+    once('load-google-charts-item', '.charts-google').forEach(function (element) {
+      if (element.dataset.hasOwnProperty('chart')) {
+        const chartId = element.id;
+        const dataAttributes = contents.getData(chartId);
+        google.charts.setOnLoadCallback(Drupal.googleCharts.drawChart(chartId, dataAttributes['visualization'], dataAttributes['data'], dataAttributes['options']));
+        if (element.nextElementSibling && element.nextElementSibling.hasAttribute('data-charts-debug-container')) {
+          element.nextElementSibling.querySelector('code').innerText = JSON.stringify(dataAttributes, null, ' ');
         }
-      });
+      }
     });
   };
 
@@ -76,49 +74,72 @@
    */
   Drupal.googleCharts.drawChart = function (chartId, chartType, dataTable, googleChartOptions) {
     return function () {
-      var data = google.visualization.arrayToDataTable(JSON.parse(dataTable));
-      var options = JSON.parse(googleChartOptions);
+      const data = google.visualization.arrayToDataTable(dataTable);
+      const options = googleChartOptions;
+      const googleChartTypeFormatted = chartType;
 
-      var googleChartTypeObject = JSON.parse(chartType);
-      var googleChartTypeFormatted = googleChartTypeObject.type;
-      var chart;
+      let visualizationNamespace = 'visualization';
+      let visualizationClass = chartType;
+      // Replace the 'Spline' chart type with 'Line'.
+      if (visualizationClass === 'SplineChart') {
+        visualizationClass = 'LineChart';
+      }
+      if (options.theme === 'material') {
+        // Material Design wants to use the 'charts' namespace.
+        visualizationNamespace = 'charts';
+        // Strip the 'Chart' suffix from the chart type.
+        visualizationClass = visualizationClass.replace('Chart', '');
+        // Replace the 'Column' chart type with 'Bar'.
+        if (visualizationClass === 'Column') {
+          visualizationClass = 'Bar';
+        }
+      }
+      console.log(visualizationClass);
 
+      let chart;
       switch (googleChartTypeFormatted) {
         case 'BarChart':
-          chart = new google.visualization.BarChart(document.getElementById(chartId));
-          break;
         case 'ColumnChart':
-          chart = new google.visualization.ColumnChart(document.getElementById(chartId));
+        case 'LineChart':
+        case 'SplineChart':
+        case 'ScatterChart':
+          chart = new google[visualizationNamespace][visualizationClass](document.getElementById(chartId));
           break;
+
         case 'DonutChart':
-          chart = new google.visualization.PieChart(document.getElementById(chartId));
-          break;
         case 'PieChart':
           chart = new google.visualization.PieChart(document.getElementById(chartId));
           break;
-        case 'ScatterChart':
-          chart = new google.visualization.ScatterChart(document.getElementById(chartId));
+
+        case 'BubbleChart':
+          chart = new google.visualization.BubbleChart(document.getElementById(chartId));
           break;
+
         case 'AreaChart':
           chart = new google.visualization.AreaChart(document.getElementById(chartId));
           break;
-        case 'LineChart':
-          chart = new google.visualization.LineChart(document.getElementById(chartId));
-          break;
-        case 'SplineChart':
-          chart = new google.visualization.LineChart(document.getElementById(chartId));
-          break;
-        case 'GaugeChart':
+
+        case 'Gauge':
           chart = new google.visualization.Gauge(document.getElementById(chartId));
           break;
+
+        case 'ComboChart':
+          chart = new google.visualization.ComboChart(document.getElementById(chartId));
+          break;
+
         case 'GeoChart':
           chart = new google.visualization.GeoChart(document.getElementById(chartId));
+          break;
+
+        case 'TableChart':
+          chart = new google.visualization.Table(document.getElementById(chartId));
       }
+
       // Fix for https://www.drupal.org/project/charts/issues/2950654.
       // Would be interested in a different approach that allowed the default
       // colors to be applied first, rather than unsetting.
-      if (options['colors'].length > 10) {
-        for (var i in options) {
+      if (options['colors'] && options['colors'].length > 10) {
+        for (const i in options) {
           if (i === 'colors') {
             delete options[i];
             break;
@@ -128,12 +149,11 @@
 
       // Rewrite the colorAxis item to include the colors: key
       if (typeof options['colorAxis'] != 'undefined') {
-        var num_colors = options['colorAxis'].length;
-        var colors = options['colorAxis'];
-        options['colorAxis'] = options['colorAxis'].splice(num_colors);
+        const colors = options['colorAxis'];
+        const num_colors = colors.length;
+        options['colorAxis'] = colors.splice(num_colors);
         options['colorAxis'] = {colors: colors};
       }
-
       chart.draw(data, options);
     };
   };
@@ -144,7 +164,7 @@
    *
    * Example usage:
    * @code
-   *  $(window).resize(function () {
+   *  window.addEventListener('resize', function () {
    *    Drupal.googleCharts.waitForFinalEvent(function(){
    *      alert('Resize...');
    *    }, 500, "some unique string");
@@ -152,7 +172,7 @@
    * @endcode
    */
   Drupal.googleCharts.waitForFinalEvent = (function () {
-    var timers = {};
+    let timers = {};
     return function (callback, ms, uniqueId) {
       if (!uniqueId) {
         uniqueId = "Don't call this twice without a uniqueId";
@@ -163,5 +183,4 @@
       timers[uniqueId] = setTimeout(callback, ms);
     };
   })();
-
-}(jQuery));
+}(Drupal, once));

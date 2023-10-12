@@ -180,15 +180,32 @@ abstract class BetterExposedFiltersWidgetBase extends PluginBase implements Bett
     $view = $form_state->get('view');
     $display = $form_state->get('display');
 
+    $request = \Drupal::request();
     if (isset($display['display_options']['path'])) {
-      return Url::fromRoute(implode('.', [
-        'view',
-        $view->id(),
-        $display['id'],
-      ]));
+      $args = [];
+      $route = $request->attributes->get('_route_object');
+      /** @var \Symfony\Component\HttpFoundation\ParameterBag $raw_params */
+      $raw_params = $request->attributes->get('_raw_variables');
+      $route_params = $request->attributes->get('_route_params');
+      $map = $route->hasOption('_view_argument_map') ? $route->getOption('_view_argument_map') : [];
+
+      foreach ($map as $attribute => $parameter_name) {
+        $arg = $raw_params->get($parameter_name) ?? $route_params[$parameter_name];
+
+        if (isset($arg)) {
+          $args[$attribute] = $arg;
+        }
+      }
+      return Url::fromRoute(
+        implode('.', [
+          'view',
+          $view->id(),
+          $display['id'],
+        ]),
+        $args
+      );
     }
 
-    $request = \Drupal::request();
     $url = Url::createFromRequest(clone $request);
     $url->setAbsolute();
 

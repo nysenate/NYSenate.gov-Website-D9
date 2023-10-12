@@ -26,7 +26,7 @@ class BetterExposedFiltersHelperUnitTest extends UnitTestCase {
    */
   public function testRewriteOptions($options, $settings, $expected) {
     $actual = BetterExposedFiltersHelper::rewriteOptions($options, $settings);
-    $this->assertArrayEquals(array_values($expected), array_values($actual));
+    $this->assertEquals(array_values($expected), array_values($actual));
   }
 
   /**
@@ -89,7 +89,7 @@ class BetterExposedFiltersHelperUnitTest extends UnitTestCase {
    */
   public function testRewriteReorderOptions($options, $settings, $expected) {
     $actual = BetterExposedFiltersHelper::rewriteOptions($options, $settings, TRUE);
-    $this->assertArrayEquals(array_values($expected), array_values($actual));
+    $this->assertEquals(array_values($expected), array_values($actual));
   }
 
   /**
@@ -131,7 +131,7 @@ class BetterExposedFiltersHelperUnitTest extends UnitTestCase {
    */
   public function testRewriteTaxonomy($options, $settings, $expected, $reorder = FALSE) {
     $actual = BetterExposedFiltersHelper::rewriteOptions($options, $settings, $reorder);
-    $this->assertArrayEquals(array_values($expected), array_values($actual));
+    $this->assertEquals(array_values($expected), array_values($actual));
   }
 
   /**
@@ -210,7 +210,7 @@ class BetterExposedFiltersHelperUnitTest extends UnitTestCase {
    */
   public function testSortOptions($unsorted, $expected) {
     $sorted = BetterExposedFiltersHelper::sortOptions($unsorted);
-    $this->assertArrayEquals(array_values($sorted), array_values($expected));
+    $this->assertEquals(array_values($sorted), array_values($expected));
   }
 
   /**
@@ -286,7 +286,7 @@ class BetterExposedFiltersHelperUnitTest extends UnitTestCase {
    */
   public function testSortNestedOptions($unsorted, $expected) {
     $sorted = BetterExposedFiltersHelper::sortNestedOptions($unsorted);
-    $this->assertArrayEquals(array_values($sorted), array_values($expected));
+    $this->assertEquals(array_values($sorted), array_values($expected));
   }
 
   /**

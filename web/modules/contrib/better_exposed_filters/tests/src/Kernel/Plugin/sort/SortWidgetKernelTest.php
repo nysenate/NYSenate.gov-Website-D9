@@ -51,7 +51,7 @@ class SortWidgetKernelTest extends BetterExposedFiltersKernelTestBase {
     ];
 
     // Assert our combined sort options are added.
-    $this->assertEqual($options, $assert, 'Sort options are combined.');
+    $this->assertEquals($options, $assert, 'Sort options are combined.');
 
     $view->destroy();
   }
@@ -89,7 +89,7 @@ class SortWidgetKernelTest extends BetterExposedFiltersKernelTestBase {
     ];
 
     // Assert our combined sort options are added.
-    $this->assertEqual($options, $assert, 'Sort options are combined and rewritten.');
+    $this->assertEquals($options, $assert, 'Sort options are combined and rewritten.');
 
     $view->destroy();
   }
@@ -128,7 +128,7 @@ class SortWidgetKernelTest extends BetterExposedFiltersKernelTestBase {
     ];
 
     // Assert our combined sort options are added.
-    $this->assertEqual($options, $assert, 'Reset sort option was added.');
+    $this->assertEquals($options, $assert, 'Reset sort option was added.');
 
     $view->destroy();
   }

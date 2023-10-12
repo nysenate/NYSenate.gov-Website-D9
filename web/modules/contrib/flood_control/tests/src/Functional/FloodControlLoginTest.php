@@ -9,7 +9,7 @@ use Drupal\Tests\BrowserTestBase;
  *
  * @group flood_control
  */
-class FloodControlIpLoginTest extends BrowserTestBase {
+class FloodControlLoginTest extends BrowserTestBase {
 
   /**
    * {@inheritdoc}
@@ -63,7 +63,7 @@ class FloodControlIpLoginTest extends BrowserTestBase {
     $database = \Drupal::database();
 
     // Removes all flood entries for a fresh start.
-    if($database->schema()->tableExists('flood')) {
+    if ($database->schema()->tableExists('flood')) {
       $database->truncate('flood')->execute();
     }
 

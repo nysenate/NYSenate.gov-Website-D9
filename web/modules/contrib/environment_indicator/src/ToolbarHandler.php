@@ -160,14 +160,6 @@ class ToolbarHandler implements ContainerInjectionInterface {
         ],
         'tray' => [
           '#heading' => $this->t('Environments menu'),
-          'configuration' => [
-            '#type' => 'link',
-            '#title' => $this->t('Configure'),
-            '#url' => Url::fromRoute('environment_indicator.settings'),
-            '#options' => [
-              'attributes' => ['class' => ['edit-environments']],
-            ],
-          ],
         ],
         '#attached' => [
           'library' => ['environment_indicator/drupal.environment_indicator'],
@@ -181,6 +173,17 @@ class ToolbarHandler implements ContainerInjectionInterface {
           ],
         ]
       ];
+
+      if ($this->account->hasPermission('administer environment indicator settings')) {
+        $items['environment_indicator']['tray']['configuration'] = [
+          '#type' => 'link',
+          '#title' => $this->t('Configure'),
+          '#url' => Url::fromRoute('environment_indicator.settings'),
+          '#options' => [
+            'attributes' => ['class' => ['edit-environments']],
+          ],
+        ];
+      }
 
       if ($links = $this->getLinks()) {
         $items['environment_indicator']['tray']['environment_links'] =  [

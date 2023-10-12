@@ -5,7 +5,7 @@
  * Adds jQuery UI Slider functionality to an exposed filter.
  */
 
-(function ($, Drupal, drupalSettings) {
+(function ($, Drupal, drupalSettings, once) {
   Drupal.behaviors.better_exposed_filters_slider = {
     attach: function (context, settings) {
       if (drupalSettings.better_exposed_filters.slider) {
@@ -13,7 +13,7 @@
           var data_selector = 'edit-' + sliderOptions.dataSelector;
 
           // Collect all possible input fields for this filter.
-          var $inputs = $("input[data-drupal-selector=" + data_selector + "], input[data-drupal-selector=" + data_selector + "-max], input[data-drupal-selector=" + data_selector + "-min]", context).once('slider-filter');
+          var $inputs = $(once('slider-filter', "input[data-drupal-selector=" + data_selector + "], input[data-drupal-selector=" + data_selector + "-max], input[data-drupal-selector=" + data_selector + "-min]", context));
 
           // This is a single-value filter.
           if ($inputs.length === 1) {
@@ -177,4 +177,4 @@
     }
   }
 
-})(jQuery, Drupal, drupalSettings);
+})(jQuery, Drupal, drupalSettings, once);

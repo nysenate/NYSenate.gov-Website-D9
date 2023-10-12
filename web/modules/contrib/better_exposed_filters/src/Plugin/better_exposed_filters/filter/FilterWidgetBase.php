@@ -226,8 +226,12 @@ abstract class FilterWidgetBase extends BetterExposedFiltersWidgetBase implement
       }
     }
 
+    // Add possible field wrapper to validate for "between" operator.
+    $element_wrapper = $field_id . '_wrapper';
+
     $filter_elements = [
       $identifier,
+      $element_wrapper,
       $filter->options['expose']['operator_id'],
     ];
 
@@ -236,6 +240,29 @@ abstract class FilterWidgetBase extends BetterExposedFiltersWidgetBase implement
       // Sanity check to make sure the element exists.
       if (empty($form[$element])) {
         continue;
+      }
+
+      // "Between" operator fields to validate for.
+      $fields = ['min', 'max'];
+
+      // Check if the the element is apart of a wrapper.
+      if ($element === $element_wrapper) {
+        $wrapper_array = $form[$element];
+        // Determine if wrapper element has min or max fields or if collapsible, if so then update type.
+        if (array_intersect($fields, array_keys($wrapper_array[$field_id])) || $is_collapsible) {
+          $form[$element] = [
+            '#type' => 'container',
+            $element => $wrapper_array,
+          ];
+        }
+      } else {
+        // Determine if element has min or max child fields, if so then update type.
+        if (array_intersect($fields, array_keys($form[$field_id]))) {
+          $form[$element] = [
+            '#type' => 'container',
+            $element => $wrapper_array,
+          ];
+        }
       }
 
       // Move collapsible elements.

@@ -131,7 +131,10 @@ class OptionsButtons extends ConditionalFieldsHandlerBase {
           // We are placed inside the option of the checkboxes.
           $selector = conditional_fields_field_selector($field);
           foreach ($options['value_form'] as $value) {
-            $selector_key = str_replace($field['#return_value'], current($value), $selector);
+            $search = '[' . $field['#return_value'] . ']';
+            $replace = '[' . current($value) . ']';
+            $pos = strrpos($selector, $search);
+            $selector_key = substr_replace($selector, $replace, $pos, strlen($search));
             $checkboxes_selectors[$selector_key] = ['checked' => TRUE];
           }
         }

@@ -2,35 +2,45 @@
 
 namespace Drupal\charts\Form;
 
+use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\Form\ConfigFormBase;
-use Drupal\charts\Settings\ChartsBaseSettingsForm;
-use Drupal\Core\Url;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\charts\Settings\ChartsDefaultSettings;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Charts Config Form.
  */
 class ChartsConfigForm extends ConfigFormBase {
 
-  protected $config;
-
-  protected $defaults;
-
-  protected $chartsBaseSettingsForm;
+  /**
+   * The cache tags invalidator.
+   *
+   * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface
+   */
+  protected $cacheTagsInvalidator;
 
   /**
-   * Construct.
+   * Constructs a new ChartsConfigForm.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   Config factory.
+   * @param \Drupal\Core\Cache\CacheTagsInvalidatorInterface $cache_tags_invalidator
+   *   Cache tag invalidator.
    */
-  public function __construct(ConfigFactoryInterface $config_factory) {
+  public function __construct(ConfigFactoryInterface $config_factory, CacheTagsInvalidatorInterface $cache_tags_invalidator) {
     parent::__construct($config_factory);
-    $this->config = $this->configFactory->getEditable('charts.settings');
-    $this->defaults = new ChartsDefaultSettings();
-    $this->chartsBaseSettingsForm = new ChartsBaseSettingsForm();
+    $this->cacheTagsInvalidator = $cache_tags_invalidator;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('config.factory'),
+      $container->get('cache_tags.invalidator')
+    );
   }
 
   /**
@@ -51,41 +61,24 @@ class ChartsConfigForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
+    $default_config = $this->config('charts.settings')->get('charts_default_settings') ?: [];
 
-    $parents = ['charts_default_settings'];
-    $default_config = $this->config->get('charts_default_settings');
-    if (!isset($default_config)) {
-      $defaultSettings = new ChartsDefaultSettings();
-      $default_config = $defaultSettings->getDefaults();
-    }
-
-    $defaults = array_merge($this->defaults->getDefaults(), $default_config);
-
-    $field_options = [];
     $form['help'] = [
-      '#type' => 'markup',
-      '#prefix' => '<p>',
-      '#suffix' => '</p>',
-      '#markup' => $this->t('The settings on this page are used to set
+      '#type' => 'html_tag',
+      '#tag' => 'p',
+      '#value' => $this->t('The settings on this page are used to set
         <strong>default</strong> settings. They do not affect existing charts.
-        To make a new chart, <a href="@create">create a new view</a> and select
-        the display format of "Chart".', [
-          '@create' => Url::fromRoute('views_ui.add')
-            ->toString(),
-        ]),
-      '#weight' => -100,
+        To make a new chart, create a new view and select the display format of
+        "Chart." Or use a Charts Block and add your own data inside that block.
+        You can also attach a Chart field to your content (or other entity)
+        type and add your data within the Chart field.'),
     ];
-    // Reuse the global settings form for defaults, but remove JS classes.
-    $form = $this->chartsBaseSettingsForm->getChartsBaseSettingsForm($form, 'config_form', $defaults, $field_options, $parents);
-    $form['xaxis']['#attributes']['class'] = [];
-    $form['yaxis']['#attributes']['class'] = [];
-    $form['display']['colors']['#prefix'] = NULL;
-    $form['display']['colors']['#suffix'] = NULL;
-    // Put settings into vertical tabs.
-    $form['display']['#group'] = 'defaults';
-    $form['xaxis']['#group'] = 'defaults';
-    $form['yaxis']['#group'] = 'defaults';
-    $form['defaults'] = ['#type' => 'vertical_tabs'];
+    $form['settings'] = [
+      '#type' => 'charts_settings',
+      '#used_in' => 'config_form',
+      '#required' => TRUE,
+      '#default_value' => $default_config,
+    ];
 
     return parent::buildForm($form, $form_state);
   }
@@ -94,8 +87,24 @@ class ChartsConfigForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $this->config->set('charts_default_settings', $form_state->getValue('charts_default_settings'));
-    $this->config->save();
+    $settings = $form_state->getValue('settings');
+    // The settings form element is returning an unneeded 'defaults' value.
+    if (isset($settings['defaults'])) {
+      unset($settings['defaults']);
+    }
+
+    // Process the default colors to remove unneeded data.
+    foreach ($settings['display']['colors'] as $color_index => $color_item) {
+      $settings['display']['colors'][$color_index] = $color_item['color'];
+    }
+
+    // Save the main settings.
+    $config = $this->config('charts.settings');
+    $config->set('charts_default_settings', $settings)
+      ->save();
+
+    // Invalidate cache tags to refresh any view relying on this.
+    $this->cacheTagsInvalidator->invalidateTags($config->getCacheTags());
 
     parent::submitForm($form, $form_state);
   }

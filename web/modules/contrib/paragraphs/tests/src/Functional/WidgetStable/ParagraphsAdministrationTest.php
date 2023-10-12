@@ -424,6 +424,10 @@ class ParagraphsAdministrationTest extends ParagraphsTestBase {
     $this->addParagraphsType('nested_double_test');
     static::fieldUIAddExistingField('admin/structure/paragraphs_type/nested_double_test', 'field_paragraphs', 'paragraphs_1');
     $this->clickLink('Manage form display');
+    // Fields now keep form display settings when reused in 10.1+, restore it to the
+    // default.
+    $this->submitForm(['fields[field_paragraphs][type]' => 'paragraphs'], 'field_paragraphs_settings_edit');
+    $this->submitForm(['fields[field_paragraphs][settings_edit_form][settings][add_mode]' => 'dropdown'], 'Update');
     $this->submitForm([], 'Save');
     //$this->drupalPostForm(NULL, array('fields[field_paragraphs][type]' => 'entity_reference_revisions_entity_view'), 'Save');
     static::fieldUIAddNewField('admin/structure/paragraphs_type/nested_double_test', 'paragraphs_2', 'paragraphs_2', 'entity_reference_revisions', array(

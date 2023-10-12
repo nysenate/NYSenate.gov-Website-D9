@@ -2,8 +2,8 @@
 
 namespace Drupal\flood_control\Commands;
 
-use Drush\Commands\DrushCommands;
 use Drupal\flood_control\FloodUnblockManager;
+use Drush\Commands\DrushCommands;
 
 /**
  * Flood unblock. module's Drush 9 commands.
@@ -61,7 +61,7 @@ class FloodUnblockCommands extends DrushCommands {
         $this->manager->floodUnblockClearEvent($fid);
       }
       $label = $event['label'];
-      $this->output()->writeln("Cleared the ${label} events");
+      $this->output()->writeln("Cleared the {$label} events");
     }
   }
 

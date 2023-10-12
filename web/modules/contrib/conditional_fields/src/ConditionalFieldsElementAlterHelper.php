@@ -43,7 +43,6 @@ class ConditionalFieldsElementAlterHelper {
     }
 
     $form = &$form_state->getCompleteForm();
-
     // Some fields do not have entity type and bundle properties.
     // In this case we try to use the properties from the form.
     // This is not an optimal solution, since in case of fields
@@ -105,10 +104,10 @@ class ConditionalFieldsElementAlterHelper {
    */
   public function loadDependencies($entity_type, $bundle) {
     static $dependency_helper;
-    if (!isset($dependency_helper)) {
-      $dependency_helper = new DependencyHelper($entity_type, $bundle);
+    if (!isset($dependency_helper[$entity_type][$bundle])) {
+      $dependency_helper[$entity_type][$bundle] = new DependencyHelper($entity_type, $bundle);
     }
-    return $dependency_helper->getBundleDependencies();
+    return $dependency_helper[$entity_type][$bundle]->getBundleDependencies();
   }
 
   /**

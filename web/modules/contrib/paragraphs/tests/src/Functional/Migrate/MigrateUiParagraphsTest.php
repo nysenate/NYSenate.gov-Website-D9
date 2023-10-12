@@ -21,12 +21,6 @@ class MigrateUiParagraphsTest extends MigrateUiParagraphsTestBase {
    * @dataProvider providerParagraphsMigrate
    */
   public function testParagraphsMigrate($node_migrate_type_classic) {
-    // Drupal 8.8.x only has 'classic' node migrations.
-    // @see https://www.drupal.org/node/3105503
-    if (!$node_migrate_type_classic && version_compare(\Drupal::VERSION, '8.9', '<')) {
-      $this->pass("Drupal 8.8.x has only the 'classic' node migration.");
-      return;
-    }
     $this->setClassicNodeMigration($node_migrate_type_classic);
     $this->assertMigrateUpgradeViaUi();
     $this->assertParagraphsMigrationResults();

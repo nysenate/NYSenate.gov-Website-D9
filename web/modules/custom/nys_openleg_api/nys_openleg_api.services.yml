@@ -1,0 +1,23 @@
+services:
+  openleg_api.log_channel:
+    parent: logger.channel_base
+    arguments: [ 'nys_openleg_api' ]
+  openleg_api.config:
+    class: Drupal\Core\Config\ImmutableConfig
+    factory: [ '@config.factory', 'get' ]
+    arguments: [ 'nys_openleg.settings']
+  openleg_api.response_manager:
+    class: Drupal\nys_openleg_api\Service\ResponseManager
+    arguments: [ '@openleg_api.log_channel' ]
+    parent: default_plugin_manager
+  openleg_api.request_manager:
+    class: Drupal\nys_openleg_api\Service\RequestManager
+    arguments: [ '@openleg_api.log_channel' ]
+    parent: default_plugin_manager
+  openleg_api:
+    class: Drupal\nys_openleg_api\Service\Api
+    arguments:
+      - '@openleg_api.log_channel'
+      - '@openleg_api.config'
+      - '@openleg_api.request_manager'
+      - '@openleg_api.response_manager'

@@ -72,13 +72,13 @@ class AmendmentsBlock extends BlockBase implements ContainerFactoryPluginInterfa
 
       // A few immediate references for the bill object.
       $bill_session_year = $node->field_ol_session->value;
-      $print_no = $node->field_ol_base_print_no->value;
       $amended_versions_result = $this->billsHelper->getBillVersions($node);
 
       $amendments = $this->billsHelper->findsFeaturedLegislationQuote($amended_versions_result);
 
       foreach ($amendments as $key => $item) {
-        $amendments[$key]['sponsors_array'] = $this->billsHelper->resolveAmendmentSponsors($item['node'], $node->field_ol_chamber->value);
+        $amendments[$key]['sponsors_array'] =
+          $this->billsHelper->resolveAmendmentSponsors($item['node'], $node->field_ol_chamber->value);
       }
 
       // Check for values in the Same As field for opposite chamber versions.
@@ -147,7 +147,7 @@ class AmendmentsBlock extends BlockBase implements ContainerFactoryPluginInterfa
       // by legislative session.
       $previous_versions = [];
       foreach ($related_metadata as $key => $val) {
-        if (!empty($val->session) && ($val->session === $bill_session_year)) {
+        if (!empty($val->session) && ($val->session !== $bill_session_year)) {
           $t_sess = $this->billsHelper->standardizeSession((int) $val->session);
           $t_year = substr($t_sess, 0, 4);
           /* @phpstan-ignore-next-line */
@@ -175,7 +175,7 @@ class AmendmentsBlock extends BlockBase implements ContainerFactoryPluginInterfa
         $prev_vers_pre = $this->t('Versions Introduced in @current Legislative Session:', ['@current' => $current]);
       }
 
-      $build = [
+      return [
         '#theme' => 'nys_bills__amendments_block',
         '#content' => [
           'amendments' => $amendments,
@@ -192,7 +192,6 @@ class AmendmentsBlock extends BlockBase implements ContainerFactoryPluginInterfa
           'version' => '',
         ],
       ];
-      return $build;
     }
     return [];
   }

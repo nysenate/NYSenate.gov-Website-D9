@@ -9,7 +9,7 @@ use Drupal\nys_openleg_api\ResponsePluginBase;
  *
  * This is a template, and does not match a known OpenLeg response type.
  *
- * @OpenlegApiResponse(
+ * @OpenlegApiResponseNew(
  *   id = "response_item",
  *   label = @Translation("Generic Item Response Template"),
  *   description = @Translation("Openleg API Response plugin template")

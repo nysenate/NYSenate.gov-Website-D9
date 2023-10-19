@@ -7,7 +7,7 @@ use Drupal\nys_openleg_api\RequestPluginBase;
 /**
  * Openleg API Request plugin for Floor Transcripts.
  *
- * @OpenlegApiRequest(
+ * @OpenlegApiRequestNew(
  *   id = "floor_transcript",
  *   label = @Translation("Floor Transcripts"),
  *   description = @Translation("Openleg API Request plugin"),

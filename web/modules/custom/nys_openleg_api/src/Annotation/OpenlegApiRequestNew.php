@@ -12,7 +12,7 @@ use Drupal\Core\Annotation\Translation;
  *
  * @Annotation
  */
-class OpenlegApiRequest extends Plugin {
+class OpenlegApiRequestNew extends Plugin {
 
   /**
    * The plugin ID.

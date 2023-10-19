@@ -5,7 +5,7 @@ namespace Drupal\nys_openleg_api\Plugin\OpenlegApi\Response;
 /**
  * Openleg API Response plugin for a list of transcript updates.
  *
- * @OpenlegApiResponse(
+ * @OpenlegApiResponseNew(
  *   id = "transcript-update-token list",
  *   label = @Translation("Transcript Update List"),
  *   description = @Translation("Openleg API Response plugin")

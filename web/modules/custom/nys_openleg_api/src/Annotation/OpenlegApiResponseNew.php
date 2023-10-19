@@ -12,7 +12,7 @@ use Drupal\Core\Annotation\Translation;
  *
  * @Annotation
  */
-class OpenlegApiResponse extends Plugin {
+class OpenlegApiResponseNew extends Plugin {
 
   /**
    * The plugin ID.  This should match the Openleg responseType property.

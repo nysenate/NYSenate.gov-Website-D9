@@ -7,7 +7,7 @@ use Drupal\nys_openleg_api\RequestPluginBase;
 /**
  * Openleg API Request plugin for Calendars.
  *
- * @OpenlegApiRequest(
+ * @OpenlegApiRequestNew(
  *   id = "calendar",
  *   label = @Translation("Calendars"),
  *   description = @Translation("Openleg API Request plugin"),

@@ -10,7 +10,7 @@ use Drupal\nys_openleg_api\RequestPluginBase;
  * @see https://legislation.nysenate.gov/static/docs/html/laws.html#get-the-law-structure
  * @see https://legislation.nysenate.gov/static/docs/html/laws.html#get-a-law-sub-document
  *
- * @OpenlegApiRequest(
+ * @OpenlegApiRequestNew(
  *   id = "statute",
  *   label = @Translation("Statute"),
  *   description = @Translation("Openleg API Request plugin"),

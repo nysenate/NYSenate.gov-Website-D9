@@ -7,7 +7,7 @@ use Drupal\nys_openleg_api\ResponsePluginBase;
 /**
  * Represents a search return from Openleg.
  *
- * @OpenlegApiResponse(
+ * @OpenlegApiResponseNew(
  *   id = "search-results list",
  *   label = @Translation("Generic Search Response"),
  *   description = @Translation("Openleg API Response plugin")

@@ -7,7 +7,7 @@ use Drupal\nys_openleg_api\RequestPluginBase;
 /**
  * Openleg API Request plugin for Bills.
  *
- * @OpenlegApiRequest(
+ * @OpenlegApiRequestNew(
  *   id = "bill",
  *   label = @Translation("Bills and Resolutions"),
  *   description = @Translation("Openleg API Request plugin"),

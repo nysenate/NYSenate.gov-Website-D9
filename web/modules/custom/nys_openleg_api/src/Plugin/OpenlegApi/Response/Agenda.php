@@ -5,7 +5,7 @@ namespace Drupal\nys_openleg_api\Plugin\OpenlegApi\Response;
 /**
  * Openleg API Response plugin for an individual agenda.
  *
- * @OpenlegApiResponse(
+ * @OpenlegApiResponseNew(
  *   id = "agenda",
  *   label = @Translation("Agenda Item"),
  *   description = @Translation("Openleg API Response plugin")

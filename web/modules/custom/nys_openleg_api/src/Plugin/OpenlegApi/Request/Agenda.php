@@ -7,7 +7,7 @@ use Drupal\nys_openleg_api\RequestPluginBase;
 /**
  * Openleg API Request plugin for Agendas.
  *
- * @OpenlegApiRequest(
+ * @OpenlegApiRequestNew(
  *   id = "agenda",
  *   label = @Translation("Agendas"),
  *   description = @Translation("Openleg API Request plugin"),

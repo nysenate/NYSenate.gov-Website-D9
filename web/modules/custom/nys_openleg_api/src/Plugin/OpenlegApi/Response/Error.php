@@ -15,7 +15,7 @@ use Drupal\nys_openleg_api\ResponsePluginBase;
  * _may_ have properties for errorDataType (string) and errorData (object).  The
  * contents of these properties are unique to the request.
  *
- * @OpenlegApiResponse(
+ * @OpenlegApiResponseNew(
  *   id = "error",
  *   label = @Translation("Error Response"),
  *   description = @Translation("Openleg API Response plugin")

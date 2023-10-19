@@ -7,7 +7,7 @@ use Drupal\nys_openleg_api\RequestPluginBase;
 /**
  * Openleg API Request plugin for Public Hearing Transcripts.
  *
- * @OpenlegApiRequest(
+ * @OpenlegApiRequestNew(
  *   id = "hearing_transcript",
  *   label = @Translation("Public Hearing Transcripts"),
  *   description = @Translation("Openleg API Request plugin"),

@@ -95,3 +95,41 @@
 .c-block.c-event-featured-story {
 	margin-bottom: 0;
 }
+
+.c-event-video--home {
+	color: #666666;
+	font-size: 12px;
+	//vertical-align: top;
+	//margin: 12px 0;
+		display: flex;
+		align-items: center;
+		font-family: $font-sans;
+		text-transform: uppercase;
+		text-decoration: none;
+		@extend .contrast_text;
+		margin-bottom: 15px;
+
+		&:hover {
+			text-decoration: underline;
+		}
+
+		span {
+			line-height: 1;
+		}
+
+		svg {
+			margin-right: 10px;
+
+			path {
+				fill: $orange01;
+			}
+		}
+	}
+
+
+.stream-title {
+	font-family: $font-sans-bold;
+	text-transform: uppercase;
+	color: $orange01;
+	margin: 0;
+}

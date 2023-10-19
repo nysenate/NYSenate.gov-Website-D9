@@ -84,22 +84,18 @@
 {{ attach_library('classy/node') }}
 {{ attach_library('nysenate_theme/event') }}
 {{ attach_library('nysenate_theme/nysenate-senators-events') }}
+{{ attach_library('nysenate_theme/featured-story') }}
+{% import '@rain_theme/icons/_icons-macro.twig' as icons %}
 
 <article{{ attributes.addClass(classes) }}>
 
   <h1 class="nys-event-title">{{ label }}</h1>
-  <div class="c-event-block c-event-block--featured{% if content.field_feature_image %}-image{% endif %}">
-    {% if content.field_feature_image %}
-      <div class="c-event-image">
-        {{ content.field_feature_image }}
-      </div>
-      {% else %}
+  <div class="c-event-block c-event-block--featured-image">
+    {% if content.field_image_main %}
       <div class="c-event-image--main">
         {{ content.field_image_main }}
       </div>
     {% endif %}
-
-    {{ content.field_image_main }}
 
     {% include "@nysenate_theme/nysenate-event-date/nysenate-event-date.twig" with {
       is_multiday: is_multiday,
@@ -140,9 +136,13 @@
     {% endif %}
 
     {% if node.field_video_status.0.value %}
-      <div class="c-event-address">
-        {{ content.field_video_status }}
+    <div class="c-event-address">
+      <div class="c-event-video--home">
+        {{ icons.get('youtube-2') }}
+        <a class="stream-link">
+      <span>{{ content.field_video_status }}</span></a>
       </div>
+    </div>
     {% endif %}
 
     {% set event_place = content.field_event_place[0]['#markup'] %}
@@ -164,11 +164,7 @@
     {% endif %}
 
     <div class="c-event-time">
-      {{ start_date|date("g:i A") }}
-      {% if end_date %}
-        -
-        {{ end_date|date("g:i A") }}
-      {% endif %}
+      {{ content.field_date_range }}
     </div>
 
     {% if calendar_links %}

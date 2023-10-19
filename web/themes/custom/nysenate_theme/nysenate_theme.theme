@@ -803,7 +803,7 @@ function nysenate_theme_preprocess_views_view__homepage_news__hp_live(&$variable
         if ($node->hasField('field_image_main') && !$node->get('field_image_main')->isEmpty()) {
           $media = !empty($node->get('field_image_main')->target_id) ? $media_storage->load($node->get('field_image_main')->target_id) : NULL;
           if (!empty($media)) {
-            $image_main = \Drupal::entityTypeManager()->getViewBuilder('media')->view($media, 'default');
+            $image_main = \Drupal::entityTypeManager()->getViewBuilder('media')->view($media, '380x215');
             $variables['main_image'] = !empty($image_main) ? $image_main : FALSE;
           }
         }
@@ -900,6 +900,20 @@ function nysenate_theme_preprocess_views_view__homepage_news__hp_live(&$variable
           }
         }
         $variables['livestream_cta'] = $livestream_cta;
+
+        $issues = NULL;
+        if ($node->hasField('field_issues') && !$node->get('field_issues')->isEmpty()) {
+          $node->field_issues->entity;
+          foreach ($node->field_issues as $value) {
+            /** @var \Drupal\taxonomy\Entity\Term $term */
+            $term = $value->entity;
+            $issues[] = [
+              'text' => $term->getName(),
+              'url' => $term->toUrl()->toString(),
+            ];
+          }
+        }
+        $variables['issues'] = $issues;
       }
     }
   }
@@ -1365,8 +1379,8 @@ function nysenate_theme_preprocess_views_view__senator_events(&$variables) {
           'time_end' => $date_end->format('g:i A'),
         ];
 
-        if (!empty($node->_entity->field_feature_image->getValue())) {
-          $variables['item_featured']['image'] = $node->_entity->field_feature_image[0]->entity->field_image;
+        if (!empty($node->_entity->field_image_main->getValue())) {
+          $variables['item_featured']['image'] = $node->_entity->field_image_main[0]->entity->field_image;
         }
       }
     }

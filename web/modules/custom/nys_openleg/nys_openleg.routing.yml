@@ -1,2 +1,10 @@
+nys_openleg.config:
+  path: /admin/config/nys_openleg_api/browsing
+  defaults:
+    _form: '\Drupal\nys_openleg\Form\ConfigForm'
+    _title: "NYS OpenLeg Browsing Configuration"
+  requirements:
+    _permission: 'administer site configuration'
+
 route_callbacks:
   - Drupal\nys_openleg\Routing\DynamicRouting::routes

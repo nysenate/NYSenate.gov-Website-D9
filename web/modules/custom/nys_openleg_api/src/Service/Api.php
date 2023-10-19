@@ -25,7 +25,7 @@ class Api {
   protected LoggerChannel $logger;
 
   /**
-   * Config object for nys_openleg.settings.
+   * Config object for nys_openleg_api.settings.
    *
    * @var \Drupal\Core\Config\ImmutableConfig
    */

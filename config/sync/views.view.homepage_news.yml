@@ -655,6 +655,7 @@ display:
             operator: ''
             operator_limit_selection: false
             operator_list: {  }
+          accept_null: false
         type:
           id: type
           table: node_field_data
@@ -760,7 +761,8 @@ display:
         type: entity_reference
         options:
           default_field_elements: true
-          inline: {  }
+          inline:
+            title: title
           separator: '-'
           hide_empty: false
       defaults:
@@ -1139,6 +1141,7 @@ display:
             operator: ''
             operator_limit_selection: false
             operator_list: {  }
+          accept_null: false
         type:
           id: type
           table: node_field_data

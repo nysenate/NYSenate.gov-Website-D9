@@ -2,7 +2,7 @@
 
 namespace Drupal\nys_openleg;
 
-use Drupal\nys_openleg\Api\Request;
+use Drupal\nys_openleg_api\Request;
 
 /**
  * Class ApiWrapper.
@@ -63,11 +63,11 @@ class StatuteHelper {
       // Each law type comes pre-formatted as a list item template structure.
       foreach (static::getLawBooks() as $v) {
         $ret[$v->lawType] = $ret[$v->lawType]
-                ?? [
-                  'name' => ucwords(strtolower(str_replace('_', ' ', $v->lawType ?: 'no description'))),
-                  'description' => self::LAW_TYPE_NAMES[$v->lawType] ?? 'no description',
-                  'url' => static::baseUrl() . '/' . $v->lawType,
-                ];
+          ?? [
+            'name' => ucwords(strtolower(str_replace('_', ' ', $v->lawType ?: 'no description'))),
+            'description' => self::LAW_TYPE_NAMES[$v->lawType] ?? 'no description',
+            'url' => static::baseUrl() . '/' . $v->lawType,
+          ];
       }
 
       // Store for posterity.
@@ -80,15 +80,29 @@ class StatuteHelper {
   /**
    * Fetches a cache value.
    */
-  public static function getCache(string $name) {
+  public static function getCache(string $name): mixed {
     return \Drupal::cache()->get('openleg:' . $name);
   }
 
   /**
    * Clears a cache value.
    */
-  public static function clearCache(string $name) {
+  public static function clearCache(string $name): void {
     \Drupal::cache()->delete('openleg:' . $name);
+  }
+
+  /**
+   * Sets a cache value, with default retention of 1 day.
+   *
+   * @param string $name
+   *   The cache entry name.
+   * @param mixed $data
+   *   The cache entry value.
+   * @param int $retain
+   *   (Optional) Retention time in seconds, defaults to 1 day.
+   */
+  public static function setCache(string $name, mixed $data, int $retain = 86400): void {
+    \Drupal::cache()->set('openleg:' . $name, $data, time() + $retain);
   }
 
   /**
@@ -129,25 +143,11 @@ class StatuteHelper {
   }
 
   /**
-   * Sets a cache value, with default retention of 1 day.
-   *
-   * @param string $name
-   *   The cache entry name.
-   * @param mixed $data
-   *   The cache entry value.
-   * @param int $retain
-   *   (Optional) Retention time in seconds, defaults to 1 day.
-   */
-  public static function setCache(string $name, $data, int $retain = 86400) {
-    \Drupal::cache()->set('openleg:' . $name, $data, time() + $retain);
-  }
-
-  /**
    * Resolves and returns the base URL used by statutes.
    */
   public static function baseUrl(): string {
     if (!static::$landingUrl) {
-      static::$landingUrl = \Drupal::config('nys_openleg.settings')
+      static::$landingUrl = \Drupal::config('nys_openleg_api.settings')
         ->get('base_path') ?: static::DEFAULT_LANDING_URL;
     }
     return static::$landingUrl;
@@ -167,13 +167,13 @@ class StatuteHelper {
    * @return array
    *   An array of book objects.
    */
-  public static function getBooksByType(string $type, $sort = self::SORT_BY_CODE): array {
+  public static function getBooksByType(string $type, mixed $sort = self::SORT_BY_CODE): array {
     $books = array_filter(
-          static::getLawBooks(),
-          function ($v) use ($type) {
-              return $v->lawType == $type;
-          }
-      );
+      static::getLawBooks(),
+      function ($v) use ($type) {
+        return $v->lawType == $type;
+      }
+    );
     return static::sortList($books, $sort);
   }
 
@@ -193,26 +193,18 @@ class StatuteHelper {
    * @return array
    *   The sorted array.
    */
-  public static function sortList(array $list, $sort = self::SORT_BY_CODE): array {
-    switch ($sort) {
-      case self::SORT_BY_CODE:
-        $sort_prop = 'lawId';
-        break;
-
-      case self::SORT_BY_NAME:
-        $sort_prop = 'name';
-        break;
-
-      default:
-        $sort_prop = (string) $sort;
-        break;
-    }
+  public static function sortList(array $list, mixed $sort = self::SORT_BY_CODE): array {
+    $sort_prop = match ($sort) {
+      self::SORT_BY_CODE => 'lawId',
+      self::SORT_BY_NAME => 'name',
+      default => (string) $sort,
+    };
     uasort(
-          $list,
-          function ($a, $b) use ($sort_prop) {
-              return strcmp($a->{$sort_prop}, $b->{$sort_prop});
-          }
-      );
+      $list,
+      function ($a, $b) use ($sort_prop) {
+        return strcmp($a->{$sort_prop} ?? '', $b->{$sort_prop} ?? '');
+      }
+    );
     return $list;
   }
 

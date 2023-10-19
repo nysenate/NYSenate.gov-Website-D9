@@ -2,8 +2,6 @@
 
 namespace Drupal\nys_openleg_api\Plugin\OpenlegApi\Response;
 
-use Drupal\nys_openleg\BillHelper;
-
 /**
  * Openleg API Response plugin for a list of calendars in a calendar year.
  *
@@ -16,6 +14,25 @@ use Drupal\nys_openleg\BillHelper;
 class CalendarSimpleList extends ResponseSearch {
 
   /**
+   * Formatter for calendar titles.
+   *
+   * It sucks this has to be here, but the alternative is a circular dependency
+   * with nys_openleg.  This mirrors nys_openleg\BillHelper::formatTitle().
+   *
+   * @param object $item
+   *   Ostensibly an OpenLeg representation of a bill object.  Can be any object
+   *   with 'session', and 'basePrintNo' properties.
+   *
+   * @return string
+   *   The title, in the form "<session>/<base_print_number>".
+   */
+  protected static function formatTitle(object $item): string {
+    $num = $item->basePrintNo ?? '';
+    $session = $item->session ?? '';
+    return ($session && $num) ? $item->session . '/' . $num : '';
+  }
+
+  /**
    * Gets the request names for a list of bill references.
    *
    * @param array $items
@@ -25,16 +42,14 @@ class CalendarSimpleList extends ResponseSearch {
    *   The list of bill print numbers.
    */
   public function getBillIdsFromList(array $items): array {
-    return array_filter(
-          array_unique(
-              array_map(
-                  function ($v) {
-                        return BillHelper::formatTitle($v, TRUE, '/');
-                  },
-                  $items
-              )
-          )
-      );
+    return array_filter(array_unique(
+      array_map(
+        function ($v) {
+          return self::formatTitle($v);
+        },
+        $items
+      )
+    ));
   }
 
 }

@@ -903,7 +903,6 @@ function nysenate_theme_preprocess_views_view__homepage_news__hp_live(&$variable
 
         $issues = NULL;
         if ($node->hasField('field_issues') && !$node->get('field_issues')->isEmpty()) {
-          $node->field_issues->entity;
           foreach ($node->field_issues as $value) {
             /** @var \Drupal\taxonomy\Entity\Term $term */
             $term = $value->entity;

@@ -907,10 +907,12 @@ function nysenate_theme_preprocess_views_view__homepage_news__hp_live(&$variable
           foreach ($node->field_issues as $value) {
             /** @var \Drupal\taxonomy\Entity\Term $term */
             $term = $value->entity;
-            $issues[] = [
-              'text' => $term->getName(),
-              'url' => $term->toUrl()->toString(),
-            ];
+            if ($term) {
+              $issues[] = [
+                'text' => $term->getName(),
+                'url' => $term->toUrl()->toString(),
+              ];
+            }
           }
         }
         $variables['issues'] = $issues;

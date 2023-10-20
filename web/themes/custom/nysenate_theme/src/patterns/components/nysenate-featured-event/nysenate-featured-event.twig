@@ -32,7 +32,7 @@
     <span class="date-display-single">
       <span class="date-display-range">
         <span class="date-display-start">{{ time_start }}</span>
-        {% if time_end != time_start %}
+        {% if time_end > time_start %}
         to <span class="date-display-end">{{ time_end }}</span>
         {% endif %}
       </span>

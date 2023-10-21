@@ -5,3 +5,5 @@ nys_committees.dashboard.committees:
     _controller: '\Drupal\nys_committees\Controller\DashboardCommitteesController::followedCommittees'
   requirements:
     _user_is_logged_in: 'TRUE'
+  options:
+    no_cache: 'TRUE'

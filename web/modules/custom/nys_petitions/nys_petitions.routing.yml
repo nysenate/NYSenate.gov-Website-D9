@@ -5,6 +5,8 @@ nys_petitions.dashboard.petitions:
     _controller: '\Drupal\nys_petitions\Controller\DashboardPetitionsController::signedPetitions'
   requirements:
     _user_is_logged_in: 'TRUE'
+  options:
+    no_cache: 'TRUE'
 nys_petitions.management.ajax.signed_petitions:
   path: '/taxonomy/term/{taxonomy_term}/petitions/{node}'
   defaults:

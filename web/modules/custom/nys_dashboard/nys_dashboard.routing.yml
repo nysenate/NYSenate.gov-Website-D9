@@ -5,6 +5,8 @@ nys_dashboard.overview:
     _controller: '\Drupal\nys_dashboard\Controller\DashboardController::overview'
   requirements:
     _user_is_logged_in: 'TRUE'
+  options:
+    no_cache: 'TRUE'
 
 nys_dashboard.edit_profile:
   path: '/dashboard/edit'
@@ -13,3 +15,5 @@ nys_dashboard.edit_profile:
     _form: '\Drupal\nys_dashboard\Form\EditProfileForm'
   requirements:
     _user_is_logged_in: 'TRUE'
+  options:
+    no_cache: 'TRUE'

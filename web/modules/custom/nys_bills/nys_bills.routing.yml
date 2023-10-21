@@ -5,3 +5,5 @@ nys_bills.dashboard.bills:
     _controller: '\Drupal\nys_bills\Controller\DashboardBillsController::followedBills'
   requirements:
     _user_is_logged_in: 'TRUE'
+  options:
+    no_cache: 'TRUE'

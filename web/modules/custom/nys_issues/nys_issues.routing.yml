@@ -5,6 +5,8 @@ nys_issues.dashboard.issues:
     _controller: '\Drupal\nys_issues\Controller\DashboardIssuesController::followedIssues'
   requirements:
     _user_is_logged_in: 'TRUE'
+  options:
+    no_cache: 'TRUE'
 nys_issues.management.ajax.following_issue:
   path: '/taxonomy/term/{taxonomy_term}/issues/{tid}'
   defaults:

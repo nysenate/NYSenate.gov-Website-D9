@@ -1,14 +1,25 @@
 uuid: a1b0cabb-cd25-4dbf-9bdd-affd95b3b50b
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  config:
+    - crop.type.event_image
+  module:
+    - crop
 name: 380x215
 label: 380x215
 effects:
-  13a52df4-1bbf-41f2-8c7b-fc56d5033e5b:
-    uuid: 13a52df4-1bbf-41f2-8c7b-fc56d5033e5b
+  c9b3adc7-6e58-4bc4-a677-d7a71524f509:
+    uuid: c9b3adc7-6e58-4bc4-a677-d7a71524f509
+    id: crop_crop
+    weight: 2
+    data:
+      crop_type: event_image
+      automatic_crop_provider: null
+  8d92a5f8-9659-4166-b6b9-fadadfdb0dc2:
+    uuid: 8d92a5f8-9659-4166-b6b9-fadadfdb0dc2
     id: image_scale_and_crop
-    weight: 1
+    weight: 2
     data:
       width: 380
       height: 215

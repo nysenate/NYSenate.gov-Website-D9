@@ -595,7 +595,7 @@
 
   .c-event-block--featured {
 
-    .c-event-image {
+    .c-event-image, .field--name-field-image-main {
       max-width: 380px;
       float: left;
     }
@@ -780,5 +780,11 @@
     .c-event-block--list {
       border-top: 2px solid $grey05;
     }
+  }
+}
+.page-node-type-event {
+  .field--name-field-image-main {
+    max-width: 380px;
+    float: left;
   }
 }

@@ -34,8 +34,12 @@ class BillHelper {
   /**
    * Finds senators based on OpenLeg member information.
    *
-   * This method expects the memberId and shortName properties to be available
-   * in each item.
+   * This method expects the memberId to be available in each item.
+   *
+   * 2023-10-25: secondary matching based on shortname has been removed because
+   * shortname is only guaranteed unique within a single session year.  That
+   * relationship was never defined in Drupal, and we are unprepared to deal
+   * with the inevitable collisions.
    *
    * @param array $items
    *   An array of JSON-decoded member records from OpenLeg.
@@ -51,22 +55,13 @@ class BillHelper {
           },
           $items
       );
-    $shortnames = array_map(
-          function ($v) {
-              return $v->shortName ?? '';
-          },
-          $items
-      );
-    if (count($member_ids) || count($shortnames)) {
+    if (count($member_ids)) {
       try {
         $query = \Drupal::entityQuery('taxonomy_term');
-        $group = $query->orConditionGroup()
-          ->condition('field_ol_member_id', $member_ids, 'IN')
-          ->condition('field_ol_shortname', $shortnames, 'IN');
-        $ret = $query->condition($group)->execute();
+        $query->condition('field_ol_member_id', $member_ids, 'IN');
+        $ret = $query->execute();
       }
-      catch (\Throwable $e) {
-        $ret = [];
+      catch (\Throwable) {
       }
     }
 

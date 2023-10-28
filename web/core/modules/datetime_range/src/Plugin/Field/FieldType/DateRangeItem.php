@@ -25,6 +25,15 @@ use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 class DateRangeItem extends DateTimeItem {
 
   /**
+   * {@inheritdoc}
+   */
+  public static function defaultStorageSettings() {
+    return [
+      'optional_end_date' => FALSE,
+    ] + parent::defaultStorageSettings();
+  }
+
+  /**
    * Value for the 'datetime_type' setting: store a date and time.
    */
   const DATETIME_TYPE_ALLDAY = 'allday';
@@ -46,7 +55,7 @@ class DateRangeItem extends DateTimeItem {
 
     $properties['end_value'] = DataDefinition::create('datetime_iso8601')
       ->setLabel(t('End date value'))
-      ->setRequired(TRUE);
+      ->setRequired(FALSE);
 
     $properties['end_date'] = DataDefinition::create('any')
       ->setLabel(t('Computed end date'))
@@ -83,6 +92,12 @@ class DateRangeItem extends DateTimeItem {
 
     $element['datetime_type']['#options'][static::DATETIME_TYPE_ALLDAY] = $this->t('All Day');
 
+    $element['optional_end_date'] = [
+      '#type' => 'checkbox',
+      '#title' => t('Optional end date'),
+      '#default_value' => $this->getSetting('optional_end_date'),
+    ];
+
     return $element;
   }
 
@@ -94,7 +109,7 @@ class DateRangeItem extends DateTimeItem {
 
     // Just pick a date in the past year. No guidance is provided by this Field
     // type.
-    $start = REQUEST_TIME - mt_rand(0, 86400 * 365) - 86400;
+    $start = \Drupal::time()->getRequestTime() - mt_rand(0, 86400 * 365) - 86400;
     $end = $start + 86400;
     if ($type == static::DATETIME_TYPE_DATETIME) {
       $values['value'] = gmdate(DateTimeItemInterface::DATETIME_STORAGE_FORMAT, $start);
@@ -112,6 +127,10 @@ class DateRangeItem extends DateTimeItem {
    */
   public function isEmpty() {
     $start_value = $this->get('value')->getValue();
+    if ($this->getFieldDefinition()->getFieldStorageDefinition()->getSetting('optional_end_date')) {
+      return $start_value === NULL || $start_value === '';
+    }
+
     $end_value = $this->get('end_value')->getValue();
     return ($start_value === NULL || $start_value === '') && ($end_value === NULL || $end_value === '');
   }
@@ -128,6 +147,30 @@ class DateRangeItem extends DateTimeItem {
       $this->end_date = NULL;
     }
     parent::onChange($property_name, $notify);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getConstraints() {
+    $constraint_manager = \Drupal::typedDataManager()
+      ->getValidationConstraintManager();
+
+    if (!empty($this->getSetting('optional_end_date'))) {
+      return parent::getConstraints();
+    }
+
+    $label = $this->getFieldDefinition()->getLabel();
+    $constraints[] = $constraint_manager
+      ->create('ComplexData', [
+        'end_value' => [
+          'NotNull' => [
+            'message' => t('The @title end date is required', ['@title' => $label]),
+          ],
+        ],
+      ]);
+
+    return $constraints;
   }
 
 }

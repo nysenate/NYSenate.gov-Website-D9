@@ -33,7 +33,8 @@ class ModalRenderer extends DialogRenderer {
     // otherwise get it from the routing information.
     $options = $request->request->get('dialogOptions', []);
 
-    $response->addCommand(new OpenModalDialogCommand($title, $content, $options));
+    $modal_selector = $main_content['#modal_selector'] ?? NULL;
+    $response->addCommand(new OpenModalDialogCommand($title, $content, $options, NULL, $modal_selector));
     return $response;
   }
 

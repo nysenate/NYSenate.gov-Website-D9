@@ -139,7 +139,7 @@ class EntityTestDateRangeTest extends EntityTestResourceTestBase {
       unset($normalization[static::$fieldName][0]['end_value']);
       $request_options[RequestOptions::BODY] = $this->serializer->encode($normalization, static::$format);
       $response = $this->request($method, $url, $request_options);
-      $message = "Unprocessable Entity: validation failed.\n{$fieldName}.0.end_value: This value should not be null.\n";
+      $message = "Unprocessable Entity: validation failed.\n{$fieldName}.0.end_value: The field_daterange end date is required\n";
       $this->assertResourceErrorResponse(422, $message, $response);
 
       // DX: 422 when 'end_value' data type is incorrect.

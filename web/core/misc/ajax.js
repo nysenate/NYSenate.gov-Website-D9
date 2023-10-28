@@ -445,7 +445,11 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       var settings = this.settings || drupalSettings;
       Drupal.attachBehaviors(this.$form.get(0), settings);
     }
-    throw new Drupal.AjaxError(xmlhttprequest, uri, customMessage);
+    $(document).ajaxComplete(function (e, xhr, settings) {
+      if (xhr.status !== 200 && xhr.responseText !== '') {
+        throw new Drupal.AjaxError(xmlhttprequest, uri, customMessage);
+      }
+    });
   };
   Drupal.theme.ajaxWrapperNewContent = function ($newContent, ajax, response) {
     return (response.effect || ajax.effect) !== 'none' && $newContent.filter(function (i) {

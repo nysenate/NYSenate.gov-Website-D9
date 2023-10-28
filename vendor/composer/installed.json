@@ -4982,7 +4982,10 @@
                     "3202896 - Don't display OEmbed error to anonymous visitors when resource stops being available: https://www.drupal.org/project/drupal/issues/3202896": "https://www.drupal.org/files/issues/2022-02-23/issue-3202896-6.patch",
                     "2972846 - Improve oEmbed exception logging: https://www.drupal.org/project/drupal/issues/2972846": "https://www.drupal.org/files/issues/2022-12-20/drupal-9.4.x-core-media-oembed-2972846-25.patch",
                     "3059955 - It is possible to overflow the number of items allowed in Media Library: https://www.drupal.org/project/drupal/issues/3059955": "https://www.drupal.org/files/issues/2023-03-18/3059955-167.patch",
-                    "2769407 - Views UI should offer a 'Treat NULL values as FALSE' on boolean field": "https://www.drupal.org/files/issues/2022-11-08/2769407-71.patch"
+                    "2769407 - Views UI should offer a 'Treat NULL values as FALSE' on boolean field": "https://www.drupal.org/files/issues/2022-11-08/2769407-71.patch",
+                    "2741877 - Nested modals don't work - fixed focal point preview modal": "https://www.drupal.org/files/issues/2021-04-29/2741877-77.patch",
+                    "3049216 - ajax error": "https://www.drupal.org/files/issues/2023-01-31/3049216-21_0.patch",
+                    "2794481 - Allow end date to be optional": "https://www.drupal.org/files/issues/2021-05-15/2794481-126.patch"
                 }
             },
             "installation-source": "dist",
@@ -5221,6 +5224,66 @@
                 "source": "https://github.com/drupal/core-recommended/tree/9.5.11"
             },
             "install-path": null
+        },
+        {
+            "name": "drupal/crop",
+            "version": "2.3.0",
+            "version_normalized": "2.3.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/crop.git",
+                "reference": "8.x-2.3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/crop-8.x-2.3.zip",
+                "reference": "8.x-2.3",
+                "shasum": "8e109cf60077f4c605c4d1f895cb3dc28613a23a"
+            },
+            "require": {
+                "drupal/core": "^9.3 || ^10"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-2.3",
+                    "datestamp": "1665437894",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "installation-source": "dist",
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Drupal Media Team",
+                    "homepage": "https://www.drupal.org/user/3260690"
+                },
+                {
+                    "name": "phenaproxima",
+                    "homepage": "https://www.drupal.org/user/205645"
+                },
+                {
+                    "name": "slashrsm",
+                    "homepage": "https://www.drupal.org/user/744628"
+                },
+                {
+                    "name": "woprrr",
+                    "homepage": "https://www.drupal.org/user/858604"
+                }
+            ],
+            "description": "Provides storage and API for image crops.",
+            "homepage": "https://www.drupal.org/project/crop",
+            "support": {
+                "source": "https://git.drupalcode.org/project/crop",
+                "issues": "https://www.drupal.org/project/issues/crop"
+            },
+            "install-path": "../../web/modules/contrib/crop"
         },
         {
             "name": "drupal/csv_serialization",
@@ -7637,6 +7700,89 @@
                 "source": "https://git.drupalcode.org/project/image_style_quality"
             },
             "install-path": "../../web/modules/contrib/image_style_quality"
+        },
+        {
+            "name": "drupal/image_widget_crop",
+            "version": "2.4.0",
+            "version_normalized": "2.4.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/image_widget_crop.git",
+                "reference": "8.x-2.4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/image_widget_crop-8.x-2.4.zip",
+                "reference": "8.x-2.4",
+                "shasum": "6fcf4641d730bf1f5afce2a95d58f76094c72d1b"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9 || ^10",
+                "drupal/crop": "^1 || ^2"
+            },
+            "require-dev": {
+                "drupal/bartik": "^1",
+                "drupal/crop": "*",
+                "drupal/ctools": "^3",
+                "drupal/entity_browser": "^2",
+                "drupal/inline_entity_form": "^1"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-2.4",
+                    "datestamp": "1667435355",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                },
+                "patches_applied": {
+                    "3153736 - Enforce hard limit": "https://www.drupal.org/files/issues/2020-06-22/3153736-2.patch",
+                    "3214365 - Crop widget not adjusting crop box when crop is applied\nx": "https://www.drupal.org/files/issues/2021-06-09/crop_widget_not_adjusting_to_existing_crop-3214365-9.patch"
+                }
+            },
+            "installation-source": "dist",
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Alexandre Mallet",
+                    "homepage": "https://github.com/woprrr",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "Drupal Media Team",
+                    "homepage": "https://www.drupal.org/user/3260690"
+                },
+                {
+                    "name": "phenaproxima",
+                    "homepage": "https://www.drupal.org/user/205645"
+                },
+                {
+                    "name": "slashrsm",
+                    "homepage": "https://www.drupal.org/user/744628"
+                },
+                {
+                    "name": "woprrr",
+                    "homepage": "https://www.drupal.org/user/858604"
+                }
+            ],
+            "description": "Provides an interface for using the features of the Crop API.",
+            "homepage": "https://www.drupal.org/project/image_widget_crop",
+            "keywords": [
+                "Crop",
+                "Drupal",
+                "Drupal Media"
+            ],
+            "support": {
+                "source": "https://www.drupal.org/project/image_widget_crop",
+                "issues": "https://www.drupal.org/project/issues/image_widget_crop",
+                "irc": "irc://irc.freenode.org/drupal-contribute"
+            },
+            "install-path": "../../web/modules/contrib/image_widget_crop"
         },
         {
             "name": "drupal/imagemagick",

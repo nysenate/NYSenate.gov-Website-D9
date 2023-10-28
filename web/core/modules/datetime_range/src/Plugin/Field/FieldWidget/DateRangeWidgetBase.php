@@ -19,6 +19,7 @@ class DateRangeWidgetBase extends DateTimeWidgetBase {
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $element = parent::formElement($items, $delta, $element, $form, $form_state);
+    $optional_end_date = $this->getFieldSetting('optional_end_date');
 
     // Wrap all of the select elements with a fieldset.
     $element['#theme_wrappers'][] = 'fieldset';
@@ -27,8 +28,12 @@ class DateRangeWidgetBase extends DateTimeWidgetBase {
     $element['value']['#title'] = $this->t('Start date');
 
     $element['end_value'] = [
-      '#title' => $this->t('End date'),
+      '#title' => $optional_end_date ? $this->t('End date (optional)') : $this->t('End date'),
     ] + $element['value'];
+
+    if ($element['#required'] && $optional_end_date) {
+      $element['end_value']['#required'] = FALSE;
+    }
 
     if ($items[$delta]->start_date) {
       /** @var \Drupal\Core\Datetime\DrupalDateTime $start_date */

@@ -103,4 +103,41 @@ class DateRangeItemTest extends FieldKernelTestBase {
     $this->assertEquals('12:00:00', $end_date->format('H:i:s'));
   }
 
+  /**
+   * Test optional end date.
+   */
+  public function testOptionalEndDate() {
+    $field_name = $this->fieldStorage->getName();
+
+    $this->fieldStorage->setSettings([
+        'datetime_type' => DateRangeItem::DATETIME_TYPE_DATE,
+        'optional_end_date' => FALSE,
+      ])
+      ->save();
+
+    $value = [
+      'value' => '2016-09-21',
+      'end_value' => NULL,
+    ];
+
+    // Verify entity without optional_end_date enabled.
+    $entity = EntityTest::create([
+      'name' => $this->randomString(),
+      $field_name => $value,
+    ]);
+    $this->assertNotEquals(count($entity->validate()), 0);
+
+    // Verify entity with the optional_end_date enabled.
+    $this->fieldStorage->setSetting('optional_end_date', TRUE)
+      ->save();
+    $entity = EntityTest::create([
+      'name' => $this->randomString(),
+      $field_name => $value,
+    ]);
+    $this->entityValidateAndSave($entity);
+
+    // Verify changing the date value.
+    $this->assertEquals($entity->{$field_name}->end_value, $value['end_value']);
+  }
+
 }

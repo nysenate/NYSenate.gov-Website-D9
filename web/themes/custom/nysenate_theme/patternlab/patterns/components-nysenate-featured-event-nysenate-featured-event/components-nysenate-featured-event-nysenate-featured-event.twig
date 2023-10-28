@@ -1,7 +1,9 @@
 {{ attach_library('nysenate_theme/nysenate-featured-event') }}
 
 <div class="c-event-block c-event-block--featured-image">
-  <div class="c-title">{{ "Featured Event"|t }}</div>
+  <div class="c-container--header__top-border">
+    <div class="c-container--title">{{ "Featured Event"|t }}</div>
+  </div>
   <div class="c-event-image">
       {{ image }}
   </div>
@@ -26,12 +28,16 @@
   {% if street_1 or street_2 %}
     <div class="c-event-address">{% if street_1 %}{{ street_1 }}<br>{% endif %}{{ street_2 }}</div>
   {% endif %}
-
-</div>
-<div class="c-event-time">
+  <div class="c-event-time">
     <span class="date-display-single">
       <span class="date-display-range">
-        <span class="date-display-start">{{ time_start }}</span> to <span class="date-display-end">{{ time_end }}</span>
+        <span class="date-display-start">{{ time_start }}</span>
+        {% if time_end > time_start %}
+        to <span class="date-display-end">{{ time_end }}</span>
+        {% endif %}
       </span>
     </span>
+  </div>
+
 </div>
+

@@ -11,7 +11,7 @@
       {% if main_image %}
         {{ main_image }}
       {% else %}
-        <img src="/sites/default/files/styles/760x377/public/press-release/main-image/senate_seal_in_a_rectangle_2.png?itok=7S2Glqlt" width="760" height="377" alt="" loading="lazy" typeof="foaf:Image" class="image-style-_60x377">
+        <img src="themes/custom/nysenate_theme/src/assets/nysenate_seal_380x215.png" width="380" height="215" alt="" loading="lazy" typeof="foaf:Image">
       {% endif %}
     </div>
     <div class="l-right">
@@ -21,11 +21,10 @@
         {% if event_url %}</a>{% endif %}
       </h3>
       {% if livestream_cta.text %}
-        <div class="c-event-video--home">
+        <div class="c-event-video--home ">
         {% if livestream_cta.url %}<a class="stream-link" href="{{ event_url }}">{% endif %}
-          {{ icons.get('youtube-2') }}<span>{{ livestream_cta.text }}</span>
+          {# icons.get('youtube-2') #}<span class="c-meeting-video--status icon-before__youtube">{{ livestream_cta.text }}</span>
         {% if livestream_cta.url %}</a>{% endif %}
-        <p class="stream-title">{{ livestream_cta.stream_title }}</p>
         </div>
       {% endif %}
       <div class="c-featured-story-issue-tag">

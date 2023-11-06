@@ -3173,7 +3173,6 @@ function nysenate_theme_preprocess_taxonomy_term__districts(&$variables) {
   $senator_link = \Drupal::service('nys_senators.microsites')
     ->getMicrosite($senator);
   $variables['senator_link'] = $senator_link;
-  $variables['test'] = "test";
 }
 
 /**

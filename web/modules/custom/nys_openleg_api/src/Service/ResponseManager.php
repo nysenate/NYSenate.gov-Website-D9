@@ -29,8 +29,8 @@ class ResponseManager extends DefaultPluginManager {
           'Plugin/OpenlegApi/Response',
           $namespaces,
           $module_handler,
-          'Drupal\nys_openleg\Api\ResponsePluginInterface',
-          'Drupal\nys_openleg\Annotation\OpenlegApiResponse'
+          'Drupal\nys_openleg_api\ResponsePluginInterface',
+          'Drupal\nys_openleg_api\Annotation\OpenlegApiResponse'
       );
     $this->setCacheBackend($cache_backend, 'openleg_api.responses');
     $this->logger = $logger;

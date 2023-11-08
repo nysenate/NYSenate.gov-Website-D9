@@ -60,7 +60,7 @@ abstract class RequestPluginBase implements RequestPluginInterface {
     $this->pluginConfig = $configuration;
     $this->logger = $logger;
     $this->endpoint = $definition['endpoint'];
-    $this->request = new Request($this->endpoint, $configuration['request_options'] ?? []);
+    $this->request = new Request($this->endpoint, $configuration['request_options'] ?? [], $this->logger);
   }
 
   /**
@@ -70,7 +70,7 @@ abstract class RequestPluginBase implements RequestPluginInterface {
     return new static(
       $plugin_definition,
       $configuration,
-      $container->get('openleg_api.log_channel')
+      $container->get('openleg_api.logger')
     );
   }
 

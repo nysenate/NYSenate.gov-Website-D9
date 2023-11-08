@@ -8,6 +8,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\ImmutableConfig;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\ProxyClass\Routing\RouteBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -53,10 +54,10 @@ class ConfigForm extends ConfigFormBase {
    */
   public static function create(ContainerInterface $container): static {
     return new static(
-          $container->get('config.factory'),
-          $container->get('openleg_api.config'),
-          $container->get('router.builder')
-      );
+      $container->get('config.factory'),
+      $container->get('openleg_api.config'),
+      $container->get('router.builder')
+    );
   }
 
   /**
@@ -70,6 +71,8 @@ class ConfigForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state): array {
+    $form['#attached'] = ['library' => ['nys_openleg/openleg']];
+
     // Check for an API key override.  Need to use the immutable config.
     $apikey = $this->configOverrides->get('api_key');
 
@@ -79,7 +82,7 @@ class ConfigForm extends ConfigFormBase {
       ? "<div>An API key is already saved.  Leave the box blank to keep it, or input a new one to change it.</div>"
       : "<h2><b>No API key has been configured.  The API key is required before making calls to OpenLeg API.</b></h2>";
     if ($apikey && ($apikey != $saved_apikey)) {
-      $apikey_text .= '<h3>An override is replacing this setting.  Changing this value will have no effect.</h3>';
+      $apikey_text .= '<h3 class="nys-openleg-config-warning">An override is configured to replace this setting.</h3>';
     }
     $apikey_required = !((boolean) $apikey);
 
@@ -91,6 +94,14 @@ class ConfigForm extends ConfigFormBase {
       '#default_value' => '',
     ];
 
+    $form['log_level'] = [
+      '#type' => 'select',
+      '#title' => 'Log Level',
+      '#description' => 'Sets the logging level for all calls to OpenLeg API.',
+      '#options' => RfcLogLevel::getLevels(),
+      '#default_value' => $this->localConfig->get('log_level') ?? RfcLogLevel::WARNING,
+    ];
+
     return parent::buildForm($form, $form_state);
   }
 
@@ -99,8 +110,15 @@ class ConfigForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state): void {
     $values = $form_state->getValues();
+
+    // Set the API key.
     if (!empty($values['api_key'])) {
       $this->localConfig->set('api_key', Html::escape($values['api_key']));
+    }
+
+    // Set the log level.
+    if (($level = ($values['log_level'] ?? FALSE)) !== FALSE) {
+      $this->localConfig->set('log_level', $level);
     }
 
     $this->localConfig->save();

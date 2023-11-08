@@ -5,26 +5,24 @@ namespace Drupal\nys_openleg_api;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Logger\LoggerChannel;
 use Drupal\Core\Logger\LoggerChannelFactory;
-use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\Core\Logger\RfcLogLevel;
 
 /**
- * Wrapper around Drupal's LoggerChannel to provide for conditional logging
- * based on a configured log level.
+ * Wrapper around Drupal's LoggerChannel logging based on configured level.
  */
 class ConditionalLogger extends LoggerChannel {
 
   /**
    * A default level to use if config has not been set.
    *
-   * @var integer
+   * @var int
    */
-  public static int $DEFAULT_LEVEL = RfcLogLevel::WARNING;
+  public static int $defaultLogLevel = RfcLogLevel::WARNING;
 
   /**
    * The current log level.
    *
-   * @var integer
+   * @var int
    */
   protected int $logLevel = RfcLogLevel::WARNING;
 
@@ -35,6 +33,11 @@ class ConditionalLogger extends LoggerChannel {
    */
   protected Config $config;
 
+  /**
+   * {@inheritDoc}
+   *
+   * Adds parameters for the OpenLeg API configuration, and conditional logger.
+   */
   public function __construct(string $channel, Config $openlegConfig, LoggerChannelFactory $factory) {
     parent::__construct($channel);
     $this->addLogger($factory->get($channel));
@@ -46,13 +49,11 @@ class ConditionalLogger extends LoggerChannel {
    * Getter for LogLevel.
    */
   public function getLogLevel(): int {
-    return $this->logLevel ?? static::$DEFAULT_LEVEL;
+    return $this->logLevel ?? static::$defaultLogLevel;
   }
 
   /**
    * Gets the name associated with the log level.
-   *
-   * @return string
    *
    * @see \Drupal\Core\Logger\LoggerChannel::$levelTranslation
    */
@@ -72,10 +73,10 @@ class ConditionalLogger extends LoggerChannel {
    */
   public function setLogLevel(mixed $log_level = NULL): void {
     if (is_null($log_level)) {
-      $log_level = $this->config->get('log_level') ?? static::$DEFAULT_LEVEL;
+      $log_level = $this->config->get('log_level') ?? static::$defaultLogLevel;
     }
     if (!is_numeric($log_level)) {
-      $log_level = $this->levelTranslation[$log_level] ?? static::$DEFAULT_LEVEL;
+      $log_level = $this->levelTranslation[$log_level] ?? static::$defaultLogLevel;
     }
     $this->logLevel = $log_level;
   }

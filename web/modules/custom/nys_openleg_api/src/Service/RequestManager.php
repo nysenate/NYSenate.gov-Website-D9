@@ -27,11 +27,11 @@ class RequestManager extends DefaultPluginManager {
           'Plugin/OpenlegApi/Request',
           $namespaces,
           $module_handler,
-          'Drupal\nys_openleg\Api\RequestPluginInterface',
-          'Drupal\nys_openleg\Annotation\OpenlegApiRequest'
+          'Drupal\nys_openleg_api\RequestPluginInterface',
+          'Drupal\nys_openleg_api\Annotation\OpenlegApiRequest'
       );
     $this->setCacheBackend($cache_backend, 'openleg_api.requests');
-    $this->logger = $logger;
+    $this->setLogger($logger);
   }
 
   /**

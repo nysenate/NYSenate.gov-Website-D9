@@ -30,9 +30,12 @@
   ]
 %}
 
+
+
 {% include "@nysenate_theme/district/district.twig" with {
   name: name[0]['#context']['value'],
   video: content.field_map_url[0]['#context']['value'],
   subhead: content.field_subheading[0]['#context']['value'],
-  body: content.description
+  body: content.description,
+  view_mode: "district"
 } only %}

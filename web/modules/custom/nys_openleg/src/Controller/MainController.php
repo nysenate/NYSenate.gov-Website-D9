@@ -9,6 +9,7 @@ use Drupal\Core\Http\RequestStack;
 use Drupal\Core\Pager\PagerManagerInterface;
 use Drupal\nys_openleg\StatuteHelper;
 use Drupal\nys_openleg_api\Service\Api;
+use Drupal\nys_openleg_api\Statute;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -56,11 +57,11 @@ class MainController extends ControllerBase {
   protected PagerManagerInterface $pager;
 
   /**
-   * The Openleg API Manager service.
+   * The Openleg API service.
    *
    * @var \Drupal\nys_openleg_api\Service\Api
    */
-  protected Api $apiManager;
+  protected Api $openLegApi;
 
   /**
    * Constructor.
@@ -68,7 +69,7 @@ class MainController extends ControllerBase {
    * Sets up the request and config objects, and configures the API
    * key to be used by ApiRequest objects.
    */
-  public function __construct(RequestStack $request, FormBuilderInterface $formBuilder, PagerManagerInterface $pager, Api $apiManager, ImmutableConfig $openlegConfig) {
+  public function __construct(RequestStack $request, FormBuilderInterface $formBuilder, PagerManagerInterface $pager, Api $openLegApi, ImmutableConfig $openlegConfig) {
     // Set the request context to the current request by default.
     $this->setRequest($request->getCurrentRequest());
 
@@ -79,7 +80,7 @@ class MainController extends ControllerBase {
     $this->pager = $pager;
 
     // Set the API Manager service reference.
-    $this->apiManager = $apiManager;
+    $this->openLegApi = $openLegApi;
 
     // Set the app config as a local reference.
     $this->config = $openlegConfig;
@@ -180,14 +181,19 @@ class MainController extends ControllerBase {
     else {
       // Get the statute.  Consider any historical milestone being requested.
       $history = $this->request->request->get('history') ?: '';
-      $statute = $this->apiManager->getStatute($book, $location, $history);
+      try {
+        $statute = $this->openLegApi->getStatute($book, $location, $history);
+      }
+      catch (\Throwable) {
+        $statute = NULL;
+      }
 
       // If the entry is not found (or other OL error), render the error page.
-      if (!($statute->tree->success())) {
+      if (!(($statute instanceof Statute) && $statute->tree->success())) {
         return [
           '#theme' => 'nys_openleg_not_found',
           '#attached' => ['library' => ['nys_openleg/openleg']],
-          '#browse_url' => $share_path,
+          '#browse_url' => $base_share_path,
         ];
       }
 
@@ -282,7 +288,7 @@ class MainController extends ControllerBase {
       /**
        * @var \Drupal\nys_openleg_api\Plugin\OpenlegApi\Response\ResponseSearch $search
        */
-      $search = $this->apiManager->getSearch(
+      $search = $this->openLegApi->getSearch(
         'statute',
         $search_term,
         [

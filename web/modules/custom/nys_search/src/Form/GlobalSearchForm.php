@@ -5,9 +5,10 @@ namespace Drupal\nys_search\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\TrustedRedirectResponse;
+use Drupal\node\Entity\Node;
 
 /**
- * Allow for calling the SAGE API and viewing the return.
+ * Builds the site-wide search form.
  */
 class GlobalSearchForm extends FormBase {
 
@@ -37,9 +38,8 @@ class GlobalSearchForm extends FormBase {
     ];
 
     $node = \Drupal::routeMatch()->getParameter('node');
-    if (!empty($node) && $node->bundle() == 'microsite_page') {
-      $senator_term = ($node->hasField('field_senator_multiref') && !$node->get('field_senator_multiref')->isEmpty())
-        ? $node->get('field_senator_multiref')->entity : [];
+    if (($node instanceof Node) && ($node->bundle() == 'microsite_page')) {
+      $senator_term = $node->field_senator_multiref?->entity ?? NULL;
       if ($senator_term) {
         $form['senator'] = [
           '#type' => 'hidden',

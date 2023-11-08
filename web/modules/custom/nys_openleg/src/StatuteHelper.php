@@ -116,8 +116,6 @@ class StatuteHelper {
    *   An array of book objects.
    *
    * @see https://legislation.nysenate.gov/static/docs/html/laws.html#get-a-list-of-law-ids
-   *
-   * @todo create a static cache at this level, break out the cache fetch.
    */
   public static function getLawBooks(): array {
     // Check the cache for an existing list.

@@ -1,3 +1,10 @@
+.nys-openleg-config-warning {
+  background-color: darkred;
+  color: yellow;
+  padding: 0.5em 1.5em;
+  width: fit-content;
+}
+
 .path-legislation main.l-row--main {
   padding: 20px 0;
 }
@@ -327,12 +334,14 @@
 }
 
 #nys-openleg-search-form button.search__submit {
-  padding: 0.6em;
-  margin-left: 1em;
-  margin-right: 0;
+  position: relative;
+  top: 3px;
   width: 15%;
-  background-color: #008CBA !important;
-  border-color: #007095 !important;
+  line-height: 1em;
+  padding: 0.6em;
+  margin-right: 0;
+  background-color: #008CBA;
+  color: #ffffff;
 }
 
 #nys-openleg-search-form button.search__submit:hover {

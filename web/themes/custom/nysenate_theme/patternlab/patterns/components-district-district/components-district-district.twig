@@ -2,9 +2,20 @@
 
 <div class="district">
   <div class="district__header">
-    <h2 class="nys-title nys-title--district">Our District</h2>
-    {% if name %}
-      <h3 class="c-subpage-header--subtitle05">{{ name }}</h3>
+    {% if view_mode == "district" %}
+      <h2 class="nys-title nys-title--district">Our District</h2>
+      {% if name %}
+        <h3 class="c-subpage-header--subtitle03">{{ name }}</h3>
+      {% endif %}
+    {% elseif senator %}
+        <h2 class="nys-title nys-title--district">{{ name }}</h2>
+        <h3 class="c-subpage-header--subtitle03"><a href="{{ senator_link }}">Senator {{ senator }}</a></h3>
+    {% elseif name %}
+      <h2 class="nys-title nys-title--district">{{ name }}</h2>
+      <h3 class="c-subpage-header--subtitle03">Vacant Senatorial Seat</h3>
+    {% else %}
+        <h2 class="nys-title nys-title--district">Our District</h2>
+        <h3 class="c-subpage-header--subtitle03">Vacant Senatorial Seat</h3>
     {% endif %}
   </div>
 

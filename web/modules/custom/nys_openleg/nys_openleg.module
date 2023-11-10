@@ -5,6 +5,8 @@
  * Module nys_openleg.
  */
 
+use Drupal\nys_openleg_api\Plugin\OpenlegApi\Response\ResponseSearch;
+
 /**
  * Implements hook_theme().
  */
@@ -77,7 +79,8 @@ function nys_openleg_theme(): array {
  */
 function nys_openleg_preprocess_block__nys_blocks_bythe_numbers(&$variables): void {
   $content = $variables['elements']['content'];
-  $variables['facts_title'] = $content['#first_year'] . '-' . $content['#second_year'] . ' by the numbers';
+  $variables['facts_title'] = $content['#first_year'] . '-' .
+    $content['#second_year'] . ' by the numbers';
 
   $legislative_session = date("Y", strtotime("now"));
   if (($legislative_session % 2) == 0) {
@@ -103,7 +106,7 @@ function nys_openleg_preprocess_block__nys_blocks_bythe_numbers(&$variables): vo
   ];
 
   // Get Openleg results.  Any error means zero records.
-  /** @var \Drupal\nys_openleg\Service\ApiManager $openApiService */
+  /** @var \Drupal\nys_openleg_api\Service\Api $openApiService */
   $openApiService = Drupal::service('manager.openleg_api');
   foreach ($variables['facts'] as &$v) {
     $v['link'] = '/search/legislation?type=bill&session_year=' .
@@ -112,7 +115,9 @@ function nys_openleg_preprocess_block__nys_blocks_bythe_numbers(&$variables): vo
       ' AND status.statusType:' . $v['statusType'];
     try {
       $result = $openApiService->getSearch('bill', $search);
-      $v['statistic'] = $result->getTotal();
+      $v['statistic'] = ($result instanceof ResponseSearch)
+        ? $result->total()
+        : 0;
     }
     catch (Throwable) {
       $v['statistic'] = 0;

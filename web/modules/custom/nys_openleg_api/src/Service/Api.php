@@ -40,13 +40,6 @@ class Api {
   protected ResponseManager $responder;
 
   /**
-   * Local cache for requesters, to enforce singletons.  Keyed by plugin ID.
-   *
-   * @var array|RequestPluginInterface[]
-   */
-  protected array $allRequesters = [];
-
-  /**
    * Constructor.
    */
   public function __construct(LoggerChannel $logger, ImmutableConfig $config, RequestManager $requester, ResponseManager $responder) {
@@ -58,29 +51,10 @@ class Api {
   }
 
   /**
-   * Instantiates a requester.  Uses local cache to enforce singleton per type.
-   *
-   * @param string $item_type
-   *   The plugin name.
-   *
-   * @return \Drupal\nys_openleg_api\RequestPluginInterface|null
-   *   The instantiated requester, or NULL on error.
+   * Gets a request plugin by type.
    */
-  protected function resolveRequest(string $item_type): ?RequestPluginInterface {
-    if (!($this->allRequesters[$item_type] ?? NULL)) {
-      try {
-        $ret = $this->requester->createInstance($item_type);
-      }
-      catch (\Throwable $e) {
-        $this->logger->error(
-          'Could not instantiate request plugin "@name"',
-          ['@name' => $item_type, '@msg' => $e->getMessage()]
-        );
-        $ret = NULL;
-      }
-      $this->allRequesters[$item_type] = $ret;
-    }
-    return $this->allRequesters[$item_type];
+  public function getRequest(string $type): ?RequestPluginInterface {
+    return $this->requester->resolve($type);
   }
 
   /**
@@ -102,7 +76,7 @@ class Api {
       '@type' => $type,
       '@params' => $params,
     ]);
-    return $this->resolveRequest($type)?->setParams($params)->retrieve($name);
+    return $this->getRequest($type)?->setParams($params)->retrieve($name);
   }
 
   /**
@@ -112,7 +86,7 @@ class Api {
    *   The Response object, a contrived Error response, or NULL on failure.
    */
   public function get(string $type, string $name, array $params = []): ResponsePluginInterface {
-    return $this->responder->resolveResponse($this->getJson($type, $name, $params));
+    return $this->responder->resolve($this->getJson($type, $name, $params));
   }
 
   /**
@@ -131,13 +105,13 @@ class Api {
    *   The Response object from Openleg.
    */
   public function getUpdates(string $type, mixed $time_from, mixed $time_to, array $params = []): ResponsePluginInterface {
-    $request = $this->resolveRequest($type)?->setParams($params);
+    $request = $this->getRequest($type)?->setParams($params);
     $this->logger->info('Requesting "@type" updates (from: @from, to: @to)', [
       '@type' => $type,
       '@from' => $time_from,
       '@to' => $time_to,
     ]);
-    return $this->responder->resolveResponse($request?->retrieveUpdates($time_from, $time_to));
+    return $this->responder->resolve($request?->retrieveUpdates($time_from, $time_to));
   }
 
   /**
@@ -154,12 +128,12 @@ class Api {
    *   The Response object from Openleg.
    */
   public function getSearch(string $type, string $term, array $params = []): ResponsePluginInterface {
-    $request = $this->resolveRequest($type)?->setParams($params);
+    $request = $this->getRequest($type)?->setParams($params);
     $this->logger->info('Requesting "@type" search (term: @term)', [
       '@type' => $type,
       '@term' => $term,
     ]);
-    return $this->responder->resolveResponse($request?->retrieveSearch($term));
+    return $this->responder->resolve($request?->retrieveSearch($term));
   }
 
   /**

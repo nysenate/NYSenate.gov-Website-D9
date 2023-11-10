@@ -56,7 +56,7 @@ class ResponseManager extends DefaultPluginManager {
    * @return \Drupal\nys_openleg_api\ResponsePluginInterface
    *   An appropriate response object, or an Error Response object.
    */
-  public function resolveResponse(?object $response): ResponsePluginInterface {
+  public function resolve(?object $response): ResponsePluginInterface {
 
     // If responseType is not available, immediately fallback to "error".
     $type = $response->responseType ?? 'error';

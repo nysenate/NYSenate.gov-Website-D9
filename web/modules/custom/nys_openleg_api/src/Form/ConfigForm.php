@@ -64,7 +64,7 @@ class ConfigForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function getFormId(): string {
-    return 'openleg_settings';
+    return 'openleg_api_settings';
   }
 
   /**
@@ -97,7 +97,7 @@ class ConfigForm extends ConfigFormBase {
     $form['log_level'] = [
       '#type' => 'select',
       '#title' => 'Log Level',
-      '#description' => 'Sets the logging level for all calls to OpenLeg API.',
+      '#description' => 'Determines the level of logging for API activity.',
       '#options' => RfcLogLevel::getLevels(),
       '#default_value' => $this->localConfig->get('log_level') ?? RfcLogLevel::WARNING,
     ];
@@ -118,7 +118,7 @@ class ConfigForm extends ConfigFormBase {
 
     // Set the log level.
     if (($level = ($values['log_level'] ?? FALSE)) !== FALSE) {
-      $this->localConfig->set('log_level', $level);
+      $this->localConfig->set('log_level', (int) $level);
     }
 
     $this->localConfig->save();

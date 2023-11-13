@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5a87d32dc58feb8887470435be6c72d5",
+    "content-hash": "8c75d3fb1008ab383510c4b66fd76957",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -19433,6 +19433,48 @@
                 }
             ],
             "time": "2022-08-02T15:47:23+00:00"
+        },
+        {
+            "name": "topfloor/composer-cleanup-vcs-dirs",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/VolantisDev/composer-cleanup-vcs-dirs.git",
+                "reference": "dfa7c8c0fe22e048310d00f133f7df14f0b2f57a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/VolantisDev/composer-cleanup-vcs-dirs/zipball/dfa7c8c0fe22e048310d00f133f7df14f0b2f57a",
+                "reference": "dfa7c8c0fe22e048310d00f133f7df14f0b2f57a",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^1 | ^2",
+                "php": ">=5.5",
+                "symfony/finder": "*"
+            },
+            "require-dev": {
+                "composer/composer": "dev-master"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "class": "TopFloor\\ComposerCleanupVcsDirs\\Plugin"
+            },
+            "autoload": {
+                "psr-4": {
+                    "TopFloor\\ComposerCleanupVcsDirs\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "description": "Automatically deletes .git directories in newly installed or updated dependencies.",
+            "support": {
+                "issues": "https://github.com/VolantisDev/composer-cleanup-vcs-dirs/issues",
+                "source": "https://github.com/VolantisDev/composer-cleanup-vcs-dirs/tree/1.1.0"
+            },
+            "time": "2021-07-09T16:11:23+00:00"
         },
         {
             "name": "twig/twig",

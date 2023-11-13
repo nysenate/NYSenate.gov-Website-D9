@@ -84,3 +84,6 @@ Confirm you can browse to [https://nysenate.ddev.site](https://nysenate.ddev.sit
 not, click the button that says "track info" - you may need to do this a couple times to run all the way through.
 * Run `drush sapi-i` to re-index and watch for any errors.
 * If the re-index times out you can pick it back up where it left off by running `drush sapi-i` again.
+
+## Github Actions
+This should be documented.

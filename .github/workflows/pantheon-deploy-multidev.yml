@@ -53,7 +53,6 @@ jobs:
           git remote add pantheon ${{ vars.PANTHEON_GIT_REMOTE }}
           echo $(git remote -v)
           echo PANTHEON_MULTIDEV=$(echo "${GITHUB_REF_HEAD#refs/heads/feature/}" | cut -f 2 -d "/" | tr "[A-Z]" "[a-z]") >> $GITHUB_ENV
-          git checkout -b $PANTHEON_MULTIDEV
 
       - name: Cache Composer dependencies to make builds faster
         uses: actions/cache@v3
@@ -84,6 +83,7 @@ jobs:
 
       - name: Deploy to Pantheon Multi-Dev
         run: |
+          git checkout -b $PANTHEON_MULTIDEV
           rm -rf ${{ vars.THEME_PATH }}/node_modules
           git add -Af .
           git commit -q -m "${{ env.GIT_COMMIT_MESSAGE }} - ${{ env.NOW }}"

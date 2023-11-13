@@ -84,6 +84,7 @@ jobs:
       - name: Deploy to Pantheon Multi-Dev
         run: |
           git checkout -b $PANTHEON_MULTIDEV
+          find vendor web -name ".git" -type d -prune -exec rm -rf "{}" \;
           rm -rf ${{ vars.THEME_PATH }}/node_modules
           git add -Af .
           git commit -q -m "${{ env.GIT_COMMIT_MESSAGE }} - ${{ env.NOW }}"

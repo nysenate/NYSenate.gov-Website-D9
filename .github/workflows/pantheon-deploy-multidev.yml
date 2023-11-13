@@ -66,7 +66,7 @@ jobs:
         uses: php-actions/composer@v6
         with:
           php_version: ${{ vars.PHP_VERSION }}
-          php_extensions: gd
+          php_extensions: gd sodium
 
       - name: Setup Node with the version set in .nvmrc
         uses: actions/setup-node@v3

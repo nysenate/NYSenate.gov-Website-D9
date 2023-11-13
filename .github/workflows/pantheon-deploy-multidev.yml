@@ -16,15 +16,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Set some variables to use in the workflow
-        run: |
-          echo "NOW=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
-          echo "GRUMPHP_GIT_WORKING_DIR="$(git rev-parse --show-toplevel)" >> $GITHUB_ENV
-
       - name: Clone the github repo in the Github Action container
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Set some variables to use in the workflow
+        run: |
+          echo "NOW=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
+          echo "GRUMPHP_GIT_WORKING_DIR=$(git rev-parse --show-toplevel)" >> $GITHUB_ENV
 
       - name: Setup PHP for Terminus
         uses: shivammathur/setup-php@v2

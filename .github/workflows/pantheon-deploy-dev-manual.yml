@@ -1,0 +1,98 @@
+name: Pantheon Deploy Dev Manually
+
+on:
+  workflow_dispatch:
+    inputs:
+      BRANCH:
+        description: 'Branch to use'
+        required: true
+        default: 'main'
+        type: choice
+        options:
+          - main
+
+env:
+  GIT_COMMIT_MESSAGE: 'Github Actions Build'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone the github repo in the Github Action container
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ inputs.BRANCH }}
+
+      - name: Set some variables to use in the workflow
+        run: |
+          echo "NOW=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
+          echo "GRUMPHP_GIT_WORKING_DIR=$(git rev-parse --show-toplevel)" >> $GITHUB_ENV
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ vars.PHP_VERSION }}
+
+      - name: Add the Pantheon SSH Key for the CI user
+        uses: webfactory/ssh-agent@v0.7.0
+        with:
+          ssh-private-key: ${{ secrets.PANTHEON_SSH_PRIVATE_KEY }}
+
+      - name: Disable Pantheon SSH strict host key checking
+        run: 'printf "\nHost *\n\tStrictHostKeyChecking no" >> ~/.ssh/config'
+
+      - name: Configure git config
+        run: |
+          git config --global user.name "NY Senate CI Bot"
+          git config --global user.email "zalewski.senate+github@gmail.com"
+
+      - name: Set up the Pantheon GIT Remote
+        run: |
+          git remote add pantheon ${{ vars.PANTHEON_GIT_REMOTE }}
+          echo $(git remote -v)
+
+      - name: Cache Composer dependencies to make builds faster
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-vendor
+        with:
+          path: ./vendor
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/composer.lock') }}
+
+      - name: Make composer available and do a composer install to build Drupal
+        uses: php-actions/composer@v6
+        with:
+          php_version: ${{ vars.PHP_VERSION }}
+          php_extensions: gd sodium zip
+
+      - name: Setup Node with the version set in .nvmrc
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: '${{ vars.THEME_PATH }}/.nvmrc'
+          cache: 'npm'
+          cache-dependency-path: '${{ vars.THEME_PATH }}/package-lock.json'
+
+      - name: Build Theme Assets
+        run: |
+          cd ${{ vars.THEME_PATH }}
+          npm install
+          npm run build
+
+      - name: Deploy to Pantheon Dev (master)
+        run: |
+          rm -rf ${{ vars.THEME_PATH }}/node_modules
+          git add -Af .
+          git commit -q -m "${{ env.GIT_COMMIT_MESSAGE }} - ${{ env.NOW }}"
+          git push --force pantheon HEAD:refs/heads/master
+
+      - name: Post to a Slack channel
+        if: always()
+        id: slack
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          channel-id: '${{ vars.SLACK_CHANNEL }}'
+          slack-message: "@${{ github.actor }} is pushing code today and it was a ${{ job.status }}!\nUsing Workflow: ${{ github.workflow }}\nPantheon: https://dev-${{ vars.PANTHEON_SITE }}.pantheonsite.io"
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}

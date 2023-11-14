@@ -86,4 +86,8 @@ not, click the button that says "track info" - you may need to do this a couple 
 * If the re-index times out you can pick it back up where it left off by running `drush sapi-i` again.
 
 ## Github Actions
-This should be documented.
+If a branch is created off of `main` with the naming convention `feature/JIRA-1234`, upon creating a pull request,
+a Github Action will run doing a composer build and a build of the front end assets. The assets will be pushed to Pantheon
+and a multi-dev environment will be created. As long as the pull request is open, you may continue to push changes to the
+feature branch and the multi-dev environment will be updated. Note, it can take up to 2.5 hours for a multi-dev environment
+to be created.

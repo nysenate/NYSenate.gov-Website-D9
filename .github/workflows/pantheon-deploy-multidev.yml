@@ -7,12 +7,11 @@ on:
       - main
 
 env:
-  GITHUB_REF: ${{ github.ref }}
-  GITHUB_REF_HEAD: ${{ github.head_ref }}
   GIT_COMMIT_MESSAGE: 'Github Actions Build'
 
 jobs:
-  deploy:
+  run_if:
+    if: startsWith(github.head_ref, 'feature/')
     runs-on: ubuntu-latest
 
     steps:
@@ -53,7 +52,7 @@ jobs:
         run: |
           git remote add pantheon ${{ vars.PANTHEON_GIT_REMOTE }}
           echo $(git remote -v)
-          echo PANTHEON_MULTIDEV=$(echo "${GITHUB_REF_HEAD#refs/heads/feature/}" | cut -f 2 -d "/" | tr "[A-Z]" "[a-z]") >> $GITHUB_ENV
+          echo PANTHEON_MULTIDEV=$(echo "pr-${{ github.event.pull_request.number }}") >> $GITHUB_ENV
 
       - name: Cache Composer dependencies to make builds faster
         uses: actions/cache@v3
@@ -90,10 +89,10 @@ jobs:
           git commit -q -m "${{ env.GIT_COMMIT_MESSAGE }} - ${{ env.NOW }}"
           git push --force pantheon HEAD:refs/heads/$PANTHEON_MULTIDEV
 
-      - name: Create or update Multi-Dev environment.
-        id: multi-dev
-        run: terminus env:create ${{ vars.PANTHEON_SITE }}.${{ vars.PANTHEON_MULTIDEV_CLONE_ENV }} $PANTHEON_MULTIDEV || true
-        continue-on-error: true
+      # - name: Create or update Multi-Dev environment.
+      #   id: multi-dev
+      #   run: terminus env:create ${{ vars.PANTHEON_SITE }}.${{ vars.PANTHEON_MULTIDEV_CLONE_ENV }} $PANTHEON_MULTIDEV || true
+      #   continue-on-error: true
 
       - name: Post to a Slack channel
         if: always()

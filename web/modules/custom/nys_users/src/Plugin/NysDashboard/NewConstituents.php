@@ -32,6 +32,7 @@ class NewConstituents extends OverviewStatBase {
     try {
       $ret = $this->manager->getStorage('user')
         ->getQuery()
+        ->accessCheck(FALSE)
         ->condition('created', $soy, '>=')
         ->condition('status', 1)
         ->condition('field_district.entity.tid', $district->id())

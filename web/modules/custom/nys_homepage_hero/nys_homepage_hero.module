@@ -50,7 +50,9 @@ function nys_homepage_hero_cron() {
     $query = \Drupal::entityQuery('node');
     $query->condition('field_date_range', $now->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT), '>');
     $query->condition('field_date_range', $interval->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT), '<=');
-    $results = $query->execute();
+    $results = $query
+      ->accessCheck(FALSE)
+      ->execute();
 
     if (!empty($results)) {
       // Turn on the flag to start adding the polling JS to the front page.

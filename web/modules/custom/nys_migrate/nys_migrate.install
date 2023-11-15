@@ -5,6 +5,8 @@
  * Various hook implementations for NYS Migrate.
  */
 
+use Drupal\Core\Datetime\DrupalDateTime;
+
 /**
  * Implements hook_uninstall().
  */
@@ -191,7 +193,7 @@ function nys_migrate_update_8007(&$sandbox) {
 }
 
 /**
- * Populate empty entity reference fields for Session content types.
+ * Populate empty entity reference fields for Session content type.
  */
 function nys_migrate_update_8008(&$sandbox) {
   // Load all Session nodes with empty entity reference fields.
@@ -200,8 +202,46 @@ function nys_migrate_update_8008(&$sandbox) {
     ->condition('type', 'session')
     ->accessCheck(FALSE);
   $session_empty_fields_query_group = $session_query->orConditionGroup()
-    ->notExists('field_transcript')
-    ->notExists('field_session_calendars');
-  $session_query_result = $session_query->execute();
+    ->notExists('field_session_calendars')
+    ->notExists('field_transcript');
+  $session_query_result = $session_query
+    ->condition($session_empty_fields_query_group)
+    ->execute();
   $session_nodes_with_missing_data = $node_storage->loadMultiple($session_query_result);
+
+  // Loop over session nodes and update empty fields.
+  foreach ($session_nodes_with_missing_data as $session_node) {
+    if (
+      empty($session_node->field_calendar_number->value)
+      || empty($session_node->field_date_range->value)
+    ) {
+      // @TODO: Log session node with missing data.
+      continue;
+    }
+    $calendar_number = $session_node->field_calendar_number->value;
+    $start_date_time_formatted = $session_node->field_date_range->value;
+    $timezone = \Drupal::config('system.date')->get('timezone')['default'];
+    $start_date_time_object = new DrupalDateTime($start_date_time_formatted, $timezone);
+    $start_date_year = $start_date_time_object->format('Y');
+    if (empty($session_node->field_session_calendars->target_id)) {
+      $associated_calendar_nid = $node_storage->getQuery()
+        ->condition('type', 'calendar')
+        ->condition('field_ol_year', $start_date_year)
+        ->condition('field_ol_cal_no', $calendar_number)
+        ->execute();
+      $session_node->field_session_calendars->target_id = $associated_calendar_nid;
+    }
+    if (empty($session_node->field_transcript->target_id)) {
+      $associated_transcript_nid = $node_storage->getQuery()
+        ->condition('type', 'transcript')
+        ->condition('field_ol_transcript_type', 'floor')
+        ->condition('field_ol_publish_date', $start_date_time_formatted, '>=')
+        ->sort('field_ol_publish_date', 'ASC')
+        ->range(0, 1)
+        ->execute();
+      $session_node->field_transcript->target_id = $associated_transcript_nid;
+    }
+    // @TODO: Log session node with updated data.
+    $session_node->save();
+  }
 }

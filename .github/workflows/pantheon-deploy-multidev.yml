@@ -89,10 +89,10 @@ jobs:
           git commit -q -m "${{ env.GIT_COMMIT_MESSAGE }} - ${{ env.NOW }}"
           git push --force pantheon HEAD:refs/heads/$PANTHEON_MULTIDEV
 
-      # - name: Create or update Multi-Dev environment.
-      #   id: multi-dev
-      #   run: terminus env:create ${{ vars.PANTHEON_SITE }}.${{ vars.PANTHEON_MULTIDEV_CLONE_ENV }} $PANTHEON_MULTIDEV || true
-      #   continue-on-error: true
+      - name: Create or update Multi-Dev environment.
+        id: multi-dev
+        run: terminus env:create ${{ vars.PANTHEON_SITE }}.${{ vars.PANTHEON_MULTIDEV_CLONE_ENV }} $PANTHEON_MULTIDEV || true
+        continue-on-error: true
 
       - name: Post to a Slack channel
         if: always()

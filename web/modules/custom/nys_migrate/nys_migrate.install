@@ -189,3 +189,19 @@ function nys_migrate_update_8007(&$sandbox) {
   $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['progress'] / $sandbox['max']);
 
 }
+
+/**
+ * Populate empty entity reference fields for Session content types.
+ */
+function nys_migrate_update_8008(&$sandbox) {
+  // Load all Session nodes with empty entity reference fields.
+  $node_storage = \Drupal::entityTypeManager()->getStorage('node');
+  $session_query = $node_storage->getQuery()
+    ->condition('type', 'session')
+    ->accessCheck(FALSE);
+  $session_empty_fields_query_group = $session_query->orConditionGroup()
+    ->notExists('field_transcript')
+    ->notExists('field_session_calendars');
+  $session_query_result = $session_query->execute();
+  $session_nodes_with_missing_data = $node_storage->loadMultiple($session_query_result);
+}

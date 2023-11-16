@@ -259,7 +259,7 @@ function nys_migrate_update_8008(&$sandbox) {
 
   }
   $session_node_update_json = json_encode($session_node_update_information);
-  \Drupal::logger('nys_migrate')->notice('The following Sssion'
-    . ' nodes were successfully update with the following new values:' . "\n\n"
-    . $session_nodes_missing_data_json);
+  \Drupal::logger('nys_migrate')->notice('The following session'
+    . ' nodes were successfully updated with the following new values:' . "\n\n"
+    . $session_node_update_json);
 }

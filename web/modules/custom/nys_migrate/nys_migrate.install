@@ -241,7 +241,7 @@ function nys_migrate_update_8008(&$sandbox) {
         ->condition('field_ol_year', $start_date_year)
         ->condition('field_ol_cal_no', $calendar_number)
         ->execute();
-      $session_node_update_information[$session_node->nid]['associated_calendar_nid'] = reset($associated_calendar_nid);
+      $session_node_update_information[$session_node->id()]['associated_calendar_nid'] = reset($associated_calendar_nid);
       // $session_node->field_session_calendars->target_id = reset($associated_calendar_nid);
     }
     if (empty($session_node->field_transcript->target_id)) {
@@ -252,7 +252,7 @@ function nys_migrate_update_8008(&$sandbox) {
         ->sort('field_ol_publish_date', 'ASC')
         ->range(0, 1)
         ->execute();
-      $session_node_update_information[$session_node->nid]['associated_transcript_nid'] = reset($associated_transcript_nid);
+      $session_node_update_information[$session_node->id()]['associated_transcript_nid'] = reset($associated_transcript_nid);
       // $session_node->field_transcript->target_id = reset($associated_transcript_nid);
     }
     //$session_node->save();
@@ -262,5 +262,4 @@ function nys_migrate_update_8008(&$sandbox) {
   \Drupal::logger('nys_migrate')->notice('The following Sssion'
     . ' nodes were successfully update with the following new values:' . "\n\n"
     . $session_nodes_missing_data_json);
-  $i=0;
 }

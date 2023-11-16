@@ -93,6 +93,6 @@ jobs:
         uses: slackapi/slack-github-action@v1.24.0
         with:
           channel-id: '${{ vars.SLACK_CHANNEL }}'
-          slack-message: "@${{ github.actor }} is pushing code today and it was a ${{ job.status }}!\nUsing Workflow: ${{ github.workflow }}\nPantheon: https://dev-${{ vars.PANTHEON_SITE }}.pantheonsite.io"
+          slack-message: "@${{ github.actor }} deployed a new release and it was a ${{ job.status }}!\nUsing Workflow: ${{ github.workflow }}\nPantheon: https://dev-${{ vars.PANTHEON_SITE }}.pantheonsite.io"
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}

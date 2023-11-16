@@ -198,81 +198,76 @@ function nys_migrate_update_8007(&$sandbox) {
 function nys_migrate_update_8008(&$sandbox) {
   $node_storage = \Drupal::entityTypeManager()->getStorage('node');
 
-  // Log total session nodes
+  // @TODO: log or remove.
   $session_nodes_count = $node_storage->getQuery()
     ->condition('type', 'session')
     ->accessCheck(FALSE)
     ->count()
     ->execute();
-  \Drupal::logger('nys_migrate')->notice('Processing '
-    . $session_nodes_count . ' Session nodes.');
 
-  // Log all Session nodes needing update but unable due to missing data.
-  $session_nodes_missing_data_query = $node_storage->getQuery()
+  // @TODO: log or remove.
+  $session_nids_missing_calendar_count = $node_storage->getQuery()
+    ->accessCheck(FALSE)
     ->condition('type', 'session')
-    ->accessCheck(FALSE);
-  $session_nodes_missing_data_query_group = $session_nodes_missing_data_query->orConditionGroup()
-    ->notExists('field_calendar_number')
-    ->notExists('field_date_range');
-  $session_nodes_missing_data_query_group_2 = $session_nodes_missing_data_query->orConditionGroup()
     ->notExists('field_session_calendars')
-    ->notExists('field_transcript');
-  $session_nodes_missing_data_query_result = $session_nodes_missing_data_query
-    ->condition($session_nodes_missing_data_query_group)
-    ->condition($session_nodes_missing_data_query_group_2)
+    ->count()
     ->execute();
-  $session_nodes_missing_data_json = json_encode($session_nodes_missing_data_query_result);
-  \Drupal::logger('nys_migrate')->notice('Unable to update the'
-    . ' following Session nodes due to missing field_calendar_number or'
-    . ' field_date_range values:' . "\n\n" . $session_nodes_missing_data_json);
 
-  // Load all updatable Session nodes.
-  $session_nodes_to_update_query = $node_storage->getQuery()
+  $session_nids_missing_calendar_updatable = $node_storage->getQuery()
+    ->accessCheck(FALSE)
     ->condition('type', 'session')
+    ->notExists('field_session_calendars')
     ->exists('field_calendar_number')
     ->exists('field_date_range')
-    ->accessCheck(FALSE);
-  $session_nodes_to_update_query_group = $session_nodes_to_update_query->orConditionGroup()
-    ->notExists('field_session_calendars')
-    ->notExists('field_transcript');
-  $session_nodes_to_update_query_result = $session_nodes_to_update_query
-    ->condition($session_nodes_to_update_query_group)
     ->execute();
-  $session_nodes_with_missing_data = $node_storage->loadMultiple($session_nodes_to_update_query_result);
-
-  // Loop over updatable Session nodes and populate empty fields.
-  $session_node_update_information = [];
-  foreach ($session_nodes_with_missing_data as $session_node) {
-    $calendar_number = $session_node->field_calendar_number->value;
-    $start_date_time_formatted = $session_node->field_date_range->value;
+  $session_nodes_missing_calendar_updateable = $node_storage->loadMultiple($session_nids_missing_calendar_updatable);
+  $calendar_update_information = [];
+  foreach ($session_nodes_missing_calendar_updateable as $session_node_missing_cal) {
+    $calendar_number = $session_node_missing_cal->field_calendar_number->value;
+    $start_date_time_formatted = $session_node_missing_cal->field_date_range->value;
     $timezone = \Drupal::config('system.date')->get('timezone')['default'];
     $start_date_time_object = new DrupalDateTime($start_date_time_formatted, $timezone);
     $start_date_year = $start_date_time_object->format('Y');
-    if (empty($session_node->field_session_calendars->target_id)) {
-      $associated_calendar_nid = $node_storage->getQuery()
-        ->condition('type', 'calendar')
-        ->condition('field_ol_year', $start_date_year)
-        ->condition('field_ol_cal_no', $calendar_number)
-        ->execute();
-      $session_node_update_information[$session_node->id()]['associated_calendar_nid'] = reset($associated_calendar_nid);
-      // $session_node->field_session_calendars->target_id = reset($associated_calendar_nid);
-    }
-    if (empty($session_node->field_transcript->target_id)) {
-      $associated_transcript_nid = $node_storage->getQuery()
-        ->condition('type', 'transcript')
-        ->condition('field_ol_transcript_type', 'floor')
-        ->condition('field_ol_publish_date', $start_date_time_formatted, '>=')
-        ->sort('field_ol_publish_date', 'ASC')
-        ->range(0, 1)
-        ->execute();
-      $session_node_update_information[$session_node->id()]['associated_transcript_nid'] = reset($associated_transcript_nid);
-      // $session_node->field_transcript->target_id = reset($associated_transcript_nid);
-    }
-    //$session_node->save();
-
+    $associated_calendar_nid = $node_storage->getQuery()
+      ->condition('type', 'calendar')
+      ->condition('field_ol_year', $start_date_year)
+      ->condition('field_ol_cal_no', $calendar_number)
+      ->execute();
+    $calendar_update_information[$session_node_missing_cal->id()]['associated_calendar_nid'] = reset($associated_calendar_nid);
+    // @TODO: enable data update and log.
+    // $session_node->field_session_calendars->target_id = reset($associated_calendar_nid);
   }
-  $session_node_update_json = json_encode($session_node_update_information);
-  \Drupal::logger('nys_migrate')->notice('The following session'
-    . ' nodes were successfully updated with the following new values:' . "\n\n"
-    . $session_node_update_json);
+
+  // @TODO: log or remove.
+  $session_nids_missing_transcript_count = $node_storage->getQuery()
+    ->accessCheck(FALSE)
+    ->condition('type', 'session')
+    ->notExists('field_transcript')
+    ->count()
+    ->execute();
+
+  $session_nids_missing_transcript_updateable = $node_storage->getQuery()
+    ->accessCheck(FALSE)
+    ->condition('type', 'session')
+    ->notExists('field_transcript')
+    ->exists('field_date_range')
+    ->execute();
+  $session_nodes_missing_transcript_updateable = $node_storage->loadMultiple($session_nids_missing_transcript_updateable);
+  $transcript_update_information = [];
+  foreach ($session_nodes_missing_transcript_updateable as $session_node_missing_trans) {
+    $start_date_time_formatted = $session_node_missing_trans->field_date_range->value;
+    $transcript_type = 'floor';
+    $associated_transcript_nid = $node_storage->getQuery()
+      ->condition('type', 'transcript')
+      ->condition('field_ol_transcript_type', $transcript_type)
+      ->condition('field_ol_publish_date', $start_date_time_formatted, '>=')
+      ->sort('field_ol_publish_date', 'ASC')
+      ->range(0, 1)
+      ->execute();
+    $transcript_update_information[$session_node_missing_trans->id()]['associated_transcript_nid'] = reset($associated_transcript_nid);
+    // @TODO: enable data update and log.
+    // $session_node->field_transcript->target_id = reset($associated_transcript_nid);
+  }
+  // @TODO: enable data update and log.
+  //$session_node->save();
 }

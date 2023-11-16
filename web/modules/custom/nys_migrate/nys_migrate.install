@@ -198,15 +198,28 @@ function nys_migrate_update_8007(&$sandbox) {
 function nys_migrate_update_8008(&$sandbox) {
   $node_storage = \Drupal::entityTypeManager()->getStorage('node');
 
-  // Log all Session nodes unable to update due to missing data
+  // Log total session nodes
+  $session_nodes_count = $node_storage->getQuery()
+    ->condition('type', 'session')
+    ->accessCheck(FALSE)
+    ->count()
+    ->execute();
+  \Drupal::logger('nys_migrate')->notice('Processing '
+    . $session_nodes_count . ' Session nodes.');
+
+  // Log all Session nodes needing update but unable due to missing data.
   $session_nodes_missing_data_query = $node_storage->getQuery()
     ->condition('type', 'session')
     ->accessCheck(FALSE);
   $session_nodes_missing_data_query_group = $session_nodes_missing_data_query->orConditionGroup()
     ->notExists('field_calendar_number')
     ->notExists('field_date_range');
+  $session_nodes_missing_data_query_group_2 = $session_nodes_missing_data_query->orConditionGroup()
+    ->notExists('field_session_calendars')
+    ->notExists('field_transcript');
   $session_nodes_missing_data_query_result = $session_nodes_missing_data_query
     ->condition($session_nodes_missing_data_query_group)
+    ->condition($session_nodes_missing_data_query_group_2)
     ->execute();
   $session_nodes_missing_data_json = json_encode($session_nodes_missing_data_query_result);
   \Drupal::logger('nys_migrate')->notice('Unable to update the'

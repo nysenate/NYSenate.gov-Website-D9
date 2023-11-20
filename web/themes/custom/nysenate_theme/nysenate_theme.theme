@@ -5200,7 +5200,7 @@ function nysenate_theme_preprocess_datetime_wrapper(&$variables) {
     // Dashboard Profile Edit design fix.
     if ($variables['element']['#id'] == 'edit-field-dateofbirth-0-value') {
       $current_path = \Drupal::request()->getRequestUri();
-      if ($current_path == '/dashboard/edit') {
+      if ($current_path == '/dashboard/edit?destination=/dashboard') {
         unset($variables['title']);
       }
     }
@@ -5237,7 +5237,7 @@ function nysenate_theme_preprocess_form_element(&$variables) {
     }
     if ($variables['element']['#id'] == 'edit-field-dateofbirth-0-value-date') {
       $current_path = \Drupal::request()->getRequestUri();
-      if ($current_path == '/dashboard/edit') {
+      if ($current_path == '/dashboard/edit?destination=/dashboard') {
         $variables['label_display'] = 'before';
         $variables['label']['#title'] = t('DATE OF BIRTH');
         $variables['label']['#title_display'] = 'before';
@@ -5311,7 +5311,7 @@ function nysenate_theme_preprocess_page(&$variables) {
   $user_name = $user_parts[2] ?? \Drupal::currentUser()->id();
 
   $variables['dashboard_link'] = '/dashboard/issues';
-  $variables['edit_account_link'] = '/dashboard/edit';
+  $variables['edit_account_link'] = '/dashboard/edit?destination=/dashboard';
   $variables['sidebar'] = [
     'upper_links' => [
       [
@@ -5320,7 +5320,7 @@ function nysenate_theme_preprocess_page(&$variables) {
       ],
       [
         'text' => 'Edit Profile',
-        'url' => '/dashboard/edit',
+        'url' => '/dashboard/edit?destination=/dashboard',
       ],
     ],
     'links' => [
@@ -6193,7 +6193,7 @@ function nysenate_theme_preprocess_user__dashboard_profile(&$variables) {
   $variables['email'] = $user->getEmail();
   $variables['address'] = $address;
   $variables['image_src'] = $image_src;
-  $variables['edit_url'] = '/dashboard/edit';
+  $variables['edit_url'] = '/dashboard/edit?destination=/dashboard';
 }
 
 /**

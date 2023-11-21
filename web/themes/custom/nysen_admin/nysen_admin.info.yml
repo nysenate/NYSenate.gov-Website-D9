@@ -13,9 +13,8 @@ name: NY Senate Admin Theme Overrides
 type: theme
 description: Admin theme for Rain distribution.
 package: Other
-core: 8.x
-core_version_requirement: '^8 || ^9'
-base theme: rain_admin
+core_version_requirement: '^9 || ^10'
+base theme: gin
 
 # This section controls the libraries for your theme. For full documentation,
 # see https://www.drupal.org/node/2216195
@@ -27,7 +26,9 @@ libraries:
 regions:
   header: 'Header'
   pre_content: 'Pre-content'
+  breadcrumb: Breadcrumb
   highlighted: Highlighted
+  help: Help
   content: Content
   page_top: 'Page top'
   page_bottom: 'Page bottom'

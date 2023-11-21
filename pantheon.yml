@@ -11,3 +11,14 @@ database:
   version: 10.4
 search:
   version: 8
+workflows:
+  deploy:
+    after:
+      - type: webphp
+        description: "Invoke the processes after code has been deployed."
+        script: private/hooks/afterDeploy.php
+  sync_code:
+    after:
+      - type: webphp
+        description: "Invoke the processes after code has been pushed."
+        script: private/hooks/afterSync.php

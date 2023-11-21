@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c8d0cc420b6e73009d64d75f8253e0e3",
+    "content-hash": "8dbde447caf09e73b2a0ae602d7b69f9",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -3906,6 +3906,10 @@
                     "homepage": "https://www.drupal.org/user/423969"
                 },
                 {
+                    "name": "DieterHolvoet",
+                    "homepage": "https://www.drupal.org/user/3567222"
+                },
+                {
                     "name": "dpopdan",
                     "homepage": "https://www.drupal.org/user/2759811"
                 },
@@ -3940,6 +3944,10 @@
                 {
                     "name": "pifagor",
                     "homepage": "https://www.drupal.org/user/2375692"
+                },
+                {
+                    "name": "RobLoach",
+                    "homepage": "https://www.drupal.org/user/61114"
                 },
                 {
                     "name": "wjaspers",
@@ -5065,7 +5073,7 @@
             "extra": {
                 "drupal": {
                     "version": "5.1.13",
-                    "datestamp": "1694649554",
+                    "datestamp": "1698886922",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -7114,6 +7122,10 @@
                 {
                     "name": "bkosborne",
                     "homepage": "https://www.drupal.org/user/788032"
+                },
+                {
+                    "name": "joevagyok",
+                    "homepage": "https://www.drupal.org/user/2876343"
                 }
             ],
             "description": "Allows content editors to easily replace source files associated with any file-based media entity, preserving the original filename.",
@@ -10999,6 +11011,51 @@
             "support": {
                 "source": "https://git.drupalcode.org/project/transliterate_filenames",
                 "issues": "https://www.drupal.org/project/issues/transliterate_filenames"
+            }
+        },
+        {
+            "name": "drupal/turnstile",
+            "version": "1.1.7",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/turnstile.git",
+                "reference": "1.1.7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/turnstile-1.1.7.zip",
+                "reference": "1.1.7",
+                "shasum": "7721ef555d4a041c5a5986e77d0fa7f9d6d68e5a"
+            },
+            "require": {
+                "drupal/captcha": "*",
+                "drupal/core": "^9.4 || ^10"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "1.1.7",
+                    "datestamp": "1689091279",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "greatmatter",
+                    "homepage": "https://www.drupal.org/user/1199320"
+                }
+            ],
+            "description": "Adds Cloudflare's Turnstile product as an option to the CAPTCHA module.",
+            "homepage": "https://www.drupal.org/project/turnstile",
+            "support": {
+                "source": "https://git.drupalcode.org/project/turnstile"
             }
         },
         {
@@ -15423,7 +15480,7 @@
             "version": "3.2.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/DataTables/Dist-DataTables-DataTables.git",
+                "url": "git@github.com:DataTables/Dist-DataTables-DataTables.git",
                 "reference": "6dc8eccf208cd4b5e5f450d9eb23674915c035e6"
             },
             "dist": {
@@ -19987,6 +20044,48 @@
                 }
             ],
             "time": "2022-08-02T15:47:23+00:00"
+        },
+        {
+            "name": "topfloor/composer-cleanup-vcs-dirs",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/VolantisDev/composer-cleanup-vcs-dirs.git",
+                "reference": "dfa7c8c0fe22e048310d00f133f7df14f0b2f57a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/VolantisDev/composer-cleanup-vcs-dirs/zipball/dfa7c8c0fe22e048310d00f133f7df14f0b2f57a",
+                "reference": "dfa7c8c0fe22e048310d00f133f7df14f0b2f57a",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^1 | ^2",
+                "php": ">=5.5",
+                "symfony/finder": "*"
+            },
+            "require-dev": {
+                "composer/composer": "dev-master"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "class": "TopFloor\\ComposerCleanupVcsDirs\\Plugin"
+            },
+            "autoload": {
+                "psr-4": {
+                    "TopFloor\\ComposerCleanupVcsDirs\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "description": "Automatically deletes .git directories in newly installed or updated dependencies.",
+            "support": {
+                "issues": "https://github.com/VolantisDev/composer-cleanup-vcs-dirs/issues",
+                "source": "https://github.com/VolantisDev/composer-cleanup-vcs-dirs/tree/1.1.0"
+            },
+            "time": "2021-07-09T16:11:23+00:00"
         },
         {
             "name": "twig/twig",

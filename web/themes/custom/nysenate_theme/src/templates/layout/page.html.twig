@@ -55,15 +55,15 @@
   ]
 %}
 
-{% if is_dashboard or is_senator_dashboard %}
+{#{% if is_dashboard or is_senator_dashboard %}#}
 
-  {% include "@nysenate_theme/dashboard/dashboard.twig" with {
-    "content": page.content,
-    "sidebar": sidebar,
-    "dashboard_display_name": dashboard_display_name,
-  } only %}
+{#  {% include "@nysenate_theme/dashboard/dashboard.twig" with {#}
+{#    "content": page.content,#}
+{#    "sidebar": sidebar,#}
+{#    "dashboard_display_name": dashboard_display_name,#}
+{#  } only %}#}
 
-{% else %}
+{#{% else %}#}
 
   <!-- Skiplink -->
   <div class="skip-link">
@@ -155,4 +155,4 @@
     </footer>
 
   </div>{# /.layout-container #}
-{% endif %}
+{#{% endif %}#}

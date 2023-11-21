@@ -1,0 +1,105 @@
+name: Pantheon Deploy Multi-Dev
+# Github Action triggers when a branch is created off of main named
+# feature/this-is-a-great-branch and a pull request is opened.
+on:
+  pull_request:
+    branches:
+      - main
+
+env:
+  GIT_COMMIT_MESSAGE: 'Github Actions Build'
+
+jobs:
+  run_if:
+    if: startsWith(github.head_ref, 'feature/')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone the github repo in the Github Action container
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set some variables to use in the workflow
+        run: |
+          echo "NOW=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
+          echo "GRUMPHP_GIT_WORKING_DIR=$(git rev-parse --show-toplevel)" >> $GITHUB_ENV
+
+      - name: Setup PHP for Terminus
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ vars.PHP_VERSION }}
+
+      - name: Add the Pantheon SSH Key for the CI user
+        uses: webfactory/ssh-agent@v0.7.0
+        with:
+          ssh-private-key: ${{ secrets.PANTHEON_SSH_PRIVATE_KEY }}
+
+      - name: Disable Pantheon SSH strict host key checking
+        run: 'printf "\nHost *\n\tStrictHostKeyChecking no" >> ~/.ssh/config'
+
+      - name: Install Terminus with a machine token
+        uses: pantheon-systems/terminus-github-actions@main
+        with:
+          pantheon-machine-token: ${{ secrets.PANTHEON_MACHINE_TOKEN }}
+
+      - name: Configure git config
+        run: |
+          git config --global user.name "NY Senate CI Bot"
+          git config --global user.email "zalewski.senate+github@gmail.com"
+
+      - name: Set up the Pantheon GIT Remote and create a friendly multidev name
+        run: |
+          git remote add pantheon ${{ vars.PANTHEON_GIT_REMOTE }}
+          echo $(git remote -v)
+          echo PANTHEON_MULTIDEV=$(echo "pr-${{ github.event.pull_request.number }}") >> $GITHUB_ENV
+
+      - name: Cache Composer dependencies to make builds faster
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-vendor
+        with:
+          path: ./vendor
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/composer.lock') }}
+
+      - name: Make composer available and do a composer install to build Drupal
+        uses: php-actions/composer@v6
+        with:
+          php_version: ${{ vars.PHP_VERSION }}
+          php_extensions: gd sodium zip
+
+      - name: Setup Node with the version set in .nvmrc
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: '${{ vars.THEME_PATH }}/.nvmrc'
+          cache: 'npm'
+          cache-dependency-path: '${{ vars.THEME_PATH }}/package-lock.json'
+
+      - name: Build Theme Assets
+        run: |
+          cd ${{ vars.THEME_PATH }}
+          npm install
+          npm run build
+
+      - name: Deploy to Pantheon Multi-Dev
+        run: |
+          git checkout -b $PANTHEON_MULTIDEV
+          rm -rf ${{ vars.THEME_PATH }}/node_modules
+          git add -Af .
+          git commit -q -m "${{ env.GIT_COMMIT_MESSAGE }} - ${{ env.NOW }}"
+          git push --force pantheon HEAD:refs/heads/$PANTHEON_MULTIDEV
+
+      - name: Create or update Multi-Dev environment.
+        id: multi-dev
+        run: terminus env:create ${{ vars.PANTHEON_SITE }}.${{ vars.PANTHEON_MULTIDEV_CLONE_ENV }} $PANTHEON_MULTIDEV || true
+        continue-on-error: true
+
+      - name: Post to a Slack channel
+        if: always()
+        id: slack
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          channel-id: '${{ vars.SLACK_CHANNEL }}'
+          slack-message: "@${{ github.actor }} is pushing code today and it was a ${{ job.status }}!\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}\nUsing Workflow: ${{ github.workflow }}\nPantheon: https://${{ env.PANTHEON_MULTIDEV }}-${{ vars.PANTHEON_SITE }}.pantheonsite.io"
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}

@@ -5200,7 +5200,7 @@ function nysenate_theme_preprocess_datetime_wrapper(&$variables) {
     // Dashboard Profile Edit design fix.
     if ($variables['element']['#id'] == 'edit-field-dateofbirth-0-value') {
       $current_path = \Drupal::request()->getRequestUri();
-      if ($current_path == '/dashboard/edit?destination=/dashboard') {
+      if (str_starts_with($current_path, '/dashboard/edit')) {
         unset($variables['title']);
       }
     }
@@ -5237,7 +5237,7 @@ function nysenate_theme_preprocess_form_element(&$variables) {
     }
     if ($variables['element']['#id'] == 'edit-field-dateofbirth-0-value-date') {
       $current_path = \Drupal::request()->getRequestUri();
-      if ($current_path == '/dashboard/edit?destination=/dashboard') {
+      if (str_starts_with($current_path, '/dashboard/edit')) {
         $variables['label_display'] = 'before';
         $variables['label']['#title'] = t('DATE OF BIRTH');
         $variables['label']['#title_display'] = 'before';

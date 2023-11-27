@@ -6155,20 +6155,16 @@ function nysenate_theme_preprocess_tweets(&$variables) {
  * Implements hook_preprocess_user().
  */
 function nysenate_theme_preprocess_user__dashboard_profile(&$variables) {
-  $media_storage = \Drupal::entityTypeManager()->getStorage('media');
   $user_storage = \Drupal::entityTypeManager()->getStorage('user');
   $user = $user_storage->load(\Drupal::currentUser()->id());
 
-  $image_src = NULL;
-  if ($user->hasField('field_profile_picture') && !$user->get('field_profile_picture')->isEmpty()) {
-    $media = !empty($user->field_profile_picture->target_id) ? $media_storage->load($user->field_profile_picture->target_id) : NULL;
-    if (!empty($media)) {
-      $file = !empty($media->field_image->target_id) ? File::load($media->field_image->target_id) : NULL;
-      if (!empty($file)) {
-        $image_src = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
-      }
-    }
-  }
+  $image_entity = $user->field_profile_picture->entity ?? NULL;
+  $image_uri = is_a($image_entity, '\Drupal\file\Entity\File')
+    ? $user->field_profile_picture->entity->getFileUri()
+    : NULL;
+  $image_src = $image_uri
+    ? \Drupal::service('file_url_generator')->generateAbsoluteString($image_uri)
+    : NULL;
 
   $address = [];
   if (!$user->field_address->isEmpty()) {

@@ -6147,7 +6147,8 @@ function nysenate_theme_preprocess_tweets(&$variables) {
   foreach ($elements as $element) {
     $created_at = $element['created_at'];
     $date = date(strtotime($created_at));
-    $variables['date'] = \Drupal::service('date.formatter')->formatInterval(REQUEST_TIME - $date);
+    $request_time = \Drupal::time()->getRequestTime();
+    $variables['date'] = \Drupal::service('date.formatter')->formatInterval($request_time - $date);
     $variables['content']['items'][] = [
       'body' => $element['text'],
       'week' => $variables['date'],

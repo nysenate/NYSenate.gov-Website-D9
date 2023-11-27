@@ -96,7 +96,7 @@
         <p>
           related issues:
         </p>
-        {% for key, issue in content.field_issues if key matches '/^\\d+$/' %}
+        {% for key, issue in content.field_issues|filter((value, key) => key matches '/^\\d+$/') %}
           <li>{{ issue }}</li>
         {% endfor %}
       </ul>

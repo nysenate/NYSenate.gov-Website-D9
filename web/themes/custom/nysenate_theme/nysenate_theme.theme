@@ -6160,7 +6160,7 @@ function nysenate_theme_preprocess_user__dashboard_profile(&$variables) {
 
   $image_entity = $user->field_profile_picture->entity ?? NULL;
   $image_uri = is_a($image_entity, '\Drupal\file\Entity\File')
-    ? $user->field_profile_picture->entity->getFileUri()
+    ? $image_entity->getFileUri()
     : NULL;
   $image_src = $image_uri
     ? \Drupal::service('file_url_generator')->generateAbsoluteString($image_uri)

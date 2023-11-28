@@ -148,6 +148,9 @@ class EditProfileForm extends ProfileForm {
           'field_username' => $form['account']['name'],
           'field_email' => $form['account']['mail'],
           'field_address' => $form['field_address'],
+          'reset_password_link' => [
+            '#markup' => '<div><a href="/user/password">' . $this->t('Reset password') . '</a></div>'
+          ],
         ],
 
         'center' => [

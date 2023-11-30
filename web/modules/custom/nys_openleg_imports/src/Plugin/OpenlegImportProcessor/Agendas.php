@@ -200,7 +200,7 @@ class Agendas extends ImportProcessorBase {
     }
     foreach (($item->voteInfo->votesList->items ?? []) as $vote) {
       $name = BillHelper::formatTitle($vote->bill);
-      if (array_key_exists('$name', $bills)) {
+      if (array_key_exists($name, $bills)) {
         $bills[$name]['vote'] = $vote;
       }
     }

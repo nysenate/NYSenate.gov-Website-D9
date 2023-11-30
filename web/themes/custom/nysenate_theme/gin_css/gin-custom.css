@@ -1,7 +1,3 @@
-/* Custom CSS for Gin Admin Theme
-   https://www.drupal.org/docs/contributed-themes/gin-admin-theme/custom-theming
-*/
-
 .views-exposed-form__item.form-item--accept-null {
   display: none;
 }
@@ -10,8 +6,12 @@
   max-width: 300px;
 }
 
-body.gin--high-contrast-mode {
+.gin--high-contrast-mode {
   background: #eeeeee;
+}
+
+.gin--high-contrast-mode.front-end {
+  background: #fff!important;
 }
 
 .toolbar .toolbar-menu {
@@ -50,10 +50,10 @@ body.gin--high-contrast-mode {
   background-color: #fff;
 }
 
-.front-end .toolbar-horizontal .toolbar-tray .menu-item,
-.front-end .toolbar-horizontal .toolbar-tray .menu-item--expanded.menu-item--expanded,
-.front-end .gin--horizontal-toolbar #toolbar-item-administration-tray,
-.front-end .gin--horizontal-toolbar #toolbar-administration .toolbar-menu-administration > .toolbar-menu{
+.toolbar-horizontal.front-end .toolbar-tray .menu-item,
+.toolbar-horizontal.front-end .toolbar-tray .menu-item--expanded.menu-item--expanded,
+.gin--horizontal-toolbar.front-end  #toolbar-item-administration-tray,
+.gin--horizontal-toolbar.front-end #toolbar-administration .toolbar-menu-administration > .toolbar-menu{
   background-color: #eee!important;
 }
 

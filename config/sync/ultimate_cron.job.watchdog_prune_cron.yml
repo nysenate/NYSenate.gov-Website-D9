@@ -1,0 +1,17 @@
+uuid: 6e270ca6-d2a8-4c71-bc32-31b4955a6d72
+langcode: en
+status: true
+dependencies:
+  module:
+    - watchdog_prune
+title: 'Default cron handler'
+id: watchdog_prune_cron
+weight: 0
+module: watchdog_prune
+callback: watchdog_prune_cron
+scheduler:
+  id: simple
+launcher:
+  id: serial
+logger:
+  id: database

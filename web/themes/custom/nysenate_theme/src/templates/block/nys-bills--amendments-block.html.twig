@@ -36,7 +36,7 @@
       <!-- Bill Co/Multi Sponsors -->
       <div class="c-block c-detail--sponsors c-bill-section">
         {% if amendment.sponsors_array.co|length > 0 or amendment.sponsors_array.multi|length > 0 %}
-          {% for key,list in amendment.sponsors_array if list|length > 0 %}
+          {% for key,list in amendment.sponsors_array|filter(list|length > 0) %}
             <div class="c-{{ key }}-sponsors c-sponsors-detail">
               <h3 class="c-detail--subhead c-detail--section-title c-bill-detail--subhead">{{ key }}-Sponsors</h3>
               <div class="initial_{{ key }}-sponsors">

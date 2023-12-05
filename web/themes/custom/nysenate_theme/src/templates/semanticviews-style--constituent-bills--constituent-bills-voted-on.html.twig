@@ -9,7 +9,7 @@
 {{ attach_library('nysenate_theme/newsroom-content') }}
 {{ attach_library('nysenate_theme/nysenate-tabs') }}
 <div class="content-list__wrapper">
-  {% for key,row in rows if key matches '/^\\d+$/'  %}
+  {% for key,row in rows|filter((value, key) => key matches '/^\\d+$/') %}
     <div class="content__item">
       {{ row.content }}
     </div>

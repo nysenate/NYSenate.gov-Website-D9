@@ -144,7 +144,9 @@ class SchoolFormsService {
       }
     }
 
-    $query_results = $query->execute();
+    $query_results = $query
+      ->accessCheck(FALSE)
+      ->execute();
     foreach ($query_results as $query_result) {
       $submission = $this->entityTypeManager->getStorage('webform_submission')->load($query_result);
       /**

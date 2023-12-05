@@ -37,7 +37,7 @@
       {% if content.field_issues.0 %}
         <ul class="nys-associated-topics">
           {{ 'ISSUE:'|t }}
-          {% for key,issue in content.field_issues if key matches '/^\\d+$/' %}
+          {% for key,issue in content.field_issues|filter((value, key) => key matches '/^\\d+$/') %}
             <li>{{ issue }}</li>
           {% endfor %}
         </ul>

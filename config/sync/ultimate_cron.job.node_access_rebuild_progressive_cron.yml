@@ -1,0 +1,17 @@
+uuid: 8c5fa48b-0fa4-42d8-b65a-ff79e55c7feb
+langcode: en
+status: true
+dependencies:
+  module:
+    - node_access_rebuild_progressive
+title: 'Default cron handler'
+id: node_access_rebuild_progressive_cron
+weight: 0
+module: node_access_rebuild_progressive
+callback: node_access_rebuild_progressive_cron
+scheduler:
+  id: simple
+launcher:
+  id: serial
+logger:
+  id: database

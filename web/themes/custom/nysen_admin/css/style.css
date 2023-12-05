@@ -1,9 +1,34 @@
-.form-item-accept-null {
+.views-exposed-form__item.form-item--accept-null {
     display: none;
 }
 
 .form-item-senator {
     max-width: 300px;
+}
+
+body.gin--high-contrast-mode {
+    background: #eeeeee;
+}
+
+
+.gin--horizontal-toolbar .region-sticky {
+    opacity: .688;
+    /*background: rgba(248, 250, 254, .8)!important;*/
+    background: #eeeeee;
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+}
+
+.gin-secondary-toolbar.gin-secondary-toolbar--frontend{
+    opacity: .999;
+    /*background: rgba(248, 250, 254, .8);*/
+    background: rgba(238, 238, 238, .8);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+}
+
+.toolbar-horizontal .toolbar-tray .menu-item--expanded.menu-item--expanded {
+    background-color: #eeeeee;
 }
 
 .rain-admin-theme details > summary,
@@ -22,8 +47,4 @@
     border: none!important;
     padding: 0!important;
     margin: 0!important;
-}
-
-.toolbar[id='toolbar-administration'] .toolbar-tray .toolbar-menu .toolbar-menu a {
-    padding: 10px 15px!important;
 }

@@ -394,6 +394,7 @@ function nys_dashboard_form_alter(&$form, FormStateInterface $form_state, $form_
       $form['date']['max']['#placeholder'] = $end_of_week;
       $form['date']['min']['#title'] = [];
       $form['date']['max']['#title'] = [];
+      $form['date']['max']['#access'] = false;
     }
   }
 }

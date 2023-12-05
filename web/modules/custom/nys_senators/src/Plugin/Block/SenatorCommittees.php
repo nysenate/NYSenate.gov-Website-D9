@@ -72,6 +72,7 @@ class SenatorCommittees extends BlockBase implements ContainerFactoryPluginInter
       $paragraph_storage = $this->entityTypeManager->getStorage('paragraph');
       $senator_tid = $node->field_senator_multiref->target_id;
       $committee_membership_ids = $paragraph_storage->getQuery()
+        ->accessCheck(FALSE)
         ->condition('type', 'members')
         ->condition('field_senator', $senator_tid)
         ->sort('field_committee_member_role', 'DESC')

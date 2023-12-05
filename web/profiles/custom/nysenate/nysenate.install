@@ -15,7 +15,9 @@ use Drupal\taxonomy\Entity\Term;
  */
 function nysenate_update_9001() {
   $bcid = \Drupal::entityQuery('block_content')
-    ->condition('type', 'views')->execute();
+    ->accessCheck(FALSE)
+    ->condition('type', 'views')
+    ->execute();
 
   if (!empty($bcid)) {
     $list_views = \Drupal::entityTypeManager()
@@ -38,7 +40,9 @@ function nysenate_update_9001() {
  */
 function nysenate_update_9002() {
   $bcid = \Drupal::entityQuery('block_content')
-    ->condition('type', 'views')->execute();
+    ->accessCheck(FALSE)
+    ->condition('type', 'views')
+    ->execute();
 
   if (!empty($bcid)) {
     $list_views = \Drupal::entityTypeManager()
@@ -488,7 +492,9 @@ function nysenate_update_9013() {
   $query = $node_storage->getQuery();
   $query->condition('type', 'session');
   $query->notExists('field_upcoming_legislation');
-  $nids = $query->execute();
+  $nids = $query
+    ->accessCheck(FALSE)
+    ->execute();
   $nodes = $node_storage->loadMultiple($nids);
 
   foreach ($nodes as $node) {

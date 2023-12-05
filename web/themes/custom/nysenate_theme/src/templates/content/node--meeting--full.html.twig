@@ -99,7 +99,7 @@
             {% if field_majority_issue_tag %}
               <li>{{ field_majority_issue_tag }}</li>
             {% endif %}
-            {% for key,issue in content.field_issues if key matches '/^\\d+$/' %}
+            {% for key,issue in content.field_issues|filter((value, key) => key matches '/^\\d+$/') %}
               <li>{{ issue }}</li>
             {% endfor %}
           </ul>

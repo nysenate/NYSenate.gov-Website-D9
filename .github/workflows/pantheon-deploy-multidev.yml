@@ -89,10 +89,24 @@ jobs:
           git commit -q -m "${{ env.GIT_COMMIT_MESSAGE }} - ${{ env.NOW }}"
           git push --force pantheon HEAD:refs/heads/$PANTHEON_MULTIDEV
 
-      - name: Create or update Multi-Dev environment.
-        id: multi-dev
-        run: terminus env:create ${{ vars.PANTHEON_SITE }}.${{ vars.PANTHEON_MULTIDEV_CLONE_ENV }} $PANTHEON_MULTIDEV || true
-        continue-on-error: true
+      - name: Check if Pantheon multidev environment exists
+        run: |
+          if [ $(terminus multidev:list ${{ vars.PANTHEON_SITE }} --field=id | grep -iw "$PANTHEON_MULTIDEV") ]; then
+            echo "PANTHEON_MULTIDEV_EXISTS=TRUE" >> $GITHUB_ENV
+          fi
+
+      - name: Create a multidev environment if not existing
+        if: ${{ !env.PANTHEON_MULTIDEV_EXISTS }}
+        run: terminus env:create ${{ vars.PANTHEON_SITE }}.${{ vars.PANTHEON_MULTIDEV_CLONE_ENV }} $PANTHEON_MULTIDEV
+
+      - name: Post a comment to the PR
+        if: success()
+        uses: ouzi-dev/commit-status-updater@v2
+        with:
+          name: "Code Deployed to Pantheon"
+          status: "${{ job.status }}"
+          url: https://${{ env.PANTHEON_MULTIDEV }}-${{ vars.PANTHEON_SITE }}.pantheonsite.io
+          description: "Code has been deployed to the Pantheon ${{ env.PANTHEON_MULTIDEV }} multidev environment. Clicks details for the link."
 
       - name: Post to a Slack channel
         if: always()

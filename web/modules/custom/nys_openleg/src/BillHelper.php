@@ -59,7 +59,9 @@ class BillHelper {
       try {
         $query = \Drupal::entityQuery('taxonomy_term');
         $query->condition('field_ol_member_id', $member_ids, 'IN');
-        $ret = $query->execute();
+        $ret = $query
+          ->accessCheck(FALSE)
+          ->execute();
       }
       catch (\Throwable) {
       }

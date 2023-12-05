@@ -73,6 +73,7 @@ function nys_sunset_policy_get_expired() {
   $date = $date->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT);
   $query = \Drupal::entityTypeManager()->getStorage('node')->getQuery();
   $results = $query
+    ->accessCheck(FALSE)
     ->condition('type', ['petition', 'webform'], 'IN')
     ->condition('status', NodeInterface::PUBLISHED)
     ->condition('field_expiration_date', $date, '<=')
@@ -108,6 +109,7 @@ function nys_sunset_policy_get_expiring() {
   $future = $future->format('Y-m-d\TH:i:s');
   $query = \Drupal::entityTypeManager()->getStorage('node')->getQuery();
   $results = $query
+    ->accessCheck(FALSE)
     ->condition('type', ['petition', 'webform'], 'IN')
     ->condition('status', NodeInterface::PUBLISHED)
     ->condition('field_expiration_date', $date, '>=')

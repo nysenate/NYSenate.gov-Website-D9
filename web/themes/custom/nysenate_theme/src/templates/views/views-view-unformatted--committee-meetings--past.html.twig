@@ -34,7 +34,7 @@
       </h3>
       <div class="c-meeting-detail--related">
         <ul>
-          {% for key,issue in content.issues if key matches '/^\\d+$/' %}
+          {% for key,issue in content.issues|filter((value, key) => key matches '/^\\d+$/') %}
             <li>
               <a href="{{ issue.url }}">{{ issue.name }}</a>
             </li>

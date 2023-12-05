@@ -96,7 +96,9 @@ class SchoolAutocompleteController extends ControllerBase {
       ->sort('title')
       ->range(0, 10);
 
-    $ids = $query->execute();
+    $ids = $query
+      ->accessCheck(FALSE)
+      ->execute();
     $nodes = $ids ? $this->entityTypeManager->getStorage('node')->loadMultiple($ids) : [];
 
     foreach ($nodes as $node) {

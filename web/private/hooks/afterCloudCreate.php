@@ -7,6 +7,8 @@
  * See https://docs.pantheon.io/guides/quicksilver.
  */
 
+require_once 'inc/copyGinCss.php';
+
 $drushCommands = [
   'deploy' => [
     '--yes',

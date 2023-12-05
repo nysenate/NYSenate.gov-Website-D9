@@ -1,0 +1,5 @@
+services:
+  nys_access_permissions.route_subscriber:
+    class: Drupal\nys_access_permissions\Routing\RouteSubscriber
+    tags:
+      - { name: event_subscriber }

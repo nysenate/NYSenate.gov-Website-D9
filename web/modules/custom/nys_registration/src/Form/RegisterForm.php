@@ -190,7 +190,7 @@ class RegisterForm extends UserRegisterForm {
         '#button_type' => 'primary',
         '#value' => $this->t('Next'),
         '#submit' => ['::formSubmitStep1'],
-        '#validate' => ['::formValidateStep1'],
+        '#validate' => ['::formPreValidateStep1', '::formValidateStep1'],
       ],
     ];
 
@@ -236,6 +236,27 @@ class RegisterForm extends UserRegisterForm {
     }
 
     return $form;
+  }
+
+  /**
+   * Step 1 pre-validation handler.
+   *
+   * Cleans/sanitizes data prior to validation.
+   */
+  public function formPreValidateStep1(array &$form, FormStateInterface $form_state): void {
+    // Trim whitespace from Zipcode input.
+    $zip_raw = $form_state
+      ->getValue(['field_address', '0', 'address', 'postal_code']);
+    $zip_trimmed = trim($zip_raw);
+    if ($zip_raw && $zip_raw !== $zip_trimmed) {
+      $form_state
+        ->setValue([
+          'field_address',
+          '0',
+          'address',
+          'postal_code',
+        ], $zip_trimmed);
+    }
   }
 
   /**

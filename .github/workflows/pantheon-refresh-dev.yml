@@ -34,7 +34,7 @@ jobs:
 
       - name: Truncate Tables that are not needed in dev
         run: |
-          tables=$(terminus drush nysenate-2022.dev sqlq -- "SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'pantheon' AND (TABLE_NAME LIKE 'accum%' OR TABLE_NAME LIKE 'watchdog%' OR TABLE_NAME LIKE 'migrate%')")
+          tables=$(terminus drush ${{ vars.PANTHEON_SITE }}.dev sqlq -- "SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'pantheon' AND (TABLE_NAME LIKE 'accum%' OR TABLE_NAME LIKE 'watchdog%' OR TABLE_NAME LIKE 'migrate%')")
           tables=$(echo "$tables" | tr ' ' '\n')
           echo -e "$tables"
           echo "${tables[@]}" | parallel --jobs 32 terminus drush ${{ vars.PANTHEON_SITE }}.dev sqlq -- "\"truncate table {}\""

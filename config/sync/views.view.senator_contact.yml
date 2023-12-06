@@ -3,11 +3,13 @@ langcode: en
 status: true
 dependencies:
   config:
+    - user.role.administrator
     - webform.webform.senator_contact_webform
   module:
     - csv_serialization
     - rest
     - serialization
+    - user
     - views_data_export
     - webform
     - webform_views
@@ -760,8 +762,10 @@ display:
           sort_asc_label: Asc
           sort_desc_label: Desc
       access:
-        type: none
-        options: {  }
+        type: role
+        options:
+          role:
+            administrator: administrator
       cache:
         type: tag
         options: {  }
@@ -1039,6 +1043,7 @@ display:
         - url
         - url.query_args
         - user
+        - user.roles
       tags: {  }
   data_export_1:
     id: data_export_1
@@ -1079,6 +1084,7 @@ display:
         - request_format
         - url
         - user
+        - user.roles
       tags: {  }
   page_1:
     id: page_1
@@ -1097,4 +1103,5 @@ display:
         - url
         - url.query_args
         - user
+        - user.roles
       tags: {  }

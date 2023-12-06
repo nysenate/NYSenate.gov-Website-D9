@@ -381,7 +381,7 @@ function nys_dashboard_form_alter(&$form, FormStateInterface $form_state, $form_
     ])) {
       [$start_of_week, $end_of_week] = nys_dashboard_get_date('week');
       if (isset($form['date_wrapper'])) {
-        $form['date'] = $form['date_wrapper']['date'];
+        $form['date'] = $form['date_wrapper']['date_wrapper']['date'];
         unset($form['date_wrapper']);
       }
       $form['date']['min']['#date_format'] = 'm/d/Y';
@@ -394,6 +394,7 @@ function nys_dashboard_form_alter(&$form, FormStateInterface $form_state, $form_
       $form['date']['max']['#placeholder'] = $end_of_week;
       $form['date']['min']['#title'] = [];
       $form['date']['max']['#title'] = [];
+      $form['date']['max']['#access'] = false;
     }
   }
 }

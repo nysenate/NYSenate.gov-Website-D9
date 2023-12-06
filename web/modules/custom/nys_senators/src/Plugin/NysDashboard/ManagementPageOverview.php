@@ -61,6 +61,7 @@ class ManagementPageOverview extends ManagementPageBase {
     $date = date("Y-m-d");
     $storage = $this->manager->getStorage('node');
     $results = $storage->getQuery()
+      ->accessCheck(FALSE)
       ->condition('field_date_range.value', $date . '%', 'LIKE')
       ->condition('type', 'session')
       ->execute();

@@ -164,7 +164,9 @@ function nys_comment_menu_local_tasks_alter(&$data, $route_name, RefinableCachea
  * Update the existing comments with the default rejected value.
  */
 function nys_comment_deploy_default_rejected_value() {
-  $cids = \Drupal::entityQuery('comment')->execute();
+  $cids = \Drupal::entityQuery('comment')
+    ->accessCheck(FALSE)
+    ->execute();
   $comment_storage = \Drupal::entityTypeManager()->getStorage('comment');
   $comments = $comment_storage->loadMultiple($cids);
 

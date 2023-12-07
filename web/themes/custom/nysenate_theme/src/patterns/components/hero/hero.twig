@@ -1,5 +1,6 @@
 {{ attach_library('nysenate_theme/hero') }}
 {{ attach_library('rain_theme/media') }}
+{% import '@nysenate_theme/icons/_icons-macro.twig' as icons %}
 
 <section class="hero {% if type == "senator" %} hero--senator{% if is_senator_landing is same as(false) %} hero--senator-collapsed{% endif %}{% else %} hero--homepage{% endif %} {% if type == " default" %} hero--default{% endif %} {% if type == " press_conference" or type == " public_hearing" or type == " session" %}hero--public-hearing{% endif %}">
   {% if type == "senator" %}
@@ -48,7 +49,7 @@
             <ul class="c-senator-hero--social">
               {% for social in socials %}
                 <li class="{% if loop.first %}first {% endif %}leaf c-senator-hero--social-item {{ social.name }}">
-                  <a href="{{ social.url }}" target="_blank" class="icon-replace__{{ social.name }}">{{ social.name }}</a>
+                  <a href="{{ social.url }}" target="_blank"}">{{ icons.get(social.name) }}</a>
                 </li>
               {% endfor %}
             </ul>

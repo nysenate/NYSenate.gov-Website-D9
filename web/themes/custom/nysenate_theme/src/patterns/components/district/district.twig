@@ -7,6 +7,9 @@
       {% if name %}
         <h3 class="c-subpage-header--subtitle03">{{ name }}</h3>
       {% endif %}
+    {% elseif view_mode == "user_registration" %}
+        <h2 class="nys-title nys-title--district">{{ name }}</h2>
+        <h3 class="c-subpage-header--subtitle03">{{ subhead }}</h3>
     {% elseif senator %}
         <h2 class="nys-title nys-title--district">{{ name }}</h2>
         <h3 class="c-subpage-header--subtitle03"><a href="{{ senator_link }}">Senator {{ senator }}</a></h3>
@@ -27,7 +30,7 @@
     </div>
   {% endif %}
 
-  {% if subhead %}
+  {% if subhead and view_mode != "user_registration" %}
     <div class="district__subheading c-subpage-header--title03">
       {{ subhead }}
     </div>

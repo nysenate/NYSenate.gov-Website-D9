@@ -1,0 +1,40 @@
+name: Pantheon Daily Dev Refresh
+
+on:
+  schedule:
+    - cron:  '0 6 * * *'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ vars.PHP_VERSION }}
+
+      - name: Add SSH Key
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.PANTHEON_SSH_PRIVATE_KEY }}
+
+      - name: Disable Pantheon SSH strict host key checking
+        run: 'printf "\nHost *\n\tStrictHostKeyChecking no" >> ~/.ssh/config'
+
+      - name: Install Terminus
+        uses: pantheon-systems/terminus-github-actions@main
+        with:
+          pantheon-machine-token: ${{ secrets.PANTHEON_MACHINE_TOKEN }}
+
+      - name: Refresh Dev Environment with a database from Live (no files)
+        run: |
+          terminus env:clone-content ${{ vars.PANTHEON_SITE }}.live dev --yes --db-only
+          terminus drush ${{ vars.PANTHEON_SITE }}.dev cr
+
+      - name: Truncate Tables that are not needed in dev
+        run: |
+          tables=$(terminus drush ${{ vars.PANTHEON_SITE }}.dev sqlq -- "SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'pantheon' AND (TABLE_NAME LIKE 'accum%' OR TABLE_NAME LIKE 'watchdog%' OR TABLE_NAME LIKE 'migrate%')")
+          tables=$(echo "$tables" | tr ' ' '\n')
+          echo -e "$tables"
+          echo "${tables[@]}" | parallel --jobs 32 terminus drush ${{ vars.PANTHEON_SITE }}.dev sqlq -- "\"truncate table {}\""

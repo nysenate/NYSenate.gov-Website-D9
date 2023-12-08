@@ -97,7 +97,7 @@ jobs:
 
       - name: Create a multidev environment if not existing
         if: ${{ !env.PANTHEON_MULTIDEV_EXISTS }}
-        run: terminus env:create ${{ vars.PANTHEON_SITE }}.${{ vars.PANTHEON_MULTIDEV_CLONE_ENV }} $PANTHEON_MULTIDEV
+        run: terminus env:create ${{ vars.PANTHEON_SITE }}.${{ vars.PANTHEON_MULTIDEV_CLONE_ENV }} $PANTHEON_MULTIDEV --no-files
 
       - name: Post a comment to the PR
         if: success()

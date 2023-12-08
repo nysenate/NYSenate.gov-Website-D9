@@ -1,0 +1,37 @@
+name: Pantheon PR Merge Cleanup
+
+on:
+  pull_request:
+    branches:
+      - main
+    types: [ closed ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ vars.PHP_VERSION }}
+
+      - name: Add SSH Key
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.PANTHEON_SSH_PRIVATE_KEY }}
+
+      - name: Disable Pantheon SSH strict host key checking
+        run: 'printf "\nHost *\n\tStrictHostKeyChecking no" >> ~/.ssh/config'
+
+      - name: Get the Pantheon Multidev Name
+        run: echo PANTHEON_MULTIDEV=$(echo "pr-${{ github.event.pull_request.number }}") >> $GITHUB_ENV
+
+      - name: Install Terminus
+        uses: pantheon-systems/terminus-github-actions@main
+        with:
+          pantheon-machine-token: ${{ secrets.PANTHEON_MACHINE_TOKEN }}
+
+      - name: Delete Pantheon Multidev
+        run: terminus multidev:delete ${{ vars.PANTHEON_SITE }}.${{ env.PANTHEON_MULTIDEV }} --yes
+        continue-on-error: true

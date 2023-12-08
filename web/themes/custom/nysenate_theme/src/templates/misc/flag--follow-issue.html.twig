@@ -15,7 +15,7 @@
  */
 #}
 
-{% spaceless %}
+{% apply spaceless %}
     {# Attach the flag CSS library.#}
     {{ attach_library('flag/flag.link') }}
 
@@ -40,7 +40,7 @@
     {% set attributes = attributes.setAttribute('rel', 'nofollow') %}
 
     <div class="{{classes|join(' ')}}"><a{{ attributes }}>{{ title }}</a></div>
-{% endspaceless %}
+{% endapply %}
 
 {# Attach flag count.
 {% set count = flagcount(flag, flaggable) %}

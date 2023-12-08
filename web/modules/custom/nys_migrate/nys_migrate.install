@@ -41,6 +41,7 @@ function nys_migrate_uninstall() {
  */
 function nys_migrate_update_8001() {
   $node_ids = \Drupal::entityQuery('node')
+    ->accessCheck(FALSE)
     ->condition('nid', '9000000', '>')
     ->condition('type', ['bill', 'resolution'], 'IN')
     ->execute();

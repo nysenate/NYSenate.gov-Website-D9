@@ -60,7 +60,7 @@
     <!-- Bill Co/Multi Sponsors -->
     <div class="c-block c-detail--sponsors c-bill-section">
       {% if sponsors_array.co|length > 0 or sponsors_array.multi|length > 0 %}
-        {% for key,list in sponsors_array if list|length > 0 %}
+        {% for key,list in sponsors_array|filter(list|length > 0) %}
           <div class="c-{{ key }}-sponsors c-sponsors-detail">
             <h3 class="c-detail--subhead c-detail--section-title c-bill-detail--subhead">{{ key }}-Sponsors</h3>
             <div class="initial_{{ key }}-sponsors">

@@ -255,7 +255,9 @@ class SchoolFormsController extends ControllerBase {
       ->condition('webform_id', $webform_type)
       ->range(0, 5)
       ->sort('created', 'DESC');
-    $submission_ids = $query->execute();
+    $submission_ids = $query
+      ->accessCheck(FALSE)
+      ->execute();
     $start = $year;
     foreach ($submission_ids as $submission_id) {
       if ($start >= '2022') {

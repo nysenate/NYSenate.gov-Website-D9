@@ -14,12 +14,13 @@
 
 {% set senator = attributes.variables.senator|json_decode %}
 {% set user = attributes.variables.user|json_decode %}
+{% set district = attributes.variables.district|json_decode %}
 
 <div>
   {% include '@nysenate_theme/nysenate-user-profile/nysenate-user-profile.twig' with {
     user: user,
     senator: senator,
-    district_number: attributes.variables.district_number
+    district: district
   } %}
 
   <div class="button-group--step-two">

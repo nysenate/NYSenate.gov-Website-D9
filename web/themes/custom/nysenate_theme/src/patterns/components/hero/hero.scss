@@ -1030,7 +1030,7 @@ p.c-hero--welcome {
     .c-senator-hero--social {
       display: block;
       margin: 20px 0 0 -0.3em;
-      padding-left: 0;
+      padding-left: 10px;
       height: 1em;
       font-size: 27px;
     }
@@ -1044,7 +1044,7 @@ p.c-hero--welcome {
         display: block;
         height: 30px;
         width: 30px;
-        color: $color-white;
+        filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(104deg) brightness(103%) contrast(103%);
 
         &::after {
           line-height: 1em;

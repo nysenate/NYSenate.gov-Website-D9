@@ -185,6 +185,7 @@ class BillsHelper {
     try {
       $storage = $this->getStorage();
       $results = $storage->getQuery()
+        ->accessCheck(FALSE)
         ->condition('type', ['bill', 'resolution'], 'IN')
         ->condition('field_ol_base_print_no', $base_print)
         ->condition('field_ol_session', $session)
@@ -616,6 +617,7 @@ class BillsHelper {
   public function loadBillsFromTid($tid) {
     $query = $this->entityTypeManager->getStorage('node')
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('type', 'bill')
       ->condition('field_bill_multi_session_root', [$tid], 'IN');
     $result = $query->execute();
@@ -646,6 +648,7 @@ class BillsHelper {
 
     $query = $this->entityTypeManager->getStorage('node')
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('type', ['bill', 'resolution'], 'IN')
       ->condition('field_ol_session.value', $prev_vers_session)
       ->condition('field_ol_print_no.value', $prev_vers_print_no)

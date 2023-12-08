@@ -29,7 +29,7 @@ class DynamicRouting {
               'form_type' => $term_name,
             ],
             [
-              '_permission' => 'access all webform results',
+              '_permission' => 'administer site configurations',
             ]
         );
       $route->setOption('_admin_route', TRUE);

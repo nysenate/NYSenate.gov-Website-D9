@@ -427,7 +427,7 @@ function nysenate_theme_preprocess_block_content__microsite_hero(&$variables) {
 
   if (!empty($senator->field_youtube_url->value)) {
     $socials[] = [
-      'name' => 'youtube',
+      'name' => 'youtube-2',
       'url' => $senator->field_youtube_url->value,
     ];
   }
@@ -5224,14 +5224,22 @@ function nysenate_theme_preprocess_form_element(&$variables) {
       $variables['label_display'] = 'before';
       $variables['label']['#title'] = t('APT/SUITE/FLOOR (OPTIONAL)');
       $variables['label']['#title_display'] = 'before';
+      break;
+
     case 'edit-field-address-0-address-address-line1--2':
       $variables['label']['#title'] = t('STREET');
+      break;
+
     case 'edit-field-address-0-address-address-line2--2':
       $variables['label_display'] = 'before';
       $variables['label']['#title'] = t('ADDITIONAL');
       $variables['label']['#title_display'] = 'before';
+      break;
+
     case 'edit-field-address-0-address-administrative-area--2':
       $variables['label']['#title'] = t('STATE/PROVINCE');
+      break;
+
     case 'edit-field-dateofbirth-0-value-date':
       $current_path = \Drupal::request()->getRequestUri();
       if (str_starts_with($current_path, '/dashboard/edit')) {
@@ -5239,6 +5247,7 @@ function nysenate_theme_preprocess_form_element(&$variables) {
         $variables['label']['#title'] = t('DATE OF BIRTH');
         $variables['label']['#title_display'] = 'before';
       }
+      break;
   }
 }
 
@@ -6143,7 +6152,8 @@ function nysenate_theme_preprocess_tweets(&$variables) {
   foreach ($elements as $element) {
     $created_at = $element['created_at'];
     $date = date(strtotime($created_at));
-    $variables['date'] = \Drupal::service('date.formatter')->formatInterval(REQUEST_TIME - $date);
+    $request_time = \Drupal::time()->getRequestTime();
+    $variables['date'] = \Drupal::service('date.formatter')->formatInterval($request_time - $date);
     $variables['content']['items'][] = [
       'body' => $element['text'],
       'week' => $variables['date'],

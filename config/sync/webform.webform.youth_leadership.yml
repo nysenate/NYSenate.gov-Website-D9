@@ -31,17 +31,15 @@ elements: |-
       '#title': 'Student Phone Number'
       '#required': true
     school:
-      '#type': webform_entity_select
+      '#type': entity_autocomplete
       '#title': School
-      '#description': 'Start typing your school&#39;s name and choose from list. If your school does not show up, &lt;a href=&quot;/webforms/school-not-showing-contact-form&quot;&gt;please contact us&lt;/a&gt;.'
+      '#description': 'Start typing your school&#39;s name and choose from list. If your school does not show up, <a href="https://www.nysenate.gov/form/webform-6265124">please contact us</a>.'
       '#required': true
-      '#target_type': taxonomy_term
-      '#selection_handler': views
+      '#target_type': node
+      '#selection_handler': 'default:node'
       '#selection_settings':
-        view:
-          view_name: active_senators_reference
-          display_name: entity_reference_1
-          arguments: {  }
+        target_bundles:
+          school: school
     student_email:
       '#type': email
       '#title': 'Student Email'

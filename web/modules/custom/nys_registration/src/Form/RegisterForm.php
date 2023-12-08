@@ -190,7 +190,7 @@ class RegisterForm extends UserRegisterForm {
         '#button_type' => 'primary',
         '#value' => $this->t('Next'),
         '#submit' => ['::formSubmitStep1'],
-        '#validate' => ['::formValidateStep1'],
+        '#validate' => ['::formPreValidateStep1', '::formValidateStep1'],
       ],
     ];
 
@@ -236,6 +236,27 @@ class RegisterForm extends UserRegisterForm {
     }
 
     return $form;
+  }
+
+  /**
+   * Step 1 pre-validation handler.
+   *
+   * Cleans/sanitizes data prior to validation.
+   */
+  public function formPreValidateStep1(array &$form, FormStateInterface $form_state): void {
+    // Trim whitespace from Zipcode input.
+    $zip_raw = $form_state
+      ->getValue(['field_address', '0', 'address', 'postal_code']);
+    $zip_trimmed = trim($zip_raw);
+    if ($zip_raw && $zip_raw !== $zip_trimmed) {
+      $form_state
+        ->setValue([
+          'field_address',
+          '0',
+          'address',
+          'postal_code',
+        ], $zip_trimmed);
+    }
   }
 
   /**
@@ -289,12 +310,10 @@ class RegisterForm extends UserRegisterForm {
     $address = $form_state->getValue(['field_address', '0', 'address']) ?? [];
     $district_term = $this->helper->getDistrictFromAddress($address);
     $district_id = $district_term?->id();
-    $district_num = $district_term ? $district_term->field_district_number->value : 0;
     $senator = $district_term ? $district_term->get('field_senator')->entity : 0;
 
     // Record the district info in form state.
     $form_state->setValue('field_district', [$district_id])
-      ->set('senate_district', $district_num)
       ->set('district', $district_term);
     // Record the senator info in form state, and move to the next step.
     $form_state->setValue('field_senator', [$senator])
@@ -310,10 +329,17 @@ class RegisterForm extends UserRegisterForm {
    * Step 2 displays district info, and asks for confirmation.
    */
   public function formBuildStep2(array &$form, FormStateInterface $form_state): array {
-    $district = $form_state->get('senate_district') ?? 0;
+    $district = [];
+    $district_term = $form_state->get('district');
+    if ($district_term) {
+      $district['name'] = $district_term->name->value ?? '';
+      $district['field_map_url'] = $district_term->field_map_url->value ?? '';
+      $district['field_subheading'] = $district_term->field_subheading->value ?? '';
+      $district['field_district_number'] = $district_term->field_district_number->value ?? '';
+    }
+
     $senator = [];
     $senator_term = $form_state->get('senator');
-
     if ($senator_term) {
       $senator_name = $senator_term->get('field_senator_name')->getValue();
       $mid = $senator_term->get('field_member_headshot')->target_id;
@@ -352,13 +378,13 @@ class RegisterForm extends UserRegisterForm {
         '#submit' => ['::formSubmitStep2'],
       ],
     ];
-    if (!$senator_term) {
+    if (!$senator_term || !$district_term) {
       $form['#theme'] = 'register_form_step2_not_found';
     }
     else {
       $form['#theme'] = 'register_form_step2';
       $form['#attributes']['variables'] = [
-        'district_number' => $district,
+        'district' => json_encode($district),
         'senator' => json_encode($senator),
         'user' => json_encode($user),
       ];

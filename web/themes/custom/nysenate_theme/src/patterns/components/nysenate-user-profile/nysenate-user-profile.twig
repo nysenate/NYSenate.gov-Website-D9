@@ -3,7 +3,7 @@
 <div class="c-block c-login">
   <h3 class="nys-title">
     {{ 'This address is in Senate District'|t }}
-    {{ district_number }}
+    {{ district.field_district_number }}
   </h3>
   <p class="body">
     {{
@@ -39,12 +39,17 @@
         {% endfor %}
         <li>
           NY Senate District
-          {{ district_number }}
-          {% if senator.location %}
-            (<a href="{{ senator.location }}">Map</a>)
-          {% endif %}
+          {{ district.field_district_number }}
         </li>
       </ul>
     </div>
   </div>
+</div>
+<div>
+    {% include "@nysenate_theme/district/district.twig" with {
+        name: district.name,
+        video: district.field_map_url,
+        subhead: district.field_subheading,
+        view_mode: "user_registration"
+    } only %}
 </div>

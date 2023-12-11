@@ -7,10 +7,12 @@ dependencies:
     - field.field.taxonomy_term.issues.field_keywords
     - field.field.taxonomy_term.issues.field_majority_issue
     - field.field.taxonomy_term.issues.field_metatags
+    - field.field.taxonomy_term.issues.rabbit_hole__settings
     - taxonomy.vocabulary.issues
   module:
     - metatag
     - path
+    - rabbit_hole
     - text
 id: taxonomy_term.issues.default
 targetEntityType: taxonomy_term
@@ -69,6 +71,13 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  rabbit_hole__settings:
+    type: rabbit_hole_default
+    weight: 100
+    region: content
+    settings:
+      advanced: true
+    third_party_settings: {  }
   simple_sitemap:
     weight: 10
     region: content
@@ -83,3 +92,5 @@ content:
     third_party_settings: {  }
 hidden:
   field_drupal_6_tid: true
+  publish_on: true
+  unpublish_on: true

@@ -5,6 +5,7 @@ dependencies:
   config:
     - core.entity_form_mode.media.inline_entity
     - field.field.media.file.field_media_file
+    - field.field.media.file.rabbit_hole__settings
     - media.type.file
   module:
     - file
@@ -25,5 +26,10 @@ hidden:
   langcode: true
   name: true
   path: true
+  publish_on: true
+  rabbit_hole__settings: true
+  replace_file: true
+  scheduler_settings: true
   status: true
   uid: true
+  unpublish_on: true

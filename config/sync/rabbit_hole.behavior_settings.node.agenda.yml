@@ -1,0 +1,16 @@
+uuid: 11ea59ea-d790-433e-8755-07fc1a3156c4
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.agenda
+id: node.agenda
+targetEntityType: node
+bundle: agenda
+action: page_redirect
+no_bypass: false
+bypass_message: false
+configuration:
+  redirect: '<front>'
+  redirect_code: 301
+  redirect_fallback_action: access_denied

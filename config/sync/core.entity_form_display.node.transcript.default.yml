@@ -11,11 +11,12 @@ dependencies:
     - field.field.node.transcript.field_ol_session_type
     - field.field.node.transcript.field_ol_text
     - field.field.node.transcript.field_ol_transcript_type
+    - field.field.node.transcript.rabbit_hole__settings
     - node.type.transcript
   module:
     - datetime
     - path
-    - scheduler
+    - rabbit_hole
 id: node.transcript.default
 targetEntityType: node
 bundle: transcript
@@ -95,9 +96,15 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-  publish_on:
-    type: datetime_timestamp_no_default
-    weight: 15
+  rabbit_hole__settings:
+    type: rabbit_hole_default
+    weight: 100
+    region: content
+    settings:
+      advanced: true
+    third_party_settings: {  }
+  simple_sitemap:
+    weight: 10
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -126,12 +133,6 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-  unpublish_on:
-    type: datetime_timestamp_no_default
-    weight: 14
-    region: content
-    settings: {  }
-    third_party_settings: {  }
   url_redirects:
     weight: 12
     region: content
@@ -140,4 +141,6 @@ content:
 hidden:
   langcode: true
   promote: true
+  publish_on: true
   sticky: true
+  unpublish_on: true

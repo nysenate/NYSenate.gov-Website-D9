@@ -32,7 +32,7 @@ display:
     display_plugin: default
     position: 0
     display_options:
-      title: Upcoming
+      title: ''
       fields:
         field_date_range:
           id: field_date_range
@@ -871,7 +871,7 @@ display:
     display_plugin: block
     position: 1
     display_options:
-      title: 'Upcoming Legislative Events'
+      title: ''
       fields:
         title:
           id: title
@@ -1210,6 +1210,7 @@ display:
             operator: ''
             operator_limit_selection: false
             operator_list: {  }
+          accept_null: false
         type:
           id: type
           table: node_field_data
@@ -1385,6 +1386,7 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
+          accept_null: false
       filter_groups:
         operator: AND
         groups:

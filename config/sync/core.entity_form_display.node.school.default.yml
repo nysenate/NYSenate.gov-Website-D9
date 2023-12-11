@@ -19,12 +19,13 @@ dependencies:
     - field.field.node.school.field_school_needs_description
     - field.field.node.school.field_school_sub_type
     - field.field.node.school.field_school_type
+    - field.field.node.school.rabbit_hole__settings
     - node.type.school
   module:
     - address
     - field_group
     - path
-    - scheduler
+    - rabbit_hole
     - telephone
     - text
 third_party_settings:
@@ -222,9 +223,15 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-  publish_on:
-    type: datetime_timestamp_no_default
-    weight: 11
+  rabbit_hole__settings:
+    type: rabbit_hole_default
+    weight: 100
+    region: content
+    settings:
+      advanced: true
+    third_party_settings: {  }
+  simple_sitemap:
+    weight: 10
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -253,12 +260,6 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-  unpublish_on:
-    type: datetime_timestamp_no_default
-    weight: 12
-    region: content
-    settings: {  }
-    third_party_settings: {  }
   url_redirects:
     weight: 9
     region: content
@@ -267,4 +268,6 @@ content:
 hidden:
   langcode: true
   promote: true
+  publish_on: true
   sticky: true
+  unpublish_on: true

@@ -5,6 +5,7 @@ dependencies:
   config:
     - core.entity_form_mode.media.media_library
     - field.field.media.image.field_image
+    - field.field.media.image.rabbit_hole__settings
     - image.style.original
     - media.type.image
   module:
@@ -75,4 +76,8 @@ content:
     third_party_settings: {  }
 hidden:
   langcode: true
+  publish_on: true
+  rabbit_hole__settings: true
   replace_file: true
+  scheduler_settings: true
+  unpublish_on: true

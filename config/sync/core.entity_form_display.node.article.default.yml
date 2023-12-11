@@ -24,6 +24,7 @@ dependencies:
     - field.field.node.article.field_social_image
     - field.field.node.article.field_social_teaser
     - field.field.node.article.field_subtitle
+    - field.field.node.article.rabbit_hole__settings
     - node.type.article
   module:
     - datetime
@@ -31,7 +32,7 @@ dependencies:
     - inline_entity_form
     - media_library
     - path
-    - scheduler
+    - rabbit_hole
     - text
 third_party_settings:
   field_group:
@@ -369,11 +370,12 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-  publish_on:
-    type: datetime_timestamp_no_default
-    weight: 11
+  rabbit_hole__settings:
+    type: rabbit_hole_default
+    weight: 100
     region: content
-    settings: {  }
+    settings:
+      advanced: true
     third_party_settings: {  }
   simple_sitemap:
     weight: 10
@@ -405,12 +407,6 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-  unpublish_on:
-    type: datetime_timestamp_no_default
-    weight: 12
-    region: content
-    settings: {  }
-    third_party_settings: {  }
   url_redirects:
     weight: 8
     region: content
@@ -419,4 +415,6 @@ content:
 hidden:
   langcode: true
   promote: true
+  publish_on: true
   sticky: true
+  unpublish_on: true

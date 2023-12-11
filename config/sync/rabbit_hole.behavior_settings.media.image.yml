@@ -1,0 +1,16 @@
+uuid: bc4ddea3-1133-49bd-a635-223bda4a1a1d
+langcode: en
+status: true
+dependencies:
+  config:
+    - media.type.image
+id: media.image
+targetEntityType: media
+bundle: image
+action: page_redirect
+no_bypass: false
+bypass_message: false
+configuration:
+  redirect: '<front>'
+  redirect_code: 301
+  redirect_fallback_action: access_denied

@@ -19,6 +19,7 @@ dependencies:
     - field.field.node.session.field_video_redirect
     - field.field.node.session.field_video_status
     - field.field.node.session.field_yt
+    - field.field.node.session.rabbit_hole__settings
     - node.type.session
   module:
     - address
@@ -26,7 +27,7 @@ dependencies:
     - field_group
     - inline_entity_form
     - path
-    - scheduler
+    - rabbit_hole
     - text
     - viewsreference
 third_party_settings:
@@ -238,11 +239,12 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-  publish_on:
-    type: datetime_timestamp_no_default
-    weight: 13
+  rabbit_hole__settings:
+    type: rabbit_hole_default
+    weight: 100
     region: content
-    settings: {  }
+    settings:
+      advanced: true
     third_party_settings: {  }
   simple_sitemap:
     weight: 12
@@ -274,12 +276,6 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-  unpublish_on:
-    type: datetime_timestamp_no_default
-    weight: 14
-    region: content
-    settings: {  }
-    third_party_settings: {  }
   url_redirects:
     weight: 11
     region: content
@@ -288,4 +284,6 @@ content:
 hidden:
   langcode: true
   promote: true
+  publish_on: true
   sticky: true
+  unpublish_on: true

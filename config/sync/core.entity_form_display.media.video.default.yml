@@ -8,9 +8,11 @@ dependencies:
     - field.field.media.video.field_description
     - field.field.media.video.field_media_video_embed_field
     - field.field.media.video.field_source
+    - field.field.media.video.rabbit_hole__settings
     - media.type.video
   module:
     - path
+    - rabbit_hole
     - text
     - video_embed_field
 _core:
@@ -56,6 +58,13 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  rabbit_hole__settings:
+    type: rabbit_hole_default
+    weight: 100
+    region: content
+    settings:
+      advanced: true
+    third_party_settings: {  }
   status:
     type: boolean_checkbox
     weight: 100
@@ -68,4 +77,6 @@ hidden:
   field_caption: true
   field_source: true
   langcode: true
+  publish_on: true
   uid: true
+  unpublish_on: true

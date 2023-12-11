@@ -22,6 +22,7 @@ dependencies:
     - field.field.node.meeting.field_video_redirect
     - field.field.node.meeting.field_video_status
     - field.field.node.meeting.field_yt
+    - field.field.node.meeting.rabbit_hole__settings
     - node.type.meeting
   module:
     - conditional_fields
@@ -30,7 +31,7 @@ dependencies:
     - inline_entity_form
     - link
     - path
-    - scheduler
+    - rabbit_hole
     - text
 third_party_settings:
   field_group:
@@ -280,11 +281,12 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-  publish_on:
-    type: datetime_timestamp_no_default
-    weight: 12
+  rabbit_hole__settings:
+    type: rabbit_hole_default
+    weight: 100
     region: content
-    settings: {  }
+    settings:
+      advanced: true
     third_party_settings: {  }
   simple_sitemap:
     weight: 10
@@ -316,12 +318,6 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-  unpublish_on:
-    type: datetime_timestamp_no_default
-    weight: 13
-    region: content
-    settings: {  }
-    third_party_settings: {  }
   url_redirects:
     weight: 14
     region: content
@@ -330,4 +326,6 @@ content:
 hidden:
   langcode: true
   promote: true
+  publish_on: true
   sticky: true
+  unpublish_on: true

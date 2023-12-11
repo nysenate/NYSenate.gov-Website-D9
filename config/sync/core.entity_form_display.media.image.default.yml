@@ -4,11 +4,13 @@ status: true
 dependencies:
   config:
     - field.field.media.image.field_image
+    - field.field.media.image.rabbit_hole__settings
     - image.style.original
     - media.type.image
   module:
     - image_widget_crop
     - path
+    - rabbit_hole
 _core:
   default_config_hash: HOONWJBpk40U6cjWznjibtyVWblMQqV7TVQ3vs4OylM
 id: media.image.default
@@ -62,6 +64,13 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  rabbit_hole__settings:
+    type: rabbit_hole_default
+    weight: 100
+    region: content
+    settings:
+      advanced: true
+    third_party_settings: {  }
   status:
     type: boolean_checkbox
     weight: 100
@@ -80,4 +89,6 @@ content:
       placeholder: ''
     third_party_settings: {  }
 hidden:
+  publish_on: true
   replace_file: true
+  unpublish_on: true

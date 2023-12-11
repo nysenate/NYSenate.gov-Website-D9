@@ -35,6 +35,7 @@ dependencies:
     - field.field.taxonomy_term.senator.field_twitter_url
     - field.field.taxonomy_term.senator.field_user_account
     - field.field.taxonomy_term.senator.field_youtube_url
+    - field.field.taxonomy_term.senator.rabbit_hole__settings
     - taxonomy.vocabulary.senator
   module:
     - field_group
@@ -44,6 +45,7 @@ dependencies:
     - name
     - paragraphs
     - paragraphs_features
+    - rabbit_hole
     - telephone
     - text
 third_party_settings:
@@ -553,6 +555,13 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
+  rabbit_hole__settings:
+    type: rabbit_hole_default
+    weight: 100
+    region: content
+    settings:
+      advanced: true
+    third_party_settings: {  }
   simple_sitemap:
     weight: 9
     region: content
@@ -562,4 +571,6 @@ hidden:
   description: true
   langcode: true
   path: true
+  publish_on: true
   status: true
+  unpublish_on: true

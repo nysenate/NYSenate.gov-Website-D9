@@ -171,10 +171,6 @@ class RegisterForm extends UserRegisterForm {
     // The username will be auto-populated during creation.
     $form['account']['name']['#access'] = FALSE;
 
-    // Set temp username value to avoid validation errors.
-    $random = new Random();
-    $form['account']['name']['#default_value'] = $random->name();
-
     // These fields are not collected during registration.
     $disable = [
       'field_dateofbirth',
@@ -262,6 +258,14 @@ class RegisterForm extends UserRegisterForm {
           'address',
           'postal_code',
         ], $zip_trimmed);
+    }
+
+    // Set username to avoid validation error (this gets overriden by
+    // email_registration module).
+    $email = $form_state->getValue(['mail']);
+    if ($email) {
+      $username_from_email = explode('@', $email, 2)[0];
+      $form_state->setValue('name', $username_from_email);
     }
   }
 

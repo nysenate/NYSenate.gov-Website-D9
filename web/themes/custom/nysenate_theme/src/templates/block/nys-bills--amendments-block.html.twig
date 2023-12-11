@@ -36,34 +36,36 @@
       <!-- Bill Co/Multi Sponsors -->
       <div class="c-block c-detail--sponsors c-bill-section">
         {% if amendment.sponsors_array.co|length > 0 or amendment.sponsors_array.multi|length > 0 %}
-          {% for key,list in amendment.sponsors_array|filter(list|length > 0) %}
-            <div class="c-{{ key }}-sponsors c-sponsors-detail">
-              <h3 class="c-detail--subhead c-detail--section-title c-bill-detail--subhead">{{ key }}-Sponsors</h3>
-              <div class="initial_{{ key }}-sponsors">
-                {% for item in list[0:4] %}
-                  {{ item }}
-                {% endfor %}
-              </div>
-              {% if list[4:]|length > 1 %}
-                <div class="other_{{ key }}-sponsors">
-                  <article class="nysenate-accordion">
-                    <button type="button" class="nysenate-accordion__toggle" aria-controls="nysenate-accordion__content-1-sponsors" aria-expanded="false" id="nysenate-accordion__toggle-1-sponsors" aria-selected="false">
-                      <span class="nysenate-accordion__heading hide-number">
-                        <span class="indicator">View
-                        </span>additional
-                        {{ key }}-sponsors
-                      </span>
-                      {{ icons.get('accordion__arrow'|lower) }}
-                    </button>
-                    <div class="nysenate-accordion__content" id="nysenate-accordion__content-1-sponsors" aria-hidden="true" aria-labelledby="nysenate-accordion__content-1-sponsors">
-                      {% for item in list[4:] %}
-                        {{ item }}
-                      {% endfor %}
-                    </div>
-                  </article>
+          {% for key, list in amendment.sponsors_array %}
+            {% if list|length > 0 %}
+              <div class="c-{{ key }}-sponsors c-sponsors-detail">
+                <h3 class="c-detail--subhead c-detail--section-title c-bill-detail--subhead">{{ key }}-Sponsors</h3>
+                <div class="initial_{{ key }}-sponsors">
+                  {% for item in list[0:4] %}
+                    {{ item }}
+                  {% endfor %}
                 </div>
-              {% endif %}
-            </div>
+                {% if list[4:]|length > 1 %}
+                  <div class="other_{{ key }}-sponsors">
+                    <article class="nysenate-accordion">
+                      <button type="button" class="nysenate-accordion__toggle" aria-controls="nysenate-accordion__content-1-sponsors" aria-expanded="false" id="nysenate-accordion__toggle-1-sponsors" aria-selected="false">
+                        <span class="nysenate-accordion__heading hide-number">
+                          <span class="indicator">View
+                          </span>additional
+                          {{ key }}-sponsors
+                        </span>
+                        {{ icons.get('accordion__arrow'|lower) }}
+                      </button>
+                      <div class="nysenate-accordion__content" id="nysenate-accordion__content-1-sponsors" aria-hidden="true" aria-labelledby="nysenate-accordion__content-1-sponsors">
+                        {% for item in list[4:] %}
+                          {{ item }}
+                        {% endfor %}
+                      </div>
+                    </article>
+                  </div>
+                {% endif %}
+              </div>
+            {% endif %}
           {% endfor %}
         {% endif %}
       </div>

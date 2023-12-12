@@ -6246,6 +6246,10 @@ function nysenate_theme_preprocess_webform_confirmation(&$variables) {
     }
   }
   $variables['student_submissions'] = $submissions;
+
+  // Set confirmation page title
+  $confirmation_page_title = $variables['webform']->getSettings()['confirmation_title'] ?? '';
+  $variables['confirmation_page_title'] = $confirmation_page_title;
 }
 
 /**

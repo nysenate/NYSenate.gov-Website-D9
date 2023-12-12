@@ -1,61 +1,90 @@
-uuid: 9317c15d-4fba-4ee5-9d0e-7a5ed73e5ab6
+uuid: a1fc2ecc-2393-4b52-b4a9-9ae660f6ca9c
 langcode: en
 status: true
 dependencies:
   config:
     - filter.format.full_html
   module:
-    - ckeditor
-_core:
-  default_config_hash: hmreJS472fteSsxIGuF6GJiR6kD1lvX2yZSv-KRJq1s
+    - ckeditor5
 format: full_html
-editor: ckeditor
+editor: ckeditor5
 settings:
   toolbar:
-    rows:
-      -
-        -
-          name: Formatting
-          items:
-            - Bold
-            - Italic
-            - '-'
-        -
-          name: Linking
-          items:
-            - DrupalLink
-            - DrupalUnlink
-        -
-          name: Lists
-          items:
-            - BulletedList
-            - NumberedList
-            - Outdent
-        -
-          name: Media
-          items:
-            - DrupalImage
-            - DrupalMediaLibrary
-        -
-          name: 'Block Formatting'
-          items:
-            - Format
-        -
-          name: Tools
-          items:
-            - Table
-            - HorizontalRule
-            - ShowBlocks
-            - Source
-        -
-          name: Styles
-          items:
-            - Blockquote
-            - Styles
+    items:
+      - bold
+      - italic
+      - '|'
+      - link
+      - '|'
+      - bulletedList
+      - numberedList
+      - outdent
+      - '|'
+      - drupalInsertImage
+      - drupalMedia
+      - '|'
+      - heading
+      - codeBlock
+      - '|'
+      - insertTable
+      - horizontalLine
+      - sourceEditing
+      - '|'
+      - blockQuote
+      - style
   plugins:
-    stylescombo:
-      styles: "a.c-paragraph--more-link.a-left|More Link Left\r\na.c-paragraph--more-link.a-right|More Link Right\r\na.nys-btn--gold|Large Button Gold\r\na.nys-btn--blue|Large Button Blue\r\na.c-btn--small-blue|Small Button Blue\r\np.nospace|Paragraph No Space\r\nh2.c-container--h2-title|H2 Container\r\na.c-container--link|H2 Container Link\r\np.c-pullquote--citation|Quote Citation\r\nul.c-block--about-seal|List style\r\ndiv.c-block--background|Gray Text Box"
-    drupallink:
+    ckeditor5_heading:
+      enabled_headings:
+        - heading2
+        - heading3
+        - heading4
+        - heading5
+        - heading6
+    ckeditor5_style:
+      styles:
+        -
+          label: 'More Link Left'
+          element: '<a class="c-paragraph--more-link a-left">'
+        -
+          label: 'More Link Right'
+          element: '<a class="c-paragraph--more-link a-right">'
+        -
+          label: 'Large Button Gold'
+          element: '<a class="nys-btn--gold">'
+        -
+          label: 'Large Button Blue'
+          element: '<a class="nys-btn--blue">'
+        -
+          label: 'Small Button Blue'
+          element: '<a class="c-btn--small-blue">'
+        -
+          label: 'Paragraph No Space'
+          element: '<p class="nospace">'
+        -
+          label: 'H2 Container'
+          element: '<h2 class="c-container--h2-title">'
+        -
+          label: 'H2 Container Link'
+          element: '<a class="c-container--link">'
+        -
+          label: 'Quote Citation'
+          element: '<p class="c-pullquote--citation">'
+        -
+          label: 'List style'
+          element: '<ul class="c-block--about-seal">'
+        -
+          label: 'Gray Text Box'
+          element: '<div class="c-block--background">'
+    ckeditor5_sourceEditing:
+      allowed_tags: {  }
+    ckeditor5_list:
+      reversed: true
+      startIndex: true
+    ckeditor5_imageResize:
+      allow_resize: true
+    media_media:
+      allow_view_mode_override: false
+    linkit_extension:
       linkit_enabled: true
       linkit_profile: default
 image_upload:
@@ -64,5 +93,5 @@ image_upload:
   directory: inline-images
   max_size: ''
   max_dimensions:
-    width: null
-    height: null
+    width: 0
+    height: 0

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5e9f3d70cb5bcc405232881eea4ab722",
+    "content-hash": "27f16e64868f4181151ca7be0c68e93f",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -12942,6 +12942,69 @@
                 "issues": "https://www.drupal.org/project/issues/webform?version=8.x",
                 "docs": "https://www.drupal.org/docs/8/modules/webform",
                 "forum": "https://drupal.stackexchange.com/questions/tagged/webform"
+            }
+        },
+        {
+            "name": "drupal/webform_analysis",
+            "version": "1.0.0-beta10",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/webform_analysis.git",
+                "reference": "8.x-1.0-beta10"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/webform_analysis-8.x-1.0-beta10.zip",
+                "reference": "8.x-1.0-beta10",
+                "shasum": "89db65f24b4cb9e6dc5cdc7f5dedea1e4d4d5d15"
+            },
+            "require": {
+                "drupal/core": "^8.8 || ^9 ||^10",
+                "drupal/webform": "*"
+            },
+            "require-dev": {
+                "drupal/webform": "^5.6 || ^6",
+                "drupal/webform_node": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-1.0-beta10",
+                    "datestamp": "1696752502",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Project has not opted into security advisory coverage!"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Laurent BARAN (lbaran)",
+                    "homepage": "https://www.drupal.org/u/lbaran",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "fabianderijk",
+                    "homepage": "https://www.drupal.org/user/278745"
+                },
+                {
+                    "name": "lbaran",
+                    "homepage": "https://www.drupal.org/user/3368098"
+                },
+                {
+                    "name": "llewellyn.dawson",
+                    "homepage": "https://www.drupal.org/user/3741706"
+                }
+            ],
+            "description": "This module is used to obtain statistics on the results of form submissions.",
+            "homepage": "https://drupal.org/project/webform_analysis",
+            "support": {
+                "source": "https://git.drupalcode.org/project/webform_analysis",
+                "issues": "https://www.drupal.org/project/issues/webform_analysis"
             }
         },
         {

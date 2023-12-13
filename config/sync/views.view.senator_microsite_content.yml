@@ -36,6 +36,7 @@ dependencies:
     - options
     - taxonomy
     - user
+    - views_infinite_scroll
 id: senator_microsite_content
 label: 'Microsite Content'
 module: views
@@ -3539,7 +3540,7 @@ display:
           separator: ', '
           field_api_classes: false
       pager:
-        type: full
+        type: infinite_scroll
         options:
           offset: 0
           items_per_page: 5
@@ -3548,8 +3549,6 @@ display:
           tags:
             next: 'Next ›'
             previous: '‹ Previous'
-            first: '« First'
-            last: 'Last »'
           expose:
             items_per_page: false
             items_per_page_label: 'Items per page'
@@ -3558,7 +3557,10 @@ display:
             items_per_page_options_all_label: '- All -'
             offset: false
             offset_label: Offset
-          quantity: 9
+          views_infinite_scroll:
+            button_text: 'Load More'
+            automatically_load_content: false
+            initially_load_all_pages: false
       exposed_form:
         type: bef
         options:

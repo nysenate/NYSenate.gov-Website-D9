@@ -2,11 +2,10 @@
 
 /**
  * @file
- * A pantheon quicksilver script to run when code has been deployed via the UI.
+ * Default commands for Quicksilver on Pantheon.
  *
  * See https://docs.pantheon.io/guides/quicksilver.
  */
-
 require_once 'inc/copyGinCss.php';
 
 $drushCommands = [

@@ -111,7 +111,7 @@
         </article>
       {% else %}
         <div class="{% if loop.first %} first {% endif %} {% if loop.index is even %} u-even even {% else %} u-odd odd {% endif %}">
-          <article class="c-block c-list-item c-legislation-block">
+          <article class="c-block c-list-item c-legislation-block c-legislation-landing">
             <div class="c-bill-meta">
               <h3 class="c-bill-num">
                 <a href="{{ item.bill_url }}">{{ item.bill_number }}</a>
@@ -123,11 +123,18 @@
               {% if item.bill_positions %}
                 {% include '@nysenate_theme/src/templates/includes/nys-bill-status.html.twig' with {positions: item.bill_positions, is_small: true} only %}
               {% endif %}
+
               <div class="c-bill-update">
                 <p class="c-bill-update--date">
                   <span class="date-display-single">{{ item.bill_date }}</span>
                 </p>
-                <p class="c-bill-update--location">{{ item.bill_status }}</p>
+                <p class="c-bill-update--location">
+                  <span>{{ item.bill_status }}
+                    {% if item.bill_committee_link %}
+                      <a class="committee-link" href="{{ item.bill_committee_link.url }}">{{ item.bill_committee_link.text }}</a>
+                    {% endif %}
+                  </span>
+                </p>
               </div>
             </div>
           </article>

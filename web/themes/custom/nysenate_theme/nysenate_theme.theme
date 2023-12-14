@@ -687,12 +687,29 @@ function nysenate_theme_preprocess_block_content__featured_legislation(&$variabl
         if ($bill->hasField('field_ol_last_status') && !$bill->get('field_ol_last_status')->isEmpty()) {
           $last_status = $allowed_values[$bill->field_ol_last_status->value];
         }
+
+        $committee_link = '';
+        if ($bill->hasField('field_ol_latest_status_committee') &&
+          !$bill->get('field_ol_latest_status_committee')->isEmpty() &&
+          $last_status == 'In Senate Committee') {
+          $committee = $bill->field_ol_latest_status_committee->value;
+          $link = '/committees/' .
+            strtolower(str_replace([',', ' '], ['', '-'], $committee));
+          $committee_link = [
+            'url' => $link,
+            'text' => $committee . ' Committee',
+          ];
+        }
+
         $bills[] = [
           'bill' => [
             'featured' => TRUE,
             'small' => FALSE,
             'is_poll' => TRUE,
+            'list' => FALSE,
             'resolution' => TRUE,
+            'bundle' => "bill",
+            'committee_link' => $committee_link,
             'link' => $bill->toUrl()->toString(),
             'number' => $bill->getTitle(),
             'description_position' => 'bottom',
@@ -1244,6 +1261,19 @@ function nysenate_theme_preprocess_paragraph(&$variables) {
       // @phpstan-ignore-next-line
       $last_status = $allowed_values[$bill->field_ol_last_status->value];
     }
+
+    $committee_link = '';
+    if ($bill->hasField('field_ol_latest_status_committee') &&
+      !$bill->get('field_ol_latest_status_committee')->isEmpty() &&
+      $last_status == 'In Senate Committee') {
+      $committee = $bill->field_ol_latest_status_committee->value;
+      $link = '/committees/' .
+        strtolower(str_replace([',', ' '], ['', '-'], $committee));
+      $committee_link = [
+        'url' => $link,
+        'text' => $committee . ' Committee',
+      ];
+    }
     // @phpstan-ignore-next-line
     $bill_title = $bill->getTitle();
     $bills[] = [
@@ -1253,6 +1283,8 @@ function nysenate_theme_preprocess_paragraph(&$variables) {
         'is_poll' => TRUE,
         'resolution' => TRUE,
         'link' => $bill->toUrl()->toString(),
+        'committee_link' => $committee_link,
+        'bundle' => "bill",
         'number' => $bill_title,
         'description_position' => 'bottom',
         'description' => !empty($bill->field_ol_name->value) ? $bill->field_ol_name->value : '',
@@ -1562,6 +1594,19 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
         $last_status = $allowed_values[$node->field_ol_last_status->value];
       }
 
+      $committee_link = '';
+      if ($node->hasField('field_ol_latest_status_committee') &&
+        !$node->get('field_ol_latest_status_committee')->isEmpty() &&
+        $last_status == 'In Senate Committee') {
+        $committee = $node->field_ol_latest_status_committee->value;
+        $link = '/committees/' .
+          strtolower(str_replace([',', ' '], ['', '-'], $committee));
+        $committee_link = [
+          'url' => $link,
+          'text' => $committee . ' Committee',
+        ];
+      }
+
       $items[] = [
         'bill_number' => $node->getTitle(),
         'bill_url' => $node->toUrl()->toString(),
@@ -1569,6 +1614,7 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
         'bill_date' => !empty($published_date) ? \Drupal::service('date.formatter')->format(strtotime($published_date), '', 'F d, Y') : '',
         'bill_positions' => nysenate_bill_positions($node),
         'bill_status' => $last_status,
+        'bill_committee_link' => $committee_link,
       ];
     }
     $variables['cta_url'] = $aliased_path . '/legislation';
@@ -1695,7 +1741,8 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
       // Published date.
       $date = '';
       if ($node->hasField('field_ol_publish_date') && !$node->get('field_ol_publish_date')->isEmpty()) {
-        $date = \Drupal::service('date.formatter')->format(strtotime($node->field_ol_publish_date->value), '', 'F d, Y');
+        $date = \Drupal::service('date.formatter')
+          ->format(strtotime($node->field_ol_publish_date->value), '', 'F d, Y');
       }
 
       // Last status.
@@ -1705,11 +1752,39 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
         $last_status = !empty($node->field_ol_last_status->value) ? $last_status_values[$node->field_ol_last_status->value] : '';
       }
 
+      $resolution_last_status = '';
+      if ($bundle = 'resolution') {
+        if ($node->hasField('field_ol_all_statuses') && !$node->get('field_ol_all_statuses')->isEmpty()) {
+          $all_statuses = json_decode($node->field_ol_all_statuses->value);
+          if (!empty($all_statuses)) {
+            $resolution_status = array_pop($all_statuses->items);
+            if (isset($resolution_status->text)) {
+              $resolution_last_status = $resolution_status->text;
+            }
+          }
+        }
+      }
+
+      $committee_link = '';
+      if ($node->hasField('field_ol_latest_status_committee') &&
+        !$node->get('field_ol_latest_status_committee')->isEmpty() &&
+        $last_status == 'In Senate Committee') {
+        $committee = $node->field_ol_latest_status_committee->value;
+        $link = '/committees/' .
+          strtolower(str_replace([',', ' '], ['', '-'], $committee));
+        $committee_link = [
+          'url' => $link,
+          'text' => $committee . ' Committee',
+        ];
+      }
+
       $bill = [
         'featured' => FALSE,
         'small' => TRUE,
         'is_poll' => FALSE,
+        'list' => TRUE,
         'resolution' => FALSE,
+        'resolution_last_status' => $resolution_last_status,
         'link' => $node->toUrl()->toString(),
         'number' => $node->getTitle(),
         'description_position' => 'top',
@@ -1717,6 +1792,8 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
         'date' => $date,
         'update_location' => $last_status,
         'positions' => nysenate_bill_positions($node),
+        'committee_link' => $committee_link,
+        'bundle' => $bundle,
       ];
 
       $contents[] = [

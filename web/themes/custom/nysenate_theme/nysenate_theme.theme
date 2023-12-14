@@ -1579,6 +1579,7 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
     $items = [];
     foreach ($view->result as $row) {
       $node = $row->_entity;
+      $bundle = $node->bundle();
       $allowed_values = '';
       if ($node->hasField('field_ol_last_status')) {
         $allowed_values = $node->field_ol_last_status->getSetting('allowed_values');
@@ -1607,6 +1608,19 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
         ];
       }
 
+      $resolution_last_status = '';
+      if ($bundle == 'resolution') {
+        if ($node->hasField('field_ol_all_statuses') && !$node->get('field_ol_all_statuses')->isEmpty()) {
+          $all_statuses = json_decode($node->field_ol_all_statuses->value);
+          if (!empty($all_statuses)) {
+            $resolution_status = array_pop($all_statuses->items);
+            if (isset($resolution_status->text)) {
+              $resolution_last_status = $resolution_status->text;
+            }
+          }
+        }
+      }
+
       $items[] = [
         'bill_number' => $node->getTitle(),
         'bill_url' => $node->toUrl()->toString(),
@@ -1615,6 +1629,8 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
         'bill_positions' => nysenate_bill_positions($node),
         'bill_status' => $last_status,
         'bill_committee_link' => $committee_link,
+        'bill_resolution_last_status' => $resolution_last_status,
+        'bill_bundle' => $bundle,
       ];
     }
     $variables['cta_url'] = $aliased_path . '/legislation';

@@ -57,23 +57,22 @@ p.c-bill-update--date {
     .c-bill-descript {
       font-weight: 400;
     }
-      p.c-bill-update--date {
-        display: inline-block;
-        margin: 0 0.25em 0 0;
-        font-family: $font-sans;
-        font-size: 14px;
-      }
-      .c-bill-update--location {
-        margin: 0;
-        font-family: $font-sans;
-        font-size: 14px;
-        line-height: 1.4;
-        &:before {
-          content: "|";
-          display: inline-block;
-          margin-right: 0.5em;
-        }
-      }
+    .c-bill-update{
+      display: block;
+    }
+    p.c-bill-update--date {
+      display: inline;
+      margin: 0 0.25em 0 0;
+      font-family: $font-sans;
+      font-size: 14px;
+    }
+    .c-bill-update--location {
+      margin: 0;
+      font-family: $font-sans;
+      font-size: 14px;
+      line-height: 1.4;
+      display: inline;
+    }
   }
 
   &.c-block-legislation-featured {

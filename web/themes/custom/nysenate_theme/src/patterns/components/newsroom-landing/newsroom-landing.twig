@@ -128,13 +128,20 @@
                 <p class="c-bill-update--date">
                   <span class="date-display-single">{{ item.bill_date }}</span>
                 </p>
+              {% if item.bill_status %}
                 <p class="c-bill-update--location">
-                  <span>{{ item.bill_status }}
-                    {% if item.bill_committee_link %}
-                      <a class="committee-link" href="{{ item.bill_committee_link.url }}">{{ item.bill_committee_link.text }}</a>
-                    {% endif %}
+                    <span> | {{ item.bill_status }}
+                      {{ item.bill_resolution_last_status }}
+                  {% if item.bill_committee_link %}
+                    <a class="committee-link" href="{{ item.bill_committee_link.url }}">{{ item.bill_committee_link.text }}</a>
+                  {% endif %}
                   </span>
                 </p>
+                {% else %}
+                <p class="c-bill-update--location">
+                  <span> | {{ item.bill_resolution_last_status }} </span>
+                </p>
+              {% endif %}
               </div>
             </div>
           </article>

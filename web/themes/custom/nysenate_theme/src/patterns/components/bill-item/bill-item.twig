@@ -93,7 +93,7 @@
       {% if bill.sponsor %}
         <div class="sponsors {{ bill.sponsor_modifier }}">
           <span>{{ bill.sponsor_text|default('Sponsored by') }}</span>
-          <span class="sponsor-name">{{ bill.sponsor }}</span>
+            <span class="sponsor-name"><a href="{{ bill.sponsor_link }}">{{ bill.sponsor }}</a></span>
         </div>
       {% endif %}
 

@@ -120,8 +120,10 @@
             </div>
             <div class="c-bill-body">
               <h4 class="c-bill-descript">{{ item.bill_description }}</h4>
-              {% if item.bill_positions %}
-                {% include '@nysenate_theme/src/templates/includes/nys-bill-status.html.twig' with {positions: item.bill_positions, is_small: true} only %}
+              {% if item.bill_bundle == 'bill' %}
+                {% if item.bill_positions %}
+                  {% include '@nysenate_theme/src/templates/includes/nys-bill-status.html.twig' with {positions: item.bill_positions, is_small: true} only %}
+                {% endif %}
               {% endif %}
 
               <div class="c-bill-update">

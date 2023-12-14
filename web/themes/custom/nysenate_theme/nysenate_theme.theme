@@ -1769,7 +1769,7 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
       }
 
       $resolution_last_status = '';
-      if ($bundle = 'resolution') {
+      if ($bundle == 'resolution') {
         if ($node->hasField('field_ol_all_statuses') && !$node->get('field_ol_all_statuses')->isEmpty()) {
           $all_statuses = json_decode($node->field_ol_all_statuses->value);
           if (!empty($all_statuses)) {
@@ -4877,7 +4877,7 @@ function nysenate_theme_preprocess_node__view__homepage_news__hp_featured_storie
 function nysenate_theme_preprocess_node__view__constituent_bills__constituent_bills_voted_on(&$variables) {
 
   $node = $variables['node'];
-
+  $bundle = $node->bundle();
   // Last status.
   $last_status_values = $node->field_ol_last_status->getSetting('allowed_values');
   $last_status = !empty($node->field_ol_last_status->value) ? $last_status_values[$node->field_ol_last_status->value] : '';
@@ -4924,11 +4924,14 @@ function nysenate_theme_preprocess_node__view__constituent_bills__constituent_bi
       ->load($node->field_ol_sponsor->target_id);
   }
 
+  $sponsor_link = \Drupal::service('nys_senators.microsites')
+    ->getMicrosite($sponsor);
+  $variables['sponsor_link'] = $sponsor_link;
+
   if (!empty($sponsor)) {
     $given = $sponsor->field_senator_name->given ?? '';
     $family = $sponsor->field_senator_name->family ?? '';
     $sponsor_name = $given . ' ' . $family;
-    $sponsor_name = Link::fromTextAndUrl($sponsor_name, $sponsor->toURL());
   }
 
   /** @var \Drupal\votingapi\VoteStorage $vote_storage */
@@ -4962,6 +4965,7 @@ function nysenate_theme_preprocess_node__view__constituent_bills__constituent_bi
     'small' => FALSE,
     'is_poll' => TRUE,
     'resolution' => TRUE,
+    'bundle' => $bundle,
     'hide_subscribe' => TRUE,
     'node_id' => $node->id(),
     'link' => $node->toUrl()->toString(),
@@ -4974,6 +4978,7 @@ function nysenate_theme_preprocess_node__view__constituent_bills__constituent_bi
     'positions' => nysenate_bill_positions($node),
     'issues' => $issues,
     'sponsor' => $sponsor_name,
+    'sponsor_link' => $sponsor_link,
     'sponsor_text' => 'SPONSORS',
     'poll_text' => $poll_text,
     'action' => \Drupal::service('path.current')->getPath(),

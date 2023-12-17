@@ -17,14 +17,14 @@ class ConditionalLogger extends LoggerChannel {
    *
    * @var int
    */
-  public static int $defaultLogLevel = RfcLogLevel::WARNING;
+  public static int $defaultLogLevel = RfcLogLevel::NOTICE;
 
   /**
    * The current log level.
    *
    * @var int
    */
-  protected int $logLevel = RfcLogLevel::WARNING;
+  protected int $logLevel = RfcLogLevel::NOTICE;
 
   /**
    * Config for openleg_api.settings.

@@ -2,10 +2,11 @@
 
 namespace Drupal\nys_openleg_imports;
 
+use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Core\Logger\LoggerChannel;
+use Drupal\nys_openleg_api\Plugin\OpenlegApi\Response\ResponseSearch;
 use Drupal\nys_openleg_api\Plugin\OpenlegApi\Response\ResponseUpdate;
 use Drupal\nys_openleg_api\Request;
-use Drupal\nys_openleg_api\Plugin\OpenlegApi\Response\ResponseSearch;
 use Drupal\nys_openleg_api\Service\Api;
 use Drupal\nys_openleg_imports\Service\OpenlegImportProcessorManager;
 use Psr\Log\LoggerInterface;
@@ -59,13 +60,6 @@ abstract class ImporterBase implements ImporterInterface {
   protected LoggerInterface $logger;
 
   /**
-   * An Openleg API Request instance.
-   *
-   * @var \Drupal\nys_openleg\Api\RequestPluginInterface
-   */
-  protected RequestPluginInterface $requester;
-
-  /**
    * The results of the most recent operation.
    *
    * @var \Drupal\nys_openleg_imports\ImportResult
@@ -88,14 +82,13 @@ abstract class ImporterBase implements ImporterInterface {
    * @param array $configuration
    *   The plugin's configuration.
    */
-  public function __construct(ApiManager $api_manager, OpenlegImportProcessorManager $processorManager, LoggerChannel $logger, array $plugin_definition, string $plugin_id, array $configuration = []) {
+  public function __construct(Api $api_manager, OpenlegImportProcessorManager $processorManager, LoggerChannel $logger, array $plugin_definition, string $plugin_id, array $configuration = []) {
     $this->definition = $plugin_definition;
     $this->pluginId = $plugin_id;
     $this->config = $configuration;
     $this->apiManager = $api_manager;
     $this->processorManager = $processorManager;
     $this->logger = $logger;
-    $this->requester = $this->apiManager->getRequest($this->definition['requester']);
   }
 
   /**
@@ -116,11 +109,9 @@ abstract class ImporterBase implements ImporterInterface {
    * {@inheritDoc}
    */
   public function importUpdates(string $time_from, string $time_to): ImportResult {
-    /**
-     * @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseUpdate $updates
-     */
-    $updates = $this->requester->retrieveUpdates($time_from, $time_to);
-    return $this->import($updates->listIds());
+    $updates = $this->apiManager->getUpdates($this->getRequesterName(), $time_from, $time_to);
+    $items = ($updates instanceof ResponseUpdate) ? $updates->listIds() : [];
+    return $this->import($items);
   }
 
   /**
@@ -128,6 +119,17 @@ abstract class ImporterBase implements ImporterInterface {
    */
   public function importItem(string $name): ImportResult {
     return $this->import([$name]);
+  }
+
+  /**
+   * Imports all items for a single year.
+   *
+   * Note that this is a calendar year, not a legislative session year.
+   */
+  public function importYear(string $year): ImportResult {
+    $items = $this->apiManager->get($this->getRequesterName(), (int) $year, ['limit' => 0]);
+    $ids = ($items instanceof ResponseSearch) ? $items->getIdFromYearList() : [];
+    return $this->import($ids);
   }
 
   /**
@@ -152,13 +154,17 @@ abstract class ImporterBase implements ImporterInterface {
    * @throws \Drupal\Component\Plugin\Exception\PluginException
    */
   protected function getProcessor(): ImportProcessorBase {
-    return $this->processorManager->createInstance($this->pluginId, $this->config);
+    $ret = $this->processorManager->createInstance($this->pluginId, $this->config);
+    if (!($ret instanceof ImportProcessorBase)) {
+      throw new PluginException('Failed to instantiate import processor for "' . $this->pluginId . '"');
+    }
+    return $ret;
   }
 
   /**
-   * Gets the name of the requester this importer uses.
+   * Gets the name of the requester, based on the importer's definition.
    */
-  public function getRequester(): string {
+  public function getRequesterName(): string {
     return $this->definition['requester'] ?? '';
   }
 
@@ -168,27 +174,29 @@ abstract class ImporterBase implements ImporterInterface {
   public function import(array $items): ImportResult {
     // Init and report.
     $this->results = $this->getResult();
-    $this->logger->info(
-          "[@time] Beginning processing of @total @type items", [
-            '@total' => count($items),
-            '@type' => $this->pluginId,
-            '@time' => date(Request::OPENLEG_TIME_SIMPLE, time()),
-          ]
-      );
+    $this->logger->notice(
+      "[@time] Beginning processing of @total @type items", [
+        '@total' => count($items),
+        '@type' => $this->pluginId,
+        '@time' => date(Request::OPENLEG_TIME_SIMPLE, time()),
+      ]
+    );
 
     // Iterate the items.  Success/fail/exceptions are tracked.
     foreach ($items as $item_name) {
       try {
-        $full_item = $this->requester->retrieve($item_name);
-        $processor = $this->getProcessor()->init($full_item);
+        $full_item = $this->apiManager->get($this->getRequesterName(), $item_name);
         if (!$full_item->success()) {
+          $msg = $full_item->message() ?? 'no message';
           $this->logger->error(
-                'API call to retrieve @name failed', [
-                  '@name' => $item_name,
-                  '@response' => var_export($full_item, 1),
-                ]
-            );
+            'API call to retrieve @name failed (@msg)', [
+              '@name' => $item_name,
+              '@response' => var_export($full_item, 1),
+              '@msg' => $msg,
+            ]
+          );
         }
+        $processor = $this->getProcessor()->init($full_item);
         $success = $full_item->success() && $processor->process();
       }
       catch (\Throwable $e) {
@@ -199,7 +207,7 @@ abstract class ImporterBase implements ImporterInterface {
 
       if ($success) {
         $this->results->addSuccess();
-        $this->logger->info(" - @name imported successfully.", ['@name' => $item_name]);
+        $this->logger->notice(" - @name imported successfully.", ['@name' => $item_name]);
       }
       else {
         $this->results->addFail();
@@ -232,50 +240,9 @@ abstract class ImporterBase implements ImporterInterface {
       $type = 'error';
     }
     else {
-      $type = $this->results->getFail() ? 'warning' : 'info';
+      $type = $this->results->getFail() ? 'warning' : 'notice';
     }
     $this->logger->$type($message, $params);
   }
-
-  /**
-   * Given an Openleg search response, returns a unique array of IDs.
-   */
-  public function getIdFromSearchList(ResponseSearch $response): array {
-    return array_unique(
-          array_filter(
-              array_map(
-                  function ($v) {
-                        return $this->id($v->result);
-                  },
-                  $response->items()
-              )
-          )
-      );
-  }
-
-  /**
-   * Generates an array of IDs from a list of calendars in a calendar year.
-   */
-  public function getIdFromYearList(ResponseSearch $response): array {
-    return array_unique(
-          array_filter(
-              array_map(
-                  [$this, 'id'],
-                  $response->items()
-              )
-          )
-      );
-  }
-
-  /**
-   * Gets the unique OpenLeg ID for a list item.
-   *
-   * @param object $item
-   *   An item from an OpenLeg "list"-style response.
-   *
-   * @return string
-   *   The unique ID, suitable for the "name" portion of a request.
-   */
-  abstract public function id(object $item): string;
 
 }

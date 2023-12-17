@@ -9,20 +9,12 @@ use Drupal\Core\Config\ImmutableConfig;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Logger\RfcLogLevel;
-use Drupal\Core\ProxyClass\Routing\RouteBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Configuration form for nys_openleg module.
+ * Configuration form for nys_openleg_api module.
  */
 class ConfigForm extends ConfigFormBase {
-
-  /**
-   * Drupal's route builder service.
-   *
-   * @var \Drupal\Core\ProxyClass\Routing\RouteBuilder
-   */
-  protected RouteBuilder $builder;
 
   /**
    * A shortcut to the nys_openleg_api.settings config collection.
@@ -41,8 +33,7 @@ class ConfigForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function __construct(ConfigFactoryInterface $config_factory, ImmutableConfig $config, RouteBuilder $builder) {
-    $this->builder = $builder;
+  public function __construct(ConfigFactoryInterface $config_factory, ImmutableConfig $config) {
     $this->configOverrides = $config;
     parent::__construct($config_factory);
 
@@ -55,8 +46,7 @@ class ConfigForm extends ConfigFormBase {
   public static function create(ContainerInterface $container): static {
     return new static(
       $container->get('config.factory'),
-      $container->get('openleg_api.config'),
-      $container->get('router.builder')
+      $container->get('openleg_api.config')
     );
   }
 
@@ -71,7 +61,7 @@ class ConfigForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state): array {
-    $form['#attached'] = ['library' => ['nys_openleg/openleg']];
+    $form['#attached'] = ['library' => ['nys_openleg_api/openleg_api']];
 
     // Check for an API key override.  Need to use the immutable config.
     $apikey = $this->configOverrides->get('api_key');
@@ -84,7 +74,7 @@ class ConfigForm extends ConfigFormBase {
     if ($apikey && ($apikey != $saved_apikey)) {
       $apikey_text .= '<h3 class="nys-openleg-config-warning">An override is configured to replace this setting.</h3>';
     }
-    $apikey_required = !((boolean) $apikey);
+    $apikey_required = !($apikey);
 
     $form['api_key'] = [
       '#type' => 'password',
@@ -99,7 +89,7 @@ class ConfigForm extends ConfigFormBase {
       '#title' => 'Log Level',
       '#description' => 'Determines the level of logging for API activity.',
       '#options' => RfcLogLevel::getLevels(),
-      '#default_value' => $this->localConfig->get('log_level') ?? RfcLogLevel::WARNING,
+      '#default_value' => $this->localConfig->get('log_level') ?? RfcLogLevel::NOTICE,
     ];
 
     return parent::buildForm($form, $form_state);

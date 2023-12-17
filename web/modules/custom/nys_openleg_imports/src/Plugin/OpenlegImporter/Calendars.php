@@ -3,7 +3,6 @@
 namespace Drupal\nys_openleg_imports\Plugin\OpenlegImporter;
 
 use Drupal\nys_openleg_imports\ImporterBase;
-use Drupal\nys_openleg_imports\ImportResult;
 
 /**
  * Openleg Import plugin for calendars.

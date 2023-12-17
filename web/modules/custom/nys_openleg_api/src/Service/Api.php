@@ -106,7 +106,7 @@ class Api {
    */
   public function getUpdates(string $type, mixed $time_from, mixed $time_to, array $params = []): ResponsePluginInterface {
     $request = $this->getRequest($type)?->setParams($params);
-    $this->logger->info('Requesting "@type" updates (from: @from, to: @to)', [
+    $this->logger->notice('Requesting "@type" updates (from: @from, to: @to)', [
       '@type' => $type,
       '@from' => $time_from,
       '@to' => $time_to,

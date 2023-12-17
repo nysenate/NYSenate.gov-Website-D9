@@ -11,7 +11,16 @@ namespace Drupal\nys_openleg_api\Plugin\OpenlegApi\Response;
  *   description = @Translation("Openleg API Response plugin")
  * )
  */
-class CalendarSimpleList extends ResponseSearch {
+class CalendarSimpleList extends YearBasedSearchList {
+
+  /**
+   * {@inheritDoc}
+   */
+  public function id(object $item): string {
+    $year = $item->year ?? '';
+    $num = $item->calendarNumber ?? '';
+    return ($year && $num) ? "$year/$num" : '';
+  }
 
   /**
    * Formatter for calendar titles.

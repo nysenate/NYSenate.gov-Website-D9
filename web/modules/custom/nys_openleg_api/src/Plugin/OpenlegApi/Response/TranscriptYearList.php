@@ -11,6 +11,13 @@ namespace Drupal\nys_openleg_api\Plugin\OpenlegApi\Response;
  *   description = @Translation("Openleg API Response plugin")
  * )
  */
-class TranscriptYearList extends ResponseSearch {
+class TranscriptYearList extends YearBasedSearchList {
+
+  /**
+   * {@inheritDoc}
+   */
+  public function id(object $item): string {
+    return $item->dateTime ?? '';
+  }
 
 }

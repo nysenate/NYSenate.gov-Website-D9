@@ -11,6 +11,15 @@ namespace Drupal\nys_openleg_api\Plugin\OpenlegApi\Response;
  *   description = @Translation("Openleg API Response plugin")
  * )
  */
-class BillYearList extends ResponseSearch {
+class BillYearList extends YearBasedSearchList {
+
+  /**
+   * {@inheritDoc}
+   */
+  public function id(object $item): string {
+    $session = $item->session ?? '';
+    $print = $item->basePrintNo ?? '';
+    return ($session && $print) ? "$session/$print" : '';
+  }
 
 }

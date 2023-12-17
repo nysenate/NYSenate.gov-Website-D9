@@ -89,7 +89,14 @@ abstract class RequestPluginBase implements RequestPluginInterface {
    */
   public function retrieve(string $name, $params = []): ?object {
     $params = $this->prepParams($params);
-    return $this->request->get($name, $params);
+    return $this->request->get($this->normalizeName($name), $params);
+  }
+
+  /**
+   * Normalizes the name for the request.  By default, nothing is done.
+   */
+  protected function normalizeName(string $name): string {
+    return $name;
   }
 
   /**

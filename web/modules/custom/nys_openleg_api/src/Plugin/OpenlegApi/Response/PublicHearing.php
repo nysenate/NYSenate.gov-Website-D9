@@ -2,6 +2,8 @@
 
 namespace Drupal\nys_openleg_api\Plugin\OpenlegApi\Response;
 
+use Drupal\nys_openleg_api\ResponsePluginBase;
+
 /**
  * Openleg API Response plugin for an individual public hearing transcript.
  *
@@ -11,7 +13,7 @@ namespace Drupal\nys_openleg_api\Plugin\OpenlegApi\Response;
  *   description = @Translation("Openleg API Response plugin")
  * )
  */
-class PublicHearing extends ResponseItem {
+class PublicHearing extends ResponsePluginBase {
 
   /**
    * Getter alias for the transcript text.

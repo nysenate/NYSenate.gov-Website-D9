@@ -11,6 +11,15 @@ namespace Drupal\nys_openleg_api\Plugin\OpenlegApi\Response;
  *   description = @Translation("Openleg API Response plugin")
  * )
  */
-class AgendaYearList extends ResponseSearch {
+class AgendaYearList extends YearBasedSearchList {
+
+  /**
+   * {@inheritDoc}
+   */
+  public function id(object $item): string {
+    $year = $item->id->year ?? '';
+    $num = $item->id->number ?? '';
+    return ($year && $num) ? "$year/$num" : '';
+  }
 
 }

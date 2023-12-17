@@ -92,11 +92,4 @@ class Senators extends ImporterBase {
     return $ret;
   }
 
-  /**
-   * {@inheritDoc}
-   */
-  public function id(object $item): string {
-    return $item->memberId ?? '';
-  }
-
 }

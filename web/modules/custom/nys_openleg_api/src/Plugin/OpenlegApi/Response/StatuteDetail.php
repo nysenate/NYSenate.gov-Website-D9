@@ -2,6 +2,8 @@
 
 namespace Drupal\nys_openleg_api\Plugin\OpenlegApi\Response;
 
+use Drupal\nys_openleg_api\ResponsePluginBase;
+
 /**
  * Openleg API Response plugin for Statute detail, part of Statute items.
  *
@@ -11,7 +13,7 @@ namespace Drupal\nys_openleg_api\Plugin\OpenlegApi\Response;
  *   description = @Translation("Openleg API Response plugin")
  * )
  */
-class StatuteDetail extends ResponseItem {
+class StatuteDetail extends ResponsePluginBase {
 
   /**
    * Gets an array of the siblings associated with the current entry.

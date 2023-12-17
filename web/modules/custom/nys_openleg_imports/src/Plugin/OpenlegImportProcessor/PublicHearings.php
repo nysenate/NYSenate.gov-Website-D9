@@ -3,7 +3,7 @@
 namespace Drupal\nys_openleg_imports\Plugin\OpenlegImportProcessor;
 
 use Drupal\node\Entity\Node;
-use Drupal\nys_openleg\Api\Request;
+use Drupal\nys_openleg_api\Request;
 use Drupal\nys_openleg_imports\ImportProcessorBase;
 
 /**
@@ -55,7 +55,7 @@ class PublicHearings extends ImportProcessorBase {
         $refs = $this->entityTypeManager->getStorage('taxonomy_term')
           ->loadByProperties(['vid' => 'committees', 'name' => $comm_names]);
       }
-      catch (\Throwable $e) {
+      catch (\Throwable) {
         $refs = [];
       }
       $node->set('field_ol_committee', array_keys($refs));

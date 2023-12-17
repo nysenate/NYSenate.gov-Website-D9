@@ -2,6 +2,8 @@
 
 namespace Drupal\nys_openleg_api\Plugin\OpenlegApi\Response;
 
+use Drupal\nys_openleg_api\ResponsePluginBase;
+
 /**
  * Openleg API Response plugin for an individual bill or resolution item.
  *
@@ -11,7 +13,7 @@ namespace Drupal\nys_openleg_api\Plugin\OpenlegApi\Response;
  *   description = @Translation("Openleg API Response plugin")
  * )
  */
-class Bill extends ResponseItem {
+class Bill extends ResponsePluginBase {
 
   /**
    * TRUE if a non-original, published amendment exists.

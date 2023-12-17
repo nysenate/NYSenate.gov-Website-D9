@@ -2,6 +2,8 @@
 
 namespace Drupal\nys_openleg_api\Plugin\OpenlegApi\Response;
 
+use Drupal\nys_openleg_api\ResponsePluginBase;
+
 /**
  * Openleg API Response plugin for a member detail.
  *
@@ -11,6 +13,6 @@ namespace Drupal\nys_openleg_api\Plugin\OpenlegApi\Response;
  *   description = @Translation("Openleg API Response plugin")
  * )
  */
-class Member extends ResponseItem {
+class Member extends ResponsePluginBase {
 
 }

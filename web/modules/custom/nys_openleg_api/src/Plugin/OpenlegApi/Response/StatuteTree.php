@@ -2,6 +2,8 @@
 
 namespace Drupal\nys_openleg_api\Plugin\OpenlegApi\Response;
 
+use Drupal\nys_openleg_api\ResponsePluginBase;
+
 /**
  * Openleg API Response plugin for a law tree, part of Statute items.
  *
@@ -11,7 +13,7 @@ namespace Drupal\nys_openleg_api\Plugin\OpenlegApi\Response;
  *   description = @Translation("Openleg API Response plugin")
  * )
  */
-class StatuteTree extends ResponseItem {
+class StatuteTree extends ResponsePluginBase {
 
   /**
    * Gets the array of child objects from the most recent call.

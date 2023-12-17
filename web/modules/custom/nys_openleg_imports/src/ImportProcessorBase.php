@@ -5,7 +5,7 @@ namespace Drupal\nys_openleg_imports;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Logger\LoggerChannel;
 use Drupal\node\Entity\Node;
-use Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseItem;
+use Drupal\nys_openleg_api\ResponsePluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -23,9 +23,9 @@ abstract class ImportProcessorBase implements ImportProcessorInterface {
   /**
    * The plugin definition.
    *
-   * @var mixed
+   * @var array
    */
-  protected $definition;
+  protected array $definition;
 
   /**
    * The plugin ID.
@@ -42,11 +42,11 @@ abstract class ImportProcessorBase implements ImportProcessorInterface {
   protected array $configuration;
 
   /**
-   * The Openleg ResponseItem to be processed.
+   * The Openleg Response plugin instance to be processed.
    *
-   * @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseItem
+   * @var \Drupal\nys_openleg_api\ResponsePluginInterface
    */
-  protected ResponseItem $item;
+  protected ResponsePluginInterface $item;
 
   /**
    * Local cache of resolved nodes, keyed by the serialized search array.
@@ -76,20 +76,20 @@ abstract class ImportProcessorBase implements ImportProcessorInterface {
   /**
    * {@inheritDoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): static {
     return new static(
-          $container->get('entity_type.manager'),
-          $container->get('logger.channel.openleg_imports'),
-          $plugin_definition,
-          $plugin_id,
-          $configuration
-      );
+      $container->get('entity_type.manager'),
+      $container->get('openleg_imports.logger'),
+      $plugin_definition,
+      $plugin_id,
+      $configuration
+    );
   }
 
   /**
    * {@inheritDoc}
    */
-  public function init(ResponseItem $item): self {
+  public function init(ResponsePluginInterface $item): self {
     $this->item = $item;
     return $this;
   }
@@ -108,7 +108,7 @@ abstract class ImportProcessorBase implements ImportProcessorInterface {
       }
       catch (\Throwable $e) {
         $ret = FALSE;
-        $this->logger->error(" ! EXCP: @msg", ['@msg' => $e->getMessage()]);
+        $this->logger->error("EXCEPTION: @msg", ['@msg' => $e->getMessage()]);
       }
     }
     return $ret;
@@ -142,6 +142,10 @@ abstract class ImportProcessorBase implements ImportProcessorInterface {
           ->loadByProperties($search);
       }
       catch (\Throwable $e) {
+        $this->logger->info('No matching node found for @id', [
+          '@id' => $this->getId(),
+          '@msg' => $e->getMessage(),
+        ]);
         $nodes = [];
       }
 
@@ -151,9 +155,9 @@ abstract class ImportProcessorBase implements ImportProcessorInterface {
         }
         catch (\Throwable $e) {
           $this->logger->error(
-                'Failed to create a new node for @type import',
-                ['@type' => $search['type'], '@message' => $e->getMessage()]
-            );
+            'Failed to create a new node for @type import',
+            ['@type' => $search['type'], '@message' => $e->getMessage()]
+          );
           $node = NULL;
         }
       }

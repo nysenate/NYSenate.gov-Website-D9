@@ -2,6 +2,8 @@
 
 namespace Drupal\nys_openleg_api\Plugin\OpenlegApi\Response;
 
+use Drupal\nys_openleg_api\ResponsePluginBase;
+
 /**
  * Openleg API Response plugin for an individual agenda.
  *
@@ -11,7 +13,7 @@ namespace Drupal\nys_openleg_api\Plugin\OpenlegApi\Response;
  *   description = @Translation("Openleg API Response plugin")
  * )
  */
-class Agenda extends ResponseItem {
+class Agenda extends ResponsePluginBase {
 
   /**
    * The display-ready title of the agenda.

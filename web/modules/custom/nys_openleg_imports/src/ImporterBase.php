@@ -3,10 +3,10 @@
 namespace Drupal\nys_openleg_imports;
 
 use Drupal\Core\Logger\LoggerChannel;
-use Drupal\nys_openleg\Api\Request;
-use Drupal\nys_openleg\Api\RequestPluginInterface;
-use Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseSearch;
-use Drupal\nys_openleg\Service\ApiManager;
+use Drupal\nys_openleg_api\Plugin\OpenlegApi\Response\ResponseUpdate;
+use Drupal\nys_openleg_api\Request;
+use Drupal\nys_openleg_api\Plugin\OpenlegApi\Response\ResponseSearch;
+use Drupal\nys_openleg_api\Service\Api;
 use Drupal\nys_openleg_imports\Service\OpenlegImportProcessorManager;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -40,9 +40,9 @@ abstract class ImporterBase implements ImporterInterface {
   /**
    * The Openleg API Manager service.
    *
-   * @var \Drupal\nys_openleg\Service\ApiManager
+   * @var \Drupal\nys_openleg_api\Service\Api
    */
-  protected ApiManager $apiManager;
+  protected Api $apiManager;
 
   /**
    * Drupal EntityType Manager service.
@@ -75,7 +75,7 @@ abstract class ImporterBase implements ImporterInterface {
   /**
    * Constructor.
    *
-   * @param \Drupal\nys_openleg\Service\ApiManager $api_manager
+   * @param \Drupal\nys_openleg_api\Service\Api $api_manager
    *   Openleg API Manager service.
    * @param \Drupal\nys_openleg_imports\Service\OpenlegImportProcessorManager $processorManager
    *   Drupal EntityType Manager service.
@@ -101,15 +101,15 @@ abstract class ImporterBase implements ImporterInterface {
   /**
    * {@inheritDoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): static {
     return new static(
-          $container->get('manager.openleg_api'),
-          $container->get('manager.openleg_import_processors'),
-          $container->get('logger.channel.openleg_imports'),
-          $plugin_definition,
-          $plugin_id,
-          $configuration,
-      );
+      $container->get('openleg_api'),
+      $container->get('manager.openleg_import_processors'),
+      $container->get('openleg_imports.logger'),
+      $plugin_definition,
+      $plugin_id,
+      $configuration,
+    );
   }
 
   /**
@@ -216,7 +216,7 @@ abstract class ImporterBase implements ImporterInterface {
   /**
    * Creates a watchdog entry for the import results.
    */
-  public function logResults(array $items) {
+  public function logResults(array $items): void {
     $attempted = count($items);
     $params = [
       '@total' => $attempted,

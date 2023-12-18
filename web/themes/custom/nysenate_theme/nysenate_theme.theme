@@ -692,13 +692,22 @@ function nysenate_theme_preprocess_block_content__featured_legislation(&$variabl
         if ($bill->hasField('field_ol_latest_status_committee') &&
           !$bill->get('field_ol_latest_status_committee')->isEmpty() &&
           $last_status == 'In Senate Committee') {
-          $committee = $bill->field_ol_latest_status_committee->value;
-          $link = '/committees/' .
-            strtolower(str_replace([',', ' '], ['', '-'], $committee));
-          $committee_link = [
-            'url' => $link,
-            'text' => $committee . ' Committee',
-          ];
+          $committee_field = $bill->field_ol_latest_status_committee->getValue();
+          $committee_name = $committee_field[0]['value'];
+
+          $committee = \Drupal::entityTypeManager()->getStorage('taxonomy_term')
+            ->loadByProperties([
+              'vid' => 'committees',
+              'name' => $committee_name,
+            ]);
+
+          if ($committee) {
+            $committee = reset($committee);
+            $committee_link = [
+              'text' => $committee->getName(),
+              'url' => $committee->toUrl()->toString(),
+            ];
+          }
         }
 
         $bills[] = [
@@ -1266,13 +1275,22 @@ function nysenate_theme_preprocess_paragraph(&$variables) {
     if ($bill->hasField('field_ol_latest_status_committee') &&
       !$bill->get('field_ol_latest_status_committee')->isEmpty() &&
       $last_status == 'In Senate Committee') {
-      $committee = $bill->field_ol_latest_status_committee->value;
-      $link = '/committees/' .
-        strtolower(str_replace([',', ' '], ['', '-'], $committee));
-      $committee_link = [
-        'url' => $link,
-        'text' => $committee . ' Committee',
-      ];
+      $committee_field = $bill->field_ol_latest_status_committee->getValue();
+      $committee_name = $committee_field[0]['value'];
+
+      $committee = \Drupal::entityTypeManager()->getStorage('taxonomy_term')
+        ->loadByProperties([
+          'vid' => 'committees',
+          'name' => $committee_name,
+        ]);
+
+      if ($committee) {
+        $committee = reset($committee);
+        $committee_link = [
+          'text' => $committee->getName(),
+          'url' => $committee->toUrl()->toString(),
+        ];
+      }
     }
     // @phpstan-ignore-next-line
     $bill_title = $bill->getTitle();
@@ -1599,13 +1617,22 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
       if ($node->hasField('field_ol_latest_status_committee') &&
         !$node->get('field_ol_latest_status_committee')->isEmpty() &&
         $last_status == 'In Senate Committee') {
-        $committee = $node->field_ol_latest_status_committee->value;
-        $link = '/committees/' .
-          strtolower(str_replace([',', ' '], ['', '-'], $committee));
-        $committee_link = [
-          'url' => $link,
-          'text' => $committee . ' Committee',
-        ];
+        $committee_field = $node->field_ol_latest_status_committee->getValue();
+        $committee_name = $committee_field[0]['value'];
+
+        $committee = \Drupal::entityTypeManager()->getStorage('taxonomy_term')
+          ->loadByProperties([
+            'vid' => 'committees',
+            'name' => $committee_name,
+          ]);
+
+        if ($committee) {
+          $committee = reset($committee);
+          $committee_link = [
+            'text' => $committee->getName(),
+            'url' => $committee->toUrl()->toString(),
+          ];
+        }
       }
 
       $resolution_last_status = '';
@@ -1785,13 +1812,22 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
       if ($node->hasField('field_ol_latest_status_committee') &&
         !$node->get('field_ol_latest_status_committee')->isEmpty() &&
         $last_status == 'In Senate Committee') {
-        $committee = $node->field_ol_latest_status_committee->value;
-        $link = '/committees/' .
-          strtolower(str_replace([',', ' '], ['', '-'], $committee));
-        $committee_link = [
-          'url' => $link,
-          'text' => $committee . ' Committee',
-        ];
+        $committee_field = $node->field_ol_latest_status_committee->getValue();
+        $committee_name = $committee_field[0]['value'];
+
+        $committee = \Drupal::entityTypeManager()->getStorage('taxonomy_term')
+          ->loadByProperties([
+            'vid' => 'committees',
+            'name' => $committee_name,
+          ]);
+
+        if ($committee) {
+          $committee = reset($committee);
+          $committee_link = [
+            'text' => $committee->getName(),
+            'url' => $committee->toUrl()->toString(),
+          ];
+        }
       }
 
       $bill = [

@@ -688,7 +688,7 @@ function nysenate_theme_preprocess_block_content__featured_legislation(&$variabl
           $last_status = $allowed_values[$bill->field_ol_last_status->value];
         }
 
-        $committee_link = '';
+        $committee_link = ['text' => '', 'url' => ''];
         if ($bill->hasField('field_ol_latest_status_committee') &&
           !$bill->get('field_ol_latest_status_committee')->isEmpty() &&
           $last_status == 'In Senate Committee') {
@@ -1271,7 +1271,7 @@ function nysenate_theme_preprocess_paragraph(&$variables) {
       $last_status = $allowed_values[$bill->field_ol_last_status->value];
     }
 
-    $committee_link = '';
+    $committee_link = ['text' => '', 'url' => ''];
     if ($bill->hasField('field_ol_latest_status_committee') &&
       !$bill->get('field_ol_latest_status_committee')->isEmpty() &&
       $last_status == 'In Senate Committee') {
@@ -1613,7 +1613,7 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
         $last_status = $allowed_values[$node->field_ol_last_status->value];
       }
 
-      $committee_link = '';
+      $committee_link = ['text' => '', 'url' => ''];
       if ($node->hasField('field_ol_latest_status_committee') &&
         !$node->get('field_ol_latest_status_committee')->isEmpty() &&
         $last_status == 'In Senate Committee') {
@@ -1808,7 +1808,7 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
         }
       }
 
-      $committee_link = '';
+      $committee_link = ['text' => '', 'url' => ''];
       if ($node->hasField('field_ol_latest_status_committee') &&
         !$node->get('field_ol_latest_status_committee')->isEmpty() &&
         $last_status == 'In Senate Committee') {

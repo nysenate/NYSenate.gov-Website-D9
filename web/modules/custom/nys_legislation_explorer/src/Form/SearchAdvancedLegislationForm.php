@@ -483,8 +483,6 @@ class SearchAdvancedLegislationForm extends FormBase {
           'printno' => $values['printno'] ?: '',
           'sponsor' => $values['sponsor'] ?: '',
           'full_text' => $values['full_text'] ?: '',
-          'sort_by' => 'field_ol_print_no',
-          'sort_order' => 'DESC',
         ];
         break;
 

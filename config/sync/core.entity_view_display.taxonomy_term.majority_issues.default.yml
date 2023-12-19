@@ -8,6 +8,7 @@ dependencies:
     - field.field.taxonomy_term.majority_issues.field_image_main
     - field.field.taxonomy_term.majority_issues.field_metatags
     - field.field.taxonomy_term.majority_issues.field_summary
+    - field.field.taxonomy_term.majority_issues.rabbit_hole__settings
     - taxonomy.vocabulary.majority_issues
   module:
     - entity_reference_revisions
@@ -74,4 +75,5 @@ content:
     region: content
 hidden:
   langcode: true
+  rabbit_hole__settings: true
   search_api_excerpt: true

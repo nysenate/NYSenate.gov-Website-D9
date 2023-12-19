@@ -1,0 +1,16 @@
+uuid: 069ce72d-10b2-4f77-924a-544fd655d8ac
+langcode: en
+status: true
+dependencies:
+  config:
+    - media.type.file
+id: media.file
+targetEntityType: media
+bundle: file
+action: page_redirect
+no_bypass: false
+bypass_message: false
+configuration:
+  redirect: '<front>'
+  redirect_code: 301
+  redirect_fallback_action: access_denied

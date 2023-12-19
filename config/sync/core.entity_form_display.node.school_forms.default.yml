@@ -10,12 +10,13 @@ dependencies:
     - field.field.node.school_forms.field_issues
     - field.field.node.school_forms.field_school_form
     - field.field.node.school_forms.field_school_form_type
+    - field.field.node.school_forms.rabbit_hole__settings
     - node.type.school_forms
   module:
     - datetime
     - media_library
     - path
-    - scheduler
+    - rabbit_hole
     - text
     - webform
 id: node.school_forms.default
@@ -105,11 +106,12 @@ content:
     settings:
       display_label: true
     third_party_settings: {  }
-  publish_on:
-    type: datetime_timestamp_no_default
-    weight: 8
+  rabbit_hole__settings:
+    type: rabbit_hole_default
+    weight: 100
     region: content
-    settings: {  }
+    settings:
+      advanced: true
     third_party_settings: {  }
   simple_sitemap:
     weight: 4
@@ -148,15 +150,11 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-  unpublish_on:
-    type: datetime_timestamp_no_default
-    weight: 9
-    region: content
-    settings: {  }
-    third_party_settings: {  }
   url_redirects:
     weight: 10
     region: content
     settings: {  }
     third_party_settings: {  }
-hidden: {  }
+hidden:
+  publish_on: true
+  unpublish_on: true

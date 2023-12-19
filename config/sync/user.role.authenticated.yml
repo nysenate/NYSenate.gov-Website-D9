@@ -2,10 +2,13 @@ uuid: 94530466-65b7-4917-ab0b-d2ffd02ee1f8
 langcode: en
 status: true
 dependencies:
+  config:
+    - filter.format.webform_default
   module:
     - comment
     - contact
     - field_permissions
+    - filter
     - honeypot
     - media
     - system
@@ -22,6 +25,7 @@ permissions:
   - 'access site-wide contact form'
   - 'bypass honeypot protection'
   - 'post comments'
+  - 'use text format webform_default'
   - 'view field_associated_senators'
   - 'view media'
   - 'view own webform submission'

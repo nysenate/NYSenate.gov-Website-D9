@@ -16,7 +16,9 @@
         }
 
         tabInput.each(function () {
-          if ($(this).is(':checked')) {
+          // Use .attr('checked') instead of .is(:checked), because
+          // tabInput.on('click') logic below operates on checked attribute.
+          if ($(this).attr('checked')) {
             $(this).parent().addClass('active');
           }
         });

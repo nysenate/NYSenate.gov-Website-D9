@@ -10,6 +10,7 @@ dependencies:
     - field.field.node.microsite_page.field_short_title
     - field.field.node.microsite_page.field_summary
     - field.field.node.microsite_page.field_thumbnail
+    - field.field.node.microsite_page.rabbit_hole__settings
     - node.type.microsite_page
   module:
     - field_group
@@ -17,6 +18,7 @@ dependencies:
     - media_library
     - metatag
     - path
+    - rabbit_hole
     - scheduler
 third_party_settings:
   field_group:
@@ -183,12 +185,19 @@ content:
     third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 12
+    weight: 52
     region: content
     settings: {  }
     third_party_settings: {  }
+  rabbit_hole__settings:
+    type: rabbit_hole_default
+    weight: 100
+    region: content
+    settings:
+      advanced: true
+    third_party_settings: {  }
   scheduler_settings:
-    weight: 9
+    weight: 50
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -231,7 +240,7 @@ content:
     third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 13
+    weight: 54
     region: content
     settings: {  }
     third_party_settings: {  }

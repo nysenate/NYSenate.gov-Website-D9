@@ -8,12 +8,14 @@ dependencies:
     - field.field.taxonomy_term.majority_issues.field_image_main
     - field.field.taxonomy_term.majority_issues.field_metatags
     - field.field.taxonomy_term.majority_issues.field_summary
+    - field.field.taxonomy_term.majority_issues.rabbit_hole__settings
     - taxonomy.vocabulary.majority_issues
   module:
     - inline_entity_form
     - media_library
     - metatag
     - path
+    - rabbit_hole
     - text
 id: taxonomy_term.majority_issues.default
 targetEntityType: taxonomy_term
@@ -97,6 +99,13 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  rabbit_hole__settings:
+    type: rabbit_hole_default
+    weight: 100
+    region: content
+    settings:
+      advanced: true
+    third_party_settings: {  }
   simple_sitemap:
     weight: 10
     region: content
@@ -109,4 +118,6 @@ content:
     settings:
       display_label: true
     third_party_settings: {  }
-hidden: {  }
+hidden:
+  publish_on: true
+  unpublish_on: true

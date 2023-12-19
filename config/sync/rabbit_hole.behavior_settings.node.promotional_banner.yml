@@ -1,0 +1,16 @@
+uuid: 042ef07a-52ce-4c28-a603-b49cc674dac4
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.promotional_banner
+id: node.promotional_banner
+targetEntityType: node
+bundle: promotional_banner
+action: page_redirect
+no_bypass: false
+bypass_message: false
+configuration:
+  redirect: '<front>'
+  redirect_code: 301
+  redirect_fallback_action: access_denied

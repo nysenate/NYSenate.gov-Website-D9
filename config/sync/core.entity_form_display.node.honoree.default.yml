@@ -20,6 +20,7 @@ dependencies:
     - field.field.node.honoree.field_issues
     - field.field.node.honoree.field_profile_status
     - field.field.node.honoree.field_senator_multiref
+    - field.field.node.honoree.rabbit_hole__settings
     - node.type.honoree
   module:
     - datetime
@@ -27,7 +28,7 @@ dependencies:
     - inline_entity_form
     - media_library
     - path
-    - scheduler
+    - rabbit_hole
     - text
 third_party_settings:
   field_group:
@@ -266,11 +267,12 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-  publish_on:
-    type: datetime_timestamp_no_default
-    weight: 10
+  rabbit_hole__settings:
+    type: rabbit_hole_default
+    weight: 100
     region: content
-    settings: {  }
+    settings:
+      advanced: true
     third_party_settings: {  }
   simple_sitemap:
     weight: 10
@@ -302,12 +304,6 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-  unpublish_on:
-    type: datetime_timestamp_no_default
-    weight: 11
-    region: content
-    settings: {  }
-    third_party_settings: {  }
   url_redirects:
     weight: 17
     region: content
@@ -316,4 +312,6 @@ content:
 hidden:
   langcode: true
   promote: true
+  publish_on: true
   sticky: true
+  unpublish_on: true

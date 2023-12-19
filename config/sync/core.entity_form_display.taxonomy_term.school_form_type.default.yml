@@ -4,9 +4,11 @@ status: true
 dependencies:
   config:
     - field.field.taxonomy_term.school_form_type.field_school_form
+    - field.field.taxonomy_term.school_form_type.rabbit_hole__settings
     - taxonomy.vocabulary.school_form_type
   module:
     - path
+    - rabbit_hole
     - text
     - webform
 id: taxonomy_term.school_form_type.default
@@ -52,6 +54,13 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  rabbit_hole__settings:
+    type: rabbit_hole_default
+    weight: 100
+    region: content
+    settings:
+      advanced: true
+    third_party_settings: {  }
   simple_sitemap:
     weight: 3
     region: content
@@ -64,4 +73,6 @@ content:
     settings:
       display_label: true
     third_party_settings: {  }
-hidden: {  }
+hidden:
+  publish_on: true
+  unpublish_on: true

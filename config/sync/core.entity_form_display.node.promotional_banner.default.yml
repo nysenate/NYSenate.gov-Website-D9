@@ -10,6 +10,7 @@ dependencies:
     - field.field.node.promotional_banner.field_promotional_banner_image
     - field.field.node.promotional_banner.field_promotional_content
     - field.field.node.promotional_banner.field_senator_multiref
+    - field.field.node.promotional_banner.rabbit_hole__settings
     - node.type.promotional_banner
   module:
     - conditional_fields
@@ -17,7 +18,7 @@ dependencies:
     - link
     - media_library
     - path
-    - scheduler
+    - rabbit_hole
 id: node.promotional_banner.default
 targetEntityType: node
 bundle: promotional_banner
@@ -120,11 +121,12 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-  publish_on:
-    type: datetime_timestamp_no_default
-    weight: 10
+  rabbit_hole__settings:
+    type: rabbit_hole_default
+    weight: 100
     region: content
-    settings: {  }
+    settings:
+      advanced: true
     third_party_settings: {  }
   status:
     type: boolean_checkbox
@@ -151,12 +153,6 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-  unpublish_on:
-    type: datetime_timestamp_no_default
-    weight: 14
-    region: content
-    settings: {  }
-    third_party_settings: {  }
   url_redirects:
     weight: 12
     region: content
@@ -165,5 +161,7 @@ content:
 hidden:
   langcode: true
   promote: true
+  publish_on: true
   simple_sitemap: true
   sticky: true
+  unpublish_on: true

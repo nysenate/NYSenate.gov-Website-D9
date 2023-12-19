@@ -4,9 +4,11 @@ status: true
 dependencies:
   config:
     - field.field.taxonomy_term.microsite_page_type.field_microsite_menu_weight
+    - field.field.taxonomy_term.microsite_page_type.rabbit_hole__settings
     - taxonomy.vocabulary.microsite_page_type
   module:
     - path
+    - rabbit_hole
     - text
 id: taxonomy_term.microsite_page_type.default
 targetEntityType: taxonomy_term
@@ -49,6 +51,18 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  rabbit_hole__settings:
+    type: rabbit_hole_default
+    weight: 100
+    region: content
+    settings:
+      advanced: true
+    third_party_settings: {  }
+  simple_sitemap:
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   status:
     type: boolean_checkbox
     weight: 100
@@ -56,4 +70,6 @@ content:
     settings:
       display_label: true
     third_party_settings: {  }
-hidden: {  }
+hidden:
+  publish_on: true
+  unpublish_on: true

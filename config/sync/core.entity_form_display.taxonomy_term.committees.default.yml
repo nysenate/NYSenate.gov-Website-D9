@@ -14,6 +14,7 @@ dependencies:
     - field.field.taxonomy_term.committees.field_learn_more_page
     - field.field.taxonomy_term.committees.field_meeting_frequency
     - field.field.taxonomy_term.committees.field_members
+    - field.field.taxonomy_term.committees.rabbit_hole__settings
     - taxonomy.vocabulary.committees
   module:
     - datetime
@@ -21,6 +22,7 @@ dependencies:
     - media_library
     - paragraphs
     - path
+    - rabbit_hole
     - text
 third_party_settings:
   field_group:
@@ -207,6 +209,13 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  rabbit_hole__settings:
+    type: rabbit_hole_default
+    weight: 100
+    region: content
+    settings:
+      advanced: true
+    third_party_settings: {  }
   simple_sitemap:
     weight: 11
     region: content
@@ -221,3 +230,5 @@ content:
     third_party_settings: {  }
 hidden:
   langcode: true
+  publish_on: true
+  unpublish_on: true

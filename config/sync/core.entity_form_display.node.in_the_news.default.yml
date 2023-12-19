@@ -20,6 +20,7 @@ dependencies:
     - field.field.node.in_the_news.field_publication_title
     - field.field.node.in_the_news.field_senator_multiref
     - field.field.node.in_the_news.field_subhead
+    - field.field.node.in_the_news.rabbit_hole__settings
     - node.type.in_the_news
   module:
     - datetime
@@ -28,7 +29,7 @@ dependencies:
     - link
     - media_library
     - path
-    - scheduler
+    - rabbit_hole
     - text
 third_party_settings:
   field_group:
@@ -306,11 +307,12 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-  publish_on:
-    type: datetime_timestamp_no_default
-    weight: 12
+  rabbit_hole__settings:
+    type: rabbit_hole_default
+    weight: 100
     region: content
-    settings: {  }
+    settings:
+      advanced: true
     third_party_settings: {  }
   status:
     type: boolean_checkbox
@@ -337,12 +339,6 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-  unpublish_on:
-    type: datetime_timestamp_no_default
-    weight: 11
-    region: content
-    settings: {  }
-    third_party_settings: {  }
   url_redirects:
     weight: 10
     region: content
@@ -351,5 +347,7 @@ content:
 hidden:
   langcode: true
   promote: true
+  publish_on: true
   simple_sitemap: true
   sticky: true
+  unpublish_on: true

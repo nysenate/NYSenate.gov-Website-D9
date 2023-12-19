@@ -1,0 +1,16 @@
+uuid: 604e506c-9217-4c64-bca8-21f2f1cf7ddf
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.nys_counties
+id: taxonomy_term.nys_counties
+targetEntityType: taxonomy_term
+bundle: nys_counties
+action: page_redirect
+no_bypass: false
+bypass_message: false
+configuration:
+  redirect: '<front>'
+  redirect_code: 301
+  redirect_fallback_action: access_denied

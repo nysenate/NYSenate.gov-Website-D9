@@ -6,6 +6,9 @@ id: local
 label: Local
 description: 'Local development settings'
 weight: 0
+stackable: false
+no_patching: false
+storage: folder
 folder: profiles/custom/nysenate/config/local
 module:
   devel: 0
@@ -13,7 +16,7 @@ module:
   stage_file_proxy: 0
   twig_vardumper: 0
 theme: {  }
-blacklist:
+complete_list:
   - captcha.captcha_point.user_login_form
   - captcha.captcha_point.user_pass
   - captcha.captcha_point.user_register_form
@@ -22,6 +25,4 @@ blacklist:
   - system.logging
   - clamav.settings
   - system.mail
-graylist: {  }
-graylist_dependents: true
-graylist_skip_equal: true
+partial_list: {  }

@@ -6,12 +6,14 @@ dependencies:
     - system.menu.admin
   module:
     - node
-    - scheduler
     - user
+  enforced:
+    module:
+      - scheduler
 _core:
   default_config_hash: uZN6cIt2dD4FwsmAOJePjdGDOLwx9TjvixvVXEetc9k
 id: scheduler_scheduled_content
-label: 'Scheduled content'
+label: 'Scheduled Content'
 module: views
 description: 'Find and manage scheduled content.'
 tag: ''
@@ -531,7 +533,9 @@ display:
           sort_asc_label: Asc
           sort_desc_label: Desc
       access:
-        type: scheduler
+        type: perm
+        options:
+          perm: 'view scheduled content'
       cache:
         type: tag
         options: {  }
@@ -991,8 +995,8 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
-        - user
         - 'user.node_grants:view'
+        - user.permissions
       tags: {  }
   overview:
     id: overview
@@ -1006,8 +1010,8 @@ display:
       path: admin/content/scheduled
       menu:
         type: normal
-        title: Scheduled
-        description: 'Content scheduled for publishing and unpublishing'
+        title: 'Scheduled Content'
+        description: 'Content that is scheduled for publishing or unpublishing'
         weight: -10
         expanded: false
         menu_name: admin
@@ -1026,15 +1030,19 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
-        - user
         - 'user.node_grants:view'
+        - user.permissions
       tags: {  }
   user_page:
     id: user_page
-    display_title: 'User profile tab'
+    display_title: User
     display_plugin: page
     position: 2
     display_options:
+      access:
+        type: perm
+        options:
+          perm: 'access content'
       empty:
         area_text_custom:
           id: area_text_custom
@@ -1092,11 +1100,12 @@ display:
           not: false
       defaults:
         empty: false
-        access: true
+        access: false
         arguments: false
         filters: true
         filter_groups: true
       display_description: 'Scheduled content tab on user profile, showing just that user''s scheduled content'
+      display_comment: 'Access to the user view is controlled via a custom RouteSubscriber. The high-level "view published content" permission is added to satisfy the security_review module'
       display_extenders: {  }
       path: user/%user/scheduled
       menu:
@@ -1105,7 +1114,7 @@ display:
         description: ''
         weight: -10
         menu_name: admin
-        parent: system.admin_content
+        parent: user.page
         context: '0'
       tab_options:
         type: normal
@@ -1120,6 +1129,6 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
-        - user
         - 'user.node_grants:view'
+        - user.permissions
       tags: {  }

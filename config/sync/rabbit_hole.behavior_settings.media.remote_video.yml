@@ -1,0 +1,16 @@
+uuid: 95204930-3418-4396-ac6a-f7e36abbb59f
+langcode: en
+status: true
+dependencies:
+  config:
+    - media.type.remote_video
+id: media.remote_video
+targetEntityType: media
+bundle: remote_video
+action: page_redirect
+no_bypass: false
+bypass_message: false
+configuration:
+  redirect: '<front>'
+  redirect_code: 301
+  redirect_fallback_action: access_denied

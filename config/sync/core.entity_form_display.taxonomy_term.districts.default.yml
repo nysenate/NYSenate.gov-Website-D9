@@ -9,12 +9,14 @@ dependencies:
     - field.field.taxonomy_term.districts.field_metatags
     - field.field.taxonomy_term.districts.field_senator
     - field.field.taxonomy_term.districts.field_subheading
+    - field.field.taxonomy_term.districts.rabbit_hole__settings
     - taxonomy.vocabulary.districts
   module:
     - field_group
     - inline_entity_form
     - metatag
     - path
+    - rabbit_hole
     - text
 third_party_settings:
   field_group:
@@ -126,6 +128,18 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  rabbit_hole__settings:
+    type: rabbit_hole_default
+    weight: 100
+    region: content
+    settings:
+      advanced: true
+    third_party_settings: {  }
+  simple_sitemap:
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   status:
     type: boolean_checkbox
     weight: 8
@@ -133,4 +147,6 @@ content:
     settings:
       display_label: true
     third_party_settings: {  }
-hidden: {  }
+hidden:
+  publish_on: true
+  unpublish_on: true

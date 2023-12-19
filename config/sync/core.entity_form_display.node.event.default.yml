@@ -28,6 +28,7 @@ dependencies:
     - field.field.node.event.field_ustream
     - field.field.node.event.field_video_status
     - field.field.node.event.field_yt
+    - field.field.node.event.rabbit_hole__settings
     - node.type.event
   module:
     - address
@@ -38,7 +39,7 @@ dependencies:
     - link
     - media_library
     - path
-    - scheduler
+    - rabbit_hole
     - text
 third_party_settings:
   field_group:
@@ -469,11 +470,12 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-  publish_on:
-    type: datetime_timestamp_no_default
-    weight: 14
+  rabbit_hole__settings:
+    type: rabbit_hole_default
+    weight: 100
     region: content
-    settings: {  }
+    settings:
+      advanced: true
     third_party_settings: {  }
   simple_sitemap:
     weight: 11
@@ -505,12 +507,6 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-  unpublish_on:
-    type: datetime_timestamp_no_default
-    weight: 15
-    region: content
-    settings: {  }
-    third_party_settings: {  }
   url_redirects:
     weight: 13
     region: content
@@ -519,4 +515,6 @@ content:
 hidden:
   langcode: true
   promote: true
+  publish_on: true
   sticky: true
+  unpublish_on: true

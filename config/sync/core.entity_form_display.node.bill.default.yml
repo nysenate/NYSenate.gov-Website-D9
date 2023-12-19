@@ -46,6 +46,7 @@ dependencies:
     - field.field.node.bill.field_ol_summary
     - field.field.node.bill.field_ol_version
     - field.field.node.bill.field_ol_votes
+    - field.field.node.bill.rabbit_hole__settings
     - node.type.bill
   module:
     - comment
@@ -53,7 +54,7 @@ dependencies:
     - inline_entity_form
     - metatag
     - path
-    - scheduler
+    - rabbit_hole
 id: node.bill.default
 targetEntityType: node
 bundle: bill
@@ -410,11 +411,12 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-  publish_on:
-    type: datetime_timestamp_no_default
-    weight: 33
+  rabbit_hole__settings:
+    type: rabbit_hole_default
+    weight: 100
     region: content
-    settings: {  }
+    settings:
+      advanced: true
     third_party_settings: {  }
   simple_sitemap:
     weight: 12
@@ -446,12 +448,6 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-  unpublish_on:
-    type: datetime_timestamp_no_default
-    weight: 32
-    region: content
-    settings: {  }
-    third_party_settings: {  }
   url_redirects:
     weight: 49
     region: content
@@ -460,4 +456,6 @@ content:
 hidden:
   langcode: true
   promote: true
+  publish_on: true
   sticky: true
+  unpublish_on: true

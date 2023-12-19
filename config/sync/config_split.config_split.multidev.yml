@@ -6,18 +6,19 @@ id: multidev
 label: Multidev
 description: 'Multidev Pantheon Sites (other than Develop)'
 weight: 0
+stackable: false
+no_patching: false
+storage: folder
 folder: profiles/custom/nysenate/config/multidev
 module:
   stage_file_proxy: 0
   clamav: 0
   pantheon_advanced_page_cache: 0
 theme: {  }
-blacklist:
+complete_list:
   - email_tfa.settings
   - reroute_email.settings
   - system.logging
   - clamav.settings
   - pantheon_advanced_page_cache.settings
-graylist: {  }
-graylist_dependents: true
-graylist_skip_equal: true
+partial_list: {  }

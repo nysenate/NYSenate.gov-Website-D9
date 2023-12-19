@@ -10,12 +10,13 @@ dependencies:
     - field.field.node.calendar.field_ol_calendar_date
     - field.field.node.calendar.field_ol_year
     - field.field.node.calendar.field_publication_date
+    - field.field.node.calendar.rabbit_hole__settings
     - node.type.calendar
   module:
     - datetime
     - paragraphs
     - path
-    - scheduler
+    - rabbit_hole
 id: node.calendar.default
 targetEntityType: node
 bundle: calendar
@@ -87,9 +88,15 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-  publish_on:
-    type: datetime_timestamp_no_default
-    weight: 13
+  rabbit_hole__settings:
+    type: rabbit_hole_default
+    weight: 100
+    region: content
+    settings:
+      advanced: true
+    third_party_settings: {  }
+  simple_sitemap:
+    weight: 10
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -118,12 +125,6 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-  unpublish_on:
-    type: datetime_timestamp_no_default
-    weight: 14
-    region: content
-    settings: {  }
-    third_party_settings: {  }
   url_redirects:
     weight: 11
     region: content
@@ -132,4 +133,6 @@ content:
 hidden:
   langcode: true
   promote: true
+  publish_on: true
   sticky: true
+  unpublish_on: true

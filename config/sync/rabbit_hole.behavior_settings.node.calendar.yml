@@ -1,0 +1,16 @@
+uuid: 88dfa8cd-76d1-493b-84eb-d71e10cdf808
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.calendar
+id: node.calendar
+targetEntityType: node
+bundle: calendar
+action: page_redirect
+no_bypass: false
+bypass_message: false
+configuration:
+  redirect: '<front>'
+  redirect_code: 301
+  redirect_fallback_action: access_denied

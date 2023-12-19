@@ -15,13 +15,14 @@ dependencies:
     - field.field.node.webform.field_last_notified
     - field.field.node.webform.field_senator_multiref
     - field.field.node.webform.field_title_stub
+    - field.field.node.webform.rabbit_hole__settings
     - field.field.node.webform.webform
     - node.type.webform
   module:
     - datetime
     - media_library
     - path
-    - scheduler
+    - rabbit_hole
     - text
     - webform
 _core:
@@ -131,11 +132,12 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-  publish_on:
-    type: datetime_timestamp_no_default
-    weight: 18
+  rabbit_hole__settings:
+    type: rabbit_hole_default
+    weight: 100
     region: content
-    settings: {  }
+    settings:
+      advanced: true
     third_party_settings: {  }
   simple_sitemap:
     weight: 11
@@ -167,12 +169,6 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-  unpublish_on:
-    type: datetime_timestamp_no_default
-    weight: 19
-    region: content
-    settings: {  }
-    third_party_settings: {  }
   url_redirects:
     weight: 20
     region: content
@@ -193,4 +189,6 @@ content:
 hidden:
   langcode: true
   promote: true
+  publish_on: true
   sticky: true
+  unpublish_on: true

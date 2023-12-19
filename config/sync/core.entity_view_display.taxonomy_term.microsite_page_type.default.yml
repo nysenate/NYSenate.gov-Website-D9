@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.taxonomy_term.microsite_page_type.field_microsite_menu_weight
+    - field.field.taxonomy_term.microsite_page_type.rabbit_hole__settings
     - taxonomy.vocabulary.microsite_page_type
   module:
     - text
@@ -30,4 +31,5 @@ content:
     region: content
 hidden:
   langcode: true
+  rabbit_hole__settings: true
   search_api_excerpt: true

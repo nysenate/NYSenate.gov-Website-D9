@@ -1,0 +1,16 @@
+uuid: 3bc997e5-f3e7-4ab0-a23b-391464bf8997
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.school
+id: node.school
+targetEntityType: node
+bundle: school
+action: page_redirect
+no_bypass: false
+bypass_message: false
+configuration:
+  redirect: '<front>'
+  redirect_code: 301
+  redirect_fallback_action: access_denied

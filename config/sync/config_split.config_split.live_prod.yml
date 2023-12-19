@@ -6,16 +6,17 @@ id: live_prod
 label: Live/Prod
 description: 'Live/Production Pantheon Site'
 weight: 0
+stackable: false
+no_patching: false
+storage: folder
 folder: profiles/custom/nysenate/config/prod
 module:
   clamav: 0
   pantheon_advanced_page_cache: 0
 theme: {  }
-blacklist:
+complete_list:
   - system.logging
   - system.performance
   - clamav.settings
   - pantheon_advanced_page_cache.settings
-graylist: {  }
-graylist_dependents: true
-graylist_skip_equal: true
+partial_list: {  }

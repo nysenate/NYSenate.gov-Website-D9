@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.taxonomy_term.school_form_type.field_school_form
+    - field.field.taxonomy_term.school_form_type.rabbit_hole__settings
     - taxonomy.vocabulary.school_form_type
   module:
     - text
@@ -30,4 +31,5 @@ content:
     region: content
 hidden:
   langcode: true
+  rabbit_hole__settings: true
   search_api_excerpt: true

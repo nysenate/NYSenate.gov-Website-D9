@@ -5,6 +5,7 @@ dependencies:
   config:
     - core.entity_form_mode.media.media_library
     - field.field.media.remote_video.field_media_oembed_video
+    - field.field.media.remote_video.rabbit_hole__settings
     - media.type.remote_video
 id: media.remote_video.media_library
 targetEntityType: media
@@ -24,5 +25,9 @@ hidden:
   field_media_oembed_video: true
   langcode: true
   path: true
+  publish_on: true
+  rabbit_hole__settings: true
+  scheduler_settings: true
   status: true
   uid: true
+  unpublish_on: true

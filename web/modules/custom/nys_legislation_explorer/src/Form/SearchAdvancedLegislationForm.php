@@ -213,6 +213,11 @@ class SearchAdvancedLegislationForm extends FormBase {
         }
       }
     }
+    // Set type default to transcript subtype, otherwise fall back on base type.
+    $type_default = $args['transcript_type'] ?? '';
+    if (empty($type_default)) {
+      $type_default = $args['type'] ?? '';
+    }
 
     $form['advanced_search']['advanced_search_text'] = [
       '#type' => 'item',
@@ -230,7 +235,7 @@ class SearchAdvancedLegislationForm extends FormBase {
         'floor' => t('Session Transcripts'),
         'public_hearing' => t('Public Hearing Transcripts'),
       ],
-      '#default_value' => $args['type'] ?? NULL,
+      '#default_value' => $type_default,
       '#attributes' => [
         'class' => ['content-type'],
       ],

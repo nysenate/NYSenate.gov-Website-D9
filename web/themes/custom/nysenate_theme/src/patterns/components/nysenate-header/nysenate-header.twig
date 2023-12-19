@@ -146,7 +146,7 @@
         </div>
       {% endif %}
     </div>
-    {% if type != 'senator' and error_page == false %}
+    {% if type != 'senator' and error_page == false and not is_dashboard and not is_senator_dashboard %}
       {%
         include '@nysenate_theme/nysenate-actionbar/nysenate-actionbar.twig' with {
           is_logged: is_logged,

@@ -1,0 +1,32 @@
+nys_dashboard.profile_view:
+  title: 'Profile'
+  menu_name: dashboard
+  route_name: nys_dashboard.overview
+  weight: 0
+nys_dashboard.profile_edit:
+  title: 'Edit Profile'
+  menu_name: dashboard
+  route_name: nys_dashboard.edit_profile
+  route_parameters:
+      destination: '/dashboard'
+  weight: 1
+nys_dashboard.bills:
+  title: 'Bills'
+  menu_name: dashboard
+  route_name: nys_bills.dashboard.bills
+  weight: 2
+nys_dashboard.issues:
+  title: 'Issues'
+  menu_name: dashboard
+  route_name: nys_issues.dashboard.issues
+  weight: 3
+nys_dashboard.committees:
+  title: 'Committees'
+  menu_name: dashboard
+  route_name: nys_committees.dashboard.committees
+  weight: 4
+nys_dashboard.petitions-guestionnaires:
+  title: 'Petitions & Questionnaires'
+  menu_name: dashboard
+  route_name: nys_petitions.dashboard.petitions
+  weight: 5

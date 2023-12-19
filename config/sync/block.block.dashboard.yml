@@ -1,0 +1,29 @@
+uuid: 5aa06282-3b15-4bb6-abc8-6c77044fc711
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.dashboard
+  module:
+    - system
+  theme:
+    - nysenate_theme
+id: dashboard
+theme: nysenate_theme
+region: sidebar_right
+weight: 0
+provider: null
+plugin: 'system_menu_block:dashboard'
+settings:
+  id: 'system_menu_block:dashboard'
+  label: 'Dashboard menu'
+  label_display: visible
+  provider: system
+  level: 1
+  depth: 0
+  expand_all_items: false
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: '/dashboard*'

@@ -257,6 +257,14 @@ class RegisterForm extends UserRegisterForm {
           'postal_code',
         ], $zip_trimmed);
     }
+
+    // Set username to avoid validation error (this gets overriden by
+    // email_registration module).
+    $email = $form_state->getValue(['mail']);
+    if ($email) {
+      $username_from_email = explode('@', $email, 2)[0];
+      $form_state->setValue('name', $username_from_email);
+    }
   }
 
   /**

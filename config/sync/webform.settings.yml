@@ -14,11 +14,11 @@ settings:
   default_reset_button_label: Reset
   default_delete_button_label: Delete
   default_form_submit_once: false
-  default_form_open_message: 'This form has not yet been opened to submissions.'
-  default_form_close_message: 'Sorry&hellip; This form is closed to new submissions.'
-  default_form_exception_message: 'Unable to display this webform. Please contact the site administrator.'
-  default_form_confidential_message: 'This form is confidential. You must <a href="[site:login-url]/logout?destination=[current-page:url:relative]">Log out</a> to submit it.'
-  default_form_access_denied_message: 'Please login to access this form.'
+  default_form_open_message: '<p>This form has not yet been opened to submissions.</p>'
+  default_form_close_message: '<p>Sorry… This form is closed to new submissions.</p>'
+  default_form_exception_message: '<p>Unable to display this webform. Please contact the site administrator.</p>'
+  default_form_confidential_message: '<p>This form is confidential. You must <a href="[site:login-url]/logout?destination=[current-page:url:relative]">Log out</a> to submit it.</p>'
+  default_form_access_denied_message: '<p>Please login to access this form.</p>'
   default_form_disable_remote_addr: false
   default_form_novalidate: false
   default_form_disable_inline_errors: false
@@ -39,13 +39,13 @@ settings:
   default_preview_prev_button_label: '< Previous'
   default_preview_label: Preview
   default_preview_title: '[webform:title]: Preview'
-  default_preview_message: 'Please review your submission. Your submission is not complete until you press the &quot;Submit&quot; button!'
+  default_preview_message: '<p>Please review your submission. Your submission is not complete until you press the "Submit" button!</p>'
   default_draft_button_label: 'Save Draft'
   default_draft_saved_message: 'Submission saved. You may return to this form later and it will restore the current values.'
   default_draft_loaded_message: 'A partially-completed form was found. Please complete the remaining portions.'
   default_draft_pending_single_message: 'You have a pending draft for this webform. <a href="#">Load your pending draft</a>.'
   default_draft_pending_multiple_message: 'You have pending drafts for this webform. <a href="#">View your pending drafts</a>.'
-  default_confirmation_message: 'New submission added to [webform:title].'
+  default_confirmation_message: '<p>New submission added to [webform:title].</p>'
   default_confirmation_back_label: 'Back to form'
   default_confirmation_noindex: true
   default_limit_total_message: 'No more submissions are permitted.'
@@ -106,6 +106,7 @@ settings:
     - webform_submission_make_lock_action
     - webform_submission_make_unlock_action
     - webform_submission_delete_action
+    - webform_submission_print_download_action
   dialog: false
   dialog_options:
     narrow:
@@ -337,3 +338,29 @@ third_party_settings:
     replace_administration_mode: true
   honeypot:
     honeypot: true
+  webform_entity_print:
+    template:
+      header: '<h3>[webform_submission:label]</h3>'
+      footer: ''
+      css: |-
+        /* Remove page margins and padding and rely on the PDF generator's default margins. */
+        body {
+          margin: 0;
+          font-size: 12px;
+        }
+
+        .page {
+          padding: 0;
+        }
+        p {
+          font-size: 12px;
+          font-weight: 400;
+        }
+    export_types:
+      pdf:
+        enabled: true
+        link_text: 'Download PDF'
+        link_attributes:
+          class:
+            - button
+    debug: false

@@ -16,14 +16,19 @@ workflows:
     after:
       - type: webphp
         description: "Invoke the processes after code has been deployed."
-        script: private/hooks/afterDeploy.php
+        script: private/hooks/quicksilverDefault.php
   sync_code:
     after:
       - type: webphp
         description: "Invoke the processes after code has been pushed."
-        script: private/hooks/afterSync.php
+        script: private/hooks/quicksilverDefault.php
   create_cloud_development_environment:
     after:
       - type: webphp
         description: 'Invoke the process after a MultiDev has been created.'
-        script: private/hooks/afterCloudCreate.php
+        script: private/hooks/quicksilverDefault.php
+  clone_database:
+    after:
+      - type: webphp
+        description: 'Invoke the process after a database has been cloned.'
+        script: private/hooks/quicksilverDefault.php

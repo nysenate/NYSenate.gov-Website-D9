@@ -481,8 +481,6 @@ class SearchAdvancedLegislationForm extends FormBase {
           'sponsor' => $values['sponsor'] ?: '',
           'full_text' => $values['full_text'] ?: '',
           'committee' => $values['committee'] ?: '',
-          'sort_by' => 'field_ol_last_status_date',
-          'sort_order' => 'DESC',
         ];
         break;
 
@@ -501,8 +499,6 @@ class SearchAdvancedLegislationForm extends FormBase {
           'type' => $values['type'] ?: '',
           'meeting_date' => $date_range ?: '',
           'committee' => $values['committee'] ?: '',
-          'sort_by' => ' field_date_range',
-          'sort_order' => 'DESC',
         ];
         break;
 
@@ -510,8 +506,6 @@ class SearchAdvancedLegislationForm extends FormBase {
         $params = [
           'type' => $values['type'] ?: '',
           'date' => $date_range ?: '',
-          'sort_by' => 'field_date_range',
-          'sort_order' => 'DESC',
         ];
         break;
 
@@ -522,8 +516,6 @@ class SearchAdvancedLegislationForm extends FormBase {
           'transcript_type' => $values['type'] ?: '',
           'publish_date' => $date_range ?: '',
           'full_text' => $values['full_text'] ?: '',
-          'sort_by' => 'field_ol_publish_date',
-          'sort_order' => 'DESC',
         ];
         break;
 

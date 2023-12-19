@@ -206,11 +206,16 @@ class SearchAdvancedLegislationForm extends FormBase {
       $dates['publish_date'] = $args['publish_date'] ?? NULL;
       $dates['meeting_date'] = $args['meeting_date'] ?? NULL;
       foreach ($dates as $date) {
-        if ($date !== NULL) {
-          $parts = explode("-", $date);
-          $month_default = $parts[1];
-          $year_default = substr($date, 0, 4);
+        if ($date == NULL) {
+          continue;
         }
+        $year_default = substr($date, 0, 4);
+        $parts = explode("-", $date);
+        // Don't set month filter if date range is full year.
+        if ($parts[1] == '1' && $parts[5] == '12') {
+          continue;
+        }
+        $month_default = $parts[1];
       }
     }
     // Set type default to transcript subtype, otherwise fall back on base type.

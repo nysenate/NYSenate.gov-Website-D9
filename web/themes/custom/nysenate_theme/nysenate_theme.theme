@@ -3151,10 +3151,21 @@ function nysenate_theme_preprocess_page__node__microsite_page(&$variables) {
     }
   }
 
-  // Override the main content.
-  // Display the microsite node with altered contents.
-  $variables['page']['content']['system_main'] = \Drupal::entityTypeManager()->getViewBuilder('node')
-    ->view($node, 'full');
+  // Override the main content, if not in a Webform confirmation context.
+  $route_name = \Drupal::routeMatch()->getRouteName();
+  $in_webform_confirm_context = (
+    $route_name == 'entity.node.webform.confirmation'
+    || in_array(
+      'webform/webform.confirmation',
+      $variables['page']['content']['system_main']['#attached']['library']
+    )
+  );
+  if (!$in_webform_confirm_context) {
+    // Display the microsite node with altered contents.
+    $variables['page']['content']['system_main'] = \Drupal::entityTypeManager()
+      ->getViewBuilder('node')
+      ->view($node, 'full');
+  }
 }
 
 /**
@@ -6235,6 +6246,10 @@ function nysenate_theme_preprocess_webform_confirmation(&$variables) {
     }
   }
   $variables['student_submissions'] = $submissions;
+
+  // Set confirmation page title.
+  $confirmation_page_title = $variables['webform']->getSettings()['confirmation_title'] ?? '';
+  $variables['confirmation_page_title'] = $confirmation_page_title;
 }
 
 /**

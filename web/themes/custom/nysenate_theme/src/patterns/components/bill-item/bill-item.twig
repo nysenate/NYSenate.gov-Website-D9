@@ -2,13 +2,14 @@
 
 <div
     class="c-block c-block-legislation {% if bill.featured %} c-block-legislation-featured {% endif %} {% if body %}c-block--half-wrap{% endif %} {{ modifier ? '' ~ modifier }}">
-  <div class="c-legislation-info {% if bill.issues %} with-issues {% endif %}">
-    {% if bill.issues %}
-    <div class="left-col">
-      {% endif %}
-      <h3 class="c-bill-num {% if bill.issues %}no-issues{% endif %} {{ bill.number_large ? 'c-bill-num--large' : '' }}">
+  <div class="c-legislation-info {% if bill.issues %} with-issues {% endif %} {% if bill.list %} leg-list {% endif %}">
+    {% if bill.list %}
+        <div class="left-col">
+    {% endif %}
+
+    <h3 class="c-bill-num {% if bill.issues %}no-issues{% endif %} {{ bill.number_large ? 'c-bill-num--large' : '' }}">
         <a href="{{ bill.link }}">{{ bill.number }}</a>
-      </h3>
+    </h3>
 
       {% if bill.issues %}
         <div class="bill-type">
@@ -23,39 +24,40 @@
           {% endfor %}
         </div>
       {% endif %}
-      {% if bill.issues %}
-    </div>
-    {% endif %}
+      {% if bill.list %}
+        </div>
+      {% endif %}
 
     <div class="right-col">
-      {% if bill.description_position == "top" %}
+    {% if bill.description_position == "top" %}
         <p class="c-bill-descript">
-          {{ bill.description }}
+            <a href="{{ bill.link }}">{{ bill.description }}</a>
         </p>
-      {% endif %}
+    {% endif %}
+
+    {% if bill.bundle == "bill" %}
       {% if bill.positions %}
         {% include '@nysenate_theme/src/templates/includes/nys-bill-status.html.twig' with {positions: bill.positions, is_small: bill.small, is_featured: bill.featured} only %}
       {% endif %}
-
-      {% if bill.description_position == "bottom" %}
+    {% endif %}
+    {% if bill.description_position == "bottom" %}
         <p class="c-bill-descript">
-          {{ bill.description }}
+            <a href="{{ bill.link }}">{{ bill.description }}</a>
         </p>
-      {% endif %}
-      {% if bill.resolution %}
-        <div
-            class="c-bill-update {% if bill.small %} bill-status__sml {% endif %}">
+    {% endif %}
+        {% if bill.bundle == 'resolution' %}
+        <div class="c-bill-update {% if bill.small %} bill-status__sml {% endif %}">
           <div>
             <p class="c-bill-update--date">
               <span class="date-display-single">{{ bill.date }}</span>
+                {% if bill.resolution_last_status %}| {{ bill.resolution_last_status }}{% endif %}
             </p>
             {% if bill.update_location %}
               <p class="c-bill-update--location">
                 <span>
                   {{ bill.update_location }}
                   {% if bill.committee_link %}
-                    <a class="committee-link"
-                       href="{{ bill.committee_link.url }}">{{ bill.committee_link.text }}</a>
+                    <a class="committee-link" href="{{ bill.committee_link.url }}">{{ bill.committee_link.text }}</a>
                   {% endif %}
                 </span>
               </p>
@@ -72,6 +74,10 @@
               <span>
                 {{ bill.update_location }}
               </span>
+                {% if bill.committee_link %}
+                    <a class="committee-link"
+                       href="{{ bill.committee_link.url }}">{{ bill.committee_link.text }}</a>
+                {% endif %}
             </p>
           {% endif %}
           {% if bill.ol_sponsor %}
@@ -81,16 +87,13 @@
             </p>
           {% endif %}
         </div>
-        {% if bill.committee_link %}
-          <a class="committee-link"
-             href="{{ bill.committee_link.url }}">{{ bill.committee_link.text }}</a>
-        {% endif %}
+
       {% endif %}
 
       {% if bill.sponsor %}
         <div class="sponsors {{ bill.sponsor_modifier }}">
           <span>{{ bill.sponsor_text|default('Sponsored by') }}</span>
-          <span class="sponsor-name">{{ bill.sponsor }}</span>
+            <span class="sponsor-name"><a href="{{ bill.sponsor_link }}">{{ bill.sponsor }}</a></span>
         </div>
       {% endif %}
 

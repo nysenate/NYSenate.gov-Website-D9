@@ -82,14 +82,16 @@ function nys_access_permissions_form_alter(&$form, FormStateInterface $form_stat
     $form['author']['#access'] = FALSE;
     $form['options']['#access'] = FALSE;
     foreach ($form as $key => $value) {
-      if (strpos($key, 'field_') !== FALSE && !in_array($key, [
-        'field_issues',
-        'field_image_main',
-        'field_featured_quote',
-        'field_majority_issue_tag',
-      ]
-      )) {
-        $form[$key]['#access'] = FALSE;
+      if (!in_array("administrator", $user)) {
+        if (strpos($key, 'field_') !== FALSE && !in_array($key, [
+          'field_issues',
+          'field_image_main',
+          'field_featured_quote',
+          'field_majority_issue_tag',
+        ]
+          )) {
+          $form[$key]['#access'] = FALSE;
+        }
       }
     }
   }

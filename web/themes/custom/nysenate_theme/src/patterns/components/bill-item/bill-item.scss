@@ -23,6 +23,13 @@ h3.c-bill-num {
     margin-bottom: 20px;
   }
 }
+.c-legislation-landing {
+  h3.c-bill-num {
+    @include breakpoint($bp-sm) {
+      margin-bottom: 10px;
+    }
+  }
+}
 
 p.c-bill-update--date {
   color: $grey08;
@@ -41,6 +48,36 @@ p.c-bill-update--date {
     font-family: $font-serif;
     font-size: 20px;
     line-height: 32px;
+    a {
+      color: $grey08;
+    }
+  }
+
+  &.c-legislation-landing {
+    .c-bill-descript {
+      font-weight: 400;
+    }
+  }
+  &.c-block-constituent-bill,
+  &.c-legislation-landing,
+  &.c-block-legislation-featured
+  {
+    .c-bill-update{
+      display: block;
+    }
+    p.c-bill-update--date {
+      display: inline;
+      margin: 0 0.25em 0 0;
+      font-family: $font-sans;
+      font-size: 14px;
+    }
+    .c-bill-update--location {
+      margin: 0;
+      font-family: $font-sans;
+      font-size: 14px;
+      line-height: 1.4;
+      display: inline;
+    }
   }
 
   &.c-block-legislation-featured {
@@ -115,6 +152,9 @@ p.c-bill-update--date {
       color: $color-white;
       font-size: 14px;
       line-height: 18px;
+      a {
+        color: $color-white;
+      }
     }
 
     p.c-bill-update--date {
@@ -379,7 +419,9 @@ p.c-bill-update--date {
       }
     }
 
-    .c-legislation-info.with-issues {
+    .c-legislation-info.leg-list,
+    .c-legislation-info.with-issues
+    {
       display: flex;
 
       .left-col {

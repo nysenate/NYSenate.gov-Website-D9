@@ -13,4 +13,13 @@ namespace Drupal\nys_openleg_api\Plugin\OpenlegApi\Response;
  */
 class EmptyList extends ResponseUpdate {
 
+  /**
+   * {@inheritDoc}
+   *
+   * Return an empty array.
+   */
+  public function listIds(): array {
+    return [];
+  }
+
 }

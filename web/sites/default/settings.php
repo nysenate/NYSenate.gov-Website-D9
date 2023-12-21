@@ -885,9 +885,6 @@ else {
       'http_method' => 'AUTO',
     ];
   }
-
-  // Turn off TFA.
-  $config['email_tfa.settings']['status'] = FALSE;
 }
 
 // Pantheon-specific Redis configuration.

@@ -651,11 +651,18 @@ function nysenate_theme_preprocess_block_content__featured_legislation(&$variabl
         ->getMicrosite($senator);
       $variables['senator_link'] = $senator_link;
 
+      $variables['senator_image'] = NULL;
       if ($senator->hasField('field_member_headshot') && !$senator->get('field_member_headshot')->isEmpty()) {
+        $mid = $senator->field_member_headshot->target_id ?? 0;
         $entity_manager = \Drupal::entityTypeManager();
-        $mid = $senator->field_member_headshot->target_id;
-        $media_image = $entity_manager->getStorage('media')->load($mid);
-        $variables['senator_image'] = !empty($media_image) ? $entity_manager->getViewBuilder('media')->view($media_image, '160x160') : NULL;
+        try {
+
+          $media_image = \Drupal::entityTypeManager()->getStorage('media')->load($mid);
+        }
+        catch (\Throwable) {
+          $media_image = NULL;
+        }
+        $variables['senator_image'] = $media_image ? $entity_manager->getViewBuilder('media')->view($media_image, '160x160') : NULL;
       }
     }
 

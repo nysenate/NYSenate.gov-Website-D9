@@ -2,6 +2,7 @@
 
 namespace Drupal\nys_openleg_api;
 
+use Psr\Log\LoggerInterface;
 use SendGrid\Client;
 
 /**
@@ -102,6 +103,13 @@ class Request {
   protected Client $client;
 
   /**
+   * An optional logging facility.
+   *
+   * @var \Psr\Log\LoggerInterface|null
+   */
+  protected ?LoggerInterface $logger;
+
+  /**
    * Constructor.
    *
    * Receives an endpoint (as a string, or an array of strings; see
@@ -117,11 +125,14 @@ class Request {
    *   A string or array of strings (path array) specifying the API endpoint.
    * @param array $options
    *   Connection options.
+   * @param \Psr\Log\LoggerInterface|null $logger
+   *   An optional logging facility.
    *
    * @see self::buildPathArray()
    */
-  public function __construct(mixed $endpoint = '', array $options = []) {
+  public function __construct(mixed $endpoint = '', array $options = [], ?LoggerInterface $logger = NULL) {
     // Initialize endpoint and options.
+    $this->logger = $logger;
     $this->setEndpoint($endpoint)->setOptions($options);
   }
 
@@ -151,12 +162,14 @@ class Request {
    *   A string or array of strings (path array) specifying the API endpoint.
    * @param array $options
    *   Connection options.
+   * @param \Psr\Log\LoggerInterface|null $logger
+   *   An optional logging facility.
    *
    * @return object|null
    *   JSON-decoded response (could be NULL)
    */
-  public static function fetch(array|string $endpoint = '', array $options = []): ?object {
-    $request = new static($endpoint, $options);
+  public static function fetch(array|string $endpoint = '', array $options = [], ?LoggerInterface $logger = NULL): ?object {
+    $request = new static($endpoint, $options, $logger);
     return $request->get($options['resource'] ?? NULL, $options['params'] ?? []);
   }
 
@@ -178,17 +191,24 @@ class Request {
   public function get($resource = NULL, array $params = []): ?object {
     // Build the primary URL.
     $url = $this->buildHost();
-    $resource = implode('/', $this->buildPathArray($resource)) . '/';
+    $resource = implode('/', $this->buildPathArray($resource ?? '')) . '/';
     $extra_path = $this->buildEndpoint() . $resource;
 
     // Build URL parameters.
     $params += $this->apiKey ? ['key' => $this->apiKey] : [];
 
     // Instantiate the client and make the call.
+    $this->logger?->debug('Calling @url (@resource)', [
+      '@url' => $url,
+      '@resource' => $extra_path,
+    ]);
     $this->client = new Client($url, NULL, $this->getVersion(), [$extra_path]);
 
-    // @todo decide on handling non-200 responses.
     $response = $this->client->get('', $params);
+    $this->logger?->debug('Response code @code, length @len', [
+      '@code' => $response->statusCode(),
+      '@len' => strlen($response->body()),
+    ]);
 
     return json_decode($response->body());
   }

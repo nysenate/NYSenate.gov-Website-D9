@@ -9,7 +9,7 @@ namespace Drupal\nys_openleg_api\Plugin\OpenlegApi\Response;
  * updates, which is used by bills, calendars, and agendas.  Each item's type
  * can be found in the contentType property.
  *
- * @OpenlegApiResponseNew(
+ * @OpenlegApiResponse(
  *   id = "update-token list",
  *   label = @Translation("Generic Update List"),
  *   description = @Translation("Openleg API Response plugin")

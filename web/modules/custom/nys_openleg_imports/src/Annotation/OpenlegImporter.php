@@ -22,7 +22,7 @@ class OpenlegImporter extends Plugin {
   public string $id;
 
   /**
-   * The human-readable name of the mail plugin.
+   * The human-readable name of the plugin.
    *
    * @var \Drupal\Core\Annotation\Translation
    *
@@ -31,7 +31,7 @@ class OpenlegImporter extends Plugin {
   public Translation $label;
 
   /**
-   * A short description of the mail plugin.
+   * A short description of the plugin.
    *
    * @var \Drupal\Core\Annotation\Translation
    *

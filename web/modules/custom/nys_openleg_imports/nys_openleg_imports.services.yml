@@ -7,6 +7,6 @@ services:
     class: Drupal\nys_openleg_imports\Service\OpenlegImportProcessorManager
     parent: default_plugin_manager
     arguments: ['@entity_type.manager']
-  logger.channel.openleg_imports:
-    parent: logger.channel_base
-    arguments: ['nys_openleg_imports']
+  openleg_imports.logger:
+    class: Drupal\nys_openleg_api\ConditionalLogger
+    arguments: [ 'nys_openleg_imports', '@openleg_api.config', '@logger.factory' ]

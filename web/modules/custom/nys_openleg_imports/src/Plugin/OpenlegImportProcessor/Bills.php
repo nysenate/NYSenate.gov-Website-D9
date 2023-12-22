@@ -3,9 +3,9 @@
 namespace Drupal\nys_openleg_imports\Plugin\OpenlegImportProcessor;
 
 use Drupal\node\Entity\Node;
-use Drupal\nys_openleg\Api\Request;
 use Drupal\nys_openleg\BillHelper;
-use Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseItem;
+use Drupal\nys_openleg_api\Request;
+use Drupal\nys_openleg_api\ResponsePluginInterface;
 use Drupal\nys_openleg_imports\ImportProcessorBase;
 
 /**
@@ -14,8 +14,8 @@ use Drupal\nys_openleg_imports\ImportProcessorBase;
  * @OpenlegImportProcessor(
  *   id = "bills",
  *   label = @Translation("Bills and Resolutions"),
- *   description = @Translation("Import processor plugin for bills and
- *   resolutions."), bundle = "bill"
+ *   description = @Translation("Import processor plugin for bills and resolutions."),
+ *   bundle = "bill"
  * )
  */
 class Bills extends ImportProcessorBase {
@@ -23,16 +23,16 @@ class Bills extends ImportProcessorBase {
   /**
    * {@inheritdoc}
    *
-   * This needs to be a Bill response object.
+   * This item must be a nys_openleg_api\Plugin\OpenlegApi\Response\Bill object.
    *
-   * @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\Bill
+   * @var \Drupal\nys_openleg_api\Plugin\OpenlegApi\Response\Bill
    */
-  protected ResponseItem $item;
+  protected ResponsePluginInterface $item;
 
   /**
    * {@inheritDoc}
    */
-  public function init(ResponseItem $item): ImportProcessorBase {
+  public function init(ResponsePluginInterface $item): ImportProcessorBase {
     // Reclaim the node cache, in case this processor is reused.
     foreach ($this->nodes as $k => $v) {
       unset($this->nodes[$k]);
@@ -44,7 +44,7 @@ class Bills extends ImportProcessorBase {
    * {@inheritDoc}
    *
    * Bill responses contain information about all amended versions of a
-   * single print number (e.g., S500, S500A, S500B, etc).  This iterates
+   * single print number (e.g., S500, S500A, S500B, etc.)  This iterates
    * over all versions in a bill response.  Success is reported only if
    * all versions were saved successfully.
    */
@@ -225,7 +225,7 @@ class Bills extends ImportProcessorBase {
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  protected function populateVotes(Node $node) {
+  protected function populateVotes(Node $node): void {
     // For reference.
     $storage = $this->entityTypeManager->getStorage('paragraph');
     $all_votes = $this->item->result()->votes->items ?? [];

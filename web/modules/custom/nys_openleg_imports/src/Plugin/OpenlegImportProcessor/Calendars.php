@@ -33,6 +33,7 @@ class Calendars extends ImportProcessorBase {
       $this->populateCalendar($node);
     }
     catch (\Throwable $e) {
+      $this->logger->error('EXCEPTION: @msg', ['@msg' => $e->getMessage()]);
       $ret = FALSE;
     }
 
@@ -56,7 +57,7 @@ class Calendars extends ImportProcessorBase {
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  protected function populateBillData(Paragraph $pg, array $items) {
+  protected function populateBillData(Paragraph $pg, array $items): void {
     // Initialize.
     $bills = [];
 
@@ -72,11 +73,11 @@ class Calendars extends ImportProcessorBase {
     $bill_storage = $this->entityTypeManager->getStorage('node');
     if (count($bills)) {
       $nodes = $bill_storage->loadByProperties(
-            [
-              'title' => array_keys($bills),
-              'type' => 'bill',
-            ]
-        );
+        [
+          'title' => array_keys($bills),
+          'type' => 'bill',
+        ]
+      );
       foreach ($nodes as $nid => $node) {
         /**
          * @var \Drupal\node\Entity\Node $node
@@ -110,17 +111,17 @@ class Calendars extends ImportProcessorBase {
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  protected function populateCalendar(Node $node) {
+  protected function populateCalendar(Node $node): void {
     $result = $this->item->result();
     $storage = $this->entityTypeManager->getStorage('paragraph');
 
     // Note the current paragraphs for later and initialize the "new" list.
     $old_ids = array_map(
-          function ($v) {
-              return $v['target_id'];
-          },
-          $node->get('field_ol_cal')->getValue()
-      );
+      function ($v) {
+        return $v['target_id'];
+      },
+      $node->get('field_ol_cal')->getValue()
+    );
     $new_ids = [];
 
     $to_import = [

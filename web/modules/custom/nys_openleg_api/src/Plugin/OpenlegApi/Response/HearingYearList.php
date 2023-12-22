@@ -3,21 +3,21 @@
 namespace Drupal\nys_openleg_api\Plugin\OpenlegApi\Response;
 
 /**
- * Openleg API Response plugin for a list of members (usually by session).
+ * Openleg API Response plugin for a list of public hearings in a calendar year.
  *
  * @OpenlegApiResponse(
- *   id = "member-session list",
- *   label = @Translation("Member Session List"),
+ *   id = "hearing-id list",
+ *   label = @Translation("Public Hearing Year List"),
  *   description = @Translation("Openleg API Response plugin")
  * )
  */
-class MemberSessionList extends YearBasedSearchList {
+class HearingYearList extends YearBasedSearchList {
 
   /**
    * {@inheritDoc}
    */
   public function id(object $item): string {
-    return $item->memberId ?? '';
+    return $item->id ?? '';
   }
 
 }

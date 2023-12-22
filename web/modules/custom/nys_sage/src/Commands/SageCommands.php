@@ -6,7 +6,7 @@ use Drupal\nys_sage\Logger\SageLogger;
 use Drush\Commands\DrushCommands;
 
 /**
- * Drush command class for nys_openleg_imports.
+ * Drush command class for nys_sage.
  */
 class SageCommands extends DrushCommands {
 

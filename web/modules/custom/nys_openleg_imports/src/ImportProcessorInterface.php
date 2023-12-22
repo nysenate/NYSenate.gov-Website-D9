@@ -4,7 +4,7 @@ namespace Drupal\nys_openleg_imports;
 
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\node\Entity\Node;
-use Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseItem;
+use Drupal\nys_openleg_api\ResponsePluginBase;
 
 /**
  * Interface for Openleg Import Processor plugins.
@@ -14,7 +14,7 @@ interface ImportProcessorInterface extends ContainerFactoryPluginInterface {
   /**
    * Initializes the processor with an Openleg item response.
    */
-  public function init(ResponseItem $item);
+  public function init(ResponsePluginBase $item);
 
   /**
    * Processes a single item.

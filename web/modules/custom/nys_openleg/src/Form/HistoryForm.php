@@ -4,7 +4,7 @@ namespace Drupal\nys_openleg\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\nys_openleg\Api\Statute;
+use Drupal\nys_openleg_api\Statute;
 
 /**
  * Class HistoryForm.

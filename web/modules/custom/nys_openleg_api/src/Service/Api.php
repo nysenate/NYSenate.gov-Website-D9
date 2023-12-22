@@ -2,8 +2,6 @@
 
 namespace Drupal\nys_openleg_api\Service;
 
-use Drupal\Component\Plugin\Exception\PluginException;
-use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Config\ImmutableConfig;
 use Drupal\Core\Logger\LoggerChannel;
 use Drupal\nys_openleg_api\Plugin\OpenlegApi\Response\StatuteDetail;
@@ -11,21 +9,17 @@ use Drupal\nys_openleg_api\Request;
 use Drupal\nys_openleg_api\RequestPluginInterface;
 use Drupal\nys_openleg_api\ResponsePluginInterface;
 use Drupal\nys_openleg_api\Statute;
+use Psr\Log\LoggerAwareTrait;
 
 /**
  * Primary service for accessing Openleg API Request and Response managers.
  */
 class Api {
 
-  /**
-   * Preconfigured logging channel for Openleg API.
-   *
-   * @var \Drupal\Core\Logger\LoggerChannel
-   */
-  protected LoggerChannel $logger;
+  use LoggerAwareTrait;
 
   /**
-   * Config object for nys_openleg.settings.
+   * Config object for nys_openleg_api.settings.
    *
    * @var \Drupal\Core\Config\ImmutableConfig
    */
@@ -46,13 +40,6 @@ class Api {
   protected ResponseManager $responder;
 
   /**
-   * Local cache for requesters, to enforce singletons.  Keyed by plugin ID.
-   *
-   * @var array
-   */
-  protected array $allRequesters = [];
-
-  /**
    * Constructor.
    */
   public function __construct(LoggerChannel $logger, ImmutableConfig $config, RequestManager $requester, ResponseManager $responder) {
@@ -64,29 +51,10 @@ class Api {
   }
 
   /**
-   * Instantiates a requester.  Uses local cache to enforce singleton per type.
-   *
-   * @param string $item_type
-   *   The plugin name.
-   *
-   * @return \Drupal\nys_openleg_api\RequestPluginInterface|null
-   *   The instantiated requester, or NULL on error.
+   * Gets a request plugin by type.
    */
-  protected function resolveRequest(string $item_type): ?RequestPluginInterface {
-    if (!($this->allRequesters[$item_type] ?? NULL)) {
-      try {
-        $ret = $this->requester->createInstance($item_type);
-      }
-      catch (PluginException | PluginNotFoundException $e) {
-        $this->logger->error(
-          'Could not instantiate request plugin "@name"',
-          ['@name' => $item_type, '@msg' => $e->getMessage()]
-        );
-        $ret = NULL;
-      }
-      $this->allRequesters[$item_type] = $ret;
-    }
-    return $this->allRequesters[$item_type];
+  public function getRequest(string $type): ?RequestPluginInterface {
+    return $this->requester->resolve($type);
   }
 
   /**
@@ -103,7 +71,12 @@ class Api {
    *   The decoded JSON object, or NULL on failure.
    */
   public function getJson(string $type, string $name, array $params = []): object|null {
-    return $this->resolveRequest($type)?->setParams($params)->retrieve($name);
+    $this->logger->info('Requesting for "@name" (type: "@type")', [
+      '@name' => $name,
+      '@type' => $type,
+      '@params' => $params,
+    ]);
+    return $this->getRequest($type)?->setParams($params)->retrieve($name);
   }
 
   /**
@@ -113,7 +86,7 @@ class Api {
    *   The Response object, a contrived Error response, or NULL on failure.
    */
   public function get(string $type, string $name, array $params = []): ResponsePluginInterface {
-    return $this->responder->resolveResponse($this->getJson($type, $name, $params));
+    return $this->responder->resolve($this->getJson($type, $name, $params));
   }
 
   /**
@@ -132,8 +105,13 @@ class Api {
    *   The Response object from Openleg.
    */
   public function getUpdates(string $type, mixed $time_from, mixed $time_to, array $params = []): ResponsePluginInterface {
-    $request = $this->resolveRequest($type)?->setParams($params);
-    return $this->responder->resolveResponse($request?->retrieveUpdates($time_from, $time_to));
+    $request = $this->getRequest($type)?->setParams($params);
+    $this->logger->notice('Requesting "@type" updates (from: @from, to: @to)', [
+      '@type' => $type,
+      '@from' => $time_from,
+      '@to' => $time_to,
+    ]);
+    return $this->responder->resolve($request?->retrieveUpdates($time_from, $time_to));
   }
 
   /**
@@ -150,8 +128,12 @@ class Api {
    *   The Response object from Openleg.
    */
   public function getSearch(string $type, string $term, array $params = []): ResponsePluginInterface {
-    $request = $this->resolveRequest($type)?->setParams($params);
-    return $this->responder->resolveResponse($request?->retrieveSearch($term));
+    $request = $this->getRequest($type)?->setParams($params);
+    $this->logger->info('Requesting "@type" search (term: @term)', [
+      '@type' => $type,
+      '@term' => $term,
+    ]);
+    return $this->responder->resolve($request?->retrieveSearch($term));
   }
 
   /**
@@ -171,6 +153,10 @@ class Api {
   public function getStatute(string $book, string $location, string $history = ''): Statute {
     $param = ['history' => $history];
 
+    $this->logger->info('Requesting statute, book: "@book", location: "@location"', [
+      '@book' => $book,
+      '@location' => $location,
+    ]);
     /** @var \Drupal\nys_openleg_api\Plugin\OpenlegApi\Response\StatuteTree $tree */
     $tree = $this->get('statute', $book, $param + ['location' => $location]);
 

@@ -2,16 +2,18 @@
 
 namespace Drupal\nys_openleg_api\Plugin\OpenlegApi\Response;
 
+use Drupal\nys_openleg_api\ResponsePluginBase;
+
 /**
  * Openleg API Response plugin for Statute detail, part of Statute items.
  *
- * @OpenlegApiResponseNew(
+ * @OpenlegApiResponse(
  *   id = "law-doc-info-detail",
  *   label = @Translation("Statute Detail"),
  *   description = @Translation("Openleg API Response plugin")
  * )
  */
-class StatuteDetail extends ResponseItem {
+class StatuteDetail extends ResponsePluginBase {
 
   /**
    * Gets an array of the siblings associated with the current entry.
@@ -39,7 +41,7 @@ class StatuteDetail extends ResponseItem {
   /**
    * Gets the text of the current entry.
    *
-   * If $raw is TRUE, the text is mangled for proper presentation in HTML.
+   * If $raw is FALSE, the text is mangled for proper presentation in HTML.
    *
    * @param bool $raw
    *   Indicates if raw text should be returned.

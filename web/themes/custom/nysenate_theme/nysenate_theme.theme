@@ -651,9 +651,18 @@ function nysenate_theme_preprocess_block_content__featured_legislation(&$variabl
         ->getMicrosite($senator);
       $variables['senator_link'] = $senator_link;
 
+      $variables['senator_image'] = NULL;
       if ($senator->hasField('field_member_headshot') && !$senator->get('field_member_headshot')->isEmpty()) {
-        $variables['senator_image'] = !empty($senator->field_member_headshot->view('full')) ?
-          $senator->field_member_headshot->view('full')[0] : $senator->field_member_headshot->view()[0];
+        $mid = $senator->field_member_headshot->target_id ?? 0;
+        $entity_manager = \Drupal::entityTypeManager();
+        try {
+
+          $media_image = \Drupal::entityTypeManager()->getStorage('media')->load($mid);
+        }
+        catch (\Throwable) {
+          $media_image = NULL;
+        }
+        $variables['senator_image'] = $media_image ? $entity_manager->getViewBuilder('media')->view($media_image, '160x160') : NULL;
       }
     }
 
@@ -6381,7 +6390,7 @@ function nysenate_theme_preprocess_webform_confirmation(&$variables) {
   }
   $variables['student_submissions'] = $submissions;
 
-  // Set confirmation page title
+  // Set confirmation page title.
   $confirmation_page_title = $variables['webform']->getSettings()['confirmation_title'] ?? '';
   $variables['confirmation_page_title'] = $confirmation_page_title;
 }

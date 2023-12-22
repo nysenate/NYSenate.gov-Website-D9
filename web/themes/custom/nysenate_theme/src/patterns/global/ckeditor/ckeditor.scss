@@ -1,5 +1,15 @@
 @import '../../global/utils/init';
 
+/*.ck-content .link-text,
+.ck-content .c-container--link,
+.ck-content .c-block a,
+.ck-content .c-paragraph--more-link,
+.ck-content ul li a,
+.ck-content ol li a,
+.ck-content a {
+  color: #cb8d37;
+}*/
+
 .field--name-field-landing-blocks {
   > .field__item {
     margin-bottom: 80px;
@@ -11,7 +21,7 @@
     }
   }
 }
-
+/*.ck-content .c-paragraph--more-link,*/
 .c-paragraph--more-link {
   clear: both;
   margin: 15px 0 30px;
@@ -49,7 +59,7 @@
     margin-top: -12px;
   }
 }
-
+/*.ck-content a.nys-btn--gold,*/
 a.nys-btn--gold {
   transition: background-color 0.2s ease;
   position: relative;
@@ -73,7 +83,7 @@ a.nys-btn--gold {
     background: $yellow03;
   }
 }
-
+/*.ck-content a.nys-btn--blue,*/
 a.nys-btn--blue {
   transition: background-color 0.2s ease;
   position: relative;
@@ -97,6 +107,7 @@ a.nys-btn--blue {
   }
 }
 
+/*.ck-content a.c-btn--small-blue,*/
 a.c-btn--small-blue {
   position: relative;
   display: block;
@@ -128,6 +139,7 @@ a.c-btn--small-blue {
   font-size: 12px;
 }
 
+.ck-content .c-block--background,
 .c-block--background {
   background-color: $color-light-gray;
   padding: 40px;
@@ -223,4 +235,65 @@ ul.c-block--about-seal {
     max-width: 470px;
     margin: 0 auto;
   }
+}
+
+.ck-content p {
+  font-family: "Adelle Light", serif;
+  line-height: 1.5em;
+  color: #666666;
+  font-size: 20px;
+  margin: 0;
+}
+
+.ck-content p + p {
+  margin-top: 24px;
+}
+
+.ck-content,
+.c-news--body {
+  h2 {
+    font-family: $font-serif;
+    font-size: 30px;
+    color: #444444;
+  }
+  p + h2 {
+    margin-top: 48px;
+  }
+
+  h3 {
+    font-family: $font-serif;
+    font-size: 24px;
+    color: #444444;
+    margin-top: 48px;
+  }
+
+  h4 {
+    font-family: $font-serif;
+    font-size: 20px;
+    color: #444444;
+    margin-top: 48px;
+  }
+}
+
+p + img {
+  margin: 40px 0;
+}
+
+p + img.align-right {
+  margin: 16px 0 16px 16px;
+}
+
+p + img.align-left {
+  margin: 16px 16px 16px 0;
+}
+
+p + img.align-center {
+  margin: 40px auto;
+  text-align: center;
+}
+
+
+
+.c-news--body .c-block blockquote p {
+  font-style: italic;
 }

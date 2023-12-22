@@ -24,6 +24,7 @@
         "ext-json": "*",
         "composer/installers": "^1.2",
         "cweagans/composer-patches": "^1.7.0",
+        "dompdf/dompdf": "^2.0",
         "drupal/address_map_link": "^1.3",
         "drupal/admin_toolbar": "^3.0",
         "drupal/ajax_comments": "^1.0@beta",
@@ -275,6 +276,7 @@
                 "2741877 - Nested modals don't work - fixed focal point preview modal": "https://www.drupal.org/files/issues/2021-04-29/2741877-77.patch",
                 "3049216 - ajax error": "https://www.drupal.org/files/issues/2023-01-31/3049216-21_0.patch",
                 "2794481 - Allow end date to be optional": "https://www.drupal.org/files/issues/2021-05-15/2794481-126.patch",
+                "3326778 - CKEditor5": "https://www.drupal.org/files/issues/2023-01-04/3326778-15.patch",
                 "3315678 - strnatcasecmp(): Passing null to parameter #2 ($string2) of type string is deprecated": "https://www.drupal.org/files/issues/2023-01-30/categorizing_plugin_error-3315678-16.patch"
             },
             "drupal/htmlpurifier": {
@@ -310,9 +312,15 @@
                 "Error while field storage definition\n": "https://www.drupal.org/files/issues/2022-10-19/contact_storage.patch",
                 "3191567 - Undefined index: entity:delete_action:contact_message": "https://www.drupal.org/files/issues/2022-11-07/contact_storage-bc_action_fix-3191567-31.patch"
             },
-            "drupal/image_widget_crop":{
+            "drupal/image_widget_crop": {
                 "3153736 - Enforce hard limit": "https://www.drupal.org/files/issues/2020-06-22/3153736-2.patch",
                 "3214365 - Crop widget not adjusting crop box when crop is applied\nx": "https://www.drupal.org/files/issues/2021-06-09/crop_widget_not_adjusting_to_existing_crop-3214365-9.patch"
+            },
+            "drupal/entity_print": {
+                "3343982 - dompdf composer requirement update": "https://www.drupal.org/files/issues/2023-02-23/Dompdf-version-2.0.0-has-high-severity-vulenrabilities-3343982-2.patch"
+            },
+            "drupal/clamav": {
+                "3383653 -Support image upload plugin for CKEditor5\n": "https://git.drupalcode.org/project/clamav/-/merge_requests/7.patch"
             }
         }
     }

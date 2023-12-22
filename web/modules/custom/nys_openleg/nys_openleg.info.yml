@@ -1,6 +1,8 @@
 name: 'NYS Openleg'
-description: "A service to call NYS OpenLeg API"
+description: "Enables browsing laws via NYS OpenLeg API"
 package: NYSenate
 core_version_requirement: ^9 || ^10
 type: module
 configure: nys_openleg.config
+dependencies:
+  - nys_openleg_api:nys_openleg_api

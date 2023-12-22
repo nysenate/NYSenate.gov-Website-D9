@@ -35,9 +35,8 @@ class DynamicRouting implements ContainerInjectionInterface {
    */
   public static function create(ContainerInterface $container): DynamicRouting {
     return new static(
-          $container->get('config.factory')
-            ->getEditable('nys_openleg.settings')
-      );
+      $container->get('config.factory')->getEditable('nys_openleg_api.settings')
+    );
   }
 
   /**
@@ -77,7 +76,7 @@ class DynamicRouting implements ContainerInjectionInterface {
         $this_path .= '/{' . $var_key . '}';
       }
 
-      $route = new Route($this_path, $defaults, $permit);
+      $route = new Route($this_path, $defaults, $permit, ['no_cache' => 'TRUE']);
       $route_collection->add('nys_openleg.' . $key, $route);
     }
 

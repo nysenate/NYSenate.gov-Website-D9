@@ -1,21 +1,21 @@
 <?php
 
-namespace Drupal\nys_openleg\Annotation;
+namespace Drupal\nys_openleg_api\Annotation;
 
 use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 
 /**
- * Defines an annotation object for Openleg response plugins.
+ * Defines an annotation object for Openleg request plugins.
  *
- * Plugin Namespace: Plugin\OpenlegApi\Response.
+ * Plugin Namespace: Plugin\OpenlegApi\Request.
  *
  * @Annotation
  */
-class OpenlegApiResponse extends Plugin {
+class OpenlegApiRequest extends Plugin {
 
   /**
-   * The plugin ID.  This should match the Openleg responseType property.
+   * The plugin ID.
    *
    * @var string
    */
@@ -31,12 +31,19 @@ class OpenlegApiResponse extends Plugin {
   public Translation $label;
 
   /**
-   * A short description of the plugin.
+   * A short description of the mail plugin.
    *
    * @var \Drupal\Core\Annotation\Translation
    *
    * @ingroup plugin_translatable
    */
   public Translation $description;
+
+  /**
+   * The base endpoint used for requests.
+   *
+   * @var string
+   */
+  public string $endpoint;
 
 }

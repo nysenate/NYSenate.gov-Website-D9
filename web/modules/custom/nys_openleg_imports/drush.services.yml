@@ -1,6 +1,6 @@
 services:
   nys_openleg_imports.commands:
     class: \Drupal\nys_openleg_imports\Commands\OpenlegImport
-    arguments: ['@manager.openleg_api', '@manager.openleg_importers', '@state']
+    arguments: ['@openleg_api', '@manager.openleg_importers', '@state', '@slack_messaging', '@openleg_imports.logger']
     tags:
       - { name: drush.command }

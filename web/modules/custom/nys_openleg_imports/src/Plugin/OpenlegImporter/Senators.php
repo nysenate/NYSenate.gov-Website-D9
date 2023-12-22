@@ -45,7 +45,7 @@ class Senators extends ImporterBase {
     $ret = new ImportResult();
 
     /**
-     * @var \Drupal\nys_openleg\Service\ApiManager $api
+     * @var \Drupal\nys_openleg_api\Service\Api $api
      */
     $api = \Drupal::service('manager.openleg_api');
 
@@ -57,7 +57,7 @@ class Senators extends ImporterBase {
 
     $request = $api->getRequest('member');
     /**
-     * @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\MemberSessionList $members
+     * @var \Drupal\nys_openleg_api\Plugin\OpenlegApi\Response\MemberSessionList $members
      */
     $members = $request->retrieve($session, ['limit' => 0]);
 
@@ -80,7 +80,7 @@ class Senators extends ImporterBase {
           $term->save();
           $ret->addSuccess();
         }
-        catch (\Throwable $e) {
+        catch (\Throwable) {
           $ret->addFail();
         }
       }
@@ -90,13 +90,6 @@ class Senators extends ImporterBase {
     }
 
     return $ret;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public function id(object $item): string {
-    return $item->memberId ?? '';
   }
 
 }

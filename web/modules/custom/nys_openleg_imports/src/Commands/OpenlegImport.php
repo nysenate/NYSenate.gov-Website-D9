@@ -2,12 +2,22 @@
 
 namespace Drupal\nys_openleg_imports\Commands;
 
+use Drupal\Core\Logger\LoggerChannelInterface;
+use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\State\State;
-use Drupal\nys_openleg\Api\Request;
-use Drupal\nys_openleg\Service\ApiManager;
+use Drupal\nys_openleg_api\ConditionalLogger;
+use Drupal\nys_openleg_api\Plugin\OpenlegApi\Response\EmptyList;
+use Drupal\nys_openleg_api\Plugin\OpenlegApi\Response\ResponseSearch;
+use Drupal\nys_openleg_api\Plugin\OpenlegApi\Response\YearBasedSearchList;
+use Drupal\nys_openleg_api\Request;
+use Drupal\nys_openleg_api\Service\Api;
+use Drupal\nys_openleg_imports\ImporterInterface;
+use Drupal\nys_openleg_imports\ImportResult;
 use Drupal\nys_openleg_imports\Service\OpenlegImporterManager;
+use Drupal\nys_slack\Service\Slack;
 use Drush\Commands\DrushCommands;
 use Drush\Exceptions\CommandFailedException;
+use Psr\Log\LoggerInterface;
 
 /**
  * Drush command class for nys_openleg_imports.
@@ -28,6 +38,7 @@ class OpenlegImport extends DrushCommands {
     'limit' => 0,
     'offset' => 1,
     'force' => FALSE,
+    'log-level' => RfcLogLevel::NOTICE,
   ];
 
   /**
@@ -40,9 +51,9 @@ class OpenlegImport extends DrushCommands {
   /**
    * The nys_openleg Manager service.
    *
-   * @var \Drupal\nys_openleg\Service\ApiManager
+   * @var \Drupal\nys_openleg_api\Service\Api
    */
-  protected ApiManager $api;
+  protected Api $api;
 
   /**
    * Drupal's State service.
@@ -66,14 +77,44 @@ class OpenlegImport extends DrushCommands {
   protected array $options;
 
   /**
+   * Slack service.
+   *
+   * @var \Drupal\nys_slack\Service\Slack
+   */
+  protected Slack $slack;
+
+  /**
+   * An importer to be used with this execution.
+   *
+   * @var ImporterInterface
+   */
+  protected ImporterInterface $importer;
+
+  /**
    * Constructor.
    */
-  public function __construct(ApiManager $api, OpenlegImporterManager $manager, State $state) {
+  public function __construct(Api $api, OpenlegImporterManager $manager, State $state, Slack $slack, LoggerChannelInterface $logChannel = NULL) {
     parent::__construct();
+
     $this->manager = $manager;
     $this->api = $api;
     $this->state = $state;
-    $this->populateDefaults();
+    $this->setLogger($logChannel);
+    $this->slack = $slack;
+  }
+
+  /**
+   * Override for setLogger()
+   *
+   * Drush likes to replace the logger after instantiation, but the logger
+   * created by OpenLeg API already has a drush logger, and allows for
+   * conditional logging based on config.  A better option would be to figure
+   * out how to replace drush's DbLog logger with a ConditionalLogger.
+   */
+  public function setLogger(LoggerInterface $logger): void {
+    if (!($this->logger instanceof LoggerChannelInterface)) {
+      $this->logger = $logger;
+    }
   }
 
   /**
@@ -92,7 +133,7 @@ class OpenlegImport extends DrushCommands {
   /**
    * Sets a type-specific state value.
    */
-  protected function setState(string $name, $value) {
+  protected function setState(string $name, $value): void {
     if ($this->type) {
       $full_name = implode('.', ['nys_openleg_imports', $this->type, $name]);
       $this->state->set($full_name, $value);
@@ -102,8 +143,8 @@ class OpenlegImport extends DrushCommands {
   /**
    * Sets default values for options which depend on run-time state.
    */
-  protected function populateDefaults() {
-    $this->defaultOptions['from'] = $this->getState('last_run', 0);
+  protected function populateDefaults(): void {
+    $this->defaultOptions['from'] = $this->getState('last_run.updates', 0);
     $this->defaultOptions['to'] = time();
   }
 
@@ -111,11 +152,22 @@ class OpenlegImport extends DrushCommands {
    * Replaces NULL values with the corresponding default value.
    */
   protected function resolveOptions(array $options): array {
+    $this->populateDefaults();
+
     // Any options with a NULL value need a default.
     foreach ($this->defaultOptions as $name => $value) {
       if (is_null($options[$name] ?? NULL)) {
         $options[$name] = $value;
       }
+    }
+
+    // This should be using our conditional logger.  If not, ignore it.
+    try {
+      if ($this->logger instanceof ConditionalLogger) {
+        $this->logger->setLogLevel($options['log-level']);
+      }
+    }
+    catch (\Throwable) {
     }
 
     // The --ids option can be specified multiple times (array), and each item
@@ -124,15 +176,18 @@ class OpenlegImport extends DrushCommands {
     foreach (($options['ids'] ?? []) as $val) {
       $list = array_merge($list, explode(',', $val));
     }
+    $options['ids'] = $list;
 
-    // Change any hyphens to slashes.
-    $options['ids'] = array_map(
+    // This is here to trigger a sniffer error preventing a commit until this line and below is removed
+    /*
+        // Change any hyphens to slashes.
+        $options['ids'] = array_map(
           function ($v) {
-              return str_replace('-', '/', $v);
+            return str_replace('-', '/', $v);
           },
           array_filter(array_unique($list))
-      );
-
+        );
+    */
     return $options;
   }
 
@@ -142,20 +197,101 @@ class OpenlegImport extends DrushCommands {
    * @return bool
    *   Returns FALSE if a lock exists and no bypass is directed.
    */
-  protected function processLock() : bool {
+  protected function processLock(): bool {
     $has_lock = $this->getState('locked', 0);
     if ($has_lock) {
-      $this->logger()->warning("Process lock detected ...");
+      $this->logger->warning("Process lock detected ...");
       if (!$this->options['force']) {
         $message = "Process lock in place since " .
-                date(Request::OPENLEG_TIME_SIMPLE, $has_lock) .
-                ".  Wait for it to release, or use option --force to reset.";
-        $this->logger()->critical($message);
+          date(Request::OPENLEG_TIME_SIMPLE, $has_lock) .
+          ".  Wait for it to release, or use option --force to reset.";
+        $this->logger->critical($message);
+        $opts = array_intersect_key($this->options,
+          [
+            'ids' => 0,
+            'to' => 0,
+            'from' => 0,
+            'session' => 0,
+            'limit' => 0,
+            'offset' => 0,
+          ]
+        );
+        $attach = implode(' ', array_filter(array_map('trim', explode("\n", var_export($opts, 1)))));
+        $this->slack->init()
+          ->addAttachment('type: ' . $this->type)
+          ->addAttachment('options: ' . $attach)
+          ->send('Unexpected process lock detected during OpenLeg imports');
         return FALSE;
       }
-      $this->logger()->info("Ignoring lock because --force was used.");
+      $this->logger->notice("Ignoring lock because --force was used.");
     }
     return TRUE;
+  }
+
+  /**
+   * Sets up the command's environment.
+   *
+   * @param string $type
+   *   The type (plugin id) of importer to use.
+   * @param array $options
+   *   The command-line options.
+   *
+   * @return bool
+   *   Indicates if setup was successful.
+   *
+   * @throws \Drush\Exceptions\CommandFailedException
+   */
+  protected function doSetup(string $type, array $options = []): bool {
+    // Get the importer and note the start of execution.
+    $this->importer = $this->getImporter($type);
+    $this->logger->info(
+      "[@time] Beginning @type import", [
+        '@type' => $type,
+        '@time' => date(Request::OPENLEG_TIME_SIMPLE, time()),
+      ]
+    );
+
+    // Populate all options.
+    $this->type = $type;
+    $this->options = $this->resolveOptions($options);
+
+    // Process the lock.
+    if (!$this->processLock()) {
+      return FALSE;
+    }
+
+    // Set the lock and return.
+    $this->setState('locked', time());
+    $this->setState('last_run', time());
+    return TRUE;
+  }
+
+  /**
+   * Clean-up tasks after import is complete.
+   */
+  protected function doCleanup(ImportResult $result): void {
+    // Record the results.
+    $result->report($this->logger);
+
+    // Release the lock.
+    $this->setState('locked', 0);
+  }
+
+  /**
+   * Wrapper to execute an import command.
+   *
+   * @throws \Drush\Exceptions\CommandFailedException
+   */
+  protected function execute(string $type, array $options, string $callback): int {
+    // Set up or die.
+    if (!$this->doSetup($type, $options)) {
+      return DRUSH_FRAMEWORK_ERROR;
+    }
+
+    // Call the handler and send the result through clean up.
+    $this->doCleanup($this->$callback($options));
+
+    return DRUSH_SUCCESS;
   }
 
   /**
@@ -190,43 +326,27 @@ class OpenlegImport extends DrushCommands {
     'from' => NULL,
     'to' => NULL,
     'force' => FALSE,
-  ]): int {
+  ]
+  ): int {
+    return $this->execute($type, $options, 'doImportUpdate');
+  }
 
-    // If the import plugin is not found, report and quit.
-    try {
-      /**
-       * @var \Drupal\nys_openleg_imports\ImporterBase $importer
-       */
-      $importer = $this->manager->getImporter($type);
-    }
-    catch (\Throwable $e) {
-      throw new CommandFailedException("Could not instantiate importer for '$type'.");
-    }
-
-    // Populate all options.
-    $this->type = $type;
-    // Ensure the 'from' option is populated from 'last_run.updates'.  The
-    // default behavior uses 'last_run'.
-    $options['from'] = $options['from'] ?? $this->getState('last_run.updates', 0);
-    $this->options = $this->resolveOptions($options);
-
-    // Process the lock.
-    if (!$this->processLock()) {
-      return DRUSH_FRAMEWORK_ERROR;
-    }
-    $this->setState('locked', time());
-
-    $result = $importer->importUpdates($this->options['from'], $this->options['to']);
-    $result->report($this->logger());
-
-    // Release the lock.  Set the last_run marker if no 'to' time was passed.
-    $this->setState('locked', 0);
+  /**
+   * Handler/callback to import updates.
+   *
+   * @param array $options
+   *   The original drush command-line options.
+   *
+   * @see importUpdates()
+   */
+  protected function doImportUpdate(array $options): ImportResult {
+    // If no "to" time was passed, set the last run marker to the current time.
     if (!($options['to'] ?? 0)) {
       $this->setState('last_run.updates', time());
     }
 
-    return DRUSH_SUCCESS;
-
+    // Run the update import and return the result.
+    return $this->importer->importUpdates($this->options['from'], $this->options['to']);
   }
 
   /**
@@ -248,6 +368,8 @@ class OpenlegImport extends DrushCommands {
    *   Starts importing at the specified record.  (for session)
    * @option force
    *   Ignores the process lock, if it has been set.
+   * @option log-level
+   *   The level of messages to be logged.  See RfcLogLevel constants.
    * @usage drush nys_openleg_import:import bills --ids=2020-S123,2020-S456
    *   Imports two bills: 2020-S123 and 2020-S456
    * @usage drush nysol-i agendas --ids=2020/3,2020/4,2020/5
@@ -268,58 +390,98 @@ class OpenlegImport extends DrushCommands {
     'limit' => 0,
     'offset' => 1,
     'force' => FALSE,
-  ]): int {
+    'log-level' => RfcLogLevel::NOTICE,
+  ]
+  ): int {
+    return $this->execute($type, $options, 'doImport');
+  }
 
+  /**
+   * Handler/callback for a standard import.
+   *
+   * @param array $options
+   *   The original drush command-line options.
+   *
+   * @see import()
+   */
+  protected function doImport(array $options): ImportResult {
+    // If a session is specified, search for the items.
+    if ($this->options['session']) {
+      $this->addSessionIds();
+    }
+
+    // Run the import.
+    $this->logger->info('Total IDs selected: @count', ['@count' => count($this->options['ids'])]);
+    return $this->importer->import($this->options['ids']);
+  }
+
+  /**
+   * Adds all items for a session to the list of IDs to be imported.
+   */
+  protected function addSessionIds(): void {
+    // Set params and search.
+    $params = [
+      'limit' => $this->options['limit'],
+      'offset' => $this->options['offset'],
+    ];
+    $search = $this->api->get($this->importer->getRequesterName(), $this->options['session'], $params);
+
+    // If a ResponseSearch is returned, add the results.
+    if ($search instanceof YearBasedSearchList) {
+      $names = $search->getIdFromYearList();
+      $this->logger->notice('Adding @session items from session @year', [
+        '@session' => count($names),
+        '@year' => $this->options['session'],
+      ]);
+    }
+    // If an EmptyList is returned, nothing was found.
+    elseif ($search instanceof EmptyList) {
+      $names = [];
+      $this->logger->notice('No items found for session @year', ['@year' => $this->options['session']]);
+    }
+    // Anything else is unexpected.  Tell somebody.
+    else {
+      $names = [];
+      $this->logger->warning('Unexpected return from session search (success: @success, @msg)', [
+        '@msg' => $search->message(),
+        '@success' => $search->success(),
+      ]);
+    }
+
+    // Add any IDs found during the search.
+    $this->options['ids'] = array_filter(
+      array_unique(
+        array_merge($this->options['ids'], $names)
+      )
+    );
+  }
+
+  /**
+   * Creates/caches the importer to be used.
+   *
+   * @param string $type
+   *   The type (plugin id) of importer to create.
+   *
+   * @return \Drupal\nys_openleg_imports\ImporterInterface
+   *   The importer for the specified $type.
+   *
+   * @throws \Drush\Exceptions\CommandFailedException
+   *   If the importer plugin could not be instantiated.
+   */
+  protected function getImporter(string $type): ImporterInterface {
     // If the import plugin is not found, report and quit.
     try {
-      /**
-       * @var \Drupal\nys_openleg_imports\ImporterBase $importer
-       */
+      /** @var \Drupal\nys_openleg_imports\ImporterBase $importer */
       $importer = $this->manager->getImporter($type);
     }
     catch (\Throwable $e) {
+      $this->logger->error('Could not instantiate importer for @type', [
+        '@type' => $type,
+        '@msg' => $e->getMessage(),
+      ]);
       throw new CommandFailedException("Could not instantiate importer for '$type'.");
     }
-
-    // Populate all options.
-    $this->type = $type;
-    $this->options = $this->resolveOptions($options);
-
-    // Check for a lock, and set the lock.
-    if (!$this->processLock()) {
-      return DRUSH_FRAMEWORK_ERROR;
-    }
-
-    // @todo Locks per type may not be needed anymore.  One global lock?
-    $this->setState('locked', time());
-    $this->setState('last_run', time());
-
-    // If a session is specified, search for the items.
-    if ($this->options['session']) {
-      $params = [
-        'limit' => $this->options['limit'],
-        'offset' => $this->options['offset'],
-      ];
-      /**
-       * @var \Drupal\nys_openleg\Plugin\OpenlegApi\Response\ResponseSearch $search
-       */
-      $search = $this->api->get($importer->getRequester(), $this->options['session'], $params);
-      $names = $importer->getIdFromYearList($search);
-      $this->options['ids'] = array_filter(
-            array_unique(
-                array_merge($this->options['ids'], $names)
-            )
-        );
-    }
-
-    // Get the list of items being imported.  The 'ids' option takes precedence.
-    $result = $importer->import($this->options['ids']);
-    $result->report($this->logger());
-
-    // Release the lock.
-    $this->setState('locked', 0);
-
-    return DRUSH_SUCCESS;
+    return $importer;
   }
 
 }

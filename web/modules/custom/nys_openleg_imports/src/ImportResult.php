@@ -115,14 +115,14 @@ class ImportResult {
   /**
    * Reports the result, using the passed logger.
    */
-  public function report(LoggerInterface $logger) {
+  public function report(LoggerInterface $logger): void {
     $msg = "Import finished";
-    $func = 'info';
+    $func = 'notice';
     if ($this->getSuccess()) {
       $msg .= " successfully";
     }
     if ($this->getFail() || $this->getSkipped()) {
-      $msg = " with some failures/skipped";
+      $msg .= " with some failures/skipped";
       $func = 'warning';
     }
     $logger->$func($msg);

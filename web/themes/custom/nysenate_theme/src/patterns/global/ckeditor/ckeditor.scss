@@ -237,84 +237,6 @@ ul.c-block--about-seal {
   }
 }
 
-
-//CKEDITOR STYLES
-/*
-.ck-content p.nospace,
-p.nospace {
-  margin-top: 0;
-}
-.ck-content p + p.nospace,
-p + p.nospace {
-    margin-top: -15px;
-}
-
-.ck-content blockquote{
-
-  p {
-    font-family: $font-serif-semibold;
-    font-size: 18px;
-    padding-left: 24px;
-    margin: 1em;
-
-    @include breakpoint($bp-md) {
-      font-size: 28px;
-      line-height: 1.3em;
-    }
-  }
-    &:before {
-      position: absolute;
-      top: 0;
-      left: -0.2em!important;
-      font-size: 2.7em;
-      font-style: normal;
-      content: "\71";
-      font-family: "senate_icons";
-      color: #2b6a90;
-      width: 0;
-      height: 0;
-      background-color: #fff;
-      border-radius: 0;
-    }
-  }
-
-.ck-content [dir="ltr"] blockquote::before {
-  left: -0.2em!important;
-}
-
-.ck-content .c-container--link {
-  bottom: 0;
-  top: auto;
-  width: 100%;
-  height: 60px;
-  padding: 23px 0 23px 25px;
-  color: $grey08;
-  background-color: #eaeaea;
-  @extend .icon-before__arrow;
-
-  &::before {
-    font-size: 17px;
-    margin-top: -2px;
-    line-height: 12px;
-  }
-
-  &::after {
-    display: none;
-  }
-}
-
-.ck-content h2.c-container--h2-title,
-.field--name-body h2.c-container--h2-title{
-  border-bottom: 1px solid $grey05;
-  padding-bottom: 10px;
-  margin-bottom: 20px;
-  color: $grey02;
-  text-transform: uppercase;
-  @include font-stack-secondary;
-  font-size: 18px;
-  margin-top: -12px;
-}
-*/
 .ck-content p {
   font-family: "Adelle Light", serif;
   line-height: 1.5em;
@@ -371,3 +293,7 @@ p + img.align-center {
 }
 
 
+
+.c-news--body .c-block blockquote p {
+  font-style: italic;
+}

@@ -295,12 +295,22 @@
                           </button>
                           <ul class="nysenate-accordion-nested nysenate-accordion-nested--inner">
                             <li class="nysenate-accordion-nested__item">
+                              <div class="c-vote--container">
                               <h3 class="c-vote-detail--date">
                                 {{ vote.type }}
                                 Vote:
                                 {{ vote.date }}</h3>
+                                {% if vote.remote_voting|length %}
+                                  <div class="c-votes--remote-voting">
+                                    The following Member(s) participated via videoconferencing:
+                                    {% for key,member in vote.remote_voting %}
+                                      <a class="remote-voting-url" href="{{ member.url }}">{{ member.name }}</a>
+                                    {% endfor %}
+                                  </div>
+                                {% endif %}
                               {% set count = 0 %}
                               {% for key,members in vote.all_members %}
+                                {% if members|length %}
                                 {% set title = key|split('_members') %}
                                 {% set title = title[0]|replace({'_': ' '}) %}
                                 {% set count = count + 1 %}
@@ -309,13 +319,23 @@
                                     ({{ members|length|default(0) }})</div>
                                   <ul class="c-votes--items">
                                     {% for member in members %}
-                                      <li>
+                                      <li{% if member in vote.remote_voting %} class="remote-voting-member"{% endif %}>
                                         <a href="{{ member.url }}">{{ member.name }}</a>
                                       </li>
                                     {% endfor %}
                                   </ul>
                                 </div>
+                                {% endif %}
                               {% endfor %}
+                                {% if vote.remote_voting|length %}
+                              <div class="c-votes--remote-voting">
+                                The following Member(s) participated via videoconferencing:
+                                {% for key,member in vote.remote_voting %}
+                                <a class="remote-voting-url" href="{{ member.url }}">{{ member.name }}</a>
+                                {% endfor %}
+                              </div>
+                                {% endif %}
+                              </div>
                             </li>
                           </ul>
                         </li>

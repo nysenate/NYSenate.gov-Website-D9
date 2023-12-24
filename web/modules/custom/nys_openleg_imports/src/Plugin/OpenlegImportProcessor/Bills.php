@@ -282,6 +282,10 @@ class Bills extends ImportProcessorBase {
         }
       }
 
+      // Set remote voting data, if it exists.
+      $remote_data = $vote->attendance->remote->items ?? [];
+      $paragraph->set('field_remote_voting', BillHelper::findSenatorsByMemberInfo($remote_data));
+
       // Save the new paragraph.
       $paragraph->save();
       $new_votes[] = $paragraph;

@@ -300,14 +300,6 @@
                                 {{ vote.type }}
                                 Vote:
                                 {{ vote.date }}</h3>
-                                {% if vote.remote_voting|length %}
-                                  <div class="c-votes--remote-voting">
-                                    The following Member(s) participated via videoconferencing:
-                                    {% for key,member in vote.remote_voting %}
-                                      <a class="remote-voting-url" href="{{ member.url }}">{{ member.name }}</a>
-                                    {% endfor %}
-                                  </div>
-                                {% endif %}
                               {% set count = 0 %}
                               {% for key,members in vote.all_members %}
                                 {% if members|length %}

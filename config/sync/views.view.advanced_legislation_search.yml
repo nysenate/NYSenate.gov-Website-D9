@@ -2350,6 +2350,19 @@ display:
     display_options:
       title: 'Advanced Legislation Search - Resolutions'
       sorts:
+        field_ol_session:
+          id: field_ol_session
+          table: search_api_index_core_search
+          field: field_ol_session
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: search_api
+          order: DESC
+          expose:
+            label: ''
+            field_identifier: ''
+          exposed: false
         field_ol_print_no:
           id: field_ol_print_no
           table: search_api_index_core_search

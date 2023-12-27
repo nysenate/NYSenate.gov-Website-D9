@@ -1,6 +1,6 @@
 {{ attach_library('nysenate_theme/nysenate-search-results-listing') }}
 
-{% set meeting_date = content.date|date('F j, Y') %}
+{% set meeting_date = node.field_date_range.value|date('F j, Y') %}
 
 {% include "@nysenate_theme/nysenate-search-results-listing/nysenate-search-results-listing.twig" with {
   "article": {

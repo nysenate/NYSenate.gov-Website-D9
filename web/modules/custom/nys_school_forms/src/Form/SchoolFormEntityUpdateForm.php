@@ -29,7 +29,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  *
  * @internal
  */
-class SchoolFormEnityUpdateForm extends FormBase {
+class SchoolFormEntityUpdateForm extends FormBase {
 
   /**
    * Request stack.

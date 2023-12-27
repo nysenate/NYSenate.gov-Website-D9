@@ -8,6 +8,7 @@ use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Field\EntityReferenceFieldItemList;
 use Drupal\Core\Logger\LoggerChannelTrait;
 use Drupal\flag\FlagServiceInterface;
 use Drupal\node\NodeInterface;
@@ -790,6 +791,179 @@ class BillsHelper {
     }
 
     return $subscription;
+  }
+
+  /**
+   * Loads all Senator objects from a vote field.
+   *
+   * Vote paragraphs have entity reference fields for each vote type (e.g.,
+   * field_ol_aye_members).  These fields have been mistakenly created as
+   * references to nodes instead of taxonomy terms in the "Senator" vid.  This
+   * bug prevents the Entity API from natively loading the reference objects.
+   * Loading the members manually is the hack-y work-around.
+   *
+   * @param \Drupal\Core\Field\EntityReferenceFieldItemList $vote_field
+   *   An entity reference list field, such as $vote->field_ol_aye_members.
+   *
+   * @return array
+   *   An array of referenced entities, as with loadMultiple(), or an empty
+   *   array on any error.
+   *
+   * @todo This is unnecessary once vote paragraph fields are fixed.
+   */
+  public function loadMembersFromVote(EntityReferenceFieldItemList $vote_field): array {
+    // If no term storage, return an empty array.
+    try {
+      $term_storage = $this->entityTypeManager->getStorage('taxonomy_term');
+
+      // Get the voting member IDs.
+      $voter_ids = array_unique(array_filter(array_map(
+        function ($v) {
+          return $v['target_id'] ?? NULL;
+        },
+        $vote_field->getValue()
+      )));
+
+      return $term_storage->loadMultiple($voter_ids);
+    }
+    catch (\Throwable) {
+      return [];
+    }
+  }
+
+  /**
+   * Generates a summary/informational array for votes attached to a bill.
+   *
+   * @param \Drupal\node\NodeInterface $node
+   *   A Bill node.
+   * @param bool $last_floor_only
+   *   If TRUE, only the most recent floor vote is returned.
+   *
+   * @return array
+   *   Returns an empty array if any issue prevents the tally of the votes.
+   *   Otherwise, an array keyed by vote label.  Each element is an array with
+   *   data points relevant to the vote instance.
+   */
+  public function compileVoteInfo(NodeInterface $node, bool $last_floor_only = FALSE): array {
+    $ret = [];
+
+    // If not a bill, return empty.
+    if (!$this->isBill($node)) {
+      return $ret;
+    }
+
+    $session_year = $node->field_ol_session->value ?? 0;
+    $vote_types = ['aye', 'nay', 'aye_wr', 'absent', 'excused', 'abstained'];
+
+    /** @var \Drupal\Core\Field\EntityReferenceFieldItemList $vote_field */
+    $vote_field = $node->field_ol_votes;
+    $votes = $vote_field->referencedEntities();
+
+    if ($votes) {
+      /** @var \Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem $vote */
+      foreach ($votes as $vote) {
+        // Initialize all members array for this vote record.
+        $all_members = [];
+
+        // Tally voting members for each type of vote.
+        foreach ($vote_types as $type) {
+          // Construct the field name for this vote type.
+          $field = 'field_ol_' . $type . '_members';
+          // Map the array of loaded voting members into name & URL.
+          $vote_members = array_map(
+            function ($v) {
+              $url = $this->senatorsHelper->getMicrositeUrl($v);
+              $name = $v->field_senator_name->family ?? '';
+              return ($name && $url)
+                ? ['name' => $name, 'url' => $url]
+                : [];
+            },
+            $this->loadMembersFromVote($vote->$field)
+          );
+
+          // Add this vote type to $all_members.
+          asort($vote_members);
+          $all_members[$type . '_members'] = $vote_members;
+        }
+
+        // Get the list of members with remote voting.
+        $remote_array = array_map(
+          function ($v) {
+            $url = $this->senatorsHelper->getMicrositeUrl($v);
+            $name = $v->field_senator_name->family ?? '';
+            return ($name && $url)
+              ? ['name' => $name, 'url' => $url]
+              : [];
+          },
+          $vote->field_remote_voting->referencedEntities()
+        );
+        $remote_votes = [];
+        foreach ($remote_array as $remote) {
+          $remote_votes[$remote['name']] = $remote;
+
+        }
+
+        // Set up the type label; special for committee votes.
+        $vote_type_label = $vote->field_ol_vote_type->value ?? '';
+        if ($vote_type_label == 'COMMITTEE') {
+          $name = $vote->field_ol_committee->entity?->getName() ?? '';
+          if ($name) {
+            $vote_type_label = $name . ' ' . $vote_type_label;
+          }
+        }
+
+        // Did the vote happen during the current session?
+        $vote_year = date("Y", strtotime($vote->field_publication_date->value));
+        if (!($vote_year % 2)) {
+          $vote_year--;
+        }
+        $bill_in_current_session = $vote_year == $session_year;
+
+        // Try to create the bill's URL.
+        try {
+          $bill_url = $node->toUrl('canonical', ['absolute' => TRUE])
+            ->toString();
+        }
+        catch (\Throwable) {
+          $bill_url = '';
+        }
+
+        // Add the '_' prefix to floor votes so they stay together.
+        $vote_key = ($vote_type_label == 'FLOOR' ? '_' : '') . $vote_type_label .
+          ' ' . $vote->field_publication_date->value;
+        $ret[$vote_key] = [
+          'aye_count' => $vote->field_ol_aye_count->value ?? 0,
+          'nay_count' => $vote->field_ol_nay_count->value ?? 0,
+          'aye_reservations_count' => $vote->field_ol_aye_wr_count->value ?? 0,
+          'absent_count' => $vote->field_ol_absent_count->value ?? 0,
+          'excused_count' => $vote->field_ol_excused_count->value ?? 0,
+          'abstained_count' => $vote->field_ol_abstained_count->value ?? 0,
+          'all_members' => $all_members,
+          'type' => ucwords(strtolower(trim($vote_type_label))),
+          'date' => date("M j, Y", strtotime($vote->field_publication_date->value)),
+          'vote_year' => $vote_year,
+          'bill_in_current_session' => $bill_in_current_session,
+          'bill_url' => $bill_url,
+          'bill_name' => $node->field_ol_print_no->value ?? '',
+          'remote_voting' => $remote_votes,
+        ];
+      }
+    }
+
+    // Sorted in reverse key order, which is also reverse date order.
+    krsort($ret);
+
+    // If last floor vote only, return the first one found, or an empty array.
+    if ($last_floor_only) {
+      foreach ($ret as $key => $val) {
+        if (str_contains($key, '_FLOOR')) {
+          return [$key => $val];
+        }
+      }
+      return [];
+    }
+
+    return $ret;
   }
 
   /**

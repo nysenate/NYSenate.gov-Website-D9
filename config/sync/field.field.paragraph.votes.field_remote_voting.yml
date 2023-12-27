@@ -1,0 +1,29 @@
+uuid: 5ccd144e-80e2-4d9d-814e-6b054c4a421b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_remote_voting
+    - paragraphs.paragraphs_type.votes
+    - taxonomy.vocabulary.senator
+id: paragraph.votes.field_remote_voting
+field_name: field_remote_voting
+entity_type: paragraph
+bundle: votes
+label: 'Remote Voting'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      senator: senator
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

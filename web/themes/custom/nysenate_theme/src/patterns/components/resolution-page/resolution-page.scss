@@ -810,37 +810,73 @@
   }
 }
 
-.c-vote-detail--date {
-  margin: 20px 0;
-  color: $grey08;
-  font-family: $font-serif-regular;
-  font-size: 16px;
-  line-height: 1;
-}
-
-.c-detail--vote-grp + .c-detail--vote-grp {
-  margin-top: 15px;
-}
-
-.c-detail--vote-grp {
-  .c-detail--section-title {
-    margin-bottom: 15px;
+.c-vote--container {
+  .c-vote-detail--date {
+    margin: 20px 0;
     color: $grey08;
-    font-family: $font-serif-semibold;
-    text-transform: uppercase;
-    font-size: 14px;
+    font-family: $font-serif-regular;
+    font-size: 16px;
+    line-height: 1;
   }
-  .c-votes--items {
-    list-style: none;
-    overflow: hidden;
 
-    li {
-      display: block;
-      float: left;
-      width: 50%;
-      margin: 4px 0;
-      text-transform: capitalize;
+  .c-detail--vote-grp + .c-detail--vote-grp {
+    margin-top: 15px;
+  }
+
+  .c-detail--vote-grp {
+    .c-detail--section-title {
+      margin-bottom: 15px;
+      color: $grey08;
+      font-family: $font-serif-semibold;
+      text-transform: uppercase;
       font-size: 14px;
+    }
+
+    .c-votes--items {
+      list-style: none;
+      overflow: hidden;
+
+      li {
+        display: block;
+        float: left;
+        width: 50%;
+        margin: 4px 0;
+        text-transform: capitalize;
+        font-size: 14px;
+
+        &.remote-voting-member a::after {
+          content: '7';
+          display: inline-block;
+          font-size: 1.25em;
+          font-family: 'senate_icons';
+          margin-left: 0.3em;
+          color: $orange01;
+          vertical-align: top;
+        }
+      }
+    }
+  }
+
+  .c-votes--remote-voting {
+    clear: both;
+
+    &::before {
+      content: '7';
+      display: inline-block;
+      font-size: 1.25em;
+      font-family: 'senate_icons';
+      margin-right: 0.3em;
+      color: $orange01;
+      vertical-align: text-bottom;
+    }
+
+    .remote-voting-url::after {
+      content: ', ';
+      display: inline-block;
+    }
+
+    .remote-voting-url:last-child::after {
+      display: none;
     }
   }
 }

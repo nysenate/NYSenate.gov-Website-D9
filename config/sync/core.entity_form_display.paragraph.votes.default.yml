@@ -24,6 +24,7 @@ dependencies:
     - field.field.paragraph.votes.field_ol_nay_names
     - field.field.paragraph.votes.field_ol_vote_type
     - field.field.paragraph.votes.field_publication_date
+    - field.field.paragraph.votes.field_remote_voting
     - paragraphs.paragraphs_type.votes
   module:
     - datetime
@@ -179,6 +180,16 @@ content:
     weight: 1
     region: content
     settings: {  }
+    third_party_settings: {  }
+  field_remote_voting:
+    type: entity_reference_autocomplete
+    weight: 22
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
 hidden:
   created: true

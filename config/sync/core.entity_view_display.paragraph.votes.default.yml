@@ -24,6 +24,7 @@ dependencies:
     - field.field.paragraph.votes.field_ol_nay_names
     - field.field.paragraph.votes.field_ol_vote_type
     - field.field.paragraph.votes.field_publication_date
+    - field.field.paragraph.votes.field_remote_voting
     - paragraphs.paragraphs_type.votes
   module:
     - datetime
@@ -201,5 +202,16 @@ content:
     third_party_settings: {  }
     weight: 1
     region: content
+  field_remote_voting:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 22
+    region: content
 hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
   search_api_excerpt: true

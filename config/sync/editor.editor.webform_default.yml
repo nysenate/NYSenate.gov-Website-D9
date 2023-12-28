@@ -10,44 +10,65 @@ format: webform_default
 editor: ckeditor5
 settings:
   toolbar:
-    rows:
-      -
-        -
-          name: Formatting
-          items:
-            - Format
-            - Bold
-            - Italic
-            - Superscript
-            - Subscript
-        -
-          name: Media
-          items:
-            - SpecialChar
-            - ImceImage
-        -
-          name: Linking
-          items:
-            - DrupalLink
-            - DrupalUnlink
-        -
-          name: Lists
-          items:
-            - NumberedList
-            - BulletedList
-        -
-          name: Indentation
-          items:
-            - Outdent
-            - Indent
-        -
-          name: 'Block Formatting'
-          items:
-            - Blockquote
-        -
-          name: Tools
-          items:
-            - Source
-            - Maximize
-  plugins: {  }
-image_upload: {  }
+    items:
+      - bold
+      - italic
+      - '|'
+      - link
+      - '|'
+      - bulletedList
+      - numberedList
+      - '|'
+      - blockQuote
+      - drupalInsertImage
+      - drupalMedia
+      - '|'
+      - heading
+      - '|'
+      - sourceEditing
+  plugins:
+    ckeditor5_heading:
+      enabled_headings:
+        - heading2
+        - heading3
+        - heading4
+        - heading5
+        - heading6
+    ckeditor5_sourceEditing:
+      allowed_tags:
+        - '<cite>'
+        - '<dl>'
+        - '<dt>'
+        - '<dd>'
+        - '<span>'
+        - '<drupal-entity data-entity-type data-entity-uuid data-entity-substitution data-align data-caption>'
+        - '<div data-oembed-url>'
+        - '<blockquote cite>'
+        - '<ul type>'
+        - '<ol type>'
+        - '<h2 id>'
+        - '<h3 id>'
+        - '<h4 id>'
+        - '<h5 id>'
+        - '<h6 id>'
+        - '<img data-entity-substitution>'
+        - '<a hreflang accesskey id rel target title>'
+        - '<drupal-media title>'
+    ckeditor5_list:
+      reversed: false
+      startIndex: true
+    ckeditor5_imageResize:
+      allow_resize: true
+    media_media:
+      allow_view_mode_override: true
+    linkit_extension:
+      linkit_enabled: true
+      linkit_profile: default
+image_upload:
+  status: true
+  scheme: public
+  directory: inline-images
+  max_size: ''
+  max_dimensions:
+    width: 0
+    height: 0

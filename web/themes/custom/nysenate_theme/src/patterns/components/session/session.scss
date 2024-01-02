@@ -998,12 +998,14 @@ div.c-meeting-detail--location {
 
 .l-panel-col {
   display: block;
-  float: left;
-
+  @include breakpoint($bp-sm) {
+    float: left;
+  }
   & + .l-panel-col {
     margin: 0;
   }
 }
+
 .l-panel-col--lft {
   @include breakpoint($bp-sm) {
     width: 24%;

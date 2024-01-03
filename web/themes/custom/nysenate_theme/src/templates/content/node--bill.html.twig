@@ -54,9 +54,9 @@
           Share this bill
         </h3>
         <ul>
-          <li><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u={{active_amend_url}}" class="c-detail--social-item facebook">Facebook</a></li>
-          <li><a target="_blank" class="c-detail--social-item twitter" href="https://twitter.com/intent/tweet?text={{content.field_ol_base_print_no[0]['#context']['value']}} Via: @nysenate: {{ active_amend_url }}">Twitter</a></li>
-          <li><a href="mailto:?&subject=From NYSenate.gov: {{content.field_ol_base_print_no[0]['#context']['value']}}&body=Check out this bill: {{ content.field_ol_base_print_no[0]['#context']['value'] }}: < {{active_amend_url}} >." class="c-detail--social-item email">Email</a></li>
+          <li><a target="_blank" href="{{ socials_facebook.url }}" class="c-detail--social-item bill">{{ icons.get(socials_facebook.icon) }}</a></li>
+          <li><a target="_blank" href="{{ socials_twitter.url }}" class="c-detail--social-item bill">{{ icons.get(socials_twitter.icon) }}</a></li>
+          <li class="email"><a href="{{ socials_email.url }}" class="c-detail--social-item bill">{{ icons.get(socials_email.icon) }}</a></li>
         </ul>
       </div>
 

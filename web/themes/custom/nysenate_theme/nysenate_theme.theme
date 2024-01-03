@@ -4035,25 +4035,6 @@ function nysenate_theme_preprocess_node__bill(&$variables) {
     'name' => $node->hasField('field_ol_print_no') ? $node->field_ol_print_no->value : '',
   ];
 
-  // Social links.
-  $url = $node->toUrl('canonical', ['absolute' => TRUE])->toString();
-  $node_title = $node->getTitle();
-
-  $variables['socials_facebook'] = [
-    'icon' => 'facebook',
-    'url' => 'https://www.facebook.com/sharer/sharer.php?u=' . $url,
-  ];
-
-  $variables['socials_twitter'] = [
-    'icon' => 'twitter',
-    'url' => 'http://twitter.com/share?url=' . $url . '&text=' . $node_title,
-  ];
-
-  $variables['socials_email'] = [
-    'icon' => 'envelope',
-    'url' => 'mailto:?&subject=From NYSenate.gov:' . $node_title . '&body=Check out this bill:' . $node_title . ':' . '<' . $url . '>.',
-  ];
-
 }
 
 /**

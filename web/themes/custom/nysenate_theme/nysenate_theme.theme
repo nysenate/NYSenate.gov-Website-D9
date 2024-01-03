@@ -4034,7 +4034,6 @@ function nysenate_theme_preprocess_node__bill(&$variables) {
     'url' => $node->toUrl('canonical', ['absolute' => TRUE])->toString(),
     'name' => $node->hasField('field_ol_print_no') ? $node->field_ol_print_no->value : '',
   ];
-
 }
 
 /**

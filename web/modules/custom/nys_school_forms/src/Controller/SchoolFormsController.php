@@ -140,9 +140,7 @@ class SchoolFormsController extends ControllerBase {
    *   Sanitized
    */
   protected function sanitizeQuery(?string $query_string): string {
-    return $query_string
-      ? filter_var(trim($query_string), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)
-      : $query_string;
+    return htmlspecialchars(trim((string) $query_string));
   }
 
   /**

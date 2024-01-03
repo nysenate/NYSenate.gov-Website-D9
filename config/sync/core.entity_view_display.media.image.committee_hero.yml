@@ -1,0 +1,45 @@
+uuid: a4d62540-3699-4692-aec0-966ce9aeee3e
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.media.committee_hero
+    - field.field.media.image.field_image
+    - field.field.media.image.rabbit_hole__settings
+    - image.style.committee_hero
+    - media.type.image
+  module:
+    - svg_image
+_core:
+  default_config_hash: Pyq580AsIX5NVdYP57-DmtQq09IcAVP3GFVYBX_ydZY
+id: media.image.committee_hero
+targetEntityType: media
+bundle: image
+mode: committee_hero
+content:
+  field_image:
+    type: image
+    label: hidden
+    settings:
+      image_link: ''
+      image_style: committee_hero
+      image_loading:
+        attribute: lazy
+      svg_attributes:
+        width: null
+        height: null
+      svg_render_as_image: true
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  created: true
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  langcode: true
+  name: true
+  rabbit_hole__settings: true
+  search_api_excerpt: true
+  thumbnail: true
+  uid: true

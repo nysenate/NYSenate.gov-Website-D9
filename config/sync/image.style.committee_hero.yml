@@ -1,0 +1,26 @@
+uuid: 20b43663-140f-4304-a1ec-f8ebec40b393
+langcode: en
+status: true
+dependencies:
+  config:
+    - crop.type.committee_hero
+  module:
+    - crop
+name: committee_hero
+label: 'Committee Hero'
+effects:
+  c1b2f37b-31e0-48cd-ad1c-48fee73841b6:
+    uuid: c1b2f37b-31e0-48cd-ad1c-48fee73841b6
+    id: image_scale_and_crop
+    weight: -9
+    data:
+      width: 1500
+      height: 368
+      anchor: center-center
+  20173659-a959-4502-a14e-fbca56667caa:
+    uuid: 20173659-a959-4502-a14e-fbca56667caa
+    id: crop_crop
+    weight: -10
+    data:
+      crop_type: committee_hero
+      automatic_crop_provider: null

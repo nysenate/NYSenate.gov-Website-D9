@@ -5,6 +5,7 @@
 {{ attach_library('nysenate_theme/resolution-page') }}
 
 {% import '@rain_theme/icons/_icons-macro.twig' as icons %}
+{% set bill_title = content.field_ol_base_print_no[0]['#context']['value'] %}
 
 {% set classes = ['node--bill'] %}
 <!-- BILL TEMPLATE -->
@@ -55,8 +56,8 @@
         </h3>
         <ul>
           <li><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u={{active_amend_url}}" class="c-detail--social-item bill">{{ icons.get('facebook') }}</a></li>
-          <li><a target="_blank" class="c-detail--social-item bill" href="https://twitter.com/intent/tweet?text={{content.field_ol_base_print_no[0]['#context']['value']}} Via: @nysenate: {{ active_amend_url }}">{{ icons.get('twitter') }}</a></li>
-          <li class="email"><a href="mailto:?&subject=From NYSenate.gov: {{content.field_ol_base_print_no[0]['#context']['value']}}&body=Check out this bill: {{ content.field_ol_base_print_no[0]['#context']['value'] }}: < {{active_amend_url}} >." class="c-detail--social-item bill">{{ icons.get('envelope') }}</a></li>
+          <li><a target="_blank" class="c-detail--social-item bill" href="https://twitter.com/intent/tweet?text={{ bill_title }} Via: @nysenate: {{ active_amend_url }}">{{ icons.get('twitter') }}</a></li>
+          <li class="email"><a href="mailto:?&subject=From NYSenate.gov: {{ bill_title }}&body=Check out this bill: {{ bill_title  }}: < {{active_amend_url}} >." class="c-detail--social-item bill">{{ icons.get('envelope') }}</a></li>
         </ul>
       </div>
 

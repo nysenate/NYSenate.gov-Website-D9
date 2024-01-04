@@ -223,8 +223,16 @@ div.c-meeting-detail--location {
 .c-block .c-meeting-detail--related {
   text-transform: uppercase;
   font-family: $font-sans-bold;
-  font-size: 10px;
-  line-height: 1.5em;
+  font-size: 15px;
+  line-height: 1.2em;
+
+  .nys-associated-topics {
+    border-left: none;
+    &.issues {
+      border-right: 1px solid #222222;
+      padding-right: 15px;
+    }
+  }
 
   ul {
     display: inline-block;
@@ -234,11 +242,10 @@ div.c-meeting-detail--location {
 
     li {
       display: inline-block;
-      vertical-align: middle;
+      //vertical-align: middle;
       margin: 0;
-      line-height: 1;
-      font-size: 10px;
-      line-height: 2.5em;
+      line-height: 1.2;
+      font-size: 15px;
 
       & + li {
         margin-left: 5px;
@@ -250,8 +257,8 @@ div.c-meeting-detail--location {
   a {
     text-transform: uppercase;
     font-family: $font-sans-bold;
-    font-size: 10px;
-    line-height: 2.5em;
+    font-size: 15px;
+    line-height: 1.2em;
   }
 
   p {
@@ -874,11 +881,11 @@ div.c-meeting-detail--location {
     font-size: 20px;
   }
   .c-block .c-meeting-detail--related {
-    font-size: 14px;
+    font-size: 15px;
     li,
     p,
     a {
-      font-size: 12px;
+      font-size: 15px;
     }
     p {
       margin-right: 15px;

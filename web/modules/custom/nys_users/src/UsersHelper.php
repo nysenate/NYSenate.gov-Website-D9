@@ -168,4 +168,40 @@ class UsersHelper {
       );
   }
 
+  /**
+   * Gets a list of all the senators assigned to a user for management.
+   *
+   * @param \Drupal\user\Entity\User|int|null $user
+   *   Either a User entity or the ID of one.  If NULL, current user is used.
+   */
+  public static function getUserSenatorManagement(mixed $user): array {
+    $user = static::resolveUser($user);
+    $senator_tids = [];
+
+    // If the user doesn't have the field, or it's empty, return an empty array.
+    if (!$user->hasField('field_senator_multiref') || $user->field_senator_multiref->isEmpty()) {
+      return $senator_tids;
+    }
+    // Otherwise, return an array of senator term IDs.
+    $senators = $user->field_senator_multiref->getValue();
+    return array_column($senators, 'target_id', 'target_id');
+  }
+
+  /**
+   * Gets a list of committees by senator tids found in field_chair.
+   *
+   * @param array $tids
+   *   Senator term IDs.
+   */
+  public static function getCommitteesBySenators(array $tids): array {
+    $storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+    $query = $storage->getQuery()
+      ->condition('vid', 'committees')
+      ->condition('field_chair', $tids, 'IN')
+      ->addTag('prevent_recursion')
+      ->accessCheck(TRUE);
+
+    return $query->execute();
+  }
+
 }

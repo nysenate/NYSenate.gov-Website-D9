@@ -9,6 +9,7 @@ use Drupal\block_content\Entity\BlockContent;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultAllowed;
 use Drupal\Core\Database\Query\AlterableInterface;
+use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Render\BubbleableMetadata;
@@ -16,6 +17,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
+use Drupal\nys_users\UsersHelper;
 use Drupal\pathauto\Entity\PathautoPattern;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\TermInterface;
@@ -1235,6 +1237,57 @@ function nys_senators_query_nys_senators_access_alter(AlterableInterface $query)
 
     }
   }
+}
+
+/**
+ * Implements hook_query_TAG_alter().
+ */
+function nys_senators_query_term_access_alter(AlterableInterface $query) {
+  // Prevent recursion with our entity query in nys_users/src/UsersHelper.php.
+  if ($query->hasTag('prevent_recursion')) {
+    return;
+  }
+
+  // Only alter the query when we routes we care about.
+  $route_match = \Drupal::routeMatch();
+  $routes = [
+    'node.add',
+    'entity.node.edit_form',
+  ];
+  if (!in_array($route_match->getRouteName(), $routes)) {
+    return;
+  }
+
+  $current_user = \Drupal::currentUser();
+  // If the user is not an MCP, return.
+  if (!UsersHelper::isMcp($current_user)) {
+    return;
+  }
+
+  $primary_table = '';
+  $tables = $query->getTables();
+  $target_tables = ['taxonomy_term_data', 'taxonomy_term_field_data'];
+  foreach ($tables as $info) {
+    $table = $info['table'];
+    if (!in_array($table, $target_tables)) {
+      continue;
+    }
+    $primary_table = $info['alias'];
+  }
+  // Get the senator management TIDs from the current user.
+  $senator_tids = UsersHelper::getUserSenatorManagement($current_user);
+  // Get the committee TIDs from the senator TIDs based on the committee chair.
+  $committee_tids = UsersHelper::getCommitteesBySenators($senator_tids);
+  if (empty($committee_tids)) {
+    return;
+  }
+
+  $vids = ['committees'];
+  $query->leftJoin('taxonomy_term_field_data', 'ttfd', $primary_table . '.tid = ttfd.tid');
+  $or = new Condition('OR');
+  $or->condition($primary_table . '.tid', array_values($committee_tids), 'IN');
+  $or->condition('ttfd.vid', $vids, 'NOT IN');
+  $query->condition($or);
 }
 
 /**

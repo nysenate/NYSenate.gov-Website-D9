@@ -5,12 +5,13 @@ dependencies:
   module:
     - node
     - paragraphs
+    - taxonomy
 id: paragraph.field_ol_abstained_members
 field_name: field_ol_abstained_members
 entity_type: paragraph
 type: entity_reference
 settings:
-  target_type: node
+  target_type: taxonomy_term
 module: core
 locked: false
 cardinality: -1

@@ -40,8 +40,9 @@
 
     .l-panel-col--lft {
       padding-right: 20px;
-      width: 22%;
-
+      @include breakpoint($bp-sm) {
+        width: 22%;
+      }
       a {
         color: $yellow03;
         text-transform: uppercase;

@@ -545,6 +545,12 @@ label {
   width: 60px;
   height: 40px;
   background: $blue01;
+  &.bill {
+    background: none;
+  }
+  svg path {
+    fill: #2B6A91;
+  }
 
   &::after {
     position: absolute;
@@ -671,6 +677,12 @@ label {
           margin-left: 0;
         }
       }
+    }
+    svg path {
+      fill: #2B6A91;
+    }
+    li.email {
+      margin-right: -40px;
     }
   }
 

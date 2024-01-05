@@ -3,8 +3,16 @@
 namespace Drupal\nys_school_forms\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Database\Connection;
+use Drupal\Core\File\FileUrlGeneratorInterface;
+use Drupal\Core\Pager\PagerManagerInterface;
+use Drupal\Core\Pager\PagerParametersInterface;
+use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Drupal\file\Entity\File;
+use Drupal\nys_school_forms\SchoolFormsService;
+use Drupal\path_alias\AliasManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -17,7 +25,7 @@ class SchoolFormsController extends ControllerBase {
    *
    * @var \Symfony\Component\HttpFoundation\RequestStack
    */
-  public $request;
+  public RequestStack $request;
 
   /**
    * ModuleInstaller.
@@ -31,28 +39,21 @@ class SchoolFormsController extends ControllerBase {
    *
    * @var \Drupal\Core\Database\Connection
    */
-  protected $database;
-
-  /**
-   * Drupal messenger.
-   *
-   * @var \Drupal\Core\Messenger\MessengerInterface
-   */
-  protected $messenger;
+  protected Connection $database;
 
   /**
    * Drupal pager parameters interface.
    *
    * @var \Drupal\Core\Pager\PagerParametersInterface
    */
-  protected $pagerParam;
+  protected PagerParametersInterface $pagerParam;
 
   /**
    * Drupal pager manager interface.
    *
    * @var \Drupal\Core\Pager\PagerManagerInterface
    */
-  protected $pagerManager;
+  protected PagerManagerInterface $pagerManager;
 
   /**
    * Drupal form builder.
@@ -66,51 +67,44 @@ class SchoolFormsController extends ControllerBase {
    *
    * @var \Drupal\path_alias\AliasManagerInterface
    */
-  protected $aliasManager;
+  protected AliasManagerInterface $aliasManager;
 
   /**
    * StreamWrapperManager.
    *
    * @var \Drupal\Core\StreamWrapper\StreamWrapperManager
    */
-  protected $streamWrapperManager;
-
-  /**
-   * Entity Type Mananger.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManager
-   */
-  protected $entityTypeManager;
+  protected StreamWrapperManager $streamWrapperManager;
 
   /**
    * School Forms Service.
    *
    * @var \Drupal\nys_school_forms\SchoolFormsService
    */
-  protected $schoolFormsService;
+  protected SchoolFormsService $schoolFormsService;
 
   /**
    * The file URL generator.
    *
    * @var \Drupal\Core\File\FileUrlGeneratorInterface
    */
-  protected $fileUrlGenerator;
+  protected FileUrlGeneratorInterface $fileUrlGenerator;
 
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container) {
+  public static function create(ContainerInterface $container): static {
     $instance = new static();
-    $instance->request = $container->get('request_stack');
     $instance->moduleHandler = $container->get('module_handler');
-    $instance->database = $container->get('database');
+    $instance->entityTypeManager = $container->get('entity_type.manager');
     $instance->messenger = $container->get('messenger');
+    $instance->formBuilder = $container->get('form_builder');
+    $instance->request = $container->get('request_stack');
+    $instance->database = $container->get('database');
     $instance->pagerParam = $container->get('pager.parameters');
     $instance->pagerManager = $container->get('pager.manager');
-    $instance->formBuilder = $container->get('form_builder');
     $instance->aliasManager = $container->get('path_alias.manager');
     $instance->streamWrapperManager = $container->get('stream_wrapper_manager');
-    $instance->entityTypeManager = $container->get('entity_type.manager');
     $instance->schoolFormsService = $container->get('nys_school_forms.school_forms');
     $instance->fileUrlGenerator = $container->get('file_url_generator');
     return $instance;
@@ -122,98 +116,87 @@ class SchoolFormsController extends ControllerBase {
    * @return array
    *   The search form and search results build array.
    */
-  public function view($form_type = NULL) {
+  public function view($form_type = NULL): array {
     // Fetch, sanitize, and build the query from parameters.
-    $senator = $this->sanitizeQuery($this->request->getCurrentRequest()->get('senator'));
-    $school = $this->sanitizeQuery($this->request->getCurrentRequest()->get('school'));
-    $teacher_name = $this->sanitizeQuery($this->request->getCurrentRequest()->get('teacher_name'));
-    $from_date = $this->sanitizeQuery($this->request->getCurrentRequest()->get('from_date'));
-    $to_date = $this->sanitizeQuery($this->request->getCurrentRequest()->get('to_date'));
-    $sort_by = $this->sanitizeQuery($this->request->getCurrentRequest()->get('sort_by'));
-    $sort_order = $this->sanitizeQuery($this->request->getCurrentRequest()->get('sort_order'));
-    $build = [];
-    $build['#theme'] = 'school_forms';
-
-    $params = [
-      'form_type' => $form_type,
-      'senator' => urldecode($senator),
-      'school' => urldecode($school),
-      'teacher_name' => urldecode($teacher_name),
-      'from_date' => strtotime(urldecode($from_date)),
-      'to_date' => strtotime(urldecode($to_date)),
-      'sort_by' => urldecode($sort_by),
-      'sort_order' => urldecode($sort_order),
+    $params = $this->buildFormParameters();
+    if ($form_type) {
+      $params['form_type'] = $form_type;
+    }
+    return [
+      '#theme' => 'school_forms',
+      '#search_form' => $this->formBuilder->getForm('Drupal\nys_school_forms\Form\SchoolFormSearchForm', $params),
+      '#entity_update_form' => $this->formBuilder->getForm('Drupal\nys_school_forms\Form\SchoolFormEntityUpdateForm', $params),
+      '#export_link' => '/admin/school-forms/export?' . http_build_query($params),
     ];
-
-    $build['#search_form'] = $this->formBuilder->getForm('Drupal\nys_school_forms\Form\SchoolFormSearchForm', $params);
-    $build['#entity_update_form'] = $this->formBuilder->getForm('Drupal\nys_school_forms\Form\SchoolFormEnityUpdateForm', $params);
-    $build['#export_link'] = '/admin/school-forms/export?senator=' . urldecode($senator) . '&form_type=' . $form_type . '&school=' . urldecode($school) . '&teacher_name=' . urldecode($teacher_name) . '&from_date=' . urldecode($from_date) . '&to_date=' . urldecode($to_date) . '&sort_by=' . urldecode($sort_by) . '&sort_order=' . urldecode($sort_order);
-    return $build;
   }
 
   /**
    * Sanitize query string.
    *
-   * @param string $query
-   *   Raw query.
+   * @param string|null $query_string
+   *   Raw string for a query.
    *
    * @return string
    *   Sanitized
    */
-  protected function sanitizeQuery($query) {
-    $query = trim($query);
-    $filtered_query = filter_var($query, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-    return $filtered_query ? $filtered_query : $query;
+  protected function sanitizeQuery(?string $query_string): string {
+    return htmlspecialchars(trim((string) $query_string));
   }
 
   /**
-   * {@inheritdoc}
+   * Builds the form parameters based on the current request.
    */
-  public function exportCsv() {
-    // Fetch, sanitize, and build the query from parameters.
-    $senator = $this->sanitizeQuery($this->request->getCurrentRequest()->get('senator'));
-    $form_type = $this->sanitizeQuery($this->request->getCurrentRequest()->get('form_type'));
-    $school = $this->sanitizeQuery($this->request->getCurrentRequest()->get('school'));
-    $teacher_name = $this->sanitizeQuery($this->request->getCurrentRequest()->get('teacher_name'));
-    $from_date = $this->sanitizeQuery($this->request->getCurrentRequest()->get('from_date'));
-    $to_date = $this->sanitizeQuery($this->request->getCurrentRequest()->get('to_date'));
-    $sort_by = $this->sanitizeQuery($this->request->getCurrentRequest()->get('sort_by'));
-    $sort_order = $this->sanitizeQuery($this->request->getCurrentRequest()->get('sort_order'));
-
-    $params = [
-      'form_type' => $form_type,
-      'senator' => urldecode($senator),
-      'school' => urldecode($school),
-      'teacher_name' => urldecode($teacher_name),
-      'from_date' => urldecode($from_date),
-      'to_date' => urldecode($to_date),
-      'sort_by' => urldecode($sort_by),
-      'sort_order' => urldecode($sort_order),
+  protected function buildFormParameters(): array {
+    $req = $this->request->getCurrentRequest();
+    $fields = [
+      'form_type',
+      'senator',
+      'school',
+      'teacher_name',
+      'from_date',
+      'to_date',
+      'sort_by',
+      'sort_order',
     ];
+    $ret = [];
+    foreach ($fields as $val) {
+      $ret[$val] = urldecode($this->sanitizeQuery($req->get($val)));
+    }
+
+    return $ret;
+  }
+
+  /**
+   * Exports the form as a CSV file.
+   */
+  public function exportCsv(): Response {
+    $params = $this->buildFormParameters();
     $results = $this->schoolFormsService->getResults($params);
     $handle = fopen('php://temp', 'w+');
     fputcsv(
-          $handle, [
-            'Date submitted',
-            'Student\'s Name',
-            'Grade',
-            'Teacher',
-            'School Name',
-            'Street',
-            'City, State',
-            'Zip Code',
-            'School Phone',
-            'Senator',
-            'District Number',
-            'Student Submission',
-          ], ','
-      );
+      $handle,
+      [
+        'Date submitted',
+        'Student\'s Name',
+        'Grade',
+        'Teacher',
+        'School Name',
+        'Street',
+        'City, State',
+        'Zip Code',
+        'School Phone',
+        'Senator',
+        'District Number',
+        'Student Submission',
+      ]
+    );
 
     foreach ($results as $result) {
       $file = File::load($result['student']['student_submission']);
       $uri = $file->getFileUri();
       $file_string = $this->fileUrlGenerator->generateAbsoluteString($uri);
-      $school_address = $result['school_node']->get('field_school_address')->getValue()[0];
+      $school_address = $result['school_node']->get('field_school_address')
+        ->getValue()[0];
       $line = [
         date('F j, Y', $result['submission']->getCreatedTime()),
         $result['student']['student_name'],
@@ -223,12 +206,13 @@ class SchoolFormsController extends ControllerBase {
         $school_address['address_line1'],
         $school_address['locality'] . ',' . $school_address['administrative_area'],
         $school_address['postal_code'],
-        $result['school_node']->get('field_school_ceo_phone')->getValue()[0]['value'],
+        $result['school_node']->get('field_school_ceo_phone')
+          ->getValue()[0]['value'],
         $result['senator']->label(),
         $result['school_node']->get('field_district')->entity->label(),
         $file_string,
       ];
-      fputcsv($handle, $line, ',');
+      fputcsv($handle, $line);
     }
     rewind($handle);
     $csv_data = stream_get_contents($handle);
@@ -243,46 +227,64 @@ class SchoolFormsController extends ControllerBase {
   /**
    * Controller method for generating webform submissions.
    */
-  public function generateArchiveWebformSubmissions($form_type = 'earth_day', $year = '2019') {
+  public function generateArchiveWebformSubmissions($form_type = 'earth_day', $year = '2019'): array {
+    // Get the webform storage.  If no joy, report and exit.
+    try {
+      $webformSubmissionStorage = $this->entityTypeManager->getStorage('webform_submission');
+    }
+    catch (\Throwable) {
+      $this->getLogger('nys_school_forms')
+        ->error('Failed to instantiate entity storage for webform_submission objects');
+      $this->messenger->addError('There was an error while attempting to generate a submission.');
+      return [];
+    }
 
-    $webformSubmissionStorage = $this->entityTypeManager->getStorage('webform_submission');
     $webform_type = match ($form_type) {
       'thankful' => 'school_form_thanksgiving',
-            'earth_day' => 'school_form_earth_day',
+      'earth_day' => 'school_form_earth_day',
     };
+
     // Query the last 5 webform submissions with webform ID = form type.
-    $query = $webformSubmissionStorage->getQuery()
+    $submission_ids = $webformSubmissionStorage->getQuery()
       ->condition('webform_id', $webform_type)
       ->range(0, 5)
-      ->sort('created', 'DESC');
-    $submission_ids = $query
+      ->sort('created', 'DESC')
       ->accessCheck(FALSE)
       ->execute();
     $start = $year;
-    foreach ($submission_ids as $submission_id) {
-      if ($start >= '2022') {
-        $start = '2022';
-      }
-      $new_created_date = strtotime($start . '-01-01 00:00:00');
-      // Load the submission entity.
-      $submission = $webformSubmissionStorage->load($submission_id);
+    $errors = 0;
+    $submissions = $webformSubmissionStorage->loadMultiple($submission_ids);
+
+    /** @var \Drupal\webform\Entity\WebformSubmission $submission */
+    foreach ($submissions as $submission) {
       // Modify the submission as needed.
       if (!empty($submission)) {
+        if ($start >= '2022') {
+          $start = '2022';
+        }
+        $new_created_date = strtotime($start . '-01-01 00:00:00');
         $submission->setCreatedTime($new_created_date);
-        $submission->save();
+        try {
+          $submission->save();
+        }
+        catch (\Throwable $e) {
+          $this->getLogger('nys_school_forms')
+            ->error('An error occurred while attempting to save a submission', ['@msg' => $e->getMessage()]);
+          $this->messenger->addError('An error occurred while saving a submission.');
+          $errors++;
+        }
       }
-      // Save the submission.
-      $submission->save();
       $start++;
     }
-    $markup = 'The last 5 webform submissions successfully modified created dates.';
 
-    $build = [
+    $markup = $errors
+      ? $errors . " occurred while modifying created dates."
+      : 'Successfully modified created dates for he last ' . count($submission_ids) . ' webform submissions.';
+
+    return [
       '#type' => 'markup',
       '#markup' => $markup,
     ];
-
-    return $build;
   }
 
 }

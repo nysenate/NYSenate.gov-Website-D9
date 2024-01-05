@@ -2,13 +2,26 @@
 @import '../../global/utils/init';
 
 .node--event-full {
-
+  .field--name-body {
+    margin-top: 30px;
+  }
 
   .nys-associated-topics {
-    display: block;
-
+    display: inline;
+    border-left: none;
+    padding-left: 0;
     @include breakpoint($bp-sm) {
       margin-bottom: 30px;
+    }
+    &.committee {
+      display: inline;
+      border-left: 1px solid #222222;
+      .nys-associated-topics--label {
+        padding-left: 14px;
+      }
+    }
+    .field--name-field-committee {
+      display: inline;
     }
   }
 

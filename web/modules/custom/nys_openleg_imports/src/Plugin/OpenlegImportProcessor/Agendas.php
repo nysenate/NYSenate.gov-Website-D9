@@ -140,13 +140,15 @@ class Agendas extends ImportProcessorBase {
    *   The formatted title.
    */
   public function formatAddendumTitle(object $meeting): string {
+    $id = $meeting->addendumId ?? '';
     $committee = $meeting->committeeId->name ?? '';
     $year = $meeting->agendaId->year ?? '';
     $week = $meeting->agendaId->number ?? '';
     $time = $meeting->meeting->meetingDateTime ?? '';
+    $time = $time ? ' (' . $time . ')' : '';
 
     return ($year && $week && $time && $committee)
-      ? "$year Week $week $committee ($time)"
+      ? "$year Week $week $committee $id{$time}"
       : '';
   }
 

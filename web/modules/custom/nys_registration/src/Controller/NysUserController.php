@@ -4,12 +4,37 @@ namespace Drupal\nys_registration\Controller;
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\user\Controller\UserController;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Custom User Controller.
  */
 class NysUserController extends UserController {
+
+  /**
+   * The tempstore factory.
+   *
+   * @var \Drupal\Core\TempStore\PrivateTempStoreFactory
+   */
+  protected $tempStoreFactory;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    $instance = new static(
+      $container->get('date.formatter'),
+      $container->get('entity_type.manager')->getStorage('user'),
+      $container->get('user.data'),
+      $container->get('logger.factory')->get('user'),
+      $container->get('flood')
+    );
+
+    $instance->tempStoreFactory = $container->get('tempstore.private');
+
+    return $instance;
+  }
 
   /**
    * Validates user, hash, and timestamp; logs the user in if correct.
@@ -53,12 +78,12 @@ class NysUserController extends UserController {
 
     user_login_finalize($user);
     $this->logger->notice(
-          'User %name used one-time login link at time %timestamp.',
-          [
-            '%name' => $user->getDisplayName(),
-            '%timestamp' => $timestamp,
-          ]
-      );
+      'User %name used one-time login link at time %timestamp.',
+      [
+        '%name' => $user->getDisplayName(),
+        '%timestamp' => $timestamp,
+      ]
+    );
     $this->messenger()->addStatus($this->t('You have just used your one-time login link. It is no longer necessary to use this link to log in. Please set your password.'));
     // Let the user's password be changed without the current password
     // check.
@@ -66,14 +91,18 @@ class NysUserController extends UserController {
     $request->getSession()->set('pass_reset_' . $user->id(), $token);
     // Clear any flood events for this user.
     $this->flood->clear('user.password_request_user', $uid);
+
+    // Bypass email TFA during password reset workflow.
+    $this->tempStoreFactory->get('email_tfa')->set('email_tfa_user_verify', 1);
+
     return $this->redirect(
-          'nys_registration.password_reset',
-          ['user' => $user->id()],
-          [
-            'query' => ['pass-reset-token' => $token],
-            'absolute' => TRUE,
-          ]
-      );
+      'nys_registration.password_reset',
+      ['user' => $user->id()],
+      [
+        'query' => ['pass-reset-token' => $token],
+        'absolute' => TRUE,
+      ]
+    );
   }
 
 }

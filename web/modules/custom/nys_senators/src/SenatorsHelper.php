@@ -385,4 +385,21 @@ class SenatorsHelper {
       );
   }
 
+  /**
+   * Gets a list of committees by senator tids found in field_chair.
+   *
+   * @param array $tids
+   *   Senator term IDs.
+   */
+  public static function getChairedCommittees(array $tids): array {
+    $storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+    $query = $storage->getQuery()
+      ->condition('vid', 'committees')
+      ->condition('field_chair', $tids, 'IN')
+      ->addTag('prevent_recursion')
+      ->accessCheck(TRUE);
+
+    return $query->execute();
+  }
+
 }

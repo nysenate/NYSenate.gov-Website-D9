@@ -1242,8 +1242,8 @@ function nys_senators_query_nys_senators_access_alter(AlterableInterface $query)
 /**
  * Implements hook_query_TAG_alter().
  */
-function nys_senators_query_term_access_alter(AlterableInterface $query) {
-  // Prevent recursion with our entity query in nys_users/src/UsersHelper.php.
+function nys_senators_query_taxonomy_term_access_alter(AlterableInterface $query): void {
+  // Prevent recursion with entity query in nys_senators/src/SenatorsHelper.php.
   if ($query->hasTag('prevent_recursion')) {
     return;
   }
@@ -1274,10 +1274,8 @@ function nys_senators_query_term_access_alter(AlterableInterface $query) {
     }
     $primary_table = $info['alias'];
   }
-  // Get the senator management TIDs from the current user.
-  $senator_tids = UsersHelper::getUserSenatorManagement($current_user);
-  // Get the committee TIDs from the senator TIDs based on the committee chair.
-  $committee_tids = UsersHelper::getCommitteesBySenators($senator_tids);
+
+  $committee_tids = UsersHelper::getManagedCommittees($current_user);
   if (empty($committee_tids)) {
     return;
   }

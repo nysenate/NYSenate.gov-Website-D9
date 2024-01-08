@@ -3,6 +3,7 @@
 namespace Drupal\nys_users;
 
 use Drupal\Core\Session\AccountInterface;
+use Drupal\nys_senators\SenatorsHelper;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\user\Entity\User;
 
@@ -174,7 +175,7 @@ class UsersHelper {
    * @param \Drupal\user\Entity\User|int|null $user
    *   Either a User entity or the ID of one.  If NULL, current user is used.
    */
-  public static function getUserSenatorManagement(mixed $user): array {
+  public static function getManagedSenators(mixed $user): array {
     $user = static::resolveUser($user);
     $senator_tids = [];
 
@@ -188,20 +189,16 @@ class UsersHelper {
   }
 
   /**
-   * Gets a list of committees by senator tids found in field_chair.
+   * Gets a list of all committees a user is assigned to for management.
    *
-   * @param array $tids
-   *   Senator term IDs.
+   * @param \Drupal\user\Entity\User|int|null $user
+   *   Either a User entity or the ID of one.  If NULL, current user is used.
    */
-  public static function getCommitteesBySenators(array $tids): array {
-    $storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
-    $query = $storage->getQuery()
-      ->condition('vid', 'committees')
-      ->condition('field_chair', $tids, 'IN')
-      ->addTag('prevent_recursion')
-      ->accessCheck(TRUE);
-
-    return $query->execute();
+  public static function getManagedCommittees(mixed $user): array {
+    $user = static::resolveUser($user);
+    $senator_tids = UsersHelper::getManagedSenators($user);
+    // Get the committee TIDs from senator TIDs based on the committee chair.
+    return SenatorsHelper::getChairedCommittees($senator_tids);
   }
 
 }

@@ -108,10 +108,7 @@
     </div>
   </div>
 
-  {{ video_status.key }}
-
-  {% if
-    video_status.key == 'streaming_live_now' %}
+  {% if video_status.key == 'streaming_live_now' %}
     <div class="c-meeting-detail--descript">
       {{ content.field_ustream }}
     </div>

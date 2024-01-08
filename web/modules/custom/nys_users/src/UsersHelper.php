@@ -178,14 +178,10 @@ class UsersHelper {
   public static function getManagedSenators(mixed $user): array {
     $user = static::resolveUser($user);
     $senator_tids = [];
+    $senators = $user->field_senator_multiref->getValue() ?? $senator_tids;
+    $senator_tids = array_column($senators, 'target_id', 'target_id');
 
-    // If the user doesn't have the field, or it's empty, return an empty array.
-    if (!$user->hasField('field_senator_multiref') || $user->field_senator_multiref->isEmpty()) {
-      return $senator_tids;
-    }
-    // Otherwise, return an array of senator term IDs.
-    $senators = $user->field_senator_multiref->getValue();
-    return array_column($senators, 'target_id', 'target_id');
+    return $senator_tids;
   }
 
   /**

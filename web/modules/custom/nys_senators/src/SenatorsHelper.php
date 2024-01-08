@@ -392,14 +392,20 @@ class SenatorsHelper {
    *   Senator term IDs.
    */
   public static function getChairedCommittees(array $tids): array {
-    $storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
-    $query = $storage->getQuery()
-      ->condition('vid', 'committees')
-      ->condition('field_chair', $tids, 'IN')
-      ->addTag('prevent_recursion')
-      ->accessCheck(TRUE);
+    try {
+      $storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+      $query = $storage->getQuery()
+        ->condition('vid', 'committees')
+        ->condition('field_chair', $tids, 'IN')
+        ->addTag('prevent_recursion')
+        ->accessCheck(TRUE);
 
-    return $query->execute();
+      return $query->execute();
+    }
+    catch (\Exception $e) {
+      \Drupal::logger('nys_senators')->error($e->getMessage());
+      return [];
+    }
   }
 
 }

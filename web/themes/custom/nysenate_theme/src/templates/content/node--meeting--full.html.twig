@@ -90,9 +90,10 @@
         </div>
       {% endif %}
 
-      {% if content.field_issues.0 %}
+      {% if content.field_issues.0 or content.field_committee %}
         <div class="c-meeting-detail--related">
-          <ul>
+          {% if content.field_issues.0 %}
+          <ul class="nys-associated-topics issues">
             <p>
               related issues:
             </p>
@@ -103,6 +104,15 @@
               <li>{{ issue }}</li>
             {% endfor %}
           </ul>
+          {% endif %}
+          {% if content.field_committee %}
+          <ul class="nys-associated-topics">
+            <p>
+              committees:
+            </p>
+              <li>{{ content.field_committee }}</li>
+          </ul>
+          {% endif %}
         </div>
       {% endif %}
     </div>
@@ -137,8 +147,6 @@
 {{ committee_events }}
 
 {{ drupal_view('committee_meetings', 'news') }}
-
-{{ drupal_view('committee_meetings', 'committee') }}
 
 {{ drupal_view('senator_microsite_content', 'promo_footer') }}
 

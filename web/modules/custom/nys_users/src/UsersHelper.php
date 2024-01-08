@@ -3,6 +3,7 @@
 namespace Drupal\nys_users;
 
 use Drupal\Core\Session\AccountInterface;
+use Drupal\nys_senators\SenatorsHelper;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\user\Entity\User;
 
@@ -166,6 +167,34 @@ class UsersHelper {
           ['microsite_content_producer', 'legislative_correspondent'],
           static::NYS_USERS_OWNS_ANY
       );
+  }
+
+  /**
+   * Gets a list of all the senators assigned to a user for management.
+   *
+   * @param \Drupal\user\Entity\User|int|null $user
+   *   Either a User entity or the ID of one.  If NULL, current user is used.
+   */
+  public static function getManagedSenators(mixed $user): array {
+    $user = static::resolveUser($user);
+    $senator_tids = [];
+    $senators = $user->field_senator_multiref->getValue() ?? $senator_tids;
+    $senator_tids = array_column($senators, 'target_id', 'target_id');
+
+    return $senator_tids;
+  }
+
+  /**
+   * Gets a list of all committees a user is assigned to for management.
+   *
+   * @param \Drupal\user\Entity\User|int|null $user
+   *   Either a User entity or the ID of one.  If NULL, current user is used.
+   */
+  public static function getManagedCommittees(mixed $user): array {
+    $user = static::resolveUser($user);
+    $senator_tids = UsersHelper::getManagedSenators($user);
+    // Get the committee TIDs from senator TIDs based on the committee chair.
+    return SenatorsHelper::getChairedCommittees($senator_tids);
   }
 
 }

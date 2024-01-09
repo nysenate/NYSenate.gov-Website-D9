@@ -4229,6 +4229,8 @@ function nysenate_theme_preprocess_node__resolution(&$variables) {
 
   $variables['sponsors_array'] = \Drupal::service('nys_bill.bills_helper')
     ->resolveAmendmentSponsors($node, $chamber);
+
+  $variables['active_amend_url'] = $node->toUrl('canonical', ['absolute' => TRUE])->toString();
 }
 
 /**

@@ -12,11 +12,18 @@
     "repositories": [
         {
             "type": "composer",
-            "url": "https://packages.drupal.org/8"
+            "url": "https://packages.drupal.org/8",
+            "exclude": [
+                "drupal/address_map_link"
+            ]
         },
         {
             "type": "composer",
             "url": "https://asset-packagist.org"
+        },
+        {
+            "type": "vcs",
+            "url": "https://oauth2:5eWouk836yRxGz4RUPy7@git.drupalcode.org/issue/address_map_link-3411810.git"
         }
     ],
     "require": {
@@ -25,10 +32,11 @@
         "composer/installers": "^1.2",
         "cweagans/composer-patches": "^1.7.0",
         "dompdf/dompdf": "^2.0",
-        "drupal/address_map_link": "^1.3",
+        "drupal/address": "^2.0",
+        "drupal/address_map_link": "dev-3411810-composer-dependency-on",
         "drupal/admin_toolbar": "^3.0",
         "drupal/ajax_comments": "^1.0@beta",
-        "drupal/allowed_formats": "^2.0",
+        "drupal/allowed_formats": "^2.0 || ^3.0",
         "drupal/auto_entitylabel": "^3.0@beta",
         "drupal/better_exposed_filters": "^6.0",
         "drupal/block_content_template": "^1.5",
@@ -54,8 +62,8 @@
         "drupal/eck": "^2.0",
         "drupal/email_registration": "^2.0@RC",
         "drupal/email_tfa": "^1.0",
-        "drupal/entity_reference_revisions": "^1.10",
         "drupal/entity_print": "^2.13",
+        "drupal/entity_reference_revisions": "^1.10",
         "drupal/entityqueue": "^1.2",
         "drupal/environment_indicator": "^4.0",
         "drupal/eva": "^3.0",
@@ -81,12 +89,12 @@
         "drupal/htmlpurifier": "^1.0@RC",
         "drupal/image_style_quality": "^1.4",
         "drupal/image_widget_crop": "^2.4",
-        "drupal/imagemagick": "^3.3",
+        "drupal/imagemagick": "^3.3 || ^4.0",
         "drupal/inline_entity_form": "~1.0",
         "drupal/job_scheduler": "^4.0",
         "drupal/jquery_ui_datepicker": "^2.0",
         "drupal/jquery_ui_slider": "^2.0",
-        "drupal/linkit": "~6.0",
+        "drupal/linkit": "~6.0 || ^6.1",
         "drupal/login_history": "^2.0@alpha",
         "drupal/mailsystem": "^4.3",
         "drupal/media_entity_file_replace": "^1.1",
@@ -141,7 +149,7 @@
         "drupal/ultimate_cron": "^2.0@alpha",
         "drupal/upgrade_status": "^4.0",
         "drupal/video_embed_field": "~2.0",
-        "drupal/views_autocomplete_filters": "^1.3",
+        "drupal/views_autocomplete_filters": "^1.3 || ^2.0",
         "drupal/views_bulk_edit": "^2.6",
         "drupal/views_bulk_operations": "^4.1",
         "drupal/views_data_export": "^1.1",
@@ -164,6 +172,7 @@
         "geocoder-php/google-maps-provider": "^4.6",
         "kint-php/kint": "^4.2",
         "mediacurrent/rain_theme": "^4.0@beta",
+        "mglaman/composer-drupal-lenient": "^1.0",
         "npm-asset/datatables.net-dt": "^3.2",
         "oomphinc/composer-installers-extender": "^2.0",
         "pantheon-systems/drupal-integrations": "^9.0",
@@ -206,7 +215,8 @@
             "phpro/grumphp-shim": true,
             "phpro/grumphp": true,
             "php-http/discovery": true,
-            "topfloor/composer-cleanup-vcs-dirs": true
+            "topfloor/composer-cleanup-vcs-dirs": true,
+            "mglaman/composer-drupal-lenient": true
         }
     },
     "autoload": {
@@ -322,6 +332,9 @@
             "drupal/clamav": {
                 "3383653 -Support image upload plugin for CKEditor5\n": "https://git.drupalcode.org/project/clamav/-/merge_requests/7.patch"
             }
+        },
+        "drupal-lenient": {
+            "allowed-list": ["drupal/address_map_link", "drupal/address_map_link"]
         }
     }
 }

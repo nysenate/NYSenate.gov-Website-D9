@@ -335,3 +335,33 @@
 .c-container--title.search {
   float: left;
 }
+
+.c-container--header__top-border.committee {
+  margin-bottom: 20px;
+  .nys-arrow-link {
+    position: absolute;
+    right: 0;
+    top: 20px;
+    text-transform: uppercase;
+    font-family: $font-sans-bold;
+    font-size: 16px;
+    line-height: 16px;
+    letter-spacing: 0.1em;
+    &:after {
+      margin-top: -4px;
+      font-size: 23px;
+      line-height: 16px;
+      font-family: $senate-icons;
+      display: inline-block;
+      vertical-align: middle;
+      speak: none;
+      font-style: normal;
+      font-weight: normal;
+      font-variant: normal;
+      text-transform: none;
+      padding-left: 3px;
+      -webkit-font-smoothing: antialiased;
+      color: $orange01;
+    }
+  }
+}

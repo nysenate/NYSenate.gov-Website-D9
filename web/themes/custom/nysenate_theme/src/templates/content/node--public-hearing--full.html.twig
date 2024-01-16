@@ -1,16 +1,14 @@
 {{ attach_library('nysenate_theme/session') }}
 {{ attach_library('nysenate_theme/nysenate-issues') }}
 
-{% if
-  video_status.key == 'streaming_live_now'
-    and content.field_video_redirect[0] %}
+{% if video_status.key == 'streaming_live_now' %}
   <div class="c-meeting-detail--descript">
     {{ content.field_ustream }}
   </div>
-{% elseif
-  video_status.key == 'streaming_redirect'
-    and content.field_video_redirect[0] %}
-  {{ content.field_ustream }}
+{% elseif video_status.key == 'streaming_redirect' and content.field_video_redirect[0] %}
+  <div class="c-meeting-detail--descript">
+    {{ content.field_video_redirect  }}
+  </div>
 {% endif %}
 
 <article class="c-block c-meeting-detail--header">

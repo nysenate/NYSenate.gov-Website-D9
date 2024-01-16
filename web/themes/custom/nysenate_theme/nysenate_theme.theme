@@ -5519,6 +5519,8 @@ function nysenate_theme_preprocess_page(&$variables) {
       if ($vocabulary->label() == "Committees") {
         $variables['actionbar']['type'] = 'committee';
         $variables['actionbar']['flag_follow_committee'] = $flag_link_service->build($term->getEntityTypeId(), $term->id(), 'follow_committee');
+        $variables['actionbar']['committee_title'] = $term->getName();
+        $variables['actionbar']['committee_type'] = $term->field_committee_types->value;
       }
     }
   }

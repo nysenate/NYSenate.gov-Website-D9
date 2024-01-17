@@ -68,9 +68,13 @@
     <div class="l-header-region l-row c-hero">
       <div class="c-hero-livestream-wrapper">
         <div class="c-hero-livestream-video">
-          {% if video_id %}
+          {% if video_id and video_status == "live" %}
             <div class="media-item__responsive-video">
               <iframe width='100%' height='315' id="UstreamIframe" src="https://www.ustream.tv/embed/{{ video_id }}" allowfullscreen webkitallowfullscreen frameborder="0" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+          {% elseif video_id and video_status == "redirect" %}
+            <div class="media-item__responsive-video">
+              <iframe width='100%' height='315' id="UstreamIframe" src="{{ video_id }}" allowfullscreen webkitallowfullscreen frameborder="0" referrerpolicy="no-referrer-when-downgrade"></iframe>
             </div>
           {% endif %}
         </div>

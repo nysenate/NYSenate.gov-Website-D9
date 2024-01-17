@@ -37,6 +37,8 @@
  * @see template_preprocess_field()
  */
 #}
+
+{{ attach_library('rain_theme/media') }}
 {%
     set classes = [
     'field',
@@ -53,7 +55,7 @@
 %}
 
 {% for item in items %}
-    <div class="media-ustream-video media-ustream-{{ item.value }}">
+    <div class="media-item__responsive-video media-ustream-video media-ustream-{{ item.value }}">
         <iframe id="UstreamIframe" src="https://www.ustream.tv/embed/{{ item.value }}" width="760px" height="427.5px" style=style="border: 0 none transparent;" allowfullscreen webkitallowfullscreen frameborder="0" referrerpolicy="no-referrer-when-downgrade">
         </iframe>
     </div>

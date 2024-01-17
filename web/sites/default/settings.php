@@ -839,13 +839,6 @@ if (isset($_ENV['PANTHEON_ENVIRONMENT'])) {
       $config['environment_indicator.indicator']['name'] = 'Multidev';
       $config['environment_indicator.indicator']['bg_color'] = '#3D004B';
       $config['environment_indicator.indicator']['fg_color'] = '#FFFFFF';
-
-      // Enable email rerouting for all Pantheon env.
-      // Re-factor before launch to remove from Live.
-      $config['reroute_email.settings']['enable'] = TRUE;
-      $config['reroute_email.settings']['address'] = 'nys.senate.dev@gmail.com';
-      $config['reroute_email.settings']['description'] = TRUE;
-      $config['reroute_email.settings']['message'] = TRUE;
   }
 }
 else {

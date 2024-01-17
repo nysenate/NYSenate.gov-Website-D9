@@ -102,7 +102,6 @@ class GeneralEventSubscriber implements EventSubscriberInterface {
    *   The built event info array, or an empty array on failure.
    */
   protected function buildEventInfo(string $msg_type, EntityInterface $entity): array {
-
     try {
       /**
        * @var \Drupal\nys_accumulator\EventInfoGeneratorInterface $plugin
@@ -112,16 +111,15 @@ class GeneralEventSubscriber implements EventSubscriberInterface {
     }
     catch (\Throwable $e) {
       $this->logger->error(
-            'Failed to build event info', [
-              '@msg' => $e->getMessage(),
-              '@type' => $msg_type,
-              '@entity_type' => $entity->getEntityTypeId() . ':' . $entity->bundle(),
-            ]
-        );
+        'Failed to build event info', [
+          '@msg' => $e->getMessage(),
+          '@type' => $msg_type,
+          '@entity_type' => $entity->getEntityTypeId() . ':' . $entity->bundle(),
+        ]
+      );
       $event_info = [];
     }
     return $event_info;
-
   }
 
   /**
@@ -132,26 +130,22 @@ class GeneralEventSubscriber implements EventSubscriberInterface {
    * @param bool $is_unflag
    *   TRUE, if flag is being removed instead of set.
    */
-  protected function processFlag(FlaggingInterface $flagging, bool $is_unflag = FALSE) {
-
+  protected function processFlag(FlaggingInterface $flagging, bool $is_unflag = FALSE): void {
     // Detect the message type.  Act only on known flags.
     $flag_id = $flagging->getFlagId();
     $msg_type = match ($flag_id) {
       'follow_this_bill' => 'bill',
-            'follow_issue' => 'issue',
-            'follow_committee', 'follow_group' => 'committee',
-            'sign_petition' => 'petition',
-            default => '',
+      'follow_issue' => 'issue',
+      'follow_committee', 'follow_group' => 'committee',
+      'sign_petition' => 'poll',
+      default => '',
     };
     if (!$msg_type) {
       return;
     }
 
     // Set the message action.
-    $msg_action = $flag_id == 'sign_petition' ? 'sign' : 'follow';
-    if ($is_unflag) {
-      $msg_action = 'un' . $msg_action;
-    }
+    $msg_action = ($is_unflag ? 'un' : '') . 'follow';
 
     // Create and save a new accumulator entry.
     $entry = $this->accumulator->createEntry($msg_type, $msg_action, $flagging->getOwner());
@@ -162,14 +156,14 @@ class GeneralEventSubscriber implements EventSubscriberInterface {
   /**
    * Acts on an entity being flagged.
    */
-  public function flagEntity(FlaggingEvent $event) {
+  public function flagEntity(FlaggingEvent $event): void {
     $this->processFlag($event->getFlagging());
   }
 
   /**
    * Acts on an entity being unflagged.
    */
-  public function unflagEntity(UnflaggingEvent $event) {
+  public function unflagEntity(UnflaggingEvent $event): void {
     foreach ($event->getFlaggings() as $flagging) {
       $this->processFlag($flagging, TRUE);
     }
@@ -178,22 +172,22 @@ class GeneralEventSubscriber implements EventSubscriberInterface {
   /**
    * Acts on a user's first login.
    */
-  public function firstLogin(FirstLoginEvent $event) {
+  public function firstLogin(FirstLoginEvent $event): void {
     $this->accumulator
-      ->createEntry('account', 'account created', $event->context)
+      ->createEntry('account', 'created', $event->context)
       ->save();
   }
 
   /**
    * Acts on a vote being cast.  Limited to the bills bundle.
    */
-  public function voteCast(VoteCastEvent $event) {
+  public function voteCast(VoteCastEvent $event): void {
     if ($event->getVotedEntity()->bundle() == 'bill') {
       $entry = $this->accumulator->createEntry(
-            'bill',
-            $event->context->getValue() ? 'aye' : 'nay',
-            $event->context->getOwner()
-        );
+        'bill',
+        $event->context->getValue() ? 'aye' : 'nay',
+        $event->context->getOwner()
+      );
       $entry->info = $this->buildEventInfo('bill', $event->getVotedEntity());
       $entry->save();
     }
@@ -237,7 +231,7 @@ class GeneralEventSubscriber implements EventSubscriberInterface {
     // If this account is new (or has not been accessed), register the
     // "created" message and leave.
     if ($user->isNew() || !$user->access->value) {
-      $this->accumulator->createEntry('account', 'account created')
+      $this->accumulator->createEntry('account', 'created')
         ->setUser($user)
         ->save();
       return;
@@ -265,7 +259,7 @@ class GeneralEventSubscriber implements EventSubscriberInterface {
       // If moving districts, record the "removed" message in the old district.
       if ($district_change) {
         $old_district_entry = $this->accumulator
-          ->createEntry('profile', 'account edited')
+          ->createEntry('account', 'edited')
           ->setUser($user)
           ->setTarget($original->field_district->entity);
         $old_district_entry->info['status'] = 'removed';
@@ -274,7 +268,7 @@ class GeneralEventSubscriber implements EventSubscriberInterface {
 
       // Add the "normal" message.  Indicate "added" if district was changed.
       $entry = $this->accumulator
-        ->createEntry('profile', 'account edited')
+        ->createEntry('account', 'edited')
         ->setUser($user)
         ->setTarget($user->field_district->entity);
       if ($district_change) {
@@ -300,12 +294,12 @@ class GeneralEventSubscriber implements EventSubscriberInterface {
       try {
         $nodes = $this->entityManager->getStorage('node')
           ->loadByProperties(
-                  [
-                    'type' => 'webform',
-                    'status' => 1,
-                    'webform.target_id' => $form->id(),
-                  ]
-              );
+            [
+              'type' => 'webform',
+              'status' => 1,
+              'webform.target_id' => $form->id(),
+            ]
+          );
         $node = current($nodes);
       }
       catch (\Throwable) {
@@ -333,7 +327,7 @@ class GeneralEventSubscriber implements EventSubscriberInterface {
       }
 
       // Create the entry.
-      $entry = $this->accumulator->createEntry('petition', 'questionnaire response');
+      $entry = $this->accumulator->createEntry('poll', 'webform');
       $entry->info = $info;
       $entry->save();
     }

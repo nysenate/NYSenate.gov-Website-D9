@@ -64,7 +64,7 @@ class AccumulatorEntry {
   protected SenatorsHelper $helper;
 
   /**
-   * Holds metadata for this entry.  The `msg_info` field, event_info key.
+   * Holds metadata for this entry.  The `event_data` field, event_info key.
    */
   public array $info = [];
 
@@ -301,7 +301,7 @@ class AccumulatorEntry {
   }
 
   /**
-   * Compiles the `msg_info` array.
+   * Compiles the `event_data` array.
    */
   public function compileInfo(): array {
     $info = [];
@@ -345,9 +345,9 @@ class AccumulatorEntry {
       'target_district' => $target_info['district'],
       'user_shortname' => $user_info['shortname'],
       'user_district' => $user_info['district'],
-      'msg_type' => $this->getType(),
-      'msg_action' => $this->getAction(),
-      'msg_info' => $this->compileInfo(),
+      'event_type' => $this->getType(),
+      'event_action' => $this->getAction(),
+      'event_data' => $this->compileInfo(),
       'created_at' => time(),
     ];
   }
@@ -360,7 +360,7 @@ class AccumulatorEntry {
     $fields = $this->compileFields();
     $event = Accumulator::createEvent('pre_save', $fields);
     $this->dispatcher->dispatch($event);
-    $event->context['msg_info'] = json_encode($event->context['msg_info']);
+    $event->context['event_data'] = json_encode($event->context['event_data']);
 
     try {
       $id = $this->database

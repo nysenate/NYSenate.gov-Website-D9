@@ -5,6 +5,8 @@
  * Install file for nys_accumulator module.
  */
 
+use Drupal\Core\Database\Database;
+
 /**
  * Implements hook_schema().
  */
@@ -101,4 +103,82 @@ function nys_accumulator_schema(): array {
   $schema['accumulator_archive'] = $schema['accumulator'];
 
   return $schema;
+}
+
+/**
+ * Implements hook_update_N().
+ *
+ * This update modifies the schema as follows:
+ *   - renames field `msg_type` to `event_type`
+ *   - renames field `msg_action` to `event_action`
+ *   - renames field `msg_info` to `event_data`
+ *
+ * The changes listed below reference "event_type:event_action".  Data changes
+ * are executed on the `accumulator` and `accumulator_archive` tables.
+ *   - "account:account created" -> "account:created"
+ *   - "profile:account edited" -> "account:edited"
+ *   - "petition:questionnaire response" -> "poll:webform"
+ *   - "petition:sign" -> "poll:follow"
+ *   - "petition:unsign" -> "poll:unfollow"
+ */
+function nys_accumulator_update_9201(): void {
+  // Get the connection.
+  $db = Database::getConnection();
+
+  // Which tables are being changed.
+  $tables = ['accumulator', 'accumulator_archive'];
+
+  // For the column name changes.  MySQL<5.6, Maria<10.8 do not allow for
+  // RENAME COLUMN.  Use the legacy format to ensure compatibility.
+  $fields = [
+    "msg_type" => "event_type VARCHAR(32) NOT NULL DEFAULT 'misc'",
+    "msg_action" => "event_action VARCHAR(32) NULL DEFAULT 'none'",
+    "msg_info" => "event_data TEXT NULL DEFAULT NULL",
+  ];
+  foreach ($tables as $table) {
+    $query = "ALTER TABLE $table ";
+    foreach ($fields as $orig => $new) {
+      $query .= "CHANGE COLUMN $orig $new,";
+    }
+    $db->query(trim($query, ','));
+  }
+
+  // For the data changes.
+  $changes = [
+    [
+      'value' => ['event_action' => 'created'],
+      'where' => [
+        'event_type' => 'account',
+        'event_action' => 'account created',
+      ],
+    ],
+    [
+      'value' => ['event_type' => 'account', 'event_action' => 'edited'],
+      'where' => ['event_type' => 'profile', 'event_action' => 'account edited'],
+    ],
+    [
+      'value' => ['event_type' => 'poll', 'event_action' => 'follow'],
+      'where' => ['event_type' => 'petition', 'event_action' => 'sign'],
+    ],
+    [
+      'value' => ['event_type' => 'poll', 'event_action' => 'unfollow'],
+      'where' => ['event_type' => 'petition', 'event_action' => 'unsign'],
+    ],
+    [
+      'value' => ['event_type' => 'poll', 'event_action' => 'webform'],
+      'where' => [
+        'event_type' => 'petition',
+        'event_action' => 'questionnaire response',
+      ],
+    ],
+  ];
+  foreach ($tables as $table) {
+    foreach ($changes as $change) {
+      $query = $db->update($table)->fields($change['value']);
+      foreach ($change['where'] as $where_key => $where_val) {
+        $query->condition($where_key, $where_val);
+      }
+      $query->execute();
+    }
+  }
 }

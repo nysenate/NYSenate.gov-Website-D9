@@ -12,7 +12,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     env:
-      TEST_PATH: 'tests/visual-regression/'
+      TEST_PATH: 'tests/cypress/'
       PERCY_TARGET_BRANCH: 'main'
       PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
 
@@ -55,7 +55,7 @@ jobs:
         run: |
           cd ${{ env.TEST_PATH }}
           npm install
-          OUTPUT=$(npx percy snapshot snapshots.yml --base-url=${{ inputs.BASE_URL }} | tee /dev/fd/2)
+          OUTPUT=$(npx percy exec -- cypress run --config baseUrl=${{ inputs.BASE_URL }} --spec "cypress/e2e/visual-regression.cy.js" | tee /dev/fd/2)
           PERCY_REVIEW_URL=$(echo "$OUTPUT" | grep -o 'https://percy.io/[^ ]*')
           echo "PERCY_REVIEW_URL=$PERCY_REVIEW_URL" >> $GITHUB_ENV
 

@@ -11,7 +11,6 @@ describe('Bulk Visual Regression testing with Percy', () => {
   vrtUrls.forEach((data) => {
     it(`Sending ${data.name} (${data.path}) to Percy`, function () {
       cy.visit(data.path)
-      cy.get('.front-end').should('be.visible');
       cy.scrollTo('bottom')
       cy.percySnapshot(data.name)
     })

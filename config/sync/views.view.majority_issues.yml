@@ -53,7 +53,7 @@ display:
     display_plugin: default
     position: 0
     display_options:
-      title: 'Majority Issues'
+      title: ''
       fields:
         title:
           id: title
@@ -597,14 +597,14 @@ display:
           value:
             min: ''
             max: ''
-            value: '2023'
+            value: '2024'
             type: date
           group: 1
           exposed: true
           expose:
             operator_id: field_date_value_op
             label: ''
-            description: 'Type year (i.e. 2022)'
+            description: 'Type year (i.e. 2023)'
             use_operator: false
             operator: field_date_value_op
             operator_limit_selection: false
@@ -623,6 +623,7 @@ display:
               legislative_correspondent: '0'
               student_programs: '0'
               constituent: '0'
+              comment_moderator: '0'
             min_placeholder: ''
             max_placeholder: ''
             placeholder: ''
@@ -1560,6 +1561,7 @@ display:
             operator: ''
             operator_limit_selection: false
             operator_list: {  }
+          accept_null: false
         type:
           id: type
           table: node_field_data
@@ -3103,6 +3105,7 @@ display:
             operator: ''
             operator_limit_selection: false
             operator_list: {  }
+          accept_null: false
         type:
           id: type
           table: node_field_data
@@ -3159,14 +3162,14 @@ display:
           value:
             min: ''
             max: ''
-            value: '2023'
+            value: '2024'
             type: date
           group: 1
           exposed: true
           expose:
             operator_id: field_date_range_value_op
             label: ''
-            description: 'Type year (i.e. 2022)'
+            description: 'Type year (i.e. 2023)'
             use_operator: false
             operator: field_date_range_value_op
             operator_limit_selection: false
@@ -3185,6 +3188,7 @@ display:
               legislative_correspondent: '0'
               student_programs: '0'
               constituent: '0'
+              comment_moderator: '0'
             min_placeholder: ''
             max_placeholder: ''
             placeholder: ''

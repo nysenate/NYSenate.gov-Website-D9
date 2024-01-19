@@ -1,0 +1,23 @@
+{{ attach_library('nysenate_theme/featured-story') }}
+
+<div class="nysenate-happening-now">
+    <div class="view-header c-container--header__top-border">
+        <h3 class="c-container--title">New York State Budget</h3>
+    </div>
+    <div class="c-event-featured-story">
+        <div class="story-container">
+            <div class="l-left">
+                {% if fields.field_image_main.content %}
+                    {{ fields.field_image_main.content }}
+                {% else %}
+                    <img src="themes/custom/nysenate_theme/src/assets/nysenate_seal_380x215.png" width="380" height="215" alt="" loading="lazy" typeof="foaf:Image">
+                {% endif %}
+            </div>
+            <div class="l-right">
+                <div>
+                    {{ fields.field_teaser.content }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

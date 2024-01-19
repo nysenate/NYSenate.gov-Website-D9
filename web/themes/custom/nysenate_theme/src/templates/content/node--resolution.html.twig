@@ -15,6 +15,8 @@
   ]
 %}
 
+{% set bill_title = content.field_ol_base_print_no[0]['#context']['value'] %}
+
 <!-- RESOLUTION TEMPLATE -->
   <div {{ attributes.addClass(classes) }}> <div class="c-block c-detail--header c-detail--header__bill">
     <h2 class="nys-title">{{ label }}</h2>
@@ -35,14 +37,17 @@
     <a href="#" class="c-detail--download" target="_blank">download pdf</a>
   </div>
 
-  <div class="c-detail--social">
-    <h3 class="c-detail--subhead">share this resolution</h3>
-    <ul>
-      <li><a target="_blank" href="https://www.facebook.com" class="c-detail--social-item facebook">facebook</a></li>
-      <li><a target="_blank" href="https://twitter.com" class="c-detail--social-item twitter">twitter</a></li>
-      <li><a href="mailto:?&subject=From NYSenate.gov:" class="c-detail--social-item email">email</a></li>
-    </ul>
-  </div>
+    <!-- Share -->
+    <div class="c-detail--social" style="margin-bottom: 0; padding-bottom: 0">
+      <h3 class="c-detail--subhead">
+        Share this resolution
+      </h3>
+      <ul>
+        <li><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u={{active_amend_url}}" class="c-detail--social-item bill">{{ icons.get('facebook') }}</a></li>
+        <li><a target="_blank" class="c-detail--social-item bill" href="https://twitter.com/intent/tweet?text={{ bill_title }} Via: @nysenate: {{ active_amend_url }}">{{ icons.get('twitter') }}</a></li>
+        <li class="email"><a href="mailto:?&subject=From NYSenate.gov: {{ bill_title }}&body=Check out this bill: {{ bill_title  }}: < {{active_amend_url}} >." class="c-detail--social-item bill">{{ icons.get('envelope') }}</a></li>
+      </ul>
+    </div>
 
   <div class="c-block">
     {% if content.field_image_main is not empty %}

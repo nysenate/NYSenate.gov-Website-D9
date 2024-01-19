@@ -1,0 +1,26 @@
+uuid: 7488aad1-02e9-472b-81ec-2553cb0f8b31
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_teaser
+    - taxonomy.vocabulary.majority_issues
+  module:
+    - allowed_formats
+    - text
+third_party_settings:
+  allowed_formats:
+    allowed_formats:
+      - full_html
+id: taxonomy_term.majority_issues.field_teaser
+field_name: field_teaser
+entity_type: taxonomy_term
+bundle: majority_issues
+label: Summary
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

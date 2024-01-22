@@ -1,11 +1,19 @@
 <?php
 
 /**
+ * @file
+ * Twig extensions for the rain theme.
+ */
+
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
+
+/**
  * These filters come from drupal-twig-extensions.
  *
  * See more: https://github.com/pattern-lab/drupal-twig-extensions.
  */
-class BasicTwigExtensions extends Twig_Extension implements Twig_ExtensionInterface {
+class BasicTwigExtensions extends AbstractExtension {
 
   /**
    * Dummy function that passes a param straight through.
@@ -42,16 +50,16 @@ class BasicTwigExtensions extends Twig_Extension implements Twig_ExtensionInterf
    *
    * @link Drupal Twig Filters - https://www.drupal.org/docs/8/theming/twig/filters-modifying-variables-in-twig-templates
    *
-   * @return Twig_SimpleFilter[]
+   * @return Twig\TwigFilter[]
    *   Returns a list of filters.
    */
   public function getFilters() {
     return [
-      new Twig_SimpleFilter('t', [$this, 'returnParam']),
-      new Twig_SimpleFilter('render', [$this, 'returnParam']),
-      new Twig_SimpleFilter('placeholder', [$this, 'returnParam']),
-      new Twig_SimpleFilter('without', [$this, 'returnParam']),
-      new Twig_SimpleFilter('clean_class', [$this, 'returnParam']),
+      new TwigFilter('t', [$this, 'returnParam']),
+      new TwigFilter('render', [$this, 'returnParam']),
+      new TwigFilter('placeholder', [$this, 'returnParam']),
+      new TwigFilter('without', [$this, 'returnParam']),
+      new TwigFilter('clean_class', [$this, 'returnParam']),
     ];
   }
 
@@ -60,13 +68,13 @@ class BasicTwigExtensions extends Twig_Extension implements Twig_ExtensionInterf
    *
    * @link Drupal Twig Functions - https://www.drupal.org/node/2486991
    *
-   * @return Twig_SimpleFunction[]
+   * @return Twig\TwigFilter[]
    *   Returns list of functions.
    */
   public function getFunctions() {
     return [
-      new Twig_SimpleFunction('url', [$this, 'inertHref']),
-      new Twig_SimpleFunction('path', function ($string) {
+      new TwigFilter('url', [$this, 'inertHref']),
+      new TwigFilter('path', function ($string) {
         if ($string === '<front>') {
           return '/';
         }
@@ -74,34 +82,10 @@ class BasicTwigExtensions extends Twig_Extension implements Twig_ExtensionInterf
           return $string;
         }
       }),
-      new Twig_SimpleFunction('link', [$this, 'inertHref']),
-      new Twig_SimpleFunction('file_url', [$this, 'returnParam']),
-      new Twig_SimpleFunction('attach_library', [$this, 'returnNothing']),
+      new TwigFilter('link', [$this, 'inertHref']),
+      new TwigFilter('file_url', [$this, 'returnParam']),
+      new TwigFilter('attach_library', [$this, 'returnNothing']),
     ];
-  }
-
-  /**
-   * Returns a list of global variables to add to the existing list.
-   *
-   * @return array
-   *   An array of global variables
-   *
-   * @deprecated since 1.23 (to be removed in 2.0), implement Twig_Extension_GlobalsInterface instead
-   */
-  public function getGlobals() {
-    return [];
-  }
-
-  /**
-   * Returns the name of the extension.
-   *
-   * @return string
-   *   The extension name.
-   *
-   * @deprecated since 1.26 (to be removed in 2.0), not used anymore internally
-   */
-  public function getName() {
-    return 'BasicTwigExtensions';
   }
 
 }

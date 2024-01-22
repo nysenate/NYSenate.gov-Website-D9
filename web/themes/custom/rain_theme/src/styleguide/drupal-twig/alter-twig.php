@@ -1,16 +1,28 @@
 <?php
 
 /**
- * @param Twig_Environment $env - The Twig Environment - https://twig.symfony.com/api/1.x/Twig_Environment.html
- * @param $config - Config of `@basalt/twig-renderer`
+ * @file
+ * Provides Twig extensions for the Basalt Twig renderer.
  */
-function twigExtensions(\Twig_Environment &$env, $config) {
 
-  // Load the \BasicTwigExtensions class so the extension can be added correctly.
+use Twig\Environment;
+use Twig\Extension\DebugExtension;
+
+/**
+ * Twig extensions.
+ *
+ * @param \Twig\Environment $env
+ *   The Twig Environment.
+ * @param mixed $config
+ *   The environment config.
+ */
+function twig_extensions(Environment &$env, $config) {
+
+  // Load the BasicTwigExtensions class so the extension can be added correctly.
   spl_autoload_register(function ($class_name) {
     include __DIR__ . '/' . $class_name . '.php';
   });
 
-  $env->addExtension(new \Twig_Extension_Debug());
+  $env->addExtension(new DebugExtension());
   $env->addExtension(new \BasicTwigExtensions());
 }

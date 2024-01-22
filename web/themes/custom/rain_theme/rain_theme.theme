@@ -5,7 +5,6 @@
  * Functions to support theming in the rain_theme theme.
  */
 
-use Drupal\image\Entity\ImageStyle;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
@@ -23,7 +22,7 @@ function rain_theme_preprocess_paragraph(&$variables) {
       $variables['count'] = $paragraph->getParentEntity()->get('field_slider_item')->count();
     }
   }
-  
+
   $paragraph_preprocess_function = 'rain_theme_preprocess_paragraph__' . $paragraph->bundle();
   if (function_exists($paragraph_preprocess_function)) {
     $paragraph_preprocess_function($variables);
@@ -167,9 +166,10 @@ function rain_theme_preprocess_block_content(array &$variables) {
         $gallery_item = $block_content->get('field_gallery_item')[$c]->entity;
 
         if ($gallery_item) {
-          $image_url = file_create_url($gallery_item->get('field_media')->entity->get('field_image')->entity->getFileUri());
+          $file_url_generator = \Drupal::service('file_url_generator');
+          $image_url = $file_url_generator->generateAbsoluteString($gallery_item->get('field_media')->entity->get('field_image')->entity->getFileUri());
           if ($gallery_item->hasField('field_thumb') && !empty($gallery_item->get('field_thumb')->entity)) {
-            $thumb_url = file_create_url($gallery_item->get('field_thumb')->entity->getFileUri());
+            $thumb_url = $file_url_generator->generateAbsoluteString($gallery_item->get('field_thumb')->entity->getFileUri());
           }
           else {
             $thumb_url = $image_url;
@@ -262,12 +262,13 @@ function rain_theme_preprocess_node(array &$variables) {
           $variables['subhead'] = \Drupal::service('date.formatter')->format($unix_time, 'custom', 'l, M d');
         }
       }
-    } else {
+    }
+    else {
       if (!empty($variables['content']['field_short_title'])) {
-        $variables['subhead'] = isset($variables['content']['field_short_title'][0]) ? $variables['content']['field_short_title'][0] : '';
+        $variables['subhead'] = $variables['content']['field_short_title'][0] ?? '';
       }
       if (!empty($variables['content']['field_subhead'])) {
-        $variables['subhead'] = isset($variables['content']['field_subhead'][0]) ? $variables['content']['field_subhead'][0] : '';
+        $variables['subhead'] = $variables['content']['field_subhead'][0] ?? '';
       }
     }
     $variables['link'] = [
@@ -275,13 +276,13 @@ function rain_theme_preprocess_node(array &$variables) {
       'text' => t('Read More >'),
     ];
     if (!empty($variables['content']['field_thumbnail'])) {
-      $variables['thumbnail'] = isset($variables['content']['field_thumbnail'][0]) ? $variables['content']['field_thumbnail'][0] : '';
+      $variables['thumbnail'] = $variables['content']['field_thumbnail'][0] ?? '';
     }
     if (!empty($variables['content']['field_profile_media'])) {
-      $variables['thumbnail'] = isset($variables['content']['field_profile_media'][0]) ? $variables['content']['field_profile_media'][0] : '';
+      $variables['thumbnail'] = $variables['content']['field_profile_media'][0] ?? '';
     }
     if (!empty($variables['content']['field_summary'])) {
-      $variables['summary'] = isset($variables['content']['field_summary'][0]) ? $variables['content']['field_summary'] : '';
+      $variables['summary'] = $variables['content']['field_summary'][0] ?? '';
     }
   }
 }
@@ -350,6 +351,7 @@ function rain_theme_preprocess_views_view_fields__latest_news__block_1(array &$v
     }
   }
 }
+
 /**
  * Implements hook_theme_suggestions_views_view_unformatted_alter().
  */

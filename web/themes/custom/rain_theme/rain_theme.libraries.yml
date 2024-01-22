@@ -1,0 +1,305 @@
+# These lines define the rain_theme/global library.
+global:
+  css:
+    # The SMACSS category, "base", is loaded before other categories. Drupal 8
+    # loads stylesheets based on the SMACSS ordering of:
+    # base, layout, component, state, theme
+    base:
+      dist/css/global.css: {}
+  dependencies:
+    - rain_theme/button
+
+# Example external library.
+# webfonts:
+#   version: 1.x
+#   js:
+#     https://fast.fonts.net/example.js: { type: external, attributes: { async: true }}
+
+# Attach each library by using attach_library() within the components twig template.
+# More info: https://www.drupal.org/node/2456753
+
+# Example component library.
+# site-logo:
+#   css:
+#     component:
+#       dist/css/site-logo.css: {}
+#   # If this library had JavaScript you could specify it like this:
+#   js:
+#     js/script.js: {}
+#   # If this library had dependencies on other libraries, you could specify it like this:
+#   dependencies:
+#     - rain_theme/clearfix
+#     - rain_theme/visually-hidden
+
+accordion:
+  css:
+    component:
+      dist/css/accordion.css: {}
+  js:
+    dist/js/accordion.es6.js: {}
+
+authors:
+  css:
+    component:
+      dist/css/authors.css: {}
+
+button:
+  css:
+    component:
+      dist/css/button.css: {}
+
+breadcrumb:
+  css:
+    component:
+      dist/css/breadcrumb.css: {}
+
+card:
+  css:
+    component:
+      dist/css/card.css: {}
+
+card-carousel:
+  css:
+    component:
+      dist/css/card-carousel.css: {}
+  js:
+    dist/js/card-carousel.es6.js: {}
+  dependencies:
+    - rain_theme/card
+    - rain_theme/slick
+    - rain_theme/colorbox
+
+card-list:
+  css:
+    component:
+      dist/css/card-list.css: {}
+  dependencies:
+    - rain_theme/card
+
+carousel:
+  css:
+    component:
+      dist/css/carousel.css: {}
+  js:
+    dist/js/carousel.es6.js: {}
+  dependencies:
+    - rain_theme/slick
+
+colorbox:
+  css:
+    theme:
+      dist/css/colorbox.css: {}
+  js:
+    dist/js/jquery.colorbox.js: {}
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery.once
+    - core/jquery
+
+columns:
+  css:
+    component:
+      dist/css/columns.css: {}
+
+content-card:
+  css:
+    component:
+      dist/css/content-card.css: {}
+
+content-carousel:
+  css:
+    component:
+      dist/css/content-carousel.css: {}
+  js:
+    dist/js/content-carousel.es6.js: {}
+  dependencies:
+    - rain_theme/slick
+
+gallery-lightbox:
+  css:
+    theme:
+      dist/css/gallery-lightbox.css: {}
+  js:
+    dist/js/gallery-lightbox.js: {}
+  dependencies:
+    - rain_theme/colorbox
+
+event-card:
+  css:
+    component:
+      dist/css/event-card.css: {}
+
+event-carousel:
+  css:
+    component:
+      dist/css/event-carousel.css: {}
+  js:
+    dist/js/event-carousel.es6.js: {}
+  dependencies:
+    - rain_theme/slick
+
+eyebrow:
+  css:
+    component:
+      dist/css/eyebrow.css: {}
+
+event-teaser:
+  css:
+    component:
+      dist/css/event-teaser.css: {}
+
+gallery-carousel:
+  css:
+    component:
+      dist/css/gallery-carousel.css: {}
+  js:
+    dist/js/gallery-carousel.es6.js: {}
+  dependencies:
+    - rain_theme/slick
+
+hero:
+  css:
+    component:
+      dist/css/hero.css: {}
+
+heading:
+  css:
+    component:
+      dist/css/heading.css: {}
+
+latest-news:
+  css:
+    component:
+      dist/css/latest-news.css: {}
+
+l-2x:
+  css:
+    component:
+      dist/css/l-2x.css: {}
+
+l-3x:
+  css:
+    component:
+      dist/css/l-3x.css: {}
+
+l-flex:
+  css:
+    component:
+      dist/css/l-flex.css: {}
+
+map:
+  css:
+    component:
+      dist/css/map.css: {}
+
+media:
+  css:
+    component:
+      dist/css/media.css: {}
+
+main-menu:
+  css:
+    component:
+      dist/css/main-menu.css: {}
+  js:
+    dist/js/main-menu.js: {}
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+    - core/drupal
+    - core/drupalSettings
+
+message:
+  css:
+    component:
+      dist/css/message.css: {}
+
+news-teaser:
+  css:
+    component:
+      dist/css/news-teaser.css: {}
+
+page-layout:
+  css:
+    component:
+      dist/css/page-layout.css: {}
+
+page-title:
+  css:
+    component:
+      dist/css/page-title.css: {}
+
+pager:
+  css:
+    component:
+      dist/css/pager.css: {}
+
+quote:
+  css:
+    component:
+      dist/css/quote.css: {}
+
+quote-carousel:
+  css:
+    component:
+      dist/css/quote-carousel.css: {}
+  js:
+    dist/js/quote-carousel.es6.js: {}
+  dependencies:
+    - rain_theme/slick
+
+search-api-results:
+  css:
+    component:
+      dist/css/search-api-results.css: {}
+
+search-box:
+  css:
+    component:
+      dist/css/search-box.css: {}
+
+site-branding:
+  css:
+    component:
+      dist/css/site-branding.css: {}
+
+site-footer:
+  css:
+    component:
+      dist/css/site-footer.css: {}
+
+site-header:
+  css:
+    component:
+      dist/css/site-header.css: {}
+  dependencies:
+    - rain_theme/l-flex
+
+slick:
+  css:
+    theme:
+      dist/css/slick.css: {}
+      dist/css/slick-theme.css: {}
+  js:
+    dist/js/slick.min.js: {}
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery.once
+    - core/jquery
+
+tabs:
+  css:
+    component:
+      dist/css/tabs.css: {}
+
+user-account-nav:
+  css:
+    component:
+      dist/css/user-account-nav.css: {}
+
+media-library:
+  css:
+    component:
+      dist/css/media-library.css: {}

@@ -1,0 +1,76 @@
+# Generated on 2019-10-07 using generator-mc-d8-theme 2.0.1
+
+# Drupal's .info.yml files allow themers to easily specify some of the static
+# properties of your theme. Properties such as its name, libraries of style
+# sheets and javascripts, and block regions.
+#
+# Drupal 8 stores a cache of the data in this .info.yml files. If you modify any
+# lines in this file, you MUST refresh Drupal 8's cache. You can do this with
+# the "drush cr" command or by simply visiting the Appearance page at
+# admin/appearance.
+
+name: Rain Theme
+type: theme
+description: Drupal 8/9 theme for Rain distribution.
+package: Other
+core: 8.x
+core_version_requirement: '^8 || ^9'
+# Classy vs. Stable as a base theme: https://www.lullabot.com/articles/a-tale-of-two-base-themes-in-drupal-8-core
+base theme: classy
+
+# This section controls the libraries for your theme. For full documentation,
+# see https://www.drupal.org/node/2216195
+
+# The "libraries-override:" section will allow you to:
+# - Replace an entire library.
+# - Remove an entire library.
+# - Replace an asset in a library with another asset.
+# - Remove an asset from a library.
+libraries-override:
+  system/base:
+    css:
+      component:
+        # Replace one file with another.
+        /core/themes/stable/css/system/components/hidden.module.css: dist/css/hidden.css
+
+# The "libraries-extend:" section will allow you to add your own JS or CSS to
+# existing libraries.
+# libraries-extend:
+
+# The "libraries:" section will add a library to _all_ pages.
+libraries:
+  - rain_theme/global
+  # Example adding the webfonts library to every page.
+  # See rain_theme.libraries.yml for more info.
+  #- rain_theme/webfonts
+
+# This section is used by the contrib module, Component Libraries. It allows you
+# to reference .twig files in your sass/ directory by using the Twig namespace:
+# @rain_theme
+# See https://www.drupal.org/project/components for more information.
+components:
+  namespaces:
+    rain_theme:
+      - src/patterns/global
+      - src/patterns/components
+      - src/patterns/pages
+      - src/templates
+
+# This section lists the regions defined in the theme (our base theme) default
+# page.html.twig and maintenance-page.html.twig files. The name before
+# the semi-colon is the machine name of the region. The text after the
+# semi-colon is the region's description used on the admin/structure/block page.
+regions:
+  # The three header regions are stacked vertically.
+  header_top: Header Top
+  header_middle: Header Middle
+  header_bottom: Header Bottom
+  content: Content
+  sidebar_right: Sidebar Right
+  # The three footer regions are stacked horizontally, so that each region can
+  # have multiple blocks; the addendum is displayed afterwards.
+  footer_left: Footer Left
+  footer_middle: Footer Middle
+  footer_right: Footer Right
+  addendum: Addendum
+

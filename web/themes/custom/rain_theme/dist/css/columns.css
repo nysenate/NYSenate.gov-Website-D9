@@ -1,0 +1,24 @@
+.columns {
+  display: flex;
+  justify-content: space-evenly;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin: 0 auto; }
+  @media screen and (min-width: 1540px) {
+    .columns {
+      max-width: 1600px; } }
+
+.columns__title {
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 60px; }
+
+.columns__item {
+  margin-bottom: 1.5rem;
+  width: 50%; }
+
+.columns-count-3 .columns__item {
+  width: 33%; }
+
+.columns-count-4 .columns__item {
+  width: 25%; }

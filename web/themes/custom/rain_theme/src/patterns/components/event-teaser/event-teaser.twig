@@ -1,0 +1,62 @@
+{{ attach_library('rain_theme/event-teaser') }}
+{% import '@rain_theme/icons/_icons-macro.twig' as icons %}
+
+{%
+  set classes = [
+    'event-teaser'
+  ]
+%}
+
+{% set attributes = attributes ? attributes.addClass(classes) : ' class="' ~ classes|join(' ') ~ '"' %}
+
+<div {{ attributes|raw }}>
+  {% if image  %}
+    <div class="event-teaser__image">
+      {{ image }}
+    </div>
+  {% endif %}
+  <div class="event-teaser__content">
+    <div class="event-teaser__info">
+      {%
+        include '@rain_theme/event-date-tiles/event-date-tiles.twig' with {
+          start_date: {
+            day: start_date.day,
+            month: start_date.month,
+            year: start_date.year,
+            time: start_date.time,
+          },
+          end_date: {
+            day: end_date.day,
+            month: end_date.month,
+            year: end_date.year,
+            time: end_date.time,
+          }
+        } only
+      %}
+      <div class="event-teaser__item">
+        <a class="event-teaser__title" href="{{ link }}">
+          {%
+            include '@rain_theme/heading/heading.twig' with {
+              heading: {
+                title: title,
+                heading_level: heading_level|default('3'),
+                attributes: title_attributes,
+              }
+            }
+          %}
+        </a>
+        <div class="event-teaser__times">
+          <span> When: </span> {{ start_date.time }} {% if end_date.time != start_date.time %} - {{ end_date.time }} {% endif %}
+        </div>
+      </div>
+    </div>
+    {% if summary  %}
+      <div class="event-teaser__item event-teaser__summary">
+        {{ summary|raw }}
+      </div>
+    {% endif %}
+    {% if link %}
+      <a class="event-teaser__link" href="{{ link }}"> Read more {{ icons.get('icon-chevron') }}</a>
+    {% endif %}
+  </div>
+</div>

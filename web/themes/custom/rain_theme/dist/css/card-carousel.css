@@ -1,0 +1,49 @@
+.card-carousel__wrapper {
+  padding-bottom: 10px; }
+
+.card-carousel-item {
+  margin: 20px; }
+  .card-carousel-item .card__title {
+    margin-top: 0; }
+
+.card-carousel-item__media {
+  display: block;
+  position: relative; }
+
+.card-carousel-item__media-thumb {
+  width: 100%;
+  cursor: pointer; }
+
+.card-carousel-item__expand {
+  display: block;
+  background-color: transparent;
+  position: absolute;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  width: 32px;
+  height: 32px;
+  right: 15px;
+  bottom: 15px;
+  transition: bottom 0.25s;
+  cursor: pointer; }
+
+.card-carousel__list.card-carousel__slick {
+  padding-left: 0; }
+  .card-carousel__list.card-carousel__slick .slick-prev::before,
+  .card-carousel__list.card-carousel__slick .slick-next::before {
+    color: #003954;
+    font-size: 40px; }
+  .card-carousel__list.card-carousel__slick .slick-dots {
+    bottom: -50px; }
+    .card-carousel__list.card-carousel__slick .slick-dots li {
+      height: 35px;
+      width: 35px; }
+      .card-carousel__list.card-carousel__slick .slick-dots li button {
+        height: 35px;
+        width: 35px; }
+        .card-carousel__list.card-carousel__slick .slick-dots li button::before {
+          font-size: 20px;
+          height: 35px;
+          position: initial;
+          width: 35px; }

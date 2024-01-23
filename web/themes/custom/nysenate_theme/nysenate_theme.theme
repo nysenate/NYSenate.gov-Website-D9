@@ -5535,6 +5535,22 @@ function nysenate_theme_preprocess_page(&$variables) {
         ->view($headshot, 'thumbnail');
     }
   }
+
+  // Set variables to prevent dup home action bar through nysenate-header.twig.
+  $variables['is_front'] = \Drupal::service('path.matcher')->isFrontPage();
+  if ($variables['is_front']) {
+    $homepage_hero_node_id = \Drupal::entityTypeManager()
+      ->getStorage('entity_subqueue')
+      ->load('homepage_hero')
+      ->get('items')
+      ->getValue();
+    if (!empty($homepage_hero_node_id[0]['target_id'])) {
+      $homepage_hero_node = \Drupal::entityTypeManager()
+        ->getStorage('node')
+        ->load($homepage_hero_node_id[0]['target_id']);
+      $variables['homepage_hero_node_type'] = $homepage_hero_node->getType();
+    }
+  }
 }
 
 /**

@@ -133,7 +133,7 @@
           'z-index': '100'
         });
 
-        origActionBar = nav.find('.c-actionbar');
+        origActionBar = $('.c-actionbar').first();
         actionBar = origActionBar.clone();
 
         if (!self.isInSession()) {

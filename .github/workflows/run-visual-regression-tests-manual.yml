@@ -1,0 +1,70 @@
+name: Run Visual Regression Tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      BASE_URL:
+        description: 'Base URL: (ex. https://www.nysenate.gov or https://pr-###-nysenate-2022.pantheonsite.io). Setting to https://www.nysenate.gov will refresh the baseline images. Any other URL will compare against the baseline images.'
+        required: true
+        type: string
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      TEST_PATH: 'tests/cypress/'
+      PERCY_TARGET_BRANCH: 'main'
+      PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
+
+    steps:
+      - name: Clone the github repo in the Github Action container
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ env.PERCY_TARGET_BRANCH }}
+
+      - name: Set PERCY_BRANCH environment variable
+        run: |
+          BASE_URL=${{ inputs.BASE_URL }}
+          BASE_URL=${BASE_URL%/}
+
+          if [[ "$BASE_URL" == "https://www.nysenate.gov" ]]; then
+            echo "PERCY_BRANCH=main" >> $GITHUB_ENV
+          elif [[ "$BASE_URL" =~ nysenate-2022.pantheonsite.io ]]; then
+            SUBDOMAIN=${BASE_URL#http://}
+            SUBDOMAIN=${SUBDOMAIN#https://}
+            SUBDOMAIN=${SUBDOMAIN%%-nysenate-2022*}
+            echo "PERCY_BRANCH=$SUBDOMAIN" >> $GITHUB_ENV
+          else
+            echo "No match found for BASE_URL"
+            echo "PERCY_REVIEW_URL=The base url was invalid." >> $GITHUB_ENV
+          fi
+
+      - name: Stop if PERCY_BRANCH is not set
+        if: ${{ !env.PERCY_BRANCH }}
+        run: exit 1
+
+      - name: Setup Node with the version set in .nvmrc
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: '${{ env.TEST_PATH }}.nvmrc'
+          cache: 'npm'
+          cache-dependency-path: '${{ env.TEST_PATH }}package-lock.json'
+
+      - name: Run Visual Regression Tests
+        run: |
+          cd ${{ env.TEST_PATH }}
+          npm install
+          OUTPUT=$(npx percy exec -- cypress run --config baseUrl=${{ inputs.BASE_URL }} --spec "cypress/e2e/visual-regression.cy.js" | tee /dev/fd/2)
+          PERCY_REVIEW_URL=$(echo "$OUTPUT" | grep -o 'https://percy.io/[^ ]*')
+          echo "PERCY_REVIEW_URL=$PERCY_REVIEW_URL" >> $GITHUB_ENV
+
+      - name: Post to a Slack channel
+        if: always()
+        id: slack
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          channel-id: '${{ vars.SLACK_CHANNEL }}'
+          slack-message: "@${{ github.actor }} ran visual regression tests against ${{ inputs.BASE_URL }}. Percy results can be viewed at ${{ env.PERCY_REVIEW_URL }}."
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}

@@ -3314,11 +3314,17 @@ function nysenate_theme_preprocess_page__node__microsite_page(&$variables) {
       ->view($node, 'full');
   }
 
-  $term = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load(6466);
-  $variables['actionbar']['type'] = 'committee';
-  $variables['actionbar']['flag_follow_committee'] = \Drupal::service('flag.link_builder')->build($term->getEntityTypeId(), $term->id(), 'follow_committee');
-  $variables['actionbar']['committee_title'] = $term->getName();
-  $variables['actionbar']['committee_type'] = $term->field_committee_types->value;
+  // If microsite page is assigned to committee, show committee action bar.
+  $node_type = $node->getType();
+  $relevant_node_types = ['event', 'in_the_news', 'article', 'video'];
+  if (in_array($node_type, $relevant_node_types) && !empty($node->field_committee->target_id)) {
+    $tid = $node->field_committee->target_id;
+    $term = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load($tid);
+    $variables['actionbar']['type'] = 'committee';
+    $variables['actionbar']['flag_follow_committee'] = \Drupal::service('flag.link_builder')->build($term->getEntityTypeId(), $term->id(), 'follow_committee');
+    $variables['actionbar']['committee_title'] = $term->getName();
+    $variables['actionbar']['committee_type'] = $term->field_committee_types->value;
+  }
 }
 
 /**

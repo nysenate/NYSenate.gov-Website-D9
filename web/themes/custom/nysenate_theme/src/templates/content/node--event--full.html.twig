@@ -90,8 +90,9 @@
 <article{{ attributes.addClass(classes) }}>
 
   <h1 class="nys-event-title">{{ label }}</h1>
+
   <div class="c-event-block c-event-block--featured-image">
-    {% if content.field_image_main %}
+    {% if content.field_image_main[0] %}
       <div class="c-event-image--main">
         {{ content.field_image_main }}
       </div>
@@ -188,7 +189,8 @@
       {% endfor %}
     </ul>
   {% endif %}
-  {% if content.field_committee %}
+
+  {% if content.field_committee[0] %}
     <ul class="nys-associated-topics committee">
       <div class="nys-associated-topics--label">committees:</div>
       <li>{{ content.field_committee }}</li>
@@ -209,11 +211,18 @@
         } only
       %}
     </div>
-  {% elseif node.field_video_status.0.value == "streaming_live_now" and content.field_ustream[0]  %}
-    <div class="c-block">
+  {% endif %}
+
+  {% if content.field_video_status[0]['#markup'] == 'streaming_live_now' %}
+    <div class="c-meeting-detail--streaming">
       {{ content.field_ustream }}
     </div>
+  {% elseif content.field_video_status[0]['#markup'] == 'streaming_redirect' and content.field_video_redirect[0] %}
+    <div class="c-meeting-detail--streaming">
+      {{ content.field_video_redirect  }}
+    </div>
   {% endif %}
+
 
   <div class="c-block">
     {{ content.body }}

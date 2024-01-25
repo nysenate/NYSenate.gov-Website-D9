@@ -1,6 +1,7 @@
 {{ attach_library('nysenate_theme/session') }}
 {{ attach_library('nysenate_theme/nysenate-issues') }}
 
+
 {% if video_status.key == 'streaming_live_now' %}
   <div class="c-meeting-detail--descript">
     {{ content.field_ustream }}
@@ -88,17 +89,42 @@
     </div>
   {% endif %}
 
-  {% if content.field_issues[0] %}
+  {% if field_issues or field_majority_issue_tag %}
+    <ul class="nys-associated-topics">
+      <div class="nys-associated-topics--label">related issues:</div>
+      {% if field_majority_issue_tag %}
+        <li>{{ field_majority_issue_tag  }}</li>
+      {% endif %}
+      {% for issue in field_issues %}
+        <li>{{ issue }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  {% if content.field_issues[0] or content.field_majority_issue_tag[0] %}
     <div class="c-meeting-detail--related">
-      <ul class="c-meeting-detail--related">
-        <p>
-          related issues:
-        </p>
-        {% for key, issue in content.field_issues|filter((value, key) => key matches '/^\\d+$/') %}
-          <li>{{ issue }}</li>
-        {% endfor %}
+      <ul class="nys-associated-topics issues">
+        {% if content.field_issues[0] %}
+        <div class="nys-associated-topics--label">related issues:</div>
+          {% for key, issue in content.field_issues|filter((value, key) => key matches '/^\\d+$/') %}
+            <li>{{ issue }}</li>
+          {% endfor %}
+        {% endif %}
+        {% if content.field_majority_issue_tag[0] %}
+          <li>{{ content.field_majority_issue_tag }}</li>
+        {% endif %}
       </ul>
     </div>
+  {% endif %}
+
+
+  {% if content.field_committee[0] %}
+  <div class="c-meeting-detail--related">
+    <ul class="nys-associated-topics committee">
+      <div class="nys-associated-topics--label">committees:</div>
+      <li>{{ content.field_committee }}</li>
+    </ul>
+  </div>
   {% endif %}
 
   {% if content.field_yt[0] %}
@@ -123,13 +149,10 @@
   cta: cta
 } only %}
 
-{{ drupal_view('issues_listings', 'meeting_issues') }}
 
 {{ drupal_view('committee_meetings', 'past') }}
 
 {{ drupal_view('committee_meetings', 'news') }}
-
-{{ drupal_view('committee_meetings', 'committee') }}
 
 {{ drupal_view('global_promo_banner', 'global_promo_banner') }}
 

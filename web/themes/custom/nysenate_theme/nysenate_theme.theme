@@ -350,6 +350,8 @@ function nysenate_theme_preprocess_block_content__microsite_hero(&$variables) {
     $variables['senator_headshot'] = \Drupal::entityTypeManager()->getViewBuilder('media')->view($headshot, 'thumbnail');
   }
 
+  $node = \Drupal::routeMatch()->getParameter('node');
+
   if (!empty($node) && $node->hasField('field_microsite_page_type') && !$node->get('field_microsite_page_type')->isEmpty()) {
     $term = $node->field_microsite_page_type->entity ?? [];
     if ($term instanceof TermInterface) {
@@ -991,9 +993,15 @@ function nysenate_theme_preprocess_block__views_block__homepage_hero_homepage_he
         $url_calendar = $node->toUrl()->toString();
       }
 
-      if (!$node->field_ustream->isEmpty()) {
+      if (!$node->field_ustream->isEmpty() && $node->field_video_status[0]->value == 'streaming_live_now') {
         $media_id = $node->field_ustream->value ?? [];
+        $media_status = 'live';
       }
+      elseif (!$node->field_video_redirect->isEmpty() && $node->field_video_status[0]->value == 'streaming_redirect') {
+        $media_status = 'redirect';
+        $media_id = $node->field_video_redirect->value ?? [];
+      }
+
       if ($node->bundle() != 'event') {
         $type = $node->bundle();
         $title = $bundle_info[$node->getEntityTypeId()][$node->bundle()]['label'];
@@ -1013,6 +1021,7 @@ function nysenate_theme_preprocess_block__views_block__homepage_hero_homepage_he
         'date' => $date ?? '',
         'url_calendar' => $url_calendar ?? $node->toUrl()->toString(),
         'media_id' => $media_id ?? [],
+        'media_status' => $media_status ?? [],
       ];
     }
     else {
@@ -5356,6 +5365,7 @@ function nysenate_theme_preprocess_page(&$variables) {
     'video',
   ];
   $node = \Drupal::routeMatch()->getParameter('node');
+
   if (!empty($node) && is_object($node) && in_array($node->bundle(), $node_types)) {
     if ($node->hasField('field_senator_multiref') && !$node->get('field_senator_multiref')->isEmpty()) {
       $sid = $node->field_senator_multiref->target_id;
@@ -5519,6 +5529,8 @@ function nysenate_theme_preprocess_page(&$variables) {
       if ($vocabulary->label() == "Committees") {
         $variables['actionbar']['type'] = 'committee';
         $variables['actionbar']['flag_follow_committee'] = $flag_link_service->build($term->getEntityTypeId(), $term->id(), 'follow_committee');
+        $variables['actionbar']['committee_title'] = $term->getName();
+        $variables['actionbar']['committee_type'] = $term->field_committee_types->value;
       }
     }
   }

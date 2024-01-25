@@ -165,3 +165,20 @@
     }
   }
 }
+
+.page--committees {
+
+    @include breakpoint($bp-sm) {
+      .c-actionbar {
+        .c-actionbar--info {
+          width: 465px;
+        }
+      }
+    }
+    @include breakpoint($bp-md) {
+      .c-actionbar--info .actionbar--cta,
+      .actionbar--cta {
+        max-width: 465px;
+      }
+    }
+}

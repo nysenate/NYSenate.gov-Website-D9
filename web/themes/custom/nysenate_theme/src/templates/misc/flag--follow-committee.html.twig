@@ -42,8 +42,9 @@
     {% set attributes = attributes.setAttribute('rel', 'nofollow') %}
 
     <div class="{{classes|join(' ')}}">
-        <a{{ attributes.addClass(anchor_class) }}>{{ title }}</a>
+        <a{{ attributes.addClass(anchor_class, 'icon-before__committee-follow') }}>{{ title }}</a>
     </div>
+
 {% endapply %}
 
 {# Attach flag count.

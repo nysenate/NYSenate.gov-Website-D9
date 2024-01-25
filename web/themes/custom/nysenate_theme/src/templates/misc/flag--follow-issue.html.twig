@@ -39,7 +39,9 @@
     {# Set nofollow to prevent search bots from crawling anonymous flag links #}
     {% set attributes = attributes.setAttribute('rel', 'nofollow') %}
 
-    <div class="{{classes|join(' ')}}"><a{{ attributes }}>{{ title }}</a></div>
+    <div class="{{classes|join(' ')}}">
+        <a{{ attributes.addClass(anchor_class, 'icon-before__issue-follow') }}>{{ title }}</a>
+    </div>
 {% endapply %}
 
 {# Attach flag count.

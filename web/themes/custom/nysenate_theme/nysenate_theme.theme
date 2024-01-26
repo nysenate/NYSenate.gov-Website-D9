@@ -3392,6 +3392,7 @@ function nysenate_theme_preprocess_taxonomy_term__senator__dashboard(&$variables
       '@district' => $district,
     ]
   );
+  $variables['dashboard_url'] = $term->id();
 }
 
 /**

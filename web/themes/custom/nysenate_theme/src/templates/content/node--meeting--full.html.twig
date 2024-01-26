@@ -122,9 +122,10 @@
     <div class="c-meeting-detail--descript">
       {{ content.field_ustream }}
     </div>
-  {% elseif
-    video_status.key == 'streaming_redirect' and content.field_video_redirect.0 %}
-    {{ content.field_ustream }}
+  {% elseif video_status.key == 'streaming_redirect' and content.field_video_redirect.0 %}
+    <div class="c-meeting-detail--descript">
+      {{ content.field_video_redirect }}
+    </div>
   {% endif %}
 
   {% if content.field_yt.0 %}

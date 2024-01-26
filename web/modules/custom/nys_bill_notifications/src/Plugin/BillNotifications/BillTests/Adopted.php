@@ -19,6 +19,7 @@ use Drupal\nys_bill_notifications\BillTestBase;
  *       "Status" = "ADOPTED",
  *     },
  *   },
+ *   disabled = true,
  *   priority = 0
  * )
  */

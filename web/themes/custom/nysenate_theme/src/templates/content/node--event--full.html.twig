@@ -91,6 +91,14 @@
 
   <h1 class="nys-event-title">{{ label }}</h1>
 
+  <div class="c-meeting-detail--meta">
+    {% if content.field_video_status[0]['#markup'] == 'streaming_live_now' or content.field_video_status[0]['#markup'] == 'streaming_redirect' %}
+      <p class="c-meeting-detail--live-flag">
+        Streaming Live Now
+      </p>
+    {% endif %}
+  </div>
+
   <div class="c-event-block c-event-block--featured-image">
     {% if content.field_image_main[0] %}
       <div class="c-event-image--main">
@@ -139,11 +147,17 @@
     {% endif %}
 
     {% if node.field_video_status.0.value %}
-    <div class="c-event-address">
+    <div class="c-event-video--meta">
       <div class="c-event-video--home">
         {{ icons.get('youtube-2') }}
         <a class="stream-link">
-      <span>{{ content.field_video_status }}</span></a>
+      <span>
+        {% if content.field_video_status[0]['#markup'] == 'streaming_redirect' %}
+        Streaming Live Now
+        {% else %}
+        {{ content.field_video_status }}
+        {% endif %}
+      </span></a>
       </div>
     </div>
     {% endif %}
@@ -152,7 +166,7 @@
     {% if event_place == "In Albany" or event_place == "In The District" %}
       {% if content.field_meeting_location[0]['#context']['value'] %}
         <div class="c-event-address">
-          <br>{{ content.field_meeting_location[0]['#context']['value'] }}
+          {{ content.field_meeting_location[0]['#context']['value'] }}
         </div>
       {% endif %}
     {% endif %}

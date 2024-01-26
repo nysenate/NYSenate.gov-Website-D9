@@ -145,11 +145,10 @@ function nysenate_theme_preprocess_node__article(&$variables) {
 
   // Senator Link.
   if (!empty($node->field_senator_multiref->entity)) {
-    $tid = $node->field_senator_multiref->target_id;
-    $senator = \Drupal::entityTypeManager()->getStorage('taxonomy_term')
-      ->load($tid);
-    $senator_link = \Drupal::service('nys_senators.microsites')
-      ->getMicrosite($senator);
+    $senator = $node->get('field_senator_multiref')->entity ?? NULL;
+    $senator_link = $senator
+      ? \Drupal::service('nys_senators.microsites')->getMicrosite($senator)
+      : '';
     $variables['senator_link'] = $senator_link;
 
     // Senator name.

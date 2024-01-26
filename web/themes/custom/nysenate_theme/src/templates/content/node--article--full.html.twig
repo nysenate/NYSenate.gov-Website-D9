@@ -16,7 +16,7 @@
           </p>
         {% elseif content.field_senator_multiref.0 %}
           <p class="c-news--author">
-            {{ content.field_senator_multiref.0 }}
+            <a href="{{ senator_link }}">{{ senator_name }}</a>
           </p>
         {% endif %}
         {% if content.field_date[0] %}

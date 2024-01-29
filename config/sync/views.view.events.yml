@@ -17,6 +17,7 @@ dependencies:
     - node.type.session
     - taxonomy.vocabulary.committees
     - taxonomy.vocabulary.senator
+    - views.view.global_promo_banner
   module:
     - address
     - better_exposed_filters
@@ -1593,7 +1594,18 @@ display:
       relationships: {  }
       use_ajax: true
       header: {  }
-      footer: {  }
+      footer:
+        view:
+          id: view
+          table: views
+          field: view
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: view
+          empty: false
+          view_to_insert: 'global_promo_banner:global_promo_banner'
+          inherit_arguments: false
       display_extenders: {  }
     cache_metadata:
       max-age: -1

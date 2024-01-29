@@ -65,10 +65,14 @@
               to
               {{ date_value.to_time }}
             {% endif %}
-            {% if video_status.key != 'streaming_redirect' and video_status.value %}
+            {% if video_status.key == 'streaming_redirect' and video_status.value %}
               <span class="c-meeting-video--status icon-before__youtube">
-                {{ video_status.value }}
-              </span>
+              Streaming Live Now
+            </span>
+            {% elseif video_status.value %}
+              <span class="c-meeting-video--status icon-before__youtube">
+              {{ video_status.value }}
+            </span>
             {% endif %}
           </p>
           {% if calendar_links %}
@@ -78,11 +82,12 @@
           {% endif %}
         </div>
       </div>
+
+      {% if content.body[0] %}
       <div class="c-meeting-detail--descript">
-        {% if content.body %}
           {{ content.body }}
-        {% endif %}
       </div>
+      {% endif %}
 
       {% if field_chapters %}
         <div class="c-meeting-detail--descript">

@@ -25,6 +25,7 @@ dependencies:
     - field.field.node.event.field_teleconference_id_number
     - field.field.node.event.field_teleconference_number
     - field.field.node.event.field_ustream
+    - field.field.node.event.field_video_redirect
     - field.field.node.event.field_video_status
     - field.field.node.event.field_yt
     - field.field.node.event.rabbit_hole__settings
@@ -218,8 +219,16 @@ content:
     third_party_settings: {  }
     weight: 24
     region: content
+  field_video_redirect:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 26
+    region: content
   field_video_status:
-    type: list_default
+    type: list_key
     label: hidden
     settings: {  }
     third_party_settings: {  }

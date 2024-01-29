@@ -130,9 +130,15 @@
 
     {% if fields.field_video_status_1.content is defined and fields.field_video_status_1.content|striptags|trim is not empty  %}
       {% if view.current_display != 'day_block' %}| {% endif %}
+      {% if fields.field_video_status_1.content|striptags|trim == "Streaming (Redirect)" %}
+        <a class="c-video-status icon-before__youtube" href="{{ url }}">
+          Streaming Live Now
+        </a>
+        {% else %}
         <a class="c-video-status icon-before__youtube" href="{{ url }}">
           {{ fields.field_video_status_1.content }}
         </a>
+      {% endif %}
     {% endif %}
   {% endif %}
 </div>

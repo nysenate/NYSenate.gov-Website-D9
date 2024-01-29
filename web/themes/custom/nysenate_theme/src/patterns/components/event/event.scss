@@ -33,6 +33,28 @@
       line-height: 12px;
     }
   }
+  .c-meeting-detail--streaming {
+    margin-top: 36px;
+  }
+  .c-meeting-detail--live-flag::before {
+    content: '';
+    display: inline-block;
+    background: #506e50;
+    height: 10px;
+    width: 10px;
+    margin-right: 10px;
+    border-radius: 50%;
+  }
+  .c-event-video--home a {
+    font-size: 16px;
+  }
+  .c-meeting-detail--meta p {
+    display: inline-block;
+    color: #444444;
+    text-transform: uppercase;
+    font-family: $font-sans;
+    font-size: 16px;
+  }
 }
 
 .nys-event-title {
@@ -602,7 +624,8 @@
       .c-senator,
       .c-event-location,
       .c-event-address,
-      .c-event-time {
+      .c-event-time,
+      .e-event-video--meta{
         float: right;
         margin-right: 0;
         width: 580px;

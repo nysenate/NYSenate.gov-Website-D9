@@ -23,12 +23,12 @@ jobs:
           fetch-depth: 0
           ref: ${{ env.PERCY_TARGET_BRANCH }}
 
-      - name: Setup PHP
+      - name: Setup PHP for Terminus
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ vars.PHP_VERSION }}
 
-      - name: Add SSH Key
+      - name: Add SSH Key for Terminus
         uses: webfactory/ssh-agent@v0.8.0
         with:
           ssh-private-key: ${{ secrets.PANTHEON_SSH_PRIVATE_KEY }}
@@ -36,7 +36,7 @@ jobs:
       - name: Disable Pantheon SSH strict host key checking
         run: 'printf "\nHost *\n\tStrictHostKeyChecking no" >> ~/.ssh/config'
 
-      - name: Install Terminus
+      - name: Install Terminus so we can wakeup environments
         uses: pantheon-systems/terminus-github-actions@main
         with:
           pantheon-machine-token: ${{ secrets.PANTHEON_MACHINE_TOKEN }}

@@ -147,8 +147,8 @@
       {% endif %}
     </div>
     {%
-      if not is_front and type != 'senator' and error_page == false
-      or is_front and homepage_hero_node_type in ['press_conference', 'public_hearing', 'session']
+      if (not is_front and type != 'senator' and error_page == false)
+      or (is_front and homepage_hero_node_type in ['press_conference', 'public_hearing', 'session'])
     %}
       {%
         include '@nysenate_theme/nysenate-actionbar/nysenate-actionbar.twig' with {

@@ -48,52 +48,70 @@
   }
 }
 
-@include breakpoint($bp-sm) {
-
-  .c-featured-bills-body {
-    p {
-      font-size: 20px;
-      line-height: 32px;
-
-      & + p {
-        margin-top: 40px;
-      }
-    }
+.node--view-mode-featured-content .c-block.c-block-legislation-featured {
+  a {
+    color: #fff;
   }
-
-  .c-pg-featured-bills {
-
-    &.c-block {
-      flex-direction: row;
-    }
-
-    .bills-container {
-
-      &.c-block--half-wrap {
-        width: 50%;
-        margin-right: 60px;
-      }
-    }
-
-    .c-block-legislation-featured.c-block--half-wrap {
-      margin: 0 24px 28px 0;
-      clear: both;
-      width: 100%;
-    }
-
-    .c-block.c-block-legislation-featured .c-legislation-info  {
-      width: 100%;
-    }
+  .c-legislation-info .sponsor-name {
+    text-transform: capitalize;
+    margin-top: 3px;
+    font-size: 16px;
+  }
+  .c-bill-descript,
+  p.c-bill-update--date,
+  .c-legislation-info .sponsors span,
+  p.c-bill-update--location {
+    font-size: 16px
   }
 }
-
-.bills-container {
 
   @include breakpoint($bp-sm) {
-    &--col {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 4%;
+
+    .c-featured-bills-body {
+      p {
+        font-size: 20px;
+        line-height: 32px;
+
+        & + p {
+          margin-top: 40px;
+        }
+      }
+    }
+
+    .c-pg-featured-bills {
+
+      &.c-block {
+        flex-direction: row;
+      }
+
+      .bills-container {
+
+        &.c-block--half-wrap {
+          width: 50%;
+          margin-right: 60px;
+        }
+      }
+
+      .c-block-legislation-featured.c-block--half-wrap {
+        margin: 0 24px 28px 0;
+        clear: both;
+        width: 100%;
+      }
+
+      .c-block.c-block-legislation-featured .c-legislation-info  {
+        width: 100%;
+      }
     }
   }
-}
+
+  .bills-container {
+
+    @include breakpoint($bp-sm) {
+      &--col {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 4%;
+      }
+    }
+  }
+

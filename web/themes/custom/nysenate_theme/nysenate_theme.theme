@@ -4727,6 +4727,29 @@ function nysenate_theme_preprocess_node__bill__featured_content(&$variables) {
     }
   }
 
+  // Committee Link.
+  $committee_link = ['text' => '', 'url' => ''];
+  if ($node->hasField('field_ol_latest_status_committee') &&
+    !$node->get('field_ol_latest_status_committee')->isEmpty() &&
+    $last_status == 'In Senate Committee') {
+    $committee_field = $node->field_ol_latest_status_committee->getValue();
+    $committee_name = $committee_field[0]['value'];
+
+    $committee = \Drupal::entityTypeManager()->getStorage('taxonomy_term')
+      ->loadByProperties([
+        'vid' => 'committees',
+        'name' => $committee_name,
+      ]);
+
+    if ($committee) {
+      $committee = reset($committee);
+      $committee_link = [
+        'text' => $committee->getName(),
+        'url' => $committee->toUrl()->toString(),
+      ];
+    }
+  }
+
   // Sponsor.
   $sponsor = NULL;
   if ($node->hasField('field_ol_sponsor') && !empty($node->field_ol_sponsor->target_id)) {
@@ -4755,6 +4778,7 @@ function nysenate_theme_preprocess_node__bill__featured_content(&$variables) {
     'issues' => $issues,
     'sponsor' => !empty($sponsor) ? $sponsor->name->value : '',
     'sponsor_link' => $sponsor_link,
+    'committee_link' => $committee_link,
     'vote_widget' => $variables['content']['vote_widget'],
   ];
 }

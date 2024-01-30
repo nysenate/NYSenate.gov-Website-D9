@@ -54,7 +54,6 @@ abstract class BillTestBase implements BillTestInterface, ContainerFactoryPlugin
    *   True if the item was matched by the test.
    */
   public static function resolveTest(object $item, array $test_array = []): bool {
-
     // Initialize test result.  This forces empty test arrays to fail.
     $final_test_result = ((bool) $item) && ((bool) $test_array);
 
@@ -67,13 +66,15 @@ abstract class BillTestBase implements BillTestInterface, ContainerFactoryPlugin
       else {
         // Get this property's value from the update object.
         $test_item = $item->$key;
-        // If the value is an array, recurse that level.
+        // If the value is an array, recurse that level.  The test fails if
+        // the $test_item is not also an object.
         if (is_array($val)) {
-          $final_test_result = static::resolveTest($test_item, $val);
+          $final_test_result = is_object($test_item) && static::resolveTest($test_item, $val);
         }
-        // Anything other than boolean TRUE requires an explicit match.
+        // Anything other than boolean TRUE requires an explicit match against
+        // the $test_item represented as a string.
         elseif ($val !== TRUE) {
-          $final_test_result = static::wildcardMatch($val, $test_item);
+          $final_test_result = static::wildcardMatch($val, (string) $test_item);
         }
       }
 

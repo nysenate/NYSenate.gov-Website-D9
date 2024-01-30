@@ -82,8 +82,8 @@ class NysBillNotificationsCommands extends DrushCommands {
    * @aliases nysbn-pu
    */
   public function processUpdates(array $options = [
-    'from' => 0,
-    'to' => 0,
+    'from' => NULL,
+    'to' => NULL,
     'force' => FALSE,
   ]): int {
     $this->options = $this->resolveOptions($options);

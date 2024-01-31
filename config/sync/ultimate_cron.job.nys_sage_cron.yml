@@ -1,0 +1,17 @@
+uuid: 65f9efb2-ed1b-4fc9-b33f-b5a50b8f4650
+langcode: en
+status: true
+dependencies:
+  module:
+    - nys_sage
+title: 'Default cron handler'
+id: nys_sage_cron
+weight: 0
+module: nys_sage
+callback: nys_sage_cron
+scheduler:
+  id: simple
+launcher:
+  id: serial
+logger:
+  id: database

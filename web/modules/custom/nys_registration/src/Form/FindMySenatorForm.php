@@ -229,6 +229,7 @@ class FindMySenatorForm extends FormBase {
                 </p>
               </div>
             </div>
+            ' . $create_message . '
             <div class="row c-find-my-senator--row">
               <div class="columns large-12">
                 <h2 class="c-container--title">Senate District Map</h2>
@@ -237,7 +238,6 @@ class FindMySenatorForm extends FormBase {
                 </iframe>
               </div>
             </div>
-            ' . $create_message . '
           </div>',
           []
         );

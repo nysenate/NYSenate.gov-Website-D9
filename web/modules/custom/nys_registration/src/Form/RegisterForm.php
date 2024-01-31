@@ -217,6 +217,7 @@ class RegisterForm extends UserRegisterForm {
     $find_my_senator_address = $tempstore->get('find_my_senator_address');
     if (!empty($find_my_senator_address)) {
       $form['field_address']['widget'][0]['address']['#default_value'] = $find_my_senator_address;
+      $this->messenger()->addStatus($this->t('We reused the address you provided in "Find My Senator".  Please check that it is correct before proceeding.'));
     }
 
     // Check if redirected from Senator's Page.

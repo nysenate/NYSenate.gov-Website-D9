@@ -8,6 +8,7 @@ use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\file\Entity\File;
 use Drupal\media\Entity\Media;
 use Drupal\nys_registration\RegistrationHelper;
@@ -35,12 +36,28 @@ class RegisterForm extends UserRegisterForm {
   protected SenatorsHelper $senatorsHelper;
 
   /**
+   * The tempstore factory.
+   *
+   * @var \Drupal\Core\TempStore\PrivateTempStoreFactory
+   */
+  protected $tempStoreFactory;
+
+  /**
    * {@inheritDoc}
    */
-  public function __construct(EntityRepositoryInterface $entity_repository, LanguageManagerInterface $language_manager, RegistrationHelper $helper, SenatorsHelper $senatorsHelper, EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL, TimeInterface $time = NULL) {
+  public function __construct(
+    EntityRepositoryInterface $entity_repository,
+    LanguageManagerInterface $language_manager,
+    EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL,
+    TimeInterface $time = NULL,
+    RegistrationHelper $helper,
+    SenatorsHelper $senatorsHelper,
+    PrivateTempStoreFactory $tempStoreFactory
+  ) {
     parent::__construct($entity_repository, $language_manager, $entity_type_bundle_info, $time);
     $this->helper = $helper;
     $this->senatorsHelper = $senatorsHelper;
+    $this->tempStoreFactory = $tempStoreFactory;
   }
 
   /**
@@ -48,13 +65,14 @@ class RegisterForm extends UserRegisterForm {
    */
   public static function create(ContainerInterface $container): self {
     return new static(
-          $container->get('entity.repository'),
-          $container->get('language_manager'),
-          $container->get('nys_registration.helper'),
-          $container->get('nys_senators.senators_helper'),
-          $container->get('entity_type.bundle.info'),
-          $container->get('datetime.time')
-      );
+      $container->get('entity.repository'),
+      $container->get('language_manager'),
+      $container->get('entity_type.bundle.info'),
+      $container->get('datetime.time'),
+      $container->get('nys_registration.helper'),
+      $container->get('nys_senators.senators_helper'),
+      $container->get('tempstore.private')
+    );
   }
 
   /**
@@ -193,6 +211,13 @@ class RegisterForm extends UserRegisterForm {
         '#validate' => ['::formPreValidateStep1', '::formValidateStep1'],
       ],
     ];
+
+    // Prefill address if value found from find my senator form.
+    $tempstore = $this->tempStoreFactory->get('nys_registration');
+    $find_my_senator_address = $tempstore->get('find_my_senator_address');
+    if (!empty($find_my_senator_address)) {
+      $form['field_address']['widget'][0]['address']['#default_value'] = $find_my_senator_address;
+    }
 
     // Check if redirected from Senator's Page.
     if (\Drupal::request()->headers->get('referer')) {

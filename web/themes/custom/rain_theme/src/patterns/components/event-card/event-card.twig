@@ -1,0 +1,41 @@
+{{ attach_library('rain_theme/event-card') }}
+
+<article class="event-card {{ card.modifier_class ? ' ' ~ card.modifier_class }}
+  {{- attributes ? ' ' ~ attributes.class -}}"
+  {{- attributes ? attributes|without(class) -}}>
+
+  {% if card.date.month %}
+    <div class="event-card__month">
+      {{ card.date.month }}
+    </div>
+  {% endif %}
+
+  <div class="event-card__content">
+    {% if card.date.display %}
+      <div class="event-card__date-display">
+        {{ card.date.display }}
+      </div>
+    {% endif %}
+    {%
+      include '@rain_theme/heading/heading.twig' with {
+        "heading": card.heading
+      } only
+    %}
+    {% if card.summary_text %}
+      {%
+        include '@rain_theme/body-text/body-text.twig' with {
+          "body_text": card.summary_text
+        } only
+      %}
+    {% endif %}
+
+    {% if card.link %}
+      <a href="{{ card.link.url }}" class="event-card__link">{{ card.link.text }}</a>
+    {% endif %}
+  </div>
+  {% if card.date.day %}
+    <div class="event-card__day">
+      {{ card.date.day }}
+    </div>
+  {% endif %}
+</article>

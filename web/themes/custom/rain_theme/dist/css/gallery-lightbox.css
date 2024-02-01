@@ -1,0 +1,54 @@
+.gallery-lightbox {
+  display: grid;
+  grid-column-gap: 1rem;
+  grid-row-gap: 1rem;
+  margin-top: 1.5rem; }
+  @media screen and (min-width: 544px) {
+    .gallery-lightbox {
+      grid-template-columns: 1fr 1fr 1fr; } }
+  @media screen and (min-width: 768px) {
+    .gallery-lightbox {
+      grid-template-columns: 1fr 1fr 1fr 1fr; } }
+
+.gallery-lightbox-item {
+  cursor: pointer;
+  border: 3px solid transparent;
+  margin: auto;
+  position: relative;
+  transition: border 0.25s;
+  overflow: hidden; }
+  .gallery-lightbox-item:hover, .gallery-lightbox-item:focus-within {
+    border: 3px solid #003954; }
+    .gallery-lightbox-item:hover .gallery-lightbox-item__expand, .gallery-lightbox-item:focus-within .gallery-lightbox-item__expand {
+      bottom: 10px; }
+
+.gallery-lightbox-item__media {
+  display: block;
+  width: 100%; }
+
+.gallery-lightbox-item__expand {
+  background: none;
+  display: block;
+  position: absolute;
+  right: 10px;
+  bottom: -35px;
+  transition: bottom 0.25s;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  width: 32px;
+  height: 32px;
+  cursor: pointer; }
+
+.gallery-lightbox__title {
+  font-size: 1.5rem;
+  font-weight: normal; }
+  @media screen and (min-width: 544px) {
+    .gallery-lightbox__title {
+      font-size: 2rem; } }
+  @media screen and (min-width: 768px) {
+    .gallery-lightbox__title {
+      font-size: 3rem; } }
+
+#cboxLoadedContent {
+  background: #000; }

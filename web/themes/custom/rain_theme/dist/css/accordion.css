@@ -1,0 +1,99 @@
+.faq-container {
+  margin: 0 auto;
+  max-width: 1600px;
+  width: 100%;
+  padding: 0 1.5rem; }
+
+.accordion__title {
+  font-size: 28px;
+  font-family: 'Raleway-Bold', sans-serif;
+  font-weight: bold;
+  line-height: 33px;
+  color: #003954; }
+  @media screen and (min-width: 1024px) {
+    .accordion__title {
+      font-size: 42px;
+      line-height: 49px; } }
+
+.accordion__wrapper {
+  max-width: none;
+  position: relative;
+  margin-top: 50px; }
+
+.accordion {
+  background: #FFF;
+  padding: 22px 16px 22px 30px;
+  transition: background 0.75s;
+  box-shadow: 0 2px 20px 0 rgba(0, 0, 0, 0.2);
+  border: 0;
+  margin-bottom: 10px;
+  width: 112%;
+  margin-left: -6%; }
+  @media screen and (min-width: 544px) {
+    .accordion {
+      width: 100%;
+      margin-left: 0; } }
+  .accordion:first-of-type {
+    border: 0; }
+  .accordion.open {
+    background: #FFF; }
+    .accordion.open .accordion__heading {
+      font-weight: 600; }
+    .accordion.open svg {
+      transform: rotate(-180deg); }
+  .accordion .field--type-link {
+    margin-top: 20px; }
+    .accordion .field--type-link a {
+      color: #404040;
+      font-size: 16px;
+      font-weight: bold;
+      line-height: 26px;
+      position: relative;
+      text-decoration: none;
+      margin-top: 21px; }
+      .accordion .field--type-link a::after {
+        content: '>';
+        margin-left: 10px; }
+
+.accordion__toggle {
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  outline: inherit;
+  padding: 0;
+  position: relative;
+  text-align: left;
+  width: 100%;
+  display: flex;
+  justify-content: space-between; }
+  .accordion__toggle::after {
+    display: none; }
+  .accordion__toggle svg {
+    fill: #003954;
+    margin-top: 12px; }
+
+.accordion__heading {
+  color: #414751;
+  font-size: 18px;
+  font-weight: 500; }
+  @media screen and (min-width: 768px) {
+    .accordion__heading {
+      font-size: 24px; } }
+
+.accordion__content {
+  max-height: 0;
+  margin-top: 0;
+  overflow: hidden;
+  padding: 0 32px 0 0;
+  transition: max-height 0.15s, margin-top 0.35s;
+  color: #414751;
+  font-family: 'Raleway', sans-serif;
+  font-size: 18px;
+  font-weight: normal;
+  line-height: 26px; }
+  .open .accordion__content {
+    margin-top: 20px;
+    max-height: 9999vh; }
+  .accordion__content img {
+    position: relative;
+    border: 15px solid #003954; }

@@ -2,11 +2,6 @@
 {% import '@nysenate_theme/icons/_icons-macro.twig' as icons %}
 
 {% set error_page = false or is_error_page %}
-{% set mcp = 'microsite_content_producer' in user.getroles %}
-{% set lc = 'legislative_correspondent' in user.getroles %}
-{% set student = 'student_programs' in user.getroles %}
-{% set frontpage = 'frontpage_editor' in user.getroles %}
-{% set admin = 'admin' in user.getroles %}
 
 <header
   id="js-sticky" role="banner" class="l-header {{ error_page ? 'error-page-header' : '' }}" style="z-index: 100;">
@@ -57,19 +52,20 @@
 
                 {% if is_admin or admin or frontpage or mcp or lc or student %}
                   <li class="c-login--admin">
-                    {% if admin or is_admin %}
+                    {% if 'administrator' in user.getroles %}
                       <a class="c-header--btn" href="/admin">Admin</a>
-                    {% elseif frontpage  %}
+                    {% elseif 'frontpage_editor' in user.getroles  %}
                       <a class="c-header--btn" href="/admin/frontpage-editors">Admin</a>
-                    {% elseif student  %}
+                    {% elseif 'student_programs' in user.getroles %}
                       <a class="c-header--btn" href="/admin/student-programs">Admin</a>
-                    {% elseif mcp %}
+                    {% elseif 'microsite_content_producer' in user.getroles %}
                       <a class="c-header--btn" href="/admin/content/my-senator">Admin</a>
-                    {% elseif lc %}
+                    {% elseif 'legislative_correspondent' in user.getroles %}
                       <a class="c-header--btn" href="/dashboard/senators">Admin</a>
                     {% endif %}
                   </li>
                 {% endif %}
+
               </ul>
               {% if has_senator %}
                 <a class="c-header--btn c-senator-header--btn" href="{{ senator_microsite_link }}">
@@ -93,11 +89,20 @@
       </section>
       <!--.c-header-bar -->
       <button id="" class="js-mobile-nav--btn c-block--btn c-nav--toggle icon-replace button--menu"></button>
-      {% block microsite_hero %}
-        {% if microsite_hero %}
-          {{ microsite_hero }}
-        {% endif %}
-      {% endblock %}
+      {% if actionbar.type != 'committee' %}
+        {% block microsite_hero %}
+          {% if microsite_hero %}
+            {{ microsite_hero }}
+          {% endif %}
+        {% endblock %}
+      {% elseif type == 'senator' and actionbar.type == 'committee' %}
+        {%
+          include '@nysenate_theme/nysenate-actionbar/nysenate-actionbar.twig' with {
+          is_logged: is_logged,
+          actionbar,
+        } only
+        %}
+      {% endif %}
       {% if type == 'senator' %}
         {{ microsite_menu }}
       {% else %}
@@ -146,7 +151,10 @@
         </div>
       {% endif %}
     </div>
-    {% if type != 'senator' and error_page == false %}
+    {%
+      if (not is_front and type != 'senator' and error_page == false)
+      or (is_front and homepage_hero_node_type in ['press_conference', 'public_hearing', 'session'])
+    %}
       {%
         include '@nysenate_theme/nysenate-actionbar/nysenate-actionbar.twig' with {
           is_logged: is_logged,

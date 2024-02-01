@@ -106,7 +106,7 @@ jobs:
           SETTINGS_FILE="files/private/private_settings.php"
           LOCAL_FILE="${{ runner.temp }}/private_settings.php"
           echo -e "get $SETTINGS_FILE $LOCAL_FILE\nbye" | $SOURCE_SFTP_COMMAND
-          echo -e "put $LOCAL_FILE $SETTINGS_FILE\nbye" | $DEST_SFTP_COMMAND
+          echo -e "mkdir files/private\nput $LOCAL_FILE $SETTINGS_FILE\nbye" | $DEST_SFTP_COMMAND
 
       - name: Post a comment to the PR
         if: success()

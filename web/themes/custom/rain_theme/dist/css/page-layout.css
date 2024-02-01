@@ -1,0 +1,21 @@
+.two-col-layout {
+  max-width: 90%;
+  width: auto;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column; }
+  @media screen and (min-width: 1540px) {
+    .two-col-layout {
+      max-width: 1600px; } }
+  @media screen and (min-width: 1024px) {
+    .two-col-layout {
+      flex-direction: row; } }
+  .two-col-layout .region-content {
+    flex: 3;
+    padding: 30px 0; }
+    @media screen and (min-width: 1024px) {
+      .two-col-layout .region-content {
+        max-width: 75%; } }
+  .two-col-layout .layout-sidebar-right {
+    flex: 1;
+    padding: 30px; }

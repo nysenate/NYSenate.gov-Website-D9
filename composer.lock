@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b31f0af0a46f817174c1fdef9ace0eee",
+    "content-hash": "3ede984adcab5e7585df0fb2efceb310",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1769,7 +1769,7 @@
             },
             "require": {
                 "drupal/address": "^2.0",
-                "drupal/core": "^8 || ^9 || ^10 || ^11",
+                "drupal/core": "^9.2 || ^10",
                 "php": "^7.3 || ^8.0"
             },
             "type": "drupal-module",
@@ -6007,6 +6007,10 @@
                     "homepage": "https://www.drupal.org/user/99340"
                 },
                 {
+                    "name": "dww",
+                    "homepage": "https://www.drupal.org/user/46549"
+                },
+                {
                     "name": "geek-merlin",
                     "homepage": "https://www.drupal.org/user/229048"
                 },
@@ -7243,12 +7247,12 @@
                     "homepage": "https://www.drupal.org/user/57511"
                 },
                 {
-                    "name": "Grayside",
-                    "homepage": "https://www.drupal.org/user/346868"
+                    "name": "bluegeek9",
+                    "homepage": "https://www.drupal.org/user/1286304"
                 },
                 {
-                    "name": "itamar",
-                    "homepage": "https://www.drupal.org/user/1757910"
+                    "name": "Grayside",
+                    "homepage": "https://www.drupal.org/user/346868"
                 },
                 {
                     "name": "jhedstrom",
@@ -7306,6 +7310,10 @@
                 {
                     "name": "amitaibu",
                     "homepage": "https://www.drupal.org/user/57511"
+                },
+                {
+                    "name": "bluegeek9",
+                    "homepage": "https://www.drupal.org/user/1286304"
                 },
                 {
                     "name": "jhedstrom",
@@ -8651,8 +8659,8 @@
                     "dev-3.0.x": "3.0.x-dev"
                 },
                 "drupal": {
-                    "version": "3.0.0+1-dev",
-                    "datestamp": "1700819026",
+                    "version": "3.0.0+31-dev",
+                    "datestamp": "1706537044",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Dev releases are not covered by Drupal security advisories."
@@ -8677,6 +8685,10 @@
                 {
                     "name": "artem_sylchuk",
                     "homepage": "https://www.drupal.org/user/2511902"
+                },
+                {
+                    "name": "bohart",
+                    "homepage": "https://www.drupal.org/user/289861"
                 },
                 {
                     "name": "edutrul",
@@ -14581,95 +14593,6 @@
                 "source": "https://github.com/viossat/arraytotexttable/tree/v1.0.10"
             },
             "time": "2023-09-21T16:42:23+00:00"
-        },
-        {
-            "name": "mediacurrent/rain_theme",
-            "version": "4.0-beta3",
-            "source": {
-                "type": "git",
-                "url": "https://bitbucket.org/mediacurrent/rain_theme.git",
-                "reference": "e0cad4590309bd0fa88bec19d5c201de0de5cc6a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://bitbucket.org/mediacurrent/rain_theme/get/e0cad4590309bd0fa88bec19d5c201de0de5cc6a.zip",
-                "reference": "e0cad4590309bd0fa88bec19d5c201de0de5cc6a",
-                "shasum": ""
-            },
-            "type": "drupal-theme",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-2.0-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "Jay Callicott"
-                }
-            ],
-            "description": "Mediacurrent Rain starter theme.",
-            "homepage": "https://bitbucket.org/mediacurrent/rain_theme",
-            "support": {
-                "source": "https://bitbucket.org/mediacurrent/rain_theme/src/e0cad4590309bd0fa88bec19d5c201de0de5cc6a/?at=4.0-beta3"
-            },
-            "time": "2021-03-19T15:37:36+00:00"
-        },
-        {
-            "name": "mglaman/composer-drupal-lenient",
-            "version": "1.0.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/mglaman/composer-drupal-lenient.git",
-                "reference": "6f9e03f238403b53c04f26a24dd8777f62135213"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/mglaman/composer-drupal-lenient/zipball/6f9e03f238403b53c04f26a24dd8777f62135213",
-                "reference": "6f9e03f238403b53c04f26a24dd8777f62135213",
-                "shasum": ""
-            },
-            "require": {
-                "composer-plugin-api": "^2.0",
-                "php": ">=8.1"
-            },
-            "require-dev": {
-                "composer/composer": "^2.3",
-                "phpstan/extension-installer": "^1.1",
-                "phpstan/phpstan": "^1.6",
-                "phpstan/phpstan-phpunit": "^1.1",
-                "phpstan/phpstan-strict-rules": "^1.2",
-                "phpunit/phpunit": "^9.5",
-                "squizlabs/php_codesniffer": "^3.6"
-            },
-            "type": "composer-plugin",
-            "extra": {
-                "class": "ComposerDrupalLenient\\Plugin"
-            },
-            "autoload": {
-                "psr-4": {
-                    "ComposerDrupalLenient\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-2.0-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "Matt Glaman",
-                    "email": "nmd.matt@gmail.com"
-                }
-            ],
-            "support": {
-                "issues": "https://github.com/mglaman/composer-drupal-lenient/issues",
-                "source": "https://github.com/mglaman/composer-drupal-lenient/tree/1.0.4"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/mglaman",
-                    "type": "github"
-                }
-            ],
-            "time": "2023-12-07T17:56:20+00:00"
         },
         {
             "name": "mglaman/phpstan-drupal",
@@ -22336,12 +22259,11 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://bitbucket.org/mediacurrent/ci-tests/get/db5b1b0f6a42987856d3d21889bdfb24419081a6.zip",
+                "url": "https://bitbucket.org/mediacurrent/ci-tests/get/a3a0147b7a1c6ec79bcda7854278da1c72bfc0f2.zip",
                 "reference": "db5b1b0f6a42987856d3d21889bdfb24419081a6",
                 "shasum": ""
             },
             "require": {
-                "behat/mink-goutte-driver": "^1.2 || ^2",
                 "dmore/behat-chrome-extension": "^1.3"
             },
             "default-branch": true,
@@ -22357,7 +22279,7 @@
             "homepage": "https://bitbucket.org/mediacurrent/ci-tests",
             "support": {
                 "issues": "https://bitbucket.org/mediacurrent/ci-tests/issues",
-                "source": "https://bitbucket.org/mediacurrent/ci-tests/src/db5b1b0f6a42987856d3d21889bdfb24419081a6/?at=master"
+                "source": "https://bitbucket.org/mediacurrent/ci-tests/src/a3a0147b7a1c6ec79bcda7854278da1c72bfc0f2/?at=master"
             },
             "time": "2023-10-04T15:31:03+00:00"
         },
@@ -25741,12 +25663,12 @@
         "drupal/ultimate_cron": 15,
         "drupal/views_exclude_previous": 10,
         "drupal/views_field_view": 10,
+        "drupal/views_ical": 15,
         "drupal/views_load_more": 15,
         "drupal/viewsreference": 10,
         "drupal/votingapi": 10,
         "drupal/webform": 5,
         "drupal/webform_analysis": 10,
-        "mediacurrent/rain_theme": 10,
         "mediacurrent/ci-tests": 20
     },
     "prefer-stable": true,

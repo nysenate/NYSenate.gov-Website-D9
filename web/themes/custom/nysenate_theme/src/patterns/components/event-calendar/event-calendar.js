@@ -36,10 +36,12 @@
         viewType = 'month';
         formatType = 'm/Y';
         submit = $('#views-exposed-form-events-page-2 input[type="submit"]');
+        $('.form-item-date.js-form-type-textfield').hide();
       }
       if ($('.view-events.view-display-id-page_3').length > 0) {
         viewType = 'week';
         submit = $('#views-exposed-form-events-page-3 input[type="submit"]');
+        $('.form-item-date-min.form-type-textfield').hide();
       }
 
       if ($('.form-item-date.js-form-type-textfield input').val()) {
@@ -52,7 +54,6 @@
             .split('/');
           const lastIndex = splitDate.length - 1;
 
-          $('.form-item-date.js-form-type-textfield input').val(`${splitDate[0]}/${splitDate[lastIndex]}`);
           $('#datepicker input').val(`${splitDate[0]}/${splitDate[lastIndex]}`);
         }
       }

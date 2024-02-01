@@ -1,0 +1,75 @@
+.map__link {
+  display: inline-block;
+  margin-top: 1.5rem; }
+
+.map--2col {
+  align-items: center;
+  display: flex;
+  flex-direction: column; }
+  @media screen and (min-width: 544px) {
+    .map--2col {
+      flex-direction: row; } }
+  .map--2col .map__wrapper {
+    width: 100%; }
+    @media screen and (min-width: 544px) {
+      .map--2col .map__wrapper {
+        flex: 1; } }
+  .map--2col .map__embed {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden; }
+    .map--2col .map__embed iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%; }
+  .map--2col .map__text {
+    width: 100%;
+    margin: 1.5rem 0 0; }
+    @media screen and (min-width: 544px) {
+      .map--2col .map__text {
+        flex: 1;
+        margin: 0 0 0 1.5rem; } }
+    @media screen and (min-width: 1200px) {
+      .map--2col .map__text {
+        margin: 0 0 0 4rem; } }
+    .map--2col .map__text .map__address {
+      line-height: 1.625; }
+      @media screen and (min-width: 544px) {
+        .map--2col .map__text .map__address {
+          font-size: 1.5rem; } }
+    .map--2col .map__text .map__location {
+      font-size: 1.5rem;
+      font-weight: normal; }
+      @media screen and (min-width: 544px) {
+        .map--2col .map__text .map__location {
+          font-size: 2rem; } }
+
+.map--full {
+  max-height: 250px;
+  overflow: hidden; }
+  @media screen and (min-width: 544px) {
+    .map--full {
+      max-height: 300px; } }
+  @media screen and (min-width: 1200px) {
+    .map--full {
+      max-height: 395px; } }
+  .map--full .map__embed {
+    position: relative;
+    padding-bottom: 100%;
+    height: 0;
+    overflow: hidden; }
+    .map--full .map__embed iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%; }
+      @media screen and (min-width: 544px) {
+        .map--full .map__embed iframe {
+          height: 50%; } }
+      @media screen and (min-width: 1200px) {
+        .map--full .map__embed iframe {
+          height: 35%; } }

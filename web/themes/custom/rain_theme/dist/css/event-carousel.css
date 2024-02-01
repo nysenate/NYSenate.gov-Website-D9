@@ -1,0 +1,64 @@
+.event-carousel {
+  margin-left: auto;
+  position: relative; }
+  @media screen and (min-width: 1165px) {
+    .event-carousel {
+      padding: 30px 0; }
+      .event-carousel .slick-list {
+        padding: 0 90px 0 0; }
+        .event-carousel .slick-list::before {
+          content: '\A';
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          right: 0;
+          width: 5rem;
+          z-index: 10; }
+      .event-carousel.fade .slick-list::before {
+        background-image: linear-gradient(90deg, rgba(255, 255, 255, 0) 0, white 100%);
+        background-position: 50% 50%;
+        background-origin: padding-box;
+        background-clip: border-box;
+        background-size: auto auto; } }
+  .event-carousel .slick-slide {
+    width: 335px;
+    margin: 0; }
+
+.event-carousel__navigation {
+  margin-top: 3rem; }
+  .event-carousel__navigation .slick-prev,
+  .event-carousel__navigation .slick-next {
+    height: 50px;
+    width: 50px;
+    z-index: 1;
+    display: inline;
+    position: relative; }
+    .event-carousel__navigation .slick-prev::before,
+    .event-carousel__navigation .slick-next::before {
+      color: #003954;
+      font-size: 48px; }
+  .event-carousel__navigation .slick-prev {
+    left: auto; }
+  .event-carousel__navigation .slick-next {
+    right: auto; }
+  .event-carousel__navigation .slick-track {
+    display: flex;
+    align-items: center;
+    justify-content: center; }
+  .event-carousel__navigation .slick-pager .slick-prev::before,
+  .event-carousel__navigation .slick-pager .slick-next::before {
+    border-radius: 50%;
+    border: 5px solid #cccae3;
+    width: 70px;
+    height: 70px;
+    display: block;
+    font-family: 'Raleway', sans-serif; }
+  .event-carousel__navigation .slick-pager .slick-prev {
+    left: -30px; }
+    .event-carousel__navigation .slick-pager .slick-prev::before {
+      content: '\003C'; }
+  .event-carousel__navigation .slick-pager .slick-next::before {
+    content: '\003E'; }
+  .event-carousel__navigation .slick-pager {
+    width: 100px;
+    margin: 0 auto; }

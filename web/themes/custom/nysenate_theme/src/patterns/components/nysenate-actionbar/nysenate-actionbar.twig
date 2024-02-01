@@ -38,41 +38,6 @@
         <a href="/user/login" class="icon-before__issue-follow" title="follow this committee">follow this issue</a>
       {% endif %}
     </span>
-  {% elseif actionbar.type == 'microsite' %}
-    {% if senator_microsite_link %}
-      <a href="{{ senator_microsite_link }}">
-      {% endif %}
-      <div class="c-senator-hero--img" id="senatorImage">
-        {% if image_hero %}
-          {{ image_hero }}
-        {% else %}
-          <img src="{{ default_image }}">
-        {% endif %}
-      </div>
-      <div id="smallShotImage">
-        {{ senator_headshot }}
-      </div>
-      {% if senator_microsite_link %}
-      </a>
-    {% endif %}
-    <div class="c-senator-hero--info {% if not is_active %} inactive-pallette {% endif %}">
-      <div>
-        <h2 class="c-senator-hero--title">
-          {% if not is_active %}former
-          {% endif %}new york state senator<br>
-          {% if senator_microsite_link %}
-            <a href="{{ senator_microsite_link }}" class="c-senator-hero--name">{{ senator_name }}</a>
-          {% else %}
-            <span class="c-senator-hero--name">{{ senator_name }}</span>
-          {% endif %}
-        </h2>
-      </div>
-    </div>
-    {% if is_active %}
-      <a class="c-block--btn c-senator-hero--contact-btn icon-before__contact med-bg" href="{{ message_senator_link }}">message senator</a>
-    {% else %}
-      <a class="c-block--btn c-senator-hero--contact-btn icon-before__contact med-bg" href="{{ your_dashboard_link }}">your dashboard</a>
-    {% endif %}
   {% elseif actionbar.type == 'default' %}
     <div class="c-actionbar--info {{ is_logged ? 'content-logged' }}">
       <p class="actionbar--cta">{{ is_logged ? "See activity on Issues, Bills and Committees you're following."|t :

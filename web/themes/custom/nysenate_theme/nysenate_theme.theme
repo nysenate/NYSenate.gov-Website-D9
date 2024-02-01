@@ -112,6 +112,7 @@ function nysenate_theme_preprocess_block_content__how_senate_works(&$variables) 
  * Implements hook_preprocess_node_TYPE().
  */
 function nysenate_theme_preprocess_node__article(&$variables) {
+  $node = $variables['node'];
   $variables['title'] = $variables['label'][0]['#context']['value'];
   if (isset($variables['content']['field_date'][0]['#markup'])) {
     $variables['field_date'] = $variables['content']['field_date'][0]['#markup'];
@@ -142,6 +143,25 @@ function nysenate_theme_preprocess_node__article(&$variables) {
     $variables['image_caption'] = $variables['content']['field_image_caption'][0]['#context']['value'];
   }
 
+  // Senator Link.
+  if (!empty($node->field_senator_multiref->entity)) {
+    $senator = $node->get('field_senator_multiref')->entity ?? NULL;
+    $senator_link = $senator
+      ? \Drupal::service('nys_senators.microsites')->getMicrosite($senator)
+      : '';
+    $variables['senator_link'] = $senator_link;
+
+    // Senator name.
+    $senator_name = '';
+    if ($senator->field_senator_name) {
+      $title = $senator->field_senator_name->title ?? '';
+      $given = $senator->field_senator_name->given ?? '';
+      $family = $senator->field_senator_name->family ?? '';
+      $senator_name = $title . ' ' . $given . ' ' . $family;
+      $senator_name = trim($senator_name);
+    }
+    $variables['senator_name'] = $senator_name;
+  }
 }
 
 /**
@@ -585,50 +605,6 @@ function nysenate_theme_preprocess_block_content__featured_image(&$variables) {
   $variables['title'] = $variables['elements']['#block_content']->info->value;
   if (isset($variables['content']['field_pg_full_width_bleed'][0]) && !empty($variables['content']['field_pg_full_width_bleed'][0])) {
     $variables['full_width_bleed'] = strtolower($variables['content']['field_pg_full_width_bleed'][0]['#markup']) == 'on' ? TRUE : FALSE;
-  }
-}
-
-/**
- * Implements hook_preprocess_block_content_ID().
- */
-function nysenate_theme_preprocess_block_content__featured_bill(&$variables) {
-  if (isset($variables['content']['field_bills']) && !empty($variables['content']['field_bills'])) {
-    $bills = [];
-    foreach ($variables['content']['field_bills'] as $key => $bill) {
-      if (!is_numeric($key)) {
-        continue;
-      }
-      $node = $bill['#node'];
-
-      // Published date.
-      $date = \Drupal::service('date.formatter')->format(strtotime($node->field_ol_publish_date->value), '', 'F d, Y');
-
-      // Last status.
-      $last_status_values = $node->field_ol_last_status->getSetting('allowed_values');
-      $last_status = !empty($node->field_ol_last_status->value) ? $last_status_values[$node->field_ol_last_status->value] : '';
-      // All status.
-      $positions = nysenate_bill_positions($node);
-
-      $sponsor_name = NULL;
-      if ($node->hasField('field_ol_sponsor') && !$node->get('field_ol_sponsor')->isEmpty()) {
-        $sponsor = $node->field_ol_sponsor->entity;
-
-        $given = $sponsor->field_senator_name->given ?? '';
-        $family = $sponsor->field_senator_name->family ?? '';
-        $sponsor_name = $given . ' ' . $family;
-      }
-
-      $bills[] = [
-        'number' => $node->label(),
-        'description' => $node->field_ol_name->value,
-        'date' => $date,
-        'update_location' => $last_status,
-        'sponsor' => $sponsor_name ?? '',
-        'positions' => $positions,
-      ];
-
-      $variables['bills'] = $bills;
-    }
   }
 }
 
@@ -3313,6 +3289,18 @@ function nysenate_theme_preprocess_page__node__microsite_page(&$variables) {
       ->getViewBuilder('node')
       ->view($node, 'full');
   }
+
+  // If microsite page is assigned to committee, show committee action bar.
+  $node_type = $node->getType();
+  $relevant_node_types = ['event', 'in_the_news', 'article', 'video'];
+  if (in_array($node_type, $relevant_node_types) && !empty($node->field_committee->target_id)) {
+    $tid = $node->field_committee->target_id;
+    $term = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load($tid);
+    $variables['actionbar']['type'] = 'committee';
+    $variables['actionbar']['flag_follow_committee'] = \Drupal::service('flag.link_builder')->build($term->getEntityTypeId(), $term->id(), 'follow_committee');
+    $variables['actionbar']['committee_title'] = $term->getName();
+    $variables['actionbar']['committee_type'] = $term->field_committee_types->value;
+  }
 }
 
 /**
@@ -3392,6 +3380,7 @@ function nysenate_theme_preprocess_taxonomy_term__senator__dashboard(&$variables
       '@district' => $district,
     ]
   );
+  $variables['dashboard_url'] = $term->id();
 }
 
 /**
@@ -4739,6 +4728,7 @@ function nysenate_theme_preprocess_node__bill__featured_content(&$variables) {
   }
 
   $node = $variables['node'];
+  $bundle = $node->bundle();
   $allowed_values = '';
   if ($node->hasField('field_ol_last_status')) {
     $allowed_values = $node->field_ol_last_status->getSetting('allowed_values');
@@ -4770,19 +4760,47 @@ function nysenate_theme_preprocess_node__bill__featured_content(&$variables) {
     }
   }
 
+  // Committee Link.
+  $committee_link = ['text' => '', 'url' => ''];
+  if ($node->hasField('field_ol_latest_status_committee') &&
+    !$node->get('field_ol_latest_status_committee')->isEmpty() &&
+    $last_status == 'In Senate Committee') {
+    $committee_field = $node->field_ol_latest_status_committee->getValue();
+    $committee_name = $committee_field[0]['value'];
+
+    $committee = \Drupal::entityTypeManager()->getStorage('taxonomy_term')
+      ->loadByProperties([
+        'vid' => 'committees',
+        'name' => $committee_name,
+      ]);
+
+    if ($committee) {
+      $committee = reset($committee);
+      $committee_link = [
+        'text' => $committee->getName(),
+        'url' => $committee->toUrl()->toString(),
+      ];
+    }
+  }
+
   // Sponsor.
   $sponsor = NULL;
   if ($node->hasField('field_ol_sponsor') && !empty($node->field_ol_sponsor->target_id)) {
     $sponsor = \Drupal::entityTypeManager()
       ->getStorage('taxonomy_term')
       ->load($node->field_ol_sponsor->target_id);
+
+    $sponsor_link = $sponsor
+      ? \Drupal::service('nys_senators.microsites')->getMicrosite($sponsor)
+      : '';
   }
 
   $variables['bill'] = [
     'featured' => TRUE,
     'small' => FALSE,
     'is_poll' => TRUE,
-    'resolution' => TRUE,
+    'resolution' => FALSE,
+    'bundle' => $bundle,
     'link' => $node->toUrl()->toString(),
     'number' => $node->getTitle(),
     'description_position' => 'bottom',
@@ -4792,6 +4810,8 @@ function nysenate_theme_preprocess_node__bill__featured_content(&$variables) {
     'positions' => nysenate_bill_positions($node),
     'issues' => $issues,
     'sponsor' => !empty($sponsor) ? $sponsor->name->value : '',
+    'sponsor_link' => $sponsor_link,
+    'committee_link' => $committee_link,
     'vote_widget' => $variables['content']['vote_widget'],
   ];
 }
@@ -5545,6 +5565,22 @@ function nysenate_theme_preprocess_page(&$variables) {
       $variables['headshot'] = \Drupal::entityTypeManager()
         ->getViewBuilder('media')
         ->view($headshot, 'thumbnail');
+    }
+  }
+
+  // Set variables to prevent dup home action bar through nysenate-header.twig.
+  $variables['is_front'] = \Drupal::service('path.matcher')->isFrontPage();
+  if ($variables['is_front']) {
+    $homepage_hero_node_id = \Drupal::entityTypeManager()
+      ->getStorage('entity_subqueue')
+      ->load('homepage_hero')
+      ->get('items')
+      ->getValue();
+    if (!empty($homepage_hero_node_id[0]['target_id'])) {
+      $homepage_hero_node = \Drupal::entityTypeManager()
+        ->getStorage('node')
+        ->load($homepage_hero_node_id[0]['target_id']);
+      $variables['homepage_hero_node_type'] = $homepage_hero_node->getType();
     }
   }
 }

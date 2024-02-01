@@ -6,6 +6,7 @@ use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\file\Entity\File;
 use Drupal\media\Entity\Media;
 use Drupal\nys_registration\RegistrationHelper;
@@ -39,12 +40,25 @@ class FindMySenatorForm extends FormBase {
   protected $messenger;
 
   /**
+   * The tempstore factory.
+   *
+   * @var \Drupal\Core\TempStore\PrivateTempStoreFactory
+   */
+  protected $tempStoreFactory;
+
+  /**
    * Constructor for service injection.
    */
-  public function __construct(RegistrationHelper $helper, SenatorsHelper $senatorsHelper, MessengerInterface $messenger) {
+  public function __construct(
+    RegistrationHelper $helper,
+    SenatorsHelper $senatorsHelper,
+    MessengerInterface $messenger,
+    PrivateTempStoreFactory $tempStoreFactory
+  ) {
     $this->helper = $helper;
     $this->senatorsHelper = $senatorsHelper;
     $this->messenger = $messenger;
+    $this->tempStoreFactory = $tempStoreFactory;
   }
 
   /**
@@ -55,6 +69,7 @@ class FindMySenatorForm extends FormBase {
       $container->get('nys_registration.helper'),
       $container->get('nys_senators.senators_helper'),
       $container->get('messenger'),
+      $container->get('tempstore.private')
     );
   }
 
@@ -214,6 +229,7 @@ class FindMySenatorForm extends FormBase {
                 </p>
               </div>
             </div>
+            ' . $create_message . '
             <div class="row c-find-my-senator--row">
               <div class="columns large-12">
                 <h2 class="c-container--title">Senate District Map</h2>
@@ -222,7 +238,6 @@ class FindMySenatorForm extends FormBase {
                 </iframe>
               </div>
             </div>
-            ' . $create_message . '
           </div>',
           []
         );
@@ -255,6 +270,11 @@ class FindMySenatorForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $address = $form_state->getValue('field_address') ?? [];
+
+    // Save input address to current session for later reuse.
+    $tempstore = $this->tempStoreFactory->get('nys_registration');
+    $tempstore->set('find_my_senator_address', $address);
+
     $district_term = $this->helper->getDistrictFromAddress($address);
     $district_num = $district_term ? $district_term->field_district_number->value : 0;
     $form_state->set('district_term', $district_term)

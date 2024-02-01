@@ -1,0 +1,31 @@
+// Styling for Author Details.
+
+// Import site utilities.
+@import '../../global/utils/init';
+
+.authors {
+  margin-bottom: 15px;
+}
+
+.author {
+  display: flex;
+  margin-bottom: 30px;
+}
+
+.author__image {
+  width: 38px;
+  height: 38px;
+  margin-right: 1rem;
+
+  img {
+    border-radius: 50%;
+  }
+}
+
+.author__details {
+  font-size: 0.85rem;
+}
+
+.author__name {
+  font-weight: $font-weight-bold;
+}

@@ -41,9 +41,9 @@
       </div>
     {% else %}
       <div class="c-meeting-detail--meta">
-        {% if video_status.key == "streaming_live_now" %}
+        {% if video_status.key == "streaming_live_now" or video_status.key == "streaming_redirect" %}
           <p class="c-meeting-detail--live-flag">
-            {{ video_status.value }}
+            Streaming Live Now
           </p>
         {% endif %}
       </div>
@@ -82,8 +82,14 @@
               to
               {{ date_value.to_time }}
             {% endif %}
-            {% if video_status.key != "streaming_redirect" and video_status.value %}
-              <span class="c-meeting-video--status icon-before__youtube">{{ video_status.value }}</span>
+            {% if video_status.key == 'streaming_redirect' and video_status.value %}
+              <span class="c-meeting-video--status icon-before__youtube">
+              Streaming Live Now
+            </span>
+            {% elseif video_status.value %}
+              <span class="c-meeting-video--status icon-before__youtube">
+              {{ video_status.value }}
+            </span>
             {% endif %}
           </p>
 
@@ -115,12 +121,14 @@
         </div>
       {% endif %}
 
-      {% if video_status.key == "streaming_live_now" and content.field_video_redirect %}
+      {% if video_status.key == "streaming_live_now" %}
         <div class="c-meeting-detail--descript">
           {{ content.field_ustream }}
         </div>
-      {% elseif video_status.key == "streaming_redirect" and content.field_video_redirect %}
-        {{ content.field_ustream }}
+      {% elseif video_status.key == "streaming_redirect" and content.field_video_redirect.0 %}
+        <div class="c-meeting-detail--descript">
+          {{ content.field_video_redirect  }}
+        </div>
       {% endif %}
 
       {% if content.field_yt[0] %}

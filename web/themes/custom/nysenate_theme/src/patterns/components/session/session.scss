@@ -200,8 +200,9 @@ div.c-meeting-detail--location {
 }
 
 .c-meeting-detail--descript {
+  margin: 30px 0;
   .video-embed {
-    margin-top: 24px;
+    margin: 0;
   }
 
   p {
@@ -225,12 +226,15 @@ div.c-meeting-detail--location {
   font-family: $font-sans-bold;
   font-size: 15px;
   line-height: 1.2em;
-
+  display: inline;
   .nys-associated-topics {
     border-left: none;
     &.issues {
       border-right: 1px solid #222222;
       padding-right: 15px;
+    }
+    &.committee {
+      padding-left: 15px;
     }
   }
 
@@ -245,8 +249,10 @@ div.c-meeting-detail--location {
       //vertical-align: middle;
       margin: 0;
       line-height: 1.2;
-      font-size: 15px;
-
+      font-size: 12px;
+      a{
+        color: $blue01;
+      }
       & + li {
         margin-left: 5px;
       }
@@ -877,7 +883,7 @@ div.c-meeting-detail--location {
   }
   .c-meeting-detail--descript {
     clear: both;
-    margin-bottom: 30px;
+    margin: 30px 0;
     font-size: 20px;
   }
   .c-block .c-meeting-detail--related {

@@ -26,6 +26,7 @@ dependencies:
     - field.field.node.event.field_teleconference_id_number
     - field.field.node.event.field_teleconference_number
     - field.field.node.event.field_ustream
+    - field.field.node.event.field_video_redirect
     - field.field.node.event.field_video_status
     - field.field.node.event.field_yt
     - field.field.node.event.rabbit_hole__settings
@@ -104,7 +105,7 @@ third_party_settings:
       label: 'Promotion and Visibility'
       region: content
       parent_name: group_discoverability
-      weight: 35
+      weight: 36
       format_type: tabs
       format_settings:
         classes: 'group-promotion field-group-htabs'
@@ -146,9 +147,10 @@ third_party_settings:
         required_fields: true
     group_video_settings:
       children:
-        - field_ustream
-        - field_yt
         - field_video_status
+        - field_ustream
+        - field_video_redirect
+        - field_yt
       label: 'Event Video Settings'
       region: content
       parent_name: ''
@@ -288,7 +290,7 @@ content:
     third_party_settings: {  }
   field_featured:
     type: boolean_checkbox
-    weight: 9
+    weight: 10
     region: content
     settings:
       display_label: true
@@ -314,7 +316,8 @@ content:
     type: address_default
     weight: 9
     region: content
-    settings: {  }
+    settings:
+      wrapper_type: details
     third_party_settings:
       conditional_fields:
         d4176998-7290-465d-85a5-83155a18f290:
@@ -441,9 +444,17 @@ content:
             selector: ''
   field_ustream:
     type: options_select
-    weight: 28
+    weight: 31
     region: content
     settings: {  }
+    third_party_settings: {  }
+  field_video_redirect:
+    type: string_textfield
+    weight: 32
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
   field_video_status:
     type: options_select
@@ -453,7 +464,7 @@ content:
     third_party_settings: {  }
   field_yt:
     type: inline_entity_form_simple
-    weight: 29
+    weight: 33
     region: content
     settings:
       form_mode: inline_entity
@@ -472,7 +483,7 @@ content:
     third_party_settings: {  }
   rabbit_hole__settings:
     type: rabbit_hole_default
-    weight: 100
+    weight: 14
     region: content
     settings:
       advanced: true
@@ -484,7 +495,7 @@ content:
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    weight: 8
+    weight: 7
     region: content
     settings:
       display_label: true

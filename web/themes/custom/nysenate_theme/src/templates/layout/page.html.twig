@@ -70,12 +70,12 @@
     <a href="#main-content" class="element-invisible element-focusable">Skip to main content</a>
   </div>
 
-
   <div class="layout-container page {{ theme }}">
     {%
       embed "@nysenate_theme/nysenate-header/nysenate-header.twig" with {
       "is_logged": logged_in,
       actionbar,
+      "is_front": is_front,
       "dashboard_link": dashboard_link,
       "edit_account_link": edit_account_link,
       "senator_microsite_link": senator_link,

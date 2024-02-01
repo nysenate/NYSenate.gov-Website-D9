@@ -8,11 +8,17 @@ Cypress.on('uncaught:exception', (err, runnable) => {
 })
 
 describe('Bulk Visual Regression testing with Percy', () => {
-  vrtUrls.forEach((data) => {
+  Cypress._.each(vrtUrls, (data) => {
     it(`Sending ${data.name} (${data.path}) to Percy`, function () {
-      cy.visit(data.path)
-      cy.scrollTo('bottom')
-      cy.percySnapshot(data.name)
-    })
-  })
-})
+      cy.request({
+        url: data.path,
+        retryOnStatusCodeFailure: true,
+        retries: 3
+      }).then(() => {
+        cy.visit(data.path);
+        cy.scrollTo('bottom');
+        cy.percySnapshot(data.name);
+      });
+    });
+  });
+});

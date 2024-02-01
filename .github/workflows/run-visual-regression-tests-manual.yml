@@ -23,6 +23,24 @@ jobs:
           fetch-depth: 0
           ref: ${{ env.PERCY_TARGET_BRANCH }}
 
+      - name: Setup PHP for Terminus
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ vars.PHP_VERSION }}
+
+      - name: Add SSH Key for Terminus
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.PANTHEON_SSH_PRIVATE_KEY }}
+
+      - name: Disable Pantheon SSH strict host key checking
+        run: 'printf "\nHost *\n\tStrictHostKeyChecking no" >> ~/.ssh/config'
+
+      - name: Install Terminus so we can wakeup environments
+        uses: pantheon-systems/terminus-github-actions@main
+        with:
+          pantheon-machine-token: ${{ secrets.PANTHEON_MACHINE_TOKEN }}
+
       - name: Set PERCY_BRANCH environment variable
         run: |
           BASE_URL=${{ inputs.BASE_URL }}
@@ -30,15 +48,20 @@ jobs:
 
           if [[ "$BASE_URL" == "https://www.nysenate.gov" ]]; then
             echo "PERCY_BRANCH=main" >> $GITHUB_ENV
+            echo "PANTHEON_ENV=live" >> $GITHUB_ENV
           elif [[ "$BASE_URL" =~ nysenate-2022.pantheonsite.io ]]; then
             SUBDOMAIN=${BASE_URL#http://}
             SUBDOMAIN=${SUBDOMAIN#https://}
             SUBDOMAIN=${SUBDOMAIN%%-nysenate-2022*}
             echo "PERCY_BRANCH=$SUBDOMAIN" >> $GITHUB_ENV
+            echo "PANTHEON_ENV=$SUBDOMAIN" >> $GITHUB_ENV
           else
             echo "No match found for BASE_URL"
             echo "PERCY_REVIEW_URL=The base url was invalid." >> $GITHUB_ENV
           fi
+
+      - name: Wake up the Pantheon site
+        run: terminus env:wake ${{ vars.PANTHEON_SITE }}.${{ env.PANTHEON_ENV }}
 
       - name: Stop if PERCY_BRANCH is not set
         if: ${{ !env.PERCY_BRANCH }}

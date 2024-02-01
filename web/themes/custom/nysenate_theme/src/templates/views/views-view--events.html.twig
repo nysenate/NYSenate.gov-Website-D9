@@ -117,11 +117,6 @@
   {% if more %}
     {{ more }}
   {% endif %}
-  {% if footer %}
-    <div class="view-footer">
-      {{ footer }}
-    </div>
-  {% endif %}
   {% if feed_icons %}
     <div class="feed-icons">
       {{ feed_icons }}
@@ -130,6 +125,9 @@
   {% if calendar_downloads %}
     {{ calendar_downloads }}
   {% endif %}
+  {% if footer %}
+    <div class="view-footer">
+      {{ footer }}
+    </div>
+  {% endif %}
 </div>
-
-{{ drupal_view('global_promo_banner', 'global_promo_banner') }}

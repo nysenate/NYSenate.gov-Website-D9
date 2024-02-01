@@ -112,6 +112,7 @@ function nysenate_theme_preprocess_block_content__how_senate_works(&$variables) 
  * Implements hook_preprocess_node_TYPE().
  */
 function nysenate_theme_preprocess_node__article(&$variables) {
+  $node = $variables['node'];
   $variables['title'] = $variables['label'][0]['#context']['value'];
   if (isset($variables['content']['field_date'][0]['#markup'])) {
     $variables['field_date'] = $variables['content']['field_date'][0]['#markup'];
@@ -142,6 +143,25 @@ function nysenate_theme_preprocess_node__article(&$variables) {
     $variables['image_caption'] = $variables['content']['field_image_caption'][0]['#context']['value'];
   }
 
+  // Senator Link.
+  if (!empty($node->field_senator_multiref->entity)) {
+    $senator = $node->get('field_senator_multiref')->entity ?? NULL;
+    $senator_link = $senator
+      ? \Drupal::service('nys_senators.microsites')->getMicrosite($senator)
+      : '';
+    $variables['senator_link'] = $senator_link;
+
+    // Senator name.
+    $senator_name = '';
+    if ($senator->field_senator_name) {
+      $title = $senator->field_senator_name->title ?? '';
+      $given = $senator->field_senator_name->given ?? '';
+      $family = $senator->field_senator_name->family ?? '';
+      $senator_name = $title . ' ' . $given . ' ' . $family;
+      $senator_name = trim($senator_name);
+    }
+    $variables['senator_name'] = $senator_name;
+  }
 }
 
 /**
@@ -3392,6 +3412,7 @@ function nysenate_theme_preprocess_taxonomy_term__senator__dashboard(&$variables
       '@district' => $district,
     ]
   );
+  $variables['dashboard_url'] = $term->id();
 }
 
 /**

@@ -1119,11 +1119,11 @@ a:hover.c-header--btn.c-header--btn__taking_action {
 @include breakpoint($bp-sm) {
   .c-actionbar,
   .c-senate-status {
-    height: 100px;
+    height: 100px !important;
     padding: 0 410px 0 9%;
 
     .c-actionbar--info {
-      display: flex;
+      display: flex !important;
       vertical-align: middle;
       height: 100%;
       align-items: center;
@@ -1147,9 +1147,9 @@ a:hover.c-header--btn.c-header--btn__taking_action {
 
       &::before {
         height: 100%;
-        margin-right: 0.1em;
+        margin-right: 0.1em !important;
         font-size: 32px;
-        line-height: 100px;
+        line-height: 100px !important;
       }
     }
 
@@ -1164,9 +1164,9 @@ a:hover.c-header--btn.c-header--btn__taking_action {
 
         &::before {
           height: 100%;
-          margin-right: 0.1em;
+          margin-right: 0.1em !important;
           font-size: 32px;
-          line-height: 100px;
+          line-height: 100px !important;
         }
       }
     }

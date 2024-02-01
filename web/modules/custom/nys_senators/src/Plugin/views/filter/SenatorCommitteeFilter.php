@@ -71,7 +71,9 @@ class SenatorCommitteeFilter extends InOperator {
     if (!empty($terms) && count($terms) > 1) {
       $value_options = [];
       foreach ($terms as $term) {
-        $value_options[$term->id()] = $term->getName();
+        if (!($term->field_committee_types->value === 'inactive')) {
+          $value_options[$term->id()] = $term->getName();
+        }
       }
       $this->valueOptions = $value_options;
     }

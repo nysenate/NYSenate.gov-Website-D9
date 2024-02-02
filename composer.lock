@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "63cbab406ef732c485499754de4c9f34",
+    "content-hash": "3ede984adcab5e7585df0fb2efceb310",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1769,7 +1769,7 @@
             },
             "require": {
                 "drupal/address": "^2.0",
-                "drupal/core": "^8 || ^9 || ^10 || ^11",
+                "drupal/core": "^9.2 || ^10",
                 "php": "^7.3 || ^8.0"
             },
             "type": "drupal-module",
@@ -6007,6 +6007,10 @@
                     "homepage": "https://www.drupal.org/user/99340"
                 },
                 {
+                    "name": "dww",
+                    "homepage": "https://www.drupal.org/user/46549"
+                },
+                {
                     "name": "geek-merlin",
                     "homepage": "https://www.drupal.org/user/229048"
                 },
@@ -7243,12 +7247,12 @@
                     "homepage": "https://www.drupal.org/user/57511"
                 },
                 {
-                    "name": "Grayside",
-                    "homepage": "https://www.drupal.org/user/346868"
+                    "name": "bluegeek9",
+                    "homepage": "https://www.drupal.org/user/1286304"
                 },
                 {
-                    "name": "itamar",
-                    "homepage": "https://www.drupal.org/user/1757910"
+                    "name": "Grayside",
+                    "homepage": "https://www.drupal.org/user/346868"
                 },
                 {
                     "name": "jhedstrom",
@@ -7306,6 +7310,10 @@
                 {
                     "name": "amitaibu",
                     "homepage": "https://www.drupal.org/user/57511"
+                },
+                {
+                    "name": "bluegeek9",
+                    "homepage": "https://www.drupal.org/user/1286304"
                 },
                 {
                     "name": "jhedstrom",
@@ -8651,8 +8659,8 @@
                     "dev-3.0.x": "3.0.x-dev"
                 },
                 "drupal": {
-                    "version": "3.0.0+1-dev",
-                    "datestamp": "1700819026",
+                    "version": "3.0.0+31-dev",
+                    "datestamp": "1706537044",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Dev releases are not covered by Drupal security advisories."
@@ -8677,6 +8685,10 @@
                 {
                     "name": "artem_sylchuk",
                     "homepage": "https://www.drupal.org/user/2511902"
+                },
+                {
+                    "name": "bohart",
+                    "homepage": "https://www.drupal.org/user/289861"
                 },
                 {
                     "name": "edutrul",
@@ -11557,6 +11569,56 @@
             }
         },
         {
+            "name": "drupal/views_ical",
+            "version": "1.0.0-alpha12",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/views_ical.git",
+                "reference": "8.x-1.0-alpha12"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/views_ical-8.x-1.0-alpha12.zip",
+                "reference": "8.x-1.0-alpha12",
+                "shasum": "a5131c78c2163a0f8b72b90064fc1768f7e3b173"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9 || ^10",
+                "eluceo/ical": "^0.17",
+                "html2text/html2text": "^4.0"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-1.0-alpha12",
+                    "datestamp": "1699985658",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Project has not opted into security advisory coverage!"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "bburg",
+                    "homepage": "https://www.drupal.org/user/1867900"
+                },
+                {
+                    "name": "mukhsim",
+                    "homepage": "https://www.drupal.org/user/63885"
+                }
+            ],
+            "description": "Provides an iCal Views style plugin.",
+            "homepage": "https://www.drupal.org/project/views_ical",
+            "support": {
+                "source": "https://git.drupalcode.org/project/views_ical"
+            }
+        },
+        {
             "name": "drupal/views_infinite_scroll",
             "version": "2.0.2",
             "source": {
@@ -12678,6 +12740,61 @@
             "time": "2023-06-01T07:04:22+00:00"
         },
         {
+            "name": "eluceo/ical",
+            "version": "0.17.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/markuspoerschke/iCal.git",
+                "reference": "f6ad851d59c2cca0a613e334a60beb69da12e3cb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/markuspoerschke/iCal/zipball/f6ad851d59c2cca0a613e334a60beb69da12e3cb",
+                "reference": "f6ad851d59c2cca0a613e334a60beb69da12e3cb",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.4"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9.5"
+            },
+            "suggest": {
+                "ext-mbstring": "Massive performance enhancement of line folding"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Eluceo\\iCal\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Markus Poerschke",
+                    "email": "markus@eluceo.de",
+                    "role": "Developer"
+                }
+            ],
+            "description": "The eluceo/iCal package offers a abstraction layer for creating iCalendars. You can easily create iCal files by using PHP object instead of typing your *.ics file by hand. The output will follow RFC 5545 as best as possible.",
+            "homepage": "https://github.com/markuspoerschke/iCal",
+            "keywords": [
+                "calendar",
+                "iCalendar",
+                "ical",
+                "ics",
+                "php calendar"
+            ],
+            "support": {
+                "issues": "https://github.com/markuspoerschke/iCal/issues",
+                "source": "https://github.com/markuspoerschke/iCal"
+            },
+            "time": "2022-06-18T16:42:05+00:00"
+        },
+        {
             "name": "enlightn/security-checker",
             "version": "v1.11.0",
             "source": {
@@ -13498,6 +13615,47 @@
                 }
             ],
             "time": "2023-04-17T16:00:37+00:00"
+        },
+        {
+            "name": "html2text/html2text",
+            "version": "4.3.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mtibben/html2text.git",
+                "reference": "61ad68e934066a6f8df29a3d23a6460536d0855c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mtibben/html2text/zipball/61ad68e934066a6f8df29a3d23a6460536d0855c",
+                "reference": "61ad68e934066a6f8df29a3d23a6460536d0855c",
+                "shasum": ""
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4"
+            },
+            "suggest": {
+                "ext-mbstring": "For best performance",
+                "symfony/polyfill-mbstring": "If you can't install ext-mbstring"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Html2Text\\": [
+                        "src/",
+                        "test/"
+                    ]
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "description": "Converts HTML to formatted plain text",
+            "support": {
+                "issues": "https://github.com/mtibben/html2text/issues",
+                "source": "https://github.com/mtibben/html2text/tree/4.3.1"
+            },
+            "time": "2020-04-16T23:44:31+00:00"
         },
         {
             "name": "http-interop/http-factory-guzzle",
@@ -14437,7 +14595,6 @@
             "time": "2023-09-21T16:42:23+00:00"
         },
         {
-
             "name": "mglaman/phpstan-drupal",
             "version": "1.2.4",
             "source": {
@@ -22102,12 +22259,11 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://bitbucket.org/mediacurrent/ci-tests/get/db5b1b0f6a42987856d3d21889bdfb24419081a6.zip",
+                "url": "https://bitbucket.org/mediacurrent/ci-tests/get/a3a0147b7a1c6ec79bcda7854278da1c72bfc0f2.zip",
                 "reference": "db5b1b0f6a42987856d3d21889bdfb24419081a6",
                 "shasum": ""
             },
             "require": {
-                "behat/mink-goutte-driver": "^1.2 || ^2",
                 "dmore/behat-chrome-extension": "^1.3"
             },
             "default-branch": true,
@@ -22123,7 +22279,7 @@
             "homepage": "https://bitbucket.org/mediacurrent/ci-tests",
             "support": {
                 "issues": "https://bitbucket.org/mediacurrent/ci-tests/issues",
-                "source": "https://bitbucket.org/mediacurrent/ci-tests/src/db5b1b0f6a42987856d3d21889bdfb24419081a6/?at=master"
+                "source": "https://bitbucket.org/mediacurrent/ci-tests/src/a3a0147b7a1c6ec79bcda7854278da1c72bfc0f2/?at=master"
             },
             "time": "2023-10-04T15:31:03+00:00"
         },
@@ -25507,6 +25663,7 @@
         "drupal/ultimate_cron": 15,
         "drupal/views_exclude_previous": 10,
         "drupal/views_field_view": 10,
+        "drupal/views_ical": 15,
         "drupal/views_load_more": 15,
         "drupal/viewsreference": 10,
         "drupal/votingapi": 10,
@@ -25524,5 +25681,5 @@
     "platform-overrides": {
         "php": "8.1"
     },
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.3.0"
 }

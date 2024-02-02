@@ -1,0 +1,80 @@
+<?php
+
+/**
+ * @file
+ * Contains rabbit_hole.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Entity\EntityFormInterface;
+use Drupal\rabbit_hole\BehaviorSettingsManager;
+
+/**
+ * Implements hook_help().
+ */
+function rabbit_hole_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the rabbit_hole module.
+    case 'help.page.rabbit_hole':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Basic functionality that is shared among the different Rabbit Hole modules.') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function rabbit_hole_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $form_mangler = \Drupal::service('rabbit_hole.form_mangler');
+  $entity_type_manager = \Drupal::service('entity_type.manager');
+
+  // Get affected bundle types from enabled entity types.
+  // @todo Remove this code in 3.0.0 - we should keep only custom redirect here.
+  $entity_types = \Drupal::config('rabbit_hole.settings')->get('enabled_entity_types');
+  $affected_bundle_types = array_map(function($entity_type_id) use ($entity_type_manager) {
+    return $entity_type_manager->getStorage($entity_type_id)->getEntityType()->getBundleEntityType();
+  }, $entity_types);
+  $affected_bundle_types = array_filter($affected_bundle_types);
+  $affected_global_forms = in_array('user', $entity_types, TRUE) ? ['user_admin_settings'] : [];
+
+  if ($form_state->getFormObject() instanceof EntityFormInterface) {
+    $current_type = $form_state->getFormObject()->getEntity()->getEntityTypeId();
+    $current_operation = $form_state->getFormObject()->getOperation();
+    $disallowed_operations = [
+      'delete', 'cancel', 'reset', 'layout_builder', 'replicate',
+    ];
+
+    $is_bundle_form = in_array($current_type, $affected_bundle_types) && !in_array($current_operation, $disallowed_operations);
+    if ($is_bundle_form) {
+      $form_mangler->addRabbitHoleChangeNotice($form);
+    }
+
+    // Custom submit to avoid 403/404 pages after saving an entity.
+    if (\Drupal::service('rabbit_hole.behavior_settings_manager')->entityTypeIsEnabled($current_type)) {
+      $form['#submit'][] = [$form_mangler, 'redirectToEntityEditForm'];
+      if (!empty($form['actions']['submit']['#submit'])) {
+        $form['actions']['submit']['#submit'][] = [$form_mangler, 'redirectToEntityEditForm'];
+      }
+    }
+  }
+  elseif (in_array($form_id, $affected_global_forms, TRUE)) {
+    $form_mangler->addRabbitHoleChangeNotice($form);
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for \Drupal\field_ui\Form\EntityViewDisplayEditForm.
+ */
+function rabbit_hole_form_entity_view_display_edit_form_alter(&$form, FormStateInterface $form_state) {
+  // Hides the Rabbit Hole field on "Manage Display" page.
+  unset($form['fields'][BehaviorSettingsManager::FIELD_NAME]);
+  $key = array_search(BehaviorSettingsManager::FIELD_NAME, $form['#fields']);
+  if ($key !== FALSE) {
+    unset($form['#fields'][$key]);
+  }
+}

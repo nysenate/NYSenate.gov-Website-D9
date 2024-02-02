@@ -1,0 +1,14 @@
+name: Email Registration
+type: module
+description: 'Allows users to register with an email address as their username.'
+package: Administration
+configure: entity.user.admin_form
+core_version_requirement: ^9.5 || ^10
+php: 8.0
+dependencies:
+  - drupal:user
+
+# Information added by Drupal.org packaging script on 2023-11-21
+version: '2.0.0-rc3'
+project: 'email_registration'
+datestamp: 1700548874

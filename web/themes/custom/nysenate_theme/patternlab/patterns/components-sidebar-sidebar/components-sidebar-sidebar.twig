@@ -1,0 +1,29 @@
+{{ attach_library('nysenate_theme/sidebar') }}
+
+<div class="sidebar">
+
+  {% if upper_links|length %}
+    <div class="pane-content">
+      <ul class="menu">
+        {% for link in upper_links %}
+          <li class="{{ loop.first ? 'first' : loop.last ? 'last' : ''}} leaf">
+            <a href="{{ link.url }}" title="" class="{{ link.active ? 'active' : '' }}">{{ link.text }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+
+  {% if links|length %}
+    <div class="pane-content">
+      <ul class="menu">
+        {% for link in links %}
+          <li class="{{ loop.first ? 'first' : loop.last ? 'last' : ''}} leaf">
+            <a href="{{ link.url }}" title="" class="{{ link.active ? 'active' : '' }}">{{ link.text }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+
+</div>

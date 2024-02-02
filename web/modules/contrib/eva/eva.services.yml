@@ -1,0 +1,7 @@
+services:
+  eva.view_displays:
+    class: Drupal\eva\ViewDisplays
+    arguments: ['@cache.default', '@cache.render', '@config.factory']
+  eva.token_handler:
+    class: Drupal\eva\TokenHandler
+    arguments: ['@token']

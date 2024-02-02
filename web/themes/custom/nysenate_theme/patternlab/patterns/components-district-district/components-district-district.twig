@@ -1,0 +1,46 @@
+{{ attach_library('nysenate_theme/district') }}
+
+<div class="district">
+  <div class="district__header">
+    {% if view_mode == "district" %}
+      <h2 class="nys-title nys-title--district">Our District</h2>
+      {% if name %}
+        <h3 class="c-subpage-header--subtitle03">{{ name }}</h3>
+      {% endif %}
+    {% elseif view_mode == "user_registration" %}
+        <h2 class="nys-title nys-title--district">{{ name }}</h2>
+        <h3 class="c-subpage-header--subtitle03">{{ subhead }}</h3>
+    {% elseif senator %}
+        <h2 class="nys-title nys-title--district">{{ name }}</h2>
+        <h3 class="c-subpage-header--subtitle03"><a href="{{ senator_link }}">Senator {{ senator }}</a></h3>
+    {% elseif name %}
+      <h2 class="nys-title nys-title--district">{{ name }}</h2>
+      <h3 class="c-subpage-header--subtitle03">Vacant Senatorial Seat</h3>
+    {% else %}
+        <h2 class="nys-title nys-title--district">Our District</h2>
+        <h3 class="c-subpage-header--subtitle03">Vacant Senatorial Seat</h3>
+    {% endif %}
+  </div>
+
+  {% if video %}
+    <div class="district__video">
+      <div class="c-block">
+        <iframe height="414" scrolling="no" src="{{ video }}" width="100%"></iframe>
+      </div>
+    </div>
+  {% endif %}
+
+  {% if subhead and view_mode != "user_registration" %}
+    <div class="district__subheading c-subpage-header--title03">
+      {{ subhead }}
+    </div>
+  {% endif %}
+
+  {% if body %}
+    <div class="district__body">
+      <div class="c-block">
+        {{ body|raw }}
+      </div>
+    </div>
+  {% endif %}
+</div>

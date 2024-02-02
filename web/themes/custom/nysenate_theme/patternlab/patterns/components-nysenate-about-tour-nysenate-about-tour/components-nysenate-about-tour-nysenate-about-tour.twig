@@ -1,0 +1,51 @@
+{{ attach_library('nysenate_theme/nysenate-about-tour') }}
+
+<div class="c-block c-block--about c-block--full-bleed c-block--about-tour">
+  {% if title %}
+    <h3 class="nys-subtitle-title">{{ title }}</h3>
+  {% endif %}
+  {% if carousel or carousel_block %}
+    <section class="carousel__wrapper{{ attributes ? ' ' ~ attributes.class}}" {{- attributes ? attributes|without(class) -}}>
+      <ul class="carousel__list carousel__slick">
+        {% if carousel %}
+          {% block carousel_items %}
+            {% for item in carousel.list %}
+              {%
+            include '@rain_theme/carousel/_carousel-item.twig' with {
+              "item": item
+            } only
+          %}
+            {% endfor %}
+          {% endblock %}
+        {% else %}
+          {{ carousel_block|without('field_title') }}
+        {% endif %}
+      </ul>
+    </section>
+  {% endif %}
+
+  {% if description %}
+    <p>{{ description }}</p>
+  {% endif %}
+
+  {% if contact %}
+    {% if contact.title %}
+      <div class="c-tour-contact">
+        <p class="c-tour-contact--title">{{ contact.title }}</p>
+        <p class="c-tour-contact--loc">{{ contact.loc }}</p>
+        <p class="c-tour-contact--phone">{{ contact.phone }}</p>
+      </div>
+    {% elseif contact.full %}
+      <div class="c-tour-contact">
+        {{ contact.full }}
+      </div>
+    {% endif %}
+  {% endif %}
+
+  {% if cta.text %}
+    <a class="nys-btn--gold" href="">{{ cta.text }}</a>
+  {% else %}
+    {{ cta.full|render|striptags('<a>')|raw }}
+  {% endif %}
+
+</div>

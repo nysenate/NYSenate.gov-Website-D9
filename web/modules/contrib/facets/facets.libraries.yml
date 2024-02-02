@@ -1,0 +1,82 @@
+drupal.facets.index-active-formatters:
+  version: VERSION
+  js:
+    js/index-active-formatters.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/once
+
+drupal.facets.edit-facet:
+  version: VERSION
+  js:
+    js/edit-facet.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+
+drupal.facets.admin_css:
+  version: VERSION
+  css:
+    theme:
+      css/facets.admin.css: {}
+
+widget:
+  version: VERSION
+  js:
+    js/base-widget.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/once
+
+drupal.facets.link-widget:
+  version: VERSION
+  js:
+    js/link-widget.js: {}
+  dependencies:
+    - facets/widget
+
+drupal.facets.checkbox-widget:
+  version: VERSION
+  js:
+    js/checkbox-widget.js: {}
+  dependencies:
+    - facets/widget
+
+drupal.facets.hierarchical:
+  version: VERSION
+  css:
+    theme:
+      css/hierarchical.css: {}
+
+drupal.facets.general:
+  version: VERSION
+  css:
+    theme:
+      css/general.css: {}
+
+drupal.facets.dropdown-widget:
+  version: VERSION
+  js:
+    js/dropdown-widget.js: {}
+  dependencies:
+    - facets/widget
+
+soft-limit:
+  version: VERSION
+  js:
+    js/soft-limit.js: {}
+  dependencies:
+    - core/jquery
+    - core/once
+    - core/drupal
+    - core/drupalSettings
+
+drupal.facets.views-ajax:
+  js:
+    js/facets-views-ajax.js: {}
+  dependencies:
+    - facets/widget
+    - core/drupalSettings
+    - core/drupal.ajax

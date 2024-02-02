@@ -1,0 +1,13 @@
+type: module
+name: 'Upgrade Status'
+description: 'Review Drupal major upgrade readiness of the environment and components of the site.'
+configure: upgrade_status.report
+package: Administration
+core_version_requirement: ^9 || ^10
+dependencies:
+  - drupal:update
+
+# Information added by Drupal.org packaging script on 2023-03-14
+version: '4.0.0'
+project: 'upgrade_status'
+datestamp: 1678815092

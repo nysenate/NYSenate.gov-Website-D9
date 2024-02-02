@@ -1,0 +1,403 @@
+<?php
+
+/**
+ * @file
+ * Contains menu_token.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
+use Drupal\Component\Serialization\Json;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\Core\Utility\Token;
+use Drupal\Core\PhpStorage\PhpStorageFactory;
+
+/**
+ * Implements hook_help().
+ */
+function menu_token_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the menu_token module.
+    case 'help.page.menu_token':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Menu Token module provides tokens, that can be used in title or in path of menu items (links). For example, if you create a menu item with path: &quot;user/[current-user:uid]&quot;, the url will be changed on the fly to: &quot;user/1&quot; (assuming you are user 1).') . '</p>';
+      return $output;
+
+    default:
+      break;
+  }
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function menu_token_form_menu_link_content_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+
+  $form_state->setCached(FALSE);
+  $rebuild_with_custom_element = $form_state->get('rebuild_with_custom_element');
+
+  $available_entities_configuration = \Drupal::config('menu_token.availableentitiesconfiguration');
+  $data = $available_entities_configuration->getRawData();
+
+  $form_entity = $form_state->getFormObject()->getEntity();
+  $options = $form_entity->get('link')->options;
+  $config_array = $options['menu_token'] ?? ["menu_token_enabled" => 0, "remove_if_replacement_is_not_present" => 0];
+
+  if (!empty($form['link']['weight'])) {
+    $link_weight = $form['link']['weight'];
+  }
+  else {
+    $link_weight = -2;
+  }
+
+  if (empty($config_array['menu_token_enabled'])) {
+    $config_array['menu_token_enabled'] = 0;
+  }
+
+  if (empty($config_array['remove_if_replacement_is_not_present'])) {
+    $config_array['remove_if_replacement_is_not_present'] = 0;
+  }
+
+  $form['menu_token_enabled'] = [
+    '#type' => 'checkbox',
+    '#title' => t('<strong>Use tokens</strong> in title and in path.'),
+    '#description' => t('Activate this option in order to use Menu token.'),
+    '#default_value' => $config_array['menu_token_enabled'],
+    '#weight' => $link_weight,
+  ];
+
+  $form['menu_token_options'] = [
+    '#type' => 'fieldset',
+    '#title' => t('Menu Token options'),
+    '#collapsible' => TRUE,
+    '#weight' => $link_weight,
+    '#states' => [
+      'visible' => [
+        ':input[name="menu_token_enabled"]' => ['checked' => TRUE],
+      ],
+    ],
+  ];
+
+  $form['menu_token_options']['menu_token_modal_link'] = [
+    '#title' => t('Browse available tokens.'),
+    '#type' => 'link',
+    '#url' => Url::fromRoute('menu_token.page.show.available.tokens'),
+    '#attributes' => [
+      'class' => ['use-ajax'],
+      'data-dialog-type' => 'modal',
+      'data-dialog-options' => Json::encode([
+        'width' => 600,
+        'height' => 600,
+        'resizable' => TRUE,
+      ]),
+    ],
+    '#states' => [
+      'visible' => [
+        ':input[name="menu_token_enabled"]' => ['checked' => TRUE],
+      ],
+    ],
+  ];
+
+  // If entities exist and item is enabled.
+  if (!empty($data['available_entities'])) {
+    foreach ($data['available_entities'] as $config_key => $config_item) {
+      if ($config_item !== '0') {
+        $default_value_array = ["none"];
+        if (!empty($config_array[$config_item])) {
+          $default_value_array = [$config_array[$config_item]];
+        }
+        $default_selection = $default_value_array[0][0];
+
+        $form['menu_token_options'][$config_item]['menu_token_type_' . $config_item] = [
+          '#type' => 'select',
+          '#title' => t("Method for %var", ['%var' => ucfirst($config_item)]),
+          '#options' => [
+            'none' => t("Disabled", [
+              '%var' => 'none',
+            ]),
+            'context' => t("Context from %var", [
+              '%var' => ucfirst($config_item),
+            ]),
+            'random' => t("Random %var", [
+              '%var' => ucfirst($config_item),
+            ]),
+            'user_defined' => t("User defined %var", [
+              '%var' => ucfirst($config_item),
+            ]),
+          ],
+          '#default_value' => $default_selection,
+          '#executes_submit_callback' => TRUE,
+          '#submit' => ['menu_token_custom_entity_submit'],
+          '#ajax' => [
+            'callback' => 'menu_token_custom_entity_callback',
+            'wrapper' => $config_item . '_custom_entity_container',
+          ],
+        ];
+
+        // Define the container.
+        $form['menu_token_options'][$config_item]['custom_entity_wrapper'] = [
+          '#type' => 'container',
+          '#attributes' => ['id' => $config_item . '_custom_entity_container'],
+        ];
+
+        /* If it is rebuild from ajax */
+        if (!empty($rebuild_with_custom_element)) {
+
+          // Made new form element insert.
+          if ($rebuild_with_custom_element == 'user_defined') {
+            $form['menu_token_options'][$config_item]['custom_entity_wrapper'][$config_item . 'custom_entity'] = [
+              '#title' => t('Entity ID'),
+              '#description' => t('The id of the entity that this token handler should load.'),
+              '#type' => 'textfield',
+              '#default_value' => 1,
+            ];
+          }
+
+        }
+        else {
+          // Build only if you have in config variable.
+          if ($default_selection == 'user_defined') {
+            $form['menu_token_options'][$config_item]['custom_entity_wrapper'][$config_item . 'custom_entity'] = [
+              '#title' => t('Entity ID'),
+              '#description' => t('The id of the entity that this token handler should load.'),
+              '#type' => 'textfield',
+              '#default_value' => $default_value_array[0][1],
+            ];
+          }
+        }
+      }
+    }
+  }
+
+  $form['menu_token_options']['remove_if_replacement_is_not_present'] = [
+    '#type' => 'checkbox',
+    '#title' => t('Remove token if replacement is not present'),
+    '#description' => t('If the replacement token is not available on the page being viewed, the token will be removed if checked.'),
+    '#default_value' => $config_array['remove_if_replacement_is_not_present'],
+  ];
+
+  // Submit handler.
+  $form['actions']['submit']['#submit'][] = 'menu_token_form_submit';
+}
+
+/**
+ * Custom form submit handler.
+ */
+function menu_token_custom_entity_submit($form, &$form_state) {
+  $triggering_element = $form_state->getTriggeringElement();
+  $form_state->set('rebuild_with_custom_element', $triggering_element['#value']);
+  $form_state->setRebuild();
+}
+
+/**
+ * Ajax callback for the method select dropdown.
+ */
+function menu_token_custom_entity_callback($form, &$form_state) {
+
+  $triggering_element = $form_state->getTriggeringElement();
+  if ($triggering_element['#value'] == 'user_defined') {
+    $element = $triggering_element['#array_parents'][1];
+  }
+  else {
+    // Return just the wrapper. Form was rebuild in the background.
+    $element = $triggering_element['#array_parents'][1];
+  }
+  return $form['menu_token_options'][$element]['custom_entity_wrapper'];
+}
+
+/**
+ * Custom form submit handler.
+ */
+function menu_token_form_submit($form, &$form_state) {
+  $values = $form_state->getValues();
+  $config_array = [
+    "menu_token_enabled" => $values['menu_token_enabled'],
+    "remove_if_replacement_is_not_present" => $values['remove_if_replacement_is_not_present'],
+  ];
+
+  $available_entities_configuration = \Drupal::config('menu_token.availableentitiesconfiguration');
+  $data = $available_entities_configuration->getRawData();
+
+  foreach ($data['available_entities'] as $config_key => $config_item) {
+    if ($config_item !== '0') {
+      if (isset($values['menu_token_type_' . $config_item])) {
+        if ($values['menu_token_type_' . $config_item] == 'user_defined') {
+          if (empty($values[$config_item . 'custom_entity'])) {
+            $values[$config_item . 'custom_entity'] = $_POST[$config_item . 'custom_entity'];
+          }
+          $config_array[$config_key] = [
+            $values['menu_token_type_' . $config_item], $values[$config_item . 'custom_entity'],
+          ];
+        }
+        else {
+          $config_array[$config_key] = [$values['menu_token_type_' . $config_item], 0];
+        }
+      }
+    }
+  }
+
+  $form_entity = $form_state->getFormObject()->getEntity();
+  $options = $form_entity->link->first()->options ?? [];
+
+  unset($options['menu_token']);
+  if ( $values['menu_token_enabled']) {
+    $options['menu_token'] = $config_array;
+    $form_entity->link->first()->options = $options;
+  }
+  $form_entity->save();
+  
+  $menu_token_menu_link_manager = \Drupal::service('plugin.manager.menu.link');
+  $menu_token_menu_link_manager->rebuild();
+
+  // Reset all static caches.
+  drupal_static_reset();
+  \Drupal::cache()->deleteAll();
+
+  // Flush asset file caches.
+  \Drupal::service('asset.css.collection_optimizer')->deleteAll();
+  \Drupal::service('asset.js.collection_optimizer')->deleteAll();
+  _drupal_flush_css_js();
+
+  // Wipe the Twig PHP Storage cache.
+  PhpStorageFactory::get('twig')->deleteAll();
+
+  // Reset all static caches.
+  drupal_static_reset();
+  
+}
+
+/**
+ * Implements hook_tokens().
+ */
+function menu_token_tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
+
+  if (!empty($options['configuration'])) {
+    $configuration = $options['configuration'];
+
+    // Flag to know what to do with tokens where replacement is not found.
+    $remove_if_not_present = !empty($configuration['remove_if_replacement_is_not_present']) && $configuration['remove_if_replacement_is_not_present'] == 1;
+
+    $replacements = [];
+    foreach ($tokens as $key => $token) {
+      $entity_type = \Drupal::service('token.entity_mapper')
+        ->getEntityTypeForTokenType($type);
+      $token_replacer = \Drupal::service('menu_token.token_replacer');
+
+      if (!empty($configuration[$entity_type][0])) {
+        // Make type agnostic so it can handle any type.
+        switch ($configuration[$entity_type][0]) {
+          case "none":
+            $r = $token_replacer->replaceNone($token, $key, $bubbleable_metadata);
+            $replacements = array_merge($replacements, $r);
+            break;
+
+          case "context":
+            $r = $token_replacer->replaceContext($token, $key, $bubbleable_metadata);
+            if (empty($r)) {
+              $r = $token_replacer->replaceExoticToken($token, $key, $bubbleable_metadata);
+              if (empty($r)) {
+                $r = [array_pop($tokens) => ''];
+              }
+            }
+            $replacements = array_merge($replacements, $r);
+            break;
+
+          case "random":
+            $r = $token_replacer->replaceRandom($token, $key, $bubbleable_metadata);
+            if (empty($r) && $remove_if_not_present) {
+              $r = [array_pop($tokens) => ''];
+            }
+            $replacements = array_merge($replacements, $r);
+            break;
+
+          case "user_defined":
+            $admin_defined_variable = $configuration[$type][1];
+            $r = $token_replacer->replaceUserDefined($token, $key, $admin_defined_variable, $bubbleable_metadata);
+            if (empty($r) && $remove_if_not_present) {
+              $r = [array_pop($tokens) => ''];
+            }
+            $replacements = array_merge($replacements, $r);
+            break;
+
+          default:
+            break;
+        }
+      }
+      else {
+        $r = $token_replacer->replaceExoticToken($token, $key, $bubbleable_metadata);
+        $replacements = array_merge($replacements, $r);
+      }
+    }
+    return $replacements;
+  }
+}
+
+/**
+ * Helper function for replacing links with token.
+ */
+function replace_links_with_tokens(Token $token_service, $replace_with, $relevant_link, &$links, BubbleableMetadata $bubbleableMetadata) {
+
+  $configuration = $relevant_link['options']['menu_token'];
+  // Replace nothing to mess here all action is in hook.
+  $links[$relevant_link['id']][$replace_with] = $token_service->replace($links[$relevant_link['id']][$replace_with], [], ["configuration" => $configuration], $bubbleableMetadata);
+  if (is_null($links[$relevant_link['id']][$replace_with])) {
+    $links[$relevant_link['id']][$replace_with] = $token_service->replace($relevant_link['id'], [], ["configuration" => $configuration], $bubbleableMetadata);
+  }
+  $links[$relevant_link['id']]["options"]["bubleble_metadata"] = $bubbleableMetadata;
+}
+
+/**
+ * @param $links
+ */
+function menu_token_prepare_context_replacement(&$links) {
+
+  $token_service = \Drupal::token();
+  $bubbleable_metadata = new BubbleableMetadata();
+
+  foreach ($links as $key => $linkData) {
+    try {
+      $links[$key]["link"]["url"] = $token_service->replace($linkData["link"]["url"], [], ["configuration" => $linkData["config"]], $bubbleable_metadata);
+      $links[$key]["link"]["title"] = $token_service->replace($linkData["link"]["title"], [], ["configuration" => $linkData["config"]], $bubbleable_metadata);
+      $links[$key]["link"]["options"]["bubleble_metadata"] = $bubbleable_metadata;
+    }
+    catch (Exception $exception) {}
+
+    $links[$key] = $links[$key]["link"];
+  }
+
+}
+
+/**
+ * Replace links with tokens.
+ */
+function menu_token_menu_links_discovered_alter(&$links) {
+
+  $context_manager = \Drupal::service('menu_token.context_manager');
+  $context_manager->clear();
+
+  $undiscoveredDef = $context_manager->getUndiscoveredMenuDefinitions();
+
+  $links = array_merge($links, $undiscoveredDef);
+
+  // Load configuration from entity.
+  $relevant_links = array_filter($links, function ($k) {
+    if (!isset($k['id'])) {
+      $k['id'] = 0;
+    }
+    return strpos($k['id'], 'menu_link_content:') === 0;
+  });
+
+  $token_service = \Drupal::token();
+  $bubbleable_metadata = new BubbleableMetadata();
+  foreach ($relevant_links as $relevant_link) {
+    if (!isset($relevant_link['options']['menu_token'])) {
+      continue;
+    }
+
+    $context_manager->prepareContextualLinks($relevant_link, $relevant_link['options']['menu_token']);
+    replace_links_with_tokens($token_service, "url", $relevant_link, $links, $bubbleable_metadata);
+    replace_links_with_tokens($token_service, "title", $relevant_link, $links, $bubbleable_metadata);
+  }
+}

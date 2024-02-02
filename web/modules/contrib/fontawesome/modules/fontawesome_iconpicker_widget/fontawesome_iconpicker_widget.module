@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * @file
+ * Module for integration of iconpicker with Font Awesome.
+ */
+
+/**
+ * Check to make sure that the iconpicker library is installed.
+ *
+ * @return bool
+ *   Flag indicating if the library is properly installed.
+ */
+function fontawesome_iconpicker_widget_check_installed() {
+  $iconpicker_library = \Drupal::service('library.discovery')->getLibraryByName('fontawesome_iconpicker_widget', 'fonticonpicker');
+  return file_exists(DRUPAL_ROOT . '/' . $iconpicker_library['js'][0]['data']);
+}

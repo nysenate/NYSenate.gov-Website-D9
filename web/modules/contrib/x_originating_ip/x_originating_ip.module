@@ -1,0 +1,33 @@
+<?php
+
+/**
+ * @file
+ * Add client IP addresses to outgoing email for tracking the source of spam.
+ */
+
+/**
+ * Implements hook_mail_alter().
+ */
+function x_originating_ip_mail_alter(&$message) {
+  $ip_address = \Drupal::request()->getClientIp();
+
+  // The normal headers should be sufficient if it's originating from the
+  // server anyway, so don't include a header for localhost 127.0.0.1.
+  if ($ip_address != '127.0.0.1') {
+    $header = \Drupal::config('x_originating_ip.settings')->get('x_originating_ip_header');
+    $message['headers'][$header] = $ip_address;
+  }
+}
+
+/**
+ * Header options.
+ */
+function _x_originating_ip_headers() {
+  return [
+    'X-Originating-IP' => 'X-Originating-IP',
+    'X-Sender' => 'X-Sender',
+    'X-SenderIP' => 'X-SenderIP',
+    'X-Sender-IP' => 'X-Sender-IP',
+    'X-Apparently-From' => 'X-Apparently-From',
+  ];
+}

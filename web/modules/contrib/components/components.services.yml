@@ -1,0 +1,15 @@
+services:
+  components.registry:
+    class: Drupal\components\Template\ComponentsRegistry
+    arguments: ['@extension.list.module', '@extension.list.theme', '@module_handler', '@theme.manager', '@cache.default', '@file_system']
+
+  components.twig.loader:
+    class: Drupal\components\Template\Loader\ComponentsLoader
+    arguments: ['@components.registry']
+    tags:
+      - { name: twig.loader, priority: 200 }
+
+  components.twig.extension:
+    class: Drupal\components\Template\TwigExtension
+    tags:
+      - { name: twig.extension, priority: 150 }

@@ -1,0 +1,35 @@
+{{ attach_library('rain_theme/content-card') }}
+
+<article class="content-card {{ card.modifier_class ? ' ' ~ card.modifier_class }}
+  {{- attributes ? ' ' ~ attributes.class -}}"
+  {{- attributes ? attributes|without(class) -}}>
+
+
+  <div class="content-card__content">
+    {% if card.image %}
+      {{ card.image }}
+    {% endif %}
+    {%
+      include '@rain_theme/heading/heading.twig' with {
+        "heading": card.heading
+      } only
+    %}
+    {% if card.subhead %}
+      <div class="content-card__subhead">
+        {{ card.subhead }}
+      </div>
+    {% endif %}
+    {% if card.summary_text %}
+      {%
+        include '@rain_theme/body-text/body-text.twig' with {
+          "body_text": card.summary_text
+        } only
+      %}
+    {% endif %}
+
+    {% if card.link %}
+      <a href="{{ card.link.url }}" class="content-card__link">{{ card.link.text }}</a>
+    {% endif %}
+  </div>
+
+</article>

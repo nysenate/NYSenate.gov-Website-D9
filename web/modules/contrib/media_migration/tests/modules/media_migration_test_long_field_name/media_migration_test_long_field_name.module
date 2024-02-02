@@ -1,0 +1,37 @@
+<?php
+
+/**
+ * @file
+ * Test helper module for providing simplified dealer plugins.
+ */
+
+/**
+ * Implements hook_media_migration_file_dealer_info_alter().
+ */
+function media_migration_test_long_field_name_media_migration_file_dealer_info_alter(array &$definitions) {
+  foreach ($definitions as $id => $definition) {
+    $definitions[$id]['class'] = _media_migration_test_long_field_name_replace_plugin_class($definition['class']);
+  }
+}
+
+/**
+ * Implements hook_media_migration_file_entity_dealer_info_alter().
+ */
+function media_migration_test_long_field_name_media_migration_file_entity_dealer_info_alter(array &$definitions) {
+  foreach ($definitions as $id => $definition) {
+    $definitions[$id]['class'] = _media_migration_test_long_field_name_replace_plugin_class($definition['class']);
+  }
+}
+
+/**
+ * Replaces plugin class namespace from Drupal\media_migration.
+ *
+ * @param string $class
+ *   The original plugin class FQCN.
+ *
+ * @return string
+ *   The new plugin class FQCN.
+ */
+function _media_migration_test_long_field_name_replace_plugin_class(string $class) {
+  return preg_replace('/^Drupal\\\media_migration\b/', 'Drupal\media_migration_test_long_field_name', $class);
+}

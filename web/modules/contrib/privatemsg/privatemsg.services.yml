@@ -1,0 +1,4 @@
+services:
+  privatemsg.common:
+    class: Drupal\privatemsg\PrivateMsgService
+    arguments: ['@database', '@datetime.time', '@entity_type.manager', '@plugin.manager.mail', '@request_stack']

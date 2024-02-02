@@ -1,0 +1,55 @@
+{{ attach_library('nysenate_theme/nysenate-user-profile') }}
+
+<div class="c-block c-login">
+  <h3 class="nys-title">
+    {{ 'This address is in Senate District'|t }}
+    {{ district.field_district_number }}
+  </h3>
+  <p class="body">
+    {{
+      'If your address information below is correct, select "FINISH" to
+    complete the sign-up process and connect with your Senator. If not, please
+    select "BACK"'|t
+    }}
+  </p>
+  <div class="content">
+    <div class="c-login-left">
+      <div class="nys-senator--thumb">
+        <img src="{{ file_url('/themes/custom/nysenate_theme/src/assets/default-avatar.png') }}" alt="Default avatar"/>
+      </div>
+      <ul class="c-user--info">
+        <li>{{ user.name }}</li>
+        <li>{{ user.mail }}</li>
+        <li>{{ user.address_1 }}</li>
+        <li>{{ user.address_2 }}</li>
+        <li>{{ user.locality }}, {{ user.administrative_area }} {{ user.postal_code }}</li>
+      </ul>
+    </div>
+    <div class="c-login-right">
+      <div class="nys-senator--thumb">
+        <img src="{{ senator.image }}" alt="Senator {{ senator.name }} avatar"/>
+      </div>
+      <ul class="c-senator--info">
+        <li>Your Senator</li>
+        <li>{{ senator.name }}</li>
+        {% for key, value in senator.party %}
+          {% if loop.first %}
+            <li>{{ value }}</li>
+          {% endif %}
+        {% endfor %}
+        <li>
+          NY Senate District
+          {{ district.field_district_number }}
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+<div>
+    {% include "@nysenate_theme/district/district.twig" with {
+        name: district.name,
+        video: district.field_map_url,
+        subhead: district.field_subheading,
+        view_mode: "user_registration"
+    } only %}
+</div>

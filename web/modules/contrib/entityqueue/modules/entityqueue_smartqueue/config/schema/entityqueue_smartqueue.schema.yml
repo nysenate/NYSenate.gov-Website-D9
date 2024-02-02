@@ -1,0 +1,13 @@
+entityqueue.entity_queue.plugin.entityqueue_smartqueue:
+  type: mapping
+  mapping:
+    entity_type:
+      type: string
+      label: Entity type
+    bundles:
+      type: sequence
+      label: 'Bundles'
+      nullable: true
+      sequence:
+        type: string
+        label: 'Bundle'

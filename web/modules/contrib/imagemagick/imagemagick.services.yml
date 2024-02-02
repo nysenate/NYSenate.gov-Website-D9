@@ -1,0 +1,14 @@
+services:
+  imagemagick.format_mapper:
+    class: Drupal\imagemagick\ImagemagickFormatMapper
+    # The sophron.mime_map.manager argument is only optional to avoid problems
+    # when the new dependency is not yet enabled.
+    arguments: ['@cache.default', '@config.factory', '@config.typed', '@?sophron.mime_map.manager']
+  imagemagick.exec_manager:
+    class: Drupal\imagemagick\ImagemagickExecManager
+    arguments: ['@logger.channel.image', '@config.factory', '%app.root%', '@current_user', '@imagemagick.format_mapper', '@messenger']
+  imagemagick.event_subscriber:
+    class: Drupal\imagemagick\EventSubscriber\ImagemagickEventSubscriber
+    arguments: ['@logger.channel.image', '@config.factory', '@file_system', '@stream_wrapper_manager', '@file_metadata_manager']
+    tags:
+      - { name: 'event_subscriber' }

@@ -1,0 +1,167 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for Email Registration Username module.
+ */
+
+use Drupal\Component\Utility\Html;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\email_registration\Plugin\Action\UpdateUsernameAction;
+use Drupal\email_registration_username\Plugin\Action\UpdateUsernameWithMailAction;
+use Drupal\user\UserInterface;
+
+/**
+ * Implements hook_help().
+ */
+function email_registration_username_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.email_registration_username':
+      $text = file_get_contents(__DIR__ . '/README.md');
+      if (!\Drupal::moduleHandler()->moduleExists('markdown')) {
+        return '<pre>' . Html::escape($text) . '</pre>';
+      }
+      else {
+        // Use the Markdown filter to render the README.
+        $filter_manager = \Drupal::service('plugin.manager.filter');
+        $settings = \Drupal::configFactory()->get('markdown.settings')->getRawData();
+        $config = ['settings' => $settings];
+        $filter = $filter_manager->createInstance('markdown', $config);
+        return $filter->process($text, 'en');
+      }
+  }
+  return NULL;
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave().
+ */
+function email_registration_username_email_registration_name_alter(string &$accountName, UserInterface $account) {
+  // Reset to the original account name,
+  // as we never want to use the pregenerated name from email_registration:
+  $accountName = $account->getAccountName();
+
+  if (empty($accountName) || str_starts_with($accountName, 'email_registration_')) {
+    // For new accounts:
+    // If the user is new, or starts with 'email_registration_', simply set the
+    // user mail as the user name and return early:
+    $accountName = $account->getEmail();
+  }
+  else {
+    // If the user isn't new, but the mail got modified, sync both mail and
+    // username again:
+    if (!$account->isNew() && ($currentMail = $account->getEmail()) !== $account->original->getEmail()) {
+      // If the mail address was already synced with the account name:
+      if ($account->original->getEmail() === $account->original->getAccountName()) {
+        // Re-sync the changed mail address with the account name:
+        $accountName = $currentMail;
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function email_registration_username_form_user_admin_settings_alter(&$form, FormStateInterface $form_state) {
+  $config = \Drupal::config('email_registration_username.settings');
+  // Disable the 'login_with_username' config, as it doesn't make sense with
+  // this module enabled:
+  if (isset($form['email_registration']['login_with_username'])) {
+    $form['email_registration']['login_with_username']['#disabled'] = TRUE;
+    $form['email_registration']['login_with_username']['#description'] = $form['email_registration']['login_with_username']['#description'] . t('<br><strong>Disabled through "Email Registration Username"</strong>.');
+  }
+
+  $token_tree = [
+    '#theme' => 'token_tree_link',
+    '#token_types' => ['user'],
+  ];
+  $form['email_registration']['username_display_override_mode'] = [
+    '#type' => 'radios',
+    '#title' => t('Override user display name'),
+    '#description' => t("Allows dynamic overriding of the user display name (using <em>hook_user_format_name_alter()</em>).<br>Note, that if a user has the 'view user email addresses' permission, no override will apply for that user."),
+    '#options' => [
+      'disabled' => t("Disabled - Shows the username (=email) (Note: Higher risk of information disclosure)"),
+      'email_registration' => t("Email registration default - Replace the name with the part of the email address before the '@'"),
+      'custom' => t("Custom - Replace the name with a custom value (allows tokens)"),
+    ],
+    '#default_value' => $config->get('username_display_override_mode'),
+  ];
+  $rendered_token_tree = \Drupal::service('renderer')->render($token_tree);
+  $form['email_registration']['username_display_custom'] = [
+    '#type' => 'textfield',
+    '#title' => t('Custom display username'),
+    '#description' => t('Enter text to replace a users display name with static text (e.g. "****") or tokens. @browse_tokens_link', [
+      '@browse_tokens_link' => $rendered_token_tree,
+    ]),
+    '#states' => [
+      'visible' => [
+        ':input[name="username_display_override_mode"]' => ['value' => 'custom'],
+      ],
+      'required' => [
+        ':input[name="username_display_override_mode"]' => ['value' => 'custom'],
+      ],
+    ],
+    '#default_value' => $config->get('username_display_custom'),
+  ];
+
+  $form['#submit'][] = 'email_registration_username_form_user_admin_settings_submit';
+}
+
+/**
+ * Submit function for user_admin_settings to save our variable.
+ *
+ * @see email_registration_username_form_user_admin_settings_alter()
+ */
+function email_registration_username_form_user_admin_settings_submit(array &$form, FormStateInterface $form_state) {
+  \Drupal::configFactory()->getEditable('email_registration_username.settings')
+    ->set('username_display_custom', trim($form_state->getValue('username_display_custom')))
+    ->set('username_display_override_mode', $form_state->getValue('username_display_override_mode'))
+    ->save();
+}
+
+/**
+ * Implements hook_user_format_name_alter().
+ *
+ * @todo Discuss how we could (partially) cache the new name.
+ */
+function email_registration_username_user_format_name_alter(&$name, AccountInterface $account) {
+  // If the current user has the "View user email addresses" permission, do not
+  // override and return early:
+  if (\Drupal::currentUser()->hasPermission('view user email addresses')) {
+    return;
+  }
+  $settings = \Drupal::config('email_registration_username.settings');
+  // Override the display name, with the username_display_override_mode given:
+  $overrideMode = $settings->get('username_display_override_mode');
+  switch ($overrideMode) {
+    // Do not override:
+    case 'disabled':
+      return;
+
+    // Override using the custom username_display_custom value:
+    case 'custom':
+      $customDisplayName = $settings->get('username_display_custom');
+      $name = \Drupal::token()->replace($customDisplayName, ['user' => $account]);
+      break;
+
+    // For default or "email_registration" value, use the main module's logic:
+    default:
+      $name = email_registration_strip_mail_and_cleanup($account->getEmail());
+      break;
+  }
+}
+
+/**
+ * Implements hook_action_info_alter().
+ */
+function email_registration_username_action_info_alter(&$definitions) {
+  // Overwrite "UpdateUsernameAction" with "UpdateUsernameWithMailAction":
+  foreach ($definitions as &$definition) {
+    if ($definition['id'] === 'email_registration_update_username' && $definition['class'] == UpdateUsernameAction::class) {
+      $definition['class'] = UpdateUsernameWithMailAction::class;
+    }
+  }
+}

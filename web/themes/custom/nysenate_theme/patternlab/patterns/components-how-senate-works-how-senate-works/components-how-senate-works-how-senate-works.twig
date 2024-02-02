@@ -1,0 +1,27 @@
+{{ attach_library('nysenate_theme/how-senate-works') }}
+
+<section class="c-block c-container c-senate-works-container c-senate-works-container--{{ modifier }}">
+  <div class="c-container--header">
+    <h2 class="c-container--title">{{ title }}</h2>
+    <a href="{{ cta.link }}" class="c-container--link">{{ cta.text }}</a>
+  </div>
+
+  <div class="c-carousel--how-senate-works c-carousel--nav u-mobile-only">
+    <button class="c-carousel--btn prev hidden">prev</button>
+    <button class="c-carousel--btn next">next</button>
+  </div>
+
+  <ul id="js-carousel-{{ modifier }}" class="js-carousel c-carousel GoogleAnalyticsET-processed" style="">
+    {% for step in steps %}
+      <li class="c-carousel--item {% if loop.first %}l-first{% elseif loop.last %}l-last{% endif %}">
+        {% if modifier == 'law' %}
+          <span class="c-senate-works--illustration illustration--{{ step.title }}"></span>
+          <p class="c-senate-works-step-description">{{ step.description }}</p>
+        {% elseif modifier == 'budget' %}
+          <p class="c-senate-works--illustration">{{ step.title|raw }}</p>
+          <p class="c-senate-works-step-description">{{ step.description }}</p>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+</section>

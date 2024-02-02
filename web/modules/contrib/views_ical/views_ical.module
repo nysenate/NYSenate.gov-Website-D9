@@ -1,0 +1,115 @@
+<?php
+
+use Eluceo\iCal\Component\Calendar;
+use Eluceo\iCal\Component\Timezone;
+
+/**
+ * Prepares variables for Views iCal template.
+ *
+ * Default template: views-view-ical.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - view: A View object.
+ */
+function views_ical_preprocess_views_view_ical(&$variables) {
+  Drupal::moduleHandler()->loadInclude('views', 'inc', $name = 'views.theme');
+
+  $view = $variables['view'];
+  $view->getResponse()->headers->set('Content-Type', 'text/calendar; charset=utf-8');
+
+  if ($view->display_handler->getOption('sitename_title')) {
+    $config = \Drupal::config('system.site');
+    $title = $config->get('name');
+    if ($slogan = $config->get('slogan')) {
+      $title .= ' - ' . $slogan;
+    }
+  }
+  else {
+    $title = $view->getTitle();
+  }
+  $variables['title'] = $title;
+
+  template_preprocess_views_view_unformatted($variables);
+
+}
+
+/**
+ * Prepares variables for Views iCal template.
+ *
+ * Default template: views-view-ical.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - view: A View object.
+ */
+function views_ical_preprocess_views_view_icalwizard(&$variables) {
+  return;
+
+  $view = $variables['view'];
+
+  $view->getResponse()->headers->set('Content-Type', 'text/calendar; charset=utf-8');
+  if ($view->display_handler->getOption('sitename_title')) {
+    $config = \Drupal::config('system.site');
+    $title = $config->get('name');
+    if ($slogan = $config->get('slogan')) {
+      $title .= ' - ' . $slogan;
+    }
+  }
+  else {
+    $title = $view->getTitle();
+  }
+  $variables['title'] = $title;
+
+  // TODO: Need to load library
+  $calendar = new Calendar('-//Drupal iCal API//EN');
+  $user_timezone = \drupal_get_user_timezone();
+
+  /** @var string $user_timezone */
+  $v_timezone = new Timezone($user_timezone);
+  $calendar->setTimezone($v_timezone);
+
+  foreach ($variables['rows'] as $row) {
+    $calendar->addComponent($row);
+  }
+
+  $variables['ical'] = $calendar->render();
+
+
+
+  if (false) {
+    Drupal::moduleHandler()->loadInclude('views', 'inc', $name = 'views.theme');
+
+    $view = $variables['view'];
+    //$view->getResponse()->headers->set('Content-Type', 'text/calendar; charset=utf-8');
+    if ($view->display_handler->getOption('sitename_title')) {
+      $title = $config->get('name');
+      if ($slogan = $config->get('slogan')) {
+        $title .= ' - ' . $slogan;
+      }
+    }
+    else {
+      $title = $view->getTitle();
+    }
+    $variables['title'] = $title;
+
+
+  }
+
+  template_preprocess_views_view_fields($variables);
+}
+
+
+/**
+ * Prepares variables for Views iCal Fields template.
+ *
+ * Default template: views-view-ical-fields.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - view: A View object.
+ */
+function views_ical_preprocess_views_view_ical_fields(&$variables) {
+  Drupal::moduleHandler()->loadInclude('views', 'inc', $name = 'views.theme');
+  template_preprocess_views_view_fields($variables);
+}

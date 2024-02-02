@@ -1,0 +1,19 @@
+<?php
+
+/**
+ * @file
+ * Test helper module for change tracking.
+ */
+
+/**
+ * Implements hook_migration_plugins_alter().
+ */
+function media_migration_test_change_tracking_migration_plugins_alter(&$definitions) {
+  foreach ($definitions as $id => $definition) {
+    $destination = $definition['destination']['plugin'] ?? NULL;
+
+    if ($destination === 'entity:media') {
+      $definitions[$id]['source']['track_changes'] = TRUE;
+    }
+  }
+}

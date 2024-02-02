@@ -1,0 +1,4 @@
+services:
+  node_revision_generate:
+    class: Drupal\node_revision_generate\NodeRevisionGenerate
+    arguments: ["@datetime.time", '@database', '@string_translation']

@@ -1,0 +1,14 @@
+type: module
+core_version_requirement: ^9.3 || ^10
+name: ImageMagick
+description: 'Provides ImageMagick integration.'
+package: Media
+configure: system.image_toolkit_settings
+dependencies:
+  - file_mdm:file_mdm
+  - sophron:sophron
+
+# Information added by Drupal.org packaging script on 2022-09-23
+version: '8.x-3.4'
+project: 'imagemagick'
+datestamp: 1663947746

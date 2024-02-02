@@ -1,0 +1,17 @@
+services:
+  simple_sitemap.views:
+    class: Drupal\simple_sitemap_views\SimpleSitemapViews
+    arguments:
+      - '@entity_type.manager'
+      - '@config.factory'
+      - '@queue'
+      - '@database'
+
+  simple_sitemap.views.argument_collector:
+    class: Drupal\simple_sitemap_views\EventSubscriber\ArgumentCollector
+    arguments:
+      - '@entity_type.manager'
+      - '@simple_sitemap.views'
+      - '@current_route_match'
+    tags:
+      - {name: 'event_subscriber'}

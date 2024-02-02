@@ -1,0 +1,25 @@
+email_registration.settings:
+  type: config_object
+  label: 'Email registration config'
+  mapping:
+    login_with_username:
+      type: boolean
+      label: 'Allow users to log in with email address or username.'
+
+# Commerce.
+commerce_checkout.commerce_checkout_pane.email_registration_login:
+  type: commerce_checkout_pane_configuration
+  mapping:
+    allow_guest_checkout:
+      type: boolean
+      label: 'Allow guest checkout'
+    allow_registration:
+      type: boolean
+      label: 'Allow registration'
+    registration_form_mode:
+      type: string
+      label: 'Registration form mode'
+
+action.configuration.email_registration_update_username:
+  type: action_configuration_default
+  label: 'Update Username Action'

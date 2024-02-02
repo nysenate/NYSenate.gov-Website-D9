@@ -1,0 +1,62 @@
+<?php
+
+/**
+ * @file
+ * Main file of the views exclude previous module.
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+
+/**
+ * Implements hook_help().
+ */
+function views_exclude_previous_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.views_exclude_previous':
+      $output = '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Views Exclude Previous provides a views filter which exlcudes nodes that have already been loaded/displayed on the current page.') . '</p>';
+      return $output;
+  }
+}
+
+/**
+ * Implements hook_node_load().
+ */
+function views_exclude_previous_node_load($nodes) {
+  foreach ($nodes as $nid => $node) {
+    views_exclude_previous_remove('node_load', $nid);
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view() for node entities.
+ */
+function views_exclude_previous_node_view(array &$build, EntityInterface $node, EntityViewDisplayInterface $display, $view_mode) {
+  views_exclude_previous_remove('node_view', $node->id());
+}
+
+/**
+ * This function stores/returns nids for the given category.
+ *
+ * Static storage of our excluded nids.
+ *
+ * @param string $cat
+ *   A category given by the exclude plugin.
+ * @param int $nid
+ *   The nid to be excluded. Optional so the function just returns the category.
+ *
+ * @return array
+ *   Always returns the given category.
+ */
+function views_exclude_previous_remove($cat, $nid = NULL) {
+  $excludes = & drupal_static(__FUNCTION__);
+
+  // Add nid to be excluded in the current category.
+  if (!empty($nid)) {
+    $excludes[$cat][$nid] = $nid;
+  }
+
+  return !empty($excludes[$cat]) ? $excludes[$cat] : [0];
+}

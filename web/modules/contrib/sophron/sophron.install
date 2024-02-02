@@ -1,0 +1,16 @@
+<?php
+
+/**
+ * @file
+ * Sophron - MIME types management API.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function sophron_requirements($phase) {
+  if ($phase === 'runtime') {
+    return \Drupal::service('sophron.mime_map.manager')->requirements($phase);
+  }
+  return [];
+}

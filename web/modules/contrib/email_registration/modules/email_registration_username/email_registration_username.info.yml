@@ -1,0 +1,14 @@
+name: 'Email Registration Username'
+type: module
+description: "Use your email address as your username on registration and sync both fields on updating the user. WARNING: See the README.md for details about the possible security implications."
+package: Administration
+configure: entity.user.admin_form
+core_version_requirement: ^9.5 || ^10
+dependencies:
+  - email_registration:email_registration
+  - token:token
+
+# Information added by Drupal.org packaging script on 2023-11-21
+version: '2.0.0-rc3'
+project: 'email_registration'
+datestamp: 1700548874

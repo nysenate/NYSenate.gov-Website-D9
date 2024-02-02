@@ -1,0 +1,25 @@
+{
+    "name": "joestewart/robo-drupalvm",
+    "description": "Drupal VM tasks Robo Task Runner",
+    "license": "MIT",
+    "type": "robo-tasks",
+    "authors": [
+        {
+            "name": "Joe Stewart",
+            "email": "joe@joestewartjr.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "JoeStewart\\RoboDrupalVM\\": "src"
+        }
+    },
+    "require": {
+        "php": ">=5.5.0",
+        "consolidation/robo": "^1.4.11 || ^2 || ^3 || ^4",
+        "symfony/yaml": "~2.8|~3.0|~4.0|~5.0|~6.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": ">=4.4"
+    }
+}

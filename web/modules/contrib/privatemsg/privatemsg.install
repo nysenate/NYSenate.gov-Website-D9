@@ -1,0 +1,174 @@
+<?php
+
+/**
+ * @file
+ * Install file for privatemsg module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function privatemsg_schema(): array {
+  $schema = [];
+  $schema['pm_index'] = [
+    'description' => '{pm_index} holds indexing information about messages and recipients for fast retrieval',
+    'fields' => [
+      'mid' => [
+        'description' => 'Private Message ID',
+        'type' => 'int',
+        'not null' => TRUE,
+        'unsigned' => TRUE,
+      ],
+      'thread_id' => [
+        'description' => 'Messages thread ID',
+        'type' => 'int',
+        'not null' => TRUE,
+        'unsigned' => TRUE,
+      ],
+      'recipient' => [
+        'description' => 'ID of the recipient object, typically user',
+        'type' => 'int',
+        'not null' => TRUE,
+        'unsigned' => TRUE,
+      ],
+      'is_new' => [
+        'description' => 'Whether the user has read this message',
+        'type' => 'int',
+        'default' => 1,
+        'not null' => TRUE,
+        'unsigned' => TRUE,
+      ],
+      'deleted' => [
+        'description' => 'Whether the user has deleted this message',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'type' => [
+        'description' => 'Type of recipient object',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => 'user',
+      ],
+    ],
+    'primary key' => ['mid', 'recipient', 'type'],
+    'indexes' => [
+      'list' => ['recipient', 'type', 'deleted', 'is_new'],
+      'messages' => ['mid', 'recipient', 'type'],
+      'participants' => ['thread_id', 'recipient', 'type', 'deleted'],
+    ],
+  ];
+
+  $schema['pm_message'] = [
+    'description' => '{pm_messages} holds the message information',
+    'fields' => [
+      'mid' => [
+        'description' => 'Private Message ID',
+        'type' => 'serial',
+        'not null' => TRUE,
+        'unsigned' => TRUE,
+      ],
+      'author' => [
+        'description' => 'UID of the author',
+        'type' => 'int',
+        'not null' => TRUE,
+        'unsigned' => TRUE,
+      ],
+      'subject' => [
+        'description' => 'Subject text of the message',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ],
+      'body' => [
+        'description' => 'Body of the message',
+        'type' => 'text',
+        'not null' => TRUE,
+        'size' => 'big',
+      ],
+      'format' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+        'description' => 'The {filter_formats}.format of the message text.',
+      ],
+      'timestamp' => [
+        'description' => 'Time when the message was sent',
+        'type' => 'int',
+        'not null' => TRUE,
+        'unsigned' => TRUE,
+      ],
+      'has_tokens' => [
+        'description' => 'Indicates if the message has tokens',
+        'type' => 'int',
+        'size' => 'small',
+        'not null' => TRUE,
+        'unsigned' => TRUE,
+        'default' => 0,
+      ],
+    ],
+    'primary key' => ['mid'],
+  ];
+
+  $schema['pm_disable'] = [
+    'description' => '{pm_disable} holds the list of users that have disabled private messaging',
+    'fields' => [
+      'uid' => [
+        'description' => 'ID of the user',
+        'type' => 'int',
+        'not null' => TRUE,
+        'unsigned' => TRUE,
+      ],
+    ],
+    'primary key' => ['uid'],
+  ];
+
+  $schema['pm_email_notify'] = [
+    'description' => '{pm_email_notify} holds private message email notification settings for each user',
+    'fields' => [
+      'user_id' => [
+        'description' => 'ID of the user',
+        'type' => 'int',
+        'not null' => TRUE,
+        'unsigned' => TRUE,
+      ],
+      'email_notify_is_enabled' => [
+        'description' => 'Email Notification Status (Enabled=1, Disabled=0)',
+        'type' => 'int',
+        'not null' => TRUE,
+        'unsigned' => TRUE,
+      ],
+    ],
+    'unique keys' => [
+      'user_id' => ['user_id'],
+    ],
+  ];
+
+  return $schema;
+}
+
+/**
+ * Implements hook_install().
+ */
+function privatemsg_install(): void {
+  $privatemsg_service = \Drupal::service('privatemsg.common');
+  $query = \Drupal::database()->select('users', 'u');
+  $query->fields('u', ['uid']);
+  $query->condition('uid', 0, '>');
+  $uids = $query->execute()->fetchAll(\PDO::FETCH_ASSOC);
+  foreach ($uids as $uid) {
+    $privatemsg_service->enableDisableEmailNotification($uid['uid'], 1);
+  }
+}
+
+/**
+ * Prepare to migration.
+ */
+function privatemsg_update_8101() {
+  // Copy database tables.
+  $database = \Drupal::database();
+  $database->query("CREATE TABLE {pm_index_old} AS SELECT * FROM {pm_index}");
+  $database->query("CREATE TABLE {pm_message_old} AS SELECT * FROM {pm_message}");
+}

@@ -1,0 +1,13 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions.
+ */
+
+/**
+ * Set the default value for the new variable delete_newer.
+ */
+function node_revision_delete_update_8001() {
+  \Drupal::service('config.factory')->getEditable('node_revision_delete.settings')->set('delete_newer', FALSE)->save();
+}

@@ -1,0 +1,33 @@
+<?php
+
+/**
+ * @file
+ * Test module.
+ */
+
+/**
+ * Implements hook_theme().
+ */
+function components_test_theme($existing, $type, $theme, $path): array {
+  $items['components_test'] = [
+    'variables' => [],
+  ];
+  return $items;
+}
+
+/**
+ * Implements hook_components_namespaces_alter().
+ */
+function components_test_components_namespaces_alter(array &$namespaces, string $theme) {
+  if ($theme === 'components_test_theme') {
+    $namespaces['components'][] = \Drupal::service('extension.list.module')->getPath('components_test') . '/components-alt';
+  }
+}
+
+/**
+ * Implements hook_protected_twig_namespaces_alter().
+ */
+function components_test_protected_twig_namespaces_alter(array &$protectedNamespaces) {
+  // Allow the "system" Twig namespace to be altered.
+  unset($protectedNamespaces['system']);
+}

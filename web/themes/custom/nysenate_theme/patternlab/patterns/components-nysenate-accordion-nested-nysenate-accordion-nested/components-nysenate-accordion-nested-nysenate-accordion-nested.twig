@@ -1,0 +1,34 @@
+{{ attach_library('nysenate_theme/nysenate-accordion-nested') }}
+
+{% macro recursiveAccordion(accordion) %}
+  {% import '@rain_theme/icons/_icons-macro.twig' as icons %}
+  <li class="nysenate-accordion-nested__item">
+    {% if accordion.text %}
+      {{ accordion.text }}
+    {% endif %}
+
+    {% if accordion.items|length %}
+      <button type="button" class="nysenate-accordion-nested__toggle">
+        <span class="nysenate-accordion-nested__heading">
+          <span class="indicator">View
+          </span>
+          {{ accordion.heading }}
+        </span>
+        {{ icons.get('accordion__arrow'|lower) }}
+      </button>
+      <ul class="nysenate-accordion-nested nysenate-accordion-nested--inner">
+        {% for child in accordion.items %}
+          {{ _self.recursiveAccordion(child) }}
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </li>
+{% endmacro %}
+
+{% if items %}
+  <ul class="nysenate-accordion-nested">
+    {% for item in items %}
+      {{ _self.recursiveAccordion(item) }}
+    {% endfor %}
+  </ul>
+{% endif %}

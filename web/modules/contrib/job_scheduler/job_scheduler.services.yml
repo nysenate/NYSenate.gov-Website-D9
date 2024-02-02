@@ -1,0 +1,6 @@
+services:
+  job_scheduler.crontab_decorator:
+    class: Drupal\job_scheduler\JobSchedulerCronTabDecorator
+  job_scheduler.manager:
+    class: Drupal\job_scheduler\JobScheduler
+    arguments: ['@job_scheduler.crontab_decorator', '@entity_type.manager', '@queue']

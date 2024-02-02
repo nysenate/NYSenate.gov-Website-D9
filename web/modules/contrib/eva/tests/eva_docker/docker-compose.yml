@@ -1,0 +1,15 @@
+version: '2'
+
+services:
+  # Apache
+  drupal:
+    image: newcity/lamp-testing-drupal
+    ports:
+      - "9000:80"
+    volumes:
+      - ../../.:/app/web/modules/custom/eva:ro
+      - ../eva_test:/app/web/modules/custom/eva_test:ro
+      - web:/app/web
+
+volumes:
+  web:

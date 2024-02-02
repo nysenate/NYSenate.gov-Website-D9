@@ -1,0 +1,71 @@
+oembed_providers.settings:
+  path: '/admin/config/media/oembed-providers'
+  defaults:
+    _form: '\Drupal\oembed_providers\Form\OembedProvidersSettingsForm'
+    _title: 'oEmbed Providers'
+  requirements:
+    _permission: 'administer oembed providers'
+
+entity.oembed_provider.collection:
+  path: '/admin/config/media/oembed-providers/custom-providers'
+  defaults:
+    _entity_list: 'oembed_provider'
+    _title: 'Custom oEmbed Providers'
+  requirements:
+    _permission: 'administer oembed providers'
+
+entity.oembed_provider.add_form:
+  path: '/admin/config/media/oembed-providers/custom-providers/add'
+  defaults:
+    _entity_form: 'oembed_provider.add'
+    _title: 'Add custom oEmbed provider'
+  requirements:
+    _permission: 'administer oembed providers'
+
+entity.oembed_provider.edit_form:
+  path: '/admin/config/media/oembed-providers/custom-providers/{oembed_provider}/edit'
+  defaults:
+    _entity_form: 'oembed_provider.edit'
+    _title: 'Edit custom oEmbed provider'
+  requirements:
+    _permission: 'administer oembed providers'
+
+entity.oembed_provider.delete_form:
+  path: '/admin/config/media/oembed-providers/custom-providers/{oembed_provider}/delete'
+  defaults:
+    _entity_form: 'oembed_provider.delete'
+    _title: 'Delete'
+  requirements:
+    _permission: 'administer oembed providers'
+
+entity.oembed_provider_bucket.collection:
+  path: '/admin/config/media/oembed-providers/buckets'
+  defaults:
+    _entity_list: 'oembed_provider_bucket'
+    _title: 'Provider Buckets'
+  requirements:
+    _permission: 'administer oembed providers'
+
+entity.oembed_provider_bucket.add_form:
+  path: '/admin/config/media/oembed-providers/buckets/add'
+  defaults:
+    _entity_form: 'oembed_provider_bucket.add'
+    _title: 'Add oEmbed provider bucket'
+  requirements:
+    _permission: 'administer oembed providers'
+
+entity.oembed_provider_bucket.edit_form:
+  path: '/admin/config/media/oembed-providers/buckets/{oembed_provider_bucket}/edit'
+  defaults:
+    _entity_form: 'oembed_provider_bucket.edit'
+    _title: 'Edit oEmbed provider bucket'
+  requirements:
+    _permission: 'administer oembed providers'
+
+entity.oembed_provider_bucket.delete_form:
+  path: '/admin/config/media/oembed-providers/buckets/{oembed_provider_bucket}/delete'
+  defaults:
+    _entity_form: 'oembed_provider_bucket.delete'
+    _title: 'Delete'
+  requirements:
+    _permission: 'administer oembed providers'

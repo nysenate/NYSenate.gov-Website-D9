@@ -1,0 +1,52 @@
+<?php
+
+/**
+ * @file
+ * Extend the Views StringFilter and Combine filter with autocomplete.
+ */
+
+/**
+ * Implements hook_config_schema_info_alter().
+ *
+ * Add config schema for views filters that views_autocomplete_filters modifies.
+ */
+function views_autocomplete_filters_config_schema_info_alter(&$definitions) {
+  foreach ($definitions as $key => $value) {
+    // See views_autocomplete_filters.views.inc for the list of fields modified
+    // by this module.
+    if ($key === 'views.filter.combine'
+      || $key === 'views.filter.search_api_fulltext'
+      || $key === 'views.filter.search_api_text'
+      || $key === 'views.filter.string'
+    ) {
+      $definitions[$key]['mapping']['expose']['mapping']['autocomplete_filter'] = [
+        'type' => 'integer',
+        'label' => 'Use Autocomplete',
+      ];
+      $definitions[$key]['mapping']['expose']['mapping']['autocomplete_min_chars'] = [
+        'type' => 'string',
+        'label' => 'Minimum number of characters to start filter',
+      ];
+      $definitions[$key]['mapping']['expose']['mapping']['autocomplete_items'] = [
+        'type' => 'string',
+        'label' => 'Maximum number of items in Autocomplete',
+      ];
+      $definitions[$key]['mapping']['expose']['mapping']['autocomplete_field'] = [
+        'type' => 'string',
+        'label' => 'Field with autocomplete results',
+      ];
+      $definitions[$key]['mapping']['expose']['mapping']['autocomplete_raw_suggestion'] = [
+        'type' => 'integer',
+        'label' => 'Unformatted suggestion',
+      ];
+      $definitions[$key]['mapping']['expose']['mapping']['autocomplete_raw_dropdown'] = [
+        'type' => 'integer',
+        'label' => 'Unformatted dropdown',
+      ];
+      $definitions[$key]['mapping']['expose']['mapping']['autocomplete_dependent'] = [
+        'type' => 'integer',
+        'label' => 'Suggestions depend on other filter fields',
+      ];
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{% import '@rain_theme/icons/_icons-macro.twig' as icons %}
+
+<article class="nysenate-accordion">
+  <button type="button" class="nysenate-accordion__toggle" aria-controls="nysenate-accordion__content-{{ item.accordion_instance }}" aria-expanded="false" id="nysenate-accordion__toggle-{{ item.accordion_instance }}" aria-selected="false">
+    <span class="nysenate-accordion__heading">
+      <span class="indicator">View </span>{{ item.heading }}
+    </span>
+    {{ icons.get('accordion__arrow'|lower) }}
+  </button>
+  {% for content in item.contents %}
+    <div class="nysenate-accordion__content" id="nysenate-accordion__content-{{ item.accordion_instance }}" aria-hidden="true" aria-labelledby="nysenate-accordion__content-{{ item.accordion_instance }}">
+      {% block accordion_content %}
+        {{ content.text }}
+      {% endblock %}
+    </div>
+  {% endfor %}
+</article>

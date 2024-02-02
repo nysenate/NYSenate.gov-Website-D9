@@ -1,0 +1,14 @@
+id: d7_email_registration_settings
+label: Email registration configuration
+migration_tags:
+  - Drupal 7
+  - Configuration
+source:
+  plugin: variable
+  variables:
+    - email_registration_login_with_username
+process:
+  login_with_username: email_registration_login_with_username
+destination:
+  plugin: config
+  config_name: email_registration.settings

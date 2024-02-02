@@ -1,0 +1,167 @@
+language: php
+os: linux
+dist: xenial
+
+services:
+  - mysql
+
+env:
+  global:
+    # Make the script re-usable for other modules.
+    - MODULE=scheduler
+    # Initialise the real SYMFONY_DEPRECATIONS_HELPER variable.
+    - SYMFONY_DEPRECATIONS_HELPER=0
+    # Create a default for the allowed deprecations per branch.
+    - DEPRECATIONS=0
+
+jobs:
+  fast_finish: true
+  include:
+    - php: 7.4
+      env:
+        - DRUPAL_CORE=9.5.x
+        # Run the Node and Product tests, with Rules included.
+        - NODE=YES
+        - PRODUCT=YES
+        - RULES=YES
+        # ---- Remaining self deprecation notices (0)
+        # ---- Other deprecation notices (0)
+        - DEPRECATIONS=0
+    - php: 8.1
+      env:
+        - DRUPAL_CORE=9.5.x
+        - MEDIA=YES
+        - TAXONOMY=YES
+        # ---- Unsilenced deprecation notices (6)
+        #    6 strlen(): Passing null to parameter #1 ($string) is deprecated (SchedulerDrushTest)
+        # ---- Remaining self deprecation notices (0)
+        # ---- Other deprecation notices (0)
+        - DEPRECATIONS=6
+    - php: 8.1
+      env:
+        # Run the Node tests only.
+        - DRUPAL_CORE=10.0.x
+        - NODE=YES
+        # ---- Remaining self deprecation notices (4)
+        #    2 Behat\Mink\Element\ElementInterface::getText() might add "string"
+        #    2 Behat\Mink\Element\ElementInterface::waitFor()" might add "mixed"
+        # ---- Remaining direct deprecation notices (3)
+        #    1 PHPUnit\TextUI\DefaultResultPrinter class is considered internal
+        #    2 Drupal\Tests\Listeners\DrupalListener
+        # ---- Other deprecation notices (2)
+        #    2 PHPUnit\Framework\TestCase::addWarning() method is considered internal
+        - DEPRECATIONS=9
+
+# Be sure to cache composer downloads.
+cache:
+  directories:
+    - $HOME/.composer
+
+before_script:
+  # At job start-up Composer is installed at 1.8.4 then self-update is run. From
+  # 24 October 2020 this bumped the version to Composer 2.
+  - composer --version
+  - echo $MODULE
+
+  # Remove Xdebug as we don't need it and it causes
+  # PHP Fatal error:  Maximum function nesting level of '256' reached.
+  # We also don't care if that file exists or not on PHP 7.
+  - phpenv config-rm xdebug.ini || true
+
+  # Navigate up out of $TRAVIS_BUILD_DIR to prevent blown stack on recursive module lookup.
+  - pwd
+  - cd ..
+
+  # Create database.
+  - mysql -e "create database $MODULE"
+  # Export database variable for kernel tests.
+  - export SIMPLETEST_DB=mysql://root:@127.0.0.1/$MODULE
+
+  # Download Drupal core from the Github mirror because it is faster.
+  - travis_retry git clone --branch $DRUPAL_CORE --depth 1 https://github.com/drupal/drupal.git
+  - cd drupal
+  # Store the path to Drupal root.
+  - DRUPAL_ROOT=$(pwd)
+  - echo $DRUPAL_ROOT
+
+  # Make a directory for our module and copy the built source into it.
+  - mkdir $DRUPAL_ROOT/modules/$MODULE
+  - cp -R $TRAVIS_BUILD_DIR/* $DRUPAL_ROOT/modules/$MODULE/
+
+  # Install the site dependencies via Composer.
+  - travis_retry composer install
+
+  # Install the testing dependencies via Composer.
+  - travis_retry composer require drupal/devel:"^4 || ^5"
+  - travis_retry composer require drush/drush:"^9 || ^10 || ^11"
+  - # Need to get Rules dev because 3.0.0-alpha7 has deprecation warnings.
+  - if [ "$RULES" == "YES" ]; then travis_retry composer require drupal/rules:"3.x-dev"; fi
+  - travis_retry composer require drupal/workbench_moderation
+  # Use * because only the dev version of WBMA is compatible with D9. None for D10.
+  - if [[ $DRUPAL_CORE =~ ^(8|9) ]]; then travis_retry composer require drupal/workbench_moderation_actions:*; fi
+  - travis_retry composer require commerceguys/addressing
+  - travis_retry composer require drupal/commerce
+
+  # Coder is already installed as part of composer install. We just need to set
+  # the installed_paths to pick up the Drupal standards. This is only for Coder
+  # up to version 8.3.13. From 8.3.14 onwards this is done at install time.
+  - |
+    if [[ "$DRUPAL_CORE" == "8.9.x" || "$DRUPAL_CORE" == "9.2.x" || "$DRUPAL_CORE" == "9.3.x" ]]; then
+      $DRUPAL_ROOT/vendor/bin/phpcs --config-set installed_paths $DRUPAL_ROOT/vendor/drupal/coder/coder_sniffer
+    fi
+
+  # Start a web server on port 8888, run in the background.
+  - php -S localhost:8888 &
+
+  # Export web server URL for browser tests.
+  - export SIMPLETEST_BASE_URL=http://localhost:8888
+
+  # Get the allowed number of deprecation warnings.
+  - SYMFONY_DEPRECATIONS_HELPER=$DEPRECATIONS || $SYMFONY_DEPRECATIONS_HELPER
+  - echo $SYMFONY_DEPRECATIONS_HELPER
+
+script:
+  - echo "NODE=$NODE MEDIA=$MEDIA PRODUCT=$PRODUCT TAXONOMY=$TAXONOMY RULES=$RULES"
+  # By default the specific entity type tests will be excluded unless explicitly
+  # included via a YES variable value.
+  - EXCLUDE=()
+  - if [ "$NODE" != "YES" ]; then EXCLUDE+=('node|HooksLegacy|Multilingual|WorkbenchModeration|Migrate'); fi
+  - if [ "$MEDIA" != "YES" ]; then EXCLUDE+=('media'); fi
+  - if [ "$PRODUCT" != "YES" ]; then EXCLUDE+=('product'); fi
+  - if [ "$TAXONOMY" != "YES" ]; then EXCLUDE+=('taxonomy'); fi
+  - if [ "$RULES" != "YES" ]; then EXCLUDE+=('rules'); fi
+  - if [ "$DRUPAL_CORE" == "10.0.x" ]; then EXCLUDE+=('HooksLegacy|WorkbenchModeration'); fi
+  - EXCLUDE=${EXCLUDE[@]}     # create a space delimited string from array
+
+  # Run the PHPUnit tests, excluding the javascript test group.
+  - cd $DRUPAL_ROOT
+  - |
+    if [ "$EXCLUDE" != "" ]; then
+      echo "Running tests excluding $EXCLUDE ..."
+      export FILTER="/^(?!.*(${EXCLUDE// /|})).*/i"   # use parameter expansion to substitute spaces with |
+      echo "FILTER=$FILTER"
+      ./vendor/bin/phpunit -c ./core/phpunit.xml.dist --debug ./modules/$MODULE/ --exclude-group=scheduler_js --filter "$FILTER"
+    else
+      echo "Running all tests ..."
+      ./vendor/bin/phpunit -c ./core/phpunit.xml.dist --debug ./modules/$MODULE/ --exclude-group=scheduler_js
+    fi
+  # Display the parameters again at the end of the test run.
+  - echo "NODE=$NODE MEDIA=$MEDIA PRODUCT=$PRODUCT TAXONOMY=$TAXONOMY RULES=$RULES"
+  - echo "EXCLUDE=$EXCLUDE"
+
+  # Check for coding standards. First show the versions.
+  - composer show drupal/coder | egrep 'name |vers'
+  - composer show squizlabs/php_codesniffer | egrep 'name |vers'
+  - $DRUPAL_ROOT/vendor/bin/phpcs --version
+  - $DRUPAL_ROOT/vendor/bin/phpcs --config-show installed_paths
+
+
+  # Change into $MODULE directory to avoid having to add --standard=$DRUPAL_ROOT/modules/$MODULE/phpcs.xml.dist
+  - cd $DRUPAL_ROOT/modules/$MODULE
+
+  # List the standards and the sniffs that are used.
+  - $DRUPAL_ROOT/vendor/bin/phpcs -i
+  - $DRUPAL_ROOT/vendor/bin/phpcs -e
+
+  # Show the violations in detail, plus summary and source report.
+  - $DRUPAL_ROOT/vendor/bin/phpcs . --report-full --report-summary --report-source -s;

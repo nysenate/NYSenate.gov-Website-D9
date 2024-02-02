@@ -1,0 +1,66 @@
+<?php
+
+/**
+ * @file
+ * Records a history of the site's user logins.
+ */
+
+use Drupal\Core\Session\AccountInterface;
+
+/**
+ * Implements hook_user_login().
+ */
+function login_history_user_login($account) {
+  $request = \Drupal::request();
+  // Is this a one-time login?
+  $one_time = \Drupal::routeMatch()->getRouteName() === 'user.reset.login' ? 1 : 0;
+
+  // Limit user agent strings to 255 characters. For example, some versions of
+  // IE8 return long user agent strings causing an error upon login.
+  $user_agent = $request->server->get('HTTP_USER_AGENT');
+  if (strlen($user_agent) > 255) {
+    $user_agent = substr($user_agent, 0, 255);
+  }
+
+  // Now save the user's current login timestamp to login_history.
+  \Drupal::database()->insert('login_history')
+    ->fields([
+      'uid' => $account->id(),
+      'login' => $account->getLastLoginTime(),
+      'hostname' => $request->getClientIP(),
+      'one_time' => $one_time,
+      'user_agent' => $user_agent,
+    ])
+    ->execute();
+}
+
+/**
+ * Provide data about the last login for a user.
+ *
+ * @param \Drupal\Core\Session\AccountInterface|null $account
+ *   An optional user to get the last login for.
+ *
+ * @return object|false
+ *   An object containing information about the last login or FALSE if no
+ *   result is found.
+ *
+ * @deprecated in login_history:8.x-1.1 and is removed from login_history:8.x-2.0.
+ *   There is no replacement. Implement your own DB query instead.
+ * @see https://www.drupal.org/project/login_history/issues/3185870
+ */
+function login_history_last_login(AccountInterface $account = NULL) {
+  if (!$account) {
+    $account = \Drupal::currentUser();
+  }
+  if ($account->isAnonymous()) {
+    return FALSE;
+  }
+
+  return \Drupal::database()->select('login_history', 'lh')
+    ->fields('lh', ['login', 'hostname', 'one_time', 'user_agent'])
+    ->condition('uid', $account->id())
+    ->orderBy('login', 'DESC')
+    ->range(0, 1)
+    ->execute()
+    ->fetch();
+}

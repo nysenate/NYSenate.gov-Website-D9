@@ -1,0 +1,15 @@
+email_tfa.verifiy:
+  path: '/email-tfa'
+  defaults:
+    _form: '\Drupal\email_tfa\Form\EmailTfaVerifyForm'
+    _title: 'Email TFA Authentication'
+  requirements:
+    _custom_access: '\Drupal\email_tfa\Access\EmailTfaVerifyAccessCheck::access'
+
+email_tfa.settings:
+  path: '/admin/config/people/email-tfa'
+  defaults:
+    _form: '\Drupal\email_tfa\Form\EmailTfaConfigForm'
+    _title: 'Email TFA Settings'
+  requirements:
+    _permission: 'administer email tfa'

@@ -1,0 +1,144 @@
+<?php
+
+/**
+ * @file
+ * Contains Email TFA Module.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\user\Entity\User;
+use Drupal\user\UserInterface;
+use Drupal\Component\Utility\Xss;
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function email_tfa_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.email_tfa':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t("Two-Factor Authentication by email, using user registered email to send a verification code to user's email every time the user try to login to your siue.") . '</p>';
+      return $output;
+  }
+}
+
+/**
+ * Implements hook_user_login().
+ */
+function email_tfa_user_login(UserInterface $account) {
+  $temp_store = \Drupal::service('tempstore.private')->get('email_tfa');
+  $temp_store->set('email_tfa_send_mail', 'send_mail');
+  $temp_store->set('email_tfa_user_verify', 0);
+}
+
+/**
+ * Implements hook_mail().
+ */
+function email_tfa_mail($key, &$message, $params) {
+  if ($key == 'send_email_tfa') {
+    $language = \Drupal::languageManager()->getDefaultLanguage()->getId();
+    $message['subject'] = _email_tfa_mail_text('subject', $params, $language);
+    $message['body'][] = _email_tfa_mail_text('body', $params, $language);
+  }
+}
+
+/**
+ * Implements hook_mail_tokens().
+ */
+function email_tfa_mail_tokens(&$replacements, $data, $options) {
+  if (isset($data['email_tfa'])) {
+    $replacements['[user:email_tfa]'] = $data['email_tfa'];
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function email_tfa_form_user_form_alter(&$form, FormStateInterface $form_state) {
+  $config = \Drupal::config('email_tfa.settings');
+  $status = $config->get('status');
+  $tracks = $config->get('tracks');
+  if (empty($status) || ($status && $tracks != 'optionally_by_users')) {
+    $form['email_tfa_status']['#access'] = FALSE;
+  }
+}
+
+/**
+ * Tfa Email values and token.
+ */
+function _email_tfa_mail_text($type, $tfa, $language) {
+  $config = \Drupal::config('email_tfa.settings');
+  if ($type == 'subject') {
+    $text = Xss::filter($config->get('subject'));
+  }
+  elseif ($type == 'body') {
+    $text = Xss::filterAdmin($config->get('body'));
+  }
+
+  return Drupal::token()->replace($text, $tfa, [
+    'language' => $language,
+    'callback' => 'email_tfa_mail_tokens',
+    'sanitize' => FALSE,
+    'clear' => TRUE,
+  ]);
+}
+
+/**
+ * {@inheritdoc}
+ */
+function _email_tfa_in_array_any($needles, $haystack) {
+  $config = \Drupal::config('email_tfa.settings');
+  if ($config->get('role_exclusion_type') == 'force_for') {
+    return empty(array_intersect($needles, $haystack));
+  }
+  else {
+    return !empty(array_intersect($needles, $haystack));
+  }
+}
+
+/**
+ * Implements hook_entity_base_field_info().
+ */
+function email_tfa_entity_base_field_info(EntityTypeInterface $entity_type) {
+  $fields = [];
+  if ($entity_type->id() === 'user') {
+    $fields['email_tfa_status'] = BaseFieldDefinition::create('boolean')
+      ->setLabel(t('Active'))
+      ->setDescription(t('Enable Email TFA for my account.'))
+      ->setRevisionable(TRUE)
+      ->setTranslatable(TRUE)
+      ->setDisplayOptions('form', [
+        'type' => 'boolean_checkbox',
+        'settings' => [
+          'display_label' => TRUE,
+        ],
+      ])
+      ->setDisplayConfigurable('form', TRUE);
+  }
+
+  return $fields;
+}
+
+/**
+ * {@inheritdoc}
+ */
+function _email_tfa_user_current_status() {
+  $user = User::load(\Drupal::currentUser()->id());
+  return $user->get('email_tfa_status')->value;
+}
+
+/**
+ * Implements hook_toolbar_alter().
+ *
+ * Suppress the admin toolbar on the email code verification page.
+ */
+function email_tfa_toolbar_alter(&$items) {
+  $route_name = \Drupal::routeMatch()->getRouteName();
+  if ($route_name === 'email_tfa.verifiy') {
+    $items = ['#cache' => ['contexts' => ['route.name']]];
+  }
+}

@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * @file
+ * Test helper module for providing simplified dealer plugins.
+ */
+
+use Drupal\media_migration_test_dealer_plugins\Image;
+
+/**
+ * Implements hook_media_migration_file_entity_dealer_info_alter().
+ */
+function media_migration_test_dealer_plugins_media_migration_file_entity_dealer_info_alter(&$definitions) {
+  if (!empty($definitions['image'])) {
+    $definitions['image']['class'] = Image::class;
+  }
+}

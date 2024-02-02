@@ -1,0 +1,35 @@
+id: d7_media_view_modes
+label: Media view modes
+migration_tags:
+  - Drupal 7
+  - Configuration
+  # Should follow \Drupal\media_migration\MediaMigration::MIGRATION_TAG_MAIN
+  - Media Migration
+  # Should follow \Drupal\media_migration\MediaMigration::MIGRATION_TAG_CONFIG
+  - Media Configuration
+source:
+  plugin: d7_media_view_mode
+  constants:
+    entity_type_id: media
+process:
+  mode: mode
+  label_fallback:
+    plugin: static_map
+    source: mode
+    bypass: true
+    map:
+      full: "Full content"
+      search_index: "Search index"
+      search_result: "Search result"
+      rss: "RSS"
+      teaser: "Teaser"
+      wysiwyg: "WYSIWYG"
+  label:
+    plugin: null_coalesce
+    source:
+      - label
+      - "@label_fallback"
+      - mode
+  targetEntityType: constants/entity_type_id
+destination:
+  plugin: entity:entity_view_mode

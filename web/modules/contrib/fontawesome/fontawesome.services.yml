@@ -1,0 +1,4 @@
+services:
+  fontawesome.font_awesome_manager:
+    class: Drupal\fontawesome\FontAwesomeManager
+    arguments: ['@cache.data', '@module_handler', '@theme_handler', '@file_system', '@extension.list.module']

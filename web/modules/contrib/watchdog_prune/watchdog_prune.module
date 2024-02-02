@@ -1,0 +1,69 @@
+<?php
+
+/**
+ * @file
+ * Description: watchdog_prune.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function watchdog_prune_help($route_name, $route_match) {
+  if ($route_name == 'help.page.watchdog_prune') {
+    $output = file_get_contents(\Drupal::service('extension.list.module')->getPath('watchdog_prune') . '/README.txt');
+    $output = '<pre>' . $output . '</pre>';
+    return [
+      '#type' => 'markup',
+      '#markup' => $output,
+    ];
+  }
+}
+
+/**
+ * Implements hook_cron().
+ */
+function watchdog_prune_cron() {
+  $prune_type = \Drupal::config('watchdog_prune.settings')->get('watchdog_prune_age_type', '');
+  $database = \Drupal::service('database.replica');
+
+  if (!empty($prune_type)) {
+
+    $prune_type = explode("\n", $prune_type);
+    $prune_type_list = [];
+
+    if (is_array($prune_type)) {
+      foreach ($prune_type as $value) {
+        $watchdog_prune_settings = explode("|", $value);
+        $prune_query = $database->delete('watchdog');
+        // Check if the user has entered the correct squence of settings to prune watchdog messages by type.
+        // Starting with the watchdog type.
+        if (isset($watchdog_prune_settings[0]) || !empty($watchdog_prune_settings[0])) {
+          $prune_query->condition('type', trim($watchdog_prune_settings[0]), '=');
+          $prune_type_list[] = $watchdog_prune_settings[0];
+          // Check if age is entered as we cannot delete wathdog entries if the age limit entered is incorrect.
+          if (isset($watchdog_prune_settings[1]) || !empty($watchdog_prune_settings[1])) {
+            $ts = strtotime($watchdog_prune_settings[1], time());
+            $prune_query->condition('timestamp', $ts, '<');
+            // Execute the SQL query to Delete.
+            $prune_query->execute();
+          }
+        }
+      }
+    }
+  }
+
+  // Should we delete from the watchdog table based on age?. After deleting all the entries by type let us delete other remaining watchdog entries by excluding the type of entries which were deleted above.
+  $prune_age = \Drupal::config('watchdog_prune.settings')->get('watchdog_prune_age', '-18 MONTHS');
+  if ($prune_age != "") {
+    $ts = strtotime($prune_age, time());
+    // Now, simply delete anything from watchdog which is *less than* than our $ts value (meaning, the entry is OLDER than our age limit).
+    $prune_age = $database->delete('watchdog');
+    $prune_age->condition('timestamp', $ts, '<');
+    if (isset($prune_type_list) && count($prune_type_list) > 0) {
+      $prune_age->condition('type', $prune_type_list, 'NOT IN');
+    }
+    $prune_age->execute();
+  }
+}

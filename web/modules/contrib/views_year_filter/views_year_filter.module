@@ -1,0 +1,20 @@
+<?php
+
+/**
+ * @file
+ * Views year filter module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function views_year_filter_help($route_name, RouteMatchInterface $route_match) {
+  if ($route_name == 'help.page.views_year_filter') {
+    $output = '';
+    $output .= '<h3>' . t('About') . '</h3>';
+    $output .= '<p>' . t('This module add the possibility to expose date/date time filter with year (format CCYY) instead of using full date (format CCYY-MM-DD HH:MM:SS) or offset from the current time.') . '</p>';
+    return $output;
+  }
+}

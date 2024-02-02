@@ -1,0 +1,47 @@
+node_revision_delete.settings:
+  type: config_object
+  label: 'Node Revision Delete settings'
+  mapping:
+    delete_newer:
+      type: boolean
+      label: 'Whether or not we need to keep the revisions newer than the current revision.'
+    node_revision_delete_cron:
+      type: integer
+      label: 'Number of revisions to remove in each cron run'
+    node_revision_delete_time:
+      type: integer
+      label: 'Frequency with which to delete revisions while cron is running'
+    node_revision_delete_minimum_age_to_delete_time:
+      type: mapping
+      label: 'Time options to know the minimum age that the revision must have to be delete'
+      mapping:
+        max_number:
+          type: integer
+          label: The maximum number for minimum_age_to_delete configuration'
+        time:
+          type: string
+          label: 'The time value for minimum_age_to_delete configuration (days, weeks or months)'
+    node_revision_delete_when_to_delete_time:
+      type: mapping
+      label: 'Time options for the inactivity time that the revision must have to be deleted'
+      mapping:
+        max_number:
+          type: integer
+          label: 'The maximum number for when_to_delete configuration'
+        time:
+          type: string
+          label: 'The time value for when_to_delete configuration (days, weeks or months)'
+
+node.type.*.third_party.node_revision_delete:
+  type: mapping
+  label: 'Per-content type Node Revision Delete settings'
+  mapping:
+    minimum_revisions_to_keep:
+      type: integer
+      label: 'Minimum number of revisions to keep'
+    minimum_age_to_delete:
+      type: integer
+      label: 'Minimum age in months of revision to delete'
+    when_to_delete:
+      type: integer
+      label: 'Number of inactivity months to wait for delete a revision'

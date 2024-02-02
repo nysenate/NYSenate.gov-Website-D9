@@ -1,0 +1,19 @@
+{{ attach_library('nysenate_theme/nysenate-promotional-banner-list') }}
+
+<div 
+  class="
+    nysenate-promotional-banner-list
+    {% if banners|length == 1 %} nysenate-promotional-banner-list__single-item {% endif %}
+  "
+>
+  {% block banner_list %}
+    {% for banner in banners %}
+      {% include "@nysenate_theme/nysenate-promotional-banner/nysenate-promotional-banner.twig" with {
+        image: banner.image,
+        title: banner.title,
+        cta: banner.cta,
+        senator_name: banner.senator_name
+      } only %}
+    {% endfor %}
+  {% endblock %}
+</div>

@@ -1,0 +1,16 @@
+{% if next_url or end_text %}
+  <nav class="pager pager--load-more" role="navigation" aria-labelledby="pagination-heading">
+    <h4 id="pagination-heading" class="visually-hidden">{{ 'Pagination'|t }}</h4>
+    {% if next_url %}
+      <ul class="pager__items js-pager__items">
+        <li class="pager__item">
+          <a href="{{ next_url }}">{{ more_button_text }}</a>
+        </li>
+      </ul>
+    {% elseif end_text %}
+      <div class="pager__items pager__items--end">
+        {{ end_text }}
+      </div>
+    {% endif %}
+  </nav>
+{% endif %}

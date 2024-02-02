@@ -1,0 +1,4 @@
+services:
+  email_registration.username_generator:
+    class: Drupal\email_registration\UsernameGenerator
+    arguments: ['@uuid']

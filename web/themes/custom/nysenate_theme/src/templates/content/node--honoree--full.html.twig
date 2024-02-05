@@ -125,6 +125,7 @@
       </div>
     </div>
 
+  {% if content.field_honoree_video.value %}
     <div class="c-block">
       <div class="c-initiative c-container--header__top-border">
         <h2 class="c-container--title">Honoree Video</h2>
@@ -134,6 +135,7 @@
       } only
       %}
     </div>
+  {% endif %}
 
     <div class="c-block--honorees">
       {% if content.field_honoree_type[0]['#markup'] == 'veterans' %}

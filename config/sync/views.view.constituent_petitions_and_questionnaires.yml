@@ -529,10 +529,9 @@ display:
     position: 1
     display_options:
       access:
-        type: role
+        type: perm
         options:
-          role:
-            administrator: administrator
+          perm: 'access content'
       defaults:
         access: false
       display_description: ''
@@ -543,7 +542,7 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - 'user.node_grants:view'
-        - user.roles
+        - user.permissions
       tags:
         - 'config:field.storage.node.field_issues'
         - 'config:field.storage.node.field_senator_multiref'
@@ -1337,7 +1336,7 @@ display:
           entity_type: flagging
           entity_field: uid
           plugin_id: field
-          label: 'User ID'
+          label: ''
           exclude: false
           alter:
             alter_text: false
@@ -1644,26 +1643,14 @@ display:
           separator: ', '
           field_api_classes: false
       pager:
-        type: full
+        type: none
         options:
           offset: 0
-          items_per_page: 60
-          total_pages: null
-          id: 0
-          tags:
-            next: 'Next ›'
-            previous: '‹ Previous'
-            first: '« First'
-            last: 'Last »'
-          expose:
-            items_per_page: false
-            items_per_page_label: 'Items per page'
-            items_per_page_options: '5, 10, 25, 50'
-            items_per_page_options_all: false
-            items_per_page_options_all_label: '- All -'
-            offset: false
-            offset_label: Offset
-          quantity: 9
+      access:
+        type: role
+        options:
+          role:
+            administrator: administrator
       sorts:
         created:
           id: created
@@ -2019,6 +2006,7 @@ display:
               alias: district
               raw_output: false
       defaults:
+        access: false
         pager: false
         style: false
         row: false
@@ -2081,10 +2069,9 @@ display:
         - 'languages:language_interface'
         - request_format
         - url
-        - url.query_args
         - user
         - 'user.node_grants:view'
-        - user.permissions
+        - user.roles
       tags:
         - 'config:field.storage.node.field_issues'
         - 'config:field.storage.node.field_senator_multiref'
@@ -3183,6 +3170,7 @@ display:
         sorts: false
         filters: false
         filter_groups: false
+        header: false
       relationships:
         flag_relationship:
           id: flag_relationship
@@ -3217,6 +3205,17 @@ display:
           plugin_id: standard
           required: false
       display_description: ''
+      header:
+        result:
+          id: result
+          table: views
+          field: result
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: result
+          empty: false
+          content: 'Displaying @start - @end of @total'
       display_extenders: {  }
       path: admin/content/petitions
       menu:

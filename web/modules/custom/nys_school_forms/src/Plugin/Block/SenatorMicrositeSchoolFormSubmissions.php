@@ -107,16 +107,30 @@ class SenatorMicrositeSchoolFormSubmissions extends BlockBase implements Contain
       $form_type = $term->getName();
       $senator_term = ($node->hasField('field_senator_multiref') && !$node->get('field_senator_multiref')->isEmpty()) ? $node->get('field_senator_multiref')->entity : [];
 
-      $last_year_params = $params = [
-        'form_type' => $form_type,
-        'senator' => $senator_term->id(),
-        'school' => NULL,
-        'teacher_name' => NULL,
-        'from_date' => strtotime('this year January 1st'),
-        'to_date' => NULL,
-        'sort_by' => NULL,
-        'sort_order' => NULL,
-      ];
+      if ($form_type == 'Thankful') {
+        $last_year_params = $params = [
+          'form_type' => $form_type,
+          'senator' => $senator_term->id(),
+          'school' => NULL,
+          'teacher_name' => NULL,
+          'from_date' => strtotime('September 1, 2023'),
+          'to_date' => strtotime('December 31, 2023'),
+          'sort_by' => NULL,
+          'sort_order' => NULL,
+        ];
+      }
+      elseif ($form_type == 'Earth Day') {
+        $last_year_params = $params = [
+          'form_type' => $form_type,
+          'senator' => $senator_term->id(),
+          'school' => NULL,
+          'teacher_name' => NULL,
+          'from_date' => strtotime('January 1, 2023'),
+          'to_date' => strtotime('December 31, 2023'),
+          'sort_by' => NULL,
+          'sort_order' => NULL,
+        ];
+      }
 
       $last_year_params['from_date'] = NULL;
       $last_year_params['to_date'] = strtotime('last year December 31st');
@@ -154,7 +168,7 @@ class SenatorMicrositeSchoolFormSubmissions extends BlockBase implements Contain
           'panels' => [
         [
           'tab_text' => 'Current Year',
-          'title' => date('Y') . ' Poster Submissions',
+          'title' => '2023 Poster Submissions',
           'filter' => $filter,
           'years' => $this->schoolFormsService->getResults($params, FALSE),
         ],

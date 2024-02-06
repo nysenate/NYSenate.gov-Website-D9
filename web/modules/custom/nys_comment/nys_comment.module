@@ -178,32 +178,28 @@ function nys_comment_deploy_default_rejected_value() {
 
 /**
  * Implements hook_cron().
- *
- * @See: https://git.drupalcode.org/project/auto_close_comments/-/blob/c77a9d3918d378476f3d73f949f602ff8531c592/auto_close_comments.module
  */
 function nys_comment_cron() {
   $content_types = ['bill'];
   $current_session_year = \Drupal::config('nys_config.settings')->get('nys_session_year');
-  $current_session_start = strtotime('01/01/' . $current_session_year);
 
   // Get all nodes with open comments created outside current session.
   $query = Drupal::database()->select('node', 'n');
-  $query->join('node_field_data', 'nfd', 'n.nid = nfd.nid');
-  $query->join('node__comment', 'nc', 'n.nid = nc.entity_id');
+  $query->join('node__field_ol_session', 'ns', 'n.nid = ns.entity_id');
+  $query->join('node__field_comments', 'nc', 'n.nid = nc.entity_id');
   $query->fields('n', ['nid', 'type']);
-  $query->fields('nfd', ['created']);
-  $query->condition('nfd.status', '1', '=');
-  $query->condition('nc.comment_status', '1', '!=');
+  $query->fields('ns', ['field_ol_session_value']);
+  $query->condition('nc.field_comments_status', '1', '!=');
   $query->condition('n.type', $content_types, 'IN');
-  $query->condition('nfd.created', strtotime($current_session_start), '<=');
-  $z_results = $query->execute()->fetchAll();
+  $query->condition('ns.field_ol_session_value', $current_session_year, '<=');
+  $results = $query->execute()->fetchAll();
 
   // Close comments.
-  foreach ($z_results as $result) {
+  foreach ($results as $result) {
     $nid = $result->nid;
-    $upd = Drupal::database()->update('node__comment');
-    $upd->fields(['comment_status' => 1]);
-    $upd->condition('entity_id', $nid, '=');
+    $upd = Drupal::database()->update('node__field_comments');
+    $upd->fields(['field_comments_status' => 1]);
+    $upd->condition('entity_id', $nid);
     $upd->execute();
     Drupal::entityTypeManager()
       ->getStorage('node')

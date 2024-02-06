@@ -38,43 +38,9 @@
  * @ingroup themeable
  */
 #}
-{% if count > 1 %}
-  {% include '@rain_theme/carousel/_carousel-item.twig' with {
-    "item": {
-      "image": content.field_media,
-      "title": content.field_title,
-      "button": {
-        "text": content.field_link[0]['#title'],
-        "url": content.field_link[0]['#url']
-      }
-    }
-  } only %}
-{% else %}
-  {% include '@rain_theme/hero/hero.twig' with {
-    "hero": {
-      "media": {
-        "image": content.field_media
-      },
-      "eyebrow": {
-        "text": content.field_subhead|render|trim is not empty ? content.field_subhead,
-        "modifier": "hero__eyebrow"
-      },
-      "heading": {
-        "title": content.field_title,
-        "level": "2",
-        "modifier": "hero__heading"
-      },
-      "body": {
-        "body_text": content.field_summary|render|trim is not empty ? content.field_summary,
-        "modifier": "hero__body"
-      },
-      "button": {
-        "text": content.field_link[0]['#title'],
-        "url": content.field_link[0]['#url']
-      },
-      "layout": {
-        "short_hero_layout": short_hero_layout
-      }
-    }
-  } only %}
-{% endif %}
+
+
+{% include '@nysenate_theme/nysenate-carousel/_carousel-item.twig' with {
+  "image": content.field_media
+} only %}
+

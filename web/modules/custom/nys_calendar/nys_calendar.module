@@ -103,20 +103,12 @@ function nys_calendar_preprocess_page(&$variables) {
  */
 function nys_calendar_views_data() {
   $data = [];
-  $data['views']['nys_calendar_year'] = [
-    'title' => t('NYS Calendar Year'),
+  $data['views']['nys_start_of_year'] = [
+    'title' => t('Start of Year - NYS Custom Filter'),
     'filter' => [
-      'title' => t('NYS Calendar Year'),
+      'title' => t('Start of Year - NYS Custom Filter'),
       'field' => 'id',
-      'id' => 'nys_calendar_year',
-    ],
-  ];
-  $data['views']['nys_session_year'] = [
-    'title' => t('NYS Session Year'),
-    'filter' => [
-      'title' => t('NYS Session Year'),
-      'field' => 'id',
-      'id' => 'nys_session_year',
+      'id' => 'nys_start_of_year',
     ],
   ];
   return $data;

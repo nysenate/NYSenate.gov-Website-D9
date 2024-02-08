@@ -183,24 +183,56 @@ function nys_comment_cron() {
   $content_types = ['bill', 'resolution'];
   $current_session_year = \Drupal::config('nys_config.settings')->get('nys_session_year');
 
+  // Set missing node__field_comments values (e.g. migrated resolutions).
+  $nodes_with_comment_field_row = Drupal::database()
+    ->select('node__field_comments', 'nc')
+    ->fields('nc', ['entity_id'])
+    ->execute()
+    ->fetchAll();
+  $nids_with_comment_field_row = array_column($nodes_with_comment_field_row, 'entity_id');
+  $nodes_missing_comment_field_row = Drupal::database()
+    ->select('node', 'n')
+    ->fields('n', ['nid', 'vid', 'type'])
+    ->condition('n.type', $content_types, 'IN')
+    ->condition('n.nid', $nids_with_comment_field_row, 'NOT IN')
+    ->execute()
+    ->fetchAll();
+  foreach ($nodes_missing_comment_field_row as $node_missing_comment_field) {
+    Drupal::database()
+      ->insert('node__field_comments')
+      ->fields([
+        'bundle' => $node_missing_comment_field->type,
+        'deleted' => 0,
+        'entity_id' => $node_missing_comment_field->nid,
+        'revision_id' => $node_missing_comment_field->vid,
+        'langcode' => 'en',
+        'delta' => 0,
+        'field_comments_status' => 2,
+      ])
+      ->execute();
+  }
+
   // Get all nodes with open comments created outside current session.
   $query = Drupal::database()->select('node', 'n');
   $query->join('node__field_ol_session', 'ns', 'n.nid = ns.entity_id');
   $query->join('node__field_comments', 'nc', 'n.nid = nc.entity_id');
-  $query->fields('n', ['nid', 'type']);
-  $query->fields('ns', ['field_ol_session_value']);
-  $query->condition('nc.field_comments_status', '2');
-  $query->condition('n.type', $content_types, 'IN');
-  $query->condition('ns.field_ol_session_value', $current_session_year, '<');
-  $result = $query->execute()->fetchAll();
+  $result = $query->fields('n', ['nid', 'type'])
+    ->fields('ns', ['field_ol_session_value'])
+    ->condition('nc.field_comments_status', '2')
+    ->condition('n.type', $content_types, 'IN')
+    ->condition('ns.field_ol_session_value', $current_session_year, '<')
+    ->execute()
+    ->fetchAll();
 
   // Close comments and clear cache for relevant nodes.
-  $nids = array_column($result, 'nid');
-  $upd = Drupal::database()->update('node__field_comments');
-  $upd->fields(['field_comments_status' => 1]);
-  $upd->condition('entity_id', $nids, 'IN');
-  $upd->execute();
-  Drupal::entityTypeManager()
-    ->getStorage('node')
-    ->resetCache($nids);
+  if (!empty($result)) {
+    $nids = array_column($result, 'nid');
+    Drupal::database()->update('node__field_comments')
+      ->fields(['field_comments_status' => 1])
+      ->condition('entity_id', $nids, 'IN')
+      ->execute();
+    Drupal::entityTypeManager()
+      ->getStorage('node')
+      ->resetCache($nids);
+  }
 }

@@ -180,7 +180,7 @@ function nys_comment_deploy_default_rejected_value() {
  * Implements hook_cron().
  */
 function nys_comment_cron() {
-  $content_types = ['bill'];
+  $content_types = ['bill', 'resolution'];
   $current_session_year = \Drupal::config('nys_config.settings')->get('nys_session_year');
 
   // Get all nodes with open comments created outside current session.
@@ -189,22 +189,18 @@ function nys_comment_cron() {
   $query->join('node__field_comments', 'nc', 'n.nid = nc.entity_id');
   $query->fields('n', ['nid', 'type']);
   $query->fields('ns', ['field_ol_session_value']);
-  $query->condition('nc.field_comments_status', '1', '!=');
+  $query->condition('nc.field_comments_status', '2');
   $query->condition('n.type', $content_types, 'IN');
-  $query->condition('ns.field_ol_session_value', $current_session_year, '<=');
-  $results = $query->execute()->fetchAll();
+  $query->condition('ns.field_ol_session_value', $current_session_year, '<');
+  $result = $query->execute()->fetchAll();
 
-  // Close comments.
-  foreach ($results as $result) {
-    $nid = $result->nid;
-    $upd = Drupal::database()->update('node__field_comments');
-    $upd->fields(['field_comments_status' => 1]);
-    $upd->condition('entity_id', $nid);
-    $upd->execute();
-    Drupal::entityTypeManager()
-      ->getStorage('node')
-      ->resetCache([
-        $nid,
-      ]);
-  }
+  // Close comments and clear cache for relevant nodes.
+  $nids = array_column($result, 'nid');
+  $upd = Drupal::database()->update('node__field_comments');
+  $upd->fields(['field_comments_status' => 1]);
+  $upd->condition('entity_id', $nids, 'IN');
+  $upd->execute();
+  Drupal::entityTypeManager()
+    ->getStorage('node')
+    ->resetCache($nids);
 }

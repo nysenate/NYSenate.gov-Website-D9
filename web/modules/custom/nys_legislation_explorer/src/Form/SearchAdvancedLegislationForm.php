@@ -93,7 +93,7 @@ class SearchAdvancedLegislationForm extends FormBase {
    * @return array
    *   years.
    */
-  public function getYearList(int $min_year = 2009): array {
+  public function getYearList(int $min_year = 1993): array {
     $year = date("Y");
     $years = [];
     while ($year >= $min_year) {

@@ -183,35 +183,6 @@ function nys_comment_cron() {
   $content_types = ['bill', 'resolution'];
   $current_session_year = \Drupal::config('nys_config.settings')->get('nys_session_year');
 
-  // Set missing node__field_comments values (e.g. migrated resolutions).
-  $nodes_with_comment_field_row = Drupal::database()
-    ->select('node__field_comments', 'nc')
-    ->fields('nc', ['entity_id'])
-    ->execute()
-    ->fetchAll();
-  $nids_with_comment_field_row = array_column($nodes_with_comment_field_row, 'entity_id');
-  $nodes_missing_comment_field_row = Drupal::database()
-    ->select('node', 'n')
-    ->fields('n', ['nid', 'vid', 'type'])
-    ->condition('n.type', $content_types, 'IN')
-    ->condition('n.nid', $nids_with_comment_field_row, 'NOT IN')
-    ->execute()
-    ->fetchAll();
-  foreach ($nodes_missing_comment_field_row as $node_missing_comment_field) {
-    Drupal::database()
-      ->insert('node__field_comments')
-      ->fields([
-        'bundle' => $node_missing_comment_field->type,
-        'deleted' => 0,
-        'entity_id' => $node_missing_comment_field->nid,
-        'revision_id' => $node_missing_comment_field->vid,
-        'langcode' => 'en',
-        'delta' => 0,
-        'field_comments_status' => 2,
-      ])
-      ->execute();
-  }
-
   // Get all nodes with open comments created outside current session.
   $query = Drupal::database()->select('node', 'n');
   $query->join('node__field_ol_session', 'ns', 'n.nid = ns.entity_id');
@@ -235,4 +206,24 @@ function nys_comment_cron() {
       ->getStorage('node')
       ->resetCache($nids);
   }
+}
+
+/**
+ * Inserts missing comment field data required for Cron hook.
+ */
+function nys_comment_update_8001() {
+  $subquery = \Drupal::database()->select('node_field_data', 'n')
+    ->condition('n.type', ['bill', 'resolution'], 'IN')
+    ->condition('nc.entity_id', '', 'IS NULL');
+  $subquery->leftJoin('node__field_comments', 'nc', 'nc.entity_id=n.nid AND n.type=nc.bundle');
+  $subquery->addField('n', 'type', 'bundle');
+  $subquery->addExpression("'0'", 'deleted');
+  $subquery->addField('n', 'nid', 'entity_id');
+  $subquery->addField('n', 'vid', 'revision_id');
+  $subquery->addExpression("'en'", 'langcode');
+  $subquery->addExpression("'0'", 'delta');
+  $subquery->addExpression("'2'", 'field_comments_status');
+  \Drupal::database()->insert('node__field_comments')
+    ->from($subquery)
+    ->execute();
 }

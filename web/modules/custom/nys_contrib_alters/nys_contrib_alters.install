@@ -1,0 +1,37 @@
+<?php
+
+/**
+ * @file
+ * Install file for nys_contrib_alters module.
+ */
+
+use Drupal\Core\Database\Database;
+
+/**
+ * Removes all migration-related tables from the database.
+ */
+function nys_contrib_alters_update_9201(): void {
+  // Get the connection and a logger.
+  $db = Database::getConnection();
+  $log = \Drupal::logger('nys_contrib_alters');
+
+  // Get a list of tables to target from information_schema.
+  // Searching for 'migrat' to pick up 'migrate' and 'migration'.
+  $query = "SELECT TABLE_NAME FROM information_schema.`TABLES` s " .
+    "WHERE s.TABLE_SCHEMA = 'pantheon' AND s.TABLE_NAME LIKE '%:filter%'";
+  $tables = $db->query($query, [':schema' => 'pantheon', ':filter' => 'migrat'])
+    ->fetchCol();
+
+  // Try to drop each table.
+  foreach ($tables as $table) {
+    try {
+      $db->query("DROP TABLE IF EXISTS :table", [':table' => $table]);
+    }
+    catch (\Throwable $e) {
+      $log->error('Could not delete table :table', [
+        ':table' => $table,
+        '@msg' => $e->getMessage(),
+      ]);
+    }
+  }
+}

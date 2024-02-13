@@ -51,7 +51,7 @@ class StartOfYearFilter extends FilterPluginBase {
   public function query() {
     // @todo implement query where conditions, based on $this->options values
     //   1. If view filtering on NON-bills/resolutions, filter on created date
-    //   2. If filtering on bills/resolutions, filter on created date
+    //   2. If filtering on bills/resolutions, filter on session field
   }
 
 }

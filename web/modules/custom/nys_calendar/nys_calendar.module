@@ -102,13 +102,13 @@ function nys_calendar_preprocess_page(&$variables) {
  * Implements hook_views_data().
  */
 function nys_calendar_views_data() {
-  $data = [];
-  $data['views']['nys_start_of_year'] = [
-    'title' => t('Start of Year - NYS Custom Filter'),
+  $data['node_field_data']['created_year'] = [
+    'title' => t('Created Year - NYS Custom Filter'),
     'filter' => [
-      'title' => t('Start of Year - NYS Custom Filter'),
-      'field' => 'id',
-      'id' => 'nys_start_of_year',
+      'title' => t('Created Year - NYS Custom Filter'),
+      'help' => t('Custom filter options based on the node created date.'),
+      'field' => 'created',
+      'id' => 'created_year',
     ],
   ];
   return $data;

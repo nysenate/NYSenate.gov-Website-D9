@@ -18,14 +18,19 @@ function nys_contrib_alters_update_9201(): void {
   // Get a list of tables to target from information_schema.
   // Searching for 'migrat' to pick up 'migrate' and 'migration'.
   $query = "SELECT TABLE_NAME FROM information_schema.`TABLES` s " .
-    "WHERE s.TABLE_SCHEMA = 'pantheon' AND s.TABLE_NAME LIKE '%:filter%'";
-  $tables = $db->query($query, [':schema' => 'pantheon', ':filter' => 'migrat'])
-    ->fetchCol();
+    "WHERE s.TABLE_SCHEMA = :schema AND s.TABLE_NAME LIKE :filter";
+  $tables = $db->query($query, [
+    ':schema' => 'pantheon',
+    ':filter' => '%migrat%',
+  ])
+    ?->fetchCol() ?? [];
 
   // Try to drop each table.
+  $deleted = [];
   foreach ($tables as $table) {
     try {
-      $db->query("DROP TABLE IF EXISTS :table", [':table' => $table]);
+      $db->query("DROP TABLE IF EXISTS " . $db->escapeTable($table));
+      $deleted[] = $table;
     }
     catch (\Throwable $e) {
       $log->error('Could not delete table :table', [
@@ -34,4 +39,11 @@ function nys_contrib_alters_update_9201(): void {
       ]);
     }
   }
+
+  // Report the results.
+  $log->info(':update deleted :count tables', [
+    ':update' => __FUNCTION__,
+    ':count' => count($deleted),
+    '@deleted' => $deleted,
+  ]);
 }

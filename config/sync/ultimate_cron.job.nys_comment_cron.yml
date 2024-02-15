@@ -1,0 +1,30 @@
+uuid: c780e28f-b58d-444d-ba42-8bb364e9adb0
+langcode: en
+status: true
+dependencies:
+  module:
+    - nys_comment
+title: 'Default cron handler'
+id: nys_comment_cron
+weight: 0
+module: nys_comment
+callback: nys_comment_cron
+scheduler:
+  id: crontab
+  configuration:
+    rules:
+      - '0 0 1 * *'
+    catch_up: 0
+launcher:
+  id: serial
+  configuration:
+    timeouts:
+      lock_timeout: 3600
+    launcher:
+      thread: 0
+logger:
+  id: database
+  configuration:
+    method: '3'
+    expire: 1209600
+    retain: 1000

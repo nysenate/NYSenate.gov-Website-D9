@@ -18,3 +18,23 @@ function nys_comment_uninstall() {
   // Deleting field storage.
   FieldStorageConfig::loadByName('user', 'field_user_banned_comments')->delete();
 }
+
+/**
+ * Inserts missing comment field data required for Cron hook.
+ */
+function nys_comment_update_8001() {
+  $subquery = \Drupal::database()->select('node_field_data', 'n')
+    ->condition('n.type', ['bill', 'resolution'], 'IN')
+    ->condition('nc.entity_id', '', 'IS NULL');
+  $subquery->leftJoin('node__field_comments', 'nc', 'nc.entity_id=n.nid AND n.type=nc.bundle');
+  $subquery->addField('n', 'type', 'bundle');
+  $subquery->addExpression("'0'", 'deleted');
+  $subquery->addField('n', 'nid', 'entity_id');
+  $subquery->addField('n', 'vid', 'revision_id');
+  $subquery->addExpression("'en'", 'langcode');
+  $subquery->addExpression("'0'", 'delta');
+  $subquery->addExpression("'2'", 'field_comments_status');
+  \Drupal::database()->insert('node__field_comments')
+    ->from($subquery)
+    ->execute();
+}

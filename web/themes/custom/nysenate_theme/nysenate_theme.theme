@@ -70,45 +70,6 @@ function nysenate_theme_preprocess_block__system_branding_block(&$variables) {
 }
 
 /**
- * Implements hook_preprocess_block_ID().
- */
-function nysenate_theme_preprocess_block_content__how_senate_works(&$variables) {
-  if (!empty($variables['elements']['field_link'][0])) {
-    $variables['cta'] = [
-      'text' => $variables['elements']['field_link'][0]['#title'],
-      'link' => $variables['elements']['field_link'][0]['#url']->toString(),
-    ];
-  }
-
-  $steps = [];
-  foreach ($variables['elements']['field_steps'] as $key => $items) {
-    if (!is_numeric($key)) {
-      continue;
-    }
-
-    $title = '';
-    $description = '';
-
-    if ($items['#paragraph']->field_title->getValue()) {
-      $title = $items['#paragraph']->field_title->getValue();
-      $title = reset($title)['value'];
-    }
-
-    if ($items['#paragraph']->field_description->getValue()) {
-      $description = $items['#paragraph']->field_description->getValue();
-      $description = reset($description)['value'];
-    }
-
-    $steps[] = [
-      'title' => $title,
-      'description' => $description,
-    ];
-  }
-
-  $variables['steps'] = $steps;
-}
-
-/**
  * Implements hook_preprocess_node_TYPE().
  */
 function nysenate_theme_preprocess_node__article(&$variables) {

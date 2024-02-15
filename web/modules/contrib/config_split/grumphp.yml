@@ -1,0 +1,10 @@
+grumphp:
+  git_hook_variables:
+    EXEC_GRUMPHP_COMMAND: ['docker-compose', 'run', '--rm', '--no-deps', 'drupal']
+  ascii:
+    succeeded: ~
+  tasks:
+    phpcs: ~
+    phplint: ~
+    phpunit: ~
+#    phpstan: ~

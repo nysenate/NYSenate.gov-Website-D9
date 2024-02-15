@@ -1,0 +1,214 @@
+<?php
+
+/**
+ * @file
+ * Contains address_map_link.module.
+ */
+
+use Drupal\Component\Utility\Html;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FormatterInterface;
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_help().
+ */
+function address_map_link_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the address_map_link module.
+    case 'help.page.address_map_link':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Provides a link to an external mapping site for an address field.') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_field_formatter_third_party_settings_form().
+ */
+function address_map_link_field_formatter_third_party_settings_form(FormatterInterface $plugin, FieldDefinitionInterface $field_definition, $view_mode, $form, FormStateInterface $form_state): array {
+  $element = [];
+
+  if ($field_definition->getType() !== 'address') {
+    return $element;
+  }
+
+  $element['link_address'] = [
+    '#title' => t('Link Address to Map'),
+    '#type' => 'checkbox',
+    '#default_value' => $plugin->getThirdPartySetting('address_map_link', 'link_address', FALSE),
+    '#description' => t('Provide a link to external map website.'),
+  ];
+
+  $element['map_link_type'] = [
+    '#title' => t('Map Link Type'),
+    '#type' => 'select',
+    '#options' => \Drupal::service('plugin.manager.map_link')->getDefinitionsOptionsList(),
+    '#default_value' => $plugin->getThirdPartySetting('address_map_link', 'map_link_type', 'google_maps'),
+    '#states' => [
+      'visible' => [
+        ':input[name*="link_address"]' => ['checked' => TRUE],
+      ],
+    ],
+  ];
+
+  $element['map_link_position'] = [
+    '#title' => t('Map Link Position'),
+    '#type' => 'select',
+    '#default_value' => $plugin->getThirdPartySetting('address_map_link', 'map_link_position', 'address'),
+    '#options' => [
+      'address' => t('Link address itself'),
+      'before' => t('Place link before address'),
+      'after' => t('Place link after address'),
+    ],
+    '#states' => [
+      'visible' => [
+        ':input[name*="link_address"]' => ['checked' => TRUE],
+      ],
+    ],
+  ];
+
+  $element['map_link_text'] = [
+    '#title' => t('Map Link text'),
+    '#type' => 'textfield',
+    '#description' => t('The link text.'),
+    '#default_value' => $plugin->getThirdPartySetting('address_map_link', 'map_link_text', t('Open Map')),
+    '#states' => [
+      'invisible' => [
+        [
+          ':input[name*="link_address"]' => ['checked' => FALSE],
+        ],
+        [
+          ':input[name*="map_link_position"]' => ['value' => 'address'],
+        ],
+      ],
+    ],
+  ];
+
+  if (\Drupal::moduleHandler()->moduleExists('token')) {
+    $element['token'] = [
+      '#theme' => 'token_tree_link',
+      '#token_types' => [$form['#entity_type']],
+    ];
+
+    $element['map_link_text']['#description'] .= ' ' . t('Tokens are supported.');
+  }
+
+  $element['map_link_new_window'] = [
+    '#title' => t('Open map in new window'),
+    '#type' => 'checkbox',
+    '#default_value' => $plugin->getThirdPartySetting('address_map_link', 'map_link_new_window', FALSE),
+    '#states' => [
+      'visible' => [
+        ':input[name*="link_address"]' => ['checked' => TRUE],
+      ],
+    ],
+  ];
+
+  return $element;
+}
+
+/**
+ * Implements hook_field_formatter_settings_summary_alter().
+ */
+function address_map_link_field_formatter_settings_summary_alter(&$summary, $context) {
+  /** @var \Drupal\Core\Field\BaseFieldDefinition $fieldDefinition */
+  $fieldDefinition = &$context['field_definition'];
+
+  if ($fieldDefinition->getType() !== 'address') {
+    return;
+  }
+
+  /** @var \Drupal\Core\Field\FormatterInterface $formatter */
+  $formatter = $context['formatter'];
+  $linkedAddressSettings = $formatter->getThirdPartySetting('address_map_link', 'link_address');
+
+  if ($linkedAddressSettings) {
+    $mapLinkTypeSetting = $formatter->getThirdPartySetting('address_map_link', 'map_link_type');
+    $mapLinkTypeDefinition = \Drupal::service('plugin.manager.map_link')->getDefinition($mapLinkTypeSetting);
+
+    $summary[] = t('Linked Address: Linked to @linked_setting', ['@linked_setting' => $mapLinkTypeDefinition['name']]);
+  }
+  else {
+    $summary[] = t('Linked Address: @linked_setting', ['@linked_setting' => 'Not Linked']);
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for field templates.
+ *
+ * Adds link around address fields.
+ */
+function address_map_link_preprocess_field(&$variables) {
+  // Check if address field and existence of address map link settings.
+  if ($variables['element']['#field_type'] !== 'address' || !isset($variables['element']['#third_party_settings']['address_map_link'])) {
+    return;
+  }
+
+  $settings = $variables['element']['#third_party_settings']['address_map_link'];
+  // Check if this address field is configured to render as link.
+  if (!$settings['link_address'] || !isset($settings['map_link_type'])) {
+    return;
+  }
+
+  /** @var \Drupal\address_map_link\MapLinkManager $mapLinkManager */
+  $mapLinkManager = \Drupal::service('plugin.manager.map_link');
+
+  /** @var \Drupal\address_map_link\MapLinkInterface $mapLinkType */
+  $mapLinkType = $mapLinkManager->createInstance($settings['map_link_type']);
+
+  // Check setting, determine if we should open the link in a new window.
+  $openInNewWindow = !empty($settings['map_link_new_window']);
+
+  // Check setting to determine where we are placing the link.
+  $linkPosition = (!empty($settings['map_link_position'])) ? $settings['map_link_position'] : 'address';
+
+  // Check setting to determine the link's text.
+  if (!empty($settings['map_link_text'])) {
+    $linkText = Html::escape($settings['map_link_text']);
+
+    // Replace tokens if token module is enabled.
+    if (\Drupal::moduleHandler()->moduleExists('token')) {
+      $linkText = \Drupal::token()->replace($linkText, [$variables['element']['#entity_type'] => $variables['element']['#object']]);
+    }
+  }
+  else {
+    $linkText = t('View Map');
+  }
+
+  /** @var \Drupal\address\AddressInterface $item */
+  foreach ($variables['element']['#items'] as $delta => &$item) {
+    $url = $mapLinkType->getAddressUrl($item)->toString();
+    $aTagOpen = '<a href="' . $url . '" class="address-map-link"' . ($openInNewWindow ? ' target="_blank"' : '') . '>';
+    $aTagClose = '</a>';
+
+    // Define prefix and suffix if not already set.
+    if (!isset($variables['items'][$delta]['content']['#prefix'])) {
+      $variables['items'][$delta]['content']['#prefix'] = '';
+    }
+    if (!isset($variables['items'][$delta]['content']['#suffix'])) {
+      $variables['items'][$delta]['content']['#suffix'] = '';
+    }
+
+    switch ($linkPosition) {
+      case 'before':
+        $variables['items'][$delta]['content']['#prefix'] = $aTagOpen . $linkText . $aTagClose . $variables['items'][$delta]['content']['#prefix'];
+        break;
+
+      case 'after':
+        $variables['items'][$delta]['content']['#suffix'] .= $aTagOpen . $linkText . $aTagClose;
+        break;
+
+      case 'address':
+      default:
+        $variables['items'][$delta]['content']['#prefix'] = $aTagOpen . $variables['items'][$delta]['content']['#prefix'];
+        $variables['items'][$delta]['content']['#suffix'] .= $aTagClose;
+        break;
+
+    }
+  }
+}

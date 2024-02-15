@@ -1,0 +1,64 @@
+# Schema for the File (Field) Paths module.
+
+filefield_paths.settings:
+  type: config_object
+  label: 'File (Field) Paths configuration settings'
+  mapping:
+    temp_location:
+      type: string
+      label: 'Temporary file location'
+
+field.field.*.*.*.third_party.filefield_paths:
+  type: mapping
+  label: 'File (Field) Path settings'
+  mapping:
+    enabled:
+      type: boolean
+      label: 'Enabled'
+    file_path:
+      type: mapping
+      mapping:
+        value:
+          type: string
+          label: 'File path'
+        options:
+          type: mapping
+          label: 'Path options'
+          mapping:
+            slashes:
+              type: boolean
+              label: 'Remove Slashes (/) from tokens'
+            pathauto:
+              type: boolean
+              label: 'Cleanup using Pathauto'
+            transliterate:
+              type: boolean
+              label: 'Transliterate'
+    file_name:
+      type: mapping
+      mapping:
+        value:
+          type: string
+          label: 'File name'
+        options:
+          type: mapping
+          label: 'Path options'
+          mapping:
+            slashes:
+              type: boolean
+              label: 'Remove Slashes (/) from tokens'
+            pathauto:
+              type: boolean
+              label: 'Cleanup using Pathauto'
+            transliterate:
+              type: boolean
+              label: 'Transliterate'
+    redirect:
+      type: boolean
+      label: 'Create Redirect'
+    retroactive_update:
+      type: boolean
+      label: 'Retroactive'
+    active_updating:
+      type: boolean
+      label: 'Active'

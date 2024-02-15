@@ -1,0 +1,56 @@
+{{ attach_library('nysenate_theme/nysenate-committee-detail') }}
+
+<div class="c-committees-container {% if is_bulleted %} c-committees-container--bulleted {% endif %}">
+  <h2 class="c-container-title">{{ title }}</h2>
+
+  {% if filter_items %}
+    {% for filter_item in filter_items %}
+      <form {{ form_attr }}>
+        <label for="edit-type">
+          {{ filter_item.label }}
+        </label>
+        <div class="view-filters">
+          <div class="js-form-item form-item js-form-type-select form-type-select">
+            <select id="edit-type-{{ loop.index }}" name="edit-type" class="form-select">
+              {% for select_option in filter_item.select_options %}
+                <option value="{{ select_option.value }}" {% if loop.first %} selected="selected" {% endif %}>{{ select_option.text }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <button class="filter-btn" type="submit">Apply</button>
+        </div>
+        {% if filter_item.desc %}
+          <div class="description">
+            {{ filter_item.desc }}
+          </div>
+        {% endif %}
+      </form>
+    {% endfor %}
+  {% endif %}
+  <div class="view-content">
+    {% for group in groups %}
+      <h3 class="c-group-title">{{ group.title }}</h3>
+
+      <div class="c-committees-wrapper">
+        {% for committee in group.committees %}
+          {% if is_bulleted %}
+            <h4 class="c-subgroup-title">{{ committee.title }}</h4>
+            <ul>
+              {% for subgroup in committee.subgroups %}
+                <li>
+                  <a href="{{ subgroup.url }}" hreflang="en" class="c-committee-link">
+                    <span class="c-committee-title">{{ subgroup.title }}</span>
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <a href="{{ committee.url }}" hreflang="en" class="c-committee-link">
+              <h4 class="c-committee-title">{{ committee.title }}</h4>
+            </a>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% endfor %}
+  </div>
+</div>

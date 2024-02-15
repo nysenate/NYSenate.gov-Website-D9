@@ -1,0 +1,9 @@
+views_year_filter.settings_form:
+  path: '/admin/config/views-year-filter/settings'
+  defaults:
+    _form: '\Drupal\views_year_filter\Form\SettingsForm'
+    _title: 'Views year filter settings'
+  requirements:
+    _permission: 'administer site configuration'
+  options:
+    _admin_route: TRUE

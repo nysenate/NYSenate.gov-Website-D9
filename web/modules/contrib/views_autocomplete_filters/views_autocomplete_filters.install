@@ -1,0 +1,21 @@
+<?php
+
+/**
+ * @file
+ * Contains install and update functions for views_autocomplete_filters.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function views_autocomplete_filters_uninstall() {
+  // Remove any errant views_autocomplete_filters dependency.
+  Drupal::service('views_autocomplete_filters.install_helper')->removeDependency();
+}
+
+/**
+ * Remove any views_autocomplete_filters dependency that may have been added to views.
+ */
+function views_autocomplete_filters_update_8001() {
+  Drupal::service('views_autocomplete_filters.install_helper')->removeDependency();
+}

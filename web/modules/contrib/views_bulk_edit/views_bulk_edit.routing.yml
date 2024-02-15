@@ -1,0 +1,7 @@
+views_bulk_edit.edit_form:
+  path: '/admin/content/bulk-edit'
+  defaults:
+    _form: '\Drupal\views_bulk_edit\Form\BulkEditForm'
+    _title: 'Bulk Edit'
+  requirements:
+    _permission: 'use views bulk edit'

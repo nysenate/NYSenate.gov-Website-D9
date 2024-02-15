@@ -1,0 +1,38 @@
+{{ attach_library('nysenate_theme/nysenate-senators-talking-about-this-issue') }}
+
+<div class="c-block c-issue--mentions">
+  <h2 class="c-detail--subhead c-detail--section-title">{{ 'Senators Talking About this Issue'|t }}</h2>
+  {% if senators|length > 6 %}
+    <div class="initial_co-sponsors ">
+      {% for senator in senators %}
+        {% if loop.index < 6 %}
+          {{ senator }}
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <div class="other_co-sponsors">
+      <article class="nysenate-accordion">
+        <button type="button" class="nysenate-accordion__toggle" aria-controls="nysenate-accordion__content-1-see-more" aria-expanded="false" id="nysenate-accordion__toggle-1-see-more" aria-selected="false">
+          <span class="nysenate-accordion__heading">
+            <span class="indicator">{{ 'see more'|t }}</span>
+          </span>
+          {{ icons.get('accordion__arrow'|lower) }}
+        </button>
+        <div class="content-wrapper">
+          {% for senator in senators|slice(6) %}
+            <div class="nysenate-accordion__content" id="nysenate-accordion__content-1-see-more" aria-hidden="true" aria-labelledby="nysenate-accordion__content-1-see-more">
+              {{ senator }}
+            </div>
+          {% endfor %}
+        </div>
+      </article>
+    </div>
+  {% else %}
+    <div class="initial_co-sponsors c-issue--mentions">
+      {% for senator in senators %}
+        {{ senator }}
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>

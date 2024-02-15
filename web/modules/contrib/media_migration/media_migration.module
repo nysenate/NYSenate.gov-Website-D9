@@ -1,0 +1,130 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for Media migration module.
+ */
+
+use Drupal\Component\Plugin\PluginBase;
+use Drupal\media_migration\MediaMigration;
+use Drupal\media_migration\Utility\SourceDatabase;
+use Drupal\migmag\Utility\MigMagMigrationUtility;
+use Drupal\migrate\Plugin\MigrateSourceInterface;
+use Drupal\migrate\Plugin\MigrationInterface;
+use Drupal\migrate\Row;
+use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
+
+/**
+ * Implements hook_migration_plugins_alter().
+ */
+function media_migration_migration_plugins_alter(array &$migrations) {
+  \Drupal::service('media_migration.migrate_plugin_alterer')->alter($migrations);
+
+  // File entity source field migrations are depending on d7_file_plain_type
+  // migrations with the matching derivative ID. But if the matching
+  // d7_file_plain_type migrations aren't present, contribs (Drush,
+  // Migrate Tools) throw errors.
+  // So we have to remove those d7_file_plain_type dependencies from the file
+  // entity source field storage migrations which aren't available.
+  $file_entity_source_field_migrations = array_filter(
+    $migrations,
+    function ($definition) {
+      $original_id = $definition['source']['media_migration_original_id'] ?? NULL;
+      return is_string($original_id) && strpos($original_id, 'd7_file_entity_source_field' . PluginBase::DERIVATIVE_SEPARATOR) === 0;
+    }
+  );
+
+  $migration_ids = array_keys($migrations);
+  foreach (array_keys($file_entity_source_field_migrations) as $id) {
+    MigMagMigrationUtility::removeMissingMigrationDependencies(
+      $migrations[$id],
+      $migration_ids
+    );
+  }
+}
+
+/**
+ * Implements hook_migrate_MIGRATION_ID_prepare_row() for d7_filter_format.
+ */
+function media_migration_migrate_d7_filter_format_prepare_row(Row $row, MigrateSourceInterface $source, MigrationInterface $migration) {
+  assert($migration->getSourcePlugin() instanceof DrupalSqlBase);
+  $source_connection = $migration->getSourcePlugin()->getDatabase();
+  $filter_format_id = $row->getSourceProperty('format');
+  $filters = $row->getSourceProperty('filters');
+  $media_filter_is_mapped = MediaMigration::embedTokenDestinationFilterPluginIsValid();
+  $formats_formatting_img_tag = SourceDatabase::getFormatsUsingTag($source_connection, 'img');
+
+  // Add the media_embed (and accompanying filter_align, filter_caption) filter
+  // to text formats using <img> tags, to convert those to <drupal-media>.
+  // @see \Drupal\media_migration\Plugin\migrate\process\ImgTagToEmbedFilter
+  if (
+    in_array($filter_format_id, $formats_formatting_img_tag) ||
+    (in_array('media_filter', $filters) && $media_filter_is_mapped)
+  ) {
+    // Ensure they're added with the appropriate weight.
+    if (isset($filters['filter_htmlcorrector'])) {
+      $appropriate_weight = (int) $filters['filter_htmlcorrector']['weight'] + 1;
+    }
+    elseif (isset($filters['filter_html'])) {
+      $appropriate_weight = (int) $filters['filter_html']['weight'] + 1;
+    }
+    elseif (isset($filters['filter_html_image_secure'])) {
+      $appropriate_weight = (int) $filters['filter_html_image_secure']['weight'] + 1;
+    }
+    else {
+      $appropriate_weight = -1000;
+      foreach ($filters as $filter) {
+        $appropriate_weight = max($appropriate_weight, (int) $filter['weight']);
+      }
+    }
+
+    $filters['media_migration_added__filter_align'] = [
+      // Only name, weight and settings are truly necessary for
+      // core/modules/filter/migrations/d7_filter_format.yml.
+      'name' => 'filter_align',
+      'weight' => $appropriate_weight + 0,
+      'settings' => [],
+    ];
+    $filters['media_migration_added__filter_caption'] = [
+      'name' => 'filter_caption',
+      'weight' => $appropriate_weight + 1,
+      'settings' => [],
+    ];
+    if (in_array('media_filter', $filters)) {
+      $filters['media_filter']['weight'] = $appropriate_weight + 2;
+    }
+    else {
+      $filters['media_migration_added__media_filter'] = [
+        'name' => MediaMigration::getEmbedTokenDestinationFilterPlugin(),
+        'weight' => $appropriate_weight + 2,
+        'settings' => [],
+      ];
+    }
+
+    $row->setSourceProperty('filters', $filters);
+  }
+
+  // Add the linkit filter to text formats using <a href="/file/%">, to convert
+  // them to <a data-entity-substitution="media" data-entity-type="media"
+  // data-entity-uuid="<media UUID>" href="/file/%">.
+  // @see \Drupal\media_migration\Plugin\migrate\process\CKEditorLinkFileToLinkitFilter
+  $formats_formatting_linkit = SourceDatabase::getFormatsHavingFileLink($source_connection);
+  if (in_array($filter_format_id, $formats_formatting_linkit)) {
+    $filters['media_migration_added__linkit'] = [
+      'name' => 'linkit',
+      'weight' => 0,
+      'settings' => [],
+    ];
+    $row->setSourceProperty('filters', $filters);
+  }
+}
+
+/**
+ * Implements hook_migrate_field_info_alter().
+ *
+ * If destination site has video embed field module enabled then we don't want
+ * to migrate data from source to video embed field so unsetting that.
+ */
+function media_migration_migrate_field_info_alter(array &$definitions) {
+  unset($definitions['video_embed_field']);
+}

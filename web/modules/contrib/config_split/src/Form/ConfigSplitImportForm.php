@@ -1,0 +1,97 @@
+<?php
+
+namespace Drupal\config_split\Form;
+
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Config\StorageComparer;
+use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Session\AccountInterface;
+
+/**
+ * The form for importing a split.
+ */
+class ConfigSplitImportForm extends FormBase {
+
+  use ConfigImportFormTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFormId() {
+    return 'config_split_import_form';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildForm(array $form, FormStateInterface $form_state) {
+    $split = $this->getSplit();
+    $comparer = new StorageComparer($this->manager->singleImport($split, !$split->get('status')), $this->activeStorage);
+    $options = [
+      'route' => [
+        'config_split' => $split->getName(),
+        'operation' => 'import',
+      ],
+      'operation label' => $this->t('Import all'),
+    ];
+    $form = $this->buildFormWithStorageComparer($form, $form_state, $comparer, $options);
+
+    if (!$split->get('status')) {
+      $locallyDeactivated = $this->statusOverride->getSplitOverride($split->getName()) === FALSE;
+      $form['activate_local_only'] = [
+        '#type' => 'checkbox',
+        '#title' => $this->t('Activate locally only'),
+        '#description' => $this->t('If this is set, the split config will not be made active by default but instead it will be locally overwritten to be active.'),
+        '#default_value' => !$locallyDeactivated,
+      ];
+
+      if ($locallyDeactivated) {
+        $form['deactivation_notice'] = [
+          '#type' => 'markup',
+          '#markup' => $this->t('The local inactivation state override will be removed'),
+        ];
+      }
+    }
+
+    return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitForm(array &$form, FormStateInterface $form_state) {
+    $split = $this->getSplit();
+    $activate = !$split->get('status');
+    $override = NULL;
+    if ($activate) {
+      if ($form_state->getValue('activate_local_only')) {
+        $override = 'active';
+        $activate = FALSE;
+      }
+      else {
+        $override = 'none';
+      }
+    }
+
+    $storage = $this->manager->singleImport($split, $activate);
+    $this->launchImport($storage, $override);
+  }
+
+  /**
+   * Checks access for a specific request.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   Run access checks for this account.
+   *
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result.
+   */
+  public function access(AccountInterface $account) {
+    $split = $this->getSplit();
+    return AccessResult::allowedIfHasPermission($account, 'administer configuration split')
+      ->andIf(AccessResult::allowedIf($split->get('status') || $split->get('storage') === 'collection'))
+      ->addCacheableDependency($split);
+  }
+
+}

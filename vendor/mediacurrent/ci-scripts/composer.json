@@ -1,0 +1,27 @@
+{
+    "name": "mediacurrent/ci-scripts",
+    "description": "Scripts helpful for testing a Drupal site on a Continuous-Integration server, or locally.",
+    "license": "MIT",
+    "type": "robo-tasks",
+    "bin": ["bin/hobson"],
+    "require": {
+        "joestewart/robo-drupalvm": "^2.0",
+        "joestewart/robo-vagrant": "^1.2.0",
+        "consolidation/robo": "^3.0 || ^4.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": ">=4.4",
+        "phpro/grumphp-shim": "^1.0.0",
+        "squizlabs/php_codesniffer": "^3.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "Mediacurrent\\CiScripts\\": "src"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "phpro/grumphp-shim": true
+        }
+    }
+}

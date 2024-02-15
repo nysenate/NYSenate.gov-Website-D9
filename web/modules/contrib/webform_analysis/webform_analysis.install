@@ -1,0 +1,54 @@
+<?php
+
+/**
+ * @file
+ * Webform Analysis - Install.
+ */
+
+use Drupal\webform_analysis\WebformAnalysis;
+
+/**
+ * Move Webform analysis settings to ThirdPartySettings.
+ */
+function webform_analysis_update_8101($sandbox) {
+
+  if (!isset($sandbox['progress'])) {
+    // This must be the first run. Initialize the sandbox.
+    $sandbox['progress'] = 0;
+    $sandbox['delta'] = 5;
+    $sandbox['webform_ids'] = \Drupal::entityQuery('webform')->execute();
+    $sandbox['max'] = count($sandbox['webform_ids']);
+  }
+
+  foreach (array_slice($sandbox['webform_ids'], $sandbox['progress'], $sandbox['delta']) as $webform_id) {
+    $sandbox['progress']++;
+    $webform = \Drupal::entityTypeManager()->getStorage('webform')->load($webform_id);
+    $analysis = new WebformAnalysis($webform);
+
+    // Get Webform analysis settings.
+    $components = (array) $webform->getSetting('analysis_components');
+    $chart_type = (string) $webform->getSetting('analysis_chart_type');
+    if (empty($components) && empty($chart_type)) {
+      continue;
+    }
+
+    // Copy settings to third party settings.
+    $analysis->setComponents($components);
+    $analysis->setChartType($chart_type);
+
+    // Delete settings from Webform.
+    $settings = $webform->getSettings();
+    foreach (['analysis_components', 'analysis_chart_type'] as $setting_name) {
+      if (isset($settings[$setting_name])) {
+        unset($settings[$setting_name]);
+      }
+    }
+    $webform->setSettings($settings);
+
+    $webform->save();
+  }
+
+  $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['progress'] / $sandbox['max']);
+
+  return t('All Webform were updated.');
+}

@@ -1,0 +1,403 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the Rabbit Hole module.
+ */
+
+use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Site\Settings;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\rabbit_hole\BehaviorSettingsManager;
+use Drupal\rabbit_hole\Entity\BehaviorSettings;
+
+/**
+ * Install redirect_fallback_action field.
+ */
+function rabbit_hole_update_8100() {
+  $rh_definitions = \Drupal::service('plugin.manager.rabbit_hole_entity_plugin')->getDefinitions();
+  $update_manager = \Drupal::entityDefinitionUpdateManager();
+
+  $rh_redirect_fallback_field = BaseFieldDefinition::create('string')
+    ->setName('rh_redirect_fallback_action')
+    ->setLabel(t('Rabbit Hole redirect fallback action'))
+    ->setDescription(t('Specifies the action that should be used when the redirect path is invalid or empty.'));
+
+  foreach ($rh_definitions as $rh_module => $definition) {
+    $entity_type_id = $definition['entityType'];
+    $field_storage_definition = $update_manager->getFieldStorageDefinition('rh_redirect_fallback_action', $entity_type_id);
+    if (empty($field_storage_definition)) {
+      $update_manager->installFieldStorageDefinition('rh_redirect_fallback_action', $entity_type_id, $rh_module, $rh_redirect_fallback_field);
+    }
+  }
+}
+
+/**
+ * Update redirect_fallback_action field default values.
+ */
+function rabbit_hole_update_8101() {
+  /** @var \Drupal\Core\Config\ConfigFactoryInterface $configFactory */
+  $configFactory = \Drupal::configFactory();
+  /** @var \Drupal\Core\Config\StorageInterface $configStorage */
+  $configStorage = \Drupal::service('config.storage');
+
+  foreach ($configStorage->listAll('rabbit_hole.behavior_settings') as $configName) {
+    $config = $configFactory->getEditable($configName);
+    if (!$config->get('redirect_fallback_action')) {
+      $config->set('redirect_fallback_action', 'access_denied')->save();
+    }
+  }
+}
+
+/**
+ * Create rabbit hole settings with enabled entity types.
+ */
+function rabbit_hole_update_8103() {
+  $config = \Drupal::configFactory()->getEditable('rabbit_hole.settings');
+  // Skip if already configured.
+  if (!empty($config->get('enabled_entity_types'))) {
+    return;
+  }
+
+  $entity_types = \Drupal::service('plugin.manager.rabbit_hole_entity_plugin')->loadSupportedEntityTypes();
+  $config->set('enabled_entity_types', $entity_types)
+    ->save();
+}
+
+/**
+ * Create new rabbit hole field to keep rabbit hole settings.
+ */
+function rabbit_hole_update_8104() {
+  /** @var \Drupal\rabbit_hole\EntityHelper $rh_entity_helper */
+  $rh_entity_helper = \Drupal::service('rabbit_hole.entity_helper');
+  /** @var \Drupal\rabbit_hole\BehaviorSettingsManagerInterface $rh_behavior_settings_manager */
+  $rh_behavior_settings_manager = \Drupal::service('rabbit_hole.behavior_settings_manager');
+
+  $field_name = BehaviorSettingsManager::FIELD_NAME;
+  // Go through all rh supported entities and skip not enabled ones.
+  foreach ($rh_entity_helper->getSupportedEntityTypes() as $entity_type_id => $entity_type) {
+    if (!$rh_behavior_settings_manager->entityTypeIsEnabled($entity_type_id)) {
+      continue;
+    }
+
+    // Get through all bundles of the entity types and skip bundles with
+    // disabled allow_override setting.
+    foreach ($rh_entity_helper->getBundleInfo($entity_type_id) as $bundle_name => $bundle_info) {
+      $behavior_settings = $rh_behavior_settings_manager->getBehaviorSettings($entity_type_id, $bundle_name);
+      if (empty($behavior_settings['allow_override'])) {
+        continue;
+      }
+
+      if (FieldConfig::loadByName($entity_type_id, $bundle_name, $field_name)) {
+        continue;
+      }
+
+      $rh_entity_helper->createRabbitHoleField($entity_type_id, $bundle_name);
+    }
+  }
+}
+
+/**
+ * Move redirect settings into new "configuration" property.
+ */
+function rabbit_hole_update_8105() {
+  $config_factory = \Drupal::configFactory();
+  foreach ($config_factory->listAll('rabbit_hole.behavior_settings.') as $rh_config_name) {
+    $config = $config_factory->getEditable($rh_config_name);
+    $action = $config->get('action');
+    $redirect = $config->get('redirect');
+
+    $configuration = [];
+    $redirect_properties = [
+      'redirect', 'redirect_code', 'redirect_fallback_action',
+    ];
+
+    // Handle actions that have either "redirect" type or were extended from
+    // redirect and have other action name, but same properties.
+    if (!empty($redirect)) {
+      foreach ($redirect_properties as $property) {
+        $config_value = $config->get($property);
+        // We preserve configuration if main property "redirect" is not empty and
+        // other properties are not NULL.
+        if (isset($config_value)) {
+          $configuration[$property] = $config_value;
+        }
+        $config->clear($property);
+      }
+    }
+    // Handle any other potential custom actions that could have some custom
+    // configuration.
+    elseif ($action && $action !== 'page_redirect') {
+      // Remove redirect configuration from other actions that existed for no
+      // reason.
+      foreach ($redirect_properties as $property) {
+        $config->clear($property);
+      }
+
+      $fields = [];
+      \Drupal::service('plugin.manager.rabbit_hole_behavior_plugin')
+        ->createInstance($action)
+        ->alterExtraFields($fields);
+
+      // There is no direct relation between base fields and config properties,
+      // so we can only guess.
+      foreach ($fields as $field_name => $field_definition) {
+        $config_field_key = substr($field_name, 3);
+        $config_value = $config->get($config_field_key);
+        if (isset($config_value)) {
+          $configuration[$config_field_key] = $config_value;
+        }
+        $config->clear($config_field_key);
+      }
+    }
+
+    // Save all action-related configuration into "configuration" property.
+    $config->set('configuration', $configuration);
+    $config->save(TRUE);
+  }
+}
+
+/**
+ * Move data from previous "rh_" base fields to new "Rabbit Hole" field.
+ */
+function rabbit_hole_update_8106(&$sandbox) {
+  $items_per_pass = Settings::get('entity_update_batch_size') ?? 50;
+
+  // Get entity types that might have overridden values.
+  if (empty($sandbox['entity_types'])) {
+    $sandbox['entity_types'] = [];
+    $sandbox['progress'] = 0;
+    $sandbox['max'] = 0;
+
+    $entity_helper = \Drupal::service('rabbit_hole.entity_helper');
+    $settings_manager = \Drupal::service('rabbit_hole.behavior_settings_manager');
+    foreach ($entity_helper->getSupportedEntityTypes() as $entity_type_id => $entity_type) {
+      $is_enabled = $settings_manager->entityTypeIsEnabled($entity_type_id);
+      if (!$is_enabled) {
+        continue;
+      }
+
+      foreach ($entity_helper->getBundleInfo($entity_type_id) as $bundle_name => $bundle_info) {
+        $settings = $settings_manager->getBehaviorSettings($entity_type_id, $bundle_name);
+        if (($settings['allow_override'] ?? NULL)) {
+          $sandbox['entity_types'][$entity_type_id]['bundles'][] = $bundle_name;
+        }
+      }
+    }
+
+    foreach ($sandbox['entity_types'] as $entity_type_id => $entity_type_data) {
+      if (empty($entity_type_data['bundles'])) {
+        continue;
+      }
+
+      $storage = \Drupal::entityTypeManager()->getStorage($entity_type_id);
+      $max_query = $storage->getQuery()
+        ->accessCheck(FALSE)
+        ->exists('rh_action')
+        ->count();
+
+      $bundle_key = $storage->getEntityType()->getKey('bundle');
+      if ($bundle_key) {
+        $max_query->condition($bundle_key, $entity_type_data['bundles'], 'IN');
+      }
+
+      // Set initial values for entity type.
+      $sandbox['entity_types'][$entity_type_id]['progress'] = 0;
+      $sandbox['entity_types'][$entity_type_id]['current'] = 0;
+      $sandbox['entity_types'][$entity_type_id]['finished'] = FALSE;
+      $sandbox['max'] += $sandbox['entity_types'][$entity_type_id]['max'] = $max_query->execute();
+    }
+  }
+
+  // Stop process if there are no entity types available, or there are no
+  // items to process.
+  if (empty($sandbox['entity_types']) || empty($sandbox['max'])) {
+    $sandbox['#finished'] = 1;
+    return t('There are no entities to be updated.');
+  }
+
+  // Get the first unprocessed entity type.
+  foreach ($sandbox['entity_types'] as $entity_type_id => $entity_type_data) {
+    if ($entity_type_data['progress'] < $entity_type_data['max']) {
+      break;
+    }
+  }
+
+  $storage = \Drupal::entityTypeManager()->getStorage($entity_type_id);
+  $id_key = $storage->getEntityType()->getKey('id');
+  $bundle_key = $storage->getEntityType()->getKey('bundle');
+
+  $iteration_query = $storage->getQuery()
+    ->accessCheck(FALSE)
+    ->condition($id_key, $sandbox['entity_types'][$entity_type_id]['current'], '>')
+    ->sort($id_key)
+    ->exists('rh_action')
+    ->range(0, $items_per_pass);
+  if ($bundle_key) {
+    $iteration_query->condition($bundle_key, $sandbox['entity_types'][$entity_type_id]['bundles'], 'IN');
+  }
+  $ids = $iteration_query->execute();
+
+  // Process entities.
+  if (!empty($ids)) {
+    /** @var \Drupal\Core\Entity\ContentEntityInterface[] $entities */
+    $entities = $storage->loadMultiple(array_values($ids));
+    foreach ($entities as $entity) {
+      if ($entity->hasField('rabbit_hole__settings') && $entity->hasField('rh_action')) {
+        // Handle entity translations if available.
+        foreach ($entity->getTranslationLanguages() as $langcode => $language) {
+          $entity_translated = $entity->getTranslation($langcode);
+
+          $action = $entity_translated->get('rh_action')->value;
+          $value = [
+            'action' => $action,
+          ];
+
+          $known_actions = [
+            'access_denied',
+            'display_page',
+            'page_not_found',
+            'page_redirect',
+            'bundle_default',
+          ];
+          // Configuration exists only in "page_redirect" contrib action.
+          if ($action === 'page_redirect') {
+            $redirect_fields = [
+              'rh_redirect' => 'redirect',
+              'rh_redirect_response' => 'redirect_code',
+              'rh_redirect_fallback_action' => 'redirect_fallback_action',
+            ];
+
+            foreach ($redirect_fields as $prev_field => $new_property) {
+              if ($entity_translated->hasField($prev_field)) {
+                $value['settings'][$new_property] = $entity_translated->get($prev_field)->value;
+                $entity_translated->set($prev_field, NULL);
+              }
+            }
+          }
+          // If action is custom one, then we're loading defined fields.
+          elseif (!in_array($action, $known_actions, TRUE)) {
+            $fields = [];
+            \Drupal::service('plugin.manager.rabbit_hole_behavior_plugin')
+              ->createInstance($action)
+              ->alterExtraFields($fields);
+
+            foreach ($fields as $prev_field => $field_definition) {
+              $new_property = $prev_field;
+              if (preg_match('/^rh_.*/', $prev_field)) {
+                $new_property = substr($prev_field, 3);
+              }
+              if ($entity_translated->hasField($prev_field)) {
+                $value['settings'][$new_property] = $entity_translated->get($prev_field)->value;
+                $entity_translated->set($prev_field, NULL);
+              }
+            }
+
+            // If we have "redirect_response" property, then most likely the
+            // custom action is extending "Page Redirect". In that case, we should
+            // replace it with "redirect_code".
+            if (!empty($value['settings']['redirect_response'])) {
+              $value['settings']['redirect_code'] = $value['settings']['redirect_response'];
+              unset($value['settings']['redirect_response']);
+            }
+          }
+          $entity_translated->set('rabbit_hole__settings', $value);
+          $entity_translated->save();
+        }
+      }
+
+      // Track the progress.
+      $sandbox['progress']++;
+      $sandbox['entity_types'][$entity_type_id]['progress']++;
+      $sandbox['entity_types'][$entity_type_id]['current'] = $entity->id();
+    }
+  }
+
+  $sandbox['#finished'] = $sandbox['progress'] / $sandbox['max'];
+}
+
+/**
+ * Remove useless "rabbit_hole.behavior_settings.default_bundle" config.
+ */
+function rabbit_hole_update_8107() {
+  \Drupal::configFactory()
+    ->getEditable('rabbit_hole.behavior_settings.default_bundle')
+    ->delete();
+}
+
+/**
+ * Remove "allow_override" config from existing settings.
+ */
+function rabbit_hole_update_8108() {
+  $config_factory = \Drupal::configFactory();
+  foreach ($config_factory->listAll('rabbit_hole.behavior_settings.') as $rh_config_name) {
+    $config = $config_factory->getEditable($rh_config_name);
+    $config->clear('allow_override');
+    $config->save();
+  }
+}
+
+/**
+ * Remove useless "rabbit_hole.behavior_settings.default" config.
+ */
+function rabbit_hole_update_8109() {
+  \Drupal::configFactory()
+    ->getEditable('rabbit_hole.behavior_settings.default')
+    ->delete();
+}
+
+/**
+ * Add "no_bypass" settings to existing configuration.
+ */
+function rabbit_hole_update_8110() {
+  $config_factory = \Drupal::configFactory();
+  $configs = $config_factory->listAll('rabbit_hole.behavior_settings');
+
+  foreach ($configs as $config) {
+    $config = $config_factory->getEditable($config);
+    // Skip configs that already have "no_bypass" values.
+    if ($config->get('no_bypass') !== NULL) {
+      continue;
+    }
+    $config->set('no_bypass', FALSE);
+    $config->save(TRUE);
+  }
+}
+
+/**
+ * Add "bypass_message" settings to existing configuration.
+ */
+function rabbit_hole_update_8111() {
+  $config_factory = \Drupal::configFactory();
+  $configs = $config_factory->listAll('rabbit_hole.behavior_settings');
+
+  foreach ($configs as $config) {
+    $config = $config_factory->getEditable($config);
+    $config->set('bypass_message', FALSE);
+    $config->save(TRUE);
+  }
+}
+
+/**
+ * Update "rabbit_hole.behavior_settings.*" configurations.
+ */
+function rabbit_hole_update_8112() {
+  $entity_type_manager = \Drupal::entityTypeManager();
+  /** @var \Drupal\rabbit_hole\BehaviorSettingsInterface[] $behavior_settings */
+  $behavior_settings = $entity_type_manager->getStorage('behavior_settings')
+    ->loadMultiple();
+
+  foreach ($behavior_settings as $behavior_setting) {
+    $entity_type_name = $behavior_setting->get('entity_type_id');
+    if (empty($entity_type_name)) {
+      continue;
+    }
+    $entity_type_id = $entity_type_manager->getStorage($entity_type_name)->getEntityType()->getBundleOf() ?? $entity_type_name;
+    $bundle = $behavior_setting->get('entity_id');
+
+    $behavior_setting->set('id', $entity_type_id . '.' . ($bundle ?? $entity_type_id));
+    $behavior_setting->set('targetEntityType', $entity_type_id);
+    $behavior_setting->set('bundle', $bundle ?? $entity_type_id);
+    $behavior_setting->save();
+  }
+}

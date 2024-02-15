@@ -1,0 +1,33 @@
+{
+  "name": "drupal/media_migration",
+  "type": "drupal-module",
+  "description": "Provides a Drupal 7 to 8 media migration.",
+  "keywords": [
+    "Drupal"
+  ],
+  "license": "GPL-2.0+",
+  "homepage": "https://www.drupal.org/project/media_migration",
+  "support": {
+    "issues": "https://www.drupal.org/project/issues/media_migration",
+    "source": "https://git.drupalcode.org/project/media_migration"
+  },
+  "require": {
+    "drupal/migmag": "^1.5",
+    "drupal/migrate_plus": ">=4.2 <7",
+    "drupal/smart_sql_idmap": "^1.0-beta1"
+  },
+  "require-dev": {
+    "drupal/entity_embed": "^1",
+    "drupal/linkit": "^5.0.0-beta11 || ^6.0.0-beta2",
+    "drupal/migrate_tools": "^4.1 || ^5 || ^6",
+    "drupal/migrate_upgrade": "^3 || ^4",
+    "drush/drush": "^9 || ^10 || ^11"
+  },
+  "suggest": {
+    "drupal/entity_embed": "Allows entities to be embedded using a text editor.",
+    "drupal/file_entity": "Extends Drupal file entities to be fieldable and viewable.",
+    "drupal/linkit": "Provides an easy interface for internal and external linking with wysiwyg editors.",
+    "drupal/linkit_media_library": "Create links from media library.",
+    "drupal/media_migration_tools": "Media Migration supporting module for Migrate Tools"
+  }
+}

@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_text_formatted
+    - node.type.test_content
+  module:
+    - text
+id: node.test_content.field_text_formatted
+field_name: field_text_formatted
+entity_type: node
+bundle: test_content
+label: 'Text Formatted'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: true
+field_type: text_with_summary

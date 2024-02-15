@@ -1,0 +1,91 @@
+<?php
+
+/**
+ * @file
+ * Job scheduler module.
+ */
+
+/**
+ * Collects and returns scheduler info.
+ *
+ * @param string $name
+ *   (optional) Name of the schedule. Defaults to null.
+ *
+ * @return array
+ *   Information for the schedule if $name, all the information if not.
+ *
+ * @see hook_cron_job_scheduler_info()
+ */
+function job_scheduler_info($name = NULL) {
+  $info = &drupal_static(__FUNCTION__);
+  if (!$info) {
+    $module_handler = \Drupal::moduleHandler();
+    $info = $module_handler->invokeAll('cron_job_scheduler_info');
+    $module_handler->alter('cron_job_scheduler_info', $info);
+  }
+  if ($name) {
+    return $info[$name] ?? NULL;
+  }
+  else {
+    return $info;
+  }
+}
+
+/**
+ * Collects and returns scheduler queue info.
+ *
+ * @param string $name
+ *   (optional) Name of the schedule. Defaults to null.
+ *
+ * @return array
+ *   Information for the schedule queue if $name, all the information if not.
+ *
+ * @see hook_cron_job_scheduler_queue_info()
+ */
+function job_scheduler_queue_info($name = NULL) {
+  $info = &drupal_static(__FUNCTION__);
+  if (!$info) {
+    $module_handler = \Drupal::moduleHandler();
+    $info = $module_handler->invokeAll('cron_job_scheduler_queue_info');
+    $module_handler->alter('cron_job_scheduler_queue_info', $info);
+  }
+  if ($name) {
+    return $info[$name] ?? NULL;
+  }
+  else {
+    return $info;
+  }
+}
+
+/**
+ * Implements hook_cron().
+ */
+function job_scheduler_cron() {
+  try {
+    $config = \Drupal::config('job_scheduler.settings');
+    $scheduler = \Drupal::service('job_scheduler.manager');
+    $results = $scheduler->perform(NULL, $config->get('limit'), $config->get('time'));
+
+    // If any jobs were processed, log how much time we spent processing.
+    if ($config->get('logging') && ($results['total'] || $results['failed'])) {
+      $date_formatter = \Drupal::service('date.formatter');
+      $logger = \Drupal::logger('job_scheduler');
+      $logger->info(t('Finished processing scheduled jobs (:time, :total total, :failed failed).', [
+        ':time' => $date_formatter->formatInterval(time() - $results['start']),
+        ':total' => $results['total'],
+        ':failed' => $results['failed'],
+      ]));
+    }
+  }
+  catch (Exception $e) {
+    watchdog_exception('job_scheduler', $e);
+  }
+}
+
+/**
+ * Rebuilds scheduled information.
+ */
+function job_scheduler_rebuild_all() {
+  $scheduler = \Drupal::service('job_scheduler.manager');
+  $scheduler->rebuildAll();
+}

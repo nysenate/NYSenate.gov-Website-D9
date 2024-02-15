@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html class="pl">
+  <head>
+    <title>Pattern Lab</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="../../css/pattern-scaffolding.css?1707982400971" media="all" />
+    <link rel="stylesheet" href="../../css/all.css?1707982400971" media="all" />
+
+    <!-- Begin Pattern Lab (Required for Pattern Lab to run properly) -->
+    
+    <!-- End Pattern Lab -->
+
+  </head>
+  <body class="body"><div class="search-api-page-block-form-search-results search-form search-block-form container-inline contextual-region block block-search-api-page block-search-api-page-form-block" data-drupal-selector="search-api-page-block-form-search-results" id="block-searchapipagesearchblockform">
+      <form id="search-api-page-block-form-search-results">
+      <div class="js-form-item form-item js-form-type-search form-type-search js-form-item-keys form-item-keys">
+        <label for="search">Keyword Search</label>
+        <input title="Enter the terms you wish to search for." placeholder="Search Site" data-drupal-selector="search" type="search" id="search" name="Search" value="" size="60" maxlength="128" class="form-search" />
+      </div>
+      <div data-drupal-selector="edit-actions" class="form-actions js-form-wrapper form-wrapper" id="edit-actions">
+        <button class="search__submit button" type="submit" name="submit">
+          <span class="search__submit-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 30 30" class="icon icon--search">
+  <title>Search icon</title>
+  <g>
+    <path fill="#292929" d="M29.7,28.5l-7.3-7.3c2-2.2,3.1-5.2,3.1-8.4C25.6,5.7,19.8,0,12.8,0C5.7,0,0,5.7,0,12.8s5.7,12.8,12.8,12.8
+      c3.2,0,6.1-1.2,8.4-3.1l7.3,7.3c0.2,0.2,0.4,0.3,0.6,0.3c0.2,0,0.5-0.1,0.6-0.3C30.1,29.4,30.1,28.8,29.7,28.5z M1.8,12.8
+      c0-6.1,4.9-11,11-11c6.1,0,11,4.9,11,11s-4.9,11-11,11C6.7,23.8,1.8,18.9,1.8,12.8z"/>
+  </g>
+</svg>
+
+          </span>
+          <span class="search__submit-text">
+            Submit
+          </span>
+        </button>
+      </div>
+    </form>
+  </div><!--DO NOT REMOVE-->
+<script type="text/json" id="pl-pattern-data-footer" class="pl-js-pattern-data">
+  {"cssEnabled":false,"patternLineageExists":false,"patternLineages":[],"lineage":[],"patternLineageRExists":false,"patternLineagesR":[],"lineageR":[],"patternLineageEExists":false,"patternDesc":"","patternBreadcrumb":{"patternType":"components","patternSubtype":"search-box"},"patternExtension":"twig","patternName":"Search Box","patternPartial":"components-search-box","patternState":"","patternEngineName":"twig-php","extraOutput":{}}
+</script>
+
+<script>
+  window.patternData = {"cssEnabled":false,"patternLineageExists":false,"patternLineages":[],"lineage":[],"patternLineageRExists":false,"patternLineagesR":[],"lineageR":[],"patternLineageEExists":false,"patternDesc":"","patternBreadcrumb":{"patternType":"components","patternSubtype":"search-box"},"patternExtension":"twig","patternName":"Search Box","patternPartial":"components-search-box","patternState":"","patternEngineName":"twig-php","extraOutput":{}};
+</script>
+
+<script>
+  /*!
+   * scriptLoader - v0.1
+   *
+   * Copyright (c) 2014 Dave Olsen, http://dmolsen.com
+   * Licensed under the MIT license
+   *
+   */
+
+  var scriptLoader = {
+
+    run: function(js,cb,target) {
+      var s  = document.getElementById(target+'-'+cb);
+      for (var i = 0; i < js.length; i++) {
+        var src = (typeof js[i] != 'string') ? js[i].src : js[i];
+        var c   = document.createElement('script');
+        c.src   = '../../'+src+'?'+cb;
+        if (typeof js[i] != 'string') {
+          if (js[i].dep !== undefined) {
+            c.onload = function(dep,cb,target) {
+              return function() {
+                scriptLoader.run(dep,cb,target);
+              }
+            }(js[i].dep,cb,target);
+          }
+        }
+        s.parentNode.insertBefore(c,s);
+      }
+    }
+
+  }
+</script>
+
+<script id="pl-js-polyfill-insert-1707982400971">
+  (function() {
+    if (self != top) {
+      var cb = '1707982400971';
+      var js = [];
+      scriptLoader.run(js,cb,'pl-js-polyfill-insert');
+    }
+  })();
+</script>
+
+
+<script type="module">
+  // always load Pattern-specific JS so UI like accordions, etc can continue to work even when viewed as a standalone HTML page
+  import('../../styleguide/js/patternlab-pattern.modern.js');
+</script>
+
+<script id="pl-js-insert-1707982400971" nomodule>
+  /*! loadJS: load a JS file asynchronously. [c]2014 @scottjehl, Filament Group, Inc. (Based on http://goo.gl/REQGQ by Paul Irish). Licensed MIT */
+  !function(e){var t=function(t,n){"use strict";var o=e.document.getElementsByTagName("script")[0],r=e.document.createElement("script");return r.src=t,r.async=!0,o.parentNode.insertBefore(r,o),n&&"function"==typeof n&&(r.onload=n),r};"undefined"!=typeof module?module.exports=t:e.loadJS=t}("undefined"!=typeof global?global:this);
+
+  // always load Pattern-specific JS so UI like accordions, etc can continue to work even when viewed as a standalone HTML page
+  loadJS('../../styleguide/js/patternlab-pattern.js');
+</script>
+
+  <!-- Fake drupalSettings if you need it. -->
+  <!--
+  <script type="application/json" data-drupal-selector="drupal-settings-json">
+  </script>
+  -->
+  <!-- Drupal-provided JS so we can mock Drupal JS Behaviors. -->
+  <script src="/core/assets/vendor/jquery/jquery.min.js"></script>
+  <script src="/core/assets/vendor/jquery-once/jquery.once.min.js"></script>
+  <script src="/core/misc/drupalSettingsLoader.js"></script>
+  <script src="/core/misc/drupal.js"></script>
+  <script src="/core/misc/drupal.init.js"></script>
+  <script src="/core/misc/debounce.js"></script>
+  <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+  <script src="https://unpkg.com/@popperjs/core@2"></script>
+  <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+  <!-- Concatenated by Gulp so you don't have to manually add each file. -->
+  <script src="../../js/all.js?1707982400971"></script>
+</body>
+</html>

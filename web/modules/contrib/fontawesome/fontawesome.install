@@ -1,0 +1,147 @@
+<?php
+
+/**
+ * @file
+ * Requirements page for Font Awesome.
+ */
+
+use Drupal\Core\Link;
+
+/**
+ * Implements hook_requirements().
+ */
+function fontawesome_requirements($phase) {
+  $requirements = [];
+
+  // Report the version of Font Awesome.
+  if ($phase == 'runtime') {
+    $requirements['fontawesome'] = [
+      'title' => t('Font Awesome'),
+    ];
+
+    // Load the configuration settings.
+    $configuration_settings = \Drupal::config('fontawesome.settings');
+
+    // Check if we are loading assets.
+    if (!$configuration_settings->get('load_assets')) {
+      $requirements['fontawesome']['severity'] = REQUIREMENT_OK;
+      $requirements['fontawesome']['value'] = t('Library being loaded manually');
+      $requirements['fontawesome']['description'] = t('The Font Awesome module is configured not to load the Font Awesome library. If this is an error, please see the @adminPage and the Font Awesome module README file for more details.', [
+        '@adminPage' => Link::createFromRoute(t('admin page'), 'fontawesome.admin_settings')->toString(),
+      ]);
+    }
+    // Check if Font Awesome is installed.
+    elseif (fontawesome_check_installed()) {
+      // Get the version.
+      if ($configuration_settings->get('method') == 'webfonts') {
+        $version = t('Webfonts with CSS');
+      }
+      elseif ($configuration_settings->get('use_cdn')) {
+        $version = t('CDN SVG with JS');
+      }
+      else {
+        $version = t('SVG with JS');
+      }
+
+      // First check if we're using everything.
+      if (is_null($configuration_settings->get('use_solid_file')) === TRUE || ($configuration_settings->get('use_solid_file') && $configuration_settings->get('use_regular_file') && $configuration_settings->get('use_light_file') && $configuration_settings->get('use_brands_file'))) {
+        // Attach the main library.
+        $loadedMessages = [
+          t('All icons loaded'),
+        ];
+      }
+      // Else we attach the libraries piecemeal.
+      else {
+        $loadedMessages = [];
+        if ($configuration_settings->get('use_solid_file')) {
+          $loadedMessages[] = t('Solid icons loaded');
+        }
+        if ($configuration_settings->get('use_regular_file')) {
+          $loadedMessages[] = t('Regular icons loaded');
+        }
+        if ($configuration_settings->get('use_light_file')) {
+          $loadedMessages[] = t('Light icons loaded');
+        }
+        if ($configuration_settings->get('use_brands_file')) {
+          $loadedMessages[] = t('Brands icons loaded');
+        }
+      }
+
+      $requirements['fontawesome']['severity'] = REQUIREMENT_OK;
+      $requirements['fontawesome']['value'] = t('Font Awesome library is installed. Using %version version. (@moreInfoLink)', [
+        '%version' => $version,
+        '@moreInfoLink' => Link::createFromRoute(t('more information'), 'fontawesome.admin_settings')->toString(),
+      ]);
+      $requirements['fontawesome']['description'] = [
+        '#theme' => 'item_list',
+        '#items' => $loadedMessages,
+        '#title' => '',
+        '#list_type' => 'ul',
+        '#attributes' => [],
+      ];
+    }
+    else {
+      $requirements['fontawesome']['severity'] = REQUIREMENT_ERROR;
+      $requirements['fontawesome']['value'] = t('Not installed');
+      $requirements['fontawesome']['description'] = t('The Font Awesome library could not be found. If you want this module to handle loading your FontAwesome assets, please verify Font Awesome is installed correctly or that the CDN has been activated and properly configured. Please see the @adminPage and the Font Awesome module README file for more details.', [
+        '@adminPage' => Link::createFromRoute(t('admin page'), 'fontawesome.admin_settings')->toString(),
+      ]);
+    }
+  }
+
+  return $requirements;
+}
+
+/**
+ * Implements hook_install().
+ */
+function fontawesome_install() {
+  _fontawesome_install_grant_default_permissions();
+}
+
+/**
+ * Grants 'access fontawesome additional settings' to authenticated users.
+ */
+function _fontawesome_install_grant_default_permissions() {
+  /** @var \Drupal\user\RoleInterface $authenticated_role */
+  $authenticated_role = \Drupal::entityTypeManager()->getStorage('user_role')->loadOverrideFree('authenticated');
+  if ($authenticated_role) {
+    $authenticated_role->grantPermission('access fontawesome additional settings')->save();
+  }
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function fontawesome_uninstall() {
+  // Delete set variables.
+  $query = \Drupal::database()->delete('config');
+  $query->condition('name', 'fontawesome.settings');
+  $query->execute();
+  $query = \Drupal::database()->delete('key_value');
+  $query->condition('name', 'fontawesome');
+  $query->execute();
+
+  // Icon API module : Delete fontawesome icon bundle & clear cache.
+  if (\Drupal::moduleHandler()->moduleExists('icon') && ($cache = \Drupal::cache()->get('icon_bundles')) && !empty($cache->data)) {
+    $fa_icon_bundle = isset($cache->data['fontawesome']) ? $cache->data['fontawesome'] : [];
+    $fa_icon_bundle['path'] = isset($fa_icon_bundle['path']) ? $fa_icon_bundle['path'] : 'fontawesome';
+  }
+}
+
+/**
+ * Add new config for explicitly allowing module to load FontAwesome assets.
+ */
+function fontawesome_update_8001() {
+  $config_factory = \Drupal::configFactory();
+  $config = $config_factory->getEditable('fontawesome.settings');
+  $config->set('load_assets', TRUE);
+  $config->save(TRUE);
+}
+
+/**
+ * Grants new 'access fontawesome additional settings' to authenticated users.
+ */
+function fontawesome_update_8002() {
+  _fontawesome_install_grant_default_permissions();
+}

@@ -1,0 +1,34 @@
+{
+    "name": "drupal/stage_file_proxy",
+    "description": "Provides stage_file_proxy module.",
+    "type": "drupal-module",
+    "license": "GPL-2.0-or-later",
+    "minimum-stability": "dev",
+    "require": {
+        "drupal/core": "^9 || ^10",
+        "php": ">=8"
+    },
+    "require-dev": {
+        "drush/drush": "^11 || ^12",
+        "drupal/coder": "^8.3"
+    },
+    "extra": {
+        "drush": {
+            "services": {
+                "stage_file_proxy.drush.services.yml": "^11"
+            }
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    },
+    "scripts": {
+        "phpcs": "vendor/bin/phpcs -p .",
+        "phpcbf": "vendor/bin/phpcbf -p .",
+        "test": [
+            "@phpcs"
+        ]
+    }
+}

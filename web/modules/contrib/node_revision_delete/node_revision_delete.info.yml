@@ -1,0 +1,18 @@
+name: Node Revision Delete
+description: Track and prune node revisions.
+package: Content
+
+type: module
+core_version_requirement: ^8.7.7 || ^9.0 || ^10
+
+dependencies:
+  - drupal:node
+
+configure: node_revision_delete.admin_settings
+
+php: 7.4
+
+# Information added by Drupal.org packaging script on 2023-11-01
+version: '8.x-1.0-rc7'
+project: 'node_revision_delete'
+datestamp: 1698848347

@@ -1,0 +1,23 @@
+{#
+/**
+ * @file
+ * Default theme implementation for the Moderation Sidebar's revisions.
+ *
+ * This is what appears when you click "Revisions" in the sidebar.
+ *
+ * Available variables:
+ * - revision_message: The revision message.
+ * - revision_time: The timestamp of the revision.
+ * - revision_time_pretty: The revision time, formatted to be human-readable.
+ * - revision_author: The display name of the revision author.
+ * - revision_author_link: A link to the revision author.
+ *
+ * @ingroup themeable
+ */
+#}
+<div class="moderation-sidebar-revision-item">
+  <p class="revision-message">{{ revision_message }}</p>
+  {% if revision_author_link %}
+    <p class="revision-info">{{ 'Authored by' | t }} {{ revision_author_link }} {{ revision_link }}</p>
+  {% endif %}
+</div>

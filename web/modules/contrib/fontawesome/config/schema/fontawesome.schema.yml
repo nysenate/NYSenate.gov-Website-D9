@@ -1,0 +1,72 @@
+fontawesome.settings:
+  type: config_object
+  label: 'Font Awesome settings'
+  mapping:
+    tag:
+      type: string
+      label: 'Tag used for Font Awesome elements'
+    method:
+      type: string
+      label: 'Method used for delivering Font Awesome'
+    load_assets:
+      type: boolean
+      label: 'Let module handle loading FontAwesome assets'
+    use_cdn:
+      type: boolean
+      label: 'Use CDN to serve Font Awesome'
+    external_svg_location:
+      type: string
+      label: 'Location of the external CDN for Font Awesome'
+    use_shim:
+      type: boolean
+      label: 'Use Shim File for v4 compatibility'
+    external_shim_location:
+      type: string
+      label: 'Location of the external CDN for Font Awesome shim file'
+    allow_pseudo_elements:
+      type: boolean
+      label: 'Allow CSS pseudo elements with webfonts'
+    use_solid_file:
+      type: boolean
+      label: 'Use the Font Awesome solid icons file'
+    use_regular_file:
+      type: boolean
+      label: 'Use the Font Awesome regular icons file'
+    use_light_file:
+      type: boolean
+      label: 'Use the Font Awesome light icons file'
+    use_brands_file:
+      type: boolean
+      label: 'Use the Font Awesome brands icons file'
+    use_duotone_file:
+      type: boolean
+      label: 'Use the Font Awesome duotone icons file'
+    use_thin_file:
+      type: boolean
+      label: 'Use the Font Awesome thin icons file'
+    external_svg_integrity:
+      type: string
+      label: 'Integrity value of the external CDN for Font Awesome'
+    bypass_validation:
+      type: boolean
+      label: 'Bypass Font Awesome validation'
+    use_sharpregular_file:
+      type: boolean
+      label: 'Use the Font Awesome sharp regular icons file'
+    use_sharplight_file:
+      type: boolean
+      label: 'Use the Font Awesome sharp light icons file'
+    use_sharpsolid_file:
+      type: boolean
+      label: 'Use the Font Awesome sharp solid icons file'
+    use_custom_file:
+      type: boolean
+      label: 'Use the Font Awesome custom icons file'
+
+field.formatter.settings.fontawesome_icon_formatter:
+  type: mapping
+  label: 'Font Awesome Icon formatter settings'
+  mapping:
+    layers:
+      type: boolean
+      label: 'Display multi-value fields as layers?'

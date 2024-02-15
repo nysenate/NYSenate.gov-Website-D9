@@ -1,0 +1,12 @@
+{{ attach_library('nysenate_theme/sticky-nav') }}
+{{ attach_library('nysenate_theme/sticky-nav-2') }}
+
+<nav class="c-about--nav">
+  <ul>
+  {% for section in sections %}
+    <li class="{% if loop.first %}active{% endif %}" data-section="section-{{ loop.index0 }}">
+      <a href="{{ section.href }}">{{ section.title }}</a>
+    </li>
+  {% endfor %}
+  </ul>
+</nav>

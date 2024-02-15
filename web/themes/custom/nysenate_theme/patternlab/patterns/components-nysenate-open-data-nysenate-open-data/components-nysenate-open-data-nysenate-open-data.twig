@@ -1,0 +1,44 @@
+{{ attach_library('nysenate_theme/nysenate-open-data') }}
+<section class="open-data-section">
+  <div class="c-news--body">
+    <div class="c-news--head">
+      <h1 class="nys-article-title">
+        {{ title }}
+      </h1>
+      <div class="c-news--head-meta">
+        <p class="c-news--author">
+          {{ open_date_type }}
+        </p><br />
+        <p class="c-news--pub-date">
+          <b>{{ 'Published On: '|t }}</b>
+          <span class="date-display-single">{{ published_on }}</span>
+        </p><br />
+        <p class="c-news--pub-date">
+          <b>{{ 'Date Range of Report: '|t }}</b><span class="date-display-single">
+            {{ date }}
+          </span>
+          {{ end_date == '' ? '' : 'To ' ~ end_date }}
+        </p><br />
+      </div>
+    </div>
+  </div>
+  <div class="c-block">
+    {{ body }}
+  </div>
+
+  {{ open_data_tables }}
+
+  <div class="c-news--download">
+    {% if file_items is not empty %}
+      {% for file_item in file_items %}
+        <span class="file">
+          <a href="{{ file_item.url }}"
+            target="_blank"
+            type="{{ file_item.type }}">
+            {{ file_item.text }}
+          </a>
+        </span>
+      {% endfor %}
+    {% endif %}
+  </div>
+</section>

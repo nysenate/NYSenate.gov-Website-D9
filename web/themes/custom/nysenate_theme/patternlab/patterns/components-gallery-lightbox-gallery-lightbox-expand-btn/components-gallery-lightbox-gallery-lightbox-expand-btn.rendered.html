@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html class="pl">
+  <head>
+    <title>Pattern Lab</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="../../css/pattern-scaffolding.css?1707982400971" media="all" />
+    <link rel="stylesheet" href="../../css/all.css?1707982400971" media="all" />
+
+    <!-- Begin Pattern Lab (Required for Pattern Lab to run properly) -->
+    
+    <!-- End Pattern Lab -->
+
+  </head>
+  <body class="body"><button class="gallery-lightbox-item__expand" aria-label="View full media">  <svg width="32" height="32" xmlns="http://www.w3.org/2000/svg"><g transform="translate(1 1)" fill="none" fill-rule="evenodd"><ellipse stroke="#30C" fill="#30C" cx="14.935" cy="14.941" rx="14.935" ry="14.941"/><path d="M23 17.672c0-.453-.404-.818-.905-.818-.496 0-.904.365-.904.818v1.693l-3.65-3.137a1.009 1.009 0 00-1.276 0 .703.703 0 000 1.099l3.631 3.12h-1.961c-.535 0-.965.348-.965.777 0 .429.43.776.965.776h4.1c.533 0 .963-.347.965-.776l-.005-.032c.001-.015.005-.03.005-.046v-3.474zm-10.543-1.444L8.81 19.365v-1.693c0-.453-.408-.817-.905-.818-.5 0-.904.365-.904.818L7 21.147c0 .015.005.03.006.045l-.005.032c.001.43.432.776.965.776h4.1c.533 0 .964-.347.964-.776 0-.429-.43-.776-.964-.777h-1.961l3.631-3.12a.704.704 0 000-1.099 1.011 1.011 0 00-1.28 0zm5.085-3.457l3.65-3.135v1.694c0 .45.407.815.904.817.5 0 .904-.367.904-.817V7.854c0-.016-.004-.031-.005-.045L23 7.777c-.002-.43-.432-.777-.965-.777h-4.1c-.535 0-.965.347-.965.777 0 .428.43.776.965.777h1.961l-3.631 3.12a.7.7 0 000 1.097c.353.305.924.305 1.277 0zm-7.437-4.217h1.96c.534 0 .965-.35.965-.777 0-.43-.431-.777-.964-.777h-4.1c-.533 0-.964.347-.965.777l.005.032c-.001.014-.006.029-.006.045l.001 3.476c0 .45.404.817.904.817.497-.001.905-.366.905-.817V9.637l3.647 3.134a1.01 1.01 0 001.28 0 .702.702 0 000-1.096l-3.632-3.12z" fill="#FFF" fill-rule="nonzero"/></g></svg></button><!--DO NOT REMOVE-->
+<script type="text/json" id="pl-pattern-data-footer" class="pl-js-pattern-data">
+  {"cssEnabled":false,"patternLineageExists":false,"patternLineages":[],"lineage":[],"patternLineageRExists":true,"patternLineagesR":[{"lineagePattern":"components-gallery-lightbox-item","lineagePath":"../../patterns/components-gallery-lightbox-gallery-lightbox-item/components-gallery-lightbox-gallery-lightbox-item.rendered.html"}],"lineageR":[{"lineagePattern":"components-gallery-lightbox-item","lineagePath":"../../patterns/components-gallery-lightbox-gallery-lightbox-item/components-gallery-lightbox-gallery-lightbox-item.rendered.html"}],"patternLineageEExists":true,"patternDesc":"","patternBreadcrumb":{"patternType":"components","patternSubtype":"gallery-lightbox"},"patternExtension":"twig","patternName":"Gallery Lightbox Expand Btn","patternPartial":"components-gallery-lightbox-expand-btn","patternState":"","patternEngineName":"twig-php","extraOutput":{}}
+</script>
+
+<script>
+  window.patternData = {"cssEnabled":false,"patternLineageExists":false,"patternLineages":[],"lineage":[],"patternLineageRExists":true,"patternLineagesR":[{"lineagePattern":"components-gallery-lightbox-item","lineagePath":"../../patterns/components-gallery-lightbox-gallery-lightbox-item/components-gallery-lightbox-gallery-lightbox-item.rendered.html"}],"lineageR":[{"lineagePattern":"components-gallery-lightbox-item","lineagePath":"../../patterns/components-gallery-lightbox-gallery-lightbox-item/components-gallery-lightbox-gallery-lightbox-item.rendered.html"}],"patternLineageEExists":true,"patternDesc":"","patternBreadcrumb":{"patternType":"components","patternSubtype":"gallery-lightbox"},"patternExtension":"twig","patternName":"Gallery Lightbox Expand Btn","patternPartial":"components-gallery-lightbox-expand-btn","patternState":"","patternEngineName":"twig-php","extraOutput":{}};
+</script>
+
+<script>
+  /*!
+   * scriptLoader - v0.1
+   *
+   * Copyright (c) 2014 Dave Olsen, http://dmolsen.com
+   * Licensed under the MIT license
+   *
+   */
+
+  var scriptLoader = {
+
+    run: function(js,cb,target) {
+      var s  = document.getElementById(target+'-'+cb);
+      for (var i = 0; i < js.length; i++) {
+        var src = (typeof js[i] != 'string') ? js[i].src : js[i];
+        var c   = document.createElement('script');
+        c.src   = '../../'+src+'?'+cb;
+        if (typeof js[i] != 'string') {
+          if (js[i].dep !== undefined) {
+            c.onload = function(dep,cb,target) {
+              return function() {
+                scriptLoader.run(dep,cb,target);
+              }
+            }(js[i].dep,cb,target);
+          }
+        }
+        s.parentNode.insertBefore(c,s);
+      }
+    }
+
+  }
+</script>
+
+<script id="pl-js-polyfill-insert-1707982400971">
+  (function() {
+    if (self != top) {
+      var cb = '1707982400971';
+      var js = [];
+      scriptLoader.run(js,cb,'pl-js-polyfill-insert');
+    }
+  })();
+</script>
+
+
+<script type="module">
+  // always load Pattern-specific JS so UI like accordions, etc can continue to work even when viewed as a standalone HTML page
+  import('../../styleguide/js/patternlab-pattern.modern.js');
+</script>
+
+<script id="pl-js-insert-1707982400971" nomodule>
+  /*! loadJS: load a JS file asynchronously. [c]2014 @scottjehl, Filament Group, Inc. (Based on http://goo.gl/REQGQ by Paul Irish). Licensed MIT */
+  !function(e){var t=function(t,n){"use strict";var o=e.document.getElementsByTagName("script")[0],r=e.document.createElement("script");return r.src=t,r.async=!0,o.parentNode.insertBefore(r,o),n&&"function"==typeof n&&(r.onload=n),r};"undefined"!=typeof module?module.exports=t:e.loadJS=t}("undefined"!=typeof global?global:this);
+
+  // always load Pattern-specific JS so UI like accordions, etc can continue to work even when viewed as a standalone HTML page
+  loadJS('../../styleguide/js/patternlab-pattern.js');
+</script>
+
+  <!-- Fake drupalSettings if you need it. -->
+  <!--
+  <script type="application/json" data-drupal-selector="drupal-settings-json">
+  </script>
+  -->
+  <!-- Drupal-provided JS so we can mock Drupal JS Behaviors. -->
+  <script src="/core/assets/vendor/jquery/jquery.min.js"></script>
+  <script src="/core/assets/vendor/jquery-once/jquery.once.min.js"></script>
+  <script src="/core/misc/drupalSettingsLoader.js"></script>
+  <script src="/core/misc/drupal.js"></script>
+  <script src="/core/misc/drupal.init.js"></script>
+  <script src="/core/misc/debounce.js"></script>
+  <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+  <script src="https://unpkg.com/@popperjs/core@2"></script>
+  <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+  <!-- Concatenated by Gulp so you don't have to manually add each file. -->
+  <script src="../../js/all.js?1707982400971"></script>
+</body>
+</html>

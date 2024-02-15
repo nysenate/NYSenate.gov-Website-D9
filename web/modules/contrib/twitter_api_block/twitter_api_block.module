@@ -1,0 +1,46 @@
+<?php
+
+/**
+ * @file
+ * Contains hook implementations for twitter_api_block.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function twitter_api_block_help($route_name, RouteMatchInterface $route_match) {
+  if ($route_name === 'help.page.twitter_api_block') {
+    $readme_content = file_get_contents(dirname(__FILE__) . '/README.md');
+    if (\Drupal::moduleHandler()->moduleExists('markdown')) {
+      // Use the Markdown filter to render the README.
+      $filter_manager = \Drupal::service('plugin.manager.filter');
+      $markdown_config = \Drupal::configFactory()->get('markdown.settings')->getRawData();
+      $markdown_settings = ['settings' => $markdown_config];
+      $filter = $filter_manager->createInstance('markdown', $markdown_settings);
+
+      $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
+      return $filter->process($readme_content, $langcode);
+    }
+    else {
+      return '<pre>' . $readme_content . '</pre>';
+    }
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function twitter_api_block_theme() {
+  return [
+    'tweets' => [
+      'render element' => 'elements',
+      'file' => 'twitter_api_block.theme.inc',
+    ],
+    'tweet' => [
+      'render element' => 'elements',
+      'file' => 'twitter_api_block.theme.inc',
+    ],
+  ];
+}

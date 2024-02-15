@@ -1,0 +1,16 @@
+services:
+  oembed_providers.oembed.provider_repository:
+    decorates: media.oembed.provider_repository
+    class: Drupal\oembed_providers\OEmbed\ProviderRepositoryDecorator
+    public: false
+    arguments: ['@oembed_providers.oembed.provider_repository.inner', '@entity_type.manager', '@http_client', '@config.factory', '@datetime.time', '@keyvalue', '@logger.factory', '@module_handler']
+  oembed_providers.invalidator:
+    class: Drupal\oembed_providers\Cache\OembedProvidersCacheTagInvalidator
+    arguments: ['@plugin.manager.media.source']
+    tags:
+      - { name: cache_tags_invalidator }
+  oembed_providers_config_events_subscriber:
+    class: '\Drupal\oembed_providers\EventSubscriber\ConfigEventsSubscriber'
+    arguments: ['@entity_type.manager']
+    tags:
+      - { name: 'event_subscriber' }

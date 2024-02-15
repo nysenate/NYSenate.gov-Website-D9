@@ -1,0 +1,5 @@
+services:
+  stream_wrapper.filefield_paths_dummy_readonly:
+    class: Drupal\filefield_paths_test\StreamWrapper\FileFieldPathsDummyReadOnlyStreamWrapper
+    tags:
+      - { name: stream_wrapper, scheme: ffp-dummy-readonly }

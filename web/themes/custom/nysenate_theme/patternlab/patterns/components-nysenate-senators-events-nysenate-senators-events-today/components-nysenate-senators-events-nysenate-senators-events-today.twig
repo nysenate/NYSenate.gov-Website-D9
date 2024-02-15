@@ -1,0 +1,50 @@
+{{ attach_library('nysenate_theme/nysenate-senators-events') }}
+
+<div class="tabs-content">
+  {% if today %}
+    <h3 class="nys-title">{{ "Today, "|t }}{{ now }}</h3>
+    {% for item in items_today %}
+      <div class="c-event-block c-event-block--today">
+        <div class="c-event-time"><span class="date-display-single">{{ item.time }}</span></div>
+        <a href="{{ item.url }}"><h3 class="c-event-name">{{ item.title }}</h3></a>
+        {% if item.location %}
+          <a class="c-event-location" href=""> <span class="icon-before__circle-pin"></span><span>{{ item.location }}</span></a>
+        {% endif %}
+        {% if item.meeting_location %}
+          <div class="c-event-address">{{ item.meeting_location }}</div>
+        {% endif %}
+
+        {% if item.street_1 %}
+          <div class="c-event-address">{{ item.street_1 }}</div>
+        {% endif %}
+
+        {% if item.street_2 %}
+          <div class="c-event-address">{{ item.street_2 }}</div>
+        {% endif %}
+      </div>
+    {% endfor %}
+  {% else %}
+    {% for item in items %}
+      <article class="c-event-block c-event-block--list">
+        <div class="c-event-date"><span>{{ item.day }}</span> {{ item.month }}</div>
+        <div class="event-details">
+          <a href="{{ item.url }}"><h3 class="c-event-name">{{ item.title }}</h3></a>
+          {# add location link #}
+          <a class="c-event-location" href="" target="_blank"><span class="icon-before__circle-pin"></span><span>{{ item.location }}</span></a>
+        {% if item.meeting_location %}
+          <div class="c-event-address">{{ item.meeting_location }}</div>
+        {% endif %}
+
+        {% if item.street_1 %}
+          <div class="c-event-address">{{ item.street_1 }}</div>
+        {% endif %}
+
+        {% if item.street_2 %}
+          <div class="c-event-address">{{ item.street_2 }}</div>
+        {% endif %}
+          <div class="c-event-time"><span class="date-display-single">{{ item.time }}</span></div>
+        </div>
+      </article>
+    {% endfor %}
+  {% endif %}
+</div>

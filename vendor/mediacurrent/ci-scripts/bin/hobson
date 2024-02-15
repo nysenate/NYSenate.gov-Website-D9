@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# Uncomment for Vagrant projects
+# DDEV_PROJECT=false
+
+# To run some commands on the host use the environment variable.
+# example: "DDEV_PROJECT=false ./scripts/hobson list"
+
+SCRIPT_DIR=$(cd $(dirname "$0")/../scripts && pwd -P)
+BASE_DIR=$(cd $(dirname "$0")/../../../.. && pwd -P)
+
+cd ${BASE_DIR}
+
+COMPOSER_INSTALLED=$(command -v composer)
+
+if [ -z "${COMPOSER_INSTALLED}" ]; then
+  echo "Composer ( https://getcomposer.org/) not found, please install."
+  exit 1;
+fi
+
+if [ ! -d "${BASE_DIR}/vendor/mediacurrent/ci-scripts" ]; then
+  composer install
+fi
+
+CMD="${BASE_DIR}/vendor/bin/robo --load-from ${BASE_DIR}/scripts $@"
+if [ -z "${DDEV_PROJECT}" ] && [ -d "${BASE_DIR}/.ddev" ]; then
+  CMD="ddev . /var/www/html/vendor/bin/hobson $@"
+fi
+
+$CMD

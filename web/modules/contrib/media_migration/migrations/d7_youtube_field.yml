@@ -1,0 +1,19 @@
+id: d7_youtube_field
+label: Youtube Field migration
+migration_tags:
+  - Drupal 7
+  - Content
+idMap:
+  plugin: smart_sql
+source:
+  plugin: youtube
+  constants:
+    bundle: remote_video
+process:
+  bundle: 'constants/bundle'
+  field_media_oembed_video/value:
+    plugin: media_internet_field_value
+    source: input
+  name: '@field_media_oembed_video/value'
+destination:
+  plugin: entity:media

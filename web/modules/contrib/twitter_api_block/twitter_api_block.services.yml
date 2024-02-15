@@ -1,0 +1,14 @@
+services:
+  logger.channel.twitter_api_block:
+    parent: logger.channel_base
+    arguments: ["twitter_api_block"]
+  twitter_api_block.twitter:
+    class: '\Drupal\twitter_api_block\TwitterManager'
+    arguments:
+      [
+        "@http_client_factory",
+        "@logger.channel.twitter_api_block",
+        "@key.repository",
+        "@token",
+        "@current_user",
+      ]

@@ -1,0 +1,16 @@
+services:
+  name.autocomplete:
+    class: Drupal\name\NameAutocomplete
+    arguments: ['@name.options_provider']
+  name.options_provider:
+    class: Drupal\name\NameOptionsProvider
+    arguments: ['@entity_type.manager', '@module_handler']
+  name.format_parser:
+    class: Drupal\name\NameFormatParser
+    arguments: []
+  name.formatter:
+    class: Drupal\name\NameFormatter
+    arguments: ['@entity_type.manager', '@name.format_parser', '@language_manager', '@string_translation', '@config.factory']
+  name.generator:
+    class: Drupal\name\NameGenerator
+    arguments: ['@name.formatter', '@name.format_parser', '@config.factory', '@language_manager', '@string_translation']

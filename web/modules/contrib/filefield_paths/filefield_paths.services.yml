@@ -1,0 +1,7 @@
+services:
+  filefield_paths.redirect:
+    class: Drupal\filefield_paths\Redirect
+    arguments: ['@entity_type.manager', '@stream_wrapper_manager', '@config.factory', '@logger.channel.filefield_paths']
+  logger.channel.filefield_paths:
+    parent: logger.channel_base
+    arguments: ['filefield_paths']

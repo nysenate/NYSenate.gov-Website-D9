@@ -1,0 +1,65 @@
+# This configuration file only contains the changes from the default.config.yml.
+# To see the available variables and the default values, examine the
+# vendor/mediacurrent/mis_vagrant/default.config.yml file.
+
+vagrant_box: mediacurrent/mis_ubuntu1804 # mediacurrent/mis_ubuntu1604
+vagrant_box_version: ">=0.1.0"
+
+# If you need to run multiple instances of Drupal VM, set a unique hostname,
+# machine name, and IP address for each instance.
+vagrant_hostname: example.mcdev
+vagrant_machine_name: example_mcdev
+vagrant_ip: 192.168.50.4
+
+# The web server software to use. Can be either 'apache' or 'nginx'.
+drupalvm_webserver: apache
+
+drupal_mysql_user: root
+drupal_mysql_password: password
+
+# Settings for installing a Drupal site if 'install_site:' is 'true'.
+drupal_major_version: 8
+drupal_domain: "{{ vagrant_hostname }}"
+drupal_site_name: "Drupal"
+# Todo: Clone this profile and change this value to the project name.
+drupal_install_profile: mis_profile
+drupal_enable_modules: [ 'devel' ]
+drupal_account_name: admin
+drupal_account_pass: admin
+drupal_composer_install_dir: "/home/vagrant/docroot"
+
+# Comment out any extra utilities you don't want to install. If you don't want
+# to install *any* extras, set this value to an empty set, e.g. `[]`.
+installed_extras:
+  - adminer
+  # - blackfire
+  - drush
+  # - elasticsearch
+  # - java
+  - mailhog
+  # - memcached
+  # - newrelic
+  # - nodejs
+  - npm
+  - pimpmylog
+  # - redis
+  # - ruby
+  # - selenium
+  # - solr
+  # - varnish
+  - xdebug
+  # - xhprof
+
+# PHP Configuration. Currently-supported versions: 7.2, 7.3, 7.4.
+# See version-specific notes: http://docs.drupalvm.com/en/latest/configurations/php/
+php_version: "7.4"
+php_memory_limit: 192M
+composer_path: /usr/bin/composer
+composer_home_path: '/home/vagrant/.composer'
+composer_home_owner: vagrant
+composer_add_to_path: true
+composer_project_path: "{{ drupal_composer_install_dir }}/vendor/bin"
+composer_add_project_to_path: false
+
+# post_provision_scripts:
+#   - "{{ config_dir }}/../vendor/mediacurrent/mis_vagrant/examples/scripts/configure-solr.sh"

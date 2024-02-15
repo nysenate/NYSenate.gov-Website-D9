@@ -1,0 +1,137 @@
+{{ attach_library('nysenate_theme/comments') }}
+
+{% import _self as comments %}
+
+{{ comments.comment(comment_items, user_permission, attributes) }}
+
+{% macro comment(comment_items, user_permission, attributes) %}
+  {% import _self as comments %}
+  {% if comment_items %}
+    <ul class="comments" {{ attributes|without('class') }}>
+      {% for comment in comment_items %}
+        <li class="comments__wrapper" {{ comment.attributes|without('class') }}>
+          <div class="comment">
+            <div class="comment__heading">
+              {% if user_permission == 'allowed' %}
+                <p class="comment__author">
+                  <a href="{{ comment.username_url }}">
+                    {{ comment.username }}
+                  </a>
+                </p>
+              {% else %}
+                <p class="comment__author">
+                  {{ comment.username }}
+                </p>
+              {% endif %}
+              <span class="bullet" aria-hidden="true">•</span>
+              <a href="#"
+                data-role="relative-time"
+                class="comment__time time-ago"
+                title="{{ comment.date }}">
+                {{ comment.relative_date }}
+              </a>
+            </div>
+
+            <div class="comment__body">
+              {{ comment.comment_body|raw }}
+              <div class="button-container">
+                <button class="button reply-btn button--small"
+                  type="button"
+                  data-toggle="reply-form"
+                  data-target="{{ comment.reply_form_id }}">
+                  Reply
+                </button>
+                <button type="button" class="button flag-btn button--small">
+                  Flag
+                </button>
+
+                <!-- Reply form start -->
+                <form method="POST"
+                  class="comment__reply-form hidden"
+                  id="{{ comment.reply_form_id }}">
+                  <textarea placeholder="Reply to comment" rows="4"></textarea>
+                  <button class="button button--small" type="submit">
+                    Submit
+                  </button>
+                  <button type="button"
+                    class="button button--small"
+                    data-toggle="reply-form"
+                    data-target="{{ comment.reply_form_id }}">
+                    Cancel
+                  </button>
+                </form>
+                <!-- Reply form end -->
+              </div>
+            </div>
+          </div>
+
+          {% if comment.replies %}
+            <ul class="comment__replies" {{ attributes|without('class') }}>
+              {% for reply in comment.replies %}
+                <li class="comments__wrapper"
+                  {{ reply.attributes|without('class') }}>
+                  <div class="comment">
+                    <div class="comment__heading">
+                      {% if user_permission == 'allowed' %}
+                        <p class="comment__author">
+                          <a href="{{ reply.username_url }}">
+                            {{ reply.username }}
+                          </a>
+                        </p>
+                      {% else %}
+                        <p class="comment__author">
+                          {{ reply.username }}
+                        </p>
+                      {% endif %}
+                      <span class="bullet" aria-hidden="true">•</span>
+                      <a href="#"
+                        data-role="relative-time"
+                        class="comment__time time-ago"
+                        title="{{ reply.date }}">
+                        {{ reply.relative_date }}
+                      </a>
+                    </div>
+
+                    <div class="comment__body">
+                      {{ reply.comment_body|raw }}
+                      <div class="button-container">
+                        <button class="button reply-btn button--small"
+                          type="button"
+                          data-toggle="reply-form"
+                          data-target="{{ reply.reply_form_id }}">
+                          Reply
+                        </button>
+                        <button type="button"
+                          class="button flag-btn button--small">
+                          Flag
+                        </button>
+
+                        <!-- Reply form start -->
+                        <form method="POST"
+                          class="comment__reply-form hidden"
+                          id="{{ reply.reply_form_id }}">
+                          <textarea placeholder="Reply to comment"
+                            rows="4"></textarea>
+                          <button class="button button--small" type="submit">
+                            Submit
+                          </button>
+                          <button type="button"
+                            class="button button--small"
+                            data-toggle="reply-form"
+                            data-target="{{ reply.reply_form_id }}">
+                            Cancel
+                          </button>
+                        </form>
+                        <!-- Reply form end -->
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endmacro %}

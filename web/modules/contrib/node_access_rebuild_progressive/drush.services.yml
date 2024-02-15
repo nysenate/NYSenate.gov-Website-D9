@@ -1,0 +1,5 @@
+services:
+  node_access_rebuild_progressive.commands:
+    class: \Drupal\node_access_rebuild_progressive\Commands\NodeAccessRebuildProgressiveCommands
+    tags:
+      - { name: drush.command }

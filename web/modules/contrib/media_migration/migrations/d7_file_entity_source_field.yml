@@ -1,0 +1,68 @@
+id: d7_file_entity_source_field
+label: Media source field storage configuration
+migration_tags:
+  - Drupal 7
+  - Configuration
+deriver: Drupal\media_migration\Plugin\migrate\D7FileEntityConfigDeriver
+idMap:
+  plugin: smart_sql
+source:
+  plugin: d7_file_entity_source_field_storage
+  constants:
+    entity_type_id: media
+    status: true
+    langcode: und
+    cardinality: 1
+process:
+  preexisting_field_name:
+    -
+      plugin: migmag_get_entity_property
+      source: bundle
+      entity_type_id: 'media_type'
+      property: 'source_configuration'
+    -
+      plugin: default_value
+      default_value:
+        source_field: NULL
+    -
+      plugin: extract
+      index:
+        - source_field
+  new_field_name:
+    -
+      plugin: callback
+      callable: is_null
+      source: '@preexisting_field_name'
+    -
+      plugin: callback
+      callable: intval
+    -
+      plugin: skip_on_empty
+      method: process
+    -
+      plugin: make_unique_entity_field
+      source: source_field_name
+      entity_type: field_storage_config
+      field: id
+      length: 29
+      postfix: '_'
+  field_name:
+    plugin: null_coalesce
+    source:
+      - '@new_field_name'
+      - '@preexisting_field_name'
+  status: 'constants/status'
+  langcode: 'constants/langcode'
+  entity_type: constants/entity_type_id
+  type: field_type
+  # Translatable is not migrated and the Drupal 8 default of true is used.
+  # If translatable is false in field storage then the field can not be
+  # set to translatable via the UI.
+  #translatable: translatable
+  cardinality: 'constants/cardinality'
+  settings: settings
+destination:
+  plugin: entity:field_storage_config
+migration_dependencies:
+  required:
+    - d7_file_plain_type

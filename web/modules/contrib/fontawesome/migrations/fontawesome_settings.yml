@@ -1,0 +1,62 @@
+id: fontawesome_settings
+label: Font Awesome migration
+migration_tags:
+  - Drupal 7
+  - Configuration
+source:
+  plugin: variable
+  variables:
+    - fontawesome_method
+    - fontawesome_allow_pseudo_elements
+    - fontawesome_external
+    - fontawesome_partial
+    - fontawesome_shim
+  source_module: fontawesome
+process:
+  method:
+    plugin: default_value
+    source: fontawesome_method
+    default_value: 'svg'
+  allow_pseudo_elements:
+    plugin: default_value
+    source: fontawesome_allow_pseudo_elements
+    default_value: FALSE
+  use_cdn:
+    plugin: default_value
+    source: 'fontawesome_external/use_cdn'
+    default_value: TRUE
+  external_svg_location:
+    plugin: default_value
+    source: 'fontawesome_external/external_location'
+    default_value: ''
+  use_solid_file:
+    plugin: default_value
+    source: 'fontawesome_partial/use_solid_file'
+    strict: TRUE
+    default_value: TRUE
+  use_regular_file:
+    plugin: default_value
+    source: 'fontawesome_partial/use_regular_file'
+    strict: TRUE
+    default_value: TRUE
+  use_light_file:
+    plugin: default_value
+    source: 'fontawesome_partial/use_light_file'
+    strict: TRUE
+    default_value: TRUE
+  use_brands_file:
+    plugin: default_value
+    source: 'fontawesome_partial/use_brands_file'
+    strict: TRUE
+    default_value: TRUE
+  use_shim:
+    plugin: default_value
+    source: 'fontawesome_shim/use_shim'
+    default_value: FALSE
+  external_shim_location:
+    plugin: default_value
+    source: 'fontawesome_shim/external_location'
+    default_value: ''
+destination:
+  plugin: config
+  config_name: fontawesome.settings

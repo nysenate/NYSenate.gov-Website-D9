@@ -1,0 +1,99 @@
+<?php
+
+/**
+ * @file
+ * Login Security installation routines.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function login_security_schema() {
+  $schema['login_security_track'] = [
+    'description' => 'Keeps track of failed login attempts, as a pair of the IP address and user name.',
+    'fields' => [
+      'id' => [
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => "ID of each login event.",
+      ],
+      'host' => [
+        'type' => 'varchar',
+        'length' => 39,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => "The IP address of the request.",
+      ],
+      'name' => [
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => "Clean username, submitted using the login form.",
+      ],
+      'timestamp' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => "Timestamp of the event.",
+      ],
+    ],
+    'indexes' => [
+      'name' => ['name'],
+      'host' => ['host'],
+      'timestamp' => ['timestamp'],
+    ],
+    'primary key' => ['id'],
+  ];
+
+  return $schema;
+}
+
+/**
+ * Convert e-mail settings to use e-mail addresses instead of user names.
+ */
+function login_security_update_8001() {
+  $config = \Drupal::service('config.factory')
+    ->getEditable('login_security.settings');
+
+  // Get user email for user block notification.
+  $name = $config->get('user_blocked_email_user');
+  $user_blocked_admin_email = '';
+  if (!empty($name)) {
+    $user_blocked_admin_user = user_load_by_name($name);
+    $user_blocked_admin_email = $user_blocked_admin_user ? $user_blocked_admin_user->getEmail() : '';
+  }
+
+  // Get user email for login activity notification.
+  $name = $config->get('login_activity_email_user');
+  $login_activity_admin_email = '';
+  if (!empty($name)) {
+    $login_activity_admin_user = user_load_by_name($config->get('login_activity_email_user'));
+    $login_activity_admin_email = $login_activity_admin_user ? $login_activity_admin_user->getEmail() : '';
+  }
+
+  // Save new config.
+  $config
+    ->set('user_blocked_notification_emails', $user_blocked_admin_email)
+    ->set('login_activity_notification_emails', $login_activity_admin_email)
+    ->clear('user_blocked_email_user')
+    ->clear('login_activity_email_user')
+    ->save(TRUE);
+}
+
+/**
+ * Convert track time from hours to minutes.
+ */
+function login_security_update_8002() {
+  $config = \Drupal::service('config.factory')
+    ->getEditable('login_security.settings');
+
+  // New track time is equal to old track time in hours multiplied by 60 to
+  // convert to minutes value.
+  $converted_track_time = $config->get('track_time') * 60;
+
+  // Save converted track time to config.
+  $config
+    ->set('track_time', $converted_track_time)
+    ->save(TRUE);
+}

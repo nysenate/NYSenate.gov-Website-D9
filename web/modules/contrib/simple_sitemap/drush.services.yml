@@ -1,0 +1,7 @@
+services:
+  simple_sitemap.commands:
+    class: Drupal\simple_sitemap\Commands\SimpleSitemapCommands
+    arguments:
+      - '@simple_sitemap.generator'
+    tags:
+      - { name: drush.command }

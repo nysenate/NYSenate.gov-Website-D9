@@ -1,0 +1,123 @@
+{{ attach_library('nysenate_theme/dashboard-profile-edit') }}
+
+<div class="dashboard-profile-edit">
+  <div class="form-wrapper">
+    <div class="left">
+      <div class="name">
+        <div class="field-type-text field-name-field-first-name field-widget-text-textfield form-wrapper" id="edit-field-first-name">
+          <div id="field-first-name-add-more-wrapper">
+            <div class="form-item form-type-textfield form-item-field-first-name-und-0-value">
+              <label for="edit-field-first-name-und-0-value">First Name
+                <span class="form-required" title="This field is required.">*</span>
+              </label>
+              <input class="text-full form-text required" type="text" id="edit-field-first-name-und-0-value" name="field_first_name[und][0][value]" value="{{dashboard_profile_edit.first_name}}" size="60" maxlength="255">
+              <div data-lastpass-icon-root="true" style="position: relative !important; height: 0px !important; width: 0px !important; float: left !important;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="field-type-text field-name-field-last-name field-widget-text-textfield form-wrapper" id="edit-field-last-name">
+          <div id="field-last-name-add-more-wrapper">
+            <div class="form-item form-type-textfield form-item-field-last-name-und-0-value">
+              <label for="edit-field-last-name-und-0-value">Last Name
+                <span class="form-required" title="This field is required.">*</span>
+              </label>
+              <input class="text-full form-text required" type="text" id="edit-field-last-name-und-0-value" name="field_last_name[und][0][value]" value="{{ dashboard_profile_edit.last_name }}" size="60" maxlength="255">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-item form-type-textfield form-item-name">
+        <label for="edit-name">Username
+          <span class="form-required" title="This field is required.">*</span>
+        </label>
+        <input class="username form-text required" type="text" id="edit-name" name="name" value="{{dashboard_profile_edit.display_name}}" size="60" maxlength="60">
+      </div>
+      <div class="form-item form-type-textfield form-item-mail">
+        <label for="edit-mail">E-mail address
+          <span class="form-required" title="This field is required.">*</span>
+        </label>
+        <input type="text" id="edit-mail" name="mail" value="{{dashboard_profile_edit.email}}" size="60" maxlength="254" class="form-text required">
+      </div>
+      <div class="form-item form-type-textfield form-item-field-address-und-0-street">
+        <label for="edit-field-address-und-0-street">Street
+          <span class="form-required" title="This field is required.">*</span>
+        </label>
+        <input type="text" id="edit-field-address-und-0-street" name="field_address[und][0][street]" value="{{dashboard_profile_edit.street_address}}" size="64" maxlength="255" class="form-text required">
+      </div>
+      <div class="form-item form-type-textfield form-item-field-address-und-0-additional">
+        <label for="edit-field-address-und-0-additional">Additional
+        </label>
+        <input type="text" id="edit-field-address-und-0-additional" name="field_address[und][0][additional]" value="{{dashboard_profile_edit.apt}}" size="64" maxlength="255" class="form-text">
+      </div>
+      <div class="city-state-zip__container">
+        <div class="form-item form-type-textfield form-item-field-address-und-0-city">
+          <label for="edit-field-address-und-0-city">City
+            <span class="form-required" title="This field is required.">*</span>
+          </label>
+          <input type="text" id="edit-field-address-und-0-city" name="field_address[und][0][city]" value="{{dashboard_profile_edit.city}}" size="64" maxlength="255" class="form-text required">
+        </div>
+        <div>
+          <label for="edit-state-province">State/Province
+          </label>
+          <div class="js-form-item form-item js-form-type-select form-type-select">
+            <select name="edit-state-province" class="form-select">
+              {% for state in dashboard_profile_edit.states %}
+                <option value="{{ state.value }}" {% if state.is_selected %} selected="selected" {% endif %}>{{ state.text }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <div class="form-item form-type-textfield form-item-field-address-und-0-zip-code">
+          <label for="edit-field-address-und-0-zip-code">zip code
+            <span class="form-required" title="This field is required.">*</span>
+          </label>
+          <input type="text" id="edit-field-address-und-0-zip-code" name="field_address[und][0][zip_code]" value="{{dashboard_profile_edit.zip}}" size="16" maxlength="16" class="form-text required">
+        </div>
+      </div>
+    </div>
+
+    <div class="center">
+      <div class="user-picture">
+        {{ dashboard_profile_edit.image }}
+      </div>
+      <div class="form-item form-type-file form-item-files-picture-upload">
+        <input type="file" id="edit-picture-upload" name="files[picture_upload]" size="48" class="form-file">
+      </div>
+    </div>
+
+    <div class="right">
+      <div class="date-no-float container-inline-date">
+        <div class="form-item form-type-date-popup form-item-field-dateofbirth-und-0-value">
+          <div id="edit-field-dateofbirth-und-0-value" class="date-padding">
+            <div class="form-item form-type-textfield form-item-field-dateofbirth-und-0-value-date">
+              <label for="edit-field-dateofbirth-und-0-value-datepicker-popup-0">Date of Birth
+              </label>
+              <input class="date-clear form-text" autocomplete="off" type="text" id="edit-field-dateofbirth-und-0-value-datepicker-popup-0" name="field_dateofbirth[und][0][value][date]" value="{{dashboard_profile_edit.date_of_birth}}" size="20" maxlength="30">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <label for="edit-field-gender-user-und">Gender (Optional)
+        </label>
+        <div class="js-form-item form-item js-form-type-select form-type-select">
+          <select name="edit-field-gender-user-und" class="form-select">
+            <option value="_none">- None -</option>
+            <option value="female">Female</option>
+            <option value="male" selected="selected">Male</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="field-type-list-boolean field-name-field-user-receive-emails field-widget-options-onoff form-wrapper" id="edit-field-user-receive-emails">
+        <div class="form-item form-type-checkbox form-item-field-user-receive-emails-und">
+          <input type="checkbox" id="edit-field-user-receive-emails-und" name="field_user_receive_emails[und]" value="1" class="form-checkbox">
+          <label class="option" for="edit-field-user-receive-emails-und">Let my Senator contact me.
+          </label>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <button class="button" id="dashboard-edit-submit" name="submit" value="Save" type="submit">Save</button>
+</div>

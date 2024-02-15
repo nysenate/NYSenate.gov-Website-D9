@@ -1,0 +1,9 @@
+watchdog_prune.watchdog_prune_settings:
+  path: '/admin/config/development/watchdog-prune'
+  defaults:
+    _title: 'Watchdog Prune settings'
+    _form: '\Drupal\watchdog_prune\Form\WatchdogPruneSettings'
+  requirements:
+    _permission: 'administer watchdog prune'
+  options:
+    _admin_route: TRUE

@@ -1,0 +1,515 @@
+<?php
+
+/**
+ * @file
+ * Login Security module hooks.
+ */
+
+use Drupal\Core\Url;
+use Drupal\user\Entity\User;
+use Drupal\user\UserInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Component\Render\FormattableMarkup;
+
+/**
+ * Implements hook_cron().
+ */
+function login_security_cron() {
+  // Remove expired events.
+  _login_security_remove_events();
+}
+
+/**
+ * Implements hook_user_login().
+ */
+function login_security_user_login(UserInterface $account) {
+  $ip_address = Drupal::request()->getClientIp();
+  _login_security_remove_events($account->getAccountName(), $ip_address);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update().
+ */
+function login_security_user_update(UserInterface $account) {
+  // The update case can be launched by the user or by any administrator.
+  // On update, remove only the user information tracked.
+  if ($account->isActive()) {
+    // Don't remove tracking events if account is being blocked.
+    _login_security_remove_events($account->getAccountName());
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function login_security_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
+  if ($form_id == 'user_login_form') {
+    // Put login_security first or the capture of the previous login
+    // timestamp won't work and core's validation will update to the current
+    // login instance before login_security can read the old timestamp.
+    $validate = [
+      'login_security_soft_block_validate',
+      'login_security_set_login_timestamp',
+    ];
+
+    if (isset($form['#validate']) && is_array($form['#validate'])) {
+      $form['#validate'] = array_merge($validate, $form['#validate']);
+    }
+    else {
+      $form['#validate'] = $validate;
+    }
+
+    $form['#validate'][] = 'login_security_validate';
+    $form['#submit'][] = 'login_security_submit';
+  }
+}
+
+/**
+ * Save login attempt and save login/access timestamps.
+ *
+ * Previous incarnations of this code put it in hook_submit or hook_user, but
+ * since Drupal core validation updates the login timestamp, we have to set the
+ * message before it gets updated with the current login instance.
+ */
+function login_security_set_login_timestamp(array $form, FormStateInterface $form_state) {
+  // Always save entry in security log, Username and IP Address.
+  $ip_address = \Drupal::request()->getClientIp();
+  $account = _login_security_user_load_by_name($form_state->getValue('name'));
+  _login_security_add_event($account->getAccountName(), $ip_address);
+
+  // For active users set static login and access:
+  $account = \Drupal::database()->select('users_field_data', 'u')
+    ->fields('u', ['login', 'access'])
+    ->condition('name', $form_state->getValue('name'))
+    ->condition('status', 1)
+    ->execute()
+    ->fetchAssoc();
+  if (!empty($account)) {
+    // @todo This implementation using static is dirty!
+    _login_security_login_timestamp($account['login']);
+    _login_security_access_timestamp($account['access']);
+  }
+}
+
+/**
+ * Returns account login timestamp.
+ */
+function _login_security_login_timestamp($login = NULL) {
+  // @todo This implementation using static is dirty!
+  static $account_login;
+  if (!isset($account_login) && is_numeric($login) && $login > 0) {
+    $account_login = $login;
+  }
+  return $account_login;
+}
+
+/**
+ * Returns account access timestamp.
+ */
+function _login_security_access_timestamp($access = NULL) {
+  // @todo This implementation using static is dirty!
+  static $account_access;
+  if (!isset($account_access) && is_numeric($access) && $access > 0) {
+    $account_access = $access;
+  }
+  return $account_access;
+}
+
+/**
+ * Temporarily deny validation to users with excess invalid login attempts.
+ *
+ * @url http://drupal.org/node/493164
+ */
+function login_security_soft_block_validate(array $form, FormStateInterface $form_state) {
+  $config = \Drupal::config('login_security.settings');
+
+  $variables = _login_security_get_variables_by_name($form_state->getValue('name'));
+  // Check for host login attempts: Soft.
+  if ($variables['@soft_block_attempts'] >= 1) {
+    if ($variables['@ip_current_count'] >= $variables['@soft_block_attempts']) {
+      $form_state->setErrorByName('submit', new FormattableMarkup($config->get('host_soft_banned'), $variables));
+    }
+  }
+}
+
+/**
+ * Implements hook_validate().
+ *
+ * This functions does more than just validating, but it's main intention is to
+ * break the login form flow.
+ */
+function login_security_validate(array $form, FormStateInterface $form_state) {
+  $conf = \Drupal::config('login_security.settings');
+
+  // Sanitize user input.
+  // Setting $name=NULL will use the anonymous user:
+  $name = !empty($form_state->getValue('name')) ? $form_state->getValue('name') : NULL;
+
+  // Expire old tracked entries.
+  _login_security_remove_events();
+
+  // Populate variables to be used in any module message or login operation.
+  $variables = _login_security_get_variables_by_name($name);
+
+  // Detect an ongoing attack:
+  // An ongoing attack counts the total failed login attempts and notifies
+  // the configured user / administrator about it.
+  // First, check if administrator should be notified of unexpected login
+  // activity.
+  // Only process if configured threshold > 1.
+  // see: http://drupal.org/node/583092.
+  if ($variables['@activity_threshold']) {
+    $already_notified = \Drupal::state()->get('login_security.threshold_notified', FALSE);
+    // Check if threshold has been reached.
+    if (!$already_notified && $variables['@tracking_current_count'] > $variables['@activity_threshold']) {
+      // Mark alert status as notified and send the email.
+      \Drupal::logger('login_security')->warning('Ongoing attack detected: Suspicious activity detected in login form submissions. Too many invalid login attempts threshold reached: Currently @tracking_current_count events are tracked, and threshold is configured for @activity_threshold attempts.', $variables);
+      // Send notification only if required.
+      $email_to = $conf->get('login_activity_notification_emails');
+      if (!empty($email_to)) {
+        $from = \Drupal::config('system.site')->get('mail');
+        $languageId = \Drupal::languageManager()->getDefaultLanguage()->getId();
+        \Drupal::service('plugin.manager.mail')->mail('login_security', 'login_activity_notify', $email_to, $languageId, $variables, $from, TRUE);
+      }
+      // Set as already notified:
+      \Drupal::state()->set('login_security.threshold_notified', TRUE);
+    }
+    elseif ($already_notified && ($variables['@tracking_current_count'] < ($variables['@activity_threshold'] / 3))) {
+      // @todo /3 should better be a variable.
+      // Reset alert if currently tracked events is < threshold / 3.
+      \Drupal::logger('login_security')->notice('Suspicious activity in login form submissions is no longer detected: Currently @tracking_current_count events are being tracked, and threshold is configured for @activity_threshold maximum allowed attempts.', $variables);
+      \Drupal::state()->set('login_security.threshold_notified', FALSE);
+    }
+  }
+
+  // Check for host login attempts: Hard.
+  if ($variables['@hard_block_attempts'] >= 1) {
+    if ($variables['@ip_current_count'] >= $variables['@hard_block_attempts']) {
+      // Block the host ip_address().
+      login_user_block_ip($variables, $form_state);
+    }
+  }
+
+  // Check for user login attempts.
+  if ($variables['@user_block_attempts'] >= 1) {
+    if ($variables['@user_current_count'] >= $variables['@user_block_attempts']) {
+      // Block the account $name.
+      login_user_block_user_name($variables, $form_state);
+    }
+  }
+
+  // At this point, they're either logged in or not by Drupal core's abuse of
+  // the validation hook to login users completely.
+  if ($form_state->hasAnyErrors()) {
+    $errors = $form_state->getErrors();
+    // The 'name' error will either be "Unrecognized username or password" or
+    // "Inactive or blocked account".
+    if (!empty($errors['name'])) {
+      if ($conf->get('disable_core_login_error')) {
+        // Resets the form error status so no form fields are highlighted in
+        // red.
+        $form_state->setRebuild();
+        $form_state->clearErrors();
+
+        // Removes "Unrecognized username or password. Have you
+        // forgotten your password?" and "The username $name has not been
+        // activated or is blocked.", and any other errors that might be
+        // helpful to an attacker it should not reset the attempts message
+        // because it is a warning, not an error.
+        \Drupal::messenger()->messagesByType('error', TRUE);
+      }
+
+      // Should the user be advised about the remaining login attempts?
+      $notice_user = $conf->get('notice_attempts_available');
+      if ($notice_user && ($variables['@user_block_attempts'] > 0) && $variables['@user_block_attempts'] >= $variables['@user_current_count']) {
+        $message_raw = $conf->get('notice_attempts_message');
+
+        // Simple flag that can be changed using hook_alter (see below).
+        $display_block_attempts = TRUE;
+
+        // Allow other module to change the flag, or even the message displayed,
+        // with a custom logic.
+        \Drupal::moduleHandler()->alter('login_security_display_block_attempts', $message_raw, $display_block_attempts, $variables['@user_current_count']);
+
+        $message = [
+          'message' => $message_raw,
+          'variables' => $variables,
+        ];
+
+        // This loop is used instead of doing t() because t() can only
+        // translate static strings, not variables.
+        // Ignoring Coder because $variables is sanitized by
+        // login_security_t().
+        // See https://drupal.org/node/1743996#comment-6421246.
+        // @ignore security_2
+        $message = new FormattableMarkup($message['message'], $message['variables']);
+        if ($display_block_attempts) {
+          \Drupal::messenger()->addWarning($message, TRUE);
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_submit().
+ */
+function login_security_submit(array $form, FormStateInterface $form_state) {
+  $user = \Drupal::currentUser();
+  $conf = \Drupal::config('login_security.settings');
+  // The submit handler shouldn't be called unless the authentication succeeded.
+  if (is_object($user)) {
+    $login = _login_security_login_timestamp();
+    if ($conf->get('last_login_timestamp') && $login > 0) {
+      \Drupal::messenger()->addMessage(t('Your last login was @stamp.', ['@stamp' => \Drupal::service('date.formatter')->format($login, 'long')]), 'status');
+    }
+
+    $access = _login_security_access_timestamp();
+    if ($conf->get('last_access_timestamp') && $access > 0) {
+      \Drupal::messenger()->addMessage(t('Your last page access (site activity) was @stamp.', ['@stamp' => \Drupal::service('date.formatter')->format($access, 'long')]), 'status');
+    }
+  }
+}
+
+/**
+ * Remove tracked events or expire old ones.
+ *
+ * @param string $name
+ *   If specified, events for this user name will be removed.
+ * @param string $host
+ *   If specified, IP Address of the name-ip pair to be removed.
+ */
+function _login_security_remove_events($name = NULL, $host = NULL) {
+  $conf = \Drupal::config('login_security.settings');
+
+  // Remove selected events.
+  if (!empty($name)) {
+    if (!empty($host)) {
+      \Drupal::database()->delete('login_security_track')
+        ->condition('name', $name)
+        ->condition('host', $host)
+        ->execute();
+    }
+    else {
+      \Drupal::database()->delete('login_security_track')
+        ->condition('name', $name)
+        ->execute();
+    }
+  }
+  else {
+    $request_time = \Drupal::time()->getRequestTime();
+    // Calculate protection time window and remove expired events.
+    $time = $request_time - ($conf->get('track_time') * 60);
+    _login_security_remove_all_events($time);
+  }
+}
+
+/**
+ * Remove all tracked events up to a date..
+ *
+ * @param int $time
+ *   if specified, events up to this timestamp will be deleted. If not
+ *   specified, all elements up to current timestamp will be deleted.
+ *
+ * @return int
+ *   The number of events deleted.
+ */
+function _login_security_remove_all_events($time = NULL) {
+  // Remove selected events.
+  if (empty($time)) {
+    $time = \Drupal::time()->getRequestTime();
+  }
+
+  return \Drupal::database()->delete('login_security_track')
+    ->condition('timestamp', $time, '<')
+    ->execute();
+}
+
+/**
+ * Save the login attempt in the tracking database: user name nd ip address.
+ *
+ * @param string $name
+ *   User name to be tracked.
+ * @param string $ip
+ *   IP Address of the pair.
+ */
+function _login_security_add_event($name, $ip) {
+  // Each attempt is kept for future mining of advanced brute forcing like
+  // multiple IP or X-Forwarded-for usage and automated track data cleanup.
+  \Drupal::database()->insert('login_security_track')
+    ->fields([
+      'host' => $ip,
+      'name' => $name,
+      'timestamp' => \Drupal::time()->getRequestTime(),
+    ])
+    ->execute();
+}
+
+/**
+ * Create a Deny entry for the IP address.
+ *
+ * If IP address is not especified then block current IP.
+ */
+function login_user_block_ip($variables, FormStateInterface $form_state) {
+  // There is no need to check if the host has been banned, we can't get here
+  // twice.
+  $conf = \Drupal::config('login_security.settings');
+
+  $ip = $variables['@ip'];
+  \Drupal::database()->merge('ban_ip')
+    ->key(['ip' => $ip])
+    ->fields(['ip' => $ip])
+    ->execute();
+  \Drupal::logger('login_security')->notice('Banned IP address @ip due to security configuration.', $variables);
+  $form_state->setErrorByName('void', new FormattableMarkup($conf->get('host_hard_banned'), $variables));
+}
+
+/**
+ * Block a user by user name. If no user id then block current user.
+ */
+function login_user_block_user_name($variables, FormStateInterface $form_state) {
+  $conf = \Drupal::config('login_security.settings');
+  // If the user exists.
+  if ($variables['@uid'] > 1) {
+    // Modifying the user table is not an option so it disables the user hooks.
+    // Need to do firing the hook so user_notifications can be used.
+    $uid = $variables['@uid'];
+    $account = User::load($uid);
+    // Block account if is active.
+    if ($account->status->value == 1) {
+      $account->status->setValue(0);
+      $account->save();
+      // Remove user from site now.
+      if (\Drupal::currentUser()->isAuthenticated()) {
+        user_logout();
+      }
+      // The watchdog alert is set to 'user' so it will show with other blocked
+      // user messages.
+      \Drupal::logger('login_security')->notice('Blocked user @username due to security configuration.', $variables);
+      // Also notify the user that account has been blocked.
+      $form_state->setErrorByName('void', new FormattableMarkup($conf->get('user_blocked'), $variables));
+
+      // Send notification.
+      $to = $conf->get('user_blocked_notification_emails');
+      if (!empty($to)) {
+        $from = \Drupal::config('system.site')->get('mail');
+        $languageId = \Drupal::languageManager()->getDefaultLanguage()->getId();
+        return \Drupal::service('plugin.manager.mail')->mail('login_security', 'block_user_notify', $to, $languageId, $variables, $from, TRUE);
+      }
+    }
+  }
+}
+
+/**
+ * Returns the user object, of the users exists, otherwise the anonymous user.
+ *
+ * @param string|null $name
+ *   The username to load.
+ *
+ * @return \Drupal\user\UserInterface
+ *   The loaded user or anonymous user fallback.
+ */
+function _login_security_user_load_by_name($name = NULL) {
+  if (empty($name)) {
+    // Load anonymous, if no name given:
+    $account = User::load(0);
+  }
+  else {
+    // Try to load the user by name:
+    $account = user_load_by_name($name);
+    // If the user does not exist, return the anonymous user.
+    if (empty($account)) {
+      // https://drupal.org/node/1744704
+      $account = User::load(0);
+    }
+  }
+  return $account;
+}
+
+/**
+ * Helper function to get the variable array for the messages.
+ *
+ * @param string|null $name
+ *   The username to load the variables for. If NULL given, uses anyonymous.
+ *
+ * @return array
+ *   login_security variables.
+ */
+function _login_security_get_variables_by_name($name = NULL) {
+  global $base_url;
+
+  $config = \Drupal::config('login_security.settings');
+  $account = _login_security_user_load_by_name($name);
+  $ipaddress = \Drupal::request()->getClientIp();
+  $request_time = \Drupal::time()->getRequestTime();
+  $variables = [
+    '@date' => \Drupal::service('date.formatter')->format($request_time),
+    '@ip' => $ipaddress,
+    '@username' => $account->getAccountName(),
+    '@email' => $account->getEmail() ?? '',
+    '@uid' => $account->id(),
+    '@site' => \Drupal::config('system.site')->get('name'),
+    '@uri' => $base_url,
+    '@edit_uri' => Url::fromRoute('entity.user.edit_form', ['user' => $account->id()], ['absolute' => TRUE])->toString(),
+    '@hard_block_attempts' => $config->get('host_wrong_count_hard'),
+    '@soft_block_attempts' => $config->get('host_wrong_count'),
+    '@user_block_attempts' => $config->get('user_wrong_count'),
+    '@user_ip_current_count' => \Drupal::database()->select('login_security_track', 'lst')
+      ->fields('lst', ['id'])
+      ->condition('name', $name)
+      ->condition('host', $ipaddress)
+      ->countQuery()
+      ->execute()
+      ->fetchField(),
+    '@ip_current_count' => \Drupal::database()->select('login_security_track', 'lst')
+      ->fields('lst', ['id'])
+      ->condition('host', $ipaddress)
+      ->countQuery()
+      ->execute()
+      ->fetchField(),
+    '@user_current_count' => \Drupal::database()->select('login_security_track', 'lst')
+      ->fields('lst', ['id'])
+      ->condition('name', $name)
+      ->countQuery()
+      ->execute()
+      ->fetchField(),
+    '@tracking_time' => $config->get('track_time'),
+    '@tracking_current_count' => \Drupal::database()->select('login_security_track', 'lst')
+      ->fields('lst', ['id'])
+      ->countQuery()
+      ->execute()
+      ->fetchField(),
+    '@activity_threshold' => $config->get('activity_threshold'),
+  ];
+  return $variables;
+}
+
+/**
+ * Implements hook_mail().
+ */
+function login_security_mail($key, &$message, $variables) {
+  $conf = \Drupal::config('login_security.settings');
+
+  switch ($key) {
+    case 'block_user_notify':
+      $message['subject'] = new FormattableMarkup($conf->get('user_blocked_email_subject'), $variables);
+      $message['body'][] = new FormattableMarkup($conf->get('user_blocked_email_body'), $variables);
+      break;
+
+    case 'login_activity_notify':
+      $message['subject'] = new FormattableMarkup($conf->get('login_activity_email_subject'), $variables);
+      $message['body'][] = new FormattableMarkup($conf->get('login_activity_email_body'), $variables);
+      break;
+  }
+}
+
+/**
+ * Implements hook_help().
+ */
+function login_security_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.login_security':
+      return '<p>' . t('Make sure you have reviewed the <a href="!README">README file</a> for further information about how all these settings will affect your Drupal login form submissions.', ['!README' => 'http://drupalcode.org/project/login_security.git/blob/refs/heads/6.x-1.x:/README.txt']) . '</p>';
+  }
+}

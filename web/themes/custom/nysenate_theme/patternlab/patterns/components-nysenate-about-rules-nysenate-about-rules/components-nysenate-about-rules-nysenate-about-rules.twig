@@ -1,0 +1,28 @@
+{{ attach_library('nysenate_theme/nysenate-about-rules') }}
+
+<div class="c-block c-block--about-rules">
+
+  {% if title %}
+    <div class="c-container--header">
+      <h3 class="c-container--title">{{ title }}</h3>
+    </div>
+  {% endif %}
+
+  {% if col_1 %}
+    <div class="l-col l-col--padded l-col-2">
+      {{ col_1.content }}
+      {% if col_1.cta.text %}
+        <a class="nys-btn--gold" href="{{ col_1.cta.href }}">{{ col_1.cta.text }}</a>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  {% if col_2 %}
+    <div class="l-col l-col--padded l-col-2">
+      {{ col_2.content }}
+      {% if col_2.cta.text %}
+        <a class="nys-btn--gold" href="{{ col_2.cta.href }}">{{ col_2.cta.text }}</a>
+      {% endif %}
+    </div>
+  {% endif %}
+</div>

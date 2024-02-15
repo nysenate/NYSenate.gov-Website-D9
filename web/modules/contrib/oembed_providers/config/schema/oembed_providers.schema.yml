@@ -1,0 +1,72 @@
+# Schema for the configuration files of the oEmbed Providers module.
+
+oembed_providers.settings:
+  type: config_object
+  label: 'oEmbed Providers settings'
+  mapping:
+    external_fetch:
+      type: boolean
+      label: 'External Fetch'
+
+oembed_providers.provider.*:
+  type: config_entity
+  label: 'oEmbed provider'
+  mapping:
+    id:
+      type: string
+      label: 'Machine-readable name'
+    label:
+      type: label
+      label: 'Provider name'
+    provider_url:
+      type: string
+      label: 'Provider URL'
+    endpoints:
+      type: sequence
+      label: 'Endpoints'
+      sequence:
+        type: mapping
+        label: 'Endpoint'
+        mapping:
+          schemes:
+            type: sequence
+            label: 'Schemes'
+            sequence:
+              type: string
+              label: 'Scheme'
+          url:
+            type: string
+            label: Endpoint URL
+          discovery:
+            type: boolean
+            label: 'Discovery'
+          formats:
+            type: mapping
+            label: 'Formats'
+            mapping:
+              json:
+                type: boolean
+                label: 'JSON'
+              xml:
+                type: boolean
+                label: 'XML'
+
+oembed_providers.bucket.*:
+  type: config_entity
+  label: 'oEmbed provider bucket'
+  mapping:
+    id:
+      type: string
+      label: 'Machine-readable name'
+    label:
+      type: label
+      label: 'Provider name'
+    description:
+      type: string
+      label: 'Description'
+    providers:
+      type: sequence
+      label: 'Allowed Providers'
+      sequence:
+        type: string
+        label: 'Provider'

@@ -1,0 +1,12 @@
+services:
+  plugin.manager.entityqueue.handler:
+    class: Drupal\entityqueue\EntityQueueHandlerManager
+    arguments: ['@container.namespaces', '@cache.default', '@module_handler']
+  entityqueue.route_subscriber:
+    class: Drupal\entityqueue\Routing\RouteSubscriber
+    arguments: ['@entity_type.manager']
+    tags:
+      - { name: event_subscriber }
+  entityqueue.repository:
+    class: Drupal\entityqueue\EntityQueueRepository
+    arguments: ['@entity_type.manager']

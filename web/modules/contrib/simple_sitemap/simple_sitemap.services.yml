@@ -1,0 +1,105 @@
+services:
+  simple_sitemap.generator:
+    class: Drupal\simple_sitemap\Manager\Generator
+    public: true
+    arguments:
+      - '@simple_sitemap.settings'
+      - '@simple_sitemap.queue_worker'
+      - '@lock'
+      - '@simple_sitemap.logger'
+
+  simple_sitemap.entity_manager:
+    class: Drupal\simple_sitemap\Manager\EntityManager
+    public: true
+    arguments:
+      - '@simple_sitemap.entity_helper'
+      - '@simple_sitemap.settings'
+      - '@config.factory'
+      - '@database'
+      - '@entity_type.manager'
+      - '@entity_field.manager'
+
+  simple_sitemap.custom_link_manager:
+    class: Drupal\simple_sitemap\Manager\CustomLinkManager
+    public: true
+    arguments:
+      - '@config.factory'
+      - '@path.validator'
+
+  simple_sitemap.settings:
+    class: Drupal\simple_sitemap\Settings
+    public: true
+    arguments:
+    - '@config.factory'
+
+  simple_sitemap.queue_worker:
+    class: Drupal\simple_sitemap\Queue\QueueWorker
+    public: true
+    arguments:
+    - '@simple_sitemap.settings'
+    - '@state'
+    - '@simple_sitemap.queue'
+    - '@simple_sitemap.logger'
+    - '@module_handler'
+    - '@entity_type.manager'
+    - '@lock'
+
+  simple_sitemap.queue:
+    class: Drupal\simple_sitemap\Queue\SimpleSitemapQueue
+    public: true
+    arguments:
+    - 'simple_sitemap_elements'
+    - '@database'
+    - '@datetime.time'
+
+  simple_sitemap.sitemap_writer:
+    class: Drupal\simple_sitemap\Plugin\simple_sitemap\SitemapGenerator\SitemapWriter
+    public: true
+    arguments:
+      - '@router.route_provider'
+
+  simple_sitemap.entity_helper:
+    class: Drupal\simple_sitemap\Entity\EntityHelper
+    public: true
+    arguments:
+      - '@entity_type.manager'
+      - '@entity_type.bundle.info'
+      - '@config.factory'
+
+  simple_sitemap.form_helper:
+    class: Drupal\simple_sitemap\Form\FormHelper
+    public: true
+    arguments:
+      - '@simple_sitemap.generator'
+      - '@simple_sitemap.settings'
+      - '@simple_sitemap.entity_helper'
+      - '@current_user'
+      - '@class_resolver'
+
+  simple_sitemap.logger:
+    class: Drupal\simple_sitemap\Logger
+    public: true
+    arguments:
+      - '@logger.channel.simple_sitemap'
+      - '@messenger'
+      - '@current_user'
+
+  simple_sitemap.path_processor:
+    class: Drupal\simple_sitemap\PathProcessor\SitemapPathProcessor
+    tags:
+      - { name: path_processor_inbound, priority: 300 }
+      - { name: path_processor_outbound, priority: 300 }
+
+  logger.channel.simple_sitemap:
+    parent: logger.channel_base
+    public: true
+    arguments:
+      - simple_sitemap
+
+  plugin.manager.simple_sitemap.url_generator:
+    class: Drupal\simple_sitemap\Plugin\simple_sitemap\UrlGenerator\UrlGeneratorManager
+    parent: default_plugin_manager
+
+  plugin.manager.simple_sitemap.sitemap_generator:
+    class: Drupal\simple_sitemap\Plugin\simple_sitemap\SitemapGenerator\SitemapGeneratorManager
+    parent: default_plugin_manager

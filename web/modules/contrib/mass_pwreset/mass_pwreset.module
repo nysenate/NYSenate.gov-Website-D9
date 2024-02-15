@@ -1,0 +1,186 @@
+<?php
+
+/**
+ * @file
+ * Reset user passwords and optionally notify users.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Establish batch operation for resetting passwords.
+ *
+ * @param array $data
+ *   The array of data needed for this batch.
+ */
+function mass_pwreset_multiple_reset(array $data) {
+  $batch = [
+    'operations' => [
+      ['mass_pwreset_batch_process', [$data]],
+    ],
+    'finished' => 'mass_pwreset_batch_finished',
+    'title' => t('Multiple password reset'),
+    'init_message' => t('Multiple password reset in progress.'),
+    'progress_message' => t('Password reset batch in progress.'),
+    'error_message' => t('There was an error in the password reset batch.'),
+    'file' => \Drupal::service('extension.list.module')->getPath('mass_pwreset') . '/mass_pwreset.batch.inc',
+  ];
+  // Set batch via form submit handler.
+  batch_set($batch);
+}
+
+/**
+ * Return uids from a list of roles.
+ *
+ * Excludes current uid and uid 1.
+ *
+ * @param array $roles
+ *   An array of select roles.
+ */
+function mass_pwreset_get_uids_by_selected_roles($roles = array()) {
+
+  // Do not include current logged in user.
+  $current_uid = \Drupal::currentUser()->id();
+
+  $db = \Drupal::database();
+  $query = $db->select('users', 'u');
+  $query->innerJoin('user__roles', 'ur', 'u.uid = ur.entity_id');
+  $query->fields('u', ['uid']);
+  $query->condition('ur.roles_target_id', $roles, 'IN');
+  $query->condition('u.uid', [1, $current_uid], 'NOT IN');
+  $query->orderBy('u.uid');
+  $query->distinct();
+  return $query->execute()->fetchCol();
+}
+
+/**
+ * Return uids for all user accounts.
+ *
+ * Excludes uid 0, 1, and current uid.
+ */
+function mass_pwreset_get_uids() {
+
+  // Do not include current logged in user.
+  $current_uid = \Drupal::currentUser()->id();
+
+  $db = \Drupal::database();
+  $query = $db->select('users', 'u');
+  $query->fields('u', ['uid']);
+  $query->condition('u.uid', [0, 1, $current_uid], 'NOT IN');
+  $query->orderBy('u.uid');
+  $query->distinct();
+  return $query->execute()->fetchCol();
+}
+
+/**
+ * Remove anonymous and authenticated and return a list of roles.
+ */
+function mass_pwreset_get_custom_roles() {
+  $roles = user_role_names(TRUE);
+  unset($roles['authenticated']);
+  return $roles;
+}
+
+/**
+ * Implements hook_help().
+ */
+function mass_pwreset_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.mass_pwreset':
+      $render['about'] = [
+        '#markup' => t('About'),
+        '#prefix' => '<h3>',
+        '#suffix' => '</h3>',
+      ];
+      $render['about_content'] = [
+        '#markup' => t('This module will reset passwords for specific roles selected. The administrator account (uid 1) can optionally be reset as well.'),
+        '#prefix' => '<p>',
+        '#suffix' => '</p>',
+        'more' => [
+          '#markup' => t("There is an option to notify the affected users by using Drupal's password recovery email process."),
+          '#prefix' => '<p>',
+          '#suffix' => '</p>',
+        ],
+      ];
+      $render['usage'] = [
+        '#markup' => t('Usage'),
+        '#prefix' => '<h3>',
+        '#suffix' => '</h3>',
+      ];
+      $render['usage_content'] = [
+        '#markup' => t('The password reset form is in a tab in the <b>admin people</b> section. Located at <a href="@link">/admin/people/mass-pwreset</a>', ['@link' => '/admin/people/mass-pwreset']),
+        '#prefix' => '<p>',
+        '#suffix' => '</p>',
+        'list' => [
+          '#theme' => 'item_list',
+          '#title' => t('Password Reset Options'),
+          '#items' => [
+            'Select either all users (authenicated role) or select specific roles for the users you want to reset',
+            'Select to notify active and blocked user accounts using the Drupal password recovery email system',
+            'To reset the administrator account (uid 1) you must also select include admin user',
+            'Start the process by clicking the "Reset Passwords" button',
+          ],
+        ],
+      ];
+      $render['logging'] = [
+        '#markup' => t('Logging'),
+        '#prefix' => '<h3>',
+        '#suffix' => '</h3>',
+      ];
+      $render['logging_content'] = [
+        '#markup' => t('The user accounts will be updated in a batch session. The uid will be logged for each user and the finished batch will be logged as well.'),
+        '#prefix' => '<p>',
+        '#suffix' => '</p>',
+      ];
+      return $render;
+  }
+}
+
+/**
+ * Generate user passwords.
+ *
+ * Modified version of Drupal's user_password() to include special characters.
+ *
+ * @param int $password_length
+ *   Length of password.
+ *
+ * @return string
+ *   Generated password
+ */
+function _mass_pwreset_generate_password($password_length = 20) {
+
+  // Regex to enforce the password requirements.
+  // First and last characters cannot be digits (0-9).
+  // Must contain two digit characters (0-9).
+  // Must contain one lower case character (a-z).
+  // Must contain one upper case character (A-Z).
+  // Must contain three special characters
+  // ( ()`~!@#$%^&*-+=|\{}[]:;"'<>,.?/ ).
+  // Minimum length is 12 characters.
+  // Maximum length is 128 characters.
+  $password_requirements = '_^(?=.*\d.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[()`~!@#$%^\&*\-+=\|\\{}[\]:;"\'<>,.?/].*[()`~!@#$%^\&*\-+=\|\\{}[\]:;"\'<>,.?/].*[()`~!@#$%^\&*\-+=\|\\{}[\]:;"\'<>,.?/])[\D]{1}[\s0-9a-zA-Z()`~!@#$%^\&*\-+=\|\\{}[\]:;"\'<>,.?/]{10,126}[\D]{1}$_';
+
+  // List of allowable characters for the password.
+  $allowable_characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ0123456789()`~!@#$%^&*-+=|\{}[]:;"\'<>,.?/';
+
+  // Zero-based count of characters in the allowable list.
+  $characters_length = Unicode::strlen($allowable_characters) - 1;
+  $characters_length = mb_strlen($allowable_characters) - 1;
+
+  $new_password = '';
+  // Generate passwords until password requirements are met.
+  while (preg_match($password_requirements, $new_password) == 0) {
+    // Loop the number of times specified by $length.
+    for ($i = 0; $i < $characters_length; $i++) {
+      do {
+        // Find a secure random number within the range needed.
+        $index = ord(drupal_random_bytes(1));
+      } while ($index > $len);
+
+      // Each iteration, pick a random character from the
+      // allowable string and append it to the password:
+      $new_password .= $allowable_characters[$index];
+    }
+  }
+  return $new_password;
+}

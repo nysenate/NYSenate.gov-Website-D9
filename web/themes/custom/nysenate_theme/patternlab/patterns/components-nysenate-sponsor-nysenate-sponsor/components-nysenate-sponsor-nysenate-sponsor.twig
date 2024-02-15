@@ -1,0 +1,34 @@
+<h3 style="margin-top:20px;margin-bottom:0;" class="c-detail--subhead c-detail--section-title c-bill-detail--subhead">Sponsored By</h3>
+<div class="c-sponsor" style="overflow:auto;">
+
+  {% if ol_sponsor or ol_sponsor_name or ol_add_sponsors or sponsor_names %}
+    {% if ol_sponsor %}
+      {{ ol_sponsor }}
+    {% elseif ol_sponsor_name %}
+      <div class="nys-senator sponsor-list c-bill--nys-senator">
+        <div class="nys-senator--info">
+        <h4 class="nys-senator--name">
+          {{ ol_sponsor_name }}
+        </h4>
+        </div>
+      </div>
+    {% endif %}
+
+    {% if ol_add_sponsors %}
+      {{ ol_add_sponsors }}
+    {% endif %}
+
+    {% if sponsor_names %}
+      <div class="nys-senator sponsor-list c-bill--nys-senator">
+        <div class="nys-senator--info">
+          <label>Additional Sponsors:</label>
+            <h4 class="nys-senator--name">
+              {{ sponsor_names }}
+            </h4>
+        </div>
+      </div>
+    {% endif %}
+  {% else %}
+    <p style="margin:.75em 0">There are no sponsors of this bill.</p>
+  {% endif %}
+</div>

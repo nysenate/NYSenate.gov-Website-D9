@@ -1,0 +1,41 @@
+name: Code quality
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+
+  static-analysis:
+    name: "Code quality checks"
+    runs-on: "ubuntu-20.04"
+
+    strategy:
+      matrix:
+        php-version:
+          - "7.3"
+
+    steps:
+      - name: "Checkout code"
+        uses: "actions/checkout@v3"
+
+      - name: "Install PHP"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          coverage: "none"
+          php-version: "${{ matrix.php-version }}"
+          tools: "cs2pr"
+
+      - name: "Install dependencies with Composer"
+        uses: "ramsey/composer-install@v1"
+
+      - name: "Run static analysis with phpstan/phpstan"
+        run: "vendor/bin/phpstan"
+
+      - name: "Run static analysis with vimeo/psalm"
+        run: ./vendor/bin/psalm --shepherd
+
+      - name: "Run code style check with squizlabs/php_codesniffer"
+        run: ./vendor/bin/phpcs --runtime-set ignore_warnings_on_exit 1

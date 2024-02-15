@@ -1,0 +1,40 @@
+# Schema for the configuration files of the turnstile module.
+
+turnstile.settings:
+  type: config_object
+  label: 'Turnstile settings'
+  mapping:
+    site_key:
+      type: string
+      label: 'Site key'
+    secret_key:
+      type: string
+      label: 'Secret key'
+    turnstile_src:
+      type: string
+      label: 'Turnstile JavaScript resource URL'
+    widget:
+      type: mapping
+      label: 'Widget settings'
+      mapping:
+        theme:
+          type: string
+          label: 'Theme'
+        size:
+          type: string
+          label: 'Size'
+        tabindex:
+          type: integer
+          label: 'Tabindex'
+        language:
+          type: string
+          lable: 'Language'
+        retry:
+          type: string
+          lable: 'Retry'
+        retry_interval:
+          type: integer
+          lable: 'Retry Interval'
+        appearance:
+          type: string
+          lable: 'Appearance'

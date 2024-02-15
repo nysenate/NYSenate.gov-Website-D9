@@ -1,0 +1,29 @@
+<?php
+
+/**
+ * @file
+ * Contains node_revision_generate.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_help().
+ */
+function node_revision_generate_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the node_revision_generate module.
+    case 'help.page.node_revision_generate':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Node Revision Generate module allows you to generate node revisions. This module is for testing.') . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Generating revisions') . '</dt>';
+      $output .= '<dd>' . t('To generate revisions visit the <a href=":generate-page">Node Revision Generate</a> page and select the content type for which you are going to generate revisions, then select the number of revision to generate for each node and the age between each revision and click on the Generate revisions button. The first revision for each node will be generated starting from the created date of the last revision and the last one will not have a date in the future.', [':generate-page' => Url::fromRoute('node_revision_generate.generate_revisions')->toString()]) . '</dd>';
+      $output .= '</dl>';
+
+      return $output;
+  }
+}

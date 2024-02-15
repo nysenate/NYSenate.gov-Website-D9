@@ -1,0 +1,30 @@
+services:
+  scheduler.manager:
+    class: Drupal\scheduler\SchedulerManager
+    arguments:
+      - '@date.formatter'
+      - '@logger.channel.scheduler'
+      - '@module_handler'
+      - '@entity_type.manager'
+      - '@config.factory'
+      - '@event_dispatcher'
+      - '@datetime.time'
+      - '@entity_field.manager'
+      - '@plugin.manager.scheduler'
+  logger.channel.scheduler:
+    class: Drupal\Core\Logger\LoggerChannel
+    factory: logger.factory:get
+    arguments: ['scheduler']
+  theme.negotiator.scheduler:
+    class: Drupal\scheduler\Theme\SchedulerThemeNegotiator
+    tags:
+      - { name: theme_negotiator, priority: 10 }
+  plugin.manager.scheduler:
+    class: Drupal\scheduler\SchedulerPluginManager
+    parent: default_plugin_manager
+    arguments:
+      - '@entity_type.manager'
+  scheduler.route_subscriber:
+    class: Drupal\scheduler\Routing\SchedulerRouteSubscriber
+    tags:
+      - { name: event_subscriber }

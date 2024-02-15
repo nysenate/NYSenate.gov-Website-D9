@@ -3,13 +3,13 @@
 namespace Drupal\nys_calendar\Plugin\views\filter;
 
 /**
- * Start of year filter.
+ * Session year filter.
  *
  * @ingroup views_filter_handlers
  *
- * @ViewsFilter("created_year")
+ * @ViewsFilter("session_year")
  */
-class CreatedYearFilter extends YearFilterBase {
+class SessionYearFilter extends YearFilterBase {
 
   /**
    * {@inheritdoc}
@@ -23,7 +23,7 @@ class CreatedYearFilter extends YearFilterBase {
       return;
     }
 
-    // Get selected year datetime object.
+    // Prepare value for query.
     $timezone = new \DateTimeZone('America/New_York');
     if ($input_value == 'current_year') {
       $current_year_start = new \DateTime("first day of january", $timezone);
@@ -32,22 +32,7 @@ class CreatedYearFilter extends YearFilterBase {
     else {
       $selected_year = $input_value;
     }
-    $selected_year_start = new \DateTime("first day of january $selected_year", $timezone);
-
-    // Prepare value and operator for query.
-    if ($this->operator == '=') {
-      $this->operator = 'BETWEEN';
-      $following_year = $selected_year + 1;
-      $next_year_start = new \DateTime("first day of january $following_year", $timezone);
-      $processed_value = [
-        $selected_year_start->getTimestamp(),
-        $next_year_start->getTimestamp(),
-      ];
-    }
-    else {
-      $processed_value = $selected_year_start->getTimestamp();
-    }
-    $this->value = $processed_value;
+    $this->value = $selected_year;
 
     parent::query();
   }

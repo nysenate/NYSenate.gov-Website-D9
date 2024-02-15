@@ -35,7 +35,7 @@ abstract class YearFilterBase extends FilterPluginBase {
    * {@inheritDoc}
    */
   public function operatorForm(&$form, FormStateInterface $form_state) {
-    $default_value = 'BETWEEN';
+    $default_value = '=';
     if (
       !empty($this->options['operator'])
       && $this->options['operator'] != '='
@@ -48,7 +48,7 @@ abstract class YearFilterBase extends FilterPluginBase {
       '#title' => $this->t('Show content from'),
       '#options' => [
         'all' => '- Any -',
-        'BETWEEN' => 'Selected year',
+        '=' => 'Selected year',
         '>=' => 'After start of selected year',
         '<' => 'Before start of selected year',
       ],

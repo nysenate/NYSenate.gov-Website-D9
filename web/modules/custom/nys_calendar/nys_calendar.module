@@ -107,8 +107,19 @@ function nys_calendar_views_data() {
     'filter' => [
       'title' => t('Filter on created year'),
       'help' => t('Custom NYS filter based on the node created date.'),
+      'group' => t('Content'),
       'field' => 'created',
       'id' => 'created_year',
+    ],
+  ];
+  $data['node__field_ol_session']['session_year'] = [
+    'title' => t('Filter on session year'),
+    'filter' => [
+      'title' => t('Filter on session year'),
+      'help' => t('Custom NYS filter based on the field_ol_session.'),
+      'group' => t('Content'),
+      'field' => 'field_ol_session_value',
+      'id' => 'session_year',
     ],
   ];
   return $data;

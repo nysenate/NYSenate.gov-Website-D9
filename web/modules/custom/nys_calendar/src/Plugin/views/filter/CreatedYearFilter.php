@@ -22,12 +22,16 @@ class CreatedYearFilter extends FilterPluginBase {
     $current_datetime = new \DateTime('now', $timezone);
     $current_year = $current_datetime->format('Y');
     $years = range($current_year, $current_year - 30);
-    $options = ['current_year' => 'Current year'] + array_combine($years, $years);
+    $static_options = [
+      'all' => '- Any -',
+      'current_year' => 'Current year',
+    ];
+    $dynamic_options = array_combine($years, $years);
     $form['value'] = [
       '#type' => 'select',
       '#title' => $this->t('Selected year'),
-      '#options' => $options,
-      '#default_value' => !empty($this->options['value']) ? $this->options['value'] : 'current_year',
+      '#options' => $static_options + $dynamic_options,
+      '#default_value' => !empty($this->options['value']) ? $this->options['value'] : 'all',
     ];
   }
 
@@ -35,26 +39,65 @@ class CreatedYearFilter extends FilterPluginBase {
    * {@inheritDoc}
    */
   public function operatorForm(&$form, FormStateInterface $form_state) {
+    $default_value = 'BETWEEN';
+    if (
+      !empty($this->options['operator'])
+      && $this->options['operator'] != '='
+    ) {
+      $default_value = $this->options['operator'];
+    }
+
     $form['operator'] = [
       '#type' => 'select',
-      '#title' => $this->t('Operator!'),
+      '#title' => $this->t('Show content from'),
       '#options' => [
-        'BETWEEN' => 'During selected year',
+        'all' => '- Any -',
+        'BETWEEN' => 'Selected year',
         '>=' => 'After start of selected year',
         '<' => 'Before start of selected year',
       ],
-      '#default_value' => !empty($this->options['operator']) ? $this->options['operator'] : 'BETWEEN',
+      '#default_value' => $default_value,
     ];
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
+   */
+  public function buildExposeForm(&$form, FormStateInterface $form_state) {
+    parent::buildExposeForm($form, $form_state);
+    foreach ($form['expose'] as $expose_field_key => $expose_field) {
+      if (!empty($form['expose'][$expose_field_key]['#type'])) {
+        $form['expose'][$expose_field_key]['#access'] = FALSE;
+      }
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildExposedForm(&$form, FormStateInterface $form_state) {
+    // Build operator form element.
+    $operator = $this->options['expose']['operator_id'];
+    $op_wrapper = $this->options['expose']['identifier'] . '_wrapper';
+    $this->buildValueWrapper($form, $op_wrapper);
+    $this->operatorForm($form, $form_state);
+    $form[$op_wrapper][$operator] = $form['operator'];
+    unset($form['operator']);
+
+    // Build value form element.
+    $value = $this->options['expose']['identifier'];
+    $val_wrapper = $value . '_wrapper';
+    $this->buildValueWrapper($form, $val_wrapper);
+    $this->valueForm($form, $form_state);
+    $form[$val_wrapper][$value] = $form['value'];
+    unset($form['value']);
+  }
+
+  /**
+   * {@inheritdoc}
    */
   public function query() {
-    $timezone = new \DateTimeZone('America/New_York');
-    $where_field = "$this->table.$this->realField";
-
-    // Get input value depending on context (in_array = exposed filter input).
+    // Get input value depending on context.
     if (is_array($this->value)) {
       $input_value = $this->value[0];
     }
@@ -62,7 +105,13 @@ class CreatedYearFilter extends FilterPluginBase {
       $input_value = $this->value;
     }
 
+    // Bypass query additions if either field set to 'all'.
+    if ($input_value == 'all' || $this->operator == 'all') {
+      return;
+    }
+
     // Get selected year datetime object.
+    $timezone = new \DateTimeZone('America/New_York');
     if ($input_value == 'current_year') {
       $current_year_start = new \DateTime("first day of january", $timezone);
       $selected_year = $current_year_start->format('Y');
@@ -72,21 +121,21 @@ class CreatedYearFilter extends FilterPluginBase {
     }
     $selected_year_start = new \DateTime("first day of january $selected_year", $timezone);
 
-    // Setup where_value based on operator.
+    // Prepare value for query.
     if ($this->operator == 'BETWEEN') {
       $following_year = $selected_year + 1;
       $next_year_start = new \DateTime("first day of january $following_year", $timezone);
-      $where_value = [
+      $processed_value = [
         $selected_year_start->getTimestamp(),
         $next_year_start->getTimestamp(),
       ];
     }
     else {
-      $where_value = $selected_year_start->getTimestamp();
+      $processed_value = $selected_year_start->getTimestamp();
     }
+    $this->value = $processed_value;
 
-    // Update query from input.
-    $this->query->addWhere(0, $where_field, $where_value, $this->operator);
+    parent::query();
   }
 
 }

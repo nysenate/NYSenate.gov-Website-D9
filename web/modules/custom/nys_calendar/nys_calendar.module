@@ -103,10 +103,10 @@ function nys_calendar_preprocess_page(&$variables) {
  */
 function nys_calendar_views_data() {
   $data['node_field_data']['created_year'] = [
-    'title' => t('Created Year - NYS Custom Filter'),
+    'title' => t('Filter on created year'),
     'filter' => [
-      'title' => t('Created Year - NYS Custom Filter'),
-      'help' => t('Custom filter options based on the node created date.'),
+      'title' => t('Filter on created year'),
+      'help' => t('Custom NYS filter based on the node created date.'),
       'field' => 'created',
       'id' => 'created_year',
     ],

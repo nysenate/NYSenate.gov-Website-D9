@@ -8,8 +8,8 @@ Cypress.on('uncaught:exception', (err, runnable) => {
 })
 
 describe('Bulk Visual Regression testing with Percy', () => {
-  vrtUrls.forEach((data) => {
-    it(`Sending ${data.name} (${data.path}) to Percy`, function () {
+  it('Sending all URLs to Percy', function () {
+    vrtUrls.forEach((data) => {
       cy.visit(data.path)
       cy.scrollTo('bottom')
       cy.percySnapshot(data.name)

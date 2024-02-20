@@ -6,9 +6,13 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\filter\FilterPluginBase;
 
 /**
- * Base class for custom year-based filtering.
+ * Year filter.
+ *
+ * @ingroup views_filter_handlers
+ *
+ * @ViewsFilter("year_filter")
  */
-abstract class YearFilterBase extends FilterPluginBase {
+class YearFilter extends FilterPluginBase {
 
   /**
    * {@inheritdoc}
@@ -35,14 +39,6 @@ abstract class YearFilterBase extends FilterPluginBase {
    * {@inheritDoc}
    */
   public function operatorForm(&$form, FormStateInterface $form_state) {
-    $default_value = '=';
-    if (
-      !empty($this->options['operator'])
-      && $this->options['operator'] != '='
-    ) {
-      $default_value = $this->options['operator'];
-    }
-
     $form['operator'] = [
       '#type' => 'select',
       '#title' => $this->t('Show content from'),
@@ -52,7 +48,7 @@ abstract class YearFilterBase extends FilterPluginBase {
         '>=' => 'After start of selected year',
         '<' => 'Before start of selected year',
       ],
-      '#default_value' => $default_value,
+      '#default_value' => !empty($this->options['operator']) ? $this->options['operator'] : 'all',
     ];
   }
 
@@ -88,6 +84,46 @@ abstract class YearFilterBase extends FilterPluginBase {
     $this->valueForm($form, $form_state);
     $form[$val_wrapper][$value] = $form['value'];
     unset($form['value']);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function query() {
+    // Make input value consistent regardless of filter context.
+    $this->value = is_array($this->value) && !empty($this->value[0]) ? $this->value[0] : $this->value;
+
+    // Bypass query additions if either field set to 'all'.
+    if ($this->value == 'all' || $this->operator == 'all') {
+      return;
+    }
+
+    // Dynamically set 'current_year' to current year.
+    if ($this->value == 'current_year') {
+      $timezone = new \DateTimeZone('America/New_York');
+      $current_year = new \DateTime("now", $timezone);
+      $this->value = $current_year->format('Y');
+    }
+
+    // Process value(s) and operator for datetime fields.
+    if ($this->configuration['field_type'] == 'datetime') {
+      $selected_year_start = new \DateTime("first day of january $this->value", $timezone);
+
+      if ($this->operator == '=') {
+        $this->operator = 'BETWEEN';
+        $following_year = $this->value + 1;
+        $next_year_start = new \DateTime("first day of january $following_year", $timezone);
+        $this->value = [
+          $selected_year_start->getTimestamp(),
+          $next_year_start->getTimestamp(),
+        ];
+      }
+      else {
+        $this->value = $selected_year_start->getTimestamp();
+      }
+    }
+
+    parent::query();
   }
 
 }

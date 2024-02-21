@@ -6,12 +6,12 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Http\RequestStack;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\nys_senators\Service\Microsites;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\TermInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Collects "helper" functions for Senator entities.
@@ -53,7 +53,7 @@ class SenatorsHelper {
    *   The entity type manager service.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   The backend cache.
-   * @param \Drupal\Core\Http\RequestStack $request_stack
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   A request stack service.
    * @param \Drupal\nys_senators\Service\Microsites $microsites
    *   NYS Senators Microsites service.

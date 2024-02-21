@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3ce25bf48b8a1cd69c5b0bd7c0cacba2",
+    "content-hash": "a340441bc0076093ee98af4c16b7702f",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1661,11 +1661,17 @@
         },
         {
             "name": "drupal/address_map_link",
-            "version": "dev-3411810-composer-dependency-on",
+            "version": "1.4.0",
             "source": {
                 "type": "git",
-                "url": "https://oauth2:5eWouk836yRxGz4RUPy7@git.drupalcode.org/issue/address_map_link-3411810.git",
-                "reference": "768408f10ff349e0554b88ec3f33884da46157a1"
+                "url": "https://git.drupalcode.org/project/address_map_link.git",
+                "reference": "8.x-1.4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/address_map_link-8.x-1.4.zip",
+                "reference": "8.x-1.4",
+                "shasum": "854c86a4e4ac6ef492e502659acf8eed89e56058"
             },
             "require": {
                 "drupal/address": "^1.0 || ^2.0",
@@ -1673,14 +1679,25 @@
                 "php": "^7.3 || ^8.0"
             },
             "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-1.4",
+                    "datestamp": "1708441555",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
             "license": [
                 "GPL-2.0-or-later"
             ],
             "authors": [
                 {
                     "name": "Chris Snyder",
-                    "email": "chris@chrissnyder.org",
                     "homepage": "https://www.drupal.org/u/chrissnyder",
+                    "email": "chris@chrissnyder.org",
                     "role": "Maintainer"
                 }
             ],
@@ -1690,10 +1707,9 @@
                 "Drupal"
             ],
             "support": {
-                "issues": "https://www.drupal.org/project/issues/address_map_link",
-                "source": "https://cgit.drupalcode.org/address_map_link"
-            },
-            "time": "2024-02-20T14:58:38+00:00"
+                "source": "https://cgit.drupalcode.org/address_map_link",
+                "issues": "https://www.drupal.org/project/issues/address_map_link"
+            }
         },
         {
             "name": "drupal/admin_toolbar",
@@ -7704,17 +7720,17 @@
         },
         {
             "name": "drupal/node_access_rebuild_progressive",
-            "version": "2.0.1",
+            "version": "2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/node_access_rebuild_progressive.git",
-                "reference": "2.0.1"
+                "reference": "2.0.2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/node_access_rebuild_progressive-2.0.1.zip",
-                "reference": "2.0.1",
-                "shasum": "7b14ec8b5b1127e0cd894fe82b4f13a62305f7b8"
+                "url": "https://ftp.drupal.org/files/projects/node_access_rebuild_progressive-2.0.2.zip",
+                "reference": "2.0.2",
+                "shasum": "2543cc927880cc1f023fff2a239a12970c4bdf1f"
             },
             "require": {
                 "consolidation/site-alias": "*",
@@ -7724,8 +7740,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "2.0.1",
-                    "datestamp": "1697559606",
+                    "version": "2.0.2",
+                    "datestamp": "1708536170",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -25888,7 +25904,6 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "drupal/address_map_link": 20,
         "drupal/ajax_comments": 10,
         "drupal/auto_entitylabel": 10,
         "drupal/block_field": 5,

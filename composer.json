@@ -12,10 +12,7 @@
     "repositories": [
         {
             "type": "composer",
-            "url": "https://packages.drupal.org/8",
-            "exclude": [
-                "drupal/address_map_link"
-            ]
+            "url": "https://packages.drupal.org/8"
         },
         {
             "type": "composer",
@@ -33,7 +30,7 @@
         "cweagans/composer-patches": "^1.7.0",
         "dompdf/dompdf": "^2.0",
         "drupal/address": "^2.0",
-        "drupal/address_map_link": "dev-3411810-composer-dependency-on",
+        "drupal/address_map_link": "^1.4",
         "drupal/admin_toolbar": "^3.0",
         "drupal/ajax_comments": "^1.0@beta",
         "drupal/allowed_formats": "^2.0 || ^3.0",
@@ -328,9 +325,6 @@
             "drupal/clamav": {
                 "3383653 -Support image upload plugin for CKEditor5\n": "https://git.drupalcode.org/project/clamav/-/merge_requests/7.patch"
             }
-        },
-        "drupal-lenient": {
-            "allowed-list": ["drupal/address_map_link", "drupal/address_map_link"]
         }
     }
 }

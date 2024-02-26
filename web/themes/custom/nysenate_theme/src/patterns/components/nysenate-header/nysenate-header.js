@@ -45,12 +45,9 @@
 
       if (self.isSenatorLanding(origNav)) {
         actionBar = nav.find('.c-senator-hero');
+        nav.find('#senatorImage').html(nav.find('#smallShotImage').html());
 
         if (self.isSenatorCollapsed()) {
-          $(document).ready(function () {
-            $('#senatorImage').html($('#smallShotImage').html());
-          });
-
           // place origin Nav
           origNav
             .prependTo('.page')
@@ -364,7 +361,6 @@
           currentTop < origNav.outerHeight() &&
           !this.isSenatorCollapsed()
         ) {
-          $('#senatorImage').html($('#smallShotImage').html());
           actionBar.addClass('hidden');
           headerBar.removeClass('collapsed');
         }
@@ -392,7 +388,6 @@
           }
         }
         else if (currentTop >= heroHeight) {
-          $('#senatorImage').html($('#smallShotImage').html());
           actionBar.removeClass('hidden');
           headerBar.addClass('collapsed');
           this.checkMenuState(menu, currentTop, previousTop);
@@ -438,21 +433,15 @@
       if (!topBarToggle) {
         if (
           currentTop > nav.outerHeight() &&
-          !headerBar.hasClass('collapsed') &&
-          !nav.hasClass('l-header__collapsed')
+          !headerBar.hasClass('collapsed')
         ) {
           headerBar.addClass('collapsed');
-          nav.addClass('l-header__collapsed');
         }
         else if (
           currentTop <= nav.outerHeight() &&
-          headerBar.hasClass('collapsed') &&
-          nav.hasClass('l-header__collapsed')
+          headerBar.hasClass('collapsed')
         ) {
           headerBar.removeClass('collapsed');
-          if (!this.isSenatorCollapsed()) {
-            nav.removeClass('l-header__collapsed');
-          }
         }
       }
     },

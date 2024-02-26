@@ -2,20 +2,24 @@
 {{ attach_library('rain_theme/media') }}
 {% import '@nysenate_theme/icons/_icons-macro.twig' as icons %}
 
-<section class="hero {% if type == "senator" %} hero--senator{% if is_senator_landing is same as(false) %} hero--senator-collapsed{% endif %}{% else %} hero--homepage{% endif %} {% if type == " default" %} hero--default{% endif %} {% if type == " press_conference" or type == " public_hearing" or type == " session" %}hero--public-hearing{% endif %}">
+<section class="hero {% if type == "senator" %} hero--senator{% if not is_senator_landing %} hero--senator-collapsed{% endif %}{% else %} hero--homepage{% endif %} {% if type == " default" %} hero--default{% endif %} {% if type == " press_conference" or type == " public_hearing" or type == " session" %}hero--public-hearing{% endif %}">
   {% if type == "senator" %}
     {# start of senator hero #}
     <div class="l-header-region l-row l-row--hero c-senator-hero">
       <div class="c-senator-hero--img" id="senatorImage">
-        {% if image_hero %}
+        {% if not is_senator_landing %}
+          {{ senator_headshot }}
+        {% elseif image_hero %}
           {{ image_hero }}
         {% else %}
           <img src="{{ default_image }}">
         {% endif %}
       </div>
-      <div id="smallShotImage">
-        {{ senator_headshot }}
-      </div>
+      {% if is_senator_landing %}
+        <div id="smallShotImage">
+          {{ senator_headshot }}
+        </div>
+      {% endif %}
       <div class="c-senator-hero--info {% if not is_active %} inactive-pallette {% endif %}">
         <div>
           <h2 class="c-senator-hero--title">

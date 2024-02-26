@@ -4,7 +4,7 @@
 {% set error_page = false or is_error_page %}
 
 <header
-  id="js-sticky" role="banner" class="l-header {{ error_page ? 'error-page-header' : '' }}" style="z-index: 100;">
+  id="js-sticky" role="banner" class="l-header {{ error_page ? 'error-page-header' : '' }} {% if not is_senator_landing %} l-header__collapsed{% endif %}" style="z-index: 100;">
   <!-- Begin Header -->
   <div class="panel-pane pane-block pane-nys-blocks-sitewide-header-bar-block">
 

@@ -333,6 +333,7 @@ function nysenate_theme_preprocess_block_content__microsite_hero(&$variables) {
 
   $node = \Drupal::routeMatch()->getParameter('node');
 
+  $variables['is_senator_landing'] = FALSE;
   if (!empty($node) && $node->hasField('field_microsite_page_type') && !$node->get('field_microsite_page_type')->isEmpty()) {
     $term = $node->field_microsite_page_type->entity ?? [];
     if ($term instanceof TermInterface) {

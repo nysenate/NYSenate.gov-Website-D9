@@ -3,9 +3,9 @@
   Drupal.behaviors.nysenateHeader = {
     attach: function (context) {
       // If admin toolbar is present, abort and use static nav bar.
-      //if ($('#toolbar-administration').length > 0) {
-      //  return;
-      //}
+      if ($('#toolbar-administration').length > 0) {
+       return;
+      }
 
       let self = this;
       let userScroll = 0;

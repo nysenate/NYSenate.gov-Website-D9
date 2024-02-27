@@ -107,7 +107,12 @@ elements: |-
           '#options': yes_no
           '#title': 'Show Student?'
           '#default_value': 'No'
-          '#private': true
+          '#access_create_roles':
+            - administrator
+          '#access_update_roles':
+            - administrator
+          '#access_view_roles':
+            - administrator
   actions:
     '#type': webform_actions
     '#title': 'Submit button(s)'
@@ -256,8 +261,7 @@ access:
     permissions: {  }
   view_any:
     roles:
-      - anonymous
-      - authenticated
+      - administrator
     users: {  }
     permissions: {  }
   update_any:
@@ -297,7 +301,8 @@ access:
     users: {  }
     permissions: {  }
   configuration:
-    roles: {  }
+    roles:
+      - administrator
     users: {  }
     permissions: {  }
 handlers:

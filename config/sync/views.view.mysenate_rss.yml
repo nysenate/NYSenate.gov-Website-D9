@@ -234,7 +234,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: '{{ field_date_range|split('' - '')[0] }}'
+            text: "{{ field_date_range|split(' - ')[0] }}"
             make_link: false
             path: ''
             absolute: false

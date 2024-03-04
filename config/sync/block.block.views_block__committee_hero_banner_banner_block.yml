@@ -1,0 +1,33 @@
+uuid: 05b9b4c6-6ddd-4308-8225-9ab112bed152
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.committee_hero_banner
+  module:
+    - taxonomy
+    - views
+  theme:
+    - nysenate_theme
+id: views_block__committee_hero_banner_banner_block
+theme: nysenate_theme
+region: above_content
+weight: 0
+provider: null
+plugin: 'views_block:committee_hero_banner-banner_block'
+settings:
+  id: 'views_block:committee_hero_banner-banner_block'
+  label: ''
+  label_display: '0'
+  provider: views
+  context_mapping: {  }
+  views_label: ''
+  items_per_page: none
+visibility:
+  'entity_bundle:taxonomy_term':
+    id: 'entity_bundle:taxonomy_term'
+    negate: false
+    context_mapping:
+      taxonomy_term: '@taxonomy_term.taxonomy_term_route_context:taxonomy_term'
+    bundles:
+      committees: committees

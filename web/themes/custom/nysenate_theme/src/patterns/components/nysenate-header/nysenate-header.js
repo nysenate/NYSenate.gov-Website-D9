@@ -432,14 +432,12 @@
 
       if (!topBarToggle) {
         if (
-          currentTop > nav.outerHeight() &&
-          !headerBar.hasClass('collapsed')
+          currentTop > nav.outerHeight()
         ) {
           headerBar.addClass('collapsed');
         }
         else if (
-          currentTop <= nav.outerHeight() &&
-          headerBar.hasClass('collapsed')
+          currentTop <= nav.outerHeight()
         ) {
           headerBar.removeClass('collapsed');
         }

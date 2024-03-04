@@ -37,22 +37,7 @@
 %}
 <div{{attributes.setAttribute('id','taxonomy-term-'~term.id).addClass(classes)}}>
 
-  {% if content.field_image_hero.0 is not empty %}
-    <div class="landing-page-hero">
-      <div class="l-row l-row--hero">
-        {{ content.field_image_hero.0 }}
-        <div class="l-row l-row--main c-hero--tout">
-          <div class="c-about--welcome">
-            <h2 class="nys-title nys-title--about">{{ name }}</h2>
-            <div class="c-committee-type">
-              <a href="/senators-committees" title="Senators & Committees">{{ content.field_committee_types }}</a>
-            </div>
-            {{ content.description }}
-          </div>
-        </div>
-      </div>
-    </div>
-  {% else %}
+  {% if content.field_image_hero.0 is empty %}
     <div class="c-committee-header">
       <h2 class="nys-title">{{ name }}</h2>
       <div class="c-committee-type">

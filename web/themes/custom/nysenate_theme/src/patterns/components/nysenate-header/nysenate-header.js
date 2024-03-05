@@ -253,13 +253,13 @@
         }
       }
 
-      mobileNavToggle
-        .once('nySenateHeaderMobile')
-        .on('click touch', function () {
-          self.toggleMobileNav(menu);
-        });
+      $(once('nySenateHeaderMobile', mobileNavToggle))
+      .on('click touch', function () {
+        self.toggleMobileNav(menu);
+      });
 
-      searchToggle.once('nySenateHeader').on('click touch', function (e) {
+      $(once('nySenateHeader', searchToggle))
+      .on('click touch', function (e) {
         self.toggleSearchBar(userScroll, e);
       });
 

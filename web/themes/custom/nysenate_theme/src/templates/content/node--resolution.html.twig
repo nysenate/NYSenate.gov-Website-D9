@@ -66,7 +66,7 @@
     {% endif %}
 
     <!-- Bill Co/Multi Sponsors -->
-    {% if sponsors_array %}
+    {% if sponsors_array.co %}
     <div class="c-block c-detail--sponsors c-bill-section">
       {% if sponsors_array.co|length > 0 or sponsors_array.multi|length > 0 %}
         {% for key, list in sponsors_array %}

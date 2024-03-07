@@ -4123,7 +4123,6 @@ function nysenate_theme_preprocess_node__resolution(&$variables) {
       // Handle legacy statuses.
       $statuses->date = $statuses->actionDate;
       $statuses->text = $statuses->statusDesc;
-
       $statuses = [$statuses];
     }
 
@@ -4190,6 +4189,18 @@ function nysenate_theme_preprocess_node__resolution(&$variables) {
     ->resolveAmendmentSponsors($node, $chamber);
 
   $variables['active_amend_url'] = $node->toUrl('canonical', ['absolute' => TRUE])->toString();
+
+  // Sponsor.
+  $sponsor = NULL;
+  if ($node->hasField('field_ol_sponsor') && !empty($node->field_ol_sponsor->target_id)) {
+    $sponsor = \Drupal::entityTypeManager()
+      ->getStorage('taxonomy_term')
+      ->load($node->field_ol_sponsor->target_id);
+
+    $variables['sponsor_link'] = $sponsor
+      ? \Drupal::service('nys_senators.microsites')->getMicrosite($sponsor)
+      : '';
+  }
 }
 
 /**

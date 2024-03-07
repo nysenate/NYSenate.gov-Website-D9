@@ -3920,6 +3920,10 @@ function nysenate_theme_preprocess_node__bill(&$variables) {
   $amendments_block = $block_manager->createInstance('nys_bills_amendment_block', []);
   $variables['amendments_block'] = $amendments_block->build();
 
+  $amendments_block_new = Views::getView('bill_amendments')
+    ->buildRenderable('tabbed_view');
+  $variables['amendments_block_new'] = $amendments_block_new;
+
   // Detect signed/vetoed status.
   $status_value = $node->field_ol_last_status->value;
   if ($variables['is_substituted']) {

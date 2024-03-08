@@ -4196,7 +4196,7 @@ function nysenate_theme_preprocess_node__resolution(&$variables) {
     $sponsor = \Drupal::entityTypeManager()
       ->getStorage('taxonomy_term')
       ->load($node->field_ol_sponsor->target_id);
-
+    $variables['sponsor_link'] = '';
     $variables['sponsor_link'] = $sponsor
       ? \Drupal::service('nys_senators.microsites')->getMicrosite($sponsor)
       : '';

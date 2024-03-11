@@ -1,9 +1,10 @@
-uuid: 1a79ca68-1dc9-4def-b80b-b6c56f080073
+uuid: 7c0c8b56-c416-4ebf-8cea-7c4d0674ff34
 langcode: en
 status: true
 dependencies:
   config:
     - core.entity_view_display.comment.default_comment.default
+    - core.entity_view_mode.node.pdf
     - field.field.node.resolution.field_comments
     - field.field.node.resolution.field_featured_quote
     - field.field.node.resolution.field_image_main
@@ -45,10 +46,10 @@ dependencies:
 third_party_settings:
   entity_print:
     pdf_label: 'Download PDF'
-id: node.resolution.default
+id: node.resolution.pdf
 targetEntityType: node
 bundle: resolution
-mode: default
+mode: pdf
 content:
   entity_print_view_pdf:
     settings: {  }
@@ -275,7 +276,7 @@ content:
     type: entity_reference_label
     label: hidden
     settings:
-      link: false
+      link: true
     third_party_settings: {  }
     weight: 12
     region: content

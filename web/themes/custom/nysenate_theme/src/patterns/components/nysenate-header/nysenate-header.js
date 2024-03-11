@@ -140,10 +140,7 @@
 
         origActionBar = $('.c-actionbar').first();
         actionBar = origActionBar.clone();
-
-        if (!self.isInSession()) {
-          actionBar.appendTo(nav).addClass('hidden');
-        }
+        actionBar.appendTo(nav).addClass('hidden');
 
         menu = nav.find('.c-nav--wrap');
         headerBar = nav.find('.c-header-bar');
@@ -290,9 +287,6 @@
         ) {
           actionBar.removeClass('hidden');
           origActionBar.addClass('hidden');
-          if (this.isInSession()) {
-            origNav.css('visibility', 'visible');
-          }
         }
         else if (
           this.isMovingUp(currentTop, previousTop) &&
@@ -301,9 +295,6 @@
           if (toggleActionBar !== 'show-actionbar') {
             actionBar.addClass('hidden');
             origActionBar.removeClass('hidden');
-          }
-          if (this.isInSession()) {
-            origNav.css('visibility', 'hidden');
           }
         }
       }

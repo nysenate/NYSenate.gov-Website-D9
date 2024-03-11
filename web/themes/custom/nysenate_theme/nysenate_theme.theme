@@ -5952,7 +5952,7 @@ function nysenate_theme_preprocess_node__landing__about(&$variables) {
 
         case 'video':
           if ($block['#block_content']->info->value == 'Senate Chamber Visit Video') {
-            $variables['landing_page_hero']['body'] = $block;
+            $variables['senate_chamber_visit_video'] = $block;
           }
           break;
 

@@ -70,6 +70,13 @@ class YearFilter extends FilterPluginBase {
    * {@inheritdoc}
    */
   public function buildExposedForm(&$form, FormStateInterface $form_state) {
+    if (
+      empty($this->options['expose']['operator_id'])
+      || empty($this->options['expose']['identifier'])
+    ) {
+      return;
+    }
+
     // Build operator form element.
     $operator = $this->options['expose']['operator_id'];
     $op_wrapper = $this->options['expose']['identifier'] . '_wrapper';
@@ -99,10 +106,11 @@ class YearFilter extends FilterPluginBase {
       return;
     }
 
+    $timezone_string = \Drupal::config('system.date')->get('timezone')['default'];
+    $timezone_object = new \DateTimeZone($timezone_string);
+
     // Dynamically set 'current_year' to current year.
     if ($this->value == 'current_year') {
-      $timezone_string = \Drupal::config('system.date')->get('timezone')['default'];
-      $timezone_object = new \DateTimeZone($timezone_string);
       $current_year = new \DateTime("now", $timezone_object);
       $this->value = $current_year->format('Y');
     }

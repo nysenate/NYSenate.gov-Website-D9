@@ -18,8 +18,9 @@ class YearFilter extends FilterPluginBase {
    * {@inheritdoc}
    */
   protected function valueForm(&$form, FormStateInterface $form_state) {
-    $timezone = new \DateTimeZone('America/New_York');
-    $current_datetime = new \DateTime('now', $timezone);
+    $timezone_string = \Drupal::config('system.date')->get('timezone')['default'];
+    $timezone_object = new \DateTimeZone($timezone_string);
+    $current_datetime = new \DateTime('now', $timezone_object);
     $current_year = $current_datetime->format('Y');
     $years = range($current_year, $current_year - 30);
     $static_options = [
@@ -100,19 +101,20 @@ class YearFilter extends FilterPluginBase {
 
     // Dynamically set 'current_year' to current year.
     if ($this->value == 'current_year') {
-      $timezone = new \DateTimeZone('America/New_York');
-      $current_year = new \DateTime("now", $timezone);
+      $timezone_string = \Drupal::config('system.date')->get('timezone')['default'];
+      $timezone_object = new \DateTimeZone($timezone_string);
+      $current_year = new \DateTime("now", $timezone_object);
       $this->value = $current_year->format('Y');
     }
 
     // Process value(s) and operator for datetime fields.
     if ($this->configuration['field_type'] == 'datetime') {
-      $selected_year_start = new \DateTime("first day of january $this->value", $timezone);
+      $selected_year_start = new \DateTime("first day of january $this->value", $timezone_object);
 
       if ($this->operator == '=') {
         $this->operator = 'BETWEEN';
         $following_year = $this->value + 1;
-        $next_year_start = new \DateTime("first day of january $following_year", $timezone);
+        $next_year_start = new \DateTime("first day of january $following_year", $timezone_object);
         $this->value = [
           $selected_year_start->getTimestamp(),
           $next_year_start->getTimestamp(),

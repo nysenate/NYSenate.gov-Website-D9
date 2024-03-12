@@ -1890,14 +1890,14 @@ display:
           parse_mode: terms
           conjunction: OR
           fields: {  }
-        field_ol_print_no:
-          id: field_ol_print_no
+        search_api_fulltext_1:
+          id: search_api_fulltext_1
           table: search_api_index_core_search
-          field: field_ol_print_no
+          field: search_api_fulltext
           relationship: none
           group_type: group
           admin_label: ''
-          plugin_id: search_api
+          plugin_id: search_api_fulltext
           default_action: default
           exception:
             value: all
@@ -1916,13 +1916,18 @@ display:
             sort_order: asc
             number_of_records: 0
             format: default_summary
-          specify_validation: true
+          specify_validation: false
           validate:
             type: none
-            fail: ignore
+            fail: 'not found'
           validate_options: {  }
           break_phrase: false
           not: false
+          parse_mode: terms
+          conjunction: OR
+          fields:
+            - field_ol_base_print_no
+            - field_ol_print_no
       filters:
         status:
           id: status

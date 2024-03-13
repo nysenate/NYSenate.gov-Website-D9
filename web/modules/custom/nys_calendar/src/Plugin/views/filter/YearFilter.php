@@ -56,7 +56,7 @@ class YearFilter extends FilterPluginBase {
    * {@inheritdoc}
    */
   protected function valueForm(&$form, FormStateInterface $form_state) {
-    $timezone_string = \Drupal::config('system.date')->get('timezone')['default'];
+    $timezone_string = $this->configFactory->get('system.date')->get('timezone')['default'];
     $timezone_object = new \DateTimeZone($timezone_string);
     $current_datetime = new \DateTime('now', $timezone_object);
     $current_year = $current_datetime->format('Y');
@@ -144,7 +144,7 @@ class YearFilter extends FilterPluginBase {
       return;
     }
 
-    $timezone_string = \Drupal::config('system.date')->get('timezone')['default'];
+    $timezone_string = $this->configFactory->get('system.date')->get('timezone')['default'];
     $timezone_object = new \DateTimeZone($timezone_string);
 
     // Dynamically set 'current_year' to current year.

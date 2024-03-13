@@ -2,8 +2,10 @@
 
 namespace Drupal\nys_calendar\Plugin\views\filter;
 
+use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\filter\FilterPluginBase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Year filter.
@@ -13,6 +15,42 @@ use Drupal\views\Plugin\views\filter\FilterPluginBase;
  * @ViewsFilter("year_filter")
  */
 class YearFilter extends FilterPluginBase {
+
+  /**
+   * Config factory service.
+   *
+   * @var \Drupal\Core\Config\ConfigFactory
+   */
+  public $configFactory;
+
+  /**
+   * Constructs a YearFilter object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Config\ConfigFactory $configFactory
+   *   Config factory service.
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, ConfigFactory $configFactory) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->configFactory = $configFactory;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('config.factory')
+    );
+  }
 
   /**
    * {@inheritdoc}

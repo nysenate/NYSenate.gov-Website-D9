@@ -4,15 +4,11 @@ status: true
 dependencies:
   config:
     - field.storage.taxonomy_term.field_about
+    - filter.format.basic_html
+    - filter.format.full_html
     - taxonomy.vocabulary.senator
   module:
-    - allowed_formats
     - text
-third_party_settings:
-  allowed_formats:
-    allowed_formats:
-      - full_html
-      - basic_html
 id: taxonomy_term.senator.field_about
 field_name: field_about
 entity_type: taxonomy_term
@@ -23,5 +19,8 @@ required: false
 translatable: false
 default_value: {  }
 default_value_callback: ''
-settings: {  }
+settings:
+  allowed_formats:
+    - full_html
+    - basic_html
 field_type: text_long

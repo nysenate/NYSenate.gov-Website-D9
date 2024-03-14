@@ -13,29 +13,29 @@ name: 'Full HTML'
 format: full_html
 weight: -9
 filters:
+  editor_file_reference:
+    id: editor_file_reference
+    provider: editor
+    status: true
+    weight: -45
+    settings: {  }
   filter_align:
     id: filter_align
     provider: filter
     status: true
     weight: -48
     settings: {  }
+  filter_autop:
+    id: filter_autop
+    provider: filter
+    status: false
+    weight: -42
+    settings: {  }
   filter_caption:
     id: filter_caption
     provider: filter
     status: true
     weight: -47
-    settings: {  }
-  filter_htmlcorrector:
-    id: filter_htmlcorrector
-    provider: filter
-    status: true
-    weight: -46
-    settings: {  }
-  editor_file_reference:
-    id: editor_file_reference
-    provider: editor
-    status: true
-    weight: -45
     settings: {  }
   filter_html:
     id: filter_html
@@ -46,13 +46,37 @@ filters:
       allowed_html: '<a class="c-paragraph--more-link a-left a-right nys-btn--gold nys-btn--blue c-btn--small-blue c-container--link"> <p class="nospace"> <h2 class="c-container--h2-title"> <ul class="c-block--about-seal"> <div class="c-block--background">'
       filter_html_help: true
       filter_html_nofollow: false
-  linkit:
-    id: linkit
-    provider: linkit
+  filter_html_escape:
+    id: filter_html_escape
+    provider: filter
+    status: false
+    weight: -43
+    settings: {  }
+  filter_html_image_secure:
+    id: filter_html_image_secure
+    provider: filter
+    status: false
+    weight: -39
+    settings: {  }
+  filter_htmlcorrector:
+    id: filter_htmlcorrector
+    provider: filter
     status: true
-    weight: -50
+    weight: -46
+    settings: {  }
+  filter_image_lazy_load:
+    id: filter_image_lazy_load
+    provider: filter
+    status: true
+    weight: -44
+    settings: {  }
+  filter_url:
+    id: filter_url
+    provider: filter
+    status: false
+    weight: -41
     settings:
-      title: false
+      filter_url_length: 72
   htmlpurifier:
     id: htmlpurifier
     provider: htmlpurifier
@@ -60,6 +84,13 @@ filters:
     weight: -40
     settings:
       htmlpurifier_configuration: "Attr:\r\n  AllowedClasses: null\r\n  AllowedFrameTargets: {  }\r\n  AllowedRel: {  }\r\n  AllowedRev: {  }\r\n  ClassUseCDATA: null\r\n  DefaultImageAlt: null\r\n  DefaultInvalidImage: ''\r\n  DefaultInvalidImageAlt: 'Invalid image'\r\n  DefaultTextDir: ltr\r\n  EnableID: false\r\n  ForbiddenClasses: {  }\r\n  ID.HTML5: null\r\n  IDBlacklist: {  }\r\n  IDBlacklistRegexp: null\r\n  IDPrefix: ''\r\n  IDPrefixLocal: ''\r\nAutoFormat:\r\n  AutoParagraph: false\r\n  Custom: {  }\r\n  DisplayLinkURI: false\r\n  Linkify: false\r\n  PurifierLinkify.DocURL: '#%s'\r\n  PurifierLinkify: false\r\n  RemoveEmpty.Predicate:\r\n    colgroup: {  }\r\n    th: {  }\r\n    td: {  }\r\n    iframe:\r\n      - src\r\n  RemoveEmpty.RemoveNbsp.Exceptions:\r\n    td: true\r\n    th: true\r\n  RemoveEmpty.RemoveNbsp: false\r\n  RemoveEmpty: false\r\n  RemoveSpansWithoutAttributes: false\r\nCSS:\r\n  AllowDuplicates: false\r\n  AllowImportant: false\r\n  AllowTricky: false\r\n  AllowedFonts: null\r\n  AllowedProperties: null\r\n  DefinitionRev: 1\r\n  ForbiddenProperties: {  }\r\n  MaxImgLength: 1200px\r\n  Proprietary: false\r\n  Trusted: false\r\nCache:\r\n  DefinitionImpl: Serializer\r\n  SerializerPath: null\r\n  SerializerPermissions: 493\r\nCore:\r\n  AggressivelyFixLt: true\r\n  AggressivelyRemoveScript: true\r\n  AllowHostnameUnderscore: false\r\n  AllowParseManyTags: false\r\n  CollectErrors: false\r\n  ColorKeywords:\r\n    aliceblue: '#F0F8FF'\r\n    antiquewhite: '#FAEBD7'\r\n    aqua: '#00FFFF'\r\n    aquamarine: '#7FFFD4'\r\n    azure: '#F0FFFF'\r\n    beige: '#F5F5DC'\r\n    bisque: '#FFE4C4'\r\n    black: '#000000'\r\n    blanchedalmond: '#FFEBCD'\r\n    blue: '#0000FF'\r\n    blueviolet: '#8A2BE2'\r\n    brown: '#A52A2A'\r\n    burlywood: '#DEB887'\r\n    cadetblue: '#5F9EA0'\r\n    chartreuse: '#7FFF00'\r\n    chocolate: '#D2691E'\r\n    coral: '#FF7F50'\r\n    cornflowerblue: '#6495ED'\r\n    cornsilk: '#FFF8DC'\r\n    crimson: '#DC143C'\r\n    cyan: '#00FFFF'\r\n    darkblue: '#00008B'\r\n    darkcyan: '#008B8B'\r\n    darkgoldenrod: '#B8860B'\r\n    darkgray: '#A9A9A9'\r\n    darkgrey: '#A9A9A9'\r\n    darkgreen: '#006400'\r\n    darkkhaki: '#BDB76B'\r\n    darkmagenta: '#8B008B'\r\n    darkolivegreen: '#556B2F'\r\n    darkorange: '#FF8C00'\r\n    darkorchid: '#9932CC'\r\n    darkred: '#8B0000'\r\n    darksalmon: '#E9967A'\r\n    darkseagreen: '#8FBC8F'\r\n    darkslateblue: '#483D8B'\r\n    darkslategray: '#2F4F4F'\r\n    darkslategrey: '#2F4F4F'\r\n    darkturquoise: '#00CED1'\r\n    darkviolet: '#9400D3'\r\n    deeppink: '#FF1493'\r\n    deepskyblue: '#00BFFF'\r\n    dimgray: '#696969'\r\n    dimgrey: '#696969'\r\n    dodgerblue: '#1E90FF'\r\n    firebrick: '#B22222'\r\n    floralwhite: '#FFFAF0'\r\n    forestgreen: '#228B22'\r\n    fuchsia: '#FF00FF'\r\n    gainsboro: '#DCDCDC'\r\n    ghostwhite: '#F8F8FF'\r\n    gold: '#FFD700'\r\n    goldenrod: '#DAA520'\r\n    gray: '#808080'\r\n    grey: '#808080'\r\n    green: '#008000'\r\n    greenyellow: '#ADFF2F'\r\n    honeydew: '#F0FFF0'\r\n    hotpink: '#FF69B4'\r\n    indianred: '#CD5C5C'\r\n    indigo: '#4B0082'\r\n    ivory: '#FFFFF0'\r\n    khaki: '#F0E68C'\r\n    lavender: '#E6E6FA'\r\n    lavenderblush: '#FFF0F5'\r\n    lawngreen: '#7CFC00'\r\n    lemonchiffon: '#FFFACD'\r\n    lightblue: '#ADD8E6'\r\n    lightcoral: '#F08080'\r\n    lightcyan: '#E0FFFF'\r\n    lightgoldenrodyellow: '#FAFAD2'\r\n    lightgray: '#D3D3D3'\r\n    lightgrey: '#D3D3D3'\r\n    lightgreen: '#90EE90'\r\n    lightpink: '#FFB6C1'\r\n    lightsalmon: '#FFA07A'\r\n    lightseagreen: '#20B2AA'\r\n    lightskyblue: '#87CEFA'\r\n    lightslategray: '#778899'\r\n    lightslategrey: '#778899'\r\n    lightsteelblue: '#B0C4DE'\r\n    lightyellow: '#FFFFE0'\r\n    lime: '#00FF00'\r\n    limegreen: '#32CD32'\r\n    linen: '#FAF0E6'\r\n    magenta: '#FF00FF'\r\n    maroon: '#800000'\r\n    mediumaquamarine: '#66CDAA'\r\n    mediumblue: '#0000CD'\r\n    mediumorchid: '#BA55D3'\r\n    mediumpurple: '#9370DB'\r\n    mediumseagreen: '#3CB371'\r\n    mediumslateblue: '#7B68EE'\r\n    mediumspringgreen: '#00FA9A'\r\n    mediumturquoise: '#48D1CC'\r\n    mediumvioletred: '#C71585'\r\n    midnightblue: '#191970'\r\n    mintcream: '#F5FFFA'\r\n    mistyrose: '#FFE4E1'\r\n    moccasin: '#FFE4B5'\r\n    navajowhite: '#FFDEAD'\r\n    navy: '#000080'\r\n    oldlace: '#FDF5E6'\r\n    olive: '#808000'\r\n    olivedrab: '#6B8E23'\r\n    orange: '#FFA500'\r\n    orangered: '#FF4500'\r\n    orchid: '#DA70D6'\r\n    palegoldenrod: '#EEE8AA'\r\n    palegreen: '#98FB98'\r\n    paleturquoise: '#AFEEEE'\r\n    palevioletred: '#DB7093'\r\n    papayawhip: '#FFEFD5'\r\n    peachpuff: '#FFDAB9'\r\n    peru: '#CD853F'\r\n    pink: '#FFC0CB'\r\n    plum: '#DDA0DD'\r\n    powderblue: '#B0E0E6'\r\n    purple: '#800080'\r\n    rebeccapurple: '#663399'\r\n    red: '#FF0000'\r\n    rosybrown: '#BC8F8F'\r\n    royalblue: '#4169E1'\r\n    saddlebrown: '#8B4513'\r\n    salmon: '#FA8072'\r\n    sandybrown: '#F4A460'\r\n    seagreen: '#2E8B57'\r\n    seashell: '#FFF5EE'\r\n    sienna: '#A0522D'\r\n    silver: '#C0C0C0'\r\n    skyblue: '#87CEEB'\r\n    slateblue: '#6A5ACD'\r\n    slategray: '#708090'\r\n    slategrey: '#708090'\r\n    snow: '#FFFAFA'\r\n    springgreen: '#00FF7F'\r\n    steelblue: '#4682B4'\r\n    tan: '#D2B48C'\r\n    teal: '#008080'\r\n    thistle: '#D8BFD8'\r\n    tomato: '#FF6347'\r\n    turquoise: '#40E0D0'\r\n    violet: '#EE82EE'\r\n    wheat: '#F5DEB3'\r\n    white: '#FFFFFF'\r\n    whitesmoke: '#F5F5F5'\r\n    yellow: '#FFFF00'\r\n    yellowgreen: '#9ACD32'\r\n  ConvertDocumentToFragment: true\r\n  DirectLexLineNumberSyncInterval: 0\r\n  DisableExcludes: false\r\n  EnableIDNA: false\r\n  Encoding: utf-8\r\n  EscapeInvalidChildren: false\r\n  EscapeInvalidTags: false\r\n  EscapeNonASCIICharacters: false\r\n  HiddenElements:\r\n    script: true\r\n    style: true\r\n  Language: en\r\n  LegacyEntityDecoder: false\r\n  LexerImpl: null\r\n  MaintainLineNumbers: null\r\n  NormalizeNewlines: true\r\n  RemoveInvalidImg: true\r\n  RemoveProcessingInstructions: false\r\n  RemoveScriptContents: null\r\nFilter:\r\n  Custom: {  }\r\n  ExtractStyleBlocks.Escaping: true\r\n  ExtractStyleBlocks.Scope: null\r\n  ExtractStyleBlocks.TidyImpl: null\r\n  ExtractStyleBlocks: false\r\n  YouTube: false\r\nHTML:\r\n  Allowed: null\r\n  AllowedAttributes: null\r\n  AllowedComments: {  }\r\n  AllowedCommentsRegexp: null\r\n  AllowedElements: null\r\n  AllowedModules: null\r\n  Attr.Name.UseCDATA: false\r\n  BlockWrapper: p\r\n  CoreModules:\r\n    Structure: true\r\n    Text: true\r\n    Hypertext: true\r\n    List: true\r\n    NonXMLCommonAttributes: true\r\n    XMLCommonAttributes: true\r\n    CommonAttributes: true\r\n  CustomDoctype: null\r\n  DefinitionID: null\r\n  DefinitionRev: 1\r\n  Doctype: null\r\n  FlashAllowFullScreen: false\r\n  ForbiddenAttributes: {  }\r\n  ForbiddenElements: {  }\r\n  Forms: false\r\n  MaxImgLength: 1200\r\n  Nofollow: false\r\n  Parent: div\r\n  Proprietary: false\r\n  SafeEmbed: true\r\n  SafeIframe: true\r\n  SafeObject: true\r\n  SafeScripting: {  }\r\n  Strict: false\r\n  TargetBlank: false\r\n  TargetNoopener: true\r\n  TargetNoreferrer: true\r\n  TidyAdd: {  }\r\n  TidyLevel: medium\r\n  TidyRemove: {  }\r\n  Trusted: false\r\n  XHTML: true\r\nOutput:\r\n  CommentScriptContents: true\r\n  FixInnerHTML: true\r\n  FlashCompat: false\r\n  Newline: null\r\n  SortAttr: false\r\n  TidyFormat: false\r\nTest:\r\n  ForceNoIconv: false\r\nURI:\r\n  AllowedSchemes:\r\n    http: true\r\n    https: true\r\n    mailto: true\r\n    ftp: true\r\n    nntp: true\r\n    news: true\r\n    tel: true\r\n  Base: null\r\n  DefaultScheme: http\r\n  DefinitionID: null\r\n  DefinitionRev: 1\r\n  Disable: false\r\n  DisableExternal: false\r\n  DisableExternalResources: false\r\n  DisableResources: false\r\n  Host: null\r\n  HostBlacklist: {  }\r\n  MakeAbsolute: false\r\n  Munge: null\r\n  MungeResources: false\r\n  MungeSecretKey: null\r\n  OverrideAllowedSchemes: true\r\n  SafeIframeRegexp: null\r\n"
+  linkit:
+    id: linkit
+    provider: linkit
+    status: true
+    weight: -50
+    settings:
+      title: false
   media_embed:
     id: media_embed
     provider: media
@@ -73,28 +104,3 @@ filters:
         file: file
         remote_video: remote_video
         video: video
-  filter_url:
-    id: filter_url
-    provider: filter
-    status: false
-    weight: -41
-    settings:
-      filter_url_length: 72
-  filter_autop:
-    id: filter_autop
-    provider: filter
-    status: false
-    weight: -42
-    settings: {  }
-  filter_html_escape:
-    id: filter_html_escape
-    provider: filter
-    status: false
-    weight: -43
-    settings: {  }
-  filter_html_image_secure:
-    id: filter_html_image_secure
-    provider: filter
-    status: false
-    weight: -39
-    settings: {  }

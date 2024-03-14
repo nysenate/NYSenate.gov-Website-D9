@@ -23,7 +23,8 @@
       const self = this;
       const debounceTime = 250;
 
-      origNav.once('navigation').each(function () {
+      $(once('navigation', origNav))
+      .each(function () {
         const nav = origNav.clone().attr('id', 'js-sticky--dashboard--clone');
         nav.addClass('fixed');
 

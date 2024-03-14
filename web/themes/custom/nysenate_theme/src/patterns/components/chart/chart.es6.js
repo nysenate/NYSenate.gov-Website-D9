@@ -14,8 +14,7 @@
    */
   Drupal.behaviors.chart = {
     attach: function (context) {
-      $('.chart', context)
-        .once('chartInit')
+      $(once('chartInit', '.chart', context))
         .each(function (index) {
           const $chart = $(this).find('div');
           const colors = $chart.data('colors');

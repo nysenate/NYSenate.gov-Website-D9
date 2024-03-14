@@ -5,13 +5,9 @@ dependencies:
   config:
     - comment.type.default_comment
     - field.storage.comment.comment_body
+    - filter.format.plain_text
   module:
-    - allowed_formats
     - text
-third_party_settings:
-  allowed_formats:
-    allowed_formats:
-      - plain_text
 id: comment.default_comment.comment_body
 field_name: comment_body
 entity_type: comment
@@ -22,5 +18,7 @@ required: true
 translatable: true
 default_value: {  }
 default_value_callback: ''
-settings: {  }
+settings:
+  allowed_formats:
+    - plain_text
 field_type: text_long

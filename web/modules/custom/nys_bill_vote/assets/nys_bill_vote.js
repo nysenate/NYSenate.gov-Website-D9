@@ -80,21 +80,6 @@
                         self.processIntentVote(context, settings);
                     }
                 );
-
-                // Add a click event handler for hiding the message form if 'Create an
-                // account checkbox is unchecked. We need to delegate this event so that:
-                //   - it can be added using $.once()
-                //   - duplicate handlers are avoided
-                $('#nys-bills-bill-form', context).once(
-                    'hide-message-click-handler', function () {
-                        $(this).on(
-                            'click', 'input[name=register]', function (e) {
-                                var $func = (e.target.checked) ? 'show' : 'hide';
-                                $('.c-bill--message-form .form-item-message')[$func]();
-                            }
-                        );
-                    }
-                );
             },
 
             processIntentVote: function (context, settings) {

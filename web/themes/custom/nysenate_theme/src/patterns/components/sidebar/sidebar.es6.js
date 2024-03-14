@@ -18,7 +18,7 @@
       const sidebarToggle = $('.sidebar-toggle', context);
       const header = $('#js-sticky--dashboard');
 
-      sidebarToggle.once('sidebarToggle').each($this.sidebarToggleInit);
+      $(once('sidebarToggle', sidebarToggle)).each($this.sidebarToggleInit);
       $(window).resize($this.debounce(() => $this.onResize(sidebarToggle)));
       $this.onResize(header);
     },

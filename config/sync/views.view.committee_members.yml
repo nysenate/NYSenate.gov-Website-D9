@@ -469,7 +469,6 @@ display:
             limit: false
             vids: {  }
             anyall: ','
-          default_argument_skip_url: false
           summary_options:
             base_path: ''
             count: true
@@ -2125,7 +2124,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: '/senators/{{ field_senator_name|lower|replace({'' '':''-'',''.'':''''}) }}'
+            text: "/senators/{{ field_senator_name|lower|replace({' ':'-','.':''}) }}"
             make_link: false
             path: ''
             absolute: false

@@ -5,13 +5,9 @@ dependencies:
   config:
     - block_content.type.embed
     - field.storage.block_content.field_script
+    - filter.format.scripts
   module:
-    - allowed_formats
     - text
-third_party_settings:
-  allowed_formats:
-    allowed_formats:
-      - scripts
 _core:
   default_config_hash: fmGpAEpnbOaXzhdRTShEQPMeMTTWG2S2AexCDjvohtc
 id: block_content.embed.field_script
@@ -24,5 +20,7 @@ required: false
 translatable: false
 default_value: {  }
 default_value_callback: ''
-settings: {  }
+settings:
+  allowed_formats:
+    - scripts
 field_type: text_long

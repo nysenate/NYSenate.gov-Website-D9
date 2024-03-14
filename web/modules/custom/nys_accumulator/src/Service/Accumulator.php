@@ -4,7 +4,6 @@ namespace Drupal\nys_accumulator\Service;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\Http\RequestStack;
 use Drupal\nys_accumulator\AccumulatorEntry;
 use Drupal\nys_accumulator\AccumulatorEventBase;
 use Drupal\nys_accumulator\Events;
@@ -12,6 +11,7 @@ use Drupal\nys_senators\SenatorsHelper;
 use Drupal\taxonomy\Entity\Term;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -64,7 +64,7 @@ class Accumulator implements ContainerInjectionInterface {
     return new static(
       $container->get('event_dispatcher'),
       $container->get('database'),
-      $container->get('current_request'),
+      $container->get('request_stack'),
       $container->get('nys_senators.senators_helper')
     );
   }

@@ -4,14 +4,10 @@ status: true
 dependencies:
   config:
     - field.storage.taxonomy_term.field_teaser
+    - filter.format.full_html
     - taxonomy.vocabulary.majority_issues
   module:
-    - allowed_formats
     - text
-third_party_settings:
-  allowed_formats:
-    allowed_formats:
-      - full_html
 id: taxonomy_term.majority_issues.field_teaser
 field_name: field_teaser
 entity_type: taxonomy_term
@@ -22,5 +18,7 @@ required: false
 translatable: false
 default_value: {  }
 default_value_callback: ''
-settings: {  }
+settings:
+  allowed_formats:
+    - full_html
 field_type: text_long

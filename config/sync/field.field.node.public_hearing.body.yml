@@ -4,15 +4,11 @@ status: true
 dependencies:
   config:
     - field.storage.node.body
+    - filter.format.basic_html
+    - filter.format.full_html
     - node.type.public_hearing
   module:
-    - allowed_formats
     - text
-third_party_settings:
-  allowed_formats:
-    allowed_formats:
-      - basic_html
-      - full_html
 id: node.public_hearing.body
 field_name: body
 entity_type: node
@@ -26,4 +22,7 @@ default_value_callback: ''
 settings:
   display_summary: true
   required_summary: false
+  allowed_formats:
+    - basic_html
+    - full_html
 field_type: text_with_summary

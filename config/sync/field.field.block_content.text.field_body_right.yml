@@ -6,11 +6,7 @@ dependencies:
     - block_content.type.text
     - field.storage.block_content.field_body_right
   module:
-    - allowed_formats
     - text
-third_party_settings:
-  allowed_formats:
-    allowed_formats: {  }
 id: block_content.text.field_body_right
 field_name: field_body_right
 entity_type: block_content
@@ -24,4 +20,5 @@ default_value_callback: ''
 settings:
   display_summary: false
   required_summary: false
+  allowed_formats: {  }
 field_type: text_with_summary

@@ -6,11 +6,7 @@ dependencies:
     - block_content.type.featured_bill
     - field.storage.block_content.field_text
   module:
-    - allowed_formats
     - text
-third_party_settings:
-  allowed_formats:
-    allowed_formats: {  }
 id: block_content.featured_bill.field_text
 field_name: field_text
 entity_type: block_content
@@ -21,5 +17,6 @@ required: false
 translatable: false
 default_value: {  }
 default_value_callback: ''
-settings: {  }
+settings:
+  allowed_formats: {  }
 field_type: text_long

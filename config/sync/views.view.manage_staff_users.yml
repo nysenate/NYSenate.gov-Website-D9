@@ -2147,7 +2147,7 @@ display:
             identifier: roles_target_id_1
             required: false
             remember: false
-            multiple: false
+            multiple: true
             remember_roles:
               authenticated: authenticated
               anonymous: '0'
@@ -2172,7 +2172,7 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          reduce_duplicates: false
+          reduce_duplicates: true
         changed:
           id: changed
           table: users_field_data
@@ -4648,7 +4648,7 @@ display:
             identifier: roles_target_id_1
             required: false
             remember: false
-            multiple: false
+            multiple: true
             remember_roles:
               authenticated: authenticated
               anonymous: '0'
@@ -4673,7 +4673,7 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          reduce_duplicates: false
+          reduce_duplicates: true
       filter_groups:
         operator: AND
         groups:
@@ -4694,8 +4694,20 @@ display:
         sorts: false
         filters: false
         filter_groups: false
+        header: false
       display_description: ''
       show_admin_links: false
+      header:
+        result:
+          id: result
+          table: views
+          field: result
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: result
+          empty: false
+          content: 'Displaying @start - @end of @total'
       display_extenders: {  }
       path: admin/people/reports-all
       menu:

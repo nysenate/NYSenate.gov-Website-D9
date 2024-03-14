@@ -11,6 +11,7 @@ dependencies:
     - user.role.administrator
     - user.role.legislative_correspondent
     - user.role.microsite_content_producer
+    - user.role.student_programs
   module:
     - csv_serialization
     - rest
@@ -4474,143 +4475,6 @@ display:
                 operator: '='
                 value: '0'
           accept_null: false
-        roles_target_id:
-          id: roles_target_id
-          table: user__roles
-          field: roles_target_id
-          relationship: none
-          group_type: group
-          admin_label: ''
-          plugin_id: user_roles
-          operator: or
-          value:
-            administrator: administrator
-            microsite_content_producer: microsite_content_producer
-            legislative_correspondent: legislative_correspondent
-          group: 1
-          exposed: false
-          expose:
-            operator_id: roles_target_id_op
-            label: Role
-            description: ''
-            use_operator: false
-            operator: roles_target_id_op
-            operator_limit_selection: false
-            operator_list: {  }
-            identifier: role
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
-            reduce: false
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          reduce_duplicates: false
-        roles_target_id_1:
-          id: roles_target_id_1
-          table: user__roles
-          field: roles_target_id
-          relationship: none
-          group_type: group
-          admin_label: ''
-          entity_type: user
-          entity_field: roles
-          plugin_id: user_roles
-          operator: or
-          value: {  }
-          group: 1
-          exposed: true
-          expose:
-            operator_id: roles_target_id_1_op
-            label: Roles
-            description: ''
-            use_operator: false
-            operator: roles_target_id_1_op
-            operator_limit_selection: false
-            operator_list: {  }
-            identifier: roles_target_id_1
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
-              frontpage_editor: '0'
-              senator: '0'
-              microsite_content_producer: '0'
-              legislative_correspondent: '0'
-              student_programs: '0'
-              constituent: '0'
-              comment_moderator: '0'
-            reduce: false
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          reduce_duplicates: false
-        default_langcode:
-          id: default_langcode
-          table: users_field_data
-          field: default_langcode
-          relationship: none
-          group_type: group
-          admin_label: ''
-          entity_type: user
-          entity_field: default_langcode
-          plugin_id: boolean
-          operator: '='
-          value: '1'
-          group: 1
-          exposed: false
-          expose:
-            operator_id: ''
-            label: ''
-            description: ''
-            use_operator: false
-            operator: ''
-            operator_limit_selection: false
-            operator_list: {  }
-            identifier: ''
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          accept_null: false
         uid_raw:
           id: uid_raw
           table: users_field_data
@@ -4709,6 +4573,106 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
+        roles_target_id:
+          id: roles_target_id
+          table: user__roles
+          field: roles_target_id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: user
+          entity_field: roles
+          plugin_id: user_roles
+          operator: or
+          value:
+            administrator: administrator
+            microsite_content_producer: microsite_content_producer
+            legislative_correspondent: legislative_correspondent
+            student_programs: student_programs
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: true
+        roles_target_id_1:
+          id: roles_target_id_1
+          table: user__roles
+          field: roles_target_id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: user
+          entity_field: roles
+          plugin_id: user_roles
+          operator: or
+          value:
+            administrator: administrator
+            microsite_content_producer: microsite_content_producer
+            legislative_correspondent: legislative_correspondent
+          group: 1
+          exposed: true
+          expose:
+            operator_id: roles_target_id_1_op
+            label: Roles
+            description: ''
+            use_operator: false
+            operator: roles_target_id_1_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: roles_target_id_1
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+              frontpage_editor: '0'
+              senator: '0'
+              microsite_content_producer: '0'
+              legislative_correspondent: '0'
+              student_programs: '0'
+              constituent: '0'
+              comment_moderator: '0'
+            reduce: true
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
       filter_groups:
         operator: AND
         groups:
@@ -4718,7 +4682,7 @@ display:
         options:
           query_comment: ''
           disable_sql_rewrite: false
-          distinct: true
+          distinct: false
           disable_automatic_base_fields: false
           replica: false
           query_tags: {  }

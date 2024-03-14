@@ -1,0 +1,17 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display a block content.
+ *
+ * @see template_preprocess_block_content_template()
+ *
+ * @ingroup themeable
+ */
+#}
+{% include "@nysenate_theme/landing-page-hero/landing-page-hero.twig" with {
+  section_id: 'section-1',
+  background_img: content.field_media,
+  title: content.field_title,
+  welcome_text: content.field_summary,
+  body: ''
+} only %}

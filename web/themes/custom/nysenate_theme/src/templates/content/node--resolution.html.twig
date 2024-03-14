@@ -17,6 +17,7 @@
 
 {% set bill_title = content.field_ol_base_print_no[0]['#context']['value'] %}
 
+
 <!-- RESOLUTION TEMPLATE -->
   <div {{ attributes.addClass(classes) }}> <div class="c-block c-detail--header c-detail--header__bill">
     <h2 class="nys-title">{{ label }}</h2>
@@ -34,7 +35,9 @@
     <div class="c-detail--related">
       {{ content.field_issues }}
     </div>
-    <a href="#" class="c-detail--download" target="_blank">download pdf</a>
+    <div class="c-detail--download resolution">
+    {{ content.entity_print_view_pdf }}
+    </div>
   </div>
 
     <!-- Share -->
@@ -49,13 +52,13 @@
       </ul>
     </div>
 
-  <div class="c-block">
-    {% if content.field_image_main is not empty %}
-      <div class="c-block c-block--img">
-        {{ content.field_image_main }}
+    {% if content.field_image_main.0 %}
+      <div class="c-block">
+          <div class="c-block c-block--img">
+            {{ content.field_image_main }}
+          </div>
       </div>
     {% endif %}
-  </div>
 
   <div class="c-block c-detail--sponsors">
     {% if sponsored_by %}
@@ -63,6 +66,7 @@
     {% endif %}
 
     <!-- Bill Co/Multi Sponsors -->
+    {% if sponsors_array.co %}
     <div class="c-block c-detail--sponsors c-bill-section">
       {% if sponsors_array.co|length > 0 or sponsors_array.multi|length > 0 %}
         {% for key, list in sponsors_array %}
@@ -98,6 +102,7 @@
         {% endfor %}
       {% endif %}
     </div>
+    {% endif %}
   </div>
   <!-- .c-block -->
 
@@ -106,7 +111,7 @@
       <h3 class="c-sponsor-quote--title">sponsor's position</h3>
       <p class="c-sponsor-quote--text">{{ featured_quote }}</p>
       <div class="c-sponsor">
-        {{ content.field_ol_sponsor }}
+        <a href="{{ sponsor_link }}">{{ content.field_ol_sponsor }}</a>
       </div>
       <button class="js-quote-toggle c-block--btn c-block--btn-toggle">close</button>
       <div class="c-social">

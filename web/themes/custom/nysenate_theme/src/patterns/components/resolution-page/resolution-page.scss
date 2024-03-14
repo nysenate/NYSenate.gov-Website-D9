@@ -51,6 +51,17 @@
   }
 }
 
+.c-detail--download.resolution {
+  .print__wrapper {
+    display: inline-block;
+  }
+  a {
+    color: $blue01;
+    font-size: 16px;
+    vertical-align: middle;
+  }
+}
+
 .c-detail--related {
   list-style: none;
   line-height: 1.3em;
@@ -100,7 +111,12 @@
 .c-sponsor-quote {
   padding: 30px 20px;
   background: $grey06;
-
+  .c-sponsor {
+    .field--name-field-ol-sponsor {
+      padding-top: 24px;
+      color: $blue01;
+    }
+  }
   .nys-senator--thumb {
     height: 65px;
     width: 65px;

@@ -333,6 +333,7 @@ function nysenate_theme_preprocess_block_content__microsite_hero(&$variables) {
 
   $node = \Drupal::routeMatch()->getParameter('node');
 
+  $variables['is_senator_landing'] = FALSE;
   if (!empty($node) && $node->hasField('field_microsite_page_type') && !$node->get('field_microsite_page_type')->isEmpty()) {
     $term = $node->field_microsite_page_type->entity ?? [];
     if ($term instanceof TermInterface) {
@@ -4123,7 +4124,6 @@ function nysenate_theme_preprocess_node__resolution(&$variables) {
       // Handle legacy statuses.
       $statuses->date = $statuses->actionDate;
       $statuses->text = $statuses->statusDesc;
-
       $statuses = [$statuses];
     }
 
@@ -4190,6 +4190,18 @@ function nysenate_theme_preprocess_node__resolution(&$variables) {
     ->resolveAmendmentSponsors($node, $chamber);
 
   $variables['active_amend_url'] = $node->toUrl('canonical', ['absolute' => TRUE])->toString();
+
+  // Sponsor.
+  $sponsor = NULL;
+  $variables['sponsor_link'] = '';
+  if ($node->hasField('field_ol_sponsor') && !empty($node->field_ol_sponsor->target_id)) {
+    $sponsor = \Drupal::entityTypeManager()
+      ->getStorage('taxonomy_term')
+      ->load($node->field_ol_sponsor->target_id);
+    $variables['sponsor_link'] = $sponsor
+      ? \Drupal::service('nys_senators.microsites')->getMicrosite($sponsor)
+      : '';
+  }
 }
 
 /**
@@ -5951,7 +5963,7 @@ function nysenate_theme_preprocess_node__landing__about(&$variables) {
 
         case 'video':
           if ($block['#block_content']->info->value == 'Senate Chamber Visit Video') {
-            $variables['landing_page_hero']['body'] = $block;
+            $variables['senate_chamber_visit_video'] = $block;
           }
           break;
 

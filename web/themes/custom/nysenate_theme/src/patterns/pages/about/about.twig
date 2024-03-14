@@ -1,11 +1,10 @@
 {% include "@nysenate_theme/sticky-nav-2/sticky-nav-2.twig" with sticky_nav only %}
 
-<div id="section-1">
-  {% include "@nysenate_theme/landing-page-hero/landing-page-hero.twig" with landing_page_hero only %}
-</div>
-
 <main role="main" class="l-row l-row--main l-main l-main--about">
   <div class="large-12 <!--main columns-->">
+    {% if senate_chamber_visit_video %}
+      {{ senate_chamber_visit_video }}
+    {% endif %}
 
     <div class="panel-pane pane-block pane-nys-blocks-about-quick-facts">
 

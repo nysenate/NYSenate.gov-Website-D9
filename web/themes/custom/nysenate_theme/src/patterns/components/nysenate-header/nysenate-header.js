@@ -3,9 +3,9 @@
   Drupal.behaviors.nysenateHeader = {
     attach: function (context) {
       // If admin toolbar is present, abort and use static nav bar.
-      //if ($('#toolbar-administration').length > 0) {
-      //  return;
-      //}
+      if ($('#toolbar-administration').length > 0) {
+       return;
+      }
 
       let self = this;
       let userScroll = 0;
@@ -45,12 +45,9 @@
 
       if (self.isSenatorLanding(origNav)) {
         actionBar = nav.find('.c-senator-hero');
+        nav.find('#senatorImage').html(nav.find('#smallShotImage').html());
 
         if (self.isSenatorCollapsed()) {
-          $(document).ready(function () {
-            $('#senatorImage').html($('#smallShotImage').html());
-          });
-
           // place origin Nav
           origNav
             .prependTo('.page')
@@ -140,10 +137,7 @@
 
         origActionBar = $('.c-actionbar').first();
         actionBar = origActionBar.clone();
-
-        if (!self.isInSession()) {
-          actionBar.appendTo(nav).addClass('hidden');
-        }
+        actionBar.appendTo(nav).addClass('hidden');
 
         menu = nav.find('.c-nav--wrap');
         headerBar = nav.find('.c-header-bar');
@@ -290,9 +284,6 @@
         ) {
           actionBar.removeClass('hidden');
           origActionBar.addClass('hidden');
-          if (this.isInSession()) {
-            origNav.css('visibility', 'visible');
-          }
         }
         else if (
           this.isMovingUp(currentTop, previousTop) &&
@@ -301,9 +292,6 @@
           if (toggleActionBar !== 'show-actionbar') {
             actionBar.addClass('hidden');
             origActionBar.removeClass('hidden');
-          }
-          if (this.isInSession()) {
-            origNav.css('visibility', 'hidden');
           }
         }
       }
@@ -364,7 +352,6 @@
           currentTop < origNav.outerHeight() &&
           !this.isSenatorCollapsed()
         ) {
-          $('#senatorImage').html($('#smallShotImage').html());
           actionBar.addClass('hidden');
           headerBar.removeClass('collapsed');
         }
@@ -392,7 +379,6 @@
           }
         }
         else if (currentTop >= heroHeight) {
-          $('#senatorImage').html($('#smallShotImage').html());
           actionBar.removeClass('hidden');
           headerBar.addClass('collapsed');
           this.checkMenuState(menu, currentTop, previousTop);
@@ -437,22 +423,14 @@
 
       if (!topBarToggle) {
         if (
-          currentTop > nav.outerHeight() &&
-          !headerBar.hasClass('collapsed') &&
-          !nav.hasClass('l-header__collapsed')
+          currentTop > nav.outerHeight()
         ) {
           headerBar.addClass('collapsed');
-          nav.addClass('l-header__collapsed');
         }
         else if (
-          currentTop <= nav.outerHeight() &&
-          headerBar.hasClass('collapsed') &&
-          nav.hasClass('l-header__collapsed')
+          currentTop <= nav.outerHeight()
         ) {
           headerBar.removeClass('collapsed');
-          if (!this.isSenatorCollapsed()) {
-            nav.removeClass('l-header__collapsed');
-          }
         }
       }
     },

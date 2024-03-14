@@ -219,12 +219,12 @@ class SchoolFormSearchForm extends FormBase {
     $form['from_date'] = [
       '#type' => 'date',
       '#title' => $this->t('From'),
-      '#default_value' => $params['from_date'] ? date('Y-m-d', $params['from_date']) : NULL,
+      '#default_value' => $params['from_date'] ? date('Y-m-d', strtotime($params['from_date'])) : NULL,
     ];
     $form['to_date'] = [
       '#type' => 'date',
       '#title' => $this->t('To'),
-      '#default_value' => $params['from_date'] ? date('Y-m-d', $params['to_date']) : NULL,
+      '#default_value' => $params['from_date'] ? date('Y-m-d', strtotime($params['to_date'])) : NULL,
     ];
     $form['sort_by'] = [
       '#title' => $this->t('Sort By'),

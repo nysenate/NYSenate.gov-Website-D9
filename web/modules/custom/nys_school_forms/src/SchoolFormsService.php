@@ -218,7 +218,7 @@ class SchoolFormsService {
     }
 
     if ($params['sort_by'] == 'student' && $admin_view) {
-      sort($results, SORT_NATURAL);
+      ksort($results, SORT_NATURAL);
       if ($params['sort_order'] == 'desc') {
         // Reverse the array if sort is descending.
         $results = array_reverse($results);

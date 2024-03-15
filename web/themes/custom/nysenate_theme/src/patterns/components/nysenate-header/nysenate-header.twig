@@ -50,7 +50,7 @@
                   <a class="c-header--btn" href="/user/logout">Logout</a>
                 </li>
 
-                {% if is_admin or admin or
+                {% if is_admin or
                   'frontpage_editor' in user.getroles or
                   'student_programs' in user.getroles or
                   'microsite_content_producer' in user.getroles or

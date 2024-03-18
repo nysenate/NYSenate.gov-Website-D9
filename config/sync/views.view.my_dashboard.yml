@@ -3,7 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_mode.node.teaser
+    - core.entity_view_mode.node.my_dashboard_teaser
     - node.type.article
     - node.type.bill
     - node.type.in_the_news
@@ -259,7 +259,7 @@ display:
         type: 'entity:node'
         options:
           relationship: none
-          view_mode: teaser
+          view_mode: my_dashboard_teaser
       query:
         type: views_query
         options:

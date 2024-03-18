@@ -29,19 +29,20 @@ dependencies:
   module:
     - datetime
     - options
+    - text
     - user
 id: node.article.my_dashboard_teaser
 targetEntityType: node
 bundle: article
 mode: my_dashboard_teaser
 content:
-  field_article_author:
-    type: string
+  body:
+    type: text_trimmed
     label: hidden
     settings:
-      link_to_entity: false
+      trim_length: 300
     third_party_settings: {  }
-    weight: 3
+    weight: 2
     region: content
   field_category:
     type: list_default
@@ -57,7 +58,7 @@ content:
       timezone_override: ''
       date_format: 'F j, Y'
     third_party_settings: {  }
-    weight: 2
+    weight: 3
     region: content
   field_image_main:
     type: entity_reference_entity_view
@@ -66,9 +67,17 @@ content:
       view_mode: full
       link: false
     third_party_settings: {  }
-    weight: 5
+    weight: 6
     region: content
   field_issues:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  field_senator_multiref:
     type: entity_reference_label
     label: hidden
     settings:
@@ -84,11 +93,11 @@ content:
     weight: 1
     region: content
 hidden:
-  body: true
   entity_print_view_epub: true
   entity_print_view_pdf: true
   entity_print_view_word_docx: true
   field_accessible_sitewide: true
+  field_article_author: true
   field_associated_senators: true
   field_attachment: true
   field_bills: true
@@ -98,7 +107,6 @@ hidden:
   field_image_hero: true
   field_layout_components: true
   field_majority_issue_tag: true
-  field_senator_multiref: true
   field_social_image: true
   field_social_teaser: true
   langcode: true

@@ -32,19 +32,12 @@ bundle: in_the_news
 mode: my_dashboard_teaser
 content:
   body:
-    type: text_default
+    type: text_trimmed
     label: hidden
-    settings: {  }
-    third_party_settings: {  }
-    weight: 0
-    region: content
-  field_article_author:
-    type: string
-    label: above
     settings:
-      link_to_entity: false
+      trim_length: 300
     third_party_settings: {  }
-    weight: 2
+    weight: 1
     region: content
   field_date:
     type: datetime_default
@@ -53,30 +46,47 @@ content:
       timezone_override: ''
       format_type: publish_date
     third_party_settings: {  }
-    weight: 1
+    weight: 2
     region: content
   field_image_main:
     type: entity_reference_entity_view
-    label: above
+    label: hidden
     settings:
       view_mode: with_caption
       link: false
     third_party_settings: {  }
-    weight: 4
+    weight: 5
     region: content
   field_issues:
     type: entity_reference_label
-    label: above
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_senator_multiref:
+    type: entity_reference_label
+    label: hidden
     settings:
       link: true
     third_party_settings: {  }
     weight: 3
+    region: content
+  field_subhead:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
     region: content
 hidden:
   entity_print_view_epub: true
   entity_print_view_pdf: true
   entity_print_view_word_docx: true
   field_accessible_sitewide: true
+  field_article_author: true
   field_attachment: true
   field_committee: true
   field_committee_featured: true
@@ -85,8 +95,6 @@ hidden:
   field_publication_source_date: true
   field_publication_source_url: true
   field_publication_title: true
-  field_senator_multiref: true
-  field_subhead: true
   langcode: true
   links: true
   private_message_link: true

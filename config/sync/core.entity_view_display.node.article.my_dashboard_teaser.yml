@@ -1,0 +1,108 @@
+uuid: 848a992e-8f39-4b27-9ded-06658c038441
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.my_dashboard_teaser
+    - field.field.node.article.body
+    - field.field.node.article.field_accessible_sitewide
+    - field.field.node.article.field_article_author
+    - field.field.node.article.field_associated_senators
+    - field.field.node.article.field_attachment
+    - field.field.node.article.field_bills
+    - field.field.node.article.field_category
+    - field.field.node.article.field_committee
+    - field.field.node.article.field_committee_featured
+    - field.field.node.article.field_date
+    - field.field.node.article.field_image_caption
+    - field.field.node.article.field_image_hero
+    - field.field.node.article.field_image_main
+    - field.field.node.article.field_issues
+    - field.field.node.article.field_layout_components
+    - field.field.node.article.field_majority_issue_tag
+    - field.field.node.article.field_senator_multiref
+    - field.field.node.article.field_social_image
+    - field.field.node.article.field_social_teaser
+    - field.field.node.article.field_subtitle
+    - field.field.node.article.rabbit_hole__settings
+    - node.type.article
+  module:
+    - datetime
+    - options
+    - user
+id: node.article.my_dashboard_teaser
+targetEntityType: node
+bundle: article
+mode: my_dashboard_teaser
+content:
+  field_article_author:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_category:
+    type: list_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_date:
+    type: datetime_custom
+    label: hidden
+    settings:
+      timezone_override: ''
+      date_format: 'F j, Y'
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_image_main:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: full
+      link: false
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  field_issues:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_subtitle:
+    type: basic_string
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  body: true
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  field_accessible_sitewide: true
+  field_associated_senators: true
+  field_attachment: true
+  field_bills: true
+  field_committee: true
+  field_committee_featured: true
+  field_image_caption: true
+  field_image_hero: true
+  field_layout_components: true
+  field_majority_issue_tag: true
+  field_senator_multiref: true
+  field_social_image: true
+  field_social_teaser: true
+  langcode: true
+  links: true
+  private_message_link: true
+  rabbit_hole__settings: true
+  search_api_excerpt: true

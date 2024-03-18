@@ -1,8 +1,9 @@
-uuid: 205d60e1-a495-4cb6-a1bc-bf22bf00fe09
+uuid: 87e90fec-4997-498c-80e5-ebc980de0ccf
 langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_view_mode.node.my_dashboard_teaser
     - field.field.node.webform.body
     - field.field.node.webform.field_accessible_sitewide
     - field.field.node.webform.field_article_author
@@ -20,46 +21,21 @@ dependencies:
     - node.type.webform
   module:
     - datetime
-    - text
     - user
-    - webform
 _core:
   default_config_hash: 3r1i0UMUbeNHhvmiqHDYznoS4G9XR1jq6lQ49r80lDE
-id: node.webform.default
+id: node.webform.my_dashboard_teaser
 targetEntityType: node
 bundle: webform
-mode: default
+mode: my_dashboard_teaser
 content:
-  body:
-    type: text_default
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
-    weight: 1
-    region: content
-  field_article_author:
-    type: string
-    label: above
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    weight: 5
-    region: content
   field_byline:
     type: string
     label: above
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 4
-    region: content
-  field_committee:
-    type: entity_reference_label
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    weight: 8
+    weight: 0
     region: content
   field_date:
     type: datetime_default
@@ -68,16 +44,7 @@ content:
       timezone_override: ''
       format_type: publish_date
     third_party_settings: {  }
-    weight: 12
-    region: content
-  field_expiration_date:
-    type: datetime_default
-    label: above
-    settings:
-      timezone_override: ''
-      format_type: medium
-    third_party_settings: {  }
-    weight: 13
+    weight: 1
     region: content
   field_image_main:
     type: entity_reference_entity_view
@@ -86,7 +53,7 @@ content:
       view_mode: default
       link: true
     third_party_settings: {  }
-    weight: 6
+    weight: 4
     region: content
   field_issues:
     type: entity_reference_label
@@ -94,16 +61,7 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 9
-    region: content
-  field_last_notified:
-    type: datetime_default
-    label: above
-    settings:
-      timezone_override: ''
-      format_type: medium
-    third_party_settings: {  }
-    weight: 11
+    weight: 3
     region: content
   field_senator_multiref:
     type: entity_reference_label
@@ -111,36 +69,22 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 7
-    region: content
-  field_title_stub:
-    type: string
-    label: above
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    weight: 3
-    region: content
-  links:
-    settings: {  }
-    third_party_settings: {  }
-    weight: 0
-    region: content
-  webform:
-    type: webform_entity_reference_entity_view
-    label: hidden
-    settings:
-      source_entity: true
-      lazy: false
-    third_party_settings: {  }
     weight: 2
     region: content
 hidden:
+  body: true
   entity_print_view_epub: true
   entity_print_view_pdf: true
   entity_print_view_word_docx: true
   field_accessible_sitewide: true
+  field_article_author: true
+  field_committee: true
+  field_expiration_date: true
+  field_last_notified: true
+  field_title_stub: true
   langcode: true
+  links: true
   private_message_link: true
   rabbit_hole__settings: true
   search_api_excerpt: true
+  webform: true

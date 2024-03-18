@@ -1,0 +1,164 @@
+uuid: ae239536-1cb3-41c6-bcd6-c23fb4299b7a
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.my_dashboard_teaser
+    - field.field.node.bill.field_bill_multi_session_root
+    - field.field.node.bill.field_bill_no_issue_tags
+    - field.field.node.bill.field_comments
+    - field.field.node.bill.field_issues
+    - field.field.node.bill.field_majority_issue_tag
+    - field.field.node.bill.field_metatags
+    - field.field.node.bill.field_ol_active_version
+    - field.field.node.bill.field_ol_add_sponsor_names
+    - field.field.node.bill.field_ol_add_sponsors
+    - field.field.node.bill.field_ol_all_actions
+    - field.field.node.bill.field_ol_all_statuses
+    - field.field.node.bill.field_ol_amendments
+    - field.field.node.bill.field_ol_base_print_no
+    - field.field.node.bill.field_ol_chamber
+    - field.field.node.bill.field_ol_co_sponsor_names
+    - field.field.node.bill.field_ol_co_sponsors
+    - field.field.node.bill.field_ol_full_text
+    - field.field.node.bill.field_ol_has_same_as
+    - field.field.node.bill.field_ol_is_active_version
+    - field.field.node.bill.field_ol_is_amended
+    - field.field.node.bill.field_ol_last_status
+    - field.field.node.bill.field_ol_last_status_date
+    - field.field.node.bill.field_ol_latest_status
+    - field.field.node.bill.field_ol_latest_status_committee
+    - field.field.node.bill.field_ol_law_code
+    - field.field.node.bill.field_ol_law_section
+    - field.field.node.bill.field_ol_memo
+    - field.field.node.bill.field_ol_multi_sponsor_names
+    - field.field.node.bill.field_ol_multi_sponsors
+    - field.field.node.bill.field_ol_name
+    - field.field.node.bill.field_ol_previous_versions
+    - field.field.node.bill.field_ol_print_no
+    - field.field.node.bill.field_ol_program_info
+    - field.field.node.bill.field_ol_program_info_seq
+    - field.field.node.bill.field_ol_publish_date
+    - field.field.node.bill.field_ol_same_as
+    - field.field.node.bill.field_ol_session
+    - field.field.node.bill.field_ol_sponsor
+    - field.field.node.bill.field_ol_sponsor_name
+    - field.field.node.bill.field_ol_substituted_by
+    - field.field.node.bill.field_ol_summary
+    - field.field.node.bill.field_ol_version
+    - field.field.node.bill.field_ol_votes
+    - field.field.node.bill.rabbit_hole__settings
+    - node.type.bill
+  module:
+    - datetime
+    - nys_list_formatter
+    - options
+    - user
+id: node.bill.my_dashboard_teaser
+targetEntityType: node
+bundle: bill
+mode: my_dashboard_teaser
+content:
+  field_issues:
+    type: list_formatter
+    label: hidden
+    settings:
+      type: ul
+      separator_custom: ''
+      separator_custom_tag: span
+      separator_custom_class: ''
+      comma_tag: div
+      class: list-formatter-list
+      list_formatter_contrib:
+        entity_reference_link: '1'
+      comma_and: 0
+      comma_full_stop: 0
+      comma_override: 0
+      term_plain: 0
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_ol_last_status:
+    type: list_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_ol_name:
+    type: basic_string
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_ol_publish_date:
+    type: datetime_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_ol_sponsor:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: sponsor_list
+      link: false
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  vote_widget:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 5
+    region: content
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  field_bill_multi_session_root: true
+  field_bill_no_issue_tags: true
+  field_comments: true
+  field_majority_issue_tag: true
+  field_metatags: true
+  field_ol_active_version: true
+  field_ol_add_sponsor_names: true
+  field_ol_add_sponsors: true
+  field_ol_all_actions: true
+  field_ol_all_statuses: true
+  field_ol_amendments: true
+  field_ol_base_print_no: true
+  field_ol_chamber: true
+  field_ol_co_sponsor_names: true
+  field_ol_co_sponsors: true
+  field_ol_full_text: true
+  field_ol_has_same_as: true
+  field_ol_is_active_version: true
+  field_ol_is_amended: true
+  field_ol_last_status_date: true
+  field_ol_latest_status: true
+  field_ol_latest_status_committee: true
+  field_ol_law_code: true
+  field_ol_law_section: true
+  field_ol_memo: true
+  field_ol_multi_sponsor_names: true
+  field_ol_multi_sponsors: true
+  field_ol_previous_versions: true
+  field_ol_print_no: true
+  field_ol_program_info: true
+  field_ol_program_info_seq: true
+  field_ol_same_as: true
+  field_ol_session: true
+  field_ol_sponsor_name: true
+  field_ol_substituted_by: true
+  field_ol_summary: true
+  field_ol_version: true
+  field_ol_votes: true
+  langcode: true
+  links: true
+  private_message_link: true
+  rabbit_hole__settings: true
+  search_api_excerpt: true

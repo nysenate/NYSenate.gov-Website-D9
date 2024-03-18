@@ -243,7 +243,12 @@ class BillVoteHelper {
     // If this is a user examining a bill through their dashboard...
     $current_path = $this->currentPath->getPath();
     $path_args = explode('/', $current_path);
-    if ($path_args[2] == 'dashboard' && $path_args[3] == 'bills') {
+    if (
+      !empty($path_args[2])
+      && !empty($path_args[3])
+      && $path_args[2] == 'dashboard'
+      && $path_args[3] == 'bills'
+    ) {
       $label = $this->t("Do you support this bill?");
     }
 

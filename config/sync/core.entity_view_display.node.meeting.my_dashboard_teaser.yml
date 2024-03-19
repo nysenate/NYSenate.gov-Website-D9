@@ -44,20 +44,13 @@ content:
     region: content
   field_date_range:
     type: daterange_default
-    label: above
+    label: hidden
     settings:
       timezone_override: ''
-      format_type: html_datetime
+      format_type: publish_date
       separator: '-'
     third_party_settings: {  }
     weight: 1
-    region: content
-  field_event_place:
-    type: list_default
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    weight: 2
     region: content
   field_issues:
     type: list_formatter
@@ -76,11 +69,26 @@ content:
       comma_override: 0
       term_plain: 0
     third_party_settings: {  }
+    weight: 5
+    region: content
+  field_meeting_location:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_video_status:
+    type: list_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
     weight: 4
     region: content
   field_yt:
     type: entity_reference_entity_view
-    label: above
+    label: hidden
     settings:
       view_mode: default
       link: true
@@ -95,15 +103,14 @@ hidden:
   field_committee: true
   field_committee_featured: true
   field_event_online_link: true
+  field_event_place: true
   field_majority_issue_tag: true
   field_meeting_agenda: true
-  field_meeting_location: true
   field_meeting_status: true
   field_off_the_floor: true
   field_transcript: true
   field_ustream: true
   field_video_redirect: true
-  field_video_status: true
   langcode: true
   links: true
   private_message_link: true

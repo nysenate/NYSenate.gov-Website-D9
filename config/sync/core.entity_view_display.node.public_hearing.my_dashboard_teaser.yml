@@ -24,6 +24,7 @@ dependencies:
     - node.type.public_hearing
   module:
     - datetime_range
+    - options
     - text
     - user
 id: node.public_hearing.my_dashboard_teaser
@@ -32,18 +33,19 @@ bundle: public_hearing
 mode: my_dashboard_teaser
 content:
   body:
-    type: text_default
+    type: text_trimmed
     label: hidden
-    settings: {  }
+    settings:
+      trim_length: 300
     third_party_settings: {  }
     weight: 0
     region: content
   field_date_range:
     type: daterange_default
-    label: above
+    label: hidden
     settings:
       timezone_override: ''
-      format_type: html_datetime
+      format_type: publish_date
       separator: '-'
     third_party_settings: {  }
     weight: 1
@@ -54,19 +56,26 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 4
+    weight: 5
     region: content
   field_meeting_location:
     type: string
-    label: above
+    label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
     weight: 2
     region: content
+  field_video_status:
+    type: list_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 4
+    region: content
   field_yt:
     type: entity_reference_entity_view
-    label: above
+    label: hidden
     settings:
       view_mode: default
       link: true
@@ -87,7 +96,6 @@ hidden:
   field_transcript: true
   field_ustream: true
   field_video_redirect: true
-  field_video_status: true
   langcode: true
   links: true
   private_message_link: true

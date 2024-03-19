@@ -74,7 +74,6 @@
     view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
   ]
 %}
-{{  dump() }}
 <article{{ attributes.addClass(classes) }}>
   <h2{{ title_attributes }}>
     <a href="{{ url }}" rel="bookmark">{{ label }}</a>
@@ -88,12 +87,24 @@
     {{ content.field_subtitle }}
   {% elseif node.field_subhead.value %}
     {{ content.field_subhead }}
-  {% else %}
+  {% elseif node.body.value %}
     {{ content.body }}
     <span class="c-my-dashboard--read-more"><a href="{{ url }}">... Read More</a></span>
   {% endif %}
   {{ content.field_date }}
+  {% if node.field_date_range.value %}
+    {{ content.field_date_range }}
+    {{ node.field_date_range.value|date('U')|format_date('time') }}
+  {% endif %}
+  {{ content.field_meeting_location }}
+  {{ content.field_yt }}
+  {{ content.field_video_status }}
   {{ content.field_senator_multiref }}
   {{ content.field_issues }}
   {{ content.field_image_main }}
+  {{ content.field_ol_name }}
+  {{ content.vote_widget }}
+  {{ content.field_ol_publish_date }}
+  {{ content.field_ol_last_status }}
+  {{ content.field_ol_sponsor }}
 </article>

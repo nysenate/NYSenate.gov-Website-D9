@@ -1,0 +1,31 @@
+{{ attach_library('nysenate_theme/nysenate-my-dashboard') }}
+{%
+  set classes = [
+  'node',
+  'node--type-' ~ node.bundle|clean_class,
+  view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+]
+%}
+<article{{ attributes.addClass(classes) }}>
+  <h2{{ title_attributes }}>
+    <a href="{{ url }}" rel="bookmark">{{ label }}</a>
+  </h2>
+  {% if node.bundle == 'article' %}
+    {{ content.field_category }}
+  {% else %}
+    {{ node.bundle }}
+  {% endif %}
+  {% if node.field_subtitle.value %}
+    {{ content.field_subtitle }}
+  {% elseif node.field_subhead.value %}
+    {{ content.field_subhead }}
+  {% elseif node.body.value %}
+    {{ content.body }}
+    <span class="c-my-dashboard--read-more"><a href="{{ url }}">... Read More</a></span>
+  {% endif %}
+  {% if node.field_date_range.value %}
+    {{ content.field_date_range }}
+    {{ node.field_date_range.value|date('U')|format_date('time') }}
+  {% endif %}
+  {{ content|without('field_category', 'field_subtitle', 'field_subhead', 'field_date_range', 'body') }}
+</article>

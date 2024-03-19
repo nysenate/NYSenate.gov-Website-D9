@@ -42,28 +42,10 @@ grumphp:
       regexp_type: E
     # Lint our JSON files.
     jsonlint: ~
-    # Confirm we're following Drupal standards.
+    # For phpstan configuration see phpstan.neon.dist.
+    phpstan:
+    # For phpcs configuration: see phpcs.xml.dist.
     phpcs:
-      standard: vendor/drupal/coder/coder_sniffer/Drupal/
-      ignore_patterns:
-        - libraries/
-        - sites/*/settings.php
-      triggered_by:
-        - inc
-        - install
-        - module
-        - php
-        - profile
-        - test
-        - theme
-        - info
-        - txt
-        - md
-        - yml
-      whitelist_patterns:
-        - /^web\/profiles\/custom\/(.*)/
-        - /^web\/modules\/custom\/(.*)/
-        - /^web\/themes\/custom\/(.*)/
     # Lint our YAML files.
     yamllint: ~
     # Run Enlightn Security Checker.

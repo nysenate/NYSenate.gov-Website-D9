@@ -6,6 +6,7 @@
   view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
 ]
 %}
+{{ dump() }}
 <article{{ attributes.addClass(classes) }}>
   <h2{{ title_attributes }}>
     <a href="{{ url }}" rel="bookmark">{{ label }}</a>

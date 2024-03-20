@@ -17,9 +17,16 @@
 #}
 
 {{ attach_library('nysenate_theme/session') }}
-
+<h3 class="nys-title">Meeting Agenda</h3>
+<div class="c-panel--header">
+  <h4 class="l-panel-col l-panel-col--lft">Bill #</h4>
+  <h4 class="l-panel-col l-panel-col--ctr">title & sponsor</h4>
+  <h4 class="l-panel-col l-panel-col--rgt">Votes & Actions</h4>
+</div>
 {% for row in rows %}
   <div class="{% if loop.first %} first {% endif %} {% if loop.index is odd %} u-odd {% else %} u-even {% endif %}">
     {{ row.content }}
   </div>
 {% endfor %}
+
+

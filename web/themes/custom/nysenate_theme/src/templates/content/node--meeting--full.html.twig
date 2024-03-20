@@ -141,11 +141,11 @@
 
   {% if content.field_meeting_agenda.0['#options']['entity'].field_ol_agenda_notes.0.value %}
     <pre class="c-meeting--agenda-notes">
-      {{ content.field_meeting_agenda.0['#options']['entity'].field_ol_agenda_notes.0.value }}
+      {% for key, item in content.field_meeting_agenda if key|first != '#'%}
+        {{ item['#options']['entity'].field_ol_agenda_notes.0.value }}
+      {% endfor %}
     </pre>
   {% endif %}
-
-
 
 </article>
 

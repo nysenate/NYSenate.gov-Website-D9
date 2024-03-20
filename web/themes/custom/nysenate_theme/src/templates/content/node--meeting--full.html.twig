@@ -139,6 +139,14 @@
     </div>
   {% endif %}
 
+  {% if content.field_meeting_agenda.0['#options']['entity'].field_ol_agenda_notes.0.value %}
+    <pre class="c-meeting--agenda-notes">
+      {{ content.field_meeting_agenda.0['#options']['entity'].field_ol_agenda_notes.0.value }}
+    </pre>
+  {% endif %}
+
+
+
 </article>
 
 {{ meeting_agenda }}

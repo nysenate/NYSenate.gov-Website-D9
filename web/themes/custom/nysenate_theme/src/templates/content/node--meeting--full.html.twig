@@ -138,14 +138,15 @@
       {{ content.field_yt }}
     </div>
   {% endif %}
-
-  {% if content.field_meeting_agenda.0['#options']['entity'].field_ol_agenda_notes.0.value|trim %}
-    <pre class="c-meeting--agenda-notes">
-      {% for key, item in content.field_meeting_agenda if key|first != '#'%}
-        {{ item['#options']['entity'].field_ol_agenda_notes.0.value }}
-      {% endfor %}
-    </pre>
-  {% endif %}
+  {% for key, item in content.field_meeting_agenda if key|first != '#'%}
+    {% if item['#options']['entity'].field_ol_agenda_notes.0.value|trim %}
+      <pre class="c-meeting--agenda-notes">
+        {% for key, item in content.field_meeting_agenda if key|first != '#'%}
+          {{ item['#options']['entity'].field_ol_agenda_notes.0.value }}
+        {% endfor %}
+      </pre>
+    {% endif %}
+  {% endfor %}
 
 </article>
 

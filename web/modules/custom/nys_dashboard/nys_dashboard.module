@@ -398,3 +398,36 @@ function nys_dashboard_form_alter(&$form, FormStateInterface $form_state, $form_
     }
   }
 }
+
+/**
+ * Implements hook_form_views_exposed_form_alter().
+ */
+function nys_dashboard_form_views_exposed_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // Limit field_issues exposed filters to issues followed by current user.
+  $dashboard_views = ['my_dashboard'];
+  if ($form_id == 'views_exposed_form' && in_array($form_state->get('view')->id(), $dashboard_views)) {
+    $follow_issue_flag_ids = \Drupal::entityTypeManager()
+      ->getStorage('flagging')
+      ->getQuery()
+      ->condition('flag_id', 'follow_issue')
+      ->condition('uid', \Drupal::currentUser()->id())
+      ->execute();
+    $follow_issue_tids = [];
+    if (!empty($follow_issue_flag_ids)) {
+      $follow_issue_flags = \Drupal::entityTypeManager()
+        ->getStorage('flagging')
+        ->loadMultiple($follow_issue_flag_ids);
+      foreach ($follow_issue_flags as $flag) {
+        $entity_id = $flag->get('entity_id')->getString();
+        $follow_issue_tids[] = $entity_id;
+      }
+    }
+    if (!empty($form['field_issues_target_id']['#options'])) {
+      foreach ($form['field_issues_target_id']['#options'] as $issue_tid => $issue_label) {
+        if ($issue_tid !== 'All' && !in_array($issue_tid, $follow_issue_tids)) {
+          unset($form['field_issues_target_id']['#options'][$issue_tid]);
+        }
+      }
+    }
+  }
+}

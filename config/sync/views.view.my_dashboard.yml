@@ -7,6 +7,7 @@ dependencies:
     - field.storage.node.body
     - field.storage.node.field_ol_summary
     - field.storage.node.field_subhead
+    - flag.flag.follow_issue
     - node.type.article
     - node.type.bill
     - node.type.in_the_news
@@ -15,8 +16,11 @@ dependencies:
     - node.type.public_hearing
     - node.type.resolution
     - node.type.webform
+    - taxonomy.vocabulary.issues
   module:
+    - flag
     - node
+    - taxonomy
     - text
     - user
 id: my_dashboard
@@ -404,64 +408,6 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-        type_1:
-          id: type_1
-          table: node_field_data
-          field: type
-          relationship: none
-          group_type: group
-          admin_label: ''
-          entity_type: node
-          entity_field: type
-          plugin_id: bundle
-          operator: in
-          value:
-            article: article
-            bill: bill
-            in_the_news: in_the_news
-            meeting: meeting
-            petition: petition
-            public_hearing: public_hearing
-            webform: webform
-            resolution: resolution
-          group: 1
-          exposed: true
-          expose:
-            operator_id: type_1_op
-            label: Type
-            description: ''
-            use_operator: false
-            operator: type_1_op
-            operator_limit_selection: false
-            operator_list: {  }
-            identifier: type_1
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
-              frontpage_editor: '0'
-              senator: '0'
-              microsite_content_producer: '0'
-              legislative_correspondent: '0'
-              student_programs: '0'
-              constituent: '0'
-              comment_moderator: '0'
-            reduce: true
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
         combine:
           id: combine
           table: views
@@ -522,6 +468,122 @@ display:
             body: body
             field_subhead: field_subhead
             field_ol_summary: field_ol_summary
+        type_1:
+          id: type_1
+          table: node_field_data
+          field: type
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          entity_field: type
+          plugin_id: bundle
+          operator: in
+          value:
+            article: article
+            bill: bill
+            in_the_news: in_the_news
+            meeting: meeting
+            petition: petition
+            public_hearing: public_hearing
+            webform: webform
+            resolution: resolution
+          group: 1
+          exposed: true
+          expose:
+            operator_id: type_1_op
+            label: Type
+            description: ''
+            use_operator: false
+            operator: type_1_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: type_1
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+              frontpage_editor: '0'
+              senator: '0'
+              microsite_content_producer: '0'
+              legislative_correspondent: '0'
+              student_programs: '0'
+              constituent: '0'
+              comment_moderator: '0'
+            reduce: true
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+        field_issues_target_id:
+          id: field_issues_target_id
+          table: node__field_issues
+          field: field_issues_target_id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: taxonomy_index_tid
+          operator: or
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_issues_target_id_op
+            label: Issue
+            description: ''
+            use_operator: false
+            operator: field_issues_target_id_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: field_issues_target_id
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+              frontpage_editor: '0'
+              senator: '0'
+              microsite_content_producer: '0'
+              legislative_correspondent: '0'
+              student_programs: '0'
+              constituent: '0'
+              comment_moderator: '0'
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+          vid: issues
+          type: select
+          hierarchy: false
+          limit: true
+          error_message: true
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
       style:
         type: default
         options:
@@ -542,7 +604,28 @@ display:
           disable_automatic_base_fields: false
           replica: false
           query_tags: {  }
-      relationships: {  }
+      relationships:
+        field_issues:
+          id: field_issues
+          table: node__field_issues
+          field: field_issues
+          relationship: none
+          group_type: group
+          admin_label: 'field_issues: Taxonomy term'
+          plugin_id: standard
+          required: false
+        flag_relationship:
+          id: flag_relationship
+          table: taxonomy_term_field_data
+          field: flag_relationship
+          relationship: field_issues
+          group_type: group
+          admin_label: Flags
+          entity_type: taxonomy_term
+          plugin_id: flag_relationship
+          required: true
+          flag: follow_issue
+          user_scope: current
       header: {  }
       footer: {  }
       display_extenders: {  }
@@ -553,6 +636,7 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
+        - user
         - 'user.node_grants:view'
         - user.permissions
       tags:
@@ -574,6 +658,7 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
+        - user
         - 'user.node_grants:view'
         - user.permissions
       tags:

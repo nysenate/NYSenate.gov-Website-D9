@@ -459,3 +459,13 @@ function nys_dashboard_views_data() {
   ];
   return $data;
 }
+
+/**
+ * Implements hook_preprocess_page().
+ */
+function nys_dashboard_preprocess_page(&$variables) {
+  $request_uri = \Drupal::request()->getRequestUri();
+  if (str_starts_with($request_uri, '/my-dashboard')) {
+    $variables['#attached']['library'][] = 'nysenate_theme/my-dashboard';
+  }
+}

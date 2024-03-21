@@ -370,7 +370,20 @@ display:
       cache:
         type: tag
         options: {  }
-      empty: {  }
+      empty:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text
+          empty: true
+          content:
+            value: 'No updates found.'
+            format: basic_html
+          tokenize: false
       sorts:
         created:
           id: created
@@ -646,6 +659,53 @@ display:
             operator_limit_selection: false
             operator_list: {  }
             identifier: year_month_filter
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+              frontpage_editor: '0'
+              senator: '0'
+              microsite_content_producer: '0'
+              legislative_correspondent: '0'
+              student_programs: '0'
+              constituent: '0'
+              comment_moderator: '0'
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+        your_senator_filter:
+          id: your_senator_filter
+          table: node__field_senator_multiref
+          field: your_senator_filter
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: your_senator_filter
+          operator: '='
+          value: '0'
+          group: 1
+          exposed: true
+          expose:
+            operator_id: ''
+            label: 'Only show updates from my senator'
+            description: ''
+            use_operator: false
+            operator: your_senator_filter_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: your_senator_filter
             required: false
             remember: false
             multiple: false

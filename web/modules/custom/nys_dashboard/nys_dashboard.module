@@ -447,5 +447,15 @@ function nys_dashboard_views_data() {
       'id' => 'year_month_filter',
     ],
   ];
+  $data['node__field_senator_multiref']['your_senator_filter'] = [
+    'title' => t('Only show content from my senator'),
+    'filter' => [
+      'title' => t('Only show content from my senator'),
+      'help' => t("Custom NYS filter to only show content linked to current user's senator."),
+      'group' => t('Content'),
+      'field' => 'field_senator_multiref_target_id',
+      'id' => 'your_senator_filter',
+    ],
+  ];
   return $data;
 }

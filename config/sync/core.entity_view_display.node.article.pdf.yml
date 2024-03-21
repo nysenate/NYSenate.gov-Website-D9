@@ -1,8 +1,9 @@
-uuid: 1324191e-ec4a-452e-843e-411ff192f5c4
+uuid: 55dec5ea-2c96-4010-affd-9ae7cc0ed75f
 langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_view_mode.node.pdf
     - field.field.node.article.body
     - field.field.node.article.field_accessible_sitewide
     - field.field.node.article.field_article_author
@@ -27,18 +28,14 @@ dependencies:
     - node.type.article
   module:
     - datetime
-    - entity_print
     - entity_reference_revisions
     - options
     - text
     - user
-third_party_settings:
-  entity_print:
-    pdf_label: 'Print as PDF'
-id: node.article.default
+id: node.article.pdf
 targetEntityType: node
 bundle: article
-mode: default
+mode: pdf
 content:
   body:
     type: text_default
@@ -46,11 +43,6 @@ content:
     settings: {  }
     third_party_settings: {  }
     weight: 1
-    region: content
-  entity_print_view_pdf:
-    settings: {  }
-    third_party_settings: {  }
-    weight: 21
     region: content
   field_accessible_sitewide:
     type: boolean
@@ -218,6 +210,7 @@ content:
     region: content
 hidden:
   entity_print_view_epub: true
+  entity_print_view_pdf: true
   entity_print_view_word_docx: true
   langcode: true
   private_message_link: true

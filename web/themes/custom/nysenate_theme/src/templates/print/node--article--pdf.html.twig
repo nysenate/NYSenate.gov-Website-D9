@@ -1,0 +1,131 @@
+<article id="node-{{ content.node_id }}" class="article-node {{ classes }}" {{ attributes }}>
+    {{ title_prefix }}
+
+
+        <header class="c-news--head">
+            <h1 class="nys-article-title">{{ title }}</h1>
+            <div class="c-news--head-meta">
+                {% if content.field_article_author.0 %}
+                    <p class="c-news--author">
+                        {{ content.field_article_author.0 }}
+                    </p>
+                {% elseif content.field_senator_multiref.0 %}
+                    <p class="c-news--author">
+                        <a href="{{ senator_link }}">{{ senator_name }}</a>
+                    </p>
+                {% endif %}
+                {% if content.field_date[0] %}
+                    <p class="c-news--pub-date">
+                        <span class="date-display-single">{{ content.field_date[0]['#markup'] }}</span>
+                    </p>
+                {% endif %}
+                {% if issues or majority_issue %}
+                    <ul class="nys-associated-topics">
+                        ISSUE:
+                        {% if majority_issue %}
+                            <li>{{ majority_issue }}</li>
+                        {% endif %}
+                        {% if issues %}
+                            {% for issue in issues %}
+                                <li>{{ issue }}</li>
+                            {% endfor %}
+                        {% endif %}
+                    </ul>
+                {% endif %}
+
+                {% if content.field_committee.0 %}
+                    <ul class="nys-associated-topics">
+                        {{ 'COMMITTEE:'|t }} <li>{{ content.field_committee.0 }} </li>
+                    </ul>
+                {% endif %}
+
+                {% if content.field_attachment[0] %}
+                    {% include "@nysenate_theme/file-uploads/file-uploads.twig" with {
+                        title: title,
+                        attachment: content.field_attachment,
+                    } only %}
+                {% endif %}
+
+                {{ content.entity_print_view_pdf }}
+
+            </div>
+
+
+        </header>
+
+
+    {{ title_suffix }}
+
+    <div class="c-news--body">
+        {% if content.field_image_main.0 %}
+            <div class="c-block c-block--img">
+                {{ content.field_image_main }}
+                {% if image_caption %}
+                <p class="c-img--caption">{{ image_caption }}
+                    {% endif %}
+            </div>
+        {% endif %}
+
+        {% if content.field_subtitle.0 %}
+            <div class="c-news--subtitle">
+                {{ content.field_subtitle }}
+            </div>
+        {% endif %}
+
+        <div class="c-block">
+            {{ content.body }}
+        </div>
+
+        <!-- Field Paragraphs -->
+        {% if content.field_layout_components.0 %}
+            <div class="c-block">
+                {{ content.field_layout_components }}
+            </div>
+        {% endif %}
+
+        {% if content.field_chapters %}
+            <section class="c-block">
+                {{ content.field_chapters }}
+            </section>
+        {% endif %}
+
+        {% if content.field_bills[0] %}
+            <div class="c-container--header__top-border">
+                <h2 class="c-container--title">related legislation</h2>
+            </div>
+            <aside>
+                {{ content.field_bills }}
+            </aside>
+        {% endif %}
+
+        {% include '@nysenate_theme/nysenate-social-buttons/nysenate-social-buttons.twig' with {
+            title: node.type.entity.label,
+            node_url: absolute_url,
+            cta: cta,
+        } only
+        %}
+
+        {% if content.field_category[0]['#markup'] == "Press release" %}
+            {% if content.field_associated_senators.0 %}
+                <section class="c-block c-block--associated-senators">
+                    <div class="c-container--header__top-border">
+                        <h2 class="c-container--title">Senators Involved</h2>
+                    </div>
+
+                    <div class="c-block">
+                        {{ content.field_associated_senators }}
+                    </div>
+                </section>
+            {% endif %}
+        {% endif %}
+    </div>
+
+    {# News footer for senator microsite nodes #}
+    {% if content.field_senator_multiref.0 %}
+        {{ drupal_view('senator_microsite_content', 'article_footer') }}
+    {% endif %}
+
+    {% if content.field_senator_multiref['#items'] %}
+        {{ drupal_view('senator_microsite_content', 'promo_footer') }}
+    {% endif %}
+</article>

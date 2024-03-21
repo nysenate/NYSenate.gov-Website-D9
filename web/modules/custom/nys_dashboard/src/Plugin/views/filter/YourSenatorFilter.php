@@ -70,7 +70,7 @@ class YourSenatorFilter extends FilterPluginBase {
   protected function valueForm(&$form, FormStateInterface $form_state) {
     $form['value'] = [
       '#type' => 'checkbox',
-      '#title' => 'Only show updates from my senator',
+      '#title' => 'Only show content from my senator',
     ];
   }
 

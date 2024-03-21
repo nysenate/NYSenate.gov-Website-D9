@@ -73,7 +73,7 @@ class YearMonthFilter extends FilterPluginBase {
       '#title' => 'Year',
       '#options' => array_combine($years, $years),
     ];
-    $form['month'] = [
+    $form['year_month_filter__month'] = [
       '#type' => 'select',
       '#title' => 'Month',
       '#options' => [
@@ -104,7 +104,23 @@ class YearMonthFilter extends FilterPluginBase {
    */
   public function storeExposedInput($input, $status) {
     parent::storeExposedInput($input, $status);
-    $this->month = $input['month'];
+    $this->month = $input['year_month_filter__month'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildExposedForm(&$form, FormStateInterface $form_state) {
+    parent::buildExposedForm($form, $form_state);
+
+    // Ensure month element appears after year in exposed form.
+    $month_index = array_search('year_month_filter__month', array_keys($form));
+    $year_index = array_search('year_month_filter', array_keys($form));
+    if ($month_index !== FALSE && $year_index !== FALSE) {
+      $month_form_element = array_splice($form, $month_index, 1);
+      $new_month_index = $year_index + 1;
+      $form = array_slice($form, 0, $new_month_index, TRUE) + $month_form_element + array_slice($form, $new_month_index, NULL, TRUE);
+    }
   }
 
   /**

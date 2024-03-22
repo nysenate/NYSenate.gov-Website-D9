@@ -51,11 +51,11 @@
           } only %}
         {% endif %}
 
-          {{ content.entity_print_view_pdf }}
-
-      </div>
-
-
+        {% if content.field_senator_multiref.0 %}
+            <div class="c-news--print fi-print">
+                {{ content.entity_print_view_pdf }}
+            </div>
+        {% endif %}
     </header>
   {% endif %}
 

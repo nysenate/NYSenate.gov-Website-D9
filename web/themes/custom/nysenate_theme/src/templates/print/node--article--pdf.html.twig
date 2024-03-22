@@ -1,4 +1,27 @@
-<article id="node-{{ content.node_id }}" class="article-node {{ classes }}" {{ attributes }}>
+{% set image_src = content.field_senator_multiref.0['#options'].entity.field_member_headshot.entity.field_image.entity.fileuri %}
+{% set senator_name = content.field_senator_multiref.0['#options'].entity.name.value %}
+
+{% if senator_name %}
+<section class="print hero--senator">
+    <div class="c-senator-hero--img">
+        <img src={{ image_src | image_style('square') }}>
+    </div>
+    <div class="c-senator">
+        <p>NEW YORK STATE SENATOR</p>
+        <div class="c-senator--name">
+        {{ senator_name }}
+        </div>
+    </div>
+</section>
+    {% else %}
+    <section class=" print hero">
+        <div class="c-hero--logo">
+            New York State Senate
+        </div>
+    </section>
+{% endif %}
+
+<article id="node-{{ content.node_id }}" class="article-node article-node--print {{ classes }}" {{ attributes }}>
     {{ title_prefix }}
 
 
@@ -98,34 +121,5 @@
             </aside>
         {% endif %}
 
-        {% include '@nysenate_theme/nysenate-social-buttons/nysenate-social-buttons.twig' with {
-            title: node.type.entity.label,
-            node_url: absolute_url,
-            cta: cta,
-        } only
-        %}
 
-        {% if content.field_category[0]['#markup'] == "Press release" %}
-            {% if content.field_associated_senators.0 %}
-                <section class="c-block c-block--associated-senators">
-                    <div class="c-container--header__top-border">
-                        <h2 class="c-container--title">Senators Involved</h2>
-                    </div>
-
-                    <div class="c-block">
-                        {{ content.field_associated_senators }}
-                    </div>
-                </section>
-            {% endif %}
-        {% endif %}
-    </div>
-
-    {# News footer for senator microsite nodes #}
-    {% if content.field_senator_multiref.0 %}
-        {{ drupal_view('senator_microsite_content', 'article_footer') }}
-    {% endif %}
-
-    {% if content.field_senator_multiref['#items'] %}
-        {{ drupal_view('senator_microsite_content', 'promo_footer') }}
-    {% endif %}
 </article>

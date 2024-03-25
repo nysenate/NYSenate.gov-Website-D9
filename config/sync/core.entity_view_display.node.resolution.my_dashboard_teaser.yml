@@ -50,13 +50,13 @@ mode: my_dashboard_teaser
 content:
   field_issues:
     type: list_formatter
-    label: hidden
+    label: inline
     settings:
-      type: ul
+      type: comma
       separator_custom: ''
-      separator_custom_tag: span
+      separator_custom_tag: '0'
       separator_custom_class: ''
-      comma_tag: div
+      comma_tag: '0'
       class: list-formatter-list
       list_formatter_contrib:
         entity_reference_link: '1'

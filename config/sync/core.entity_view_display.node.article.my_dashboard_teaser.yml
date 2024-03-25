@@ -25,9 +25,12 @@ dependencies:
     - field.field.node.article.field_social_teaser
     - field.field.node.article.field_subtitle
     - field.field.node.article.rabbit_hole__settings
+    - image.style.760x377
     - node.type.article
   module:
     - datetime
+    - media
+    - nys_list_formatter
     - options
     - text
     - user
@@ -61,19 +64,32 @@ content:
     weight: 3
     region: content
   field_image_main:
-    type: entity_reference_entity_view
+    type: media_thumbnail
     label: hidden
     settings:
-      view_mode: full
-      link: false
+      image_link: content
+      image_style: 760x377
+      image_loading:
+        attribute: lazy
     third_party_settings: {  }
     weight: 6
     region: content
   field_issues:
-    type: entity_reference_label
-    label: hidden
+    type: list_formatter
+    label: inline
     settings:
-      link: true
+      type: comma
+      separator_custom: ''
+      separator_custom_tag: '0'
+      separator_custom_class: list-formatter-separator
+      comma_tag: '0'
+      class: list-formatter-list
+      list_formatter_contrib:
+        entity_reference_link: '1'
+      comma_and: 0
+      comma_full_stop: 0
+      comma_override: 0
+      term_plain: 0
     third_party_settings: {  }
     weight: 5
     region: content

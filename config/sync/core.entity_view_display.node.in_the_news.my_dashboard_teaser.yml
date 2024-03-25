@@ -21,9 +21,12 @@ dependencies:
     - field.field.node.in_the_news.field_senator_multiref
     - field.field.node.in_the_news.field_subhead
     - field.field.node.in_the_news.rabbit_hole__settings
+    - image.style.760x377
     - node.type.in_the_news
   module:
     - datetime
+    - media
+    - nys_list_formatter
     - text
     - user
 id: node.in_the_news.my_dashboard_teaser
@@ -49,19 +52,32 @@ content:
     weight: 2
     region: content
   field_image_main:
-    type: entity_reference_entity_view
+    type: media_thumbnail
     label: hidden
     settings:
-      view_mode: with_caption
-      link: false
+      image_link: content
+      image_style: 760x377
+      image_loading:
+        attribute: eager
     third_party_settings: {  }
     weight: 5
     region: content
   field_issues:
-    type: entity_reference_label
-    label: hidden
+    type: list_formatter
+    label: inline
     settings:
-      link: true
+      type: comma
+      separator_custom: ''
+      separator_custom_tag: '0'
+      separator_custom_class: list-formatter-separator
+      comma_tag: '0'
+      class: list-formatter-list
+      list_formatter_contrib:
+        entity_reference_link: '1'
+      comma_and: 0
+      comma_full_stop: 0
+      comma_override: 0
+      term_plain: 0
     third_party_settings: {  }
     weight: 4
     region: content

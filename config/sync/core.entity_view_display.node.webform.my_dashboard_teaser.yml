@@ -18,9 +18,12 @@ dependencies:
     - field.field.node.webform.field_title_stub
     - field.field.node.webform.rabbit_hole__settings
     - field.field.node.webform.webform
+    - image.style.760x377
     - node.type.webform
   module:
     - datetime
+    - media
+    - nys_list_formatter
     - text
     - user
 _core:
@@ -56,19 +59,32 @@ content:
     weight: 2
     region: content
   field_image_main:
-    type: entity_reference_entity_view
+    type: media_thumbnail
     label: hidden
     settings:
-      view_mode: default
-      link: true
+      image_link: content
+      image_style: 760x377
+      image_loading:
+        attribute: lazy
     third_party_settings: {  }
     weight: 5
     region: content
   field_issues:
-    type: entity_reference_label
-    label: hidden
+    type: list_formatter
+    label: inline
     settings:
-      link: true
+      type: comma
+      separator_custom: ''
+      separator_custom_tag: '0'
+      separator_custom_class: list-formatter-separator
+      comma_tag: '0'
+      class: list-formatter-list
+      list_formatter_contrib:
+        entity_reference_link: '1'
+      comma_and: 0
+      comma_full_stop: 0
+      comma_override: 0
+      term_plain: 0
     third_party_settings: {  }
     weight: 4
     region: content

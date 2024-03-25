@@ -1,13 +1,60 @@
-.c-my-dashboard--type-wrapper {
-  position: relative;
-  color: $blue01;
+@import '../../global/utils/init';
 
-  .c-my-dashboard--type {
-    position: absolute;
-    text-transform: uppercase;
-    font-family: $font-sans;
-    font-size: 14px;
-    left: 20px;
-    top: 0;
+.node--view-mode-my-dashboard-teaser {
+  padding: 24px;
+  border-top: 1px solid $grey04;
+
+  .c-my-dashboard--type-wrapper {
+    position: relative;
+    color: $blue01;
+
+    .c-my-dashboard--type {
+      position: absolute;
+      text-transform: uppercase;
+      font-family: $font-sans;
+      font-size: 14px;
+      left: 20px;
+      top: 0;
+    }
   }
+
+  h2 {
+    margin-bottom: 8px;
+  }
+
+  a {
+    color: $blue01;
+  }
+
+  .c-my-dashboard--blurb {
+    line-height: 18px;
+    margin-bottom: 12px;
+  }
+
+  .c-my-dashboard--details {
+    font-size: 13px;
+  }
+
+  .c-my-dashboard--issues {
+    display: inline-block;
+
+    .field__label {
+      font-weight: normal;
+    }
+  }
+
+  &.node--teaser-with-image {
+    padding-right: 404px;
+    min-height: 230px;
+
+    .c-my-dashboard--image {
+      position: absolute;
+      right: 0;
+      top: 0;
+      height: 180px;
+      width: 360px;
+      margin: 24px;
+    }
+  }
+
 }

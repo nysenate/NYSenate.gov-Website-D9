@@ -24,7 +24,7 @@ dependencies:
     - node.type.public_hearing
   module:
     - datetime_range
-    - options
+    - nys_list_formatter
     - text
     - user
 id: node.public_hearing.my_dashboard_teaser
@@ -51,36 +51,23 @@ content:
     weight: 1
     region: content
   field_issues:
-    type: entity_reference_label
-    label: hidden
+    type: list_formatter
+    label: inline
     settings:
-      link: true
+      type: comma
+      separator_custom: ''
+      separator_custom_tag: '0'
+      separator_custom_class: list-formatter-separator
+      comma_tag: '0'
+      class: list-formatter-list
+      list_formatter_contrib:
+        entity_reference_link: '1'
+      comma_and: 0
+      comma_full_stop: 0
+      comma_override: 0
+      term_plain: 0
     third_party_settings: {  }
     weight: 5
-    region: content
-  field_meeting_location:
-    type: string
-    label: hidden
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    weight: 2
-    region: content
-  field_video_status:
-    type: list_default
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
-    weight: 4
-    region: content
-  field_yt:
-    type: entity_reference_entity_view
-    label: hidden
-    settings:
-      view_mode: default
-      link: true
-    third_party_settings: {  }
-    weight: 3
     region: content
 hidden:
   entity_print_view_epub: true
@@ -93,9 +80,12 @@ hidden:
   field_event_place: true
   field_location: true
   field_majority_issue_tag: true
+  field_meeting_location: true
   field_transcript: true
   field_ustream: true
   field_video_redirect: true
+  field_video_status: true
+  field_yt: true
   langcode: true
   links: true
   private_message_link: true

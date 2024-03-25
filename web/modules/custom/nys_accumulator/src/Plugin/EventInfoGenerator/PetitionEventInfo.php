@@ -11,7 +11,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Generates the event info for petition-related accumulator events.
  *
  * @EventInfoGenerator(
- *   id = "petition",
+ *   id = "poll",
  *   requires = { "node:petition" },
  *   content_url = "/node",
  *   fields = {

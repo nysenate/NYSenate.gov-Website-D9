@@ -1,20 +1,44 @@
 {{ attach_library('nysenate_theme/nysenate-my-dashboard') }}
 {%
-  set classes = [
-  'node',
-  'node--type-' ~ node.bundle|clean_class,
-  view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
-]
+  set classes, type_icon_map, type_label_map  = [
+    'node',
+    'node--type-' ~ node.bundle|clean_class,
+    view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+  ],
+  {
+    'article': 'article',
+    'bill': 'gavel',
+    'in_the_news': 'newspaper-clipping',
+    'meeting': 'calendar',
+    'petition': 'clipboard',
+    'public_hearing': 'calendar-blank',
+    'resolution': 'scales',
+    'webform': 'question',
+  },
+  {
+    'bill': 'Bill',
+    'in_the_news': 'News',
+    'meeting': 'Meetings',
+    'petition': 'Petition',
+    'public_hearing': 'Public Hearing',
+    'resolution': 'Resolution',
+    'webform': 'Questionnaire',
+  }
 %}
 <article{{ attributes.addClass(classes) }}>
+  <div class="c-my-dashboard--type-wrapper">
+    <i class="ph ph-{{ attribute(type_icon_map, node.bundle) }}"></i>
+    <span class="c-my-dashboard--type">
+      {% if node.bundle == 'article' %}
+        {{ content.field_category.0 }}
+      {% else %}
+        {{ attribute(type_label_map, node.bundle) }}
+      {% endif %}
+    </span>
+  </div>
   <h2{{ title_attributes }}>
     <a href="{{ url }}" rel="bookmark">{{ label }}</a>
   </h2>
-  {% if node.bundle == 'article' %}
-    {{ content.field_category }}
-  {% else %}
-    {{ node.bundle }}
-  {% endif %}
   {% if node.field_subtitle.value %}
     {{ content.field_subtitle }}
   {% elseif node.field_subhead.value %}

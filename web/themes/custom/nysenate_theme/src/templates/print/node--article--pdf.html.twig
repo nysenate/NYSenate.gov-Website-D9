@@ -62,15 +62,6 @@
                     </ul>
                 {% endif %}
 
-                {% if content.field_attachment[0] %}
-                    {% include "@nysenate_theme/file-uploads/file-uploads.twig" with {
-                        title: title,
-                        attachment: content.field_attachment,
-                    } only %}
-                {% endif %}
-
-                {{ content.entity_print_view_pdf }}
-
             </div>
 
 

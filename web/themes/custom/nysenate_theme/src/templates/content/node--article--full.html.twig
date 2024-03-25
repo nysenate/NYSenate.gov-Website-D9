@@ -51,11 +51,6 @@
           } only %}
         {% endif %}
 
-        {% if content.field_senator_multiref.0 %}
-            <div class="c-news--print fi-print">
-                {{ content.entity_print_view_pdf }}
-            </div>
-        {% endif %}
     </header>
   {% endif %}
 
@@ -101,6 +96,12 @@
       <aside>
         {{ content.field_bills }}
       </aside>
+    {% endif %}
+
+    {% if content.field_senator_multiref.0 %}
+      <div class="c-news--print fi-print">
+          {{ content.entity_print_view_pdf }}
+      </div>
     {% endif %}
 
     {% include '@nysenate_theme/nysenate-social-buttons/nysenate-social-buttons.twig' with {

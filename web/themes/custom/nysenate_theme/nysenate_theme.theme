@@ -5501,7 +5501,9 @@ function nysenate_theme_preprocess_page(&$variables) {
 
     $variables['dashboard_display_name'] = $display_name;
 
-    $variables['actionbar']['type'] = 'default';
+    if (empty($variables['actionbar']['type'])) {
+      $variables['actionbar']['type'] = 'default';
+    }
     // Variables for issues and committees header action bar.
     $parameters = \Drupal::routeMatch()->getParameters()->all();
     if (isset($parameters['taxonomy_term'])) {

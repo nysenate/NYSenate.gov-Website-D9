@@ -431,6 +431,11 @@ function nys_dashboard_form_views_exposed_form_alter(&$form, FormStateInterface 
       }
     }
   }
+
+  // Add icon to reset button.
+  if (!empty($form['actions']['reset'])) {
+    $form['actions']['reset']['#prefix'] = '<i class="ph ph-x"></i>';
+  }
 }
 
 /**

@@ -1,5 +1,6 @@
 @import '../../global/utils/init';
 
+// My Dashboard Teaser display mode styling.
 .node--view-mode-my-dashboard-teaser {
   padding: 24px;
   border-top: 1px solid $grey04;
@@ -56,5 +57,60 @@
       margin: 24px;
     }
   }
+}
 
+// My Dashboard exposed filter styling.
+#block-exposed-form-my-dashboard-main {
+  margin-left: 40px;
+
+  h2 {
+    color: $grey08;
+    text-transform: uppercase;
+    font-family: $font-sans;
+    font-size: 14px;
+  }
+
+  .form-item {
+    width: 100%;
+    margin: 15px 0 5px 0;
+
+    input, select {
+      margin-bottom: 0;
+    }
+
+    &.form-item-your-senator-filter {
+      margin: 30px 5px;
+      position: relative;
+
+      label {
+        position: absolute;
+        top: -10px;
+        left: 24px;
+        font-size: 15px;
+        line-height: 20px;
+        color: $blue01;
+      }
+    }
+  }
+
+  .form-actions {
+    input {
+      width: 100%;
+      margin: 0 0 20px;
+
+      &#edit-reset--2 {
+        border: none;
+        background: none;
+        color: $grey08;
+        text-align: left;
+        width: 182px;
+        padding: 0 0 0 20px;
+        margin-left: -20px;
+      }
+    }
+
+    .ph, #edit-reset--2 {
+      font-weight: 700;
+    }
+  }
 }

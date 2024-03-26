@@ -48,24 +48,29 @@
       {{ content.field_subtitle|render|striptags }}{{ read_more }}
     {% elseif node.field_subhead.value %}
       {{ content.field_subhead|render|striptags }}{{ read_more }}
+    {% elseif node.field_ol_name.value %}
+      {{ content.field_ol_name|render|striptags }}{{ read_more }}
     {% elseif node.body.value %}
       {{ content.body|render|striptags }}{{ read_more }}
     {% endif %}
   </div>
   <div class="c-my-dashboard--details">
-    <span class="c-my-dashboard--date-and-byline">
-    {% if node.field_date_range.value %}
-      {{ node.field_date_range.value|date('U')|format_date('publish_date') }}
-      | {{ node.field_date_range.value|date('U')|format_date('time') }}
-    {% elseif node.field_date.value %}
-      {{ node.field_date.value|date('U')|format_date('publish_date') }}
-      {% if node.field_senator_multiref.value  %}
-        | By Senator {{ content.field_senator_multiref.0 }}
+    {% if node.field_date_range.value or node.field_date.value %}
+      <span class="c-my-dashboard--date-and-byline">
+      {% if node.field_date_range.value %}
+        {{ node.field_date_range.value|date('U')|format_date('publish_date') }}
+        | {{ node.field_date_range.value|date('U')|format_date('time') }}
+      {% elseif node.field_date.value %}
+        {{ node.field_date.value|date('U')|format_date('publish_date') }}
+        {% if node.field_senator_multiref.value  %}
+          | By Senator {{ content.field_senator_multiref.0 }}
+        {% endif %}
       {% endif %}
+      </span>
+      <br>
     {% endif %}
-    </span>
     {% if node.field_issues.value %}
-      <br><span class="c-my-dashboard--issues">{{ content.field_issues }}</span>
+      <span class="c-my-dashboard--issues">{{ content.field_issues }}</span>
     {% endif %}
   </div>
   {% if node.field_image_main.value %}

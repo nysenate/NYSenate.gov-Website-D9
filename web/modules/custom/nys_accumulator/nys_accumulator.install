@@ -224,6 +224,7 @@ function nys_accumulator_update_9202(): void {
   $db = \Drupal::database();
   $query = $db->select('accumulator', 'a')
     ->fields('a', ['id', 'event_type', 'event_action', 'event_data'])
+    ->condition('event_type', 'poll')
     ->condition('event_data', '%event_info%', 'NOT LIKE');
   $rows = $query->execute()->fetchAllAssoc('id');
   $count = 0;
@@ -294,5 +295,8 @@ function nys_accumulator_update_9202(): void {
       $count++;
     }
   }
-  $logger->info('Update 9202 updated @count of @max records', ['@count' => $count, '@max' => count($rows)]);
+  $logger->info('Update 9202 updated @count of @max records', [
+    '@count' => $count,
+    '@max' => count($rows),
+  ]);
 }

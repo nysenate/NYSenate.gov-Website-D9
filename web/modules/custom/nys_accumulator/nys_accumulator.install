@@ -239,13 +239,10 @@ function nys_accumulator_update_9202(): void {
       continue;
     }
 
-    // Act only on records missing the event_info section.
-    if (!($event->event_info ?? NULL)) {
-      // Resolve a URL from one of three possibilities in request_info.
-      $url = $event->request_info->url
-        ?? ($event->request_info->referer
-          ?? ($event->request_info->get->destination ?? ''));
-    }
+    // Resolve a URL from one of three possibilities in request_info.
+    $url = $event->request_info->url
+      ?? ($event->request_info->referer
+        ?? ($event->request_info->get->destination ?? ''));
 
     // If no URL has been found, log and move on.
     if (!$url) {

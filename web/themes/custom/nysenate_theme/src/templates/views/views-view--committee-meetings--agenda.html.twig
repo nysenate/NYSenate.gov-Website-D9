@@ -65,13 +65,13 @@
   {% endif %}
 
   {% if rows %}
-    <h3 class="nys-title">Meeting Agenda</h3>
-    <div class="c-panel--header">
-      <h4 class="l-panel-col l-panel-col--lft">Bill #</h4>
-      <h4 class="l-panel-col l-panel-col--ctr">title & sponsor</h4>
-      <h4 class="l-panel-col l-panel-col--rgt">Votes & Actions</h4>
-    </div>
     {% if rows.0['#rows'].0['#row'].paragraphs_item_field_data_node__field_ol_agenda_bills_id %}
+      <h3 class="nys-title">Meeting Agenda</h3>
+      <div class="c-panel--header">
+        <h4 class="l-panel-col l-panel-col--lft">Bill #</h4>
+        <h4 class="l-panel-col l-panel-col--ctr">title & sponsor</h4>
+        <h4 class="l-panel-col l-panel-col--rgt">Votes & Actions</h4>
+      </div>
     <div class="view-content">
       {{ rows }}
     </div>

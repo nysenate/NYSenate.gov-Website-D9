@@ -69,11 +69,11 @@
         {% endif %}
       {% elseif node.field_ol_publish_date.value %}
         {{ node.field_ol_publish_date.value|date('U')|format_date('publish_date') }}
+        {% if node.field_ol_sponsor.value  %}
+          | Sponsored by {{ content.field_ol_sponsor.0 }}
+        {% endif %}
       {% endif %}
       </div>
-      {% if node.field_ol_sponsor.value %}
-        {{ content.field_ol_sponsor }}
-      {% endif %}
     {% endif %}
     {% if node.field_issues.value %}
         {{ content.field_issues }}

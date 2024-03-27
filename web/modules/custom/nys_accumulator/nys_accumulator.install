@@ -284,7 +284,7 @@ function nys_accumulator_update_9202(): void {
     // Rebuild the event_info and update the record.
     /** @var \Drupal\Core\Entity\ContentEntityBase $node */
     $event->event_info = $generator->build($node);
-    $update = $db->update('nys_accumulator')
+    $update = $db->update('accumulator')
       ->fields(['event_data' => json_encode($event)])
       ->condition('id', $key)
       ->execute();

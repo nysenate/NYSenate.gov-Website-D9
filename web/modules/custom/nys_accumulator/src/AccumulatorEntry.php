@@ -296,6 +296,8 @@ class AccumulatorEntry {
       'city' => trim($location['locality'] ?? ''),
       'state' => trim($location['administrative_area'] ?? ''),
       'zipcode' => trim($location['postal_code'] ?? ''),
+      'dob' => trim($user->field_dateofbirth->value ?? ''),
+      'gender' => trim($user->field_gender_user->value ?? ''),
     ];
 
   }

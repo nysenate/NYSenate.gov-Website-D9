@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Url;
 
 /**
  * Implements hook_schema().
@@ -154,7 +155,10 @@ function nys_accumulator_update_9201(): void {
     ],
     [
       'value' => ['event_type' => 'account', 'event_action' => 'edited'],
-      'where' => ['event_type' => 'profile', 'event_action' => 'account edited'],
+      'where' => [
+        'event_type' => 'profile',
+        'event_action' => 'account edited',
+      ],
     ],
     [
       'value' => ['event_type' => 'poll', 'event_action' => 'follow'],
@@ -181,4 +185,115 @@ function nys_accumulator_update_9201(): void {
       $query->execute();
     }
   }
+}
+
+/**
+ * Implements hook_update_N().
+ *
+ * As a result of update 9201 (above), the event tracking following a petition
+ * failed to find its EventInfoGenerator plugin.  This error was corrected in
+ * PR161.  This update will iterate through the existing accumulator records
+ * looking for "poll:follow" and "poll:unfollow" events, and attempt to
+ * reconstruct their event_info data.
+ */
+function nys_accumulator_update_9202(): void {
+  // Create a reference to the logging channel.
+  $logger = \Drupal::logger('nys_accumulator');
+
+  // Instantiate the storage manager.
+  try {
+    $storage = \Drupal::entityTypeManager()->getStorage('node');
+  }
+  catch (\Throwable $e) {
+    $logger->error('Update 9202 could not access node storage', ['@msg' => $e->getMessage()]);
+    exit(1);
+  }
+
+  // Instantiate the petition event info generator.
+  try {
+    /** @var \Drupal\nys_accumulator\Plugin\EventInfoGenerator\PetitionEventInfo $generator */
+    $generator = \Drupal::service('nys_accumulator.event_info_generators')
+      ->createInstance('poll');
+  }
+  catch (\Throwable $e) {
+    $logger->error('Update 9202 could not create a poll info generator', ['@msg' => $e->getMessage()]);
+    exit(1);
+  }
+
+  // Query the accumulator for suspected records.
+  $db = \Drupal::database();
+  $query = $db->select('accumulator', 'a')
+    ->fields('a', ['id', 'event_type', 'event_action', 'event_data'])
+    ->condition('event_type', 'poll')
+    ->condition('event_data', '%event_info%', 'NOT LIKE');
+  $rows = $query->execute()->fetchAllAssoc('id');
+  $count = 0;
+
+  // Iterate each row, regenerate its info field, and save.
+  foreach ($rows as $key => $entry) {
+    // Get the event_data contents, decoded from JSON.
+    // If there's a problem, report and move on.
+    $event = json_decode($entry->event_data);
+    if (!$event) {
+      $logger->error('Update 9202 could not decode event_data (id=@id)', ['@id' => $key]);
+      continue;
+    }
+
+    // Resolve a URL from one of three possibilities in request_info.
+    $url = $event->request_info->url
+      ?? ($event->request_info->referer
+        ?? ($event->request_info->get->destination ?? ''));
+
+    // If no URL has been found, log and move on.
+    if (!$url) {
+      \Drupal::logger('nys_accumulator')
+        ->error('Update 9202 failed to find a valid source URL (id=@id)', ['@id' => $key]);
+      continue;
+    }
+
+    // Match the discovered URL to its route and retrieve the parameters.
+    // This forces the URL to an internal format.  Note that the 'destination'
+    // option (method 3, above) is a flagging URL, and presents differently
+    // than the petition title/stub URLs.
+    $url = str_replace('https://www.nysenate.gov', '', $url);
+    $params = Url::fromUri('internal:' . $url)->getRouteParameters();
+    // Flags uses 'entity_id'.  Node references will use 'node'.
+    $nid = $params['node'] ?? ($params['entity_id'] ?? 0);
+
+    // If a valid node is not found, report and move on.
+    if (!$nid) {
+      \Drupal::logger('nys_accumulator')
+        ->error('Update 9202 failed to find a node id (id=@id)', [
+          '@id' => $key,
+          '@url' => $url,
+        ]);
+      continue;
+    }
+    $node = $storage->load($nid);
+    if (!(($nid == $node->id()) && ($node->bundle() == 'petition'))) {
+      $logger->error('Update 9202 encountered an unexpected entity', [
+        '@id' => $key,
+        '@detected_url' => $url,
+        '@detected_nid' => $nid,
+        '@loaded_id' => $node->id(),
+        '@loaded_bundle' => $node->bundle(),
+      ]);
+      continue;
+    }
+
+    // Rebuild the event_info and update the record.
+    /** @var \Drupal\Core\Entity\ContentEntityBase $node */
+    $event->event_info = $generator->build($node);
+    $update = $db->update('accumulator')
+      ->fields(['event_data' => json_encode($event)])
+      ->condition('id', $key)
+      ->execute();
+    if ($update == 1) {
+      $count++;
+    }
+  }
+  $logger->info('Update 9202 updated @count of @max records', [
+    '@count' => $count,
+    '@max' => count($rows),
+  ]);
 }

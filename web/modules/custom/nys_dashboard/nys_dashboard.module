@@ -475,3 +475,20 @@ function nys_dashboard_preprocess_page(&$variables) {
     $variables['actionbar']['type'] = 'my-dashboard';
   }
 }
+
+/**
+ * Implements hook_preprocess_node().
+ */
+function nys_dashboard_preprocess_node(&$variables) {
+  // Provide bill milestone information to my dashboard teasers.
+  if (
+    $variables['view_mode'] === 'my_dashboard_teaser'
+    && $variables['node']->getType() === 'bill'
+  ) {
+    /** @var \Drupal\nys_bills\BillsHelper $bills_helper_service */
+    $bills_helper_service = \Drupal::service('nys_bill.bills_helper');
+    $variables['positions'] = $bills_helper_service->calculateMilestones(
+      $bills_helper_service->resolveBillSubstitution($variables['node'])
+    );
+  }
+}

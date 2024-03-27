@@ -1,10 +1,12 @@
 {{ attach_library('nysenate_theme/nysenate-my-dashboard') }}
+{{ attach_library('nysenate_theme/bill-item') }}
 {%
   set classes, type_icon_map, type_label_map  = [
     'node',
     'node--type-' ~ node.bundle|clean_class,
     view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
-    node.field_image_main.value ? 'node--teaser-with-image'
+    node.field_image_main.value ? 'node--teaser-with-extras',
+    positions ? 'node--teaser-with-extras'
   ],
   {
     'article': 'article',
@@ -55,8 +57,8 @@
     {% endif %}
   </div>
   <div class="c-my-dashboard--details">
-    {% if node.field_date_range.value or node.field_date.value %}
-      <span class="c-my-dashboard--date-and-byline">
+    {% if node.bundle != 'bill' %}
+      <div>
       {% if node.field_date_range.value %}
         {{ node.field_date_range.value|date('U')|format_date('publish_date') }}
         | {{ node.field_date_range.value|date('U')|format_date('time') }}
@@ -65,17 +67,40 @@
         {% if node.field_senator_multiref.value  %}
           | By Senator {{ content.field_senator_multiref.0 }}
         {% endif %}
+      {% elseif node.field_ol_publish_date.value %}
+        {{ node.field_ol_publish_date.value|date('U')|format_date('publish_date') }}
       {% endif %}
-      </span>
-      <br>
+      </div>
+      {% if node.field_ol_sponsor.value %}
+        {{ content.field_ol_sponsor }}
+      {% endif %}
     {% endif %}
     {% if node.field_issues.value %}
-      <span class="c-my-dashboard--issues">{{ content.field_issues }}</span>
+        {{ content.field_issues }}
     {% endif %}
   </div>
-  {% if node.field_image_main.value %}
-    <div class="c-my-dashboard--image">
-      {{ content.field_image_main }}
+  {% if 'node--teaser-with-extras' in classes %}
+    <div class="c-my-dashboard--extras">
+      {% if node.field_image_main.value %}
+          {{ content.field_image_main }}
+      {% elseif node.bundle == 'bill' %}
+        {% if node.field_ol_publish_date.value %}
+          <div class="field">Introduced {{ node.field_ol_publish_date.value|date('U')|format_date('publish_date') }}</div>
+        {% endif %}
+        {% if node.field_ol_sponsor.value %}
+          {{ content.field_ol_sponsor }}
+        {% endif %}
+        {% if node.field_ol_last_status.value %}
+          {{ content.field_ol_last_status }}
+        {% endif %}
+        {% if positions %}
+          {%
+            include '@nysenate_theme/src/templates/includes/nys-bill-status.html.twig'
+            with {positions: positions, is_small: true}
+            only
+          %}
+        {% endif %}
+      {% endif %}
     </div>
   {% endif %}
 </article>

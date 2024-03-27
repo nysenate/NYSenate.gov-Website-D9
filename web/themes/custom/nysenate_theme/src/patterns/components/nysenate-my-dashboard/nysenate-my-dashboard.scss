@@ -34,27 +34,40 @@
 
   .c-my-dashboard--details {
     font-size: 13px;
-  }
-
-  .c-my-dashboard--issues {
-    display: inline-block;
+    overflow: hidden;
 
     .field__label {
       font-weight: normal;
     }
   }
 
-  &.node--teaser-with-image {
+  &.node--teaser-with-extras {
     padding-right: 404px;
     min-height: 230px;
 
-    .c-my-dashboard--image {
+    .c-my-dashboard--extras {
       position: absolute;
       right: 0;
       top: 0;
       height: 180px;
       width: 360px;
       margin: 24px;
+      font-size: 13px;
+
+      .nys-bill-status, .field {
+        float: right;
+        clear: both;
+      }
+
+      .field {
+        .field__label {
+          font-weight: normal;
+        }
+
+        .field__item {
+          float: left;
+        }
+      }
     }
   }
 }

@@ -21,9 +21,14 @@
 
   h2 {
     margin-bottom: 8px;
+    line-height: 24px;
 
     a {
       text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
     }
   }
 
@@ -37,12 +42,16 @@
   }
 
   .c-my-dashboard--blurb {
-    line-height: 18px;
+    line-height: 20px;
     margin-bottom: 12px;
   }
 
   .c-my-dashboard--read-more a {
     text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 
   .c-my-dashboard--details {
@@ -51,6 +60,19 @@
 
     .field__label {
       font-weight: normal;
+    }
+  }
+
+  .field--name-field-issues {
+    position: relative;
+
+    .field__label {
+      position: absolute;
+    }
+
+    .field__items {
+      margin: 3px 0 0 44px;
+      line-height: 16px;
     }
   }
 

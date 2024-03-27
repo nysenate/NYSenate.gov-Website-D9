@@ -436,6 +436,17 @@ function nys_dashboard_form_views_exposed_form_alter(&$form, FormStateInterface 
   if (!empty($form['actions']['reset'])) {
     $form['actions']['reset']['#prefix'] = '<i class="ph ph-x"></i>';
   }
+
+  // Ensure items_per_page element appears before your_senator_filter.
+  $your_senator_filter_index = array_search('your_senator_filter', array_keys($form));
+  $items_per_page_index = array_search('items_per_page', array_keys($form));
+  if ($items_per_page_index !== FALSE && $your_senator_filter_index !== FALSE) {
+    $your_senator_filter_element = array_splice($form, $your_senator_filter_index, 1);
+    $new_your_senator_filter_index = $items_per_page_index + 1;
+    $form = array_slice($form, 0, $new_your_senator_filter_index, TRUE)
+      + $your_senator_filter_element
+      + array_slice($form, $new_your_senator_filter_index, NULL, TRUE);
+  }
 }
 
 /**

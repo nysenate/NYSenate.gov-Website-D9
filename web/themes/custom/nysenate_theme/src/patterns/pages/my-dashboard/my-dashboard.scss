@@ -72,4 +72,45 @@ body.path-my-dashboard {
       }
     }
   }
+
+  // My Dashboard view pagination styling.
+  .view-my-dashboard {
+    .view-header, .view-header-pager {
+      width: 50%;
+      float: left;
+    }
+
+    .view-header {
+      font-size: 14px;
+      font-style: italic;
+    }
+
+    .pager a {
+      font-size: 14px;
+      color: $blue01;
+    }
+
+    .view-header-pager .pager__items {
+      padding: 0;
+      margin: 0;
+      text-align: right;
+
+      li {
+        display: none;
+
+        &.pager__item--previous, &.pager__item--next {
+          display: inline;
+        }
+      }
+    }
+
+    .view-content {
+      padding-top: 20px;
+      clear: both;
+    }
+
+    .view-footer-pager {
+      border-top: 1px solid $grey04;
+    }
+  }
 }

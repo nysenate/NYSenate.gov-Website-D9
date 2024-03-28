@@ -9,6 +9,10 @@ body.path-my-dashboard {
     background-color: $gen_blue_drk;
     padding-top: 100px;
 
+    @include breakpoint($bp-under-md) {
+      padding-top: 20px;
+    }
+
     h1, .field--name-field-actionbar-title {
       font-size: 40px;
       font-weight: 300;
@@ -33,11 +37,29 @@ body.path-my-dashboard {
     .view-my-dashboard {
       margin-right: 60px;
     }
+
+    @include breakpoint($bp-under-md) {
+      padding-top: 20px;
+
+      .region-content, .layout-content {
+        margin: 0;
+        padding: 0;
+        max-width: 100%;
+      }
+
+      .view-my-dashboard {
+        margin-right: 0;
+      }
+    }
   }
 
   // My Dashboard exposed filter styling.
   #block-exposed-form-my-dashboard-main {
     margin-left: 40px;
+
+    @include breakpoint($bp-under-md) {
+      margin-left: 0;
+    }
 
     h2 {
       color: $grey08;

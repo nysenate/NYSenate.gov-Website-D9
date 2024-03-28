@@ -5,6 +5,10 @@
   padding: 24px;
   border-top: 1px solid $grey04;
 
+  @include breakpoint($bp-under-md) {
+    padding: 20px 0 !important;
+  }
+
   .c-my-dashboard--type-wrapper {
     position: relative;
     color: $blue01;
@@ -80,6 +84,7 @@
     padding-right: 404px;
     min-height: 230px;
     position: relative;
+    overflow: hidden;
 
     .c-my-dashboard--extras {
       position: absolute;
@@ -103,6 +108,25 @@
         .field__item {
           float: left;
         }
+      }
+
+      @include breakpoint($bp-under-md) {
+        position: relative;
+        margin: 10px 0;
+      }
+    }
+
+    @include breakpoint($bp-under-md) {
+      .c-my-dashboard--extras {
+        height: auto;
+        width: auto;
+        float: left;
+      }
+    }
+
+    @include breakpoint($bp-under-md) {
+      &.node--type-bill .c-my-dashboard--extras {
+        float: right;
       }
     }
   }

@@ -1,0 +1,35 @@
+uuid: 622974fc-1081-48bd-bcbd-823e54bca234
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.my_dashboard_actionbar
+    - field.field.block_content.my_dashboard_actionbar.field_actionbar_blurb
+    - field.field.block_content.my_dashboard_actionbar.field_actionbar_title
+id: block_content.my_dashboard_actionbar.default
+targetEntityType: block_content
+bundle: my_dashboard_actionbar
+mode: default
+content:
+  field_actionbar_blurb:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_actionbar_title:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  langcode: true
+  search_api_excerpt: true

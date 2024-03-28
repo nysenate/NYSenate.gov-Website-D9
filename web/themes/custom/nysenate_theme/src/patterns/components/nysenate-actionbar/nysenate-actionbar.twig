@@ -7,7 +7,7 @@
     The New York State Senate is: <span class="c-status-text">{{ actionbar.status|upper }}</span>
   </div>
 {% endif %}
-<div class="l-row l-row--hero c-actionbar {% if actionbar.type is empty %}hidden{% endif %}">
+<div class="l-row l-row--hero c-actionbar {% if actionbar.type is empty or actionbar.type == 'disabled' %}hidden{% endif %}">
   {% if actionbar.type == 'committee' %}
     <div class="c-actionbar--info">
       {% if actionbar.committee_type == 'standing' %}
@@ -38,11 +38,6 @@
         <a href="/user/login" class="icon-before__issue-follow" title="follow this committee">follow this issue</a>
       {% endif %}
     </span>
-  {% elseif actionbar.type == 'my-dashboard' %}
-    <div class="c-actionbar--my-dashboard">
-      <h1>{{ "My Dashboard"|t }}</h1>
-      <p>{{ "Browse and filter New York State Senate content that you follow"|t }}</p>
-    </div>
   {% elseif actionbar.type == 'default' %}
     <div class="c-actionbar--info {{ is_logged ? 'content-logged' }}">
       <p class="actionbar--cta">{{ is_logged ? "See activity on Issues, Bills and Committees you're following."|t :

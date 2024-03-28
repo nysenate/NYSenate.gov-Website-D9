@@ -1,0 +1,45 @@
+uuid: 8b5d2449-2522-457c-8f92-b0b9f085a324
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.my_dashboard_actionbar
+    - field.field.block_content.my_dashboard_actionbar.field_actionbar_blurb
+    - field.field.block_content.my_dashboard_actionbar.field_actionbar_title
+id: block_content.my_dashboard_actionbar.default
+targetEntityType: block_content
+bundle: my_dashboard_actionbar
+mode: default
+content:
+  field_actionbar_blurb:
+    type: string_textfield
+    weight: 27
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_actionbar_title:
+    type: string_textfield
+    weight: 26
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  info:
+    type: string_textfield
+    weight: -5
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  langcode:
+    type: language_select
+    weight: 2
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+hidden: {  }

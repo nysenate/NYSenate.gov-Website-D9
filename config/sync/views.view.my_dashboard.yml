@@ -16,8 +16,8 @@ dependencies:
     - node.type.public_hearing
     - node.type.resolution
     - node.type.webform
-    - taxonomy.vocabulary.issues
   module:
+    - better_exposed_filters
     - flag
     - node
     - nys_dashboard
@@ -314,7 +314,7 @@ display:
             offset_label: Offset
           quantity: 9
       exposed_form:
-        type: basic
+        type: bef
         options:
           submit_button: Filter
           reset_button: true
@@ -323,6 +323,61 @@ display:
           expose_sort_order: false
           sort_asc_label: Asc
           sort_desc_label: Desc
+          text_input_required: 'Select any filter and click on Apply to see results'
+          text_input_required_format: basic_html
+          bef:
+            general:
+              autosubmit: false
+              autosubmit_exclude_textfield: false
+              autosubmit_textfield_delay: 500
+              autosubmit_hide: false
+              input_required: false
+              allow_secondary: false
+              secondary_label: 'Advanced options'
+              secondary_open: false
+              reset_button_always_show: true
+            pager:
+              plugin_id: default
+              advanced:
+                is_secondary: false
+            filter:
+              combine:
+                plugin_id: default
+                advanced:
+                  placeholder_text: ''
+                  collapsible: false
+                  is_secondary: false
+              type_1:
+                plugin_id: default
+                advanced:
+                  sort_options: false
+                  rewrite:
+                    filter_rewrite_values: ''
+                  collapsible: false
+                  is_secondary: false
+              your_issues_filter:
+                plugin_id: default
+                advanced:
+                  sort_options: false
+                  rewrite:
+                    filter_rewrite_values: ''
+                  collapsible: false
+                  is_secondary: false
+              year_month_filter:
+                plugin_id: default
+                advanced:
+                  sort_options: false
+                  rewrite:
+                    filter_rewrite_values: ''
+                  collapsible: false
+                  is_secondary: false
+              your_senator_filter:
+                plugin_id: default
+                advanced:
+                  rewrite:
+                    filter_rewrite_values: ''
+                  collapsible: false
+                  is_secondary: false
       access:
         type: perm
         options:
@@ -543,27 +598,27 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-        field_issues_target_id:
-          id: field_issues_target_id
+        your_issues_filter:
+          id: your_issues_filter
           table: node__field_issues
-          field: field_issues_target_id
+          field: your_issues_filter
           relationship: none
           group_type: group
           admin_label: ''
-          plugin_id: taxonomy_index_tid
-          operator: or
-          value: {  }
+          plugin_id: your_issues_filter
+          operator: '='
+          value: ''
           group: 1
           exposed: true
           expose:
-            operator_id: field_issues_target_id_op
-            label: Issue
+            operator_id: ''
+            label: 'Yours issues'
             description: ''
             use_operator: false
-            operator: field_issues_target_id_op
+            operator: your_issues_filter_op
             operator_limit_selection: false
             operator_list: {  }
-            identifier: issue
+            identifier: your_issues_filter
             required: false
             remember: false
             multiple: false
@@ -578,7 +633,6 @@ display:
               student_programs: '0'
               constituent: '0'
               comment_moderator: '0'
-            reduce: false
           is_grouped: false
           group_info:
             label: ''
@@ -591,12 +645,6 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          reduce_duplicates: false
-          vid: issues
-          type: select
-          hierarchy: false
-          limit: true
-          error_message: true
         year_month_filter:
           id: year_month_filter
           table: node_field_data
@@ -763,7 +811,6 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
-        - user
         - 'user.node_grants:view'
         - user.permissions
       tags:
@@ -786,7 +833,6 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
-        - user
         - 'user.node_grants:view'
         - user.permissions
       tags:

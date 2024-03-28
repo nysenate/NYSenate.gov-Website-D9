@@ -152,10 +152,13 @@
         {{ icons.get('youtube-2') }}
         <a class="stream-link">
       <span>
-        {% if content.field_video_status[0]['#markup'] == 'streaming_redirect' %}
-        Streaming Live Now
-        {% else %}
-        {{ content.field_video_status }}
+        {% if content.field_video_status[0]['#markup'] == 'streaming_redirect' or
+          content.field_video_status[0]['#markup'] == 'streaming_live_now' %}
+            Streaming Live Now
+        {% elseif content.field_video_status[0]['#markup'] == 'will_stream_live' %}
+            Will Stream Live
+        {% elseif content.field_video_status[0]['#markup'] == 'archived_video' %}
+            Archived Video
         {% endif %}
       </span></a>
       </div>

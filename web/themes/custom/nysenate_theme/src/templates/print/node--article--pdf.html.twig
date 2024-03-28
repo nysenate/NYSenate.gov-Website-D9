@@ -1,0 +1,116 @@
+{% set image_src = content.field_senator_multiref.0['#options'].entity.field_member_headshot.entity.field_image.entity.fileuri %}
+{% set senator_name = content.field_senator_multiref.0['#options'].entity.name.value %}
+
+{% if senator_name %}
+<section class="print hero--senator">
+    <div class="c-senator-hero--img">
+        <img src={{ image_src | image_style('square') }}>
+    </div>
+    <div class="c-senator">
+        <p>NEW YORK STATE SENATOR</p>
+        <div class="c-senator--name">
+        {{ senator_name }}
+        </div>
+    </div>
+</section>
+    {% else %}
+    <section class=" print hero">
+        <div class="c-hero--logo">
+            New York State Senate
+        </div>
+    </section>
+{% endif %}
+
+<article id="node-{{ content.node_id }}" class="article-node article-node--print {{ classes }}" {{ attributes }}>
+    {{ title_prefix }}
+
+
+        <header class="c-news--head">
+            <h1 class="nys-article-title">{{ title }}</h1>
+            <div class="c-news--head-meta">
+                {% if content.field_article_author.0 %}
+                    <p class="c-news--author">
+                        {{ content.field_article_author.0 }}
+                    </p>
+                {% elseif content.field_senator_multiref.0 %}
+                    <p class="c-news--author">
+                        <a href="{{ senator_link }}">{{ senator_name }}</a>
+                    </p>
+                {% endif %}
+                {% if content.field_date[0] %}
+                    <p class="c-news--pub-date">
+                        <span class="date-display-single">{{ content.field_date[0]['#markup'] }}</span>
+                    </p>
+                {% endif %}
+                {% if issues or majority_issue %}
+                    <ul class="nys-associated-topics">
+                        ISSUE:
+                        {% if majority_issue %}
+                            <li>{{ majority_issue }}</li>
+                        {% endif %}
+                        {% if issues %}
+                            {% for issue in issues %}
+                                <li>{{ issue }}</li>
+                            {% endfor %}
+                        {% endif %}
+                    </ul>
+                {% endif %}
+
+                {% if content.field_committee.0 %}
+                    <ul class="nys-associated-topics">
+                        {{ 'COMMITTEE:'|t }} <li>{{ content.field_committee.0 }} </li>
+                    </ul>
+                {% endif %}
+
+            </div>
+
+
+        </header>
+
+
+    {{ title_suffix }}
+
+    <div class="c-news--body">
+        {% if content.field_image_main.0 %}
+            <div class="c-block c-block--img">
+                {{ content.field_image_main }}
+                {% if image_caption %}
+                <p class="c-img--caption">{{ image_caption }}
+                    {% endif %}
+            </div>
+        {% endif %}
+
+        {% if content.field_subtitle.0 %}
+            <div class="c-news--subtitle">
+                {{ content.field_subtitle }}
+            </div>
+        {% endif %}
+
+        <div class="c-block">
+            {{ content.body }}
+        </div>
+
+        <!-- Field Paragraphs -->
+        {% if content.field_layout_components.0 %}
+            <div class="c-block">
+                {{ content.field_layout_components }}
+            </div>
+        {% endif %}
+
+        {% if content.field_chapters %}
+            <section class="c-block">
+                {{ content.field_chapters }}
+            </section>
+        {% endif %}
+
+        {% if content.field_bills[0] %}
+            <div class="c-container--header__top-border">
+                <h2 class="c-container--title">related legislation</h2>
+            </div>
+            <aside>
+                {{ content.field_bills }}
+            </aside>
+        {% endif %}
+
+
+</article>

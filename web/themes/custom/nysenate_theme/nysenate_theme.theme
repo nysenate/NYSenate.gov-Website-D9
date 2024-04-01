@@ -82,7 +82,11 @@ function nysenate_theme_preprocess_node__article(&$variables) {
   if (isset($variables['content']['field_issues'])) {
     $issues = [];
     foreach ($variables['content']['field_issues'] as $key => $field_issues) {
-      if (!is_numeric($key)) {
+      if (
+        !is_numeric($key)
+        || empty($field_issues['#title'])
+        || empty($field_issues['#url'])
+      ) {
         continue;
       }
       $url = Link::fromTextAndUrl($field_issues['#title'], $field_issues['#url']);

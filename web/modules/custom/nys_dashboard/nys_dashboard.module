@@ -484,3 +484,18 @@ function nys_dashboard_preprocess_node(&$variables) {
     );
   }
 }
+
+/**
+ * Implements hook_views_pre_build().
+ */
+function nys_dashboard_views_pre_build(ViewExecutable $view) {
+  if ($view->id() == 'my_senator') {
+    $current_user_district_tid = \Drupal::entityTypeManager()
+      ->getStorage('user')
+      ->load(\Drupal::currentUser()->id())
+      ?->field_district
+      ?->entity
+      ?->id();
+    $view->setArguments(["$current_user_district_tid"]);
+  }
+}

@@ -1,0 +1,29 @@
+uuid: ba786e04-65a5-4397-9084-130ed830af5f
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.updates_from_my_senator
+  module:
+    - system
+    - views
+  theme:
+    - nysenate_theme
+id: views_block__updates_from_my_senator_updates_from_my_senator
+theme: nysenate_theme
+region: above_content
+weight: 0
+provider: null
+plugin: 'views_block:updates_from_my_senator-updates_from_my_senator'
+settings:
+  id: 'views_block:updates_from_my_senator-updates_from_my_senator'
+  label: ''
+  label_display: '0'
+  provider: views
+  views_label: ''
+  items_per_page: none
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: /my-dashboard

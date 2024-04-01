@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f11d5b90adf8ccb57740a4c5f08171cf",
+    "content-hash": "30cd32600417261ccec0b8991b3ce714",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -8100,6 +8100,50 @@
             "support": {
                 "source": "https://git.drupalcode.org/project/oembed_providers",
                 "issues": "https://www.drupal.org/project/issues/oembed_providers"
+            }
+        },
+        {
+            "name": "drupal/other_view_filter",
+            "version": "1.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/other_view_filter.git",
+                "reference": "8.x-1.3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/other_view_filter-8.x-1.3.zip",
+                "reference": "8.x-1.3",
+                "shasum": "70944dbd31df1fad2834277eb707cfd73b446c1c"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9 || ^10"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-1.3",
+                    "datestamp": "1688658364",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Antonnavi",
+                    "homepage": "https://www.drupal.org/user/875410"
+                }
+            ],
+            "description": "Adds a filter to views that uses the results of another view.",
+            "homepage": "https://www.drupal.org/project/other_view_filter",
+            "support": {
+                "source": "https://git.drupalcode.org/project/other_view_filter"
             }
         },
         {
@@ -25665,5 +25709,5 @@
     "platform-overrides": {
         "php": "8.1"
     },
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }

@@ -201,6 +201,10 @@ body.path-my-dashboard {
     .view-header, .view-header-pager {
       width: 50%;
       float: left;
+
+      @include breakpoint($bp-under-sm) {
+        width: 100%;
+      }
     }
 
     .view-header {
@@ -221,14 +225,6 @@ body.path-my-dashboard {
       padding: 0;
       margin: 0;
       text-align: right;
-
-      li {
-        display: none;
-
-        &.pager__item--previous, &.pager__item--next {
-          display: inline;
-        }
-      }
     }
 
     .view-content {

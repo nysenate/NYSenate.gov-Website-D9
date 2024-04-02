@@ -156,6 +156,10 @@ body.path-my-dashboard {
         margin: 30px 5px;
         position: relative;
 
+        @include breakpoint($bp-under-md) {
+          max-width: 240px;
+        }
+
         label {
           position: absolute;
           top: -10px;

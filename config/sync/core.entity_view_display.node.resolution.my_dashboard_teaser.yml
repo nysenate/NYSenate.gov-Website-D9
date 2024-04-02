@@ -34,10 +34,12 @@ dependencies:
     - field.field.node.resolution.field_ol_sponsor_name
     - field.field.node.resolution.field_ol_summary
     - field.field.node.resolution.rabbit_hole__settings
+    - image.style.760x377
     - node.type.resolution
   module:
     - datetime
     - entity_print
+    - media
     - nys_list_formatter
     - user
 third_party_settings:
@@ -48,6 +50,17 @@ targetEntityType: node
 bundle: resolution
 mode: my_dashboard_teaser
 content:
+  field_image_main:
+    type: media_thumbnail
+    label: hidden
+    settings:
+      image_link: content
+      image_style: 760x377
+      image_loading:
+        attribute: lazy
+    third_party_settings: {  }
+    weight: 4
+    region: content
   field_issues:
     type: list_formatter
     label: inline
@@ -97,7 +110,6 @@ hidden:
   entity_print_view_word_docx: true
   field_comments: true
   field_featured_quote: true
-  field_image_main: true
   field_ol_active_version: true
   field_ol_add_sponsor_names: true
   field_ol_add_sponsors: true

@@ -8,6 +8,7 @@ dependencies:
     - node.type.in_the_news
     - node.type.petition
     - node.type.webform
+    - views.view.my_senator
   module:
     - node
     - nys_dashboard
@@ -246,7 +247,18 @@ display:
           replica: false
           query_tags: {  }
       relationships: {  }
-      header: {  }
+      header:
+        view:
+          id: view
+          table: views
+          field: view
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: view
+          empty: false
+          view_to_insert: 'my_senator:my_senator'
+          inherit_arguments: false
       footer: {  }
       display_extenders: {  }
     cache_metadata:

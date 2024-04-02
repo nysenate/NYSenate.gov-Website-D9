@@ -24,7 +24,84 @@ body.path-my-dashboard {
     p {
       font-size: 16px;
       color: white;
-      padding: 0 0 30px;
+      padding: 15px 0 30px;
+      margin: 0;
+    }
+  }
+
+  // My Dashboard Updates from your senator styling.
+  #block-views-block-updates-from-my-senator-updates-from-my-senator {
+    margin: 0 auto;
+    max-width: 1500px;
+    padding: 40px 9%;
+    background-color: #F2F2F2;
+    border-bottom: #E0E0E0 2px solid;
+    overflow: hidden;
+
+    .view-updates-from-my-senator > .view-header {
+      float: left;
+      width: 22%;
+
+      @include breakpoint($bp-under-md) {
+        width: 100%;
+        padding-bottom: 20px;
+      }
+
+      .field--name-field-image {
+        border-radius: 50%;
+        overflow: hidden;
+        height: 120px;
+        width: 120px;
+        margin-bottom: 15px;
+      }
+
+      .views-field-field-senator-name {
+        .views-label-field-senator-name {
+          color: $grey08;
+          text-transform: uppercase;
+          font-family: $font-sans;
+          font-size: 14px;
+        }
+
+        a {
+          color: $blue01;
+          text-decoration: underline;
+          font-family: 'Adelle Light';
+          font-size: 20px;
+
+          &:hover {
+            text-decoration: none;
+          }
+        }
+      }
+    }
+
+    .view-updates-from-my-senator > .view-content {
+      float: left;
+      width: 78%;
+
+      @include breakpoint($bp-under-md) {
+        width: 100%;
+      }
+
+      .views-row {
+        width: 50%;
+        float: left;
+
+        @include breakpoint($bp-under-md) {
+          width: 100%;
+        }
+
+        .node--view-mode-my-dashboard-teaser {
+          padding: 0 0 0 20px;
+          min-height: auto;
+          border-top: none;
+
+          .c-my-dashboard--extras {
+            display: none;
+          }
+        }
+      }
     }
   }
 

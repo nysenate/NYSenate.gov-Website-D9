@@ -419,13 +419,13 @@ function nys_dashboard_form_views_exposed_form_alter(&$form, FormStateInterface 
  * Implements hook_views_data().
  */
 function nys_dashboard_views_data() {
-  $data['node_field_data']['year_month_filter'] = [
-    'title' => t('Filter on created year and month'),
+  $data['node__field_date']['year_month_filter'] = [
+    'title' => t('Filter on year and month'),
     'filter' => [
-      'title' => t('Filter on created year and month'),
-      'help' => t('Custom NYS year/month filter based on the node created date.'),
+      'title' => t('Filter on year and month'),
+      'help' => t('Custom NYS year/month filter based on field_date, field_ol_publish_date, or field_date_range .'),
       'group' => t('Content'),
-      'field' => 'created',
+      'field' => 'field_date_value',
       'id' => 'year_month_filter',
     ],
   ];

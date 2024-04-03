@@ -3,6 +3,7 @@
 namespace Drupal\nys_dashboard\Plugin\views\filter;
 
 use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\filter\FilterPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -31,6 +32,13 @@ class YearMonthFilter extends FilterPluginBase {
   public $configFactory;
 
   /**
+   * Date formatter service.
+   *
+   * @var Drupal\Core\Datetime\DateFormatter
+   */
+  public $dateFormatter;
+
+  /**
    * Constructs a YearMonthFilter object.
    *
    * @param array $configuration
@@ -41,10 +49,19 @@ class YearMonthFilter extends FilterPluginBase {
    *   The plugin implementation definition.
    * @param \Drupal\Core\Config\ConfigFactory $configFactory
    *   Config factory service.
+   * @param \Drupal\Core\Datetime\DateFormatter $dateFormatter
+   *   Date formatter service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, ConfigFactory $configFactory) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    ConfigFactory $configFactory,
+    DateFormatter $dateFormatter
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->configFactory = $configFactory;
+    $this->dateFormatter = $dateFormatter;
   }
 
   /**
@@ -55,7 +72,8 @@ class YearMonthFilter extends FilterPluginBase {
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('config.factory')
+      $container->get('config.factory'),
+      $container->get('date.formatter')
     );
   }
 
@@ -127,27 +145,40 @@ class YearMonthFilter extends FilterPluginBase {
    * {@inheritdoc}
    */
   public function query() {
-    // Make input value consistent regardless of filter context.
-    $this->value = is_array($this->value) && !empty($this->value[0]) ? $this->value[0] : $this->value;
     $this->operator = 'BETWEEN';
+
+    // Set query value.
+    $value = is_array($this->value) && !empty($this->value[0]) ? $this->value[0] : $this->value;
     $timezone_string = $this->configFactory->get('system.date')->get('timezone')['default'];
     $timezone_object = new \DateTimeZone($timezone_string);
-
     if ($this->month == 'All') {
-      $start_datetime = new \DateTime("first day of january $this->value", $timezone_object);
-      $following_year = $this->value + 1;
+      $start_datetime = new \DateTime("first day of january $value", $timezone_object);
+      $following_year = $value + 1;
       $end_datetime = new \DateTime("first day of january $following_year", $timezone_object);
+      $end_timestamp = $end_datetime->getTimestamp();
     }
     else {
-      $start_datetime = new \DateTime("first day of $this->month $this->value", $timezone_object);
-      $end_datetime = new \DateTime("last day of $this->month $this->value", $timezone_object);
+      $start_datetime = new \DateTime("first day of $this->month $value", $timezone_object);
+      $end_datetime = new \DateTime("last day of $this->month $value", $timezone_object);
+      $end_timestamp = $end_datetime->getTimestamp() + 86400;
     }
+    $start_timestamp = $start_datetime->getTimestamp();
     $this->value = [
-      $start_datetime->getTimestamp(),
-      ($this->month == 'All') ? $end_datetime->getTimestamp() : $end_datetime->getTimestamp() + 86400,
+      $this->dateFormatter->format($start_timestamp, 'html_datetime'),
+      $this->dateFormatter->format($end_timestamp, 'html_datetime'),
     ];
 
-    parent::query();
+    // Add where group to query that accounts for all primary date fields.
+    $this->query->setWhereGroup('OR', 'nys_date_field_filter_group');
+    $nys_date_fields_and_columns = [
+      'node__field_date' => 'field_date_value',
+      'node__field_ol_publish_date' => 'field_ol_publish_date_value',
+      'node__field_date_range' => 'field_date_range_value',
+    ];
+    foreach ($nys_date_fields_and_columns as $table => $field) {
+      $this->query->addTable($table);
+      $this->query->addWhere('nys_date_field_filter_group', "$table.$field", $this->value, $this->operator);
+    }
   }
 
 }

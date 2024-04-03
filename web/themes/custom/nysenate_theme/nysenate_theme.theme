@@ -1501,9 +1501,8 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
           $video_image = NULL;
         }
 
-        $date = ($value = ($node->get('field_date')->value ?? ''))
-          ? \Drupal::service('date.formatter')->format(strtotime($value), 'custom', 'F j, Y')
-          : NULL;
+        $date = ($value = ($node->get('field_date')->date->getTimestamp() ?? '')) ?
+          \Drupal::service('date.formatter')->format($value, 'publish_date') : NULL;
 
         $bundle = $bundle_info['node'][$node->bundle()]['label'] ?? 'No Title';
         if ($bundle !== 'Article') {

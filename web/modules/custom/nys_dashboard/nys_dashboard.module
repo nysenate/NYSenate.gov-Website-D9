@@ -403,11 +403,6 @@ function nys_dashboard_form_alter(&$form, FormStateInterface $form_state, $form_
  * Implements hook_form_views_exposed_form_alter().
  */
 function nys_dashboard_form_views_exposed_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  // Add icon to reset button.
-  if (!empty($form['actions']['reset'])) {
-    $form['actions']['reset']['#prefix'] = '<i class="ph ph-x"></i>';
-  }
-
   // Ensure items_per_page element appears before your_senator_filter.
   $your_senator_filter_index = array_search('your_senator_filter', array_keys($form));
   $items_per_page_index = array_search('items_per_page', array_keys($form));

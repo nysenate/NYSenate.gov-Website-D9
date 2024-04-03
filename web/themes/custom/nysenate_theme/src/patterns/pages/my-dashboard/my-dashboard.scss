@@ -175,27 +175,24 @@ body.path-my-dashboard {
       input {
         width: 100%;
         margin: 0 0 20px;
-        background-color: $gen_blue_lgt;
-        border-color: $gen_blue_lgt;
 
-        &:hover {
-          background-color: white;
-          color: $gen_blue_lgt;
+        &#edit-submit-my-dashboard--2 {
+          background-color: $gen_blue_lgt;
+          border-color: $gen_blue_lgt;
+          color: white;
         }
 
         &#edit-reset--2 {
-          border: none;
-          background: none;
-          color: $grey08;
-          text-align: left;
-          width: 182px;
-          padding: 0 0 0 20px;
-          margin-left: -20px;
+          background-color: white;
+          border-color: $gen_blue_lgt;
+          color: $gen_blue_lgt;
         }
-      }
 
-      .ph, #edit-reset--2 {
-        font-weight: 700;
+        &#edit-submit-my-dashboard--2:hover, &#edit-reset--2:hover {
+          background-color: white;
+          border-color: $gen_blue_drk;
+          color: $gen_blue_drk;
+        }
       }
     }
   }

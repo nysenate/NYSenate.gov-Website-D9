@@ -170,12 +170,12 @@ class YearMonthFilter extends FilterPluginBase {
 
     // Add where group to query that accounts for all primary date fields.
     $this->query->setWhereGroup('OR', 'nys_date_field_filter_group');
-    $nys_date_fields_and_columns = [
+    $nys_date_tables_and_fields = [
       'node__field_date' => 'field_date_value',
       'node__field_ol_publish_date' => 'field_ol_publish_date_value',
       'node__field_date_range' => 'field_date_range_value',
     ];
-    foreach ($nys_date_fields_and_columns as $table => $field) {
+    foreach ($nys_date_tables_and_fields as $table => $field) {
       $this->query->addTable($table);
       $this->query->addWhere('nys_date_field_filter_group', "$table.$field", $this->value, $this->operator);
     }

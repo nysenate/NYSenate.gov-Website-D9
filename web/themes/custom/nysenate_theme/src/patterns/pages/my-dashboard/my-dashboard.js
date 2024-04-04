@@ -53,18 +53,22 @@
       + windowLocation
       - stickyFilterElemHeight
       - 120;
+    let rightSidebarElem = document.querySelector('.layout-sidebar-right');
+    let rightSidebarInMobileMode = window.getComputedStyle(rightSidebarElem).getPropertyValue('order');
 
-    if (windowLocation >= stickyLocation) {
-      stickyFilterElem.classList.add('sticky-filter')
-      stickyFilterElem.style.width = sidebarWidth + 'px';
-    } else {
-      stickyFilterElem.classList.remove('sticky-filter');
-      stickyFilterElem.style.width = null;
-    }
-    if (windowLocation >= bottomStickyLocation) {
-      stickyFilterElem.classList.add('sticky-filter-bottom')
-    } else {
-      stickyFilterElem.classList.remove('sticky-filter-bottom');
+    if (rightSidebarInMobileMode === '0') {
+      if (windowLocation >= stickyLocation) {
+        stickyFilterElem.classList.add('sticky-filter')
+        stickyFilterElem.style.width = sidebarWidth + 'px';
+      } else {
+        stickyFilterElem.classList.remove('sticky-filter');
+        stickyFilterElem.style.width = null;
+      }
+      if (windowLocation >= bottomStickyLocation) {
+        stickyFilterElem.classList.add('sticky-filter-bottom')
+      } else {
+        stickyFilterElem.classList.remove('sticky-filter-bottom');
+      }
     }
   }
 })(Drupal, once);

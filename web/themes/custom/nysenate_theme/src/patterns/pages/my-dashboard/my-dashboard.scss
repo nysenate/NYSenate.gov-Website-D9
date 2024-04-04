@@ -137,62 +137,123 @@ body.path-my-dashboard {
       margin-left: 0;
     }
 
+    @include breakpoint($bp-under-sm) {
+      margin-bottom: 20px;
+
+      .container {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.2s ease-out;
+      }
+    }
+
     h2 {
       color: $grey08;
       text-transform: uppercase;
       font-family: $font-sans;
       font-size: 14px;
-    }
+      position: relative;
 
-    .form-item {
-      width: 100%;
-      margin: 15px 0 5px 0;
-
-      input, select {
-        margin-bottom: 0;
+      &:after {
+        position: absolute;
+        right: 16px;
+        top: 13px;
+        font-size: 25px;
+        color: #2b6990;
+        pointer-events: none;
+        cursor: pointer;
+        content: '\65';
+        font-family: 'senate_icons';
+        display: inline-block;
+        vertical-align: middle;
+        speak: none;
+        font-style: normal;
+        font-weight: normal;
+        font-variant: normal;
+        text-transform: none;
+        padding-left: 3px;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
       }
 
-      &.form-item-your-senator-filter {
-        margin: 30px 5px;
-        position: relative;
+      &.active:after {
+        content: '\5e';
+      }
 
-        @include breakpoint($bp-under-md) {
-          max-width: 240px;
-        }
-
-        label {
-          position: absolute;
-          top: -10px;
-          left: 24px;
-          font-size: 15px;
-          line-height: 20px;
-          color: $blue01;
-        }
+      @include breakpoint($bp-under-sm) {
+        cursor: pointer;
+        padding: 20px;
+        border: 1px solid $grey04;
+        margin: 0;
       }
     }
 
-    .form-actions {
-      input {
+    #views-exposed-form-my-dashboard-main {
+      .form-item {
         width: 100%;
-        margin: 0 0 20px;
+        margin: 15px 0 5px 0;
 
-        &#edit-submit-my-dashboard--2 {
-          background-color: $gen_blue_lgt;
-          border-color: $gen_blue_lgt;
-          color: white;
+        input, select {
+          margin-bottom: 0;
         }
 
-        &#edit-reset--2 {
-          background-color: white;
-          border-color: $gen_blue_lgt;
-          color: $gen_blue_lgt;
+        &.form-item-your-senator-filter {
+          margin: 30px 5px;
+          position: relative;
+
+          @include breakpoint($bp-under-md) {
+            max-width: 240px;
+          }
+
+          label {
+            position: absolute;
+            top: -10px;
+            left: 24px;
+            font-size: 15px;
+            line-height: 20px;
+            color: $blue01;
+          }
+        }
+      }
+
+      .form-actions {
+        input {
+          width: 100%;
+          margin: 0 0 20px;
+
+          &#edit-submit-my-dashboard--2 {
+            background-color: $gen_blue_lgt;
+            border-color: $gen_blue_lgt;
+            color: white;
+          }
+
+          &#edit-reset--2 {
+            background-color: white;
+            border-color: $gen_blue_lgt;
+            color: $gen_blue_lgt;
+
+            @include breakpoint($bp-under-sm) {
+              margin: 0;
+            }
+          }
+
+          &#edit-submit-my-dashboard--2:hover, &#edit-reset--2:hover {
+            background-color: white;
+            border-color: $gen_blue_drk;
+            color: $gen_blue_drk;
+          }
         }
 
-        &#edit-submit-my-dashboard--2:hover, &#edit-reset--2:hover {
-          background-color: white;
-          border-color: $gen_blue_drk;
-          color: $gen_blue_drk;
+        @include breakpoint($bp-under-sm) {
+          margin-bottom: 0;
         }
+      }
+
+      @include breakpoint($bp-under-sm) {
+        padding: 10px 20px 20px;
+        border: 1px solid $grey04;
+        border-top: none;
+        margin: 0;
       }
     }
   }
@@ -235,6 +296,20 @@ body.path-my-dashboard {
 
     .view-footer-pager {
       border-top: 1px solid $grey04;
+    }
+  }
+
+  // Flip order of sidebar and main content on mobile.
+  @include breakpoint($bp-under-sm) {
+    .two-col-layout {
+      .region-content {
+        order: 2;
+      }
+
+      .layout-sidebar-right {
+        order: 1;
+        padding: 0;
+      }
     }
   }
 }

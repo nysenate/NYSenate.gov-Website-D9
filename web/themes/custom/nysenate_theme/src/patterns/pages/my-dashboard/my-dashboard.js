@@ -6,6 +6,9 @@
 ((Drupal, once) => {
   Drupal.behaviors.nysDashboardFilterAccordion = {
     attach: function () {
+      if (!inMobileMode()) {
+        return;
+      }
       let filterLabelOnce = once('nysDashboardFilterAccordion', '#block-exposed-form-my-dashboard-main > h2');
       filterLabelOnce.forEach(function (filterLabel) {
         filterLabel.addEventListener('click', function () {
@@ -23,6 +26,9 @@
 
   Drupal.behaviors.nysDashboardStickyFilters = {
     attach: function () {
+      if (inMobileMode()) {
+        return;
+      }
       setStickyFilterClasses();
       window.onscroll = function () {setStickyFilterClasses()};
     }
@@ -53,22 +59,26 @@
       + windowLocation
       - stickyFilterElemHeight
       - 120;
+
+    if (windowLocation >= stickyLocation) {
+      stickyFilterElem.classList.add('sticky-filter')
+      stickyFilterElem.style.width = sidebarWidth + 'px';
+    }
+    else {
+      stickyFilterElem.classList.remove('sticky-filter');
+      stickyFilterElem.style.width = null;
+    }
+    if (windowLocation >= bottomStickyLocation) {
+      stickyFilterElem.classList.add('sticky-filter-bottom')
+    }
+    else {
+      stickyFilterElem.classList.remove('sticky-filter-bottom');
+    }
+  }
+
+  function inMobileMode() {
     let rightSidebarElem = document.querySelector('.layout-sidebar-right');
     let rightSidebarInMobileMode = window.getComputedStyle(rightSidebarElem).getPropertyValue('order');
-
-    if (rightSidebarInMobileMode === '0') {
-      if (windowLocation >= stickyLocation) {
-        stickyFilterElem.classList.add('sticky-filter')
-        stickyFilterElem.style.width = sidebarWidth + 'px';
-      } else {
-        stickyFilterElem.classList.remove('sticky-filter');
-        stickyFilterElem.style.width = null;
-      }
-      if (windowLocation >= bottomStickyLocation) {
-        stickyFilterElem.classList.add('sticky-filter-bottom')
-      } else {
-        stickyFilterElem.classList.remove('sticky-filter-bottom');
-      }
-    }
+    return rightSidebarInMobileMode === '1';
   }
 })(Drupal, once);

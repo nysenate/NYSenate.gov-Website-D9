@@ -154,37 +154,37 @@ body.path-my-dashboard {
       font-size: 14px;
       position: relative;
 
-      &:after {
-        position: absolute;
-        right: 16px;
-        top: 13px;
-        font-size: 25px;
-        color: #2b6990;
-        pointer-events: none;
-        cursor: pointer;
-        content: '\65';
-        font-family: 'senate_icons';
-        display: inline-block;
-        vertical-align: middle;
-        speak: none;
-        font-style: normal;
-        font-weight: normal;
-        font-variant: normal;
-        text-transform: none;
-        padding-left: 3px;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-      }
-
-      &.active:after {
-        content: '\5e';
-      }
-
       @include breakpoint($bp-under-sm) {
         cursor: pointer;
         padding: 20px;
         border: 1px solid $grey04;
         margin: 0;
+
+        &:after {
+          position: absolute;
+          right: 16px;
+          top: 13px;
+          font-size: 25px;
+          color: #2b6990;
+          pointer-events: none;
+          cursor: pointer;
+          content: '\65';
+          font-family: 'senate_icons';
+          display: inline-block;
+          vertical-align: middle;
+          speak: none;
+          font-style: normal;
+          font-weight: normal;
+          font-variant: normal;
+          text-transform: none;
+          padding-left: 3px;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+        }
+
+        &.active:after {
+          content: '\5e';
+        }
       }
     }
 
@@ -254,6 +254,19 @@ body.path-my-dashboard {
         border: 1px solid $grey04;
         border-top: none;
         margin: 0;
+      }
+    }
+
+    @include breakpoint($bp-md) {
+      &.sticky-filter {
+        position: fixed;
+        top: 120px;
+      }
+
+      &.sticky-filter-bottom {
+        position: absolute;
+        top: auto;
+        bottom: 0;
       }
     }
   }

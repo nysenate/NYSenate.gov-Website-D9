@@ -20,4 +20,51 @@
       });
     }
   };
+
+  Drupal.behaviors.nysDashboardStickyFilters = {
+    attach: function () {
+      setStickyFilterClasses();
+      window.onscroll = function () {setStickyFilterClasses()};
+    }
+  };
+
+  function setStickyFilterClasses() {
+    let stickyFilterElem = document.getElementById('block-exposed-form-my-dashboard-main');
+    let stickyFilterElemHeight = document
+      .getElementById('block-exposed-form-my-dashboard-main')
+      .getBoundingClientRect()
+      .height;
+    let sidebarWidth = document
+      .querySelector('.region-sidebar-right')
+      .getBoundingClientRect()
+      .width
+      - 40;
+    let windowLocation = window.scrollY;
+    let stickyLocation = document
+      .querySelector('aside.layout-sidebar-right')
+      .getBoundingClientRect()
+      .top
+      + windowLocation
+      - 100;
+    let bottomStickyLocation = document
+      .querySelector('footer.l-footer')
+      .getBoundingClientRect()
+      .top
+      + windowLocation
+      - stickyFilterElemHeight
+      - 120;
+
+    if (windowLocation >= stickyLocation) {
+      stickyFilterElem.classList.add('sticky-filter')
+      stickyFilterElem.style.width = sidebarWidth + 'px';
+    } else {
+      stickyFilterElem.classList.remove('sticky-filter');
+      stickyFilterElem.style.width = null;
+    }
+    if (windowLocation >= bottomStickyLocation) {
+      stickyFilterElem.classList.add('sticky-filter-bottom')
+    } else {
+      stickyFilterElem.classList.remove('sticky-filter-bottom');
+    }
+  }
 })(Drupal, once);

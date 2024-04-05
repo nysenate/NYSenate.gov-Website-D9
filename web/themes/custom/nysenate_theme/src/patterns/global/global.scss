@@ -17,6 +17,9 @@
 // Import base styles.
 @import 'ckeditor/ckeditor';
 
+// Import base styles.
+@import 'print/print-styles';
+
 // Base
 //
 // Plain html element styling. Shouldn't require
@@ -762,4 +765,76 @@ textarea[name="message"] {
 
 .c-container--header.top-padding {
   padding-top: 48px;
+}
+
+//ENTITY PRINT STYLES
+
+
+section.print.hero {
+  .c-hero--logo {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0;
+    font-size: 24px;
+    font-family: 'FreightText Book';
+    margin-bottom: 36px;
+  }
+
+  .c-hero--logo::before {
+    content: '';
+    display: inline-block;
+    vertical-align: middle;
+    width: 60px;
+    height: 60px;
+    margin-right: 10px;
+    background: transparent url(/themes/custom/nysenate_theme/dist/images/nys_logo_header240x240.jpg) center center no-repeat;
+    background-size: cover;
+  }
+}
+
+section.print.hero--senator {
+  padding: 14px 0 0 24px;
+  background: $grey09;
+  margin-bottom: 36px;
+  height: 86px;
+
+  .c-senator-hero--img {
+    float: left;
+    padding-right: 28px;
+    img {
+      border-radius: 50%;
+      width: 75px;
+    }
+  }
+
+  .c-senator {
+    float: left;
+    margin-top: 12px;
+
+    p {
+      margin: 0 0 3px 0;
+      font-family: "Proxima Nova Regular", "Arial", sans-serif;
+      text-transform: uppercase;
+      line-height: 1em;
+      letter-spacing: 0.1em;
+      font-size: 14px;
+    }
+  }
+    .c-senator--name {
+      font-family: "Adelle Light", serif;
+      color: #fff;
+      line-height: 1.2em;
+      letter-spacing: 0.05em;
+      font-size: 24px;
+    }
+
+}
+
+.article-node--print {
+  .field__label.visually-hidden {
+    display: none;
+  }
+  .accordion button {
+    display: none;
+  }
 }

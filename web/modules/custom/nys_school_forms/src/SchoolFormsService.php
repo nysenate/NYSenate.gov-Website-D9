@@ -135,13 +135,18 @@ class SchoolFormsService {
       // Make to date filter inclusive of the day.
       $query->condition('created', (int) $params['to_date'] + 86399, '<');
     }
-    if ($params['sort_by'] === 'date') {
-      if ($params['sort_order']) {
-        $query->sort('created', $params['sort_order']);
+    if ($params['sort_by']) {
+      if ($params['sort_by'] === 'date') {
+        if ($params['sort_order']) {
+          $query->sort('created', $params['sort_order']);
+        }
+        else {
+          $query->sort('created', 'DESC');
+        }
       }
-      else {
-        $query->sort('created', 'DESC');
-      }
+    }
+    else {
+      $query->sort('created', 'DESC');
     }
 
     $query_results = $query
@@ -211,6 +216,7 @@ class SchoolFormsService {
     if (!$admin_view) {
       $results = $this->orderGrades($results);
     }
+
     if ($params['sort_by'] == 'student' && $admin_view) {
       ksort($results, SORT_NATURAL);
       if ($params['sort_order'] == 'desc') {
@@ -218,6 +224,7 @@ class SchoolFormsService {
         $results = array_reverse($results);
       }
     }
+
     return $results;
   }
 

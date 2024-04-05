@@ -97,3 +97,32 @@ function nys_calendar_preprocess_page(&$variables) {
     $variables['#attached']['library'][] = 'nys_calendar/nys-admin-theme';
   }
 }
+
+/**
+ * Implements hook_views_data().
+ */
+function nys_calendar_views_data() {
+  $data['node_field_data']['year_filter'] = [
+    'title' => t('Filter on created year'),
+    'filter' => [
+      'title' => t('Filter on created year'),
+      'help' => t('Custom NYS filter based on the node created date.'),
+      'group' => t('Content'),
+      'field' => 'created',
+      'id' => 'year_filter',
+      'field_type' => 'datetime',
+    ],
+  ];
+  $data['node__field_ol_session']['year_filter'] = [
+    'title' => t('Filter on session year'),
+    'filter' => [
+      'title' => t('Filter on session year'),
+      'help' => t('Custom NYS filter based on the field_ol_session.'),
+      'group' => t('Content'),
+      'field' => 'field_ol_session_value',
+      'id' => 'year_filter',
+      'field_type' => 'year_only',
+    ],
+  ];
+  return $data;
+}

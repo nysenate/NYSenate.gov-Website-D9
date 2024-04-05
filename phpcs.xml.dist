@@ -3,7 +3,7 @@
   <description>PHP CodeSniffer configuration for myproject development.</description>
   <!-- Check all files in the current directory and below. -->
   <file>./web</file>
-  <arg name="extensions" value="inc,install,module,php,profile,test,theme,info,txt,md,yml"/>
+  <arg name="extensions" value="inc,install,module,php,profile,test,theme,info,txt,md,yml,twig"/>
   <!-- Incldues only custom code -->
   <exclude-pattern>^(?!.*(\/(modules\/custom|profiles\/custom|themes\/custom))($|\/)).*$</exclude-pattern>
 
@@ -11,13 +11,11 @@
 
   <!-- Checks for Drupal Coding Standards -->
   <rule ref="./vendor/drupal/coder/coder_sniffer/Drupal">
-    <exclude name="Drupal.Arrays.Array.CommaLastItem"/>
-    <exclude name="Drupal.Files.LineLength.TooLong"/>
-
-    <!--  <exclude name="Drupal.Commenting.InlineComment"/>
-    <exclude name="Drupal.Arrays.DisallowLongArraySyntax.Found"/>
-    <exclude name="Drupal.NamingConventions.ValidFunctionName.InvalidName"/> -->
+    <!-- <exclude name="Drupal.Arrays.DisallowLongArraySyntax.Found"/> -->
   </rule>
+
   <!-- Enable to check for Drupal Best Practices -->
-  <!-- <rule ref="./vendor/drupal/coder/coder_sniffer/DrupalPractice"/> -->
+  <rule ref="./vendor/drupal/coder/coder_sniffer/DrupalPractice">
+    <!-- <exclude name="Drupal.Files.EndFileNewline.Missing"/> -->
+  </rule>
 </ruleset>

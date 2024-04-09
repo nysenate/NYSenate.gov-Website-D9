@@ -35,6 +35,10 @@
   };
 
   function setStickyFilterClasses() {
+    let contentHeight = document
+      .querySelector('.view-my-dashboard')
+      .getBoundingClientRect()
+      .height;
     let stickyFilterElem = document.getElementById('block-exposed-form-my-dashboard-main');
     let stickyFilterElemHeight = document
       .getElementById('block-exposed-form-my-dashboard-main')
@@ -60,7 +64,7 @@
       - stickyFilterElemHeight
       - 120;
 
-    if (stickyFilterElemHeight >= bottomStickyLocation) {
+    if (stickyFilterElemHeight >= contentHeight) {
       return;
     }
     if (windowLocation >= stickyLocation) {

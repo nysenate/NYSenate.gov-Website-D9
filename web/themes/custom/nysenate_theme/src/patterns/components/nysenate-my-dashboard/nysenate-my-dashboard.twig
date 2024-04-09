@@ -47,11 +47,11 @@
   </h2>
   <div class="c-my-dashboard--blurb">
     {% if node.field_subtitle.value %}
-      {{ node.field_subtitle.value|render|striptags|truncate(300, true)|raw }}{{ read_more }}
+      {{ node.field_subtitle.value|render|striptags|truncate(300, true)|raw }}
     {% elseif node.field_subhead.value %}
-      {{ node.field_subhead.value|render|striptags|truncate(300, true)|raw }}{{ read_more }}
+      {{ node.field_subhead.value|render|striptags|truncate(300, true)|raw }}
     {% elseif node.field_ol_name.value %}
-      {{ node.field_ol_name.value|render|striptags|truncate(300, true)|raw }}{{ read_more }}
+      {{ node.field_ol_name.value|render|striptags|truncate(300, true)|raw }}
     {% elseif node.body.value %}
       {{ node.body.value|render|striptags|truncate(300, true)|raw }}{{ read_more }}
     {% endif %}

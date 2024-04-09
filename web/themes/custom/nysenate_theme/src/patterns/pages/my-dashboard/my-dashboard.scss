@@ -44,6 +44,7 @@ body.path-my-dashboard {
 
       @include breakpoint($bp-under-md) {
         width: 100%;
+        text-align: center;
         padding-bottom: 20px;
       }
 
@@ -53,6 +54,11 @@ body.path-my-dashboard {
         height: 120px;
         width: 120px;
         margin-bottom: 15px;
+
+        @include breakpoint($bp-under-md) {
+          margin-left: auto;
+          margin-right: auto;
+        }
       }
 
       .views-field-field-senator-name {
@@ -279,6 +285,7 @@ body.path-my-dashboard {
 
       @include breakpoint($bp-under-sm) {
         width: 100%;
+        text-align: center;
       }
     }
 
@@ -300,6 +307,10 @@ body.path-my-dashboard {
       padding: 0;
       margin: 0;
       text-align: right;
+
+      @include breakpoint($bp-under-sm) {
+        text-align: center;
+      }
     }
 
     .view-content {

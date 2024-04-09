@@ -137,10 +137,10 @@ body.path-my-dashboard {
 
   // My Dashboard exposed filter styling.
   #block-exposed-form-my-dashboard-main {
-    margin-left: 40px;
+    padding-left: 40px;
 
     @include breakpoint($bp-under-md) {
-      margin-left: 0;
+      padding-left: 0;
     }
 
     @include breakpoint($bp-under-sm) {
@@ -266,12 +266,11 @@ body.path-my-dashboard {
     @include breakpoint($bp-md) {
       &.sticky-filter {
         position: fixed;
-        top: 120px;
       }
 
       &.sticky-filter-bottom {
         position: absolute;
-        top: auto;
+        top: auto !important;
         bottom: 0;
       }
     }

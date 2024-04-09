@@ -35,47 +35,47 @@
   };
 
   function setStickyFilterClasses() {
+    let stickyTopLocation = 120;
+    let windowLocation = window.scrollY;
     let contentHeight = document
       .querySelector('.view-my-dashboard')
       .getBoundingClientRect()
       .height;
     let stickyFilterElem = document.getElementById('block-exposed-form-my-dashboard-main');
-    let stickyFilterElemHeight = document
-      .getElementById('block-exposed-form-my-dashboard-main')
+    let stickyFilterElemHeight = stickyFilterElem
       .getBoundingClientRect()
       .height;
     let sidebarWidth = document
       .querySelector('.region-sidebar-right')
       .getBoundingClientRect()
-      .width
-      - 40;
-    let windowLocation = window.scrollY;
-    let stickyLocation = document
-      .querySelector('aside.layout-sidebar-right')
+      .width;
+    let topStickyTrigger = document
+      .querySelector('.region-sidebar-right')
       .getBoundingClientRect()
       .top
       + windowLocation
-      - 100;
-    let bottomStickyLocation = document
+      - stickyTopLocation;
+    let bottomStickyTrigger = document
       .querySelector('footer.l-footer')
       .getBoundingClientRect()
       .top
       + windowLocation
       - stickyFilterElemHeight
-      - 120;
-
+      - stickyTopLocation;
     if (stickyFilterElemHeight >= contentHeight) {
       return;
     }
-    if (windowLocation >= stickyLocation) {
+    if (windowLocation > topStickyTrigger) {
       stickyFilterElem.classList.add('sticky-filter')
       stickyFilterElem.style.width = sidebarWidth + 'px';
+      stickyFilterElem.style.top = stickyTopLocation + 'px';
     }
     else {
       stickyFilterElem.classList.remove('sticky-filter');
       stickyFilterElem.style.width = null;
+      stickyFilterElem.style.top = null;
     }
-    if (windowLocation >= bottomStickyLocation) {
+    if (windowLocation >= bottomStickyTrigger) {
       stickyFilterElem.classList.add('sticky-filter-bottom')
     }
     else {

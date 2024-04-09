@@ -60,6 +60,9 @@
       - stickyFilterElemHeight
       - 120;
 
+    if (stickyFilterElemHeight >= bottomStickyLocation) {
+      return;
+    }
     if (windowLocation >= stickyLocation) {
       stickyFilterElem.classList.add('sticky-filter')
       stickyFilterElem.style.width = sidebarWidth + 'px';

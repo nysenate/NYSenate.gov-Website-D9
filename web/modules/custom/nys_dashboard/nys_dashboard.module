@@ -397,6 +397,36 @@ function nys_dashboard_form_alter(&$form, FormStateInterface $form_state, $form_
       $form['date']['max']['#access'] = FALSE;
     }
   }
+
+  // Modifications to nys_bill_vote_widget form for my dashboard teasers.
+  // @todo move logic into \Drupal\nys_bill_vote\Form\BillVoteWidgetForm::buildForm.
+  if (
+    str_starts_with(\Drupal::service('path.current')->getPath(), '/my-dashboard')
+    && $form_id === 'nys_bill_vote_widget'
+  ) {
+    // Remove unused form elements and classes.
+    $form['nys_bill_vote_container']['nys_bill_vote_button_wrapper']['nys_bill_subscribe']['#access'] = FALSE;
+    unset(
+      $form['#attributes'],
+      $form['nys_bill_vote_container']['nys_bill_vote_button_wrapper']['nys_bill_vote_yes']['#attributes'],
+      $form['nys_bill_vote_container']['nys_bill_vote_button_wrapper']['nys_bill_vote_no']['#attributes']
+    );
+    $form['#attributes']['class'][] = 'my-dashboard-bill-vote-form';
+    // Update button labels.
+    $build_label = $form['nys_bill_vote_container']['nys_bill_vote_label']['#markup'];
+    $in_favor = str_contains($build_label, 'You are in favor of this bill');
+    $opposed = str_contains($build_label, 'You are opposed to this bill');
+    if ($in_favor) {
+      $form['nys_bill_vote_container']['nys_bill_vote_button_wrapper']['nys_bill_vote_no']['#attributes']['class'][] = 'change-vote';
+      $form['nys_bill_vote_container']['nys_bill_vote_button_wrapper']['nys_bill_vote_yes']['#attributes']['class'][] = 'current-vote';
+    }
+    elseif ($opposed) {
+      $form['nys_bill_vote_container']['nys_bill_vote_button_wrapper']['nys_bill_vote_yes']['#attributes']['class'][] = 'change-vote';
+      $form['nys_bill_vote_container']['nys_bill_vote_button_wrapper']['nys_bill_vote_no']['#attributes']['class'][] = 'current-vote';
+    }
+    // Update form label.
+    $form['nys_bill_vote_container']['nys_bill_vote_label']['#markup'] = '<div class="field__label">Do you support this bill?</div>';
+  }
 }
 
 /**

@@ -130,4 +130,37 @@
       }
     }
   }
+
+  form.my-dashboard-bill-vote-form {
+    .field__label {
+      float: left;
+    }
+
+    button.button {
+      border: none;
+      background: none;
+      color: $blue01;
+      font-size: 13px;
+      text-decoration: underline;
+      text-transform: none;
+      padding: 0;
+      margin: 0 0 0 8px;
+      display: inline;
+
+      &:hover {
+        text-decoration: none;
+      }
+
+      &.current-vote {
+        font-weight: 700;
+        text-decoration: none;
+        color: $grey10;
+        cursor: default;
+      }
+
+      &.change-vote:before {
+        content: "Change to ";
+      }
+    }
+  }
 }

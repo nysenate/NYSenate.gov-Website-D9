@@ -75,8 +75,11 @@
       {% endif %}
       </div>
     {% endif %}
+    {% if content.vote_widget %}
+      {{ content.vote_widget }}
+    {% endif %}
     {% if node.field_issues.value %}
-        {{ content.field_issues }}
+      {{ content.field_issues }}
     {% endif %}
   </div>
   {% if 'node--teaser-with-extras' in classes %}

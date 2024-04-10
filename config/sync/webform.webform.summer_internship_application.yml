@@ -1,0 +1,434 @@
+uuid: 5e984678-8cf0-46d3-b7f7-23b3026fb28b
+langcode: en
+status: open
+dependencies: {  }
+weight: 0
+open: null
+close: null
+uid: 145666
+template: false
+archive: false
+id: summer_internship_application
+title: 'Summer Internship Application'
+description: '<p>This webform is for applicants to apply for summer internships with Senate Services.</p>'
+categories: {  }
+elements: |-
+  page_1:
+    '#type': webform_wizard_page
+    '#title': Form
+    intro_text:
+      '#type': processed_text
+      '#text': '<h2>Work-Based Learning Summer Application</h2><p>Please complete and submit the enclosed application materials in coordination with your CLO/Advisor.</p><p><strong>Deadline: Mid-May</strong></p><p><strong>Please contact Student Programs for exact deadline dates, as they are subject to change. Questions should be directed to the Senate Office of Student Programs.</strong></p><p><strong>Tel: 518-455-2611 Fax: 518-426-6827</strong>&nbsp;<br><strong>students@nysenate.gov | nysenate.gov/student-programs&nbsp;</strong></p><p><br>&nbsp;</p><h2>New York State Senate&nbsp;<br>Internship in Senate Services-Production</h2>'
+      '#format': basic_html
+    flexbox_1:
+      '#type': webform_flexbox
+      date_of_birth:
+        '#type': date
+        '#title': 'Date of Birth'
+        '#required': true
+        '#required_error': 'Please enter a value for date of birth.'
+      age:
+        '#type': number
+        '#title': Age
+        '#required': true
+        '#required_error': 'Please enter a value for age.'
+    home_address:
+      '#type': webform_address
+      '#title': 'Home Address'
+      '#title_display': before
+      '#required': true
+      '#address__required': true
+      '#address_2__access': false
+      '#city__required': true
+      '#state_province__required': true
+      '#postal_code__required': true
+      '#country__access': false
+    same_as_address:
+      '#type': webform_same
+      '#title': 'Same as Home Address'
+      '#source': home_address
+      '#destination': mailing_address
+      '#destination_state': visible-slide
+    mailing_address:
+      '#type': webform_address
+      '#title': 'Mailing Address'
+      '#title_display': before
+      '#address_2__access': false
+    telephone:
+      '#type': webform_telephone
+      '#title': Telephone(s)
+      '#multiple': true
+      '#ext__access': false
+      '#select2': true
+      '#phone__international': false
+      '#required': true
+    email_addess:
+      '#type': email
+      '#title': 'Email Addess'
+      '#required': true
+    education:
+      '#type': webform_custom_composite
+      '#title': Education
+      '#description': '<p>List all high schools you have attended, beginning with the most recent.</p>'
+      '#title_display': before
+      '#description_display': before
+      '#required': true
+      '#element':
+        school_name:
+          '#type': textfield
+          '#title': 'Name of School'
+          '#required': true
+        attendance_date:
+          '#type': textfield
+          '#title': 'Date of Attendance'
+          '#placeholder': 'MM/DD/YYYY to MM/DD/YYYY'
+          '#required': true
+        diploma:
+          '#type': textfield
+          '#title': 'Diploma, GED, Certification'
+        graduation_date:
+          '#type': date
+          '#title': 'Date of Graduation'
+        gpa:
+          '#type': textfield
+          '#title': 'Overall GPA (4.0 Scale)'
+      '#select2': true
+    special_skills:
+      '#type': webform_checkboxes_other
+      '#title': 'Special Skills'
+      '#description': '<p>If you have experience/knowledge in any of the areas below, please check the corresponding box. Inexperience does not preclude participation in the program.</p>'
+      '#title_display': before
+      '#description_display': before
+      '#options':
+        'Graphic Design': 'Graphic Design'
+        ' Hand Tools': ' Hand Tools'
+        'Basic Knowledge of Measurement Systems (cm, mm, in)': 'Basic Knowledge of Measurement Systems (cm, mm, in)'
+        'Microsoft Office Suite': 'Microsoft Office Suite'
+        ' Adobe Creative Suite': ' Adobe Creative Suite'
+        Machinery: Machinery
+        'Working with Printers': 'Working with Printers'
+        Electronics: Electronics
+        Editing/Proofing: Editing/Proofing
+      '#options_display': two_columns
+    working_papers:
+      '#type': radios
+      '#title': 'Do you have working papers?'
+      '#options': yes_no
+      '#options_display': side_by_side
+      '#required': true
+    reference:
+      '#type': webform_custom_composite
+      '#title': Reference
+      '#multiple': false
+      '#description': '<p>Provide a reference from a person familiar with your academic abilities.</p>'
+      '#title_display': before
+      '#description_display': before
+      '#element':
+        reference_name:
+          '#type': textfield
+          '#title': Name
+          '#required': true
+        reference_title:
+          '#type': textfield
+          '#title': Position/Title
+          '#required': true
+        reference_co:
+          '#type': textfield
+          '#title': Institution
+          '#required': true
+        reference_phone:
+          '#type': tel
+          '#title': 'Direct Telephone Number'
+          '#placeholder': '(    )      -      '
+          '#required': true
+  page_2:
+    '#type': webform_wizard_page
+    '#title': 'Student Statement'
+    student_statement:
+      '#type': processed_text
+      '#text': '<h2>New York State Senate<br>Internship in Senate Services-Production</h2><h4>Student Statement in Regard to Preparations and Understandings</h4><p>I have read the attached information in its entirety, and I understand the program is not financial aid for on-campus study. I understand that if I am selected:</p>'
+      '#format': basic_html
+    ss1:
+      '#type': checkbox
+      '#title': 'participation in all aspects of the program is required;'
+      '#required': true
+      '#required_error': 'Please read and acknowledge all statements.'
+    ss2:
+      '#type': checkbox
+      '#title': 'interns must work through the last scheduled date of the program in order to receive the full and timely payment of their final biweekly paycheck;'
+      '#required': true
+      '#required_error': 'Please read and checkmark all statements.'
+    ss3:
+      '#type': checkbox
+      '#title': 'my application materials are kept confidentially [Public Law 93-380, Sec.438(a)(1)] for use during the screening and selection processes, for placement, and periodic review;'
+      '#required': true
+      '#required_error': 'Please read and checkmark all statements.'
+    ss4:
+      '#type': checkbox
+      '#title': 'my application materials may be a resource in consideration of further education or employment opportunities during or after the conclusion of the program;'
+      '#required': true
+      '#required_error': 'Please read and checkmark all statements.'
+    ss5:
+      '#type': checkbox
+      '#title': 'all materials furnished by me are original where required and the information accurate and true to the best of my knowledge; and'
+      '#required': true
+      '#required_error': 'Please read and checkmark all statements.'
+    ss6:
+      '#type': checkbox
+      '#title': 'I am expected and agree to meet all obligations of the program.'
+      '#required': true
+      '#required_error': 'Please read and checkmark all statements.'
+    student_signature:
+      '#type': webform_signature
+      '#title': 'Student Signature'
+      '#description': '<p>Sign above</p>'
+      '#required': true
+      '#uri_scheme': private
+  page_3:
+    '#type': webform_wizard_page
+    '#title': 'Statement of Purpose'
+    statement_of_purpose:
+      '#type': text_format
+      '#title': 'Statement of Purpose'
+      '#help': '<p>Please explain why you are applying.</p>'
+      '#help_display': title_after
+      '#required': true
+      '#allowed_formats':
+        basic_html: basic_html
+    working_papers_upload:
+      '#type': managed_file
+      '#title': 'Working papers'
+      '#description': '<p>Please upload your working papers.</p>'
+      '#title_display': before
+      '#description_display': before
+      '#required_error': 'Please upload your working papers.'
+    photo_id_upload:
+      '#type': managed_file
+      '#title': 'Photo ID'
+      '#description': '<p>Please upload your photo ID.</p>'
+      '#title_display': before
+      '#description_display': before
+      '#required': true
+      '#required_error': 'Please upload your photo ID.'
+css: ''
+javascript: ''
+settings:
+  ajax: false
+  ajax_scroll_top: form
+  ajax_progress_type: ''
+  ajax_effect: ''
+  ajax_speed: null
+  page: true
+  page_submit_path: ''
+  page_confirm_path: ''
+  page_theme_name: ''
+  form_title: both
+  form_submit_once: false
+  form_open_message: ''
+  form_close_message: ''
+  form_exception_message: ''
+  form_previous_submissions: true
+  form_confidential: false
+  form_confidential_message: ''
+  form_disable_remote_addr: false
+  form_convert_anonymous: false
+  form_prepopulate: false
+  form_prepopulate_source_entity: false
+  form_prepopulate_source_entity_required: false
+  form_prepopulate_source_entity_type: ''
+  form_unsaved: false
+  form_disable_back: false
+  form_submit_back: false
+  form_disable_autocomplete: false
+  form_novalidate: false
+  form_disable_inline_errors: false
+  form_required: false
+  form_autofocus: false
+  form_details_toggle: false
+  form_reset: false
+  form_access_denied: default
+  form_access_denied_title: ''
+  form_access_denied_message: ''
+  form_access_denied_attributes: {  }
+  form_file_limit: ''
+  form_attributes: {  }
+  form_method: ''
+  form_action: ''
+  share: false
+  share_node: false
+  share_theme_name: ''
+  share_title: true
+  share_page_body_attributes: {  }
+  submission_label: ''
+  submission_exception_message: ''
+  submission_locked_message: ''
+  submission_log: false
+  submission_excluded_elements: {  }
+  submission_exclude_empty: false
+  submission_exclude_empty_checkbox: false
+  submission_views: {  }
+  submission_views_replace: {  }
+  submission_user_columns: {  }
+  submission_user_duplicate: false
+  submission_access_denied: default
+  submission_access_denied_title: ''
+  submission_access_denied_message: ''
+  submission_access_denied_attributes: {  }
+  previous_submission_message: ''
+  previous_submissions_message: ''
+  autofill: false
+  autofill_message: ''
+  autofill_excluded_elements: {  }
+  wizard_progress_bar: true
+  wizard_progress_pages: false
+  wizard_progress_percentage: false
+  wizard_progress_link: false
+  wizard_progress_states: false
+  wizard_start_label: ''
+  wizard_preview_link: false
+  wizard_confirmation: true
+  wizard_confirmation_label: ''
+  wizard_auto_forward: true
+  wizard_auto_forward_hide_next_button: false
+  wizard_keyboard: true
+  wizard_track: ''
+  wizard_prev_button_label: ''
+  wizard_next_button_label: ''
+  wizard_toggle: false
+  wizard_toggle_show_label: ''
+  wizard_toggle_hide_label: ''
+  wizard_page_type: container
+  wizard_page_title_tag: h2
+  preview: 0
+  preview_label: ''
+  preview_title: ''
+  preview_message: ''
+  preview_attributes: {  }
+  preview_excluded_elements: {  }
+  preview_exclude_empty: true
+  preview_exclude_empty_checkbox: false
+  draft: none
+  draft_multiple: false
+  draft_auto_save: false
+  draft_saved_message: ''
+  draft_loaded_message: ''
+  draft_pending_single_message: ''
+  draft_pending_multiple_message: ''
+  confirmation_type: page
+  confirmation_url: ''
+  confirmation_title: ''
+  confirmation_message: '<p>Your application has been received. Thank you.</p>'
+  confirmation_attributes: {  }
+  confirmation_back: true
+  confirmation_back_label: ''
+  confirmation_back_attributes: {  }
+  confirmation_exclude_query: false
+  confirmation_exclude_token: false
+  confirmation_update: false
+  limit_total: null
+  limit_total_interval: null
+  limit_total_message: ''
+  limit_total_unique: false
+  limit_user: null
+  limit_user_interval: null
+  limit_user_message: ''
+  limit_user_unique: false
+  entity_limit_total: null
+  entity_limit_total_interval: null
+  entity_limit_user: null
+  entity_limit_user_interval: null
+  purge: none
+  purge_days: null
+  results_disabled: false
+  results_disabled_ignore: false
+  results_customize: false
+  token_view: false
+  token_update: false
+  token_delete: false
+  serial_disabled: false
+access:
+  create:
+    roles:
+      - anonymous
+      - authenticated
+    users: {  }
+    permissions: {  }
+  view_any:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+  update_any:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+  delete_any:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+  purge_any:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+  view_own:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+  update_own:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+  delete_own:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+  administer:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+  test:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+  configuration:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+handlers:
+  email_notification:
+    id: email
+    handler_id: email_notification
+    label: 'email notification'
+    notes: ''
+    status: true
+    conditions: {  }
+    weight: 0
+    settings:
+      states:
+        - completed
+      to_mail: gordinie@nysenate.gov
+      to_options: {  }
+      bcc_mail: ''
+      bcc_options: {  }
+      cc_mail: ''
+      cc_options: {  }
+      from_mail: _default
+      from_options: {  }
+      from_name: _default
+      reply_to: ''
+      return_path: ''
+      sender_mail: ''
+      sender_name: ''
+      subject: _default
+      body: _default
+      excluded_elements: {  }
+      ignore_access: false
+      exclude_empty: true
+      exclude_empty_checkbox: false
+      exclude_attachments: false
+      html: true
+      attachments: false
+      twig: false
+      theme_name: ''
+      parameters: {  }
+      debug: false
+variants: {  }

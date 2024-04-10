@@ -14,6 +14,7 @@ dependencies:
     - field.field.node.student_program.field_issues
     - field.field.node.student_program.field_student_program_intro
     - field.field.node.student_program.field_subtitle
+    - field.field.node.student_program.field_webform
     - field.field.node.student_program.rabbit_hole__settings
     - node.type.student_program
   module:
@@ -23,6 +24,7 @@ dependencies:
     - path
     - rabbit_hole
     - text
+    - webform
 id: node.student_program.default
 targetEntityType: node
 bundle: student_program
@@ -40,13 +42,13 @@ content:
     third_party_settings: {  }
   created:
     type: datetime_timestamp
-    weight: 11
+    weight: 12
     region: content
     settings: {  }
     third_party_settings: {  }
   field_accordion:
     type: inline_entity_form_complex
-    weight: 26
+    weight: 16
     region: content
     settings:
       form_mode: default
@@ -60,6 +62,7 @@ content:
       collapsible: true
       collapsed: true
       revision: false
+      removed_reference: optional
     third_party_settings: {  }
   field_article_author:
     type: string_textfield
@@ -127,6 +130,15 @@ content:
       rows: 5
       placeholder: ''
     third_party_settings: {  }
+  field_webform:
+    type: webform_entity_reference_select
+    weight: 17
+    region: content
+    settings:
+      allow_status: true
+      default_data: true
+      webforms: {  }
+    third_party_settings: {  }
   path:
     type: path
     weight: 13
@@ -135,19 +147,19 @@ content:
     third_party_settings: {  }
   rabbit_hole__settings:
     type: rabbit_hole_default
-    weight: 100
+    weight: 18
     region: content
     settings:
       advanced: true
     third_party_settings: {  }
   simple_sitemap:
-    weight: 10
+    weight: 11
     region: content
     settings: {  }
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    weight: 16
+    weight: 15
     region: content
     settings:
       display_label: true
@@ -171,7 +183,7 @@ content:
       placeholder: ''
     third_party_settings: {  }
   url_redirects:
-    weight: 15
+    weight: 14
     region: content
     settings: {  }
     third_party_settings: {  }

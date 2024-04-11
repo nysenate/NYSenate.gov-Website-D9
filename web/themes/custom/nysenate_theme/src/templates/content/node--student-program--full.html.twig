@@ -61,16 +61,16 @@
       {{ content.body }}
     </div>
 
-    {% if content.field_webform.0 %}
-      <div class="c-block--webform">
-        {{ content.field_webform }}
-      </div>
-    {% endif %}
-
     {% if chapters %}
       {% include '@nysenate_theme/nysenate-chapters/nysenate-chapters.twig' with {
         chapters: chapters
       } only %}
+    {% endif %}
+
+    {% if content.field_webform.0 %}
+      <div class="c-block--webform">
+        {{ content.field_webform }}
+      </div>
     {% endif %}
 
     {% if content.webform %}

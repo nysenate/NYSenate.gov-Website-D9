@@ -54,17 +54,26 @@ elements: |-
       '#title': 'Mailing Address'
       '#title_display': before
       '#address_2__access': false
+      '#country__access': false
     telephone:
-      '#type': webform_telephone
+      '#type': webform_custom_composite
       '#title': Telephone(s)
-      '#multiple': true
-      '#ext__access': false
-      '#select2': true
-      '#phone__international': false
       '#required': true
-    email_addess:
+      '#element':
+        type:
+          '#type': select
+          '#options':
+            cell: Cell
+            home: Home
+          '#title': Type
+          '#required': true
+        phone_number:
+          '#type': tel
+          '#title': 'Phone Number'
+          '#required': true
+    email_address:
       '#type': email
-      '#title': 'Email Addess'
+      '#title': 'Email Address'
       '#required': true
     education:
       '#type': webform_custom_composite
@@ -135,7 +144,6 @@ elements: |-
         reference_co:
           '#type': textfield
           '#title': Institution
-          '#required': true
         reference_phone:
           '#type': tel
           '#title': 'Direct Telephone Number'
@@ -157,27 +165,27 @@ elements: |-
       '#type': checkbox
       '#title': 'interns must work through the last scheduled date of the program in order to receive the full and timely payment of their final biweekly paycheck;'
       '#required': true
-      '#required_error': 'Please read and checkmark all statements.'
+      '#required_error': 'Please read and acknowledge all statements.'
     ss3:
       '#type': checkbox
       '#title': 'my application materials are kept confidentially [Public Law 93-380, Sec.438(a)(1)] for use during the screening and selection processes, for placement, and periodic review;'
       '#required': true
-      '#required_error': 'Please read and checkmark all statements.'
+      '#required_error': 'Please read and acknowledge all statements.'
     ss4:
       '#type': checkbox
       '#title': 'my application materials may be a resource in consideration of further education or employment opportunities during or after the conclusion of the program;'
       '#required': true
-      '#required_error': 'Please read and checkmark all statements.'
+      '#required_error': 'Please read and acknowledge all statements.'
     ss5:
       '#type': checkbox
       '#title': 'all materials furnished by me are original where required and the information accurate and true to the best of my knowledge; and'
       '#required': true
-      '#required_error': 'Please read and checkmark all statements.'
+      '#required_error': 'Please read and acknowledge all statements.'
     ss6:
       '#type': checkbox
       '#title': 'I am expected and agree to meet all obligations of the program.'
       '#required': true
-      '#required_error': 'Please read and checkmark all statements.'
+      '#required_error': 'Please read and acknowledge all statements.'
     student_signature:
       '#type': webform_signature
       '#title': 'Student Signature'
@@ -355,7 +363,8 @@ access:
     permissions: {  }
   view_any:
     roles: {  }
-    users: {  }
+    users:
+      - 9
     permissions: {  }
   update_any:
     roles: {  }
@@ -420,6 +429,43 @@ handlers:
       sender_name: ''
       subject: _default
       body: _default
+      excluded_elements: {  }
+      ignore_access: false
+      exclude_empty: true
+      exclude_empty_checkbox: false
+      exclude_attachments: false
+      html: true
+      attachments: false
+      twig: false
+      theme_name: ''
+      parameters: {  }
+      debug: false
+  applicant_email:
+    id: email
+    handler_id: applicant_email
+    label: 'Applicant Email'
+    notes: ''
+    status: true
+    conditions: {  }
+    weight: 0
+    settings:
+      states:
+        - completed
+      to_mail: '[webform_submission:values:email_address:raw]'
+      to_options: {  }
+      bcc_mail: ''
+      bcc_options: {  }
+      cc_mail: ''
+      cc_options: {  }
+      from_mail: _default
+      from_options: {  }
+      from_name: _default
+      reply_to: ''
+      return_path: ''
+      sender_mail: ''
+      sender_name: ''
+      subject: _default
+      body: '<div style="-webkit-text-stroke-width:0px;background-color:rgb(255, 255, 255);border:0px;color:black;font-family:&quot;Palatino Linotype&quot;, &quot;Book Antiqua&quot;, Palatino, serif;font-feature-settings:inherit;font-kerning:inherit;font-optical-sizing:inherit;font-size:15px;font-stretch:inherit;font-style:normal;font-variant-alternates:inherit;font-variant-caps:normal;font-variant-east-asian:inherit;font-variant-ligatures:normal;font-variant-numeric:inherit;font-variant-position:inherit;font-variation-settings:inherit;font-weight:400;letter-spacing:normal;line-height:inherit;margin:0px;orphans:2;padding:0px;text-align:start;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;vertical-align:baseline;white-space:normal;widows:2;word-spacing:0px;"><span style="background-color:white;border:0px;color:inherit;font-family:inherit;font-feature-settings:inherit;font-kerning:inherit;font-optical-sizing:inherit;font-size:16px;font-stretch:inherit;font-style:inherit;font-variant:inherit;font-variation-settings:inherit;font-weight:inherit;line-height:inherit;margin:0px;padding:0px;vertical-align:baseline;">Thank you for your interest in the NYS Senate Summer Work Based Learning Internship Program. </span><span style="border:0px;color:inherit;font-family:inherit;font-feature-settings:inherit;font-kerning:inherit;font-optical-sizing:inherit;font-size:12pt;font-stretch:inherit;font-style:inherit;font-variant:inherit;font-variation-settings:inherit;font-weight:inherit;line-height:inherit;margin:0px;padding:0px;vertical-align:baseline;">Your application has been received. Someone from our office will be in contact with you regarding the next steps.&nbsp;</span></div><div style="-webkit-text-stroke-width:0px;background-color:rgb(255, 255, 255);border:0px;color:black;font-family:&quot;Palatino Linotype&quot;, &quot;Book Antiqua&quot;, Palatino, serif;font-feature-settings:inherit;font-kerning:inherit;font-optical-sizing:inherit;font-size:12pt;font-stretch:inherit;font-style:normal;font-variant-alternates:inherit;font-variant-caps:normal;font-variant-east-asian:inherit;font-variant-ligatures:normal;font-variant-numeric:inherit;font-variant-position:inherit;font-variation-settings:inherit;font-weight:400;letter-spacing:normal;line-height:inherit;margin:0px;orphans:2;padding:0px;text-align:start;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;vertical-align:baseline;white-space:normal;widows:2;word-spacing:0px;">&nbsp;</div><div style="-webkit-text-stroke-width:0px;background-color:rgb(255, 255, 255);border:0px;color:black;font-family:&quot;Palatino Linotype&quot;, &quot;Book Antiqua&quot;, Palatino, serif;font-feature-settings:inherit;font-kerning:inherit;font-optical-sizing:inherit;font-size:12pt;font-stretch:inherit;font-style:normal;font-variant-alternates:inherit;font-variant-caps:normal;font-variant-east-asian:inherit;font-variant-ligatures:normal;font-variant-numeric:inherit;font-variant-position:inherit;font-variation-settings:inherit;font-weight:400;letter-spacing:normal;line-height:inherit;margin:0px;orphans:2;padding:0px;text-align:start;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;vertical-align:baseline;white-space:normal;widows:2;word-spacing:0px;">Again, thank you for taking the time to apply.</div><div style="-webkit-text-stroke-width:0px;background-color:rgb(255, 255, 255);border:0px;color:black;font-family:&quot;Palatino Linotype&quot;, &quot;Book Antiqua&quot;, Palatino, serif;font-feature-settings:inherit;font-kerning:inherit;font-optical-sizing:inherit;font-size:12pt;font-stretch:inherit;font-style:normal;font-variant-alternates:inherit;font-variant-caps:normal;font-variant-east-asian:inherit;font-variant-ligatures:normal;font-variant-numeric:inherit;font-variant-position:inherit;font-variation-settings:inherit;font-weight:400;letter-spacing:normal;line-height:inherit;margin:0px;orphans:2;padding:0px;text-align:start;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;vertical-align:baseline;white-space:normal;widows:2;word-spacing:0px;">Office of Student Programs</div>'
       excluded_elements: {  }
       ignore_access: false
       exclude_empty: true

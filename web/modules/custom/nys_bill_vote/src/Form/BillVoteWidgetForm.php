@@ -345,12 +345,7 @@ class BillVoteWidgetForm extends FormBase {
     $value = $triggering_element['#value'];
     $id = $triggering_element['#id'];
 
-    if (!empty($user_input['nid'])) {
-      $bill_path = '/node/' . $user_input['nid'];
-    }
-    else {
-      $bill_path = '/node/' . $settings['entity_id'];
-    }
+    $bill_path = '/node/' . (empty($user_input['nid']) ? $settings['entity_id'] : $user_input['nid']);
 
     $intent = $this->billVoteHelper->getIntentFromVote($value);
 

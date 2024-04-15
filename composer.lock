@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "30cd32600417261ccec0b8991b3ce714",
+    "content-hash": "b451ee705a6d58f45d8c08d4332b222e",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -11376,6 +11376,55 @@
                 "source": "https://git.drupalcode.org/project/views_bulk_operations/-/tree/8.x-3.x",
                 "issues": "https://www.drupal.org/project/issues/views_bulk_operations?version=8.x",
                 "docs": "https://www.drupal.org/docs/8/modules/views-bulk-operations-vbo"
+            }
+        },
+        {
+            "name": "drupal/views_combine",
+            "version": "1.0.0-alpha4",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/views_combine.git",
+                "reference": "1.0.0-alpha4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/views_combine-1.0.0-alpha4.zip",
+                "reference": "1.0.0-alpha4",
+                "shasum": "c5ace58021e32f0f36befc4bd9aa551ca9c5588e"
+            },
+            "require": {
+                "drupal/core": "^8.8 || ^9 || ^10"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "1.0.0-alpha4",
+                    "datestamp": "1671731468",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Alpha releases are not covered by Drupal security advisories."
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "b_sharpe",
+                    "homepage": "https://www.drupal.org/user/2512258"
+                },
+                {
+                    "name": "robphillips",
+                    "homepage": "https://www.drupal.org/user/459772"
+                }
+            ],
+            "description": "Allows creating unions between views to combine the output into one view.",
+            "homepage": "https://www.drupal.org/project/views_combine",
+            "support": {
+                "source": "https://git.drupalcode.org/project/views_combine",
+                "issues": "https://www.drupal.org/project/issues/views_combine"
             }
         },
         {
@@ -25689,6 +25738,7 @@
         "drupal/site_verify": 20,
         "drupal/twitter_block": 15,
         "drupal/ultimate_cron": 15,
+        "drupal/views_combine": 15,
         "drupal/views_exclude_previous": 10,
         "drupal/views_field_view": 10,
         "drupal/views_ical": 15,

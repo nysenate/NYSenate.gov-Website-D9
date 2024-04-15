@@ -68,30 +68,33 @@ class YourIssuesFilter extends FilterPluginBase {
    * {@inheritdoc}
    */
   protected function valueForm(&$form, FormStateInterface $form_state) {
-    $follow_issue_flag_ids = $this->entityTypeManager
-      ->getStorage('flagging')
-      ->getQuery()
-      ->condition('flag_id', 'follow_issue')
-      ->condition('uid', $this->currentUser->id())
-      ->execute();
-    $options = [];
-    if (!empty($follow_issue_flag_ids)) {
-      $follow_issue_flags = $this->entityTypeManager
+    if ($form_state->get('exposed')) {
+      $follow_issue_flag_ids = $this->entityTypeManager
         ->getStorage('flagging')
-        ->loadMultiple($follow_issue_flag_ids);
-      foreach ($follow_issue_flags as $flag) {
-        $entity_id = $flag->flagged_entity?->referencedEntities()[0]?->id();
-        $entity_label = $flag->flagged_entity?->referencedEntities()[0]?->label();
-        if (!empty($entity_id) && !empty($entity_label)) {
-          $options[$entity_id] = $entity_label;
+        ->getQuery()
+        ->condition('flag_id', 'follow_issue')
+        ->condition('uid', $this->currentUser->id())
+        ->execute();
+      $options = [];
+      if (!empty($follow_issue_flag_ids)) {
+        $follow_issue_flags = $this->entityTypeManager
+          ->getStorage('flagging')
+          ->loadMultiple($follow_issue_flag_ids);
+        foreach ($follow_issue_flags as $flag) {
+          $entity_id = $flag->flagged_entity?->referencedEntities()[0]?->id();
+          $entity_label = $flag->flagged_entity?->referencedEntities()[0]?->label();
+          if (!empty($entity_id) && !empty($entity_label)) {
+            $options[$entity_id] = $entity_label;
+          }
         }
       }
+      $form['value'] = [
+        '#type' => 'select',
+        '#title' => 'Your issues',
+        '#options' => ['All' => '- Any -'] + $options,
+        '#default_value' => 'All',
+      ];
     }
-    $form['value'] = [
-      '#type' => 'select',
-      '#title' => 'Your issues',
-      '#options' => $options,
-    ];
   }
 
 }

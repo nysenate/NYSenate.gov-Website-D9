@@ -81,40 +81,45 @@ class YearMonthFilter extends FilterPluginBase {
    * {@inheritdoc}
    */
   protected function valueForm(&$form, FormStateInterface $form_state) {
-    $timezone_string = $this->configFactory->get('system.date')->get('timezone')['default'];
-    $timezone_object = new \DateTimeZone($timezone_string);
-    $current_datetime = new \DateTime('now', $timezone_object);
-    $current_year = $current_datetime->format('Y');
-    $years = range($current_year, $current_year - 30);
-    $form['value'] = [
-      '#type' => 'select',
-      '#title' => 'Year',
-      '#options' => array_combine($years, $years),
-    ];
-    $form['year_month_filter__month'] = [
-      '#type' => 'select',
-      '#title' => 'Month',
-      '#options' => [
-        'All' => '- Any -',
-        'january' => 'January',
-        'february' => 'February',
-        'march' => 'March',
-        'april' => 'April',
-        'may' => 'May',
-        'june' => 'June',
-        'july' => 'July',
-        'august' => 'August',
-        'september' => 'September',
-        'october' => 'October',
-        'november' => 'November',
-        'december' => 'December',
-      ],
-      '#states' => [
-        'visible' => [
-          'select[name="year_month_filter"]' => ['!value' => 'All'],
+    if ($form_state->get('exposed')) {
+      $timezone_string = $this->configFactory->get('system.date')
+        ->get('timezone')['default'];
+      $timezone_object = new \DateTimeZone($timezone_string);
+      $current_datetime = new \DateTime('now', $timezone_object);
+      $current_year = $current_datetime->format('Y');
+      $years = range($current_year, $current_year - 30);
+      $form['value'] = [
+        '#type' => 'select',
+        '#title' => 'Year',
+        '#options' => ['All' => '- Any -'] + array_combine($years, $years),
+        '#default_value' => 'All',
+      ];
+      $form['year_month_filter__month'] = [
+        '#type' => 'select',
+        '#title' => 'Month',
+        '#options' => [
+          'All' => '- Any -',
+          'january' => 'January',
+          'february' => 'February',
+          'march' => 'March',
+          'april' => 'April',
+          'may' => 'May',
+          'june' => 'June',
+          'july' => 'July',
+          'august' => 'August',
+          'september' => 'September',
+          'october' => 'October',
+          'november' => 'November',
+          'december' => 'December',
         ],
-      ],
-    ];
+        '#default_value' => 'All',
+        '#states' => [
+          'visible' => [
+            'select[name="year_month_filter"]' => ['!value' => 'All'],
+          ],
+        ],
+      ];
+    }
   }
 
   /**
@@ -145,8 +150,6 @@ class YearMonthFilter extends FilterPluginBase {
    * {@inheritdoc}
    */
   public function query() {
-    $this->operator = 'BETWEEN';
-
     // Set query value.
     $value = is_array($this->value) && !empty($this->value[0]) ? $this->value[0] : $this->value;
     $timezone_string = $this->configFactory->get('system.date')->get('timezone')['default'];
@@ -177,7 +180,7 @@ class YearMonthFilter extends FilterPluginBase {
     ];
     foreach ($nys_date_tables_and_fields as $table => $field) {
       $this->query->addTable($table);
-      $this->query->addWhere('nys_date_field_filter_group', "$table.$field", $this->value, $this->operator);
+      $this->query->addWhere('nys_date_field_filter_group', "$table.$field", $this->value, 'BETWEEN');
     }
   }
 

@@ -4,6 +4,7 @@ namespace Drupal\nys_dashboard\Plugin\views\filter;
 
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Http\RequestStack;
 use Drupal\Core\Session\AccountProxy;
 use Drupal\views\Plugin\views\filter\FilterPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -32,6 +33,13 @@ class YourSenatorFilter extends FilterPluginBase {
   public $currentUser;
 
   /**
+   * Request stack service.
+   *
+   * @var \Drupal\Core\Http\RequestStack
+   */
+  public $requestStack;
+
+  /**
    * Constructs a YourSenaterFilter object.
    *
    * @param array $configuration
@@ -44,11 +52,21 @@ class YourSenatorFilter extends FilterPluginBase {
    *   Entity type manager service.
    * @param \Drupal\Core\Session\AccountProxy $currentUser
    *   Current user service.
+   * @param \Drupal\Core\Http\RequestStack $requestStack
+   *   Request stack service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManager $entityTypeManager, AccountProxy $currentUser) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    EntityTypeManager $entityTypeManager,
+    AccountProxy $currentUser,
+    RequestStack $requestStack
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->entityTypeManager = $entityTypeManager;
     $this->currentUser = $currentUser;
+    $this->requestStack = $requestStack;
   }
 
   /**
@@ -61,6 +79,7 @@ class YourSenatorFilter extends FilterPluginBase {
       $plugin_definition,
       $container->get('entity_type.manager'),
       $container->get('current_user'),
+      $container->get('request_stack'),
     );
   }
 
@@ -72,6 +91,21 @@ class YourSenatorFilter extends FilterPluginBase {
       '#type' => 'checkbox',
       '#title' => 'Only show content from my senator',
     ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function acceptExposedInput($input) {
+    // Workaround to potential bug in views_combine where wrong input sent to
+    // combined view.
+    if ($input['your_senator_filter']) {
+      $request_params = $this->requestStack->getCurrentRequest()->query->all();
+      if (empty($request_params['your_senator_filter'])) {
+        return FALSE;
+      }
+    }
+    return parent::acceptExposedInput($input);
   }
 
   /**

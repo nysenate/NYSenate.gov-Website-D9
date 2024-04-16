@@ -7,6 +7,7 @@ dependencies:
     - field.storage.node.body
     - field.storage.node.field_ol_summary
     - field.storage.node.field_subhead
+    - flag.flag.follow_committee
     - flag.flag.follow_issue
     - flag.flag.follow_this_bill
     - node.type.article
@@ -772,7 +773,7 @@ display:
           exposed: true
           expose:
             operator_id: ''
-            label: 'Filter on year and month'
+            label: Year
             description: ''
             use_operator: false
             operator: year_month_filter_op
@@ -885,7 +886,7 @@ display:
           group_type: group
           admin_label: 'field_issues: Taxonomy term'
           plugin_id: standard
-          required: false
+          required: true
         flag_relationship:
           id: flag_relationship
           table: taxonomy_term_field_data
@@ -950,6 +951,52 @@ display:
           plugin_id: flag_relationship
           required: true
           flag: follow_this_bill
+          user_scope: current
+      display_description: ''
+      exposed_block: true
+      display_extenders: {  }
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - url
+        - url.query_args
+        - 'user.node_grants:view'
+        - user.roles
+      tags:
+        - 'config:field.storage.node.body'
+        - 'config:field.storage.node.field_ol_summary'
+        - 'config:field.storage.node.field_subhead'
+  committees:
+    id: committees
+    display_title: Committees
+    display_plugin: block
+    position: 1
+    display_options:
+      defaults:
+        relationships: false
+      relationships:
+        field_committee:
+          id: field_committee
+          table: node__field_committee
+          field: field_committee
+          relationship: none
+          group_type: group
+          admin_label: 'field_committee: Taxonomy term'
+          plugin_id: standard
+          required: true
+        flag_relationship:
+          id: flag_relationship
+          table: taxonomy_term_field_data
+          field: flag_relationship
+          relationship: field_committee
+          group_type: group
+          admin_label: Flags
+          entity_type: taxonomy_term
+          plugin_id: flag_relationship
+          required: true
+          flag: follow_committee
           user_scope: current
       display_description: ''
       exposed_block: true
@@ -1342,6 +1389,63 @@ display:
           empty_zero: false
           hide_alter_empty: true
           view_id: 'my_dashboard:bills'
+          filter_map:
+            combine: ''
+            type_1: ''
+            your_issues_filter: ''
+            year_month_filter: ''
+            your_senator_filter: ''
+          sort_map: ''
+        views_combine_1:
+          id: views_combine_1
+          table: views
+          field: views_combine
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: views_combine
+          label: ''
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          view_id: 'my_dashboard:committees'
           filter_map:
             combine: ''
             type_1: ''

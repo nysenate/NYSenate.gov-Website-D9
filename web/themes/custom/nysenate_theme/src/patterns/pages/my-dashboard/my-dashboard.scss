@@ -279,7 +279,6 @@ body.path-my-dashboard {
   // My Dashboard view pagination styling.
   .view-my-dashboard {
     .view-header, .view-header-pager {
-      width: 50%;
       float: left;
 
       @include breakpoint($bp-under-sm) {
@@ -289,6 +288,7 @@ body.path-my-dashboard {
     }
 
     .view-header {
+      width: 30%;
       font-size: 14px;
       font-style: italic;
     }
@@ -302,13 +302,17 @@ body.path-my-dashboard {
       }
     }
 
-    .view-header-pager .pager__items {
-      padding: 0;
-      margin: 0;
-      text-align: right;
+    .view-header-pager {
+      width: 70%;
 
-      @include breakpoint($bp-under-sm) {
-        text-align: center;
+      .pager__items {
+        padding: 0;
+        margin: 0;
+        text-align: right;
+
+        @include breakpoint($bp-under-sm) {
+          text-align: center;
+        }
       }
     }
 

@@ -54,6 +54,25 @@ content:
     third_party_settings: {  }
     weight: 0
     region: content
+  field_committee:
+    type: list_formatter
+    label: inline
+    settings:
+      type: comma
+      separator_custom: ''
+      separator_custom_tag: span
+      separator_custom_class: list-formatter-separator
+      comma_tag: div
+      class: list-formatter-list
+      list_formatter_contrib:
+        entity_reference_link: '1'
+      comma_and: 0
+      comma_full_stop: 0
+      comma_override: 0
+      term_plain: 0
+    third_party_settings: {  }
+    weight: 6
+    region: content
   field_date:
     type: datetime_custom
     label: hidden
@@ -72,7 +91,7 @@ content:
       image_loading:
         attribute: lazy
     third_party_settings: {  }
-    weight: 6
+    weight: 7
     region: content
   field_issues:
     type: list_formatter
@@ -117,7 +136,6 @@ hidden:
   field_associated_senators: true
   field_attachment: true
   field_bills: true
-  field_committee: true
   field_committee_featured: true
   field_image_caption: true
   field_image_hero: true

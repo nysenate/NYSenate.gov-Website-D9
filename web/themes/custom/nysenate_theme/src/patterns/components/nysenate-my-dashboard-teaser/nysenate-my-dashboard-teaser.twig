@@ -1,4 +1,4 @@
-{{ attach_library('nysenate_theme/nysenate-my-dashboard') }}
+{{ attach_library('nysenate_theme/nysenate-my-dashboard-teaser') }}
 {{ attach_library('nysenate_theme/bill-item') }}
 {%
   set classes, type_icon_map, type_label_map  = [
@@ -80,6 +80,9 @@
     {% endif %}
     {% if node.field_issues.value %}
       {{ content.field_issues }}
+    {% endif %}
+    {% if node.field_committee.value %}
+      {{ content.field_committee }}
     {% endif %}
   </div>
   {% if 'node--teaser-with-extras' in classes %}

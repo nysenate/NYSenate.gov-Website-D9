@@ -62,21 +62,33 @@
     font-size: 13px;
     overflow: hidden;
 
+    .field {
+      clear: both;
+      overflow: hidden;
+      margin-bottom: 3px;
+    }
+
     .field__label {
       font-weight: normal;
     }
   }
 
-  .field--name-field-issues {
+  .field--name-field-issues, .field--name-field-committee {
     position: relative;
 
     .field__label {
       position: absolute;
     }
 
-    .field__items {
-      margin: 3px 0 0 44px;
+    .field__items, > .field__item {
+      margin: 2px 0 0 44px;
       line-height: 16px;
+    }
+  }
+
+  .field--name-field-committee {
+    .field__item, > .field__item {
+      margin-left: 71px;
     }
   }
 

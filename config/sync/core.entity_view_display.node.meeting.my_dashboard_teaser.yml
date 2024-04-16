@@ -42,6 +42,25 @@ content:
     third_party_settings: {  }
     weight: 0
     region: content
+  field_committee:
+    type: list_formatter
+    label: inline
+    settings:
+      type: comma
+      separator_custom: ''
+      separator_custom_tag: span
+      separator_custom_class: list-formatter-separator
+      comma_tag: div
+      class: list-formatter-list
+      list_formatter_contrib:
+        entity_reference_link: '1'
+      comma_and: 0
+      comma_full_stop: 0
+      comma_override: 0
+      term_plain: 0
+    third_party_settings: {  }
+    weight: 3
+    region: content
   field_date_range:
     type: daterange_default
     label: hidden
@@ -69,14 +88,13 @@ content:
       comma_override: 0
       term_plain: 0
     third_party_settings: {  }
-    weight: 5
+    weight: 2
     region: content
 hidden:
   entity_print_view_epub: true
   entity_print_view_pdf: true
   entity_print_view_word_docx: true
   field_bill: true
-  field_committee: true
   field_committee_featured: true
   field_event_online_link: true
   field_event_place: true

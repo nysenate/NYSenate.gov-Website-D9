@@ -91,7 +91,9 @@
       {% if node.field_image_main.value %}
           {{ content.field_image_main }}
       {% elseif node.bundle == 'bill' %}
-        {% if node.field_ol_publish_date.value %}
+        {% if node.field_ol_last_status_date.value %}
+          <div class="field">Updated {{ node.field_ol_last_status_date.value|date('U')|format_date('publish_date') }}</div>
+        {% elseif node.field_ol_publish_date.value %}
           <div class="field">Introduced {{ node.field_ol_publish_date.value|date('U')|format_date('publish_date') }}</div>
         {% endif %}
         {% if node.field_ol_sponsor.value %}

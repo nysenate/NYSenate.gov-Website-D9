@@ -175,12 +175,23 @@ class YearMonthFilter extends FilterPluginBase {
     $this->query->setWhereGroup('OR', 'nys_date_field_filter_group');
     $nys_date_tables_and_fields = [
       'node__field_date' => 'field_date_value',
-      'node__field_ol_publish_date' => 'field_ol_publish_date_value',
       'node__field_date_range' => 'field_date_range_value',
+      'node__field_ol_last_status_date' => 'field_ol_last_status_date_value',
+      'node__field_ol_publish_date' => 'field_ol_publish_date_value',
     ];
     foreach ($nys_date_tables_and_fields as $table => $field) {
       $this->query->addTable($table);
-      $this->query->addWhere('nys_date_field_filter_group', "$table.$field", $this->value, 'BETWEEN');
+      if ($table !== 'node__field_ol_publish_date') {
+        $this->query->addWhere('nys_date_field_filter_group', "$table.$field", $this->value, 'BETWEEN');
+      }
+      else {
+        $this->query->addWhere('nys_date_field_filter_group',
+          ($this->query->getConnection()->condition('AND'))
+            ->condition('node_field_data.type', 'bill')
+            ->condition('node__field_ol_last_status_date.field_ol_last_status_date_value', '', 'IS NULL')
+            ->condition("$table.$field", $this->value, 'BETWEEN')
+        );
+      }
     }
   }
 

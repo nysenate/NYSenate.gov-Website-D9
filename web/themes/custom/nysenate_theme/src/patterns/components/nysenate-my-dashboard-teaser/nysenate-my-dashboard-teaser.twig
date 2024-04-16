@@ -6,6 +6,7 @@
     'node--type-' ~ node.bundle|clean_class,
     view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
     node.field_image_main.value ? 'node--teaser-with-extras',
+    node.field_image_main.value ? 'node--teaser-with-image',
     positions ? 'node--teaser-with-extras'
   ],
   {

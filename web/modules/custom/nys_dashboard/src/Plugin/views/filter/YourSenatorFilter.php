@@ -121,11 +121,7 @@ class YourSenatorFilter extends FilterPluginBase {
       ?->entity
       ?->id();
 
-    if (empty($current_user_senator_id)) {
-      return;
-    }
-
-    $this->value = $current_user_senator_id;
+    $this->value = empty($current_user_senator_id) ? 0 : $current_user_senator_id;
     parent::query();
   }
 

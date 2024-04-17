@@ -4634,7 +4634,7 @@ function nysenate_theme_preprocess_node__open_data(&$variables) {
  */
 function nysenate_theme_preprocess_node__article__featured_content(&$variables) {
   $variables['image_main'] = $variables['content']['field_image_main'][0] ?? [];
-  $field_issues = $variables['content']['field_issues'];
+  $field_issues = $variables['content']['field_issues'] ?? [];
   $variables['date'] = $variables['content']['field_date'][0] ?? [];
   foreach ($field_issues as $key => $issue) {
     if (!is_numeric($key)) {
@@ -4653,7 +4653,7 @@ function nysenate_theme_preprocess_node__article__featured_content(&$variables) 
  */
 function nysenate_theme_preprocess_node__in_the_news__featured_content(&$variables) {
   $variables['image_main'] = $variables['content']['field_image_main'][0] ?? [];
-  $field_issues = $variables['content']['field_issues'];
+  $field_issues = $variables['content']['field_issues'] ?? [];
   $variables['date'] = $variables['content']['field_date'][0] ?? [];
   foreach ($field_issues as $key => $issue) {
     if (!is_numeric($key)) {

@@ -18,7 +18,7 @@ elements: |-
     '#title': Form
     intro_text:
       '#type': processed_text
-      '#text': '<h2>Work-Based Learning Summer Application</h2><p>Please complete and submit the enclosed application materials in coordination with your CLO/Advisor.</p><p><strong>Deadline: Mid-May</strong></p><p><strong>Please contact Student Programs for exact deadline dates, as they are subject to change. Questions should be directed to the Senate Office of Student Programs.</strong></p><p><strong>Tel: 518-455-2611 Fax: 518-426-6827</strong>&nbsp;<br><strong>students@nysenate.gov | nysenate.gov/student-programs&nbsp;</strong></p><p><br>&nbsp;</p><h2>New York State Senate&nbsp;<br>Internship in Senate Services-Production</h2>'
+      '#text': '<h2>New York State Senate&nbsp;<br>Internship in Senate Services-Production</h2>'
       '#format': basic_html
     flexbox_1:
       '#type': webform_flexbox
@@ -118,7 +118,6 @@ elements: |-
         'Working with Printers': 'Working with Printers'
         Electronics: Electronics
         Editing/Proofing: Editing/Proofing
-      '#options_display': two_columns
     working_papers:
       '#type': radios
       '#title': 'Do you have working papers?'
@@ -414,7 +413,7 @@ handlers:
     settings:
       states:
         - completed
-      to_mail: gordinie@nysenate.gov
+      to_mail: 'cknight@nysenate.gov, students@nysenate.gov'
       to_options: {  }
       bcc_mail: ''
       bcc_options: {  }

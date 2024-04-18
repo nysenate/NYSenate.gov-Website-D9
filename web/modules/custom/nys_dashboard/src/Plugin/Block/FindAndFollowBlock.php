@@ -146,13 +146,9 @@ class FindAndFollowBlock extends BlockBase {
    * {@inheritdoc}
    */
   public function build(): array {
-    $output = '';
-    $items = $this->configuration['fandf_items'];
-    foreach ($items as $item) {
-      $output .= '<p>' . $item['text'] . ' ' . $item['url'] . ' ' . $item['icon'] . '</p>';
-    }
     return [
-      '#markup' => $output,
+      '#theme' => 'nys_dashboard_find_and_follow',
+      '#fandf_items' => $this->configuration['fandf_items'],
     ];
   }
 

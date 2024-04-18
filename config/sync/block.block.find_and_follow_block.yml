@@ -1,0 +1,46 @@
+uuid: 6b7014df-75bb-414a-879a-121250d1eeea
+langcode: en
+status: true
+dependencies:
+  module:
+    - nys_dashboard
+    - system
+  theme:
+    - nysenate_theme
+id: find_and_follow_block
+theme: nysenate_theme
+region: content
+weight: 9
+provider: null
+plugin: find_and_follow
+settings:
+  id: find_and_follow
+  label: 'Find and Follow More from New York State Senate'
+  label_display: visible
+  provider: nys_dashboard
+  fandf_items:
+    -
+      text: Bills
+      url: /legislation
+      icon: gavel
+    -
+      text: Issues
+      url: /explore-issues
+      icon: list-magnifying-glass
+    -
+      text: Committees
+      url: '/senators-committees#committees-pre'
+      icon: users-three
+    -
+      text: News
+      url: /news-and-issues
+      icon: newspaper-clipping
+    -
+      text: Events
+      url: /events
+      icon: calendar
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: /my-dashboard

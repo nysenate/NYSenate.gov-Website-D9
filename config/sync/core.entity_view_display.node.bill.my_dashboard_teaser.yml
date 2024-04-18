@@ -76,12 +76,21 @@ content:
       comma_override: 0
       term_plain: 0
     third_party_settings: {  }
-    weight: 4
+    weight: 5
     region: content
   field_ol_last_status:
     type: list_default
     label: hidden
     settings: {  }
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_ol_last_status_date:
+    type: datetime_default
+    label: hidden
+    settings:
+      timezone_override: ''
+      format_type: publish_date
     third_party_settings: {  }
     weight: 2
     region: content
@@ -107,12 +116,12 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 3
+    weight: 4
     region: content
   vote_widget:
     settings: {  }
     third_party_settings: {  }
-    weight: 5
+    weight: 6
     region: content
 hidden:
   entity_print_view_epub: true
@@ -137,7 +146,6 @@ hidden:
   field_ol_has_same_as: true
   field_ol_is_active_version: true
   field_ol_is_amended: true
-  field_ol_last_status_date: true
   field_ol_latest_status: true
   field_ol_latest_status_committee: true
   field_ol_law_code: true

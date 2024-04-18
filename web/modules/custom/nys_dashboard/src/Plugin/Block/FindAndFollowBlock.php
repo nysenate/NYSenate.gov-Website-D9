@@ -8,7 +8,7 @@ use Drupal\Core\Form\FormStateInterface;
 /**
  * Find and follow block class.
  *
- * Adopts pattern from: https://git.drupalcode.org/project/examples/-/blob/4.0.x/modules/form_api_example/src/Form/AjaxAddMore.php.
+ * @see: https://git.drupalcode.org/project/examples/-/blob/4.0.x/modules/form_api_example/src/Form/AjaxAddMore.php
  *
  * @Block(
  *    id = "find_and_follow",
@@ -21,21 +21,22 @@ class FindAndFollowBlock extends BlockBase {
    * {@inheritdoc}
    */
   public function blockForm($form, FormStateInterface $form_state) {
-    $fieldset_from_config = $this->configuration['fandf_fieldset'];
+    $fandf_items_from_config = $this->configuration['fandf_items'];
 
-    // Ensure $form_state 'fieldset_count' value updated from config.
+    // Ensure $form_state 'fandf_items_count' value updated from config.
     if (
-      !empty($fieldset_from_config['items'])
-      && count($fieldset_from_config['items']) > $form_state->get('fieldset_count')
+      $fandf_items_from_config
+      && !$form_state->getCompleteFormState()->isRebuilding()
+      && count($fandf_items_from_config) > $form_state->get('fandf_items_count')
     ) {
-      $form_state->set('fieldset_count', count($fieldset_from_config['items']));
+      $form_state->set('fandf_items_count', count($fandf_items_from_config));
     }
 
-    // Ensure $form_state 'fieldset_count' at least 1.
-    $fieldset_count = $form_state->get('fieldset_count');
-    if ($fieldset_count === NULL) {
-      $form_state->set('fieldset_count', 1);
-      $fieldset_count = 1;
+    // Ensure $form_state 'fandf_items_count' at least 1.
+    $fandf_items_count = $form_state->get('fandf_items_count');
+    if ($fandf_items_count === NULL) {
+      $form_state->set('fandf_items_count', 1);
+      $fandf_items_count = 1;
     }
 
     // Build form.
@@ -46,25 +47,40 @@ class FindAndFollowBlock extends BlockBase {
       '#prefix' => '<div id="fandf-fieldset-wrapper">',
       '#suffix' => '</div>',
     ];
-    for ($i = 0; $i < $fieldset_count; $i++) {
+    for ($i = 0; $i < $fandf_items_count; $i++) {
       $form['fandf_fieldset']['items'][$i] = [
         '#type' => 'fieldset',
+        '#title' => $this->t('Find and follow link @num', ['@num' => $i + 1]),
         'text' => [
           '#type' => 'textfield',
+          '#required' => TRUE,
           '#title' => $this->t('Link text'),
-          '#default_value' => empty($fieldset_from_config['items'][$i]['text']) ? '' : $fieldset_from_config['items'][$i]['text'],
         ],
         'url' => [
           '#type' => 'textfield',
+          '#required' => TRUE,
           '#title' => $this->t('URL'),
-          '#default_value' => empty($fieldset_from_config['items'][$i]['url']) ? '' : $fieldset_from_config['items'][$i]['url'],
         ],
         'icon' => [
           '#type' => 'textfield',
+          '#required' => TRUE,
           '#title' => $this->t('Icon'),
-          '#default_value' => empty($fieldset_from_config['items'][$i]['icon']) ? '' : $fieldset_from_config['items'][$i]['icon'],
+          '#description' => <<<DESC
+            Icons are from the Phosphor icon library. Use the machine name of
+            an icon in this field, e.g. "newspaper-clipping". See
+            <a href="https://phosphoricons.com" target="_blank">
+            https://phosphoricons.com</a>.
+            DESC,
         ],
       ];
+      if (!$form_state->getCompleteFormState()->isRebuilding()) {
+        $form['fandf_fieldset']['items'][$i]['text']['#default_value'] =
+          empty($fandf_items_from_config[$i]['text']) ? '' : $fandf_items_from_config[$i]['text'];
+        $form['fandf_fieldset']['items'][$i]['url']['#default_value'] =
+          empty($fandf_items_from_config[$i]['url']) ? '' : $fandf_items_from_config[$i]['url'];
+        $form['fandf_fieldset']['items'][$i]['icon']['#default_value'] =
+          empty($fandf_items_from_config[$i]['icon']) ? '' : $fandf_items_from_config[$i]['icon'];
+      }
     }
 
     // Add form actions.
@@ -80,7 +96,7 @@ class FindAndFollowBlock extends BlockBase {
         'wrapper' => 'fandf-fieldset-wrapper',
       ],
     ];
-    if ($fieldset_count > 1) {
+    if ($fandf_items_count > 1) {
       $form['fandf_fieldset']['actions']['remove_item'] = [
         '#type' => 'submit',
         '#value' => $this->t('Remove item'),
@@ -99,7 +115,7 @@ class FindAndFollowBlock extends BlockBase {
    * Submit handler to add a fieldset item.
    */
   public static function addItem(array &$form, FormStateInterface $form_state): void {
-    $form_state->set('fieldset_count', $form_state->get('fieldset_count') + 1);
+    $form_state->set('fandf_items_count', $form_state->get('fandf_items_count') + 1);
     $form_state->setRebuild();
   }
 
@@ -107,7 +123,7 @@ class FindAndFollowBlock extends BlockBase {
    * Submit handler to remove a fieldset item.
    */
   public static function removeItem(array &$form, FormStateInterface $form_state): void {
-    $form_state->set('fieldset_count', $form_state->get('fieldset_count') - 1);
+    $form_state->set('fandf_items_count', $form_state->get('fandf_items_count') - 1);
     $form_state->setRebuild();
   }
 
@@ -122,7 +138,8 @@ class FindAndFollowBlock extends BlockBase {
    * {@inheritdoc}
    */
   public function blockSubmit($form, FormStateInterface $form_state): void {
-    $this->configuration['fandf_fieldset'] = $form_state->getValue('fandf_fieldset');
+    $fandf_fieldset = $form_state->getValue('fandf_fieldset');
+    $this->configuration['fandf_items'] = !empty($fandf_fieldset['items']) ? $fandf_fieldset['items'] : NULL;
   }
 
   /**
@@ -130,7 +147,7 @@ class FindAndFollowBlock extends BlockBase {
    */
   public function build(): array {
     $output = '';
-    $items = $this->configuration['fandf_fieldset']['items'];
+    $items = $this->configuration['fandf_items'];
     foreach ($items as $item) {
       $output .= '<p>' . $item['text'] . ' ' . $item['url'] . ' ' . $item['icon'] . '</p>';
     }

@@ -1,8 +1,19 @@
-{% for item in fandf_items %}
-  <div class="find-and-follow-button-wrapper">
+{#
+/**
+ * @file nys-dashboard-find-and-follow.html.twig
+ *
+ * @var array fandf_items
+ *   An array of link items.
+ */
+#}
+{{ attach_library('nys_dashboard/find_and_follow') }}
+<ul>
+  {% for item in fandf_items %}
+  <li class="find-and-follow-button-wrapper">
     <a class="find-and-follow-button" href="{{ item.url }}">
       <i class="ph ph-{{ item.icon }}"></i><br>
       <span>{{ item.text }}</span>
     </a>
-  </div>
-{% endfor %}
+  </li>
+  {% endfor %}
+</ul>

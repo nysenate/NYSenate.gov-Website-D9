@@ -117,7 +117,7 @@ body.path-my-dashboard {
     padding-top: 40px;
 
     .view-my-dashboard {
-      margin-right: 60px;
+      margin: 0 60px 60px 0;
     }
 
     @include breakpoint($bp-under-md) {
@@ -233,7 +233,7 @@ body.path-my-dashboard {
             color: white;
           }
 
-          &#edit-reset--2 {
+          &[id^=edit-reset] {
             background-color: white;
             border-color: $gen_blue_lgt;
             color: $gen_blue_lgt;
@@ -243,7 +243,7 @@ body.path-my-dashboard {
             }
           }
 
-          &#edit-submit-my-dashboard--2:hover, &#edit-reset--2:hover {
+          &[id^=edit-submit]:hover, &[id^=edit-reset]:hover {
             background-color: white;
             border-color: $gen_blue_drk;
             color: $gen_blue_drk;

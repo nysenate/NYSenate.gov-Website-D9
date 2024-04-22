@@ -17,3 +17,13 @@ nys_dashboard.edit_profile:
     _user_is_logged_in: 'TRUE'
   options:
     no_cache: 'TRUE'
+
+nys_dashboard.manage_dashboard:
+  path: '/my-dashboard/manage'
+  defaults:
+    _title: 'Manage Dashboard'
+    _form: '\Drupal\nys_dashboard\Form\ManageDashboardForm'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+  options:
+    no_cache: 'TRUE'

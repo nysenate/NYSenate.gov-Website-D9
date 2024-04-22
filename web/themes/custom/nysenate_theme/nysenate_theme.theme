@@ -4636,6 +4636,7 @@ function nysenate_theme_preprocess_node__article__featured_content(&$variables) 
   $variables['image_main'] = $variables['content']['field_image_main'][0] ?? [];
   $field_issues = $variables['content']['field_issues'] ?? [];
   $variables['date'] = $variables['content']['field_date'][0] ?? [];
+  $variables['tags'] = $variables['tags'] ?? [];
   foreach ($field_issues as $key => $issue) {
     if (!is_numeric($key)) {
       continue;
@@ -4655,6 +4656,7 @@ function nysenate_theme_preprocess_node__in_the_news__featured_content(&$variabl
   $variables['image_main'] = $variables['content']['field_image_main'][0] ?? [];
   $field_issues = $variables['content']['field_issues'] ?? [];
   $variables['date'] = $variables['content']['field_date'][0] ?? [];
+  $variables['tags'] = $variables['tags'] ?? [];
   foreach ($field_issues as $key => $issue) {
     if (!is_numeric($key)) {
       continue;
@@ -4674,6 +4676,7 @@ function nysenate_theme_preprocess_node__honoree__featured_content(&$variables) 
   $variables['image_main'] = $variables['content']['field_image_main'][0] ?? [];
   $variables['date'] = $variables['content']['field_date'][0] ?? [];
   $field_issues = $variables['content']['field_issues'];
+  $variables['tags'] = $variables['tags'] ?? [];
   foreach ($field_issues as $key => $issue) {
     if (!is_numeric($key)) {
       continue;

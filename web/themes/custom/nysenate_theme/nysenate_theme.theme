@@ -2803,6 +2803,7 @@ function nysenate_theme_preprocess_semanticviews_row__news_by_issue__news_by_bil
     'link' => $node->toUrl()->toString(),
     'number' => $node->getTitle(),
     'description_position' => 'top',
+    'list' => TRUE,
   ];
 
   if ($node->hasField('field_ol_name') && !$node->get('field_ol_name')->isEmpty()) {

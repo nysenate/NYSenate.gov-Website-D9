@@ -6,6 +6,7 @@ use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountProxy;
+use Drupal\flag\FlagService;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -27,6 +28,25 @@ class ManageDashboardForm extends FormBase {
    */
   public $currentUser;
 
+
+  /**
+   * Flag service.
+   *
+   * @var \Drupal\flag\FlagService
+   */
+  public $flagService;
+
+  /**
+   * Mapping of field names to flag types.
+   *
+   * @var array
+   */
+  public array $fieldNamesToFlagTypes = [
+    'bills' => 'follow_this_bill',
+    'issues' => 'follow_issue',
+    'committees' => 'follow_committee',
+  ];
+
   /**
    * Constructs a ManageDashboardForm object.
    *
@@ -34,10 +54,13 @@ class ManageDashboardForm extends FormBase {
    *   Entity type manager service.
    * @param \Drupal\Core\Session\AccountProxy $currentUser
    *   Current user service.
+   * @param \Drupal\flag\FlagService $flagService
+   *   Flag service.
    */
-  public function __construct(EntityTypeManager $entityTypeManager, AccountProxy $currentUser) {
+  public function __construct(EntityTypeManager $entityTypeManager, AccountProxy $currentUser, FlagService $flagService) {
     $this->entityTypeManager = $entityTypeManager;
     $this->currentUser = $currentUser;
+    $this->flagService = $flagService;
   }
 
   /**
@@ -47,6 +70,7 @@ class ManageDashboardForm extends FormBase {
     return new static(
       $container->get('entity_type.manager'),
       $container->get('current_user'),
+      $container->get('flag'),
     );
   }
 
@@ -81,32 +105,17 @@ class ManageDashboardForm extends FormBase {
       '#suffix' => '</div>',
     ];
 
-    // Followed bills checkboxes.
-    $bill_options = $this->getUsersFlaggedEntitiesByFlagName('follow_this_bill');
-    $form['followed_types_fieldset']['bills'] = [
-      '#type' => 'checkboxes',
-      '#title' => $this->t("Bills You're Following"),
-      '#options' => $bill_options,
-      '#default_value' => array_keys($bill_options),
-    ];
-
-    // Followed issues checkboxes.
-    $issue_options = $this->getUsersFlaggedEntitiesByFlagName('follow_issue');
-    $form['followed_types_fieldset']['issues'] = [
-      '#type' => 'checkboxes',
-      '#title' => $this->t("Issues You're Following"),
-      '#options' => $issue_options,
-      '#default_value' => array_keys($issue_options),
-    ];
-
-    // Followed committees checkboxes.
-    $committee_options = $this->getUsersFlaggedEntitiesByFlagName('follow_committee');
-    $form['followed_types_fieldset']['committees'] = [
-      '#type' => 'checkboxes',
-      '#title' => $this->t("Committees You're Following"),
-      '#options' => $committee_options,
-      '#default_value' => array_keys($committee_options),
-    ];
+    foreach ($this->fieldNamesToFlagTypes as $field_name => $flag_type) {
+      $options = $this->getUsersFlaggedEntitiesByFlagName($flag_type);
+      $form['followed_types_fieldset'][$field_name] = [
+        '#type' => 'checkboxes',
+        '#title' => ucfirst($field_name) . " You're Following",
+        '#description' => 'To stop following, uncheck ' . $field_name . ' and click Update My Preferences',
+        '#description_display' => 'before',
+        '#options' => $options,
+        '#default_value' => array_keys($options),
+      ];
+    }
 
     $form['actions']['#type'] = 'actions';
     $form['actions']['submit'] = [
@@ -121,19 +130,18 @@ class ManageDashboardForm extends FormBase {
    * Ajax callback to inject re-rendered fieldset form element.
    */
   public function applyFormFilter(array &$form, FormStateInterface $form_state) {
-    $follow_types = ['bills', 'issues', 'committees'];
     $type_filter = $form_state->getValue('type_filter');
-    foreach ($follow_types as $type) {
-      // Ensure re-rendered fields default to checked.
-      foreach ($form['followed_types_fieldset'][$type]['#default_value'] as $checkbox) {
-        $form['followed_types_fieldset'][$type][$checkbox]['#checked'] = TRUE;
+    foreach ($this->fieldNamesToFlagTypes as $field_name => $flag_type) {
+      // Ensure ajax re-rendered fields default to checked.
+      foreach ($form['followed_types_fieldset'][$field_name]['#default_value'] as $flagged_entity_id) {
+        $form['followed_types_fieldset'][$field_name][$flagged_entity_id]['#checked'] = TRUE;
       }
       // Disable access to all but selected follow types.
       if (!empty($type_filter) && $type_filter !== 'All') {
-        if ($type == $type_filter) {
+        if ($field_name == $type_filter) {
           continue;
         }
-        $form['followed_types_fieldset'][$type]['#access'] = FALSE;
+        $form['followed_types_fieldset'][$field_name]['#access'] = FALSE;
       }
     }
     return $form['followed_types_fieldset'];
@@ -177,8 +185,54 @@ class ManageDashboardForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
-    // @todo Implement submitForm() method.
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
+    $content_to_unfollow = [];
+    $user_input = $form_state->getUserInput();
+    if (!empty($user_input)) {
+      foreach ($this->fieldNamesToFlagTypes as $field_name => $flag_type) {
+        // Only record input that matches type_filter.
+        if ($user_input['type_filter'] !== 'All' && $user_input['type_filter'] !== $field_name) {
+          continue;
+        }
+        $user_unchecked_entity_ids = array_diff(
+          array_keys($form['followed_types_fieldset'][$field_name]['#options']),
+          array_values($user_input[$field_name])
+        );
+        foreach ($user_unchecked_entity_ids as $flagged_entity_id) {
+          $content_to_unfollow[] = [
+            'flag_type' => $flag_type,
+            'flagged_entity_id' => $flagged_entity_id,
+          ];
+        }
+      }
+    }
+    if (!empty($content_to_unfollow)) {
+      $unfollow_content_list = '';
+      foreach ($content_to_unfollow as $key => $unfollow_content) {
+        $flag = $this->flagService->getFlagById($unfollow_content['flag_type']);
+        $flagged_entity_type_id = ($unfollow_content['flag_type'] !== 'follow_this_bill') ? 'taxonomy_term' : 'node';
+        $flagged_entity = $this->entityTypeManager
+          ->getStorage($flagged_entity_type_id)
+          ->load($unfollow_content['flagged_entity_id']);
+        try {
+          $this->flagService->unflag($flag, $flagged_entity, $this->currentUser);
+        }
+        catch (\Exception $error) {
+          $this->messenger()->addError('There was an error unfollowing chosen content. Please try again later.');
+          continue;
+        }
+        $list_separator = ($key === array_key_last($content_to_unfollow)) ? '.' : ', ';
+        $unfollow_content_list .= $flagged_entity->label() . $list_separator;
+      }
+      if (!empty($unfollow_content_list)) {
+        $this->messenger()->addStatus(
+          'Successfully unfollowed the followed bills, issues, or committees: '
+          . $unfollow_content_list
+        );
+      }
+      return;
+    }
+    $this->messenger()->addWarning('Nothing chosen to unfollow.');
   }
 
 }

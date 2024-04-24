@@ -23,7 +23,8 @@ class FindAndFollowBlock extends BlockBase {
   public function blockForm($form, FormStateInterface $form_state) {
     $fandf_items_from_config = $this->configuration['fandf_items'];
 
-    // Ensure $form_state 'fandf_items_count' value updated from config.
+    // Ensure $form_state 'fandf_items_count' value updated from config during
+    // initial form build.
     if (
       $fandf_items_from_config
       && !$form_state->getCompleteFormState()->isRebuilding()
@@ -73,13 +74,12 @@ class FindAndFollowBlock extends BlockBase {
             DESC,
         ],
       ];
+
+      // Set default form values from config during initial form build.
       if (!$form_state->getCompleteFormState()->isRebuilding()) {
-        $form['fandf_fieldset']['items'][$i]['text']['#default_value'] =
-          empty($fandf_items_from_config[$i]['text']) ? '' : $fandf_items_from_config[$i]['text'];
-        $form['fandf_fieldset']['items'][$i]['url']['#default_value'] =
-          empty($fandf_items_from_config[$i]['url']) ? '' : $fandf_items_from_config[$i]['url'];
-        $form['fandf_fieldset']['items'][$i]['icon']['#default_value'] =
-          empty($fandf_items_from_config[$i]['icon']) ? '' : $fandf_items_from_config[$i]['icon'];
+        $form['fandf_fieldset']['items'][$i]['text']['#default_value'] = $fandf_items_from_config[$i]['text'] ?? '';
+        $form['fandf_fieldset']['items'][$i]['url']['#default_value'] = $fandf_items_from_config[$i]['url'] ?? '';
+        $form['fandf_fieldset']['items'][$i]['icon']['#default_value'] = $fandf_items_from_config[$i]['icon'] ?? '';
       }
     }
 
@@ -139,7 +139,7 @@ class FindAndFollowBlock extends BlockBase {
    */
   public function blockSubmit($form, FormStateInterface $form_state): void {
     $fandf_fieldset = $form_state->getValue('fandf_fieldset');
-    $this->configuration['fandf_items'] = !empty($fandf_fieldset['items']) ? $fandf_fieldset['items'] : NULL;
+    $this->configuration['fandf_items'] = $fandf_fieldset['items'];
   }
 
   /**

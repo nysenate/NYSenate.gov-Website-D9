@@ -5,6 +5,7 @@ namespace Drupal\nys_dashboard\Form;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Markup;
 use Drupal\Core\Session\AccountProxy;
 use Drupal\flag\FlagService;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -107,10 +108,13 @@ class ManageDashboardForm extends FormBase {
 
     foreach ($this->fieldNamesToFlagTypes as $field_name => $flag_type) {
       $options = $this->getUsersFlaggedEntitiesByFlagName($flag_type);
+      $description = !empty($options)
+        ? "To stop following, uncheck $field_name and click Update My Preferences."
+        : "You're not following any $field_name.";
       $form['followed_types_fieldset'][$field_name] = [
         '#type' => 'checkboxes',
         '#title' => ucfirst($field_name) . " You're Following",
-        '#description' => 'To stop following, uncheck ' . $field_name . ' and click Update My Preferences',
+        '#description' => $description,
         '#description_display' => 'before',
         '#options' => $options,
         '#default_value' => array_keys($options),
@@ -131,6 +135,7 @@ class ManageDashboardForm extends FormBase {
    */
   public function applyFormFilter(array &$form, FormStateInterface $form_state) {
     $type_filter = $form_state->getValue('type_filter');
+
     foreach ($this->fieldNamesToFlagTypes as $field_name => $flag_type) {
       // Ensure ajax re-rendered fields default to checked.
       foreach ($form['followed_types_fieldset'][$field_name]['#default_value'] as $flagged_entity_id) {
@@ -144,6 +149,7 @@ class ManageDashboardForm extends FormBase {
         $form['followed_types_fieldset'][$field_name]['#access'] = FALSE;
       }
     }
+
     return $form['followed_types_fieldset'];
   }
 
@@ -166,6 +172,7 @@ class ManageDashboardForm extends FormBase {
       ->condition('flag_id', $flag_machine_name)
       ->condition('uid', $this->currentUser->id())
       ->execute();
+
     $entity_ids_and_labels = [];
     if (!empty($flag_ids)) {
       $flags = $this->entityTypeManager
@@ -179,6 +186,7 @@ class ManageDashboardForm extends FormBase {
         }
       }
     }
+
     return $entity_ids_and_labels;
   }
 
@@ -187,13 +195,20 @@ class ManageDashboardForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state): void {
     $content_to_unfollow = [];
+
+    // Populate $content_to_unfollow.
     $user_input = $form_state->getUserInput();
     if (!empty($user_input)) {
       foreach ($this->fieldNamesToFlagTypes as $field_name => $flag_type) {
-        // Only record input that matches type_filter.
-        if ($user_input['type_filter'] !== 'All' && $user_input['type_filter'] !== $field_name) {
+        // Break loop if user input empty, or if input doesn't match
+        // type_filter.
+        if (
+          empty($user_input[$field_name])
+          || $user_input['type_filter'] !== 'All' && $user_input['type_filter'] !== $field_name
+        ) {
           continue;
         }
+
         $user_unchecked_entity_ids = array_diff(
           array_keys($form['followed_types_fieldset'][$field_name]['#options']),
           array_values($user_input[$field_name])
@@ -202,36 +217,46 @@ class ManageDashboardForm extends FormBase {
           $content_to_unfollow[] = [
             'flag_type' => $flag_type,
             'flagged_entity_id' => $flagged_entity_id,
+            'field_name' => $field_name,
           ];
         }
       }
     }
+
+    // Process $content_to_unfollow.
     if (!empty($content_to_unfollow)) {
-      $unfollow_content_list = '';
+      $unfollow_content_li = '';
       foreach ($content_to_unfollow as $key => $unfollow_content) {
         $flag = $this->flagService->getFlagById($unfollow_content['flag_type']);
         $flagged_entity_type_id = ($unfollow_content['flag_type'] !== 'follow_this_bill') ? 'taxonomy_term' : 'node';
         $flagged_entity = $this->entityTypeManager
           ->getStorage($flagged_entity_type_id)
           ->load($unfollow_content['flagged_entity_id']);
+
         try {
           $this->flagService->unflag($flag, $flagged_entity, $this->currentUser);
         }
         catch (\Exception $error) {
-          $this->messenger()->addError('There was an error unfollowing chosen content. Please try again later.');
+          $this->messenger()->addError('There was an error unfollowing '
+            . $flagged_entity->label() . '. Please try again later.');
           continue;
         }
-        $list_separator = ($key === array_key_last($content_to_unfollow)) ? '.' : ', ';
-        $unfollow_content_list .= $flagged_entity->label() . $list_separator;
+
+        $content_type = substr($unfollow_content['field_name'], 0, -1);
+        $unfollow_content_li .= '<li>' . $content_type . ': '
+          . $flagged_entity->label() . '</li>';
       }
-      if (!empty($unfollow_content_list)) {
-        $this->messenger()->addStatus(
-          'Successfully unfollowed the followed bills, issues, or committees: '
-          . $unfollow_content_list
-        );
+
+      if (!empty($unfollow_content_li)) {
+        $unfollow_content_ul = '<ul>'
+          . $unfollow_content_li . '</ul>';
+        $message = 'Successfully unfollowed the followed content: ' . $unfollow_content_ul;
+        $rendered_message = Markup::create($message);
+        $this->messenger()->addStatus($this->t('@rendered_message', ['@rendered_message' => $rendered_message]));
       }
       return;
     }
+
     $this->messenger()->addWarning('Nothing chosen to unfollow.');
   }
 

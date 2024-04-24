@@ -17,9 +17,13 @@
                 var $real_min = $('input[name="field_date_range_value[min]"]', context);
                 var $real_max = $('input[name="field_date_range_value[max]"]', context);
 
-                $real_min.val($first_day_of_month.val());
-                $real_max.val($last_day_of_month.val());
-                $submit.click();
+
+              let a = new Date($last_day_of_month.val());
+              a.setDate(a.getDate() + 1);
+
+              $real_min.val($first_day_of_month.val());
+              $real_max.val(a.toLocaleString());
+              $submit.click();
             }
 
             $('html', context).once('submitDefaultValues').each(
@@ -37,9 +41,12 @@
                     var $real_min = $('input[name="field_date_range_value[min]"]', context);
                     var $real_max = $('input[name="field_date_range_value[max]"]', context);
 
-                    $real_min.val($fd);
-                    $real_max.val($ld);
-                    $submit.click();
+                  let a = new Date($ld.toLocaleString());
+                  a.setDate(a.getDate() + 1);
+
+                  $real_min.val($fd.toLocaleString());
+                  $real_max.val(a.toLocaleString());
+                  $submit.click();
                 }
             );
 
@@ -52,9 +59,12 @@
                     var $real_min = $('input[name="field_date_range_value[min]"]', context);
                     var $real_max = $('input[name="field_date_range_value[max]"]', context);
 
-                    $real_min.val($fd);
-                    $real_max.val($ld);
-                    $submit.click();
+                  let a = new Date($ld.toLocaleString());
+                  a.setDate(a.getDate() + 1);
+
+                  $real_min.val($fd.toLocaleString());
+                  $real_max.val(a.toLocaleString());
+                  $submit.click();
                 }
             );
 

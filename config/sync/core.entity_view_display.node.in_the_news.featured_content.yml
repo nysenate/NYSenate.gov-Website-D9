@@ -1,0 +1,84 @@
+uuid: 06a9e3a3-f40e-475d-986d-f9422056d903
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.featured_content
+    - field.field.node.in_the_news.body
+    - field.field.node.in_the_news.field_accessible_sitewide
+    - field.field.node.in_the_news.field_article_author
+    - field.field.node.in_the_news.field_attachment
+    - field.field.node.in_the_news.field_committee
+    - field.field.node.in_the_news.field_committee_featured
+    - field.field.node.in_the_news.field_date
+    - field.field.node.in_the_news.field_featured
+    - field.field.node.in_the_news.field_image_hero
+    - field.field.node.in_the_news.field_image_main
+    - field.field.node.in_the_news.field_issues
+    - field.field.node.in_the_news.field_publication_source_date
+    - field.field.node.in_the_news.field_publication_source_url
+    - field.field.node.in_the_news.field_publication_title
+    - field.field.node.in_the_news.field_senator_multiref
+    - field.field.node.in_the_news.field_subhead
+    - field.field.node.in_the_news.rabbit_hole__settings
+    - node.type.in_the_news
+  module:
+    - datetime
+    - user
+id: node.in_the_news.featured_content
+targetEntityType: node
+bundle: in_the_news
+mode: featured_content
+content:
+  field_date:
+    type: datetime_default
+    label: hidden
+    settings:
+      timezone_override: ''
+      format_type: publish_date
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_image_main:
+    type: entity_reference_entity_view
+    label: above
+    settings:
+      view_mode: 380x215
+      link: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_issues:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  body: true
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  field_accessible_sitewide: true
+  field_article_author: true
+  field_attachment: true
+  field_committee: true
+  field_committee_featured: true
+  field_featured: true
+  field_image_hero: true
+  field_publication_source_date: true
+  field_publication_source_url: true
+  field_publication_title: true
+  field_senator_multiref: true
+  field_subhead: true
+  langcode: true
+  private_message_link: true
+  rabbit_hole__settings: true
+  search_api_excerpt: true

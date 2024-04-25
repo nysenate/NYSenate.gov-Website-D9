@@ -13,6 +13,7 @@ dependencies:
     - field.field.node.student_program.field_issues
     - field.field.node.student_program.field_student_program_intro
     - field.field.node.student_program.field_subtitle
+    - field.field.node.student_program.field_webform
     - field.field.node.student_program.rabbit_hole__settings
     - node.type.student_program
   module:
@@ -20,6 +21,7 @@ dependencies:
     - entity_reference_revisions
     - text
     - user
+    - webform
 id: node.student_program.default
 targetEntityType: node
 bundle: student_program
@@ -110,6 +112,15 @@ content:
     settings: {  }
     third_party_settings: {  }
     weight: 103
+    region: content
+  field_webform:
+    type: webform_entity_reference_entity_view
+    label: hidden
+    settings:
+      source_entity: true
+      lazy: false
+    third_party_settings: {  }
+    weight: 111
     region: content
   links:
     settings: {  }

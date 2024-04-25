@@ -1505,9 +1505,8 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
           $video_image = NULL;
         }
 
-        $date = ($value = ($node->get('field_date')->value ?? ''))
-          ? \Drupal::service('date.formatter')->format(strtotime($value), 'custom', 'F j, Y')
-          : NULL;
+        $date = ($value = ($node->get('field_date')->date->getTimestamp() ?? '')) ?
+          \Drupal::service('date.formatter')->format($value, 'publish_date') : NULL;
 
         $bundle = $bundle_info['node'][$node->bundle()]['label'] ?? 'No Title';
         if ($bundle !== 'Article') {
@@ -2808,6 +2807,7 @@ function nysenate_theme_preprocess_semanticviews_row__news_by_issue__news_by_bil
     'link' => $node->toUrl()->toString(),
     'number' => $node->getTitle(),
     'description_position' => 'top',
+    'list' => TRUE,
   ];
 
   if ($node->hasField('field_ol_name') && !$node->get('field_ol_name')->isEmpty()) {
@@ -4639,8 +4639,29 @@ function nysenate_theme_preprocess_node__open_data(&$variables) {
  */
 function nysenate_theme_preprocess_node__article__featured_content(&$variables) {
   $variables['image_main'] = $variables['content']['field_image_main'][0] ?? [];
-  $field_issues = $variables['content']['field_issues'];
+  $field_issues = $variables['content']['field_issues'] ?? [];
   $variables['date'] = $variables['content']['field_date'][0] ?? [];
+  $variables['tags'] = $variables['tags'] ?? [];
+  foreach ($field_issues as $key => $issue) {
+    if (!is_numeric($key)) {
+      continue;
+    }
+
+    $variables['tags'][] = [
+      'url' => $issue['#url'],
+      'text' => $issue['#title'],
+    ];
+  }
+}
+
+/**
+ * Implements hook_preprocess_node_TYPE().
+ */
+function nysenate_theme_preprocess_node__in_the_news__featured_content(&$variables) {
+  $variables['image_main'] = $variables['content']['field_image_main'][0] ?? [];
+  $field_issues = $variables['content']['field_issues'] ?? [];
+  $variables['date'] = $variables['content']['field_date'][0] ?? [];
+  $variables['tags'] = $variables['tags'] ?? [];
   foreach ($field_issues as $key => $issue) {
     if (!is_numeric($key)) {
       continue;
@@ -4660,6 +4681,7 @@ function nysenate_theme_preprocess_node__honoree__featured_content(&$variables) 
   $variables['image_main'] = $variables['content']['field_image_main'][0] ?? [];
   $variables['date'] = $variables['content']['field_date'][0] ?? [];
   $field_issues = $variables['content']['field_issues'];
+  $variables['tags'] = $variables['tags'] ?? [];
   foreach ($field_issues as $key => $issue) {
     if (!is_numeric($key)) {
       continue;

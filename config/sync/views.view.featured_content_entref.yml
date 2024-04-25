@@ -8,6 +8,7 @@ dependencies:
     - node.type.bill
     - node.type.event
     - node.type.honoree
+    - node.type.in_the_news
     - node.type.landing
     - node.type.microsite_page
     - node.type.open_data
@@ -515,6 +516,7 @@ display:
             operator: ''
             operator_limit_selection: false
             operator_list: {  }
+          accept_null: false
         type:
           id: type
           table: node_field_data
@@ -531,6 +533,7 @@ display:
             bill: bill
             event: event
             honoree: honoree
+            in_the_news: in_the_news
             promotional_banner: promotional_banner
           group: 1
           exposed: false
@@ -599,6 +602,7 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
+          accept_null: false
       filter_groups:
         operator: AND
         groups:
@@ -751,6 +755,7 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
+          accept_null: false
       filter_groups:
         operator: AND
         groups:

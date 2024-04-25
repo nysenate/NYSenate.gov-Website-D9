@@ -10,13 +10,13 @@ body.path-my-dashboard {
     padding-top: 100px;
 
     @include breakpoint($bp-under-md) {
-      padding-top: 20px;
+      padding: 20px 9% 0;
     }
 
     h1.dashboard-action-bar-heading {
       font-size: 40px;
       font-weight: 300;
-      font-family: 'Adelle Light';
+      font-family: $font-serif;
       color: white;
       margin: 0;
     }
@@ -33,8 +33,26 @@ body.path-my-dashboard {
       bottom: 30px;
       right: 150px;
       color: white;
-      padding: 10px 8px 8px;
-      border: solid 1px white;
+      padding: 9px 12px 6px 33px;
+      background-color: rgba(0, 0, 0, 0.3);
+      text-transform: uppercase;
+      font-family: $font-sans;
+      font-weight: 700;
+      font-size: 15px;
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.4);
+      }
+
+      @include breakpoint($bp-under-md) {
+        display: none;
+      }
+
+      i {
+        position: absolute;
+        top: 13px;
+        left: 12px;
+      }
     }
   }
 
@@ -81,7 +99,7 @@ body.path-my-dashboard {
         a {
           color: $blue01;
           text-decoration: underline;
-          font-family: 'Adelle Light';
+          font-family: $font-serif;
           font-size: 20px;
 
           &:hover {
@@ -184,7 +202,7 @@ body.path-my-dashboard {
           pointer-events: none;
           cursor: pointer;
           content: '\65';
-          font-family: 'senate_icons';
+          font-family: $senate-icons;
           display: inline-block;
           vertical-align: middle;
           speak: none;
@@ -348,4 +366,81 @@ body.path-my-dashboard {
       }
     }
   }
+
+  // Manage Dashboard form styling.
+  #nys-dashboard-manage-dashboard {
+    margin: 0 100px 60px;
+
+    @include breakpoint($bp-under-md) {
+      margin: 0 10px 60px;
+    }
+
+    .form-item-type-filter {
+      width: 240px;
+      margin: 10px 0 0;
+
+      #edit-type-filter {
+        margin-bottom: 20px;
+      }
+    }
+
+    #followed-types-fieldset-wrapper {
+      clear: both;
+
+      #edit-followed-types-fieldset {
+        border: none;
+        margin: 0;
+        padding: 0;
+
+        legend {
+          font-family: $font-serif-regular;
+          font-size: 20px;
+          line-height: 30px;
+        }
+
+        .fieldgroup {
+          margin-bottom: 20px;
+
+          .description {
+            font-size: 15px;
+            font-style: italic;
+
+            a.uncheck-all-link {
+              font-size: 14px;
+              font-style: normal;
+              font-family: $font-sans;
+              color: $blue01;
+              font-weight: 700;
+              line-height: 40px;
+
+              &:hover {
+                text-decoration: underline;
+              }
+            }
+          }
+
+          .form-type-checkbox {
+            float: left;
+            margin: 4px;
+            padding: 4px 8px 4px 31px;
+            background-color: #F2F2F2;
+            position: relative;
+
+            label {
+              color: $gen_blue_lgt;
+              text-transform: none;
+            }
+
+            input {
+              accent-color: $gen_blue_lgt;
+              position: absolute;
+              top: 11px;
+              left: 10px;
+            }
+          }
+        }
+      }
+    }
+  }
+
 }

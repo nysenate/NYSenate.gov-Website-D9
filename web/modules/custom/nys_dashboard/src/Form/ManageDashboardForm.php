@@ -20,14 +20,14 @@ class ManageDashboardForm extends FormBase {
    *
    * @var \Drupal\Core\Entity\EntityTypeManager
    */
-  public $entityTypeManager;
+  public EntityTypeManager $entityTypeManager;
 
   /**
    * Current user service.
    *
-   * @var \Drupal\Core\Session\AccountProxyInterface
+   * @var \Drupal\Core\Session\AccountProxy
    */
-  public $currentUser;
+  public AccountProxy $currentUser;
 
 
   /**
@@ -35,7 +35,7 @@ class ManageDashboardForm extends FormBase {
    *
    * @var \Drupal\flag\FlagService
    */
-  public $flagService;
+  public FlagService $flagService;
 
   /**
    * Mapping of field names to flag types.
@@ -108,8 +108,9 @@ class ManageDashboardForm extends FormBase {
 
     foreach ($this->fieldNamesToFlagTypes as $field_name => $flag_type) {
       $options = $this->getUsersFlaggedEntitiesByFlagName($flag_type);
+      $uncheck_all_link = "<br><a href='' class='uncheck-all-link'>Uncheck all $field_name</a>";
       $description = !empty($options)
-        ? "To stop following, uncheck $field_name and click Update My Preferences."
+        ? "To stop following, uncheck $field_name and click Update My Preferences. $uncheck_all_link"
         : "You're not following any $field_name.";
       $form['followed_types_fieldset'][$field_name] = [
         '#type' => 'checkboxes',

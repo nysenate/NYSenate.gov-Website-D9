@@ -81,7 +81,7 @@ class DashboardActionbarBlock extends BlockBase {
     if (!empty($featured_link_config['text'])) {
       $featured_link = '<a class="dashboard-action-bar-link" href="'
         . $featured_link_config['url'] . '"><i class="ph ph-'
-        . $featured_link_config['icon'] . '"></i>&nbsp;'
+        . $featured_link_config['icon'] . '"></i>'
         . $featured_link_config['text'] . '</a>';
     }
 

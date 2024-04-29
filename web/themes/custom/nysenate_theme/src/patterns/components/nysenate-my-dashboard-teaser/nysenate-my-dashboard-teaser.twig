@@ -1,7 +1,7 @@
 {{ attach_library('nysenate_theme/nysenate-my-dashboard-teaser') }}
 {{ attach_library('nysenate_theme/bill-item') }}
 {%
-  set classes, type_icon_map, type_label_map  = [
+  set classes, type_icon_map, type_label_map, truncate  = [
     'node',
     'node--type-' ~ node.bundle|clean_class,
     view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
@@ -27,7 +27,8 @@
     'public_hearing': 'Public Hearing',
     'resolution': 'Resolution',
     'webform': 'Questionnaire',
-  }
+  },
+  150
 %}
 {% set read_more %}
   <span class="c-my-dashboard--read-more"><a href="{{ url }}">... Read More</a></span>
@@ -48,13 +49,13 @@
   </h2>
   <div class="c-my-dashboard--blurb">
     {% if node.field_subtitle.value %}
-      {{ node.field_subtitle.value|render|striptags|truncate(300, true)|raw }}
+      {{ node.field_subtitle.value|render|striptags|truncate(truncate, true)|raw }}
     {% elseif node.field_subhead.value %}
-      {{ node.field_subhead.value|render|striptags|truncate(300, true)|raw }}
+      {{ node.field_subhead.value|render|striptags|truncate(truncate, true)|raw }}
     {% elseif node.field_ol_name.value %}
-      {{ node.field_ol_name.value|render|striptags|truncate(300, true)|raw }}
+      {{ node.field_ol_name.value|render|striptags|truncate(truncate, true)|raw }}
     {% elseif node.body.value %}
-      {{ node.body.value|render|striptags|truncate(300, true)|raw }}{{ read_more }}
+      {{ node.body.value|render|striptags|truncate(truncate, true)|raw }}{{ read_more }}
     {% endif %}
   </div>
   <div class="c-my-dashboard--details">

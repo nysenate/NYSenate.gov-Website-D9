@@ -140,7 +140,7 @@ body.path-my-dashboard {
 
   // Expand main region to make room for sidebar filters.
   main {
-    max-width: 1500px;
+    max-width: 1300px;
     padding-top: 40px;
 
     .view-my-dashboard {
@@ -231,7 +231,7 @@ body.path-my-dashboard {
         }
 
         &.form-item-your-senator-filter {
-          margin: 30px 5px;
+          margin: 20px 5px 30px;
           position: relative;
 
           @include breakpoint($bp-under-md) {
@@ -240,7 +240,7 @@ body.path-my-dashboard {
 
           label {
             position: absolute;
-            top: -10px;
+            top: 0;
             left: 24px;
             font-size: 15px;
             line-height: 20px;
@@ -369,7 +369,7 @@ body.path-my-dashboard {
 
   // Manage Dashboard form styling.
   #nys-dashboard-manage-dashboard {
-    margin: 0 100px 60px;
+    margin-bottom: 60px;
 
     @include breakpoint($bp-under-md) {
       margin: 0 10px 60px;

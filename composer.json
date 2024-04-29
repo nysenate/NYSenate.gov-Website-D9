@@ -186,11 +186,12 @@
         "drupal/devel": "*",
         "drupal/drupal-extension": "^4.1",
         "drush-ops/behat-drush-endpoint": "^9.4.1",
-        "mediacurrent/ci-scripts": "^2.0.0",
-        "mediacurrent/ci-tests": "dev-master",
-        "mglaman/drupal-check": "^1.0",
+        "mglaman/phpstan-drupal": "^1.2",
         "phpro/grumphp-shim": "^1.13",
         "phpspec/prophecy-phpunit": "^2",
+        "phpstan/extension-installer": "^1.3",
+        "phpstan/phpstan": "^1.10",
+        "phpstan/phpstan-deprecation-rules": "^1.1",
         "symfony/var-dumper": "^5.4",
         "vlucas/phpdotenv": "^2.4"
     },
@@ -229,7 +230,6 @@
         "files": ["load.environment.php"]
     },
     "scripts": {
-        "robo": "$(pwd)/bin/robo --ansi --load-from $(pwd)/scripts",
         "post-install-cmd": [
             "DrupalProject\\composer\\ScriptHandler::createRequiredFiles"
         ],

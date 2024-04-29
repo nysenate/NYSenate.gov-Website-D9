@@ -125,8 +125,8 @@ class SenatorMicrositeSchoolFormSubmissions extends BlockBase implements Contain
           'senator' => $senator_term->id(),
           'school' => NULL,
           'teacher_name' => NULL,
-          'from_date' => strtotime('January 1, 2023'),
-          'to_date' => strtotime('December 31, 2023'),
+          'from_date' => strtotime('January 1, 2024'),
+          'to_date' => strtotime('December 31, 2024'),
           'sort_by' => NULL,
           'sort_order' => NULL,
         ];
@@ -161,31 +161,58 @@ class SenatorMicrositeSchoolFormSubmissions extends BlockBase implements Contain
           }
         }
       }
-
-      $build = [
-        '#theme' => 'nys_school_forms__results_block',
-        '#content' => [
-          'panels' => [
-        [
-          'tab_text' => 'Current Year',
-          'title' => '2023 Poster Submissions',
-          'filter' => $filter,
-          'years' => $this->schoolFormsService->getResults($params, FALSE),
-        ],
-        [
-          'tab_text' => 'Past Submissions',
-          'title' => 'Archived Submissions',
-          'filter' => $filter,
-          'filter_item' => [
-            'label' => 'Select Year',
-            'desc' => 'Archive only goes back to ' . end($filter_options)['text'],
-            'select_options' => $filter_options,
+      if ($form_type == 'Thankful') {
+        $build = [
+          '#theme' => 'nys_school_forms__results_block',
+          '#content' => [
+            'panels' => [
+              [
+                'tab_text' => 'Current Year',
+                'title' => '2023 Submissions',
+                'filter' => $filter,
+                'years' => $this->schoolFormsService->getResults($params, FALSE),
+              ],
+              [
+                'tab_text' => 'Past Submissions',
+                'title' => 'Archived Submissions',
+                'filter' => $filter,
+                'filter_item' => [
+                  'label' => 'Select Year',
+                  'desc' => 'Archive only goes back to ' . end($filter_options)['text'],
+                  'select_options' => $filter_options,
+                ],
+                'years' => $past_submissions,
+              ],
+            ],
           ],
-          'years' => $past_submissions,
-        ],
+        ];
+      }
+      elseif ($form_type == 'Earth Day') {
+        $build = [
+          '#theme' => 'nys_school_forms__results_block',
+          '#content' => [
+            'panels' => [
+              [
+                'tab_text' => 'Current Year',
+                'title' => '2024 Poster Submissions',
+                'filter' => $filter,
+                'years' => $this->schoolFormsService->getResults($params, FALSE),
+              ],
+              [
+                'tab_text' => 'Past Submissions',
+                'title' => 'Archived Submissions',
+                'filter' => $filter,
+                'filter_item' => [
+                  'label' => 'Select Year',
+                  'desc' => 'Archive only goes back to ' . end($filter_options)['text'],
+                  'select_options' => $filter_options,
+                ],
+                'years' => $past_submissions,
+              ],
+            ],
           ],
-        ],
-      ];
+        ];
+      }
     }
 
     return $build;

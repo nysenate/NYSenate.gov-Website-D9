@@ -9,6 +9,8 @@ dependencies:
     - field.storage.user.field_senator_multiref
     - taxonomy.vocabulary.senator
     - user.role.administrator
+    - user.role.comment_moderator
+    - user.role.frontpage_editor
     - user.role.legislative_correspondent
     - user.role.microsite_content_producer
     - user.role.student_programs
@@ -1738,7 +1740,7 @@ display:
           entity_type: user
           entity_field: created
           plugin_id: field
-          label: created
+          label: member_for
           exclude: false
           alter:
             alter_text: false
@@ -2001,9 +2003,11 @@ display:
           operator: or
           value:
             administrator: administrator
+            frontpage_editor: frontpage_editor
             microsite_content_producer: microsite_content_producer
             legislative_correspondent: legislative_correspondent
             student_programs: student_programs
+            comment_moderator: comment_moderator
           group: 1
           exposed: false
           expose:
@@ -2200,6 +2204,62 @@ display:
             operator_limit_selection: false
             operator_list: {  }
             identifier: changed
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+              frontpage_editor: '0'
+              senator: '0'
+              microsite_content_producer: '0'
+              legislative_correspondent: '0'
+              student_programs: '0'
+              constituent: '0'
+              comment_moderator: '0'
+            min_placeholder: ''
+            max_placeholder: ''
+            placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+        created:
+          id: created
+          table: users_field_data
+          field: created
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: user
+          entity_field: created
+          plugin_id: date
+          operator: '='
+          value:
+            min: ''
+            max: ''
+            value: ''
+            type: offset
+          group: 1
+          exposed: true
+          expose:
+            operator_id: created_op
+            label: Created
+            description: ''
+            use_operator: true
+            operator: created_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: created
             required: false
             remember: false
             multiple: false
@@ -3615,6 +3675,7 @@ display:
     display_plugin: page
     position: 1
     display_options:
+      title: 'Manage Staff'
       fields:
         user_bulk_form:
           id: user_bulk_form
@@ -4633,8 +4694,11 @@ display:
           operator: or
           value:
             administrator: administrator
+            frontpage_editor: frontpage_editor
             microsite_content_producer: microsite_content_producer
             legislative_correspondent: legislative_correspondent
+            student_programs: student_programs
+            comment_moderator: comment_moderator
           group: 1
           exposed: true
           expose:
@@ -4674,6 +4738,62 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           reduce_duplicates: true
+        created:
+          id: created
+          table: users_field_data
+          field: created
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: user
+          entity_field: created
+          plugin_id: date
+          operator: '='
+          value:
+            min: ''
+            max: ''
+            value: ''
+            type: offset
+          group: 1
+          exposed: true
+          expose:
+            operator_id: created_op
+            label: 'Member for'
+            description: ''
+            use_operator: true
+            operator: created_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: created
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+              frontpage_editor: '0'
+              senator: '0'
+              microsite_content_producer: '0'
+              legislative_correspondent: '0'
+              student_programs: '0'
+              constituent: '0'
+              comment_moderator: '0'
+            min_placeholder: ''
+            max_placeholder: ''
+            placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
       filter_groups:
         operator: AND
         groups:
@@ -4689,6 +4809,7 @@ display:
           query_tags: {  }
       defaults:
         query: false
+        title: false
         show_admin_links: false
         fields: false
         sorts: false

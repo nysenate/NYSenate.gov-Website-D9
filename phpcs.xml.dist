@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="nys">
+  <description>PHP CodeSniffer configuration for myproject development.</description>
+  <!-- Check all files in the current directory and below. -->
+  <file>./web</file>
+  <arg name="extensions" value="inc,install,module,php,profile,test,theme,info,txt,md,yml,twig"/>
+  <!-- Incldues only custom code -->
+  <exclude-pattern>^(?!.*(\/(modules\/custom|profiles\/custom|themes\/custom))($|\/)).*$</exclude-pattern>
+
+  <config name="drupal_core_version" value="9"/>
+
+  <!-- Checks for Drupal Coding Standards -->
+  <rule ref="./vendor/drupal/coder/coder_sniffer/Drupal">
+    <!-- <exclude name="Drupal.Arrays.DisallowLongArraySyntax.Found"/> -->
+  </rule>
+
+  <!-- Enable to check for Drupal Best Practices -->
+  <rule ref="./vendor/drupal/coder/coder_sniffer/DrupalPractice">
+    <!-- <exclude name="Drupal.Files.EndFileNewline.Missing"/> -->
+  </rule>
+</ruleset>

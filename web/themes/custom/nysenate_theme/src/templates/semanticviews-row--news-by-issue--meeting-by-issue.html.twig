@@ -30,9 +30,7 @@
     <span>{{ date }}</span>
     {{ month }}</div>
   <div class="event-details">
-    <a href="{{ url }}">
-      <h3 class="c-event-name">{{ event_name }}</h3>
-    </a>
+      <h3 class="c-event-name">{{ fields.title.content }}</h3>
     <a class="c-event-location" href="{{ location.link }}" target="_blank">
       <span class="icon-before__circle-pin"></span>
       <span>{{ location.name }}</span>

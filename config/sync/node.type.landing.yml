@@ -24,9 +24,10 @@ third_party_settings:
     unpublish_required: false
     unpublish_revision: false
   node_revision_delete:
-    minimum_revisions_to_keep: 3
-    minimum_age_to_delete: 0
-    when_to_delete: 0
+    amount:
+      status: true
+      settings:
+        amount: 3
 _core:
   default_config_hash: RBkZF27ZdG_j4LygM7OISdngikzhFbVlSqR1heA2IEg
 name: 'Landing page'

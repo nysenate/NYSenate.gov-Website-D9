@@ -8,6 +8,7 @@ body.path-my-dashboard {
     padding: 0 150px;
     background-color: $gen_blue_drk;
     padding-top: 100px;
+    position: relative;
 
     @include breakpoint($bp-under-md) {
       padding: 20px 9% 0;
@@ -441,6 +442,101 @@ body.path-my-dashboard {
         }
       }
     }
+  }
+
+  // Manage dashboard confirmation modal.
+  .ui-dialog {
+    border-radius: 0;
+    border: 0;
+    text-align: center;
+    box-shadow: none;
+
+    .ui-dialog-titlebar {
+      margin-top: 20px;
+      background-color: white;
+      padding-bottom: 5px;
+      border: 0;
+
+      &:before {
+        content: "\edc2";
+        color: #C63536;
+        width: 100%;
+        font-size: 34px;
+        font-family: "Phosphor" !important;
+        speak: never;
+        font-style: normal;
+        font-weight: normal;
+        font-variant: normal;
+        text-transform: none;
+        line-height: 1;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      .ui-dialog-title {
+        color: $grey00;
+        margin-top: 10px;
+        padding-bottom: 0;
+        font-weight: 700;
+      }
+
+      .ui-dialog-titlebar-close {
+        display: none;
+      }
+    }
+
+    #drupal-modal {
+      padding-top: 0;
+      padding-bottom: 40px;
+
+      .manage-dashboard-confirm-text {
+        font-size: 13px;
+        line-height: 16px;
+        display: inline-block;
+      }
+
+      ul {
+        text-align: left;
+        margin-bottom: 20px;
+
+        li {
+          font-size: 14px;
+        }
+      }
+
+      .button {
+        font-size: 14px;
+        padding: .5rem 1rem;
+        color: white;
+        line-height: 16px;
+
+        &:hover {
+          background-color: white;
+        }
+      }
+
+      input.button {
+        background-color: $gen_blue_lgt;
+        border-color: $gen_blue_lgt;
+
+        &:hover {
+          color: $gen_blue_lgt;
+        }
+      }
+
+      a.button {
+        background-color: $grey08;
+        border-color: $grey08;
+
+        &:hover {
+          color: $grey08;
+        }
+      }
+    }
+  }
+  .ui-widget-overlay {
+    opacity: .6;
+    background: black;
   }
 
 }

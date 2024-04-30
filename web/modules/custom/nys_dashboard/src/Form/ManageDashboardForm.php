@@ -100,7 +100,9 @@ class ManageDashboardForm extends FormBase {
 
     // Main form.
     $form_state->set('is_confimartion_step', FALSE);
+    $form['#attached']['library'][] = 'core/jquery';
     $form['#attached']['library'][] = 'core/drupal.dialog.ajax';
+    $form['#attached']['library'][] = 'core/jquery.form';
     $form['type_filter'] = [
       '#type' => 'select',
       '#title' => $this->t('Filter type'),
@@ -239,7 +241,7 @@ class ManageDashboardForm extends FormBase {
     $form = $this->buildForm($form, $form_state);
     // See http://api.jqueryui.com/dialog.
     $dialog_options = [
-      'width' => 500,
+      'width' => 700,
     ];
     $response->addCommand(new OpenModalDialogCommand($title, $form, $dialog_options));
     return $response;
@@ -287,7 +289,12 @@ class ManageDashboardForm extends FormBase {
    * Builds confirmation form.
    */
   public function buildConfirmationForm(array &$form, FormStateInterface $form_state): array {
-    $form['description']['#markup'] = $form_state->get('unfollow_content_ul');
+    $description = <<<DESC
+      <span class="manage-dashboard-confirm-text">Clicking “Yes” will unfollow 
+      and remove all posts under the selected topic(s) from your dashboard feed.
+      </span>
+      DESC;
+    $form['description']['#markup'] = $description . $form_state->get('unfollow_content_ul');
     $form['actions']['confirm'] = [
       '#type' => 'submit',
       '#value' => $this->t('Yes, unfollow my selection'),
@@ -295,7 +302,7 @@ class ManageDashboardForm extends FormBase {
     ];
     $form['actions']['cancel'] = [
       '#type' => 'link',
-      '#title' => $this->t('No, cancel'),
+      '#title' => $this->t('No, close'),
       '#attributes' => ['class' => ['button']],
       '#url' => new Url('nys_dashboard.manage_dashboard'),
     ];

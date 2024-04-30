@@ -49,11 +49,11 @@
   </h2>
   <div class="c-my-dashboard--blurb">
     {% if node.field_subtitle.value %}
-      {{ node.field_subtitle.value|render|striptags|truncate(truncate, true)|raw }}
+      {{ node.field_subtitle.value|render|striptags|truncate(truncate, true)|raw }}{{ read_more }}
     {% elseif node.field_subhead.value %}
-      {{ node.field_subhead.value|render|striptags|truncate(truncate, true)|raw }}
+      {{ node.field_subhead.value|render|striptags|truncate(truncate, true)|raw }}{{ read_more }}
     {% elseif node.field_ol_name.value %}
-      {{ node.field_ol_name.value|render|striptags|truncate(truncate, true)|raw }}
+      {{ node.field_ol_name.value|render|striptags|truncate(truncate, true)|raw }}{{ read_more }}
     {% elseif node.body.value %}
       {{ node.body.value|render|striptags|truncate(truncate, true)|raw }}{{ read_more }}
     {% endif %}

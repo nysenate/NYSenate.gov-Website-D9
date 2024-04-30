@@ -302,7 +302,7 @@ class ManageDashboardForm extends FormBase {
     ];
     $form['actions']['cancel'] = [
       '#type' => 'link',
-      '#title' => $this->t('No, close'),
+      '#title' => $this->t('No, cancel'),
       '#attributes' => ['class' => ['button']],
       '#url' => new Url('nys_dashboard.manage_dashboard'),
     ];

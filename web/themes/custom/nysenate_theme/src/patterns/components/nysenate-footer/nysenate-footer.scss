@@ -34,7 +34,7 @@ footer {
 
     @include breakpoint($bp-sm) {
       display: flex;
-      justify-content: center;
+      //justify-content: center;
       max-width: 840px;
     }
   }
@@ -45,7 +45,7 @@ footer {
 }
 
 .c-senator-footer-col {
-  float: left;
+  //float: left;
 
   @include breakpoint($bp-sm) {
     border-bottom: 0;
@@ -125,6 +125,7 @@ footer {
   padding-bottom: 10px;
   border-bottom: 2px solid #e1e1e3;
   margin-bottom: 20px;
+  height: 65px;
 
   @include breakpoint($bp-sm) {
     width: 31%;
@@ -224,14 +225,13 @@ footer {
 
 /* LINKS */
 .c-senator-footer-col__nav {
-  width: 70%;
-  border-right: 2px solid #e1e1e3;
-  min-height: 150px;
+  //width: 70%;
+  //border-right: 2px solid #e1e1e3;
+  //min-height: 150px;
 
   @include breakpoint($bp-sm) {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     padding: 0 35px;
     float: none;
     width: 37%;
@@ -293,18 +293,17 @@ footer {
 
 /* SOCIALS */
 .c-senator-footer-col__social {
-  width: 30%;
-  padding-left: 30px;
+  width: 100%;
+  padding-top: 25px;
 
   @include breakpoint($bp-sm) {
-    padding-top: 0;
-    padding-left: 35px;
+    padding-top: 24px;
     float: none;
-    width: 33%;
+    width: 100%;
   }
 
   @include breakpoint($bp-md) {
-    width: 31%;
+    width: 100%;
   }
 
   p {

@@ -1,4 +1,4 @@
-uuid: e6a99ffb-e8a1-4846-aa10-29763123d1a2
+uuid: 94f9c2f9-86dc-4783-89c5-bf960ae74439
 langcode: en
 status: open
 dependencies:
@@ -10,12 +10,12 @@ _core:
 weight: 0
 open: null
 close: null
-uid: null
+uid: 327467
 template: false
 archive: false
-id: contact
-title: Contact
-description: 'Basic email contact webform.'
+id: contact_website_issues
+title: 'Contact for Website Issues'
+description: '<p>Basic email contact webform.</p>'
 categories: {  }
 elements: |-
   name:
@@ -269,10 +269,10 @@ handlers:
       theme_name: ''
       parameters: {  }
       debug: false
-  email_notification_1:
+  email_notification:
     id: email
-    handler_id: email_notification_1
-    label: 'Email notification - General'
+    handler_id: email_notification
+    label: 'Email notification'
     notes: ''
     status: true
     conditions: {  }
@@ -280,7 +280,7 @@ handlers:
     settings:
       states:
         - completed
-      to_mail: info@nysenate.gov
+      to_mail: webadmin@nysenate.gov
       to_options: {  }
       bcc_mail: ''
       bcc_options: {  }

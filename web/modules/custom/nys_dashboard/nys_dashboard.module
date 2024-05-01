@@ -529,3 +529,10 @@ function nys_dashboard_views_pre_build(ViewExecutable $view) {
     $view->setArguments(["$current_user_district_tid"]);
   }
 }
+
+/**
+ * Implements hook_entity_type_build().
+ */
+function nys_dashboard_entity_type_build(array &$entity_types) {
+  $entity_types['user']->setFormClass('edit_account', 'Drupal\nys_dashboard\Form\EditAccountForm');
+}

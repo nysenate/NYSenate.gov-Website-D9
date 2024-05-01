@@ -27,3 +27,11 @@ nys_dashboard.manage_dashboard:
     _user_is_logged_in: 'TRUE'
   options:
     no_cache: 'TRUE'
+
+nys_dashboard.edit_account:
+  path: '/my-dashboard/edit'
+  defaults:
+    _title: 'Edit Account'
+    _entity_form: 'user.edit_account'
+  requirements:
+    _user_is_logged_in: 'TRUE'

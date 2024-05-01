@@ -124,15 +124,15 @@ footer {
   width: 100%;
   padding-bottom: 10px;
   border-bottom: 2px solid #e1e1e3;
-  margin-bottom: 20px;
-  height: 65px;
+  margin: 10px 0 20px;
+  height: 70px;
 
   @include breakpoint($bp-sm) {
     width: 31%;
     padding-right: 35px;
     padding-bottom: 0;
     border-bottom: 0;
-    margin-bottom: 0;
+    margin: 0;
     height: inherit;
   }
 
@@ -154,7 +154,7 @@ footer {
 
     span {
       color: $grey08;
-      padding-left: 20px;
+      padding-left: 0;
 
       &:before {
         display: none;
@@ -229,6 +229,14 @@ footer {
   //width: 70%;
   //border-right: 2px solid #e1e1e3;
   //min-height: 150px;
+  padding: 0 0 20px 0;
+  border-bottom: 2px solid #e1e1e3;
+  margin-bottom: 20px;
+  &.right ul.menu {
+    padding: 0 0 20px 0;
+    border-bottom: 2px solid #e1e1e3;
+    margin-bottom: 0;
+  }
 
   @include breakpoint($bp-sm) {
     display: flex;
@@ -236,6 +244,14 @@ footer {
     padding: 0 35px;
     float: none;
     width: 37%;
+    border-right: 2px solid #e1e1e3;
+    border-bottom: none;
+    margin-bottom: 0;
+    &.right ul.menu {
+      padding: 0;
+      border-bottom: none;
+      margin-bottom: 0;
+    }
   }
 
   ul {
@@ -295,7 +311,7 @@ footer {
 /* SOCIALS */
 .c-senator-footer-col__social {
   width: 100%;
-  padding-top: 25px;
+  padding-top: 20px;
 
   @include breakpoint($bp-sm) {
     padding-top: 24px;
@@ -309,7 +325,7 @@ footer {
 
   p {
     @include font-stack-secondary;
-    display: none;
+    //display: none;
     margin: 0 0 20px;
     color: $grey03;
     font-size: 11px;
@@ -326,8 +342,8 @@ footer {
     list-style: none;
     display: flex;
     padding: 0;
-    justify-content: center;
-    flex-direction: column;
+    justify-content: flex-start;
+    flex-direction: row;
     gap: 15px;
     margin: 0;
 

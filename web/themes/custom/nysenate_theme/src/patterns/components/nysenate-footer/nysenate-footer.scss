@@ -3,24 +3,24 @@
 footer {
   width: 100%;
   background-color: $grey06;
-  color: $grey08;
+  color: $gen_blue_drk;
 
   .c-senator-footer {
     display: flex;
-    padding: 0px 20px 30px 20px;
+    padding: 0 20px 32px 20px;
 
     @include breakpoint($bp-sm) {
-      padding: 35px 40px 30px;
+      padding: 60px 40px 60px;
     }
 
     a {
-      font-size: 11px;
+      font-size: 14px;
       letter-spacing: 0.1em;
       font-family: $font-sans-bold;
       text-transform: uppercase;
 
       @include breakpoint($bp-sm) {
-        font-size: 12px;
+        font-size: 14px;
       }
     }
   }
@@ -108,9 +108,9 @@ footer {
   }
 
   a {
-    font-size: 11px;
+    font-size: 14px;
     text-decoration: none;
-    color: $grey08;
+    color: $gen_blue_drk;;
     line-height: 1em;
 
     @include breakpoint($bp-sm) {
@@ -144,16 +144,16 @@ footer {
   a {
     float: left;
     text-transform: uppercase;
-    color: $grey08;
+    color: $gen_blue_drk;
     text-decoration: none;
-    font-size: 11px;
+    font-size: 14px;
     line-height: 11px;
     width: 100%;
     margin-top: 25px;
     letter-spacing: 0.1em;
 
     span {
-      color: $grey08;
+      color: $gen_blue_drk;
       padding-left: 0;
 
       &:before {
@@ -269,14 +269,14 @@ footer {
   }
 
   a {
-    color: $grey08;
+    color: $gen_blue_drk;
     text-decoration: none;
     text-transform: uppercase;
-    font-size: 11px;
+    font-size: 14px;
 
     @include breakpoint($bp-sm) {
-      font-size: 12px;
-      line-height: 11px;
+      font-size: 14px;
+      line-height: 17px;
       letter-spacing: 1.2px;
     }
   }
@@ -314,7 +314,7 @@ footer {
   padding-top: 20px;
 
   @include breakpoint($bp-sm) {
-    padding-top: 24px;
+    padding-top: 27px;
     float: none;
     width: 100%;
   }
@@ -327,9 +327,9 @@ footer {
     @include font-stack-secondary;
     //display: none;
     margin: 0 0 20px;
-    color: $grey03;
-    font-size: 11px;
-    line-height: 1em;
+    color: $grey10;
+    font-size: 12px;
+    line-height: 14.62px;
 
     @include breakpoint($bp-sm) {
       font-size: 12px;
@@ -366,10 +366,21 @@ footer {
   }
 
   svg path {
-    fill: #2B6A91;
+    fill: $gen_blue_drk;
   }
 
   a {
     display: flex;
   }
+}
+
+.trad_blue,
+.cont_blue,
+.purple,
+.trad_red,
+.cont_red,
+.orange,
+.trad_green,
+.cont_green {
+
 }

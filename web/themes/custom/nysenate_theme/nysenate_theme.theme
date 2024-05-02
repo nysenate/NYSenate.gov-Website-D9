@@ -5298,6 +5298,12 @@ function nysenate_theme_preprocess_datetime_wrapper(&$variables) {
  * Implements hook_preprocess_form_element().
  */
 function nysenate_theme_preprocess_form_element(&$variables) {
+  $current_path = \Drupal::request()->getRequestUri();
+
+  if (str_starts_with($current_path, '/my-dashboard/edit')) {
+    return;
+  }
+
   if (!empty($variables['element']['#parents'])) {
     if (array_intersect(['type_1', 'type'], $variables['element']['#parents'])) {
       $variables['attributes']['class'][] = 'c-tab';
@@ -5328,7 +5334,6 @@ function nysenate_theme_preprocess_form_element(&$variables) {
       break;
 
     case 'edit-field-dateofbirth-0-value-date':
-      $current_path = \Drupal::request()->getRequestUri();
       if (str_starts_with($current_path, '/dashboard/edit')) {
         $variables['label_display'] = 'before';
         $variables['label']['#title'] = t('DATE OF BIRTH');

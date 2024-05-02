@@ -539,4 +539,58 @@ body.path-my-dashboard {
     background: black;
   }
 
+  // Edit Account form.
+  .user-edit-account-form {
+    .edit-account-wrapper, #edit-field-first-name-wrapper, #edit-field-last-name-wrapper {
+      float: left;
+      width: 48%;
+
+      @include breakpoint($bp-under-md) {
+        width: 100%;
+      }
+    }
+
+    .edit-account-wrapper-first, #edit-field-first-name-wrapper {
+      margin-right: 4%;
+
+      @include breakpoint($bp-under-md) {
+        margin: 0;
+      }
+    }
+
+    #edit-field-address-0-address {
+      column-gap: 4%;
+
+      .form-item {
+        margin: 0;
+      }
+    }
+
+    .image-widget-data {
+      .form-submit {
+        margin: 20px 0;
+        display: block;
+
+        &.js-hide {
+          display: none;
+        }
+      }
+    }
+
+    #edit-field-gender-user-wrapper {
+      clear: both;
+      display: block;
+      overflow: hidden;
+
+      #edit-field-gender-user {
+        margin: 0;
+      }
+    }
+
+    #edit-actions {
+      clear: both;
+      padding-top: 20px;
+    }
+  }
+
 }

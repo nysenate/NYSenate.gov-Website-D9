@@ -32,6 +32,16 @@ elements: |-
         '#title': Age
         '#required': true
         '#required_error': 'Please enter a value for age.'
+    name:
+      '#type': webform_name
+      '#title': Name
+      '#title_display': before
+      '#title__access': false
+      '#first__required': true
+      '#middle__access': false
+      '#last__required': true
+      '#suffix__access': false
+      '#degree__access': false
     home_address:
       '#type': webform_address
       '#title': 'Home Address'
@@ -201,7 +211,7 @@ elements: |-
       '#help_display': title_after
       '#required': true
       '#allowed_formats':
-        basic_html: basic_html
+        plain_text: plain_text
     working_papers_upload:
       '#type': managed_file
       '#title': 'Working papers'
@@ -364,6 +374,7 @@ access:
     roles: {  }
     users:
       - 9
+      - 2323104
     permissions: {  }
   update_any:
     roles: {  }
@@ -413,7 +424,7 @@ handlers:
     settings:
       states:
         - completed
-      to_mail: 'cknight@nysenate.gov, students@nysenate.gov'
+      to_mail: cknight@nysenate.gov
       to_options: {  }
       bcc_mail: ''
       bcc_options: {  }
@@ -465,6 +476,43 @@ handlers:
       sender_name: ''
       subject: _default
       body: '<div style="-webkit-text-stroke-width:0px;background-color:rgb(255, 255, 255);border:0px;color:black;font-family:&quot;Palatino Linotype&quot;, &quot;Book Antiqua&quot;, Palatino, serif;font-feature-settings:inherit;font-kerning:inherit;font-optical-sizing:inherit;font-size:15px;font-stretch:inherit;font-style:normal;font-variant-alternates:inherit;font-variant-caps:normal;font-variant-east-asian:inherit;font-variant-ligatures:normal;font-variant-numeric:inherit;font-variant-position:inherit;font-variation-settings:inherit;font-weight:400;letter-spacing:normal;line-height:inherit;margin:0px;orphans:2;padding:0px;text-align:start;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;vertical-align:baseline;white-space:normal;widows:2;word-spacing:0px;"><span style="background-color:white;border:0px;color:inherit;font-family:inherit;font-feature-settings:inherit;font-kerning:inherit;font-optical-sizing:inherit;font-size:16px;font-stretch:inherit;font-style:inherit;font-variant:inherit;font-variation-settings:inherit;font-weight:inherit;line-height:inherit;margin:0px;padding:0px;vertical-align:baseline;">Thank you for your interest in the NYS Senate Summer Work Based Learning Internship Program. </span><span style="border:0px;color:inherit;font-family:inherit;font-feature-settings:inherit;font-kerning:inherit;font-optical-sizing:inherit;font-size:12pt;font-stretch:inherit;font-style:inherit;font-variant:inherit;font-variation-settings:inherit;font-weight:inherit;line-height:inherit;margin:0px;padding:0px;vertical-align:baseline;">Your application has been received. Someone from our office will be in contact with you regarding the next steps.&nbsp;</span></div><div style="-webkit-text-stroke-width:0px;background-color:rgb(255, 255, 255);border:0px;color:black;font-family:&quot;Palatino Linotype&quot;, &quot;Book Antiqua&quot;, Palatino, serif;font-feature-settings:inherit;font-kerning:inherit;font-optical-sizing:inherit;font-size:12pt;font-stretch:inherit;font-style:normal;font-variant-alternates:inherit;font-variant-caps:normal;font-variant-east-asian:inherit;font-variant-ligatures:normal;font-variant-numeric:inherit;font-variant-position:inherit;font-variation-settings:inherit;font-weight:400;letter-spacing:normal;line-height:inherit;margin:0px;orphans:2;padding:0px;text-align:start;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;vertical-align:baseline;white-space:normal;widows:2;word-spacing:0px;">&nbsp;</div><div style="-webkit-text-stroke-width:0px;background-color:rgb(255, 255, 255);border:0px;color:black;font-family:&quot;Palatino Linotype&quot;, &quot;Book Antiqua&quot;, Palatino, serif;font-feature-settings:inherit;font-kerning:inherit;font-optical-sizing:inherit;font-size:12pt;font-stretch:inherit;font-style:normal;font-variant-alternates:inherit;font-variant-caps:normal;font-variant-east-asian:inherit;font-variant-ligatures:normal;font-variant-numeric:inherit;font-variant-position:inherit;font-variation-settings:inherit;font-weight:400;letter-spacing:normal;line-height:inherit;margin:0px;orphans:2;padding:0px;text-align:start;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;vertical-align:baseline;white-space:normal;widows:2;word-spacing:0px;">Again, thank you for taking the time to apply.</div><div style="-webkit-text-stroke-width:0px;background-color:rgb(255, 255, 255);border:0px;color:black;font-family:&quot;Palatino Linotype&quot;, &quot;Book Antiqua&quot;, Palatino, serif;font-feature-settings:inherit;font-kerning:inherit;font-optical-sizing:inherit;font-size:12pt;font-stretch:inherit;font-style:normal;font-variant-alternates:inherit;font-variant-caps:normal;font-variant-east-asian:inherit;font-variant-ligatures:normal;font-variant-numeric:inherit;font-variant-position:inherit;font-variation-settings:inherit;font-weight:400;letter-spacing:normal;line-height:inherit;margin:0px;orphans:2;padding:0px;text-align:start;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;vertical-align:baseline;white-space:normal;widows:2;word-spacing:0px;">Office of Student Programs</div>'
+      excluded_elements: {  }
+      ignore_access: false
+      exclude_empty: true
+      exclude_empty_checkbox: false
+      exclude_attachments: false
+      html: true
+      attachments: false
+      twig: false
+      theme_name: ''
+      parameters: {  }
+      debug: false
+  email_notification_2:
+    id: email
+    handler_id: email_notification_2
+    label: 'email notification 2'
+    notes: ''
+    status: true
+    conditions: {  }
+    weight: 2
+    settings:
+      states:
+        - completed
+      to_mail: students@nysenate.gov
+      to_options: {  }
+      bcc_mail: ''
+      bcc_options: {  }
+      cc_mail: ''
+      cc_options: {  }
+      from_mail: _default
+      from_options: {  }
+      from_name: _default
+      reply_to: ''
+      return_path: ''
+      sender_mail: ''
+      sender_name: ''
+      subject: _default
+      body: _default
       excluded_elements: {  }
       ignore_access: false
       exclude_empty: true

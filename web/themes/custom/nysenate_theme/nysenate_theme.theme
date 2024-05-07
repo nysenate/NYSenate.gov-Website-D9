@@ -5408,8 +5408,10 @@ function nysenate_theme_preprocess_page(&$variables) {
   $user_parts = explode('/', $user_link);
   $user_name = $user_parts[2] ?? \Drupal::currentUser()->id();
 
-  $variables['dashboard_link'] = '/dashboard/issues';
-  $variables['edit_account_link'] = '/dashboard/edit?destination=/dashboard';
+  $variables['user_first_name'] = $user?->field_first_name?->value ?? 'Guest';
+  $variables['dashboard_link'] = '/my-dashboard';
+  $variables['manage_dashboard_link'] = '/my-dashboard/manage';
+  $variables['edit_account_link'] = '/my-dashboard/edit';
   $variables['sidebar'] = [
     'upper_links' => [
       [

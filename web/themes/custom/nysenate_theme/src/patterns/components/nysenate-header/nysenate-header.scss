@@ -96,7 +96,7 @@
   }
 
   .nys-senator--info {
-    margin-right: 8px;
+    margin-left: 8px;
   }
 
   .nys-senator--title,
@@ -105,9 +105,9 @@
   }
 
   .nys-senator--title {
-    text-transform: capitalize;
-    font-size: 12px;
+    text-transform: uppercase;
     font-family: $font-sans-bold;
+    font-size: 12px;
     margin: 0;
   }
 
@@ -123,6 +123,10 @@
     img {
       min-height: 30px;
       width: auto;
+    }
+
+    .contextual {
+      display: none;
     }
   }
 
@@ -699,16 +703,16 @@ nav ul.c-nav--list {
 .c-header--btn.c-header--btn__taking_action,
 .c-header--btn.c-header--btn__primary {
   font-family: $font-sans-bold;
+  text-transform: uppercase;
   cursor: pointer;
   position: relative;
   height: 100%;
-  margin-left: -1px;
-  padding: 0 15px 0 20px;
-  background-color: transparent;
+  padding: 0 10px 0 5px;
+  background-color: $color-white;
   line-height: 55px;
   transition: background 0.2s ease 0s;
 
-  &::after {
+  &::before, &::after {
     display: inline-block;
     vertical-align: middle;
     speak: none;
@@ -716,7 +720,7 @@ nav ul.c-nav--list {
     font-weight: normal;
     font-variant: normal;
     text-transform: none;
-    padding-left: 3px;
+    padding-left: 1px;
     -webkit-font-smoothing: antialiased;
     font-family: 'senate_icons';
     height: 30px;
@@ -724,8 +728,7 @@ nav ul.c-nav--list {
     line-height: 30px;
     text-align: center;
     font-size: 20px;
-    margin-left: 8px;
-    padding-left: 3px;
+    margin: 0 6px 0;
     color: $color-white;
     @extend .lgt-bg;
     overflow: hidden;
@@ -734,12 +737,23 @@ nav ul.c-nav--list {
   }
 }
 
-.c-header--btn.c-header--btn__taking_action::after {
+.c-header--btn.c-header--btn__taking_action {
+  margin-left: 20px;
+}
+
+.c-header--btn.c-header--btn__taking_action::before {
   content: '\69';
 }
 
-.c-header--btn.c-header--btn__primary::after {
+.c-header--btn.c-header--btn__primary::before {
   content: '\66';
+}
+
+.c-login--list .c-header--btn.c-header--btn__primary::after {
+  color: $grey08;
+  background: none !important;
+  content: '\65';
+  margin: 0;
 }
 
 ul.c-login--list {
@@ -748,7 +762,7 @@ ul.c-login--list {
   vertical-align: middle;
   list-style: none;
   height: 100%;
-  margin-left: -1px;
+  margin-left: 20px;
   margin-top: 0;
   padding-left: 0;
 
@@ -780,11 +794,6 @@ ul.c-login--list {
       width: 100%;
       margin-top: 0;
       z-index: 3;
-      transition: top 0.2s ease-in;
-
-      a {
-        transition: background 0.2s ease;
-      }
 
       &.c-login--admin {
         z-index: 3;
@@ -802,33 +811,89 @@ ul.c-login--list {
       &:hover {
         @extend .lgt-bg;
       }
+
+      &.c-header--btn::after {
+        color: $color-white;
+        background: none !important;
+      }
+    }
+
+    .c-login--dashboard {
+      top: 55px;
+      height: 45px;
+
+      a {
+        padding-top: 15px;
+      }
+    }
+
+    .c-login--manage {
+      top: 100px;
+      height: 30px;
     }
 
     .c-login--edit {
-      top: 100%;
+      top: 130px;
+      height: 30px;
     }
 
     .c-login--logout {
-      top: 200%;
-    }
+      top: 160px;
+      height: 45px;
 
-    .c-login--admin {
-      top: 300%;
+      a {
+        padding-bottom: 15px;
+        border-width: 0 1px 1px 1px;
+      }
     }
 
     li + li {
       transition: top 0.2s ease-in;
 
       a {
-        background: $grey05;
-        transition: background 0.1s ease;
+        font-family: $font-sans-bold;
+        color: $grey08;
+        background: $greyLight;
+        text-transform: uppercase;
+        line-height: 30px;
+        border: solid $grey05;
+        border-width: 0 1px;
       }
 
       a:hover {
-        transition: background 0.15s ease;
-        @extend .drk-bg;
+        text-decoration: underline;
       }
     }
+  }
+}
+
+.c-header-bar.collapsed ul.c-login--list:hover {
+  .c-header--btn {
+    line-height: 30px;
+  }
+
+  .c-header--btn__primary {
+    line-height: 40px;
+  }
+
+  .c-login--dashboard {
+    top: 40px;
+    line-height: 30px;
+  }
+
+  .c-login--manage {
+    top: 85px;
+    line-height: 30px;
+  }
+
+  .c-login--edit {
+    top: 115px;
+    line-height: 30px;
+  }
+
+  .c-login--logout {
+    top: 145px;
+    line-height: 30px;
   }
 }
 
@@ -876,7 +941,7 @@ ul.c-login--list {
   font-size: 12px;
   line-height: 28px;
   text-transform: capitalize;
-  letter-spacing: 0.25em;
+  letter-spacing: 1px;
 
   &.has-avatar {
 

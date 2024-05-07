@@ -32,14 +32,17 @@
             {% if is_logged %}
               <ul class="c-login--list u-tablet-plus">
                 <li>
-                  <a class="c-header--btn c-header--btn__primary {% if user_avatar %} has-avatar {% endif %}" href="{{ dashboard_link }}">
-                    {% if user_avatar %}
-                      <span>My Dashboard</span>
-                      {{ user_avatar }}
-                    {% else %}
-                      My Dashboard
-                    {% endif %}
+                  <a class="c-header--btn c-header--btn__primary" href="{{ dashboard_link }}">
+                    Welcome, {{ user_first_name }}!
                   </a>
+                </li>
+
+                <li class="c-login--dashboard">
+                  <a class="c-header--btn" href="{{ dashboard_link }}">My Dashboard</a>
+                </li>
+
+                <li class="c-login--manage">
+                  <a class="c-header--btn" href="{{ manage_dashboard_link }}">Manage Dashboard</a>
                 </li>
 
                 <li class="c-login--edit">
@@ -49,37 +52,15 @@
                 <li class="c-login--logout">
                   <a class="c-header--btn" href="/user/logout">Logout</a>
                 </li>
-
-                {% if is_admin or
-                  'frontpage_editor' in user.getroles or
-                  'student_programs' in user.getroles or
-                  'microsite_content_producer' in user.getroles or
-                  'legislative_correspondent' in user.getroles
-                %}
-                  <li class="c-login--admin">
-                    {% if 'administrator' in user.getroles %}
-                      <a class="c-header--btn" href="/admin">Admin</a>
-                    {% elseif 'frontpage_editor' in user.getroles  %}
-                      <a class="c-header--btn" href="/admin/frontpage-editors">Admin</a>
-                    {% elseif 'student_programs' in user.getroles %}
-                      <a class="c-header--btn" href="/admin/student-programs">Admin</a>
-                    {% elseif 'microsite_content_producer' in user.getroles %}
-                      <a class="c-header--btn" href="/admin/content/my-senator">Admin</a>
-                    {% elseif 'legislative_correspondent' in user.getroles %}
-                      <a class="c-header--btn" href="/dashboard/senators">Admin</a>
-                    {% endif %}
-                  </li>
-                {% endif %}
-
               </ul>
               {% if has_senator %}
                 <a class="c-header--btn c-senator-header--btn" href="{{ senator_microsite_link }}">
                   <div class="nys-senator">
-                    <div class="nys-senator--info">
-                      <h3 class="nys-senator--title">My Senator</h3>
-                    </div>
                     <div class="nys-senator--thumb">
                       {{ senator_image }}
+                    </div>
+                    <div class="nys-senator--info">
+                      <h3 class="nys-senator--title">My Senator</h3>
                     </div>
                   </div>
                 </a>

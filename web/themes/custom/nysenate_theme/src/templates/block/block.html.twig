@@ -35,7 +35,7 @@
 {% if content %}
   <div{{ attributes.addClass(classes) }}>
     {{ title_prefix }}
-    {% if label %}
+    {% if label and plugin_id != 'nys_senators_microsite_menu' %}
       <h2{{ title_attributes }}>{{ label }}</h2>
     {% endif %}
     {{ title_suffix }}

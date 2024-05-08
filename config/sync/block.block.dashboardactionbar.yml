@@ -5,6 +5,7 @@ dependencies:
   module:
     - nys_dashboard
     - system
+    - user
   theme:
     - nysenate_theme
 id: dashboardactionbar
@@ -37,3 +38,10 @@ visibility:
     id: request_path
     negate: false
     pages: /dashboard
+  user_role:
+    id: user_role
+    negate: false
+    context_mapping:
+      user: '@user.current_user_context:current_user'
+    roles:
+      authenticated: authenticated

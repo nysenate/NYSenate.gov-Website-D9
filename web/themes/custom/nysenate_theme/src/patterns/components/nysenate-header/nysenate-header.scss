@@ -670,10 +670,11 @@ nav ul.c-nav--list {
 
     @include breakpoint($bp-sm) {
       fill: #444444;
-      &:hover {
-        fill: $blue01;
-      }
     }
+  }
+
+  &:hover svg path {
+    fill: $blue01;
   }
 
   a {

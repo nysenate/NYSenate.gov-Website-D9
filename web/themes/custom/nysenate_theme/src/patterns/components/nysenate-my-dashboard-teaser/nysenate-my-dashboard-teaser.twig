@@ -66,13 +66,13 @@
         | {{ node.field_date_range.value|date('U')|format_date('time') }}
       {% elseif node.field_date.value %}
         {{ node.field_date.value|date('U')|format_date('publish_date') }}
-        {% if node.field_senator_multiref.value  %}
-          | By Senator {{ content.field_senator_multiref.0 }}
+        {% if node.field_senator_multiref.value %}
+          | By Senator <a href="{{ senator_microsite_url }}">{{ content.field_senator_multiref.0 }}</a>
         {% endif %}
       {% elseif node.field_ol_publish_date.value %}
         {{ node.field_ol_publish_date.value|date('U')|format_date('publish_date') }}
         {% if node.field_ol_sponsor.value  %}
-          | Sponsored by {{ content.field_ol_sponsor.0 }}
+          | Sponsored by <a href="{{ senator_microsite_url }}">{{ content.field_ol_sponsor.0 }}</a>
         {% endif %}
       {% endif %}
       </div>

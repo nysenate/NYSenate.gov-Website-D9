@@ -5300,7 +5300,7 @@ function nysenate_theme_preprocess_datetime_wrapper(&$variables) {
 function nysenate_theme_preprocess_form_element(&$variables) {
   $current_path = \Drupal::request()->getRequestUri();
 
-  if (str_starts_with($current_path, '/my-dashboard/edit')) {
+  if (str_starts_with($current_path, '/dashboard/edit')) {
     return;
   }
 
@@ -5409,9 +5409,9 @@ function nysenate_theme_preprocess_page(&$variables) {
   $user_name = $user_parts[2] ?? \Drupal::currentUser()->id();
 
   $variables['user_first_name'] = $user?->field_first_name?->value ?? 'Guest';
-  $variables['dashboard_link'] = '/my-dashboard';
-  $variables['manage_dashboard_link'] = '/my-dashboard/manage';
-  $variables['edit_account_link'] = '/my-dashboard/edit';
+  $variables['dashboard_link'] = '/dashboard';
+  $variables['manage_dashboard_link'] = '/dashboard/manage';
+  $variables['edit_account_link'] = '/dashboard/edit';
   $variables['sidebar'] = [
     'upper_links' => [
       [

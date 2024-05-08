@@ -1,25 +1,5 @@
-nys_dashboard.overview:
-  path: '/dashboard'
-  defaults:
-    _title: 'Profile Overview'
-    _controller: '\Drupal\nys_dashboard\Controller\DashboardController::overview'
-  requirements:
-    _user_is_logged_in: 'TRUE'
-  options:
-    no_cache: 'TRUE'
-
-nys_dashboard.edit_profile:
-  path: '/dashboard/edit'
-  defaults:
-    _title: 'Edit Profile'
-    _form: '\Drupal\nys_dashboard\Form\EditProfileForm'
-  requirements:
-    _user_is_logged_in: 'TRUE'
-  options:
-    no_cache: 'TRUE'
-
 nys_dashboard.manage_dashboard:
-  path: '/my-dashboard/manage'
+  path: '/dashboard/manage'
   defaults:
     _title: 'Manage Dashboard'
     _form: '\Drupal\nys_dashboard\Form\ManageDashboardForm'
@@ -29,7 +9,7 @@ nys_dashboard.manage_dashboard:
     no_cache: 'TRUE'
 
 nys_dashboard.edit_account:
-  path: '/my-dashboard/edit'
+  path: '/dashboard/edit'
   defaults:
     _title: 'Edit Account'
     _entity_form: 'user.edit_account'

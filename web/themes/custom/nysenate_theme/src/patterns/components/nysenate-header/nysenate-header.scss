@@ -669,7 +669,10 @@ nav ul.c-nav--list {
     fill: $color-white;
 
     @include breakpoint($bp-sm) {
-      fill: $blue01;
+      fill: #444444;
+      &:hover {
+        fill: $blue01;
+      }
     }
   }
 

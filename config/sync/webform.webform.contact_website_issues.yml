@@ -1,4 +1,4 @@
-uuid: e6a99ffb-e8a1-4846-aa10-29763123d1a2
+uuid: 94f9c2f9-86dc-4783-89c5-bf960ae74439
 langcode: en
 status: open
 dependencies:
@@ -10,12 +10,12 @@ _core:
 weight: 0
 open: null
 close: null
-uid: null
+uid: 327467
 template: false
 archive: false
-id: contact
-title: Contact
-description: 'Basic email contact webform.'
+id: contact_website_issues
+title: 'Contact for Website Issues'
+description: '<p>Basic email contact webform.</p>'
 categories: {  }
 elements: |-
   name:
@@ -152,7 +152,7 @@ settings:
   confirmation_type: inline
   confirmation_url: '<front>'
   confirmation_title: Confirmation
-  confirmation_message: '<p>Thank you for your submission, we will reply as soon as possible.</p><p><a href="/node/12017034" data-entity-type="node" data-entity-uuid="33d5fc91-21fa-42a7-89a1-c820c5ff51ba" data-entity-substitution="canonical">Back to form</a></p>'
+  confirmation_message: '<p>Thank you for your submission, we will reply as soon as possible.</p><p><a href="/contact-website-issue">Back to form</a></p>'
   confirmation_attributes: {  }
   confirmation_back: false
   confirmation_back_label: ''
@@ -269,10 +269,10 @@ handlers:
       theme_name: ''
       parameters: {  }
       debug: false
-  email_notification_1:
+  email_notification:
     id: email
-    handler_id: email_notification_1
-    label: 'Email notification - General'
+    handler_id: email_notification
+    label: 'Email notification'
     notes: ''
     status: true
     conditions: {  }
@@ -280,7 +280,7 @@ handlers:
     settings:
       states:
         - completed
-      to_mail: info@nysenate.gov
+      to_mail: webadmin@nysenate.gov
       to_options: {  }
       bcc_mail: ''
       bcc_options: {  }

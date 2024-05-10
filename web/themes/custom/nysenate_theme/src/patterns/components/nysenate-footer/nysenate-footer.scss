@@ -3,24 +3,24 @@
 footer {
   width: 100%;
   background-color: $grey06;
-  color: $grey08;
+  color: $gen_blue_drk;
 
   .c-senator-footer {
     display: flex;
-    padding: 0px 20px 30px 20px;
+    padding: 0 20px 32px 20px;
 
     @include breakpoint($bp-sm) {
-      padding: 35px 40px 30px;
+      padding: 60px 40px 60px;
     }
 
     a {
-      font-size: 11px;
+      font-size: 14px;
       letter-spacing: 0.1em;
       font-family: $font-sans-bold;
       text-transform: uppercase;
 
       @include breakpoint($bp-sm) {
-        font-size: 12px;
+        font-size: 14px;
       }
     }
   }
@@ -34,7 +34,7 @@ footer {
 
     @include breakpoint($bp-sm) {
       display: flex;
-      justify-content: center;
+      //justify-content: center;
       max-width: 840px;
     }
   }
@@ -45,7 +45,7 @@ footer {
 }
 
 .c-senator-footer-col {
-  float: left;
+  //float: left;
 
   @include breakpoint($bp-sm) {
     border-bottom: 0;
@@ -58,7 +58,7 @@ footer {
 }
 
 /* BOTTOM LINKS */
-.c-site-footer {
+/*.c-site-footer {
   overflow: hidden;
   min-height: 75px;
   padding: 0px 20px 25px;
@@ -108,30 +108,32 @@ footer {
   }
 
   a {
-    font-size: 11px;
+    font-size: 14px;
     text-decoration: none;
-    color: $grey08;
+    color: $gen_blue_drk;;
     line-height: 1em;
 
     @include breakpoint($bp-sm) {
       line-height: 1.2em;
     }
   }
-}
+}*/
 
 /* LOGO */
 .c-senator-footer-col__home {
   width: 100%;
   padding-bottom: 10px;
   border-bottom: 2px solid #e1e1e3;
-  margin-bottom: 20px;
+  margin: 10px 0 20px;
+  height: 70px;
 
   @include breakpoint($bp-sm) {
     width: 31%;
     padding-right: 35px;
     padding-bottom: 0;
     border-bottom: 0;
-    margin-bottom: 0;
+    margin: 0;
+    height: inherit;
   }
 
   @include breakpoint($bp-md) {
@@ -142,17 +144,17 @@ footer {
   a {
     float: left;
     text-transform: uppercase;
-    color: $grey08;
+    color: $gen_blue_drk;
     text-decoration: none;
-    font-size: 11px;
+    font-size: 14px;
     line-height: 11px;
     width: 100%;
     margin-top: 25px;
     letter-spacing: 0.1em;
 
     span {
-      color: $grey08;
-      padding-left: 20px;
+      color: $gen_blue_drk;
+      padding-left: 0;
 
       &:before {
         display: none;
@@ -224,17 +226,32 @@ footer {
 
 /* LINKS */
 .c-senator-footer-col__nav {
-  width: 70%;
-  border-right: 2px solid #e1e1e3;
-  min-height: 150px;
+  //width: 70%;
+  //border-right: 2px solid #e1e1e3;
+  //min-height: 150px;
+  padding: 0 0 20px 0;
+  border-bottom: 2px solid #e1e1e3;
+  margin-bottom: 20px;
+  &.right ul.menu {
+    padding: 0 0 20px 0;
+    border-bottom: 2px solid #e1e1e3;
+    margin-bottom: 0;
+  }
 
   @include breakpoint($bp-sm) {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     padding: 0 35px;
     float: none;
     width: 37%;
+    border-right: 2px solid #e1e1e3;
+    border-bottom: none;
+    margin-bottom: 0;
+    &.right ul.menu {
+      padding: 0;
+      border-bottom: none;
+      margin-bottom: 0;
+    }
   }
 
   ul {
@@ -252,16 +269,19 @@ footer {
   }
 
   a {
-    color: $grey08;
+    color: $gen_blue_drk;
     text-decoration: none;
     text-transform: uppercase;
-    font-size: 11px;
+    font-size: 14px;
 
     @include breakpoint($bp-sm) {
-      font-size: 12px;
-      line-height: 11px;
+      font-size: 14px;
+      line-height: 17px;
       letter-spacing: 1.2px;
     }
+  }
+  ul.menu a.is-active {
+    color: $gen_blue_drk;
   }
 }
 
@@ -293,31 +313,31 @@ footer {
 
 /* SOCIALS */
 .c-senator-footer-col__social {
-  width: 30%;
-  padding-left: 30px;
+  width: 100%;
+  padding-top: 20px;
 
   @include breakpoint($bp-sm) {
-    padding-top: 0;
-    padding-left: 35px;
+    padding-top: 27px;
     float: none;
-    width: 33%;
+    width: 100%;
   }
 
   @include breakpoint($bp-md) {
-    width: 31%;
+    width: 100%;
   }
 
   p {
     @include font-stack-secondary;
-    display: none;
+    //display: none;
     margin: 0 0 20px;
-    color: $grey03;
-    font-size: 11px;
-    line-height: 1em;
+    color: $grey10;
+    font-size: 12px;
+    line-height: 14.62px;
 
     @include breakpoint($bp-sm) {
       font-size: 12px;
       display: block;
+      margin: 0 0 1em;
     }
   }
 
@@ -325,8 +345,8 @@ footer {
     list-style: none;
     display: flex;
     padding: 0;
-    justify-content: center;
-    flex-direction: column;
+    justify-content: flex-start;
+    flex-direction: row;
     gap: 15px;
     margin: 0;
 
@@ -349,10 +369,115 @@ footer {
   }
 
   svg path {
-    fill: #2B6A91;
+    fill: $gen_blue_drk;
   }
 
   a {
     display: flex;
+  }
+}
+
+//Microsite footers
+.trad_red {
+  .c-senator-footer-col__social {
+      svg path {
+        fill: $trad_red_med;
+      }
+    }
+  .c-senator-footer {
+    a, span {
+      color: $trad_red_med;
+    }
+  }
+}
+
+.trad_blue {
+  .c-senator-footer-col__social {
+    svg path {
+      fill: $trad_blue_med;
+    }
+  }
+  .c-senator-footer {
+    a, span {
+      color: $trad_blue_med;
+    }
+  }
+}
+
+.cont_blue {
+  .c-senator-footer-col__social {
+    svg path {
+      fill: $cont_blue_med;
+    }
+  }
+  .c-senator-footer {
+    a, span {
+      color: $cont_blue_med;
+    }
+  }
+}
+
+.purple {
+  .c-senator-footer-col__social {
+    svg path {
+      fill: $purple_med;
+    }
+  }
+  .c-senator-footer {
+    a, span {
+      color: $purple_med;
+    }
+  }
+}
+
+.cont_red {
+  .c-senator-footer-col__social {
+    svg path {
+      fill: $cont_red_med;
+    }
+  }
+  .c-senator-footer {
+    a, span {
+      color: $cont_red_med;
+    }
+  }
+}
+
+.orange {
+  .c-senator-footer-col__social {
+    svg path {
+      fill: $orange_med;
+    }
+  }
+  .c-senator-footer {
+    a, span {
+      color: $orange_med;
+    }
+  }
+}
+
+.trad_green {
+  .c-senator-footer-col__social {
+    svg path {
+      fill: $trad_green_med;
+    }
+  }
+  .c-senator-footer {
+    a, span {
+      color: $trad_green_med;
+    }
+  }
+}
+
+.cont_green {
+  .c-senator-footer-col__social {
+    svg path {
+      fill: $cont_green_med;
+    }
+  }
+  .c-senator-footer {
+    a, span {
+      color: $cont_green_med;
+    }
   }
 }

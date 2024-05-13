@@ -146,30 +146,6 @@ body.path-dashboard {
     }
   }
 
-  // Expand main region to make room for sidebar filters.
-  main {
-    max-width: 1300px;
-    padding-top: 40px;
-
-    .view-my-dashboard {
-      margin: 0 60px 60px 0;
-    }
-
-    @include breakpoint($bp-under-md) {
-      padding-top: 20px;
-
-      .region-content, .layout-content {
-        margin: 0;
-        padding: 0;
-        max-width: 100%;
-      }
-
-      .view-my-dashboard {
-        margin-right: 0;
-      }
-    }
-  }
-
   // My Dashboard exposed filter styling.
   #block-exposed-form-my-dashboard-main {
     padding-left: 40px;
@@ -358,20 +334,6 @@ body.path-dashboard {
 
     .view-footer-pager {
       border-top: 1px solid $grey04;
-    }
-  }
-
-  // Flip order of sidebar and main content on mobile.
-  @include breakpoint($bp-under-sm) {
-    .two-col-layout {
-      .region-content {
-        order: 2;
-      }
-
-      .layout-sidebar-right {
-        order: 1;
-        padding: 0;
-      }
     }
   }
 

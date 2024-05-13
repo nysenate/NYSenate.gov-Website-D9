@@ -127,6 +127,7 @@ function nys_dashboard_preprocess_page(&$variables) {
   // Attach dashboard library to dashboard.
   $request_uri = \Drupal::request()->getRequestUri();
   if (str_starts_with($request_uri, '/dashboard')) {
+    $variables['#attached']['library'][] = 'nysenate_theme/full-width-main';
     $variables['#attached']['library'][] = 'nysenate_theme/my-dashboard';
     $variables['actionbar']['type'] = 'disabled';
   }

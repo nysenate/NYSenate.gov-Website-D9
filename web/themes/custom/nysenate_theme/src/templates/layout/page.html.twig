@@ -46,7 +46,6 @@
 {{ attach_library('nysenate_theme/page-layout') }}
 {{ attach_library('nysenate_theme/nysenate-footer') }}
 {{ attach_library('nysenate_theme/nysenate-header') }}
-{{ attach_library('nysenate_theme/dashboard') }}
 
 {%
   set layout_classes = [
@@ -55,108 +54,97 @@
   ]
 %}
 
-{% if is_senator_dashboard %}
+<!-- Skiplink -->
+<div class="skip-link">
+  <a href="#main-content" class="element-invisible element-focusable">Skip to main content</a>
+</div>
 
-  {% include "@nysenate_theme/dashboard/dashboard.twig" with {
-    "content": page.content,
-    "sidebar": sidebar,
-    "dashboard_display_name": dashboard_display_name,
-  } only %}
-
-{% else %}
-
-  <!-- Skiplink -->
-  <div class="skip-link">
-    <a href="#main-content" class="element-invisible element-focusable">Skip to main content</a>
-  </div>
-
-  <div class="layout-container page {{ theme }}">
-    {%
-      embed "@nysenate_theme/nysenate-header/nysenate-header.twig" with {
-      "is_logged": logged_in,
-      actionbar,
-      "is_front": is_front,
-      "dashboard_link": dashboard_link,
-      "edit_account_link": edit_account_link,
-      "senator_microsite_link": senator_link,
-      "has_senator": has_senator,
-      "senator_image": headshot,
-      "socials": socials,
-      "form": form,
-      "search": {
-        "title": "Search",
-        "link": {
-          "href": "/search/legislation",
-          "text": "Advanced Legislation Search"
-        },
-        "value": "{'tab':''}"
+<div class="layout-container page {{ theme }}">
+  {%
+    embed "@nysenate_theme/nysenate-header/nysenate-header.twig" with {
+    "is_logged": logged_in,
+    actionbar,
+    "is_front": is_front,
+    "dashboard_link": dashboard_link,
+    "edit_account_link": edit_account_link,
+    "senator_microsite_link": senator_link,
+    "has_senator": has_senator,
+    "senator_image": headshot,
+    "socials": socials,
+    "form": form,
+    "search": {
+      "title": "Search",
+      "link": {
+        "href": "/search/legislation",
+        "text": "Advanced Legislation Search"
       },
-      "user_first_name": user_first_name,
-      "manage_dashboard_link": manage_dashboard_link,
-    } %}
-      {% block menu %}
-        {{ drupal_menu('main') }}
-      {% endblock %}
-    {% endembed %}
+      "value": "{'tab':''}"
+    },
+    "user_first_name": user_first_name,
+    "manage_dashboard_link": manage_dashboard_link,
+  } %}
+    {% block menu %}
+      {{ drupal_menu('main') }}
+    {% endblock %}
+  {% endembed %}
 
 
-    {{ page.primary_menu }}
-    {{ page.secondary_menu }}
+  {{ page.primary_menu }}
+  {{ page.secondary_menu }}
 
-    {{ page.breadcrumb }}
+  {{ page.breadcrumb }}
 
-    {{ page.highlighted }}
+  {{ page.highlighted }}
 
-    {{ page.help }}
+  {{ page.help }}
 
-    {{ page.above_content }}
+  {{ page.above_content }}
 
-    <main role="main" class="container l-row l-row--main l-main">
-      <a id="main-content" tabindex="-1"></a>{# link is in html.html.twig #}
-      <div {{ attributes.addClass(layout_classes) }}>
+  <main role="main" class="container l-row l-row--main l-main">
+    <a id="main-content" tabindex="-1"></a>{# link is in html.html.twig #}
+    <div {{ attributes.addClass(layout_classes) }}>
 
-        {{ page.content }}
+      {{ page.content }}
 
-        {% if page.sidebar_right %}
-          <aside class="layout-sidebar-right" role="complementary">
-            {{ page.sidebar_right }}
-          </aside>
-        {% endif %}
-      </div>{# /.layout-content #}
-    </main>
+      {% if page.sidebar_right %}
+        <aside class="layout-sidebar-right" role="complementary">
+          {{ page.sidebar_right }}
+        </aside>
+      {% endif %}
+    </div>{# /.layout-content #}
+  </main>
 
-    <footer class="l-footer" role="contentinfo">
-      <div id="footer-first">
-        <div class="panel-pane pane-block pane-nys-blocks-sitewide-footer">
-          <div class="pane-content">
-            <section class="c-senator-footer">
-              <div class="l-row">
-                <div class="c-senator-footer-col c-senator-footer-col__home">
-                  {{ page.footer_left }}
-                </div>
-
-                <div class="c-senator-footer-col c-senator-footer-col__nav">
-                  <nav>
-                    {{ page.footer_middle }}
-                  </nav>
-                </div>
-
-                <div class="c-senator-footer-col c-senator-footer-col__social">
-                  <p class="c-senator-footer-caption">Follow the New York Senate</p>
-                    {{ page.footer_right }}
-                </div>
+  <footer class="l-footer" role="contentinfo">
+    <div id="footer-first">
+      <div class="panel-pane pane-block pane-nys-blocks-sitewide-footer">
+        <div class="pane-content">
+          <section class="c-senator-footer">
+            <div class="l-row">
+              <div class="c-senator-footer-col c-senator-footer-col__home">
+                {{ page.footer_left }}
               </div>
-            </section>
-          </div>
-        </div>
-        <div class="panel-separator"></div>
-        <div class="panel-pane pane-block pane-menu-menu-global-footer c-site-footer">
-          <div class="pane-content">
-            {{ page.addendum }}
-          </div>
+
+              <div class="c-senator-footer-col c-senator-footer-col__nav">
+                <nav>
+                  {{ page.footer_middle }}
+                </nav>
+              </div>
+
+              <div class="c-senator-footer-col c-senator-footer-col__social">
+                <p class="c-senator-footer-caption">Follow the New York Senate</p>
+                  {{ page.footer_right }}
+              </div>
+            </div>
+          </section>
         </div>
       </div>
-    </footer>
+      <div class="panel-separator"></div>
+      <div class="panel-pane pane-block pane-menu-menu-global-footer c-site-footer">
+        <div class="pane-content">
+          {{ page.addendum }}
+        </div>
+      </div>
+    </div>
+  </footer>
 
-  </div>{# /.layout-container #}
-{% endif %}
+</div>{# /.layout-container #}

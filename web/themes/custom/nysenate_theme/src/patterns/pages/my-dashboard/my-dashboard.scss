@@ -1,69 +1,6 @@
 @import '../../global/utils/init';
 
 body.path-dashboard {
-  // My Dashboard actionbar block styling.
-  .block-dashboard-action-bar {
-    margin: 0 auto;
-    max-width: 1500px;
-    padding: 0 150px;
-    background-color: $gen_blue_drk;
-    padding-top: 100px;
-    position: relative;
-
-    @include breakpoint($bp-under-md) {
-      padding: 20px 9% 0;
-    }
-
-    h1.dashboard-action-bar-heading {
-      font-size: 40px;
-      font-weight: 300;
-      font-family: $font-serif;
-      color: white;
-      margin: 0;
-    }
-
-    p.dashboard-action-bar-subheading {
-      font-size: 16px;
-      color: white;
-      padding: 15px 0 30px;
-      margin: 0;
-    }
-
-    .dashboard-action-bar-link-wrapper {
-      position: absolute;
-      bottom: 30px;
-      right: 150px;
-
-      a.dashboard-action-bar-link {
-        position: relative;
-        float: right;
-        clear: both;
-        margin-top: 10px;
-        color: white;
-        padding: 9px 12px 6px 33px;
-        background-color: rgba(0, 0, 0, 0.3);
-        text-transform: uppercase;
-        font-family: $font-sans;
-        font-weight: 700;
-        font-size: 15px;
-
-        &:hover {
-          background-color: rgba(0, 0, 0, 0.4);
-        }
-
-        @include breakpoint($bp-under-md) {
-          display: none;
-        }
-
-        i {
-          position: absolute;
-          top: 13px;
-          left: 12px;
-        }
-      }
-    }
-  }
-
   // My Dashboard Updates from your senator styling.
   #block-views-block-updates-from-my-senator-updates-from-my-senator {
     margin: 0 auto;
@@ -561,5 +498,4 @@ body.path-dashboard {
       padding-top: 20px;
     }
   }
-
 }

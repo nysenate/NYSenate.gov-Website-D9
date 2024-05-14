@@ -51,39 +51,13 @@ class DashboardActionbarBlock extends BlockBase {
    * {@inheritdoc}
    */
   public function build(): array {
-    $heading = $this->configuration['heading'];
-    $subheading = $this->configuration['subheading'];
-
-    $featured_links = [
-      1 => $this->configuration['featured_link_1'],
-      2 => $this->configuration['featured_link_2'],
-    ];
-    $featured_link_1 = '';
-    $featured_link_2 = '';
-    foreach ($featured_links as $link_num => $featured_link) {
-      if (!empty($featured_link['text'])) {
-        ${'featured_link_' . $link_num} =
-          '<a class="dashboard-action-bar-link" href="'
-          . $featured_link['url'] . '"><i class="ph ph-'
-          . $featured_link['icon'] . '"></i>'
-          . $featured_link['text'] . '</a>';
-      }
-    }
-    $featured_link_wrapper = <<<HTML
-      <div class='dashboard-action-bar-link-wrapper'>
-        $featured_link_1
-        $featured_link_2
-      </div>
-      HTML;
-
     return [
-      '#markup' => <<<END
-        <h1 class="dashboard-action-bar-heading">$heading</h1>
-        <p class="dashboard-action-bar-subheading">
-          <em>$subheading</em>
-        </p>
-        $featured_link_wrapper
-        END,
+      'heading' => $this->configuration['heading'],
+      'subheading' => $this->configuration['subheading'],
+      'featured_links' => [
+        $this->configuration['featured_link_1'],
+        $this->configuration['featured_link_2'],
+      ],
     ];
   }
 

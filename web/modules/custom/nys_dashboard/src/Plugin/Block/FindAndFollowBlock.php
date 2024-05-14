@@ -146,13 +146,7 @@ class FindAndFollowBlock extends BlockBase {
    * {@inheritdoc}
    */
   public function build(): array {
-    return [
-      '#theme' => 'nys_dashboard_find_and_follow',
-      '#attached' => [
-        'library' => 'nysenate_theme/nysenate-find-and-follow',
-      ],
-      '#fandf_items' => $this->configuration['fandf_items'],
-    ];
+    return $this->configuration['fandf_items'];
   }
 
 }

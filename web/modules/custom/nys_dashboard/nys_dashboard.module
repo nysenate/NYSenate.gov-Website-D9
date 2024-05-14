@@ -9,19 +9,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\ViewExecutable;
 
 /**
- * Implements hook_theme().
- */
-function nys_dashboard_theme($existing, $type, $theme, $path): array {
-  return [
-    'nys_dashboard_find_and_follow' => [
-      'variables' => [
-        'fandf_items' => NULL,
-      ],
-    ],
-  ];
-}
-
-/**
  * Implements hook_form_alter().
  */
 function nys_dashboard_form_alter(&$form, FormStateInterface $form_state, $form_id) {

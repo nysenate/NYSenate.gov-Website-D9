@@ -1,13 +1,13 @@
 {#
 /**
- * @file nysenate-dashboard-action-bar.twig
+ * @file nysenate-dashboard-actionbar.twig
  */
 #}
 {% if content %}
-  {{ attach_library('nysenate_theme/nysenate-dashboard-action-bar') }}
+  {{ attach_library('nysenate_theme/nysenate-dashboard-actionbar') }}
   {%
     set classes = [
-      'dashboard-action-bar-block',
+      'dashboard-actionbar-block',
       'block',
     ]
   %}
@@ -16,13 +16,13 @@
       <h2>{{ label }}</h2>
     {% endif %}
     {{ title_suffix }}
-    <h1 class="dashboard-action-bar-heading">{{ content.heading }}</h1>
-    <p class="dashboard-action-bar-subheading">
+    <h1 class="dashboard-actionbar-heading">{{ content.heading }}</h1>
+    <p class="dashboard-actionbar-subheading">
       <em>{{ content.subheading }}</em>
     </p>
-    <div class='dashboard-action-bar-link-wrapper'>
+    <div class='dashboard-actionbar-link-wrapper'>
     {% for link in content.featured_links %}
-      <a class="dashboard-action-bar-link" href="{{ link.url }}">
+      <a class="dashboard-actionbar-link" href="{{ link.url }}">
         <i class="ph ph-{{ link.icon }}"></i>
         {{ link.text }}
       </a>

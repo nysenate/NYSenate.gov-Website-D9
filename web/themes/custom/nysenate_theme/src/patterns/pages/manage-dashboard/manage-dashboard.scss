@@ -1,0 +1,176 @@
+@import '../../global/utils/init';
+
+// Manage Dashboard form styling.
+form.nys-dashboard-manage-dashboard {
+  margin-bottom: 60px;
+
+  @include breakpoint($bp-under-md) {
+    margin: 0 10px 60px;
+  }
+
+  .form-item-type-filter {
+    width: 240px;
+    margin: 10px 0 0;
+
+    #edit-type-filter {
+      margin-bottom: 20px;
+    }
+  }
+
+  #followed-types-fieldset-wrapper {
+    clear: both;
+
+    & > fieldset.form-wrapper {
+      border: none;
+      margin: 0;
+      padding: 0;
+
+      legend {
+        font-family: $font-serif-regular;
+        font-size: 20px;
+        line-height: 30px;
+      }
+
+      .fieldgroup {
+        margin-bottom: 20px;
+
+        .description {
+          font-size: 15px;
+          font-style: italic;
+
+          a.uncheck-all-link {
+            font-size: 14px;
+            font-style: normal;
+            font-family: $font-sans;
+            color: $blue01;
+            font-weight: 700;
+            line-height: 40px;
+
+            &:hover {
+              text-decoration: underline;
+            }
+          }
+        }
+
+        .form-type-checkbox {
+          float: left;
+          margin: 4px;
+          padding: 4px 8px 4px 31px;
+          background-color: #F2F2F2;
+          position: relative;
+
+          label {
+            color: $gen_blue_lgt;
+            text-transform: none;
+          }
+
+          input {
+            accent-color: $gen_blue_lgt;
+            position: absolute;
+            top: 11px;
+            left: 10px;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Manage dashboard confirmation modal.
+.ui-dialog {
+  border-radius: 0 !important;
+  border: 0;
+  text-align: center;
+  box-shadow: none;
+
+  .ui-dialog-titlebar {
+    margin-top: 30px;
+    background-color: white !important;
+    padding: 0 !important;
+    border: 0;
+
+    &:before {
+      content: "\edc2";
+      color: #C63536;
+      width: 100%;
+      font-size: 34px;
+      font-family: "Phosphor" !important;
+      speak: never;
+      font-style: normal;
+      font-weight: normal;
+      font-variant: normal;
+      text-transform: none;
+      line-height: 1;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .ui-dialog-title {
+      color: $grey00;
+      margin-top: 10px;
+      padding-bottom: 0;
+      font-weight: 700;
+    }
+
+    .ui-dialog-titlebar-close {
+      display: none;
+    }
+  }
+
+  #drupal-modal {
+    padding-top: 0;
+    padding-bottom: 40px;
+
+    .manage-dashboard-confirm-text {
+      font-size: 13px;
+      line-height: 16px;
+      display: inline-block;
+    }
+
+    ul {
+      text-align: left;
+      margin-bottom: 35px;
+
+      li {
+        font-size: 14px;
+      }
+    }
+
+    .button {
+      font-size: 14px;
+      padding: .5rem 1rem;
+      color: white;
+      line-height: 16px;
+
+      &:hover {
+        background-color: white;
+      }
+    }
+
+    input.button {
+      background-color: $gen_blue_lgt;
+      border-color: $gen_blue_lgt;
+
+      &:hover {
+        color: $gen_blue_lgt;
+      }
+    }
+
+    a.button {
+      background-color: $grey08;
+      border-color: $grey08;
+
+      &:hover {
+        color: $grey08;
+      }
+    }
+  }
+
+  form.nys-dashboard-manage-dashboard {
+    margin-bottom: 0;
+  }
+}
+.ui-widget-overlay {
+  opacity: .6 !important;
+  background: black !important;
+}

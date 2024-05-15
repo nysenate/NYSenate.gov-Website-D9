@@ -34,21 +34,6 @@
     }
   };
 
-  Drupal.behaviors.nysDashboardUncheckAll = {
-    attach: function () {
-      let uncheckAllLinks = document.getElementsByClassName('uncheck-all-link');
-      for (let uncheckAllLink of uncheckAllLinks) {
-        uncheckAllLink.onclick = function () {
-          let checkboxes = uncheckAllLink.closest('.description').nextElementSibling.getElementsByClassName('form-checkbox');
-          for (let checkbox of checkboxes) {
-            checkbox.checked = false;
-          }
-          return false;
-        };
-      }
-    }
-  };
-
   function setStickyFilterClasses() {
     let stickyTopLocation = 120;
     let windowLocation = window.scrollY;

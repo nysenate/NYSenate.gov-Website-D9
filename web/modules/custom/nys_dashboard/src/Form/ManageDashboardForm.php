@@ -103,6 +103,7 @@ class ManageDashboardForm extends FormBase {
     $form['#attached']['library'][] = 'core/jquery';
     $form['#attached']['library'][] = 'core/drupal.dialog.ajax';
     $form['#attached']['library'][] = 'core/jquery.form';
+    $form['#attached']['library'][] = 'nysenate_theme/manage-dashboard';
     $form['type_filter'] = [
       '#type' => 'select',
       '#title' => $this->t('Filter type'),

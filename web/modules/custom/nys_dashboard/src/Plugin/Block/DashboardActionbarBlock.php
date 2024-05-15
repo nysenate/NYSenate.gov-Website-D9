@@ -51,13 +51,18 @@ class DashboardActionbarBlock extends BlockBase {
    * {@inheritdoc}
    */
   public function build(): array {
+    $featured_links = [];
+    if (!empty($this->configuration['featured_link_1']['text'])) {
+      $featured_links[] = $this->configuration['featured_link_1'];
+    }
+    if (!empty($this->configuration['featured_link_2']['text'])) {
+      $featured_links[] = $this->configuration['featured_link_2'];
+    }
+
     return [
       'heading' => $this->configuration['heading'],
       'subheading' => $this->configuration['subheading'],
-      'featured_links' => [
-        $this->configuration['featured_link_1'],
-        $this->configuration['featured_link_2'],
-      ],
+      'featured_links' => $featured_links,
     ];
   }
 

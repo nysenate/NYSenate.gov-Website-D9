@@ -1,0 +1,168 @@
+@import '../../global/utils/init';
+
+ul.c-login--list {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  list-style: none;
+  height: 100%;
+  margin-top: 0;
+  padding-left: 0;
+
+  .c-header--btn {
+    margin-left: 0;
+
+    &.c-header--btn__primary {
+      transition: background 0.2s ease;
+
+      &:after {
+        color: $grey08;
+        background: none !important;
+        content: '\65';
+        margin: 0;
+      }
+    }
+  }
+
+  li {
+    position: relative;
+    top: 0;
+    height: 100%;
+    z-index: 4;
+
+    a {
+      display: block;
+      height: 100%;
+      width: 100%;
+      padding: 0 15px 0 20px;
+      color: $color-white;
+      line-height: 55px;
+    }
+
+    & + li {
+      position: absolute;
+      width: 100%;
+      margin-top: 0;
+      z-index: 3;
+
+      &.c-login--admin {
+        z-index: 3;
+      }
+    }
+  }
+
+  &:hover {
+    .c-header--btn__primary {
+      color: $color-white;
+      transition: background 0.2s ease;
+      @extend .lgt-bg;
+
+      &:hover {
+        @extend .lgt-bg;
+      }
+
+      &.c-header--btn::after {
+        color: $color-white;
+        background: none !important;
+      }
+    }
+
+    .c-login--dashboard {
+      top: 55px;
+      height: 45px;
+
+      a {
+        padding-top: 15px;
+      }
+    }
+
+    .c-login--manage {
+      top: 100px;
+      height: 30px;
+    }
+
+    .c-login--edit {
+      top: 130px;
+      height: 30px;
+    }
+
+    .c-login--logout {
+      top: 160px;
+      height: 45px;
+
+      a {
+        padding-bottom: 15px;
+        border-width: 0 1px 1px 1px;
+      }
+    }
+
+    li + li {
+      transition: top 0.2s ease-in;
+
+      a {
+        font-family: $font-sans-bold;
+        color: $grey08;
+        background: $greyLight;
+        text-transform: uppercase;
+        line-height: 30px;
+        border: solid $grey05;
+        border-width: 0 1px;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+.c-header-bar.collapsed ul.c-login--list:hover {
+  .c-header--btn {
+    line-height: 30px;
+  }
+
+  .c-header--btn__primary {
+    line-height: 40px;
+  }
+
+  .c-login--dashboard {
+    top: 40px;
+    line-height: 30px;
+  }
+
+  .c-login--manage {
+    top: 85px;
+    line-height: 30px;
+  }
+
+  .c-login--edit {
+    top: 115px;
+    line-height: 30px;
+  }
+
+  .c-login--logout {
+    top: 145px;
+    line-height: 30px;
+  }
+}
+
+.inactive-pallette {
+  .c-login--list {
+    &:hover {
+      .c-header--btn__primary,
+      .c-header--btn__taking_action {
+        background: $gen_blue_lgt;
+
+        &:hover {
+          background: $gen_blue_lgt;
+        }
+      }
+
+      li + li {
+        a:hover {
+          background: $gen_blue_drk;
+        }
+      }
+    }
+  }
+}

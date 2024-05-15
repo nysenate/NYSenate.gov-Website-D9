@@ -4560,7 +4560,7 @@ function nysenate_theme_preprocess_node__bill__featured_content(&$variables) {
   }
 
   // Sponsor.
-  $sponsor = NULL;
+  $sponsor_link = '';
   if ($node->hasField('field_ol_sponsor') && !empty($node->field_ol_sponsor->target_id)) {
     $sponsor = \Drupal::entityTypeManager()
       ->getStorage('taxonomy_term')

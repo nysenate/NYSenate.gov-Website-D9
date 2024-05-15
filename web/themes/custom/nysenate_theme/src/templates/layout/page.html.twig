@@ -49,9 +49,9 @@
 
 {%
   set layout_classes = [
-    'layout-content',
-    page.sidebar_right ? 'two-col-layout' : ''
-  ]
+  'layout-content',
+  page.sidebar_right ? 'two-col-layout' : ''
+]
 %}
 
 <!-- Skiplink -->
@@ -62,32 +62,32 @@
 <div class="layout-container page {{ theme }}">
   {%
     embed "@nysenate_theme/nysenate-header/nysenate-header.twig" with {
-    "is_logged": logged_in,
-    actionbar,
-    "is_front": is_front,
-    "dashboard_link": dashboard_link,
-    "edit_account_link": edit_account_link,
-    "senator_microsite_link": senator_link,
-    "has_senator": has_senator,
-    "senator_image": headshot,
-    "socials": socials,
-    "form": form,
-    "search": {
-      "title": "Search",
-      "link": {
-        "href": "/search/legislation",
-        "text": "Advanced Legislation Search"
+      "is_logged": logged_in,
+      actionbar,
+      "is_front": is_front,
+      "dashboard_link": dashboard_link,
+      "edit_account_link": edit_account_link,
+      "senator_microsite_link": senator_link,
+      "has_senator": has_senator,
+      "senator_image": headshot,
+      "socials": socials,
+      "form": form,
+      "search": {
+        "title": "Search",
+        "link": {
+          "href": "/search/legislation",
+          "text": "Advanced Legislation Search"
+        },
+        "value": "{'tab':''}"
       },
-      "value": "{'tab':''}"
-    },
-    "user_first_name": user_first_name,
-    "manage_dashboard_link": manage_dashboard_link,
-  } %}
+      "user_first_name": user_first_name,
+      "manage_dashboard_link": manage_dashboard_link,
+    }
+  %}
     {% block menu %}
       {{ drupal_menu('main') }}
     {% endblock %}
   {% endembed %}
-
 
   {{ page.primary_menu }}
   {{ page.secondary_menu }}
@@ -130,9 +130,8 @@
                 </nav>
               </div>
 
-              <div class="c-senator-footer-col c-senator-footer-col__social">
-                <p class="c-senator-footer-caption">Follow the New York Senate</p>
-                  {{ page.footer_right }}
+              <div class="c-senator-footer-col c-senator-footer-col__nav right">
+                {{ page.footer_right }}
               </div>
             </div>
           </section>

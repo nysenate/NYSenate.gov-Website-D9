@@ -2,12 +2,18 @@
   'use strict';
   Drupal.behaviors.nysenateHeader = {
     attach: function (context) {
-      // If admin toolbar is present, abort and use static nav bar.
-      if ($('#toolbar-administration').length > 0) {
-       return;
+      let self = this;
+      let searchToggle = $('.js-search--toggle');
+      searchToggle.once('nySenateHeader').on('click touch', function (e) {
+        self.toggleSearchBar(0, e);
+      });
+
+      // If admin toolbar is present and the user is not on mobile,
+      // abort and use static nav bar.
+      if ($('#toolbar-administration').length > 0 && !self.isMobileWidth()) {
+        return;
       }
 
-      let self = this;
       let userScroll = 0;
       let currentTop = $(window).scrollTop();
       let previousTop = 0;
@@ -21,7 +27,6 @@
       let menu;
       let headerBar;
       let mobileNavToggle;
-      let searchToggle;
       let topbarDropdown;
 
       const $adminToolbar = $('#toolbar-bar');
@@ -67,7 +72,6 @@
           menu = nav.find('.c-nav--wrap');
           headerBar = nav.find('.c-header-bar');
           mobileNavToggle = nav.find('.js-mobile-nav--btn');
-          searchToggle = $('.js-search--toggle');
           topbarDropdown = nav.find('.c-login--list');
 
           // bind scrolling
@@ -100,7 +104,6 @@
           menu = nav.find('.c-nav--wrap');
           headerBar = nav.find('.c-header-bar');
           mobileNavToggle = nav.find('.js-mobile-nav--btn');
-          searchToggle = $('.js-search--toggle');
           topbarDropdown = nav.find('.c-login--list');
 
           // collapse / hide nav
@@ -142,7 +145,6 @@
         menu = nav.find('.c-nav--wrap');
         headerBar = nav.find('.c-header-bar');
         mobileNavToggle = nav.find('.js-mobile-nav--btn');
-        searchToggle = $('.js-search--toggle');
         topbarDropdown = nav.find('.c-login--list');
 
         // hide original nav -- just for visual
@@ -204,7 +206,6 @@
         menu = nav.find('.c-nav--wrap');
         headerBar = nav.find('.c-header-bar');
         mobileNavToggle = nav.find('.js-mobile-nav--btn');
-        searchToggle = $('.js-search--toggle');
         topbarDropdown = nav.find('.c-login--list');
 
         // hide original nav -- just for visual
@@ -253,6 +254,7 @@
           self.toggleMobileNav(menu);
         });
 
+      searchToggle = $('.js-search--toggle');
       searchToggle.once('nySenateHeader').on('click touch', function (e) {
         self.toggleSearchBar(userScroll, e);
       });
@@ -509,6 +511,9 @@
       if (statusMessage && blockTabs) {
         blockTabs.after(statusMessage);
       }
+    },
+    isMobileWidth: function () {
+      return (window.innerWidth <= 1024);
     }
   };
 })(document, Drupal, jQuery);

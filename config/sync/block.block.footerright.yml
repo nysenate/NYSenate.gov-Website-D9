@@ -1,22 +1,22 @@
-uuid: a939cfff-c330-4052-a5cc-7f823f3b26b6
+uuid: 478dcdea-7f20-42b4-ad28-5ffa6a9ddda7
 langcode: en
-status: false
+status: true
 dependencies:
   config:
-    - system.menu.policies
+    - system.menu.footer-right
   module:
     - system
   theme:
     - nysenate_theme
-id: policies
+id: footerright
 theme: nysenate_theme
-region: addendum
+region: footer_right
 weight: 0
 provider: null
-plugin: 'system_menu_block:policies'
+plugin: 'system_menu_block:footer-right'
 settings:
-  id: 'system_menu_block:policies'
-  label: Policies
+  id: 'system_menu_block:footer-right'
+  label: 'Footer Right'
   label_display: '0'
   provider: system
   level: 1

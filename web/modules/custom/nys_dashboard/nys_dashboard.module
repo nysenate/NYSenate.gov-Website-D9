@@ -115,7 +115,6 @@ function nys_dashboard_preprocess_page(&$variables) {
   $request_uri = \Drupal::request()->getRequestUri();
   if (str_starts_with($request_uri, '/dashboard')) {
     $variables['#attached']['library'][] = 'nysenate_theme/full-width-main';
-    $variables['#attached']['library'][] = 'nysenate_theme/my-dashboard';
     $variables['actionbar']['type'] = 'disabled';
   }
 }
@@ -152,6 +151,13 @@ function nys_dashboard_preprocess_node(&$variables) {
     $microsites_service = \Drupal::service('nys_senators.microsites');
     $variables['senator_microsite_url'] = $microsites_service->getMicrosite($senator_term);
   }
+}
+
+/**
+ * Implements hook_preprocess_views_view__VIEW_ID().
+ */
+function nys_dashboard_preprocess_views_view__my_dashboard(&$variables) {
+  $variables['#attached']['library'][] = 'nysenate_theme/my-dashboard';
 }
 
 /**

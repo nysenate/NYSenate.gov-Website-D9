@@ -26,6 +26,9 @@ class EditAccountForm extends AccountForm {
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
 
+    // Attach library.
+    $form['#attached']['library'][] = 'nysenate_theme/edit-account';
+
     // Manipulate 'account' fieldset.
     $account_fields_to_disable = ['name', 'pass', 'status', 'roles', 'notify'];
     foreach ($account_fields_to_disable as $field) {

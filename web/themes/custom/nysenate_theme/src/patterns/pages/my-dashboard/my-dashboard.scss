@@ -1,248 +1,192 @@
 @import '../../global/utils/init';
 
-body.path-dashboard {
-  // My Dashboard exposed filter styling.
-  #block-exposed-form-my-dashboard-main {
-    padding-left: 40px;
+// My Dashboard exposed filter styling.
+.block-views-exposed-filter-blockmy-dashboard-main {
+  padding-left: 40px;
 
-    @include breakpoint($bp-under-md) {
-      padding-left: 0;
+  @include breakpoint($bp-under-md) {
+    padding-left: 0;
+  }
+
+  @include breakpoint($bp-under-sm) {
+    margin-bottom: 20px;
+
+    .container {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.2s ease-out;
+    }
+  }
+
+  h2 {
+    color: $grey08;
+    text-transform: uppercase;
+    font-family: $font-sans;
+    font-size: 14px;
+    position: relative;
+
+    @include breakpoint($bp-under-sm) {
+      cursor: pointer;
+      padding: 20px;
+      border: 1px solid $grey04;
+      margin: 0;
+
+      &:after {
+        position: absolute;
+        right: 16px;
+        top: 13px;
+        font-size: 25px;
+        color: #2b6990;
+        pointer-events: none;
+        cursor: pointer;
+        content: '\65';
+        font-family: $senate-icons;
+        display: inline-block;
+        vertical-align: middle;
+        speak: none;
+        font-style: normal;
+        font-weight: normal;
+        font-variant: normal;
+        text-transform: none;
+        padding-left: 3px;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      &.active:after {
+        content: '\5e';
+      }
+    }
+  }
+
+  #views-exposed-form-my-dashboard-main {
+    .form-item {
+      width: 100%;
+      margin: 10px 0 5px 0;
+
+      input, select {
+        margin-bottom: 0;
+      }
+
+      &.form-item-your-senator-filter {
+        margin: 20px 5px 30px;
+        position: relative;
+
+        @include breakpoint($bp-under-md) {
+          max-width: 240px;
+        }
+
+        label {
+          position: absolute;
+          top: 0;
+          left: 24px;
+          font-size: 15px;
+          line-height: 20px;
+          color: $blue01;
+        }
+      }
+    }
+
+    .form-actions {
+      input {
+        width: 100%;
+        margin: 0 0 20px;
+
+        &#edit-submit-my-dashboard--2 {
+          background-color: $gen_blue_lgt;
+          border-color: $gen_blue_lgt;
+          color: white;
+        }
+
+        &[id^=edit-reset] {
+          background-color: white;
+          border-color: $gen_blue_lgt;
+          color: $gen_blue_lgt;
+
+          @include breakpoint($bp-under-sm) {
+            margin: 0;
+          }
+        }
+
+        &[id^=edit-submit]:hover, &[id^=edit-reset]:hover {
+          background-color: white;
+          border-color: black;
+          color: black;
+        }
+      }
+
+      @include breakpoint($bp-under-sm) {
+        margin-bottom: 0;
+      }
     }
 
     @include breakpoint($bp-under-sm) {
-      margin-bottom: 20px;
-
-      .container {
-        max-height: 0;
-        overflow: hidden;
-        transition: max-height 0.2s ease-out;
-      }
-    }
-
-    h2 {
-      color: $grey08;
-      text-transform: uppercase;
-      font-family: $font-sans;
-      font-size: 14px;
-      position: relative;
-
-      @include breakpoint($bp-under-sm) {
-        cursor: pointer;
-        padding: 20px;
-        border: 1px solid $grey04;
-        margin: 0;
-
-        &:after {
-          position: absolute;
-          right: 16px;
-          top: 13px;
-          font-size: 25px;
-          color: #2b6990;
-          pointer-events: none;
-          cursor: pointer;
-          content: '\65';
-          font-family: $senate-icons;
-          display: inline-block;
-          vertical-align: middle;
-          speak: none;
-          font-style: normal;
-          font-weight: normal;
-          font-variant: normal;
-          text-transform: none;
-          padding-left: 3px;
-          -webkit-font-smoothing: antialiased;
-          -moz-osx-font-smoothing: grayscale;
-        }
-
-        &.active:after {
-          content: '\5e';
-        }
-      }
-    }
-
-    #views-exposed-form-my-dashboard-main {
-      .form-item {
-        width: 100%;
-        margin: 10px 0 5px 0;
-
-        input, select {
-          margin-bottom: 0;
-        }
-
-        &.form-item-your-senator-filter {
-          margin: 20px 5px 30px;
-          position: relative;
-
-          @include breakpoint($bp-under-md) {
-            max-width: 240px;
-          }
-
-          label {
-            position: absolute;
-            top: 0;
-            left: 24px;
-            font-size: 15px;
-            line-height: 20px;
-            color: $blue01;
-          }
-        }
-      }
-
-      .form-actions {
-        input {
-          width: 100%;
-          margin: 0 0 20px;
-
-          &#edit-submit-my-dashboard--2 {
-            background-color: $gen_blue_lgt;
-            border-color: $gen_blue_lgt;
-            color: white;
-          }
-
-          &[id^=edit-reset] {
-            background-color: white;
-            border-color: $gen_blue_lgt;
-            color: $gen_blue_lgt;
-
-            @include breakpoint($bp-under-sm) {
-              margin: 0;
-            }
-          }
-
-          &[id^=edit-submit]:hover, &[id^=edit-reset]:hover {
-            background-color: white;
-            border-color: black;
-            color: black;
-          }
-        }
-
-        @include breakpoint($bp-under-sm) {
-          margin-bottom: 0;
-        }
-      }
-
-      @include breakpoint($bp-under-sm) {
-        padding: 10px 20px 20px;
-        border: 1px solid $grey04;
-        border-top: none;
-        margin: 0;
-      }
-    }
-
-    @include breakpoint($bp-md) {
-      &.sticky-filter {
-        position: fixed;
-      }
-
-      &.sticky-filter-bottom {
-        position: absolute;
-        top: auto !important;
-        bottom: 0;
-      }
+      padding: 10px 20px 20px;
+      border: 1px solid $grey04;
+      border-top: none;
+      margin: 0;
     }
   }
 
-  // My Dashboard view pagination styling.
-  .view-my-dashboard {
-    .view-header, .view-header-pager {
-      float: left;
+  @include breakpoint($bp-md) {
+    &.sticky-filter {
+      position: fixed;
+    }
+
+    &.sticky-filter-bottom {
+      position: absolute;
+      top: auto !important;
+      bottom: 0;
+    }
+  }
+}
+
+// My Dashboard view pagination styling.
+.view-my-dashboard {
+  .view-header, .view-header-pager {
+    float: left;
+
+    @include breakpoint($bp-under-sm) {
+      width: 100%;
+      text-align: center;
+    }
+  }
+
+  .view-header {
+    width: 30%;
+    font-size: 14px;
+    font-style: italic;
+  }
+
+  .pager a {
+    font-size: 14px;
+    color: $blue01;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .view-header-pager {
+    width: 70%;
+
+    .pager__items {
+      padding: 0;
+      margin: 0;
+      text-align: right;
 
       @include breakpoint($bp-under-sm) {
-        width: 100%;
         text-align: center;
       }
     }
-
-    .view-header {
-      width: 30%;
-      font-size: 14px;
-      font-style: italic;
-    }
-
-    .pager a {
-      font-size: 14px;
-      color: $blue01;
-
-      &:hover {
-        text-decoration: underline;
-      }
-    }
-
-    .view-header-pager {
-      width: 70%;
-
-      .pager__items {
-        padding: 0;
-        margin: 0;
-        text-align: right;
-
-        @include breakpoint($bp-under-sm) {
-          text-align: center;
-        }
-      }
-    }
-
-    .view-content {
-      padding-top: 20px;
-      clear: both;
-    }
-
-    .view-footer-pager {
-      border-top: 1px solid $grey04;
-    }
   }
 
-  // Edit Account form.
-  .user-edit-account-form {
-    .edit-account-wrapper, #edit-field-first-name-wrapper, #edit-field-last-name-wrapper {
-      float: left;
-      width: 48%;
+  .view-content {
+    padding-top: 20px;
+    clear: both;
+  }
 
-      @include breakpoint($bp-under-md) {
-        width: 100%;
-      }
-    }
-
-    .edit-account-wrapper-first, #edit-field-first-name-wrapper {
-      margin-right: 4%;
-
-      @include breakpoint($bp-under-md) {
-        margin: 0;
-      }
-    }
-
-    #edit-field-address-0-address {
-      column-gap: 4%;
-
-      .form-item {
-        margin: 0;
-      }
-    }
-
-    .image-widget-data {
-      .form-submit {
-        margin: 20px 0;
-        display: block;
-
-        &.js-hide {
-          display: none;
-        }
-      }
-    }
-
-    #edit-field-gender-user-wrapper {
-      clear: both;
-      display: block;
-      overflow: hidden;
-
-      #edit-field-gender-user {
-        margin: 0;
-      }
-    }
-
-    #edit-actions {
-      clear: both;
-      padding-top: 20px;
-    }
+  .view-footer-pager {
+    border-top: 1px solid $grey04;
   }
 }

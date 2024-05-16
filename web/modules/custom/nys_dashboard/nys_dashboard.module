@@ -9,22 +9,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\ViewExecutable;
 
 /**
- * Implements hook_form_views_exposed_form_alter().
- */
-function nys_dashboard_form_views_exposed_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  // Ensure items_per_page element appears before your_senator_filter.
-  $your_senator_filter_index = array_search('your_senator_filter', array_keys($form));
-  $items_per_page_index = array_search('items_per_page', array_keys($form));
-  if ($items_per_page_index !== FALSE && $your_senator_filter_index !== FALSE) {
-    $your_senator_filter_element = array_splice($form, $your_senator_filter_index, 1);
-    $new_your_senator_filter_index = $items_per_page_index + 1;
-    $form = array_slice($form, 0, $new_your_senator_filter_index, TRUE)
-      + $your_senator_filter_element
-      + array_slice($form, $new_your_senator_filter_index, NULL, TRUE);
-  }
-}
-
-/**
  * Implements hook_views_data().
  */
 function nys_dashboard_views_data() {
@@ -59,6 +43,27 @@ function nys_dashboard_views_data() {
     ],
   ];
   return $data;
+}
+
+/**
+ * Implements hook_form_views_exposed_form_alter().
+ */
+function nys_dashboard_form_views_exposed_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if ($form['#id'] === 'views-exposed-form-my-dashboard-main') {
+    // Manually set exposed field order due to items_per_page UI limitations.
+    $field_order = [
+      'search',
+      'type',
+      'your_issues_filter',
+      'year_month_filter',
+      'year_month_filter__month',
+      'items_per_page',
+      'your_senator_filter',
+    ];
+    foreach ($field_order as $key => $field) {
+      $form[$field]['#weight'] = $key;
+    }
+  }
 }
 
 /**

@@ -4552,30 +4552,6 @@ function nysenate_theme_preprocess_node(&$variables) {
   $variables['view_mode'] = $variables['elements']['#view_mode'];
   $node = $variables['elements']['#node'];
 
-  if ($variables['view_mode'] == 'upcoming_event') {
-    if ($node->bundle() === 'event') {
-      $date = new \Datetime($node->field_date_range->value, new DateTimeZone('UTC'));
-      $date->setTimezone(new DateTimeZone('America/New_York'));
-      $date_end = new \Datetime($node->field_date_range->end_value, new DateTimeZone('UTC'));
-      $date_end->setTimezone(new DateTimeZone('America/New_York'));
-      $location = $node->field_location[0]->locality ?? '';
-      $administrative = $node->field_location[0]->administrative_area ?? '';
-      $postal_code = $node->field_location[0]->postal_code ?? '';
-      $street_2 = $location . ', ' . $administrative . ' ' . $postal_code;
-      $variables['item'] = [
-        'title' => $node->label(),
-        'url' => $node->toUrl()->toString(),
-        'day' => $date->format('d'),
-        'month' => $date->format('M'),
-        'location' => $node->field_location[0]->organization ?? '',
-        'meeting_location' => $node->field_meeting_location->value ?? '',
-        'street_1' => $node->field_location[0]->address_line1 ?? '',
-        'street_2' => !empty($node->field_location[0]->locality) ? $street_2 : '',
-        'time' => $date->format('g:i A') . ' to ' . $date_end->format('g:i A'),
-      ];
-    }
-  }
-
   $variables['title'] = $variables['label'][0]['#context']['value'];
 
   $issues = [];

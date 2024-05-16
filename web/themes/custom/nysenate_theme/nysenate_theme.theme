@@ -2842,10 +2842,12 @@ function nysenate_theme_preprocess_semanticviews_row__news_by_issue__news_by_bil
 
   if ($node->hasField('field_ol_sponsor') && !$node->get('field_ol_sponsor')->isEmpty()) {
     $sponsor = $node->field_ol_sponsor->entity;
-    $bill['ol_sponsor'] = [
-      'text' => $sponsor->getName(),
-      'url' => $sponsor->toUrl()->toString(),
-    ];
+    if($sponsor) {
+      $bill['ol_sponsor'] = [
+        'text' => $sponsor->getName(),
+        'url' => $sponsor->toUrl()->toString(),
+      ];
+    }
   }
 
   $issues = [];

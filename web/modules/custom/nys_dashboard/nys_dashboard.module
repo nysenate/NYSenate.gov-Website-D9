@@ -78,7 +78,7 @@ function nys_dashboard_preprocess_page(&$variables) {
   $variables['manage_dashboard_link'] = '/dashboard/manage';
   $variables['edit_account_link'] = '/dashboard/edit';
 
-  // Attach dashboard library to dashboard.
+  // Attach full width library to dashboard.
   $request_uri = \Drupal::request()->getRequestUri();
   if (str_starts_with($request_uri, '/dashboard')) {
     $variables['#attached']['library'][] = 'nysenate_theme/full-width-main';

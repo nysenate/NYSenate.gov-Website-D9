@@ -136,12 +136,10 @@ class BillVoteWidgetForm extends FormBase {
 
     $label = $this->billVoteHelper->getVotedLabel($default_value);
 
-    $library = !$parameter['simple_mode']
-      ? [
-        'nys_bill_vote/bill_vote',
-        'nysenate_theme/bill-vote-widget',
-      ]
-      : ['nysenate_theme/bill-vote-widget-simple'];
+    $library[] = 'nys_bill_vote/bill_vote';
+    $library[] = !$parameter['simple_mode']
+      ? 'nysenate_theme/bill-vote-widget'
+      : 'nysenate_theme/bill-vote-widget-simple';
 
     // The main form.
     $form['nys_bill_vote_container'] = [
@@ -176,7 +174,8 @@ class BillVoteWidgetForm extends FormBase {
               'c-half-btn',
               'c-half-btn--left',
               'nys-bill-vote-yes',
-              ($default_value === 'yes') ? 'current-vote' : 'change-vote',
+              ($default_value === 'yes') ? 'current-vote' : '',
+              ($default_value === 'no') ? 'change-vote' : '',
             ],
             // 'type' => 'submit',
           ],
@@ -197,7 +196,8 @@ class BillVoteWidgetForm extends FormBase {
               'c-half-btn',
               'c-half-btn--right',
               'nys-bill-vote-no',
-              ($default_value === 'no') ? 'current-vote' : 'change-vote',
+              ($default_value === 'no') ? 'current-vote' : '',
+              ($default_value === 'yes') ? 'change-vote' : '',
             ],
             // 'type' => 'submit',
           ],
@@ -220,10 +220,9 @@ class BillVoteWidgetForm extends FormBase {
       ],
     ];
 
-    if (!$parameter['simple_mode']) {
-      $this->addSubscriptionForm($form, $form_state, $node_id);
-    }
-    else {
+    $this->addSubscriptionForm($form, $form_state, $node_id);
+    if ($parameter['simple_mode']) {
+      $form['nys_bill_vote_container']['nys_bill_vote_button_wrapper']['nys_bill_subscribe']['#access'] = FALSE;
       $form['nys_bill_vote_container']['nys_bill_vote_label']['#markup'] = '<div class="field__label">Do you support this bill?</div>';
     }
 
@@ -341,7 +340,7 @@ class BillVoteWidgetForm extends FormBase {
   public function voteAjaxCallback(&$form, FormStateInterface $form_state) {
     $response = new AjaxResponse();
 
-    // Redirec to registration page for anonymous users.
+    // Redirect to registration page for anonymous users.
     if (!$this->currentUser->isAuthenticated()) {
       $url = Url::fromRoute('user.register');
       $command = new RedirectCommand($url->toString());

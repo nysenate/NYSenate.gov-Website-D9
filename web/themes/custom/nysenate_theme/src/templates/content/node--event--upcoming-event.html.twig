@@ -101,18 +101,54 @@
       <div class="c-event-date"><span>{{ node.field_date_range.value|date('U')|format_date('day_only') }}</span> {{ node.field_date_range.value|date('U')|format_date('month_only') }}</div>
       <div class="event-details">
         <a href="{{ url }}"><h3 class="c-event-name">{{ label }}</h3></a>
-        {# add location link #}
-        {% if content.field_location[0]['organization']['#value'] %}
-          <a class="c-event-location" href="" target="_blank"><span class="icon-before__circle-pin"></span><span>{{ content.field_location[0]['organization']['#value'] }}</span></a>
+
+        {% if content.field_event_place[0]['#markup'] == "Online" %}
+          <div class="c-event-location online">
+            <span class="icon-before__circle-pin">Online Event</span>
+            {% if content.field_meeting_location[0]['#context']['value'] %}
+              <br>{{ content.field_meeting_location[0]['#context']['value'] }}: {{ content.field_event_online_link }}
+            {% endif %}
+          </div>
+
+        {% elseif content.field_event_place[0]['#markup'] == "Teleconference" %}
+          <div class="c-event-location">
+            <span class="icon-before__circle-pin">Teleconference Event</span>
+            <div class="c-event-location tel">
+              <div>
+                <strong>TEL:</strong>
+                {{ content.field_teleconference_number }}
+              </div>
+              {% if content.field_teleconference_id_number %}
+                <div>
+                  <strong>ID:</strong>
+                  {{ content.field_teleconference_id_number }}
+                </div>
+              {% endif %}
+              {% if content.field_meeting_location[0]['#context']['value'] %}
+                <br>{{ content.field_meeting_location[0]['#context']['value'] }}
+              {% endif %}
+            </div>
+          </div>
         {% endif %}
-        {% if content.field_meeting_location[0]['#context']['value'] %}
-          <div class="c-event-address">{{ content.field_meeting_location }}</div>
+
+        {% if content.field_location[0]['organization']['#value'] and content.field_location[0]['address_line1']['#value'] %}
+          <a href="http://maps.google.com/?q={{ location_url }}" class="c-event-location" target="_blank">
+            <span class="icon-before__circle-pin"></span>
+            {{ content.field_location[0]['organization']['#value']|raw }}
+          </a>
+        {% elseif content.field_location[0]['organization']['#value'] %}
+          <div class="c-event-location">
+            <span class="icon-before__circle-pin"></span>
+            {{ content.field_location[0]['organization']['#value']|raw }}
+          </div>
         {% endif %}
+
+
 
         {% if content.field_location[0]['address_line1']['#value'] %}
           <p class="c-event-address">
             {{ content.field_location[0]['address_line1']['#value'] }} {{ content.field_location[0]['address_line2']['#value'] }}
-            <br/>{{ content.field_location[0]['locality']['#value'] }},
+            <br/>{% apply spaceless %}{{ content.field_location[0]['locality']['#value'] }}{% endapply %},
             {{ content.field_location[0]['administrative_area']['#value'] }}
             {{ content.field_location[0]['postal_code']['#value'] }}</p>
         {% endif %}

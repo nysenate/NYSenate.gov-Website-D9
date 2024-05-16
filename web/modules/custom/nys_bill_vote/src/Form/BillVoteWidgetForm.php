@@ -136,6 +136,13 @@ class BillVoteWidgetForm extends FormBase {
 
     $label = $this->billVoteHelper->getVotedLabel($default_value);
 
+    $library = !$parameter['simple_mode']
+      ? [
+        'nys_bill_vote/bill_vote',
+        'nysenate_theme/bill-vote-widget',
+      ]
+      : ['nysenate_theme/bill-vote-widget-simple'];
+
     // The main form.
     $form['nys_bill_vote_container'] = [
       // Main form attributes.
@@ -169,6 +176,7 @@ class BillVoteWidgetForm extends FormBase {
               'c-half-btn',
               'c-half-btn--left',
               'nys-bill-vote-yes',
+              ($default_value === 'yes') ? 'current-vote' : 'change-vote',
             ],
             // 'type' => 'submit',
           ],
@@ -189,6 +197,7 @@ class BillVoteWidgetForm extends FormBase {
               'c-half-btn',
               'c-half-btn--right',
               'nys-bill-vote-no',
+              ($default_value === 'no') ? 'current-vote' : 'change-vote',
             ],
             // 'type' => 'submit',
           ],
@@ -201,9 +210,7 @@ class BillVoteWidgetForm extends FormBase {
         ],
       ],
       '#attached' => [
-        'library' => [
-          'nys_bill_vote/bill_vote',
-        ],
+        'library' => $library,
         'drupalSettings' => [
           'settings' => [
             'is_logged_in' => $this->currentUser->isAuthenticated(),
@@ -213,7 +220,12 @@ class BillVoteWidgetForm extends FormBase {
       ],
     ];
 
-    $this->addSubscriptionForm($form, $form_state, $node_id);
+    if (!$parameter['simple_mode']) {
+      $this->addSubscriptionForm($form, $form_state, $node_id);
+    }
+    else {
+      $form['nys_bill_vote_container']['nys_bill_vote_label']['#markup'] = '<div class="field__label">Do you support this bill?</div>';
+    }
 
     $form['#cache'] = ['max-age' => 0];
 
@@ -229,7 +241,6 @@ class BillVoteWidgetForm extends FormBase {
    */
   public function addSubscriptionForm(&$form, FormStateInterface $form_state, $node_id = '') {
     $settings = $form_state->getBuildInfo();
-    $nid = $settings['entity_id'];
 
     // If we have a node id, load that node.  Otherwise, use the current.
     $ref_node = !empty($node_id) ? $this->entityTypeManager->getStorage('node')->load($node_id)
@@ -312,7 +323,7 @@ class BillVoteWidgetForm extends FormBase {
             '#attributes' => ['class' => ['subscribe_email_container']],
             'email' => [
               '#type' => 'textfield',
-              '#title' => t('Email Address'),
+              '#title' => $this->t('Email Address'),
               '#name' => 'email',
               '#size' => 20,
               '#id' => 'edit-email-address-entry-' . $node_id,
@@ -427,7 +438,7 @@ class BillVoteWidgetForm extends FormBase {
       }
 
       // Everything is awesome.  Generate the subscription.
-      $subscription = $this->subscriptionSignup($nid, $email_address);
+      $this->subscriptionSignup($nid, $email_address);
 
       $form_is_awesome = [
         'sub_ok' => [
@@ -469,7 +480,6 @@ class BillVoteWidgetForm extends FormBase {
     // @todo This method comes from nys_accumulator custom module.
     // @phpstan-ignore-next-line
     // nyslog();
-    $node = $form_state->getFormObject();
     $build_info = $form_state->getBuildInfo();
     $element = $form_state->getTriggeringElement();
     $this->billVoteHelper->processVote($build_info['entity_type'], $build_info['entity_id'], $element['value']);

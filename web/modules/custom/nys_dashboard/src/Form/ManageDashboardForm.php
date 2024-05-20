@@ -185,19 +185,17 @@ class ManageDashboardForm extends FormBase {
     }
     $form_state->set('content_to_unfollow', $content_to_unfollow);
 
-    // Populate $form_state 'unfollow_content_ul'.
-    $unfollow_content_li = '';
+    // Populate $form_state '$unfollow_content_list'.
+    $unfollow_content_list = [];
     foreach ($content_to_unfollow as $unfollow_content) {
       $flagged_entity_type_id = ($unfollow_content['flag_type'] !== 'follow_this_bill') ? 'taxonomy_term' : 'node';
       $flagged_entity = $this->entityTypeManager
         ->getStorage($flagged_entity_type_id)
         ->load($unfollow_content['flagged_entity_id']);
       $content_type = substr($unfollow_content['field_name'], 0, -1);
-      $unfollow_content_li .= '<li>' . $content_type . ': '
-        . $flagged_entity->label() . '</li>';
+      $unfollow_content_list[] = $content_type . ': ' . $flagged_entity->label();
     }
-    $unfollow_content_ul = '<ul>' . $unfollow_content_li . '</ul>';
-    $form_state->set('unfollow_content_ul', $unfollow_content_ul);
+    $form_state->set('unfollow_content_list', $unfollow_content_list);
 
     // Put form into confirmation step and trigger rebuild.
     $form_state->set('is_confimartion_step', TRUE);
@@ -295,7 +293,12 @@ class ManageDashboardForm extends FormBase {
       and remove all posts under the selected topic(s) from your dashboard feed.
       </span>
       DESC;
-    $form['description']['#markup'] = $description . $form_state->get('unfollow_content_ul');
+    $form['description'] = [
+      '#prefix' => $description,
+      '#theme' => 'item_list',
+      '#type' => 'ul',
+      '#items' => $form_state->get('unfollow_content_list'),
+    ];
     $form['actions']['confirm'] = [
       '#type' => 'submit',
       '#value' => $this->t('Yes, unfollow my selection'),

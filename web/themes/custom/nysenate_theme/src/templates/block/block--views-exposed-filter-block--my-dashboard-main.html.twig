@@ -37,7 +37,14 @@
   <div{{ attributes.addClass(classes) }}>
     {{ title_prefix }}
     {% if label and plugin_id != 'nys_senators_microsite_menu' %}
-      <h2{{ title_attributes }}>{{ label }}</h2>
+      <h2{{ title_attributes }}>
+        <button type="button"
+                aria-expanded="true"
+                aria-controls="dashboard-filters-accordion"
+                id="dashboard-filters-accordion-button">
+          <span>{{ label }}</span>
+        </button>
+      </h2>
     {% endif %}
     {{ title_suffix }}
     {% block content %}

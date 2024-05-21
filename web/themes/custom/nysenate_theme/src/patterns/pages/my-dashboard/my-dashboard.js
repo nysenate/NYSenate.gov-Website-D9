@@ -9,15 +9,18 @@
       if (!inMobileMode()) {
         return;
       }
-      let filterLabelOnce = once('nysDashboardFilterAccordion', '#block-exposed-form-my-dashboard-main > h2');
-      filterLabelOnce.forEach(function (filterLabel) {
-        filterLabel.addEventListener('click', function () {
+      let accordionButtonOnce = once('nysDashboardFilterAccordion', '#dashboard-filters-accordion-button');
+      accordionButtonOnce.forEach(function (accordionButton) {
+        accordionButton.setAttribute('aria-expanded', false);
+        accordionButton.addEventListener('click', function () {
           this.classList.toggle('active');
-          let filterContainer = document.querySelector('#block-exposed-form-my-dashboard-main > .container');
-          if (filterContainer.style.maxHeight) {
-            filterContainer.style.maxHeight = null;
+          let accordionContainer = document.getElementById('dashboard-filters-accordion');
+          if (accordionContainer.style.maxHeight) {
+            accordionButton.setAttribute('aria-expanded', false);
+            accordionContainer.style.maxHeight = null;
           } else {
-            filterContainer.style.maxHeight = filterContainer.scrollHeight + 'px';
+            accordionButton.setAttribute('aria-expanded', true);
+            accordionContainer.style.maxHeight = accordionContainer.scrollHeight + 'px';
           }
         });
       });

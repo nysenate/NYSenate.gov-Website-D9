@@ -2,6 +2,7 @@
 
 namespace Drupal\nys_legislation_explorer\Form;
 
+use Drupal\Core\Datetime\Element\Datetime;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
@@ -461,7 +462,19 @@ class SearchAdvancedLegislationForm extends FormBase {
       $year = $values['year'];
       $month = $values['month'];
       $first_day_month = date('Y-m-01', strtotime("$year-$month-01"));
-      $last_day_month = date('Y-m-t', strtotime("$year-$month-01"));
+      // Get the last day of the month and create a DateTime object.
+      $date_string = "$year-$month-01";
+      $last_day_date = new \DateTime(date('Y-m-t', strtotime($date_string)));
+
+      // Add one day to the last day of the month.
+      $last_day_date->modify('+1 day');
+
+      // Subtract one second from the result.
+      $last_day_date->modify('-1 second');
+
+      // Format the result to Y-m-d H:i:s.
+      $last_day_month = $last_day_date->format('Y-m-d H:i:s');
+
       $date_range = $first_day_month . '--' . $last_day_month;
     }
     if (!empty($values['year']) && $values['month'] == 'all') {

@@ -36,18 +36,18 @@
 <article{{ attributes.addClass(classes) }}>
   <div class="c-my-dashboard--type-wrapper">
     <i class="ph ph-{{ attribute(type_icon_map, node.bundle) }}"></i>
-    <span class="c-my-dashboard--type">
+    <p class="c-my-dashboard--type">
       {% if node.bundle == 'article' %}
         {{ content.field_category.0 }}
       {% else %}
         {{ attribute(type_label_map, node.bundle) }}
       {% endif %}
-    </span>
+    </p>
   </div>
-  <h2{{ title_attributes }}>
+  <h3{{ title_attributes }}>
     <a href="{{ url }}" rel="bookmark">{{ label }}</a>
-  </h2>
-  <div class="c-my-dashboard--blurb">
+  </h3>
+  <p class="c-my-dashboard--blurb">
     {% if node.field_subtitle.value %}
       {{ node.field_subtitle.value|render|striptags|truncate(truncate, true)|raw }}{{ read_more }}
     {% elseif node.field_subhead.value %}
@@ -57,22 +57,32 @@
     {% elseif node.body.value %}
       {{ node.body.value|render|striptags|truncate(truncate, true)|raw }}{{ read_more }}
     {% endif %}
-  </div>
+  </p>
   <div class="c-my-dashboard--details">
     {% if node.bundle != 'bill' %}
-      <div>
+      <div class="c-my-dashboard--date">
       {% if node.field_date_range.value %}
-        {{ node.field_date_range.value|date('U')|format_date('publish_date') }}
-        | {{ node.field_date_range.value|date('U')|format_date('time') }}
+        <p>
+          {{ node.field_date_range.value|date('U')|format_date('publish_date') }}
+          | {{ node.field_date_range.value|date('U')|format_date('time') }}
+        </p>
       {% elseif node.field_date.value %}
-        {{ node.field_date.value|date('U')|format_date('publish_date') }}
+        <p>
+          {{ node.field_date.value|date('U')|format_date('publish_date') }}
+        </p>
         {% if node.field_senator_multiref.value %}
-          | By Senator <a href="{{ senator_microsite_url }}">{{ content.field_senator_multiref.0 }}</a>
+          | <p>
+              By Senator <a href="{{ senator_microsite_url }}">{{ content.field_senator_multiref.0 }}</a>
+            </p>
         {% endif %}
       {% elseif node.field_ol_publish_date.value %}
-        {{ node.field_ol_publish_date.value|date('U')|format_date('publish_date') }}
+        <p>
+          {{ node.field_ol_publish_date.value|date('U')|format_date('publish_date') }}
+        </p>
         {% if node.field_ol_sponsor.value  %}
-          | Sponsored by <a href="{{ senator_microsite_url }}">{{ content.field_ol_sponsor.0 }}</a>
+          | <p>
+              Sponsored by <a href="{{ senator_microsite_url }}">{{ content.field_ol_sponsor.0 }}</a>
+            </p>
         {% endif %}
       {% endif %}
       </div>
@@ -81,10 +91,10 @@
       {{ content.vote_widget }}
     {% endif %}
     {% if node.field_issues.value %}
-      {{ content.field_issues }}
+      <h4>Issues:</h4> {{ content.field_issues }}
     {% endif %}
     {% if node.field_committee.value %}
-      {{ content.field_committee }}
+      <h4>Committees:</h4> {{ content.field_committee }}
     {% endif %}
   </div>
   {% if 'node--teaser-with-extras' in classes %}

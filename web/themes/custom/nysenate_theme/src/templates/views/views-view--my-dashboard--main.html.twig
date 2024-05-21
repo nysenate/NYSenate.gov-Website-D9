@@ -40,6 +40,10 @@
     'container',
   ]
 %}
+<a href="#my-dashboard-filters" class="visually-hidden focusable skip-link">
+  {{ 'Skip to filters'|t }}
+</a>
+<a id="my-dashboard-results" tabindex="-1"></a>
 <div{{ attributes.addClass(classes) }}>
   {{ title_prefix }}
   {% if title %}

@@ -42,13 +42,13 @@ content:
     region: content
   field_committee:
     type: list_formatter
-    label: inline
+    label: hidden
     settings:
-      type: comma
+      type: ul
       separator_custom: ''
-      separator_custom_tag: span
+      separator_custom_tag: '0'
       separator_custom_class: list-formatter-separator
-      comma_tag: div
+      comma_tag: '0'
       class: list-formatter-list
       list_formatter_contrib:
         entity_reference_link: '1'
@@ -71,9 +71,9 @@ content:
     region: content
   field_issues:
     type: list_formatter
-    label: inline
+    label: hidden
     settings:
-      type: comma
+      type: ul
       separator_custom: ''
       separator_custom_tag: '0'
       separator_custom_class: list-formatter-separator

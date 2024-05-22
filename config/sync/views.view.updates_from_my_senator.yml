@@ -231,7 +231,14 @@ display:
             default_group_multiple: {  }
             group_items: {  }
       style:
-        type: default
+        type: html_list
+        options:
+          row_class: ''
+          default_row_class: true
+          uses_fields: false
+          type: ul
+          wrapper_class: item-list
+          class: ''
       row:
         type: 'entity:node'
         options:

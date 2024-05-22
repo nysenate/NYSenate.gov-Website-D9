@@ -32,11 +32,15 @@
     }
 
     .views-field-field-senator-name {
+      font-weight: 300;
+      margin-bottom: 0;
+
       .views-label-field-senator-name {
         color: $grey08;
         text-transform: uppercase;
         font-family: $font-sans;
         font-size: 14px;
+        line-height: 22.75px;
       }
 
       a {
@@ -44,6 +48,7 @@
         text-decoration: underline;
         font-family: $font-serif;
         font-size: 20px;
+        line-height: 32.75px;
 
         &:hover {
           text-decoration: none;
@@ -52,7 +57,7 @@
     }
   }
 
-  .view-updates-from-my-senator > .view-content {
+  .view-updates-from-my-senator > .view-content .item-list {
     float: left;
     width: 78%;
 
@@ -60,21 +65,26 @@
       width: 100%;
     }
 
-    .views-row {
-      width: 50%;
-      float: left;
+    ul {
+      list-style-type: none;
 
-      @include breakpoint($bp-under-md) {
-        width: 100%;
-      }
+      li {
+        margin: 0;
+        width: 50%;
+        float: left;
 
-      .node--view-mode-my-dashboard-teaser {
-        padding: 0 0 0 20px;
-        min-height: auto;
-        border-top: none;
+        @include breakpoint($bp-under-md) {
+          width: 100%;
+        }
 
-        .c-my-dashboard--extras {
-          display: none;
+        .node--view-mode-my-dashboard-teaser {
+          padding: 0 0 0 20px;
+          min-height: auto;
+          border-top: none;
+
+          .c-my-dashboard--extras {
+            display: none;
+          }
         }
       }
     }

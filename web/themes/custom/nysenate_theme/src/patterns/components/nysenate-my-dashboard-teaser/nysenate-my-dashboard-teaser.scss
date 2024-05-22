@@ -7,6 +7,7 @@
 .node--view-mode-my-dashboard-teaser {
   padding: 24px;
   border-top: 1px solid $grey04;
+  font-family: $font-sans;
 
   @include breakpoint($bp-under-md) {
     padding: 20px 0 !important;
@@ -15,6 +16,7 @@
   .c-my-dashboard--type-wrapper {
     position: relative;
     color: $blue01;
+    line-height: 26px;
 
     .c-my-dashboard--type {
       position: absolute;
@@ -25,7 +27,7 @@
       top: 0;
       margin: 0;
       color: inherit;
-      line-height: inherit;
+      line-height: 22px;
     }
   }
 
@@ -80,11 +82,12 @@
       line-height: inherit;
       margin: 0;
       display: inline;
-      color: inherit;
+      color: $grey10;
     }
 
     h4 {
       position: absolute;
+      line-height: 21px;
     }
 
     .field {

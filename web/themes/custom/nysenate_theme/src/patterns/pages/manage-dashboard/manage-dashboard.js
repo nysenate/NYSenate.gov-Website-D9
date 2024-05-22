@@ -6,10 +6,10 @@
 ((Drupal, once) => {
   Drupal.behaviors.nysManageDashboardUncheckAll = {
     attach: function () {
-      let uncheckAllLinks = document.getElementsByClassName('uncheck-all-link');
-      for (let uncheckAllLink of uncheckAllLinks) {
-        uncheckAllLink.onclick = function () {
-          let checkboxes = uncheckAllLink.closest('.description').nextElementSibling.getElementsByClassName('form-checkbox');
+      let uncheckAllButtons = document.getElementsByClassName('uncheck-all-button');
+      for (let uncheckAllButton of uncheckAllButtons) {
+        uncheckAllButton.onclick = function () {
+          let checkboxes = uncheckAllButton.closest('.form-checkboxes').getElementsByClassName('form-checkbox');
           for (let checkbox of checkboxes) {
             checkbox.checked = false;
           }

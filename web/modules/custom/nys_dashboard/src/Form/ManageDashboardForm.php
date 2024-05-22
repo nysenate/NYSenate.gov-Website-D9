@@ -126,17 +126,38 @@ class ManageDashboardForm extends FormBase {
 
     foreach ($this->fieldNamesToFlagTypes as $field_name => $flag_type) {
       $options = $this->getUsersFlaggedEntitiesByFlagName($flag_type);
-      $uncheck_all_link = "<br><a href='' class='uncheck-all-link'>Uncheck all $field_name</a>";
       $description = !empty($options)
-        ? "To stop following, uncheck $field_name and click Update My Preferences. $uncheck_all_link"
+        ? "To stop following, uncheck $field_name and click Update My Preferences."
         : "You're not following any $field_name.";
+      $uncheck_all_button_label = !empty($options)
+        ? "Uncheck all $field_name"
+        : '';
       $form['followed_types_fieldset'][$field_name] = [
+        'title' => [
+          '#type' => 'html_tag',
+          '#tag' => 'h2',
+          '#value' => ucfirst($field_name) . " You're Following",
+          '#weight' => -3,
+        ],
+        'help_text' => [
+          '#type' => 'html_tag',
+          '#tag' => 'p',
+          '#value' => $description,
+          '#weight' => -2,
+        ],
+        'uncheck_all_button' => [
+          '#type' => 'html_tag',
+          '#tag' => 'button',
+          '#attributes' => [
+            'class' => 'uncheck-all-button',
+          ],
+          '#value' => $uncheck_all_button_label,
+          '#weight' => -1,
+        ],
         '#type' => 'checkboxes',
-        '#title' => ucfirst($field_name) . " You're Following",
-        '#description' => $description,
-        '#description_display' => 'before',
         '#options' => $options,
         '#default_value' => array_keys($options),
+        '#weight' => 0,
       ];
     }
 
@@ -236,13 +257,12 @@ class ManageDashboardForm extends FormBase {
       $this->messenger()->addWarning('Nothing chosen to unfollow.');
       return $response;
     }
-    $title = $this->t('Are you sure you want to unfollow these topics?');
     $form = $this->buildForm($form, $form_state);
     // See http://api.jqueryui.com/dialog.
     $dialog_options = [
       'width' => 700,
     ];
-    $response->addCommand(new OpenModalDialogCommand($title, $form, $dialog_options));
+    $response->addCommand(new OpenModalDialogCommand('', $form, $dialog_options));
     return $response;
   }
 
@@ -288,13 +308,22 @@ class ManageDashboardForm extends FormBase {
    * Builds confirmation form.
    */
   public function buildConfirmationForm(array &$form, FormStateInterface $form_state): array {
-    $description = <<<DESC
-      <span class="manage-dashboard-confirm-text">Clicking “Yes” will unfollow 
-      and remove all posts under the selected topic(s) from your dashboard feed.
-      </span>
-      DESC;
-    $form['description'] = [
-      '#prefix' => $description,
+    $title = $this->t('Are you sure you want to unfollow these topics?');
+    $form['title'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'h2',
+      '#value' => $title,
+    ];
+    $help_text = <<<TEXT
+      Clicking “Yes” will unfollow and remove all posts under the selected
+      topic(s) from your dashboard feed.
+      TEXT;
+    $form['help_text'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'p',
+      '#value' => $help_text,
+    ];
+    $form['unfollow_list'] = [
       '#theme' => 'item_list',
       '#type' => 'ul',
       '#items' => $form_state->get('unfollow_content_list'),

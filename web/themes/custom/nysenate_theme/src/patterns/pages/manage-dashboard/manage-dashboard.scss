@@ -28,32 +28,40 @@ form.nys-dashboard-manage-dashboard {
       margin: 0;
       padding: 0;
 
-      legend {
+      h2 {
         font-family: $font-serif-regular;
         font-size: 20px;
         line-height: 30px;
+        margin: 20px 0 0;
       }
 
-      .fieldgroup {
-        margin-bottom: 20px;
+      p {
+        font-family: $font-sans;
+        font-size: 15px;
+        font-style: italic;
+        margin: 0;
+      }
 
-        .description {
-          font-size: 15px;
-          font-style: italic;
+      button.uncheck-all-button {
+        background: none;
+        border: none;
+        display: block;
+        clear: both;
+        font-size: 14px;
+        font-style: normal;
+        font-family: $font-sans;
+        color: $blue01;
+        font-weight: 700;
+        line-height: 40px;
+        padding: 0;
 
-          a.uncheck-all-link {
-            font-size: 14px;
-            font-style: normal;
-            font-family: $font-sans;
-            color: $blue01;
-            font-weight: 700;
-            line-height: 40px;
-
-            &:hover {
-              text-decoration: underline;
-            }
-          }
+        &:hover {
+          text-decoration: underline;
         }
+      }
+
+      .form-checkboxes {
+        overflow: hidden;
 
         .form-type-checkbox {
           float: left;
@@ -77,17 +85,22 @@ form.nys-dashboard-manage-dashboard {
       }
     }
   }
+
+  #edit-actions {
+    margin-top: 30px;
+  }
 }
 
 // Manage dashboard confirmation modal.
 .ui-dialog {
+  background: white !important;
   border-radius: 0 !important;
   border: 0;
   text-align: center;
   box-shadow: none;
 
   .ui-dialog-titlebar {
-    margin-top: 30px;
+    margin: 30px 0 10px;
     background-color: white !important;
     padding: 0 !important;
     border: 0;
@@ -108,14 +121,7 @@ form.nys-dashboard-manage-dashboard {
       -moz-osx-font-smoothing: grayscale;
     }
 
-    .ui-dialog-title {
-      color: $grey00;
-      margin-top: 10px;
-      padding-bottom: 0;
-      font-weight: 700;
-    }
-
-    .ui-dialog-titlebar-close {
+    .ui-dialog-title, .ui-dialog-titlebar-close {
       display: none;
     }
   }
@@ -123,12 +129,6 @@ form.nys-dashboard-manage-dashboard {
   #drupal-modal {
     padding-top: 0;
     padding-bottom: 40px;
-
-    .manage-dashboard-confirm-text {
-      font-size: 13px;
-      line-height: 16px;
-      display: inline-block;
-    }
 
     ul {
       text-align: left;
@@ -172,6 +172,18 @@ form.nys-dashboard-manage-dashboard {
 
   form.nys-dashboard-manage-dashboard {
     margin-bottom: 0;
+
+    h2 {
+      color: $grey00;
+      padding-bottom: 0;
+      font-weight: 700;
+    }
+
+    p {
+      font-size: 13px;
+      line-height: 16px;
+      padding: 0 20px;
+    }
   }
 }
 .ui-widget-overlay {

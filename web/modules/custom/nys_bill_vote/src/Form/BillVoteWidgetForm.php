@@ -134,12 +134,14 @@ class BillVoteWidgetForm extends FormBase {
 
     $form['#id'] = 'nys-bill-vote-vote-widget-' . $node_id;
 
-    $label = $this->billVoteHelper->getVotedLabel($default_value);
+    $label = $parameter['simple_mode']
+      ? $this->billVoteHelper->getVotedLabel()
+      : $this->billVoteHelper->getVotedLabel($default_value);
 
     $library[] = 'nys_bill_vote/bill_vote';
-    $library[] = !$parameter['simple_mode']
-      ? 'nysenate_theme/bill-vote-widget'
-      : 'nysenate_theme/bill-vote-widget-simple';
+    $library[] = $parameter['simple_mode']
+      ? 'nysenate_theme/bill-vote-widget-simple'
+      : 'nysenate_theme/bill-vote-widget';
 
     // The main form.
     $form['nys_bill_vote_container'] = [
@@ -221,10 +223,6 @@ class BillVoteWidgetForm extends FormBase {
     ];
 
     $this->addSubscriptionForm($form, $form_state, $node_id);
-    if ($parameter['simple_mode']) {
-      $form['nys_bill_vote_container']['nys_bill_vote_button_wrapper']['nys_bill_subscribe']['#access'] = FALSE;
-      $form['nys_bill_vote_container']['nys_bill_vote_label']['#markup'] = '<div class="field__label">Do you support this bill?</div>';
-    }
 
     $form['#cache'] = ['max-age' => 0];
 
@@ -242,8 +240,9 @@ class BillVoteWidgetForm extends FormBase {
     $settings = $form_state->getBuildInfo();
 
     // If we have a node id, load that node.  Otherwise, use the current.
-    $ref_node = !empty($node_id) ? $this->entityTypeManager->getStorage('node')->load($node_id)
-        : $this->routeMatch->getParameter('node');
+    $ref_node = !empty($node_id)
+      ? $this->entityTypeManager->getStorage('node')->load($node_id)
+      : $this->routeMatch->getParameter('node');
 
     // If the nid matches the current node's id, then this is not an embed.
     $is_embed = FALSE;
@@ -282,6 +281,10 @@ class BillVoteWidgetForm extends FormBase {
           ],
           '#weight' => $is_embed ? 2 : 5,
         ];
+      }
+
+      if ($settings['simple_mode']) {
+        $nys_bill_subscribe['#access'] = FALSE;
       }
 
       // Construct the new form controls.

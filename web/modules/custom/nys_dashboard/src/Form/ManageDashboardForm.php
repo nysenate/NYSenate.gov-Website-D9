@@ -150,6 +150,7 @@ class ManageDashboardForm extends FormBase {
           '#tag' => 'button',
           '#attributes' => [
             'class' => 'uncheck-all-button',
+            'type' => 'button',
           ],
           '#value' => $uncheck_all_button_label,
           '#weight' => -1,

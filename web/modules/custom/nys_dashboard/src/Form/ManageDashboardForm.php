@@ -53,6 +53,17 @@ class ManageDashboardForm extends FormBase {
   ];
 
   /**
+   * Mapping of field names to browse more URLs.
+   *
+   * @var array
+   */
+  public array $fieldNamesToBrowseMoreLink = [
+    'bills' => '/legislation',
+    'issues' => '/explore-issues',
+    'committees' => '/senators-committees',
+  ];
+
+  /**
    * Constructs a ManageDashboardForm object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManager $entityTypeManager
@@ -126,9 +137,10 @@ class ManageDashboardForm extends FormBase {
 
     foreach ($this->fieldNamesToFlagTypes as $field_name => $flag_type) {
       $options = $this->getUsersFlaggedEntitiesByFlagName($flag_type);
+      $browse_more_link = "<a href='{$this->fieldNamesToBrowseMoreLink[$field_name]}'>Browse $field_name</a>";
       $description = !empty($options)
         ? "To stop following, uncheck $field_name and click Update My Preferences."
-        : "You're not following any $field_name.";
+        : "You're not following any $field_name. $browse_more_link.";
       $uncheck_all_button_label = !empty($options)
         ? "Uncheck all $field_name"
         : '';

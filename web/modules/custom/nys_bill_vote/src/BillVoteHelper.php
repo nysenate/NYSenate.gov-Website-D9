@@ -180,8 +180,8 @@ class BillVoteHelper {
   public function getOptions() {
 
     $options = [
-      'yes' => t('Aye'),
-      'no' => t('Nay'),
+      'yes' => $this->t('Aye'),
+      'no' => $this->t('Nay'),
     ];
 
     return $options;
@@ -238,18 +238,6 @@ class BillVoteHelper {
       if (!$node->getType() == 'bill') {
         $label = $this->t("What's your position?");
       }
-    }
-
-    // If this is a user examining a bill through their dashboard...
-    $current_path = $this->currentPath->getPath();
-    $path_args = explode('/', $current_path);
-    if (
-      !empty($path_args[2])
-      && !empty($path_args[3])
-      && $path_args[2] == 'dashboard'
-      && $path_args[3] == 'bills'
-    ) {
-      $label = $this->t("Do you support this bill?");
     }
 
     // If an existing vote (including one submitted now) is detected ...

@@ -4681,26 +4681,6 @@ function nysenate_theme_form_views_exposed_form_alter(&$form, FormStateInterface
       unset($form['type']['#options']['All']);
     }
   }
-
-  if (!empty($form['#id']) &&
-    ($form['#id'] == 'views-exposed-form-private-message-inbox-inbox' ||
-    $form['#id'] == 'views-exposed-form-private-message-inbox-sent')) {
-    $values = $form_state->getValues();
-
-    $field_elements = [
-      'message__value',
-      'owner',
-      'field_issue_target_id',
-      'title',
-    ];
-
-    foreach ($field_elements as $field_element) {
-      $form[$field_element]['#default_value'] = $values[$field_element] ?? '';
-      $form[$field_element]['#size'] = 60;
-      $form[$field_element]['#maxlength'] = 128;
-      $form[$field_element]['#attributes']['class'] = ['search-form-group__input'];
-    }
-  }
 }
 
 /**

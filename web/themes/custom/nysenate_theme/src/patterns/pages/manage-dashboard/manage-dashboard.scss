@@ -5,7 +5,9 @@
 
 // Manage Dashboard form styling.
 form.nys-dashboard-manage-dashboard {
-  margin-bottom: 60px;
+  margin-bottom: 40px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid $dash_grey_1;
 
   @include breakpoint($bp-under-md) {
     margin: 0 10px 60px;
@@ -76,7 +78,7 @@ form.nys-dashboard-manage-dashboard {
           float: left;
           margin: 4px;
           padding: 4px 8px 4px 31px;
-          background-color: #F2F2F2;
+          background-color: $dash_grey_2;
           position: relative;
 
           label {
@@ -101,8 +103,8 @@ form.nys-dashboard-manage-dashboard {
     input:disabled {
       cursor: default;
       color: white;
-      background-color: $grey02;
-      border-color: $grey02;
+      background-color: $dash_grey_1;
+      border-color: $dash_grey_1;
     }
   }
 }

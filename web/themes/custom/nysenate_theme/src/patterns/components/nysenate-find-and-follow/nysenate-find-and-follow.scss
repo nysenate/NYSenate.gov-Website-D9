@@ -1,11 +1,14 @@
+@import '../../global/colors/colors';
+@import '../../global/utils/typography';
+
 .find-and-follow-block {
   max-width: 960px;
   margin: 0 auto;
   overflow: hidden;
 
   h2 {
-    font-family: "Adelle Regular", serif;
-    color: #444444;
+    font-family: $font-serif-regular;
+    color: $grey08;
     font-size: 30px;
     font-weight: 300;
     margin-bottom: 30px;
@@ -29,10 +32,10 @@
       max-width: 300px;
       margin: 0 10% 30px 0;
       padding-top: 40px;
-      background-color: #f1af58;
+      background-color: $yellow01;
       transition: background-color 0.2s ease;
       text-align: center;
-      color: #222222;
+      color: $grey10;
 
       &:hover {
         background-color: rgba(241, 175, 88, 0.9);
@@ -45,7 +48,7 @@
       span {
         font-size: 22px;
         line-height: 22px;
-        font-family: "Adelle Regular", serif;
+        font-family: $font-serif-bold;
       }
     }
   }

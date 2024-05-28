@@ -120,107 +120,110 @@ form.nys-dashboard-manage-dashboard {
 }
 
 // Manage dashboard confirmation modal.
-.ui-dialog {
-  background: white !important;
-  border-radius: 0 !important;
-  border: 0;
-  text-align: center;
-  box-shadow: none;
-
-  .ui-dialog-titlebar {
-    margin: 30px 0 10px;
-    background-color: white !important;
-    padding: 0 !important;
+.page--dashboard-manage {
+  .ui-dialog {
+    background: white;
+    border-radius: 0;
     border: 0;
+    text-align: center;
+    box-shadow: none;
 
-    &:before {
-      content: "\edc2";
-      color: #C63536;
-      width: 100%;
-      font-size: 34px;
-      font-family: "Phosphor-Fill" !important;
-      speak: never;
-      font-style: normal;
-      font-weight: normal;
-      font-variant: normal;
-      text-transform: none;
-      line-height: 1;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
+    .ui-dialog-titlebar {
+      margin: 30px 0 10px;
+      background-color: white;
+      padding: 0;
+      border: 0;
+
+      &:before {
+        content: "\edc2";
+        color: $dash_red;
+        width: 100%;
+        font-size: 34px;
+        font-family: "Phosphor-Fill" !important;
+        speak: never;
+        font-style: normal;
+        font-weight: normal;
+        font-variant: normal;
+        text-transform: none;
+        line-height: 1;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      .ui-dialog-title, .ui-dialog-titlebar-close {
+        display: none;
+      }
     }
 
-    .ui-dialog-title, .ui-dialog-titlebar-close {
-      display: none;
-    }
-  }
+    #drupal-modal {
+      padding-top: 0;
+      padding-bottom: 40px;
 
-  #drupal-modal {
-    padding-top: 0;
-    padding-bottom: 40px;
+      ul {
+        text-align: left;
+        margin: 20px 0 35px;
+        padding-left: 20px;
 
-    ul {
-      text-align: left;
-      margin: 20px 0 35px;
-      padding-left: 20px;
+        li {
+          font-size: 14px;
+        }
+      }
 
-      li {
+      .button {
         font-size: 14px;
+        padding: .5rem 1rem;
+        color: white;
+        line-height: 16px;
+
+        &:hover {
+          background-color: white;
+        }
+      }
+
+      input.button {
+        background-color: $gen_blue_lgt;
+        border-color: $gen_blue_lgt;
+
+        &:hover {
+          color: $gen_blue_lgt;
+        }
+      }
+
+      a.button {
+        background-color: $grey08;
+        border-color: $grey08;
+
+        &:hover {
+          color: $grey08;
+        }
       }
     }
 
-    .button {
-      font-size: 14px;
-      padding: .5rem 1rem;
-      color: white;
-      line-height: 16px;
-
-      &:hover {
-        background-color: white;
-      }
-    }
-
-    input.button {
-      background-color: $gen_blue_lgt;
-      border-color: $gen_blue_lgt;
-
-      &:hover {
-        color: $gen_blue_lgt;
-      }
-    }
-
-    a.button {
-      background-color: $grey08;
-      border-color: $grey08;
-
-      &:hover {
-        color: $grey08;
-      }
-    }
-  }
-
-  form.nys-dashboard-manage-dashboard {
-    margin-bottom: 0;
-    padding-bottom: 0;
-    border-bottom: none;
-
-    h2 {
-      color: $grey00;
+    form.nys-dashboard-manage-dashboard {
+      margin-bottom: 0;
       padding-bottom: 0;
-      font-weight: 700;
-    }
+      border-bottom: none;
 
-    p {
-      font-size: 13px;
-      line-height: 16px;
-      padding: 0 20px;
-    }
+      h2 {
+        color: $grey00;
+        padding-bottom: 0;
+        font-weight: 700;
+      }
 
-    .form-submit {
-      margin-bottom: 20px;
+      p {
+        font-size: 13px;
+        line-height: 16px;
+        padding: 0 20px;
+      }
+
+      .form-submit {
+        margin-bottom: 20px;
+      }
     }
   }
-}
-.ui-widget-overlay {
-  opacity: .6 !important;
-  background: black !important;
+
+  .ui-widget-overlay {
+    opacity: .6;
+    background: black;
+  }
 }

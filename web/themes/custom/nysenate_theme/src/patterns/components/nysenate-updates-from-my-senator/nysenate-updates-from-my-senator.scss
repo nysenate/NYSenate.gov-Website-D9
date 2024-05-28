@@ -4,8 +4,8 @@
   margin: 0 auto;
   max-width: 1500px;
   padding: 40px 9%;
-  background-color: #F2F2F2;
-  border-bottom: #E0E0E0 2px solid;
+  background-color: $dash_grey_2;
+  border-bottom: $dash_grey_3 2px solid;
   overflow: hidden;
 
   .view-updates-from-my-senator > .view-header {
@@ -81,6 +81,10 @@
           padding: 0 0 0 20px;
           min-height: auto;
           border-top: none;
+
+          @include breakpoint($bp-under-md) {
+            padding: 20px 0;
+          }
 
           .c-my-dashboard--extras {
             display: none;

@@ -138,9 +138,12 @@ class ManageDashboardForm extends FormBase {
     foreach ($this->fieldNamesToFlagTypes as $field_name => $flag_type) {
       $options = $this->getUsersFlaggedEntitiesByFlagName($flag_type);
       $browse_more_link = "<a href='{$this->fieldNamesToBrowseMoreLink[$field_name]}'>Browse $field_name</a>";
-      $description = !empty($options)
-        ? "To stop following, uncheck $field_name and click Update My Preferences."
-        : "You're not following any $field_name. $browse_more_link.";
+      $help_text = empty($options)
+        ? "You're not following any $field_name. $browse_more_link."
+        : "To stop following, uncheck $field_name and click Update My Preferences.";
+      $help_text_class = empty($options)
+        ? 'manage-dashboard--not-following'
+        : '';
       $uncheck_all_button_label = !empty($options)
         ? "Uncheck all $field_name"
         : '';
@@ -154,8 +157,9 @@ class ManageDashboardForm extends FormBase {
         'help_text' => [
           '#type' => 'html_tag',
           '#tag' => 'p',
-          '#value' => $description,
+          '#value' => $help_text,
           '#weight' => -2,
+          '#attributes' => ['class' => $help_text_class],
         ],
         'uncheck_all_button' => [
           '#type' => 'html_tag',

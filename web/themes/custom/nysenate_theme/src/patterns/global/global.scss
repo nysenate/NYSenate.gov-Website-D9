@@ -838,3 +838,9 @@ section.print.hero--senator {
     display: none;
   }
 }
+
+// Esnure skip link never clipped when focussed.
+.skip-link.visually-hidden.focusable:focus {
+  z-index: 5000;
+  position: relative !important;
+}

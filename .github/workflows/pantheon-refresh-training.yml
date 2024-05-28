@@ -31,8 +31,8 @@ jobs:
         with:
           pantheon-machine-token: ${{ secrets.PANTHEON_MACHINE_TOKEN }}
 
-      - name: Merge the latest code from dev (master) into training.
+      - name: Merge the latest code from master into training.
         run: terminus multidev:merge-from-dev ${{ vars.PANTHEON_SITE }}.training --yes
 
       - name: Refresh Training Environment with a database from Live (no files)
-        run: terminus env:clone-content ${{ vars.PANTHEON_SITE }}.live training --yes
+        run: terminus env:clone-content ${{ vars.PANTHEON_SITE }}.live training --yes --db-only

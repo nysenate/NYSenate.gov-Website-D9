@@ -461,20 +461,11 @@ class SearchAdvancedLegislationForm extends FormBase {
     if (!empty($values['month']) && !empty($values['year']) && $values['month'] !== 'all') {
       $year = $values['year'];
       $month = $values['month'];
-      $first_day_month = date('Y-m-01', strtotime("$year-$month-01"));
-      // Get the last day of the month and create a DateTime object.
       $date_string = "$year-$month-01";
-      $last_day_date = new \DateTime(date('Y-m-t', strtotime($date_string)));
-
-      // Add one day to the last day of the month.
-      $last_day_date->modify('+1 day');
-
-      // Subtract one second from the result.
-      $last_day_date->modify('-1 second');
-
-      // Format the result to Y-m-d H:i:s.
-      $last_day_month = $last_day_date->format('Y-m-d H:i:s');
-
+      $first_day_month = date('Y-m-01', strtotime("$year-$month-01"));
+      $last_day_month = (new \DateTime(date('Y-m-t', strtotime($date_string))))
+        ->modify('+1 day -1 second')
+        ->format('Y-m-d H:i:s');
       $date_range = $first_day_month . '--' . $last_day_month;
     }
     if (!empty($values['year']) && $values['month'] == 'all') {

@@ -8,17 +8,17 @@
 .dashboard-actionbar-block {
   margin: 0 auto;
   max-width: 1500px;
-  padding: 0 150px;
+  padding: 144px 150px 40px;
   background-color: $gen_blue_drk;
-  padding-top: 100px;
   position: relative;
+  height: 287px;
 
   @include breakpoint($bp-under-md) {
     padding: 20px 9% 0;
   }
 
   h1.dashboard-actionbar-heading {
-    font-size: 40px;
+    font-size: 48px;
     font-weight: 300;
     font-family: $font-serif;
     color: white;
@@ -26,15 +26,15 @@
   }
 
   p.dashboard-actionbar-subheading {
-    font-size: 16px;
+    font-size: 20px;
     color: white;
-    padding: 15px 0 30px;
+    padding: 5px 0 0;
     margin: 0;
   }
 
   .dashboard-actionbar-link-wrapper {
     position: absolute;
-    bottom: 30px;
+    bottom: 40px;
     right: 150px;
 
     a.dashboard-actionbar-link {
@@ -43,13 +43,14 @@
       clear: both;
       margin-top: 10px;
       color: white;
-      padding: 9px 12px 6px 33px;
+      padding: 8px 12px 5px 33px;
       background-color: rgba(0, 0, 0, 0.3);
       transition: background-color 0.2s ease;
       text-transform: uppercase;
       font-family: $font-sans;
-      font-weight: 700;
-      font-size: 15px;
+      font-weight: 600;
+      font-size: 12px;
+      letter-spacing: 1px;
 
       &:hover {
         background-color: rgba(0, 0, 0, 0.4);
@@ -61,7 +62,8 @@
 
       i {
         position: absolute;
-        top: 13px;
+        font-size: 14px;
+        top: 10px;
         left: 12px;
       }
     }

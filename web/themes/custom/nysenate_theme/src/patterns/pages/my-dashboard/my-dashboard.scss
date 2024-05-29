@@ -6,12 +6,6 @@
 
 // My Dashboard exposed filter styling.
 .block-views-exposed-filter-blockmy-dashboard-main {
-  padding-left: 40px;
-
-  @include breakpoint($bp-under-md) {
-    padding-left: 0;
-  }
-
   @include breakpoint($bp-under-sm) {
     margin-bottom: 20px;
 
@@ -73,6 +67,8 @@
   }
 
   #views-exposed-form-my-dashboard-main {
+    min-width: 186px;
+
     .form-item {
       width: 100%;
       margin: 10px 0 5px 0;
@@ -94,7 +90,7 @@
           top: 0;
           left: 24px;
           font-size: 15px;
-          line-height: 20px;
+          line-height: 18px;
           color: $blue01;
         }
       }

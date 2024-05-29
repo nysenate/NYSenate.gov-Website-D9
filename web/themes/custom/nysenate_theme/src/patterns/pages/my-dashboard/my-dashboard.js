@@ -44,12 +44,12 @@
       .querySelector('.view-my-dashboard')
       .getBoundingClientRect()
       .height;
-    let stickyFilterElem = document.getElementById('block-exposed-form-my-dashboard-main');
-    let stickyFilterElemHeight = stickyFilterElem
+    let stickyFilterElem = document
+      .getElementById('block-exposed-form-my-dashboard-main');
+    let stickyFilterHeight = stickyFilterElem
       .getBoundingClientRect()
       .height;
-    let sidebarWidth = document
-      .querySelector('.region-sidebar-right')
+    let stickyFilterWidth = stickyFilterElem
       .getBoundingClientRect()
       .width;
     let topStickyTrigger = document
@@ -63,14 +63,14 @@
       .getBoundingClientRect()
       .top
       + windowLocation
-      - stickyFilterElemHeight
+      - stickyFilterHeight
       - stickyTopLocation;
-    if (stickyFilterElemHeight >= contentHeight) {
+    if (stickyFilterHeight >= contentHeight) {
       return;
     }
     if (windowLocation > topStickyTrigger) {
       stickyFilterElem.classList.add('sticky-filter')
-      stickyFilterElem.style.width = sidebarWidth + 'px';
+      stickyFilterElem.style.width = stickyFilterWidth + 'px';
       stickyFilterElem.style.top = stickyTopLocation + 'px';
     }
     else {

@@ -23,6 +23,20 @@ body {
         margin-right: 0;
       }
     }
+
+    .two-col-layout {
+      .layout-sidebar-right {
+        padding: 0 0 0 40px;
+
+        @include breakpoint($bp-under-md) {
+          padding-left: 0;
+        }
+
+        .region-sidebar-right {
+          padding: 0;
+        }
+      }
+    }
   }
 
   // Flip order of sidebar and main content on mobile.

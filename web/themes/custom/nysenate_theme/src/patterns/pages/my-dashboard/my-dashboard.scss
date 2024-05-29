@@ -156,7 +156,6 @@
     float: left;
 
     @include breakpoint($bp-under-sm) {
-      width: 100%;
       text-align: center;
     }
   }
@@ -165,6 +164,10 @@
     width: 30%;
     font-size: 14px;
     font-style: italic;
+
+    @include breakpoint($bp-under-sm) {
+      width: 100%;
+    }
   }
 
   .pager a {
@@ -178,6 +181,10 @@
 
   .view-header-pager {
     width: 70%;
+
+    @include breakpoint($bp-under-sm) {
+      width: 100%;
+    }
 
     .pager__items {
       padding: 0;

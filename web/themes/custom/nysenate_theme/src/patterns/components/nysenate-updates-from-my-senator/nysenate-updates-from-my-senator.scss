@@ -3,10 +3,14 @@
 .block-views-blockupdates-from-my-senator-updates-from-my-senator {
   margin: 0 auto;
   max-width: 1500px;
-  padding: 40px 9%;
+  padding: 60px 150px;
   background-color: $dash_grey_2;
   border-bottom: $dash_grey_3 2px solid;
   overflow: hidden;
+
+  @include breakpoint($bp-under-md) {
+    padding: 20px;
+  }
 
   .view-updates-from-my-senator > .view-header {
     float: left;
@@ -15,19 +19,17 @@
     @include breakpoint($bp-under-md) {
       width: 100%;
       text-align: center;
-      padding-bottom: 20px;
     }
 
     .field--name-field-image {
       border-radius: 50%;
       overflow: hidden;
-      height: 120px;
-      width: 120px;
-      margin-bottom: 15px;
+      height: 100px;
+      width: 100px;
+      margin-bottom: 12px;
 
       @include breakpoint($bp-under-md) {
-        margin-left: auto;
-        margin-right: auto;
+        float: left;
       }
     }
 
@@ -35,20 +37,29 @@
       font-weight: 300;
       margin-bottom: 0;
 
+      @include breakpoint($bp-under-md) {
+        text-align: left;
+        margin-left: 120px;
+        padding-top: 16px;
+      }
+
       .views-label-field-senator-name {
-        color: $grey08;
+        color: $grey10;
         text-transform: uppercase;
-        font-family: $font-sans;
-        font-size: 14px;
-        line-height: 22.75px;
+        font-family: $font-sans-bold;
+        font-size: 12px;
+        letter-spacing: 1px;
+        line-height: 15px;
       }
 
       a {
-        color: $blue01;
+        color: $gen_blue_lgt;
         text-decoration: underline;
         font-family: $font-serif;
         font-size: 20px;
-        line-height: 32.75px;
+        line-height: 26px;
+        text-underline-offset: 3px;
+        text-decoration-thickness: 1px;
 
         &:hover {
           text-decoration: none;
@@ -83,7 +94,7 @@
           border-top: none;
 
           @include breakpoint($bp-under-md) {
-            padding: 20px 0;
+            padding: 20px 0 0;
           }
 
           .c-my-dashboard--extras {

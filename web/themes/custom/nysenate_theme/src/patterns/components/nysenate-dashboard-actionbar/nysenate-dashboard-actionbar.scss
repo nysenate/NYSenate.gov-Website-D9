@@ -14,7 +14,8 @@
   height: 287px;
 
   @include breakpoint($bp-under-md) {
-    padding: 20px 9% 0;
+    padding: 20px 9%;
+    height: 115px;
   }
 
   h1.dashboard-actionbar-heading {
@@ -23,6 +24,12 @@
     font-family: $font-serif;
     color: white;
     margin: 0;
+
+    @include breakpoint($bp-under-md) {
+      font-size: 22px;
+      font-weight: 400;
+      font-family: $font-serif-regular;
+    }
   }
 
   p.dashboard-actionbar-subheading {
@@ -30,6 +37,12 @@
     color: white;
     padding: 5px 0 0;
     margin: 0;
+
+    @include breakpoint($bp-under-md) {
+      font-size: 14px;
+      line-height: 18px;
+      padding-top: 8px;
+    }
   }
 
   .dashboard-actionbar-link-wrapper {

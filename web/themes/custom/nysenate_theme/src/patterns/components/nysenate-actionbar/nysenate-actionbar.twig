@@ -45,8 +45,10 @@
     </div>
     <span class="c-block--btn {{ is_logged ? 'logged' }}">
       <a class="{{ is_logged ? 'icon-before__arrow' : 'icon-before__find-senator' }}"
-        href="{{ is_logged ? '/dashboard' : '/find-my-senator' }}">
+         href="{{ is_logged ? '/dashboard' : '/find-my-senator' }}">
+        <span class="{{ is_logged ? 'logged-text' : '' }}">
           {{ is_logged ? "your dashboard"|t : "find your senator"|t }}
+        </span>
       </a>
     </span>
   {% endif %}

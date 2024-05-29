@@ -42,16 +42,15 @@
                   </div>
                 </a>
               {% endif %}
-
               {%
                 include '@nysenate_theme/nysenate-header-user-menu/nysenate-header-user-menu.twig' with {
                   dashboard_link: dashboard_link,
                   user_first_name: user_first_name,
                   manage_dashboard_link: manage_dashboard_link,
                   edit_account_link: edit_account_link,
+                  mobile_mode: 0,
                 } only
               %}
-
             {% else %}
               <a class="c-header--btn c-header--btn__taking_action u-tablet-plus" href="/citizen-guide">get involved</a>
               <a class="c-header--btn c-header--btn__primary u-tablet-plus GoogleAnalyticsET-processed" href="/user/login">login</a>
@@ -107,11 +106,23 @@
                   {% endfor %}
                 </ul>
               {% endif %}
-              <div class="c-mobile-login--list u-mobile-only">
-                <span class="c-header--btn c-header--btn-login icon-before__recruit-friends">
-                  <a href="/user/login">login</a>
-                </span>
-              </div>
+              {% if not is_logged %}
+                <div class="c-mobile-login--list u-mobile-only">
+                  <span class="c-header--btn c-header--btn-login icon-before__recruit-friends">
+                    <a href="/user/login">login</a>
+                  </span>
+                </div>
+              {% else %}
+                {%
+                  include '@nysenate_theme/nysenate-header-user-menu/nysenate-header-user-menu.twig' with {
+                  dashboard_link: dashboard_link,
+                  user_first_name: user_first_name,
+                  manage_dashboard_link: manage_dashboard_link,
+                  edit_account_link: edit_account_link,
+                  mobile_mode: 1,
+                } only
+                %}
+              {% endif %}
             </nav>
           </div>
         </div>

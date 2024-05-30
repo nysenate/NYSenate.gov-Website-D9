@@ -6,7 +6,14 @@
 
 // My Dashboard exposed filter styling.
 .block-views-exposed-filter-blockmy-dashboard-main {
+  margin-top: 20px;
+
+  h2 {
+    margin-bottom: 5px;
+  }
+
   @include breakpoint($bp-under-sm) {
+    margin-top: 0;
     margin-bottom: 20px;
 
     .container {
@@ -24,7 +31,8 @@
     color: $grey08;
     text-transform: uppercase;
     font-family: $font-sans;
-    font-size: 14px;
+    font-size: 12px;
+    letter-spacing: 1px;
     position: relative;
     background: white;
     width: 100%;
@@ -43,7 +51,7 @@
         right: 16px;
         top: 13px;
         font-size: 25px;
-        color: #2b6990;
+        color: $gen_blue_lgt;
         pointer-events: none;
         cursor: pointer;
         content: '\65';
@@ -75,6 +83,36 @@
 
       input, select {
         margin-bottom: 0;
+      }
+
+      &.form-type-select:after {
+        bottom: 1px;
+      }
+
+      &.form-item-search {
+        position: relative;
+
+        input {
+          height: 45px;
+          padding-right: 40px;
+        }
+
+        &:after {
+          text-indent: 0;
+          position: absolute;
+          bottom: 4px;
+          right: 12px;
+          font-family: 'senate_icons';
+          speak: none;
+          font-style: normal;
+          font-weight: normal;
+          font-variant: normal;
+          text-transform: none;
+          padding-left: 3px;
+          content: '\6d';
+          font-size: 22px;
+          color: $gen_blue_lgt;
+        }
       }
 
       &.form-item-your-senator-filter {

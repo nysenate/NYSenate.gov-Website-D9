@@ -1,0 +1,64 @@
+name: Pantheon Refresh Multidev
+
+on:
+  workflow_dispatch:
+    inputs:
+      sync_type:
+        description: 'Refresh Type'
+        required: true
+        default: 'Code and Database'
+        type: choice
+        options:
+          - Code and Database
+          - Database Only
+      sync_to:
+        description: 'Multidev being refreshed'
+        required: true
+        default: 'training'
+        type: string
+      sync_from:
+        description: 'Environment to refresh from'
+        required: true
+        default: 'live'
+        type: choice
+        options:
+          - live
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ vars.PHP_VERSION }}
+
+      - name: Add SSH Key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.PANTHEON_SSH_PRIVATE_KEY }}
+
+      - name: Disable Pantheon SSH strict host key checking
+        run: 'printf "\nHost *\n\tStrictHostKeyChecking no" >> ~/.ssh/config'
+
+      - name: Install Terminus
+        uses: pantheon-systems/terminus-github-actions@main
+        with:
+          pantheon-machine-token: ${{ secrets.PANTHEON_MACHINE_TOKEN }}
+
+      - name: Get a list of all the multidev environments
+        run: echo MULTIDEV_LIST=$(terminus multidev:list ${{ vars.PANTHEON_SITE }} --fields=id --format=list) >> $GITHUB_ENV
+
+      - name: Quit workflow if inputs.sync_to does not exist as a multidev
+        run: |
+          if ! [[ " $MULTIDEV_LIST " =~ " ${{ inputs.sync_to }} " ]]; then
+            echo "${{ inputs.sync_to }} is not a multidev environment. Valid options are: $MULTIDEV_LIST."
+            exit 1
+          fi
+
+      - name: Merge the latest code from master into the multidev
+        if: ${{ inputs.sync_type == 'Code and Database' }}
+        run: terminus multidev:merge-from-dev ${{ vars.PANTHEON_SITE }}.${{ inputs.sync_to }} --yes
+
+      - name: Refresh a multidev environment (no files)
+        run: terminus env:clone-content ${{ vars.PANTHEON_SITE }}.${{ inputs.sync_from }} ${{ inputs.sync_to }} --yes --db-only

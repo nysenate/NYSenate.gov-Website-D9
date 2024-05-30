@@ -99,22 +99,18 @@
     .form-actions {
       input {
         width: 100%;
-        margin: 0 0 20px;
 
-        &#edit-submit-my-dashboard--2 {
+        &[id^=edit-submit] {
           background-color: $gen_blue_lgt;
           border-color: $gen_blue_lgt;
           color: white;
         }
 
         &[id^=edit-reset] {
+          margin: 20px 0 0;
           background-color: white;
           border-color: $gen_blue_lgt;
           color: $gen_blue_lgt;
-
-          @include breakpoint($bp-under-sm) {
-            margin: 0;
-          }
         }
 
         &[id^=edit-submit]:hover, &[id^=edit-reset]:hover {

@@ -34,8 +34,34 @@
   <span class="c-my-dashboard--read-more"><a href="{{ url }}">... Read More</a></span>
 {% endset %}
 <article{{ attributes.addClass(classes) }}>
+  {% if 'node--teaser-with-extras' in classes %}
+    <div class="c-my-dashboard--extras">
+      {% if node.field_image_main.value %}
+        {{ content.field_image_main }}
+      {% elseif node.bundle == 'bill' %}
+        {% if node.field_ol_last_status_date.value %}
+          <div class="field">Updated {{ node.field_ol_last_status_date.value|date('U')|format_date('publish_date') }}</div>
+        {% elseif node.field_ol_publish_date.value %}
+          <div class="field">Introduced {{ node.field_ol_publish_date.value|date('U')|format_date('publish_date') }}</div>
+        {% endif %}
+        {% if node.field_ol_sponsor.value %}
+          {{ content.field_ol_sponsor }}
+        {% endif %}
+        {% if node.field_ol_last_status.value %}
+          {{ content.field_ol_last_status }}
+        {% endif %}
+        {% if positions %}
+          {%
+            include '@nysenate_theme/src/templates/includes/nys-bill-status.html.twig'
+            with {positions: positions, is_small: true}
+            only
+          %}
+        {% endif %}
+      {% endif %}
+    </div>
+  {% endif %}
   <div class="c-my-dashboard--type-wrapper">
-    <i class="ph ph-{{ attribute(type_icon_map, node.bundle) }}"></i>
+    <i class="ph-fill ph-{{ attribute(type_icon_map, node.bundle) }}"></i>
     <p class="c-my-dashboard--type">
       {% if node.bundle == 'article' %}
         {{ content.field_category.0 }}
@@ -60,67 +86,52 @@
   </p>
   <div class="c-my-dashboard--details">
     {% if node.bundle != 'bill' %}
-      <div class="c-my-dashboard--date">
+      <div class="c-my-dashboard--detail">
       {% if node.field_date_range.value %}
         <p>
           {{ node.field_date_range.value|date('U')|format_date('publish_date') }}
-          | {{ node.field_date_range.value|date('U')|format_date('time') }}
+        </p>
+        <p class="c-my-dashboard--pipe">|</p>
+        <p>
+          {{ node.field_date_range.value|date('U')|format_date('time') }}
         </p>
       {% elseif node.field_date.value %}
         <p>
           {{ node.field_date.value|date('U')|format_date('publish_date') }}
         </p>
         {% if node.field_senator_multiref.value %}
-          | <p>
-              By Senator <a href="{{ senator_microsite_url }}">{{ content.field_senator_multiref.0 }}</a>
-            </p>
+          <p class="c-my-dashboard--pipe">|</p>
+          <p>
+            By Senator <a href="{{ senator_microsite_url }}">{{ content.field_senator_multiref.0 }}</a>
+          </p>
         {% endif %}
       {% elseif node.field_ol_publish_date.value %}
         <p>
           {{ node.field_ol_publish_date.value|date('U')|format_date('publish_date') }}
         </p>
         {% if node.field_ol_sponsor.value  %}
-          | <p>
-              Sponsored by <a href="{{ senator_microsite_url }}">{{ content.field_ol_sponsor.0 }}</a>
-            </p>
+          <p class="c-my-dashboard--pipe">|</p>
+          <p>
+            Sponsored by <a href="{{ senator_microsite_url }}">{{ content.field_ol_sponsor.0 }}</a>
+          </p>
         {% endif %}
       {% endif %}
       </div>
     {% endif %}
     {% if content.vote_widget %}
-      {{ content.vote_widget }}
+      <div class="c-my-dashboard--detail">
+        {{ content.vote_widget }}
+      </div>
     {% endif %}
     {% if node.field_issues.value %}
-      <h4>Issues:</h4> {{ content.field_issues }}
+      <div class="c-my-dashboard--detail">
+        <h4>Issues:</h4> {{ content.field_issues }}
+      </div>
     {% endif %}
     {% if node.field_committee.value %}
-      <h4>Committees:</h4> {{ content.field_committee }}
+      <div class="c-my-dashboard--detail">
+        <h4>Committees:</h4> {{ content.field_committee }}
+      </div>
     {% endif %}
   </div>
-  {% if 'node--teaser-with-extras' in classes %}
-    <div class="c-my-dashboard--extras">
-      {% if node.field_image_main.value %}
-          {{ content.field_image_main }}
-      {% elseif node.bundle == 'bill' %}
-        {% if node.field_ol_last_status_date.value %}
-          <div class="field">Updated {{ node.field_ol_last_status_date.value|date('U')|format_date('publish_date') }}</div>
-        {% elseif node.field_ol_publish_date.value %}
-          <div class="field">Introduced {{ node.field_ol_publish_date.value|date('U')|format_date('publish_date') }}</div>
-        {% endif %}
-        {% if node.field_ol_sponsor.value %}
-          {{ content.field_ol_sponsor }}
-        {% endif %}
-        {% if node.field_ol_last_status.value %}
-          {{ content.field_ol_last_status }}
-        {% endif %}
-        {% if positions %}
-          {%
-            include '@nysenate_theme/src/templates/includes/nys-bill-status.html.twig'
-            with {positions: positions, is_small: true}
-            only
-          %}
-        {% endif %}
-      {% endif %}
-    </div>
-  {% endif %}
 </article>

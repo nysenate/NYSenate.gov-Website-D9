@@ -6,7 +6,7 @@
 
 // My Dashboard Teaser display mode styling.
 .node--view-mode-my-dashboard-teaser {
-  padding: 24px;
+  padding: 20px;
   border-top: 1px solid $grey04;
   font-family: $font-sans;
 
@@ -16,14 +16,15 @@
 
   .c-my-dashboard--type-wrapper {
     position: relative;
-    color: $blue01;
+    color: $gen_blue_lgt;
     line-height: 26px;
 
     .c-my-dashboard--type {
       position: absolute;
       text-transform: uppercase;
-      font-family: $font-sans;
-      font-size: 14px;
+      font-family: $font-sans-bold;
+      font-size: 12px;
+      letter-spacing: 1px;
       left: 20px;
       top: 0;
       margin: 0;
@@ -33,8 +34,10 @@
   }
 
   h3 {
-    margin-bottom: 8px;
-    line-height: 24px;
+    font-family: $font-serif-bold;
+    margin-bottom: 4px;
+    font-size: 22px;
+    line-height: 29px;
 
     a {
       text-decoration: none;
@@ -46,8 +49,10 @@
   }
 
   a {
-    color: $blue01;
+    color: $gen_blue_lgt;
     text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-thickness: 1px;
 
     &:hover {
       text-decoration: none;
@@ -55,10 +60,10 @@
   }
 
   .c-my-dashboard--blurb {
-    font-family: $font-sans;
+    font-family: $font-sans-bold;
     color: $grey10;
-    line-height: 20px;
-    font-size: 16px;
+    line-height: 17px;
+    font-size: 14px;
     margin: 0 0 12px;
   }
 
@@ -73,36 +78,69 @@
   }
 
   .c-my-dashboard--details {
-    font-size: 13px;
     overflow: hidden;
 
-    p, h4 {
+    .c-my-dashboard--detail {
+      line-height: 14px;
+      margin-bottom: 5px;
       font-family: $font-sans;
-      font-size: inherit;
-      font-weight: normal;
-      line-height: inherit;
-      margin: 0;
-      display: inline;
+      font-size: 12px;
+      font-weight: 400;
       color: $grey10;
-    }
-
-    h4 {
-      position: absolute;
-      line-height: 21px;
-    }
-
-    .field {
-      clear: both;
       overflow: hidden;
-      margin-bottom: 3px;
-    }
 
-    .c-my-dashboard--date {
-      margin-bottom: 3px;
-    }
+      p, h4 {
+        font-family: inherit;
+        font-size: inherit;
+        font-weight: inherit;
+        line-height: inherit;
+        color: inherit;
+        margin: 0;
+        display: inline;
+      }
 
-    .field__label {
-      font-weight: normal;
+      h4 {
+        display: inline-block;
+        float: left;
+        clear: both;
+        margin-right: 3px;
+      }
+
+      p.c-my-dashboard--pipe {
+        margin-right: 4px;
+        margin-left: 4px;
+      }
+
+      .field--name-field-issues, .field--name-field-committee {
+        float: left;
+        display: inline-block;
+
+        ul {
+          list-style-type: none;
+          margin: 0;
+
+          li {
+            margin: 0;
+            display: inline;
+            font-size: inherit;
+            font-family: inherit;
+            line-height: inherit;
+
+            :after {
+              content: ", ";
+              display: inline-block;
+              margin-right: 3px;
+            }
+
+            &:last-of-type {
+              :after {
+                content: "";
+                margin-right: 0;
+              }
+            }
+          }
+        }
+      }
     }
 
     .nys-bill-vote .button-wrapper {
@@ -110,49 +148,8 @@
     }
   }
 
-  .field--name-field-issues, .field--name-field-committee {
-    position: relative;
-
-    ul {
-      list-style-type: none;
-      margin: 0;
-
-      li {
-        margin: 0;
-        display: inline;
-        font-size: inherit;
-        font-family: inherit;
-
-        :after {
-          content: ", ";
-          display: inline-block;
-          margin-right: 3px;
-        }
-
-        &:last-of-type {
-          :after {
-            content: "";
-            margin-right: 0;
-          }
-        }
-      }
-
-    }
-
-    .field__items, > .field__item {
-      margin-left: 44px;
-      line-height: 16px;
-    }
-  }
-
-  .field--name-field-committee > .item-list {
-    margin-left: 76px;
-    line-height: 16px;
-  }
-
   &.node--teaser-with-extras {
-    padding-right: 404px;
-    min-height: 150px;
+    padding-right: 308px;
     position: relative;
     overflow: hidden;
 
@@ -162,16 +159,20 @@
 
     .c-my-dashboard--extras {
       position: absolute;
-      right: 0;
-      top: 0;
-      height: 180px;
-      width: 360px;
-      margin: 24px;
-      font-size: 13px;
+      right: 20px;
+      top: 20px;
+      width: 268px;
+      font-size: 12px;
+      line-height: 17px;
+      font-family: $font-sans;
 
       .nys-bill-status, .field {
         float: right;
         clear: both;
+      }
+
+      .nys-bill-status {
+        line-height: 1.625;
       }
 
       .field {
@@ -193,9 +194,12 @@
 
     @include breakpoint($bp-under-md) {
       .c-my-dashboard--extras {
-        height: auto;
-        width: auto;
-        float: left;
+        width: 240px;
+        height: 160px;
+        overflow: hidden;
+        top: 0;
+        left: 0;
+        margin: 10px 0 20px;
       }
     }
 
@@ -206,7 +210,21 @@
     }
   }
 
+  &.node--type-bill {
+    padding-right: 300px;
+
+    @include breakpoint($bp-under-md) {
+      padding-right: 0;
+    }
+
+    .c-my-dashboard--extras {
+      width: auto;
+      height: auto;
+      margin: 0 0 10px 20px;
+    }
+  }
+
   &.node--teaser-with-image {
-    min-height: 230px;
+    min-height: 220px;
   }
 }

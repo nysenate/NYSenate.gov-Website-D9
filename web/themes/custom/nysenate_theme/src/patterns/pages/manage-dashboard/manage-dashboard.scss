@@ -31,31 +31,42 @@ form.nys-dashboard-manage-dashboard {
       padding: 0;
 
       h2 {
-        font-family: $font-serif-regular;
-        font-size: 20px;
-        line-height: 30px;
+        font-family: $font-serif-bold;
+        font-size: 22px;
+        line-height: 29px;
         margin: 20px 0 0;
+
+        @include breakpoint($bp-under-sm) {
+          font-size: 16px;
+          line-height: 21px;
+        }
       }
 
       p {
-        font-family: $font-sans;
-        font-size: 15px;
+        font-family: $font-serif;
+        font-size: 16px;
+        line-height: 21px;
         font-style: italic;
-        margin: 0;
+        margin: 6px 0 0 0;
+
+        @include breakpoint($bp-under-sm) {
+          font-size: 14px;
+          line-height: 18px;
+        }
 
         &.manage-dashboard--not-following {
           color: $grey10;
-          font-family: $font-sans;
+          font-family: $font-sans-bold;
           font-size: 14px;
+          line-height: 17px;
           font-style: normal;
-          font-weight: 600;
           margin-top: 10px;
         }
       }
 
       a {
         font-family: $font-sans;
-        color: $blue01;
+        color: $gen_blue_lgt;
         text-decoration: underline;
 
         &:hover {
@@ -71,10 +82,11 @@ form.nys-dashboard-manage-dashboard {
         font-size: 14px;
         font-style: normal;
         font-family: $font-sans;
-        color: $blue01;
+        color: $gen_blue_lgt;
         font-weight: 700;
         line-height: 40px;
         padding: 0;
+        letter-spacing: 0.25px;
 
         &:hover {
           text-decoration: underline;
@@ -92,7 +104,10 @@ form.nys-dashboard-manage-dashboard {
           position: relative;
 
           label {
+            font-family: $font-sans-bold;
             color: $gen_blue_lgt;
+            font-size: 14px;
+            line-height: 17px;
             text-transform: none;
           }
 
@@ -109,6 +124,11 @@ form.nys-dashboard-manage-dashboard {
 
   #edit-actions {
     margin-top: 30px;
+
+    input {
+      background-color: $gen_blue_lgt;
+      border: 2px solid $gen_blue_lgt;
+    }
 
     input:disabled {
       cursor: default;
@@ -135,7 +155,7 @@ form.nys-dashboard-manage-dashboard {
     }
 
     .ui-dialog-titlebar {
-      margin: 30px 0 10px;
+      margin: 50px 0 10px;
       background-color: white;
       padding: 0;
       border: 0;
@@ -176,10 +196,12 @@ form.nys-dashboard-manage-dashboard {
       }
 
       .button {
-        font-size: 14px;
+        font-family: $font-sans-bold;
+        font-size: 12px;
         padding: .5rem 1rem;
         color: white;
-        line-height: 16px;
+        line-height: 15px;
+        letter-spacing: 1px;
 
         &:hover {
           background-color: white;
@@ -211,15 +233,19 @@ form.nys-dashboard-manage-dashboard {
       border-bottom: none;
 
       h2 {
-        color: $grey00;
+        font-family: $font-serif-bold;
+        color: $grey10;
         padding-bottom: 0;
-        font-weight: 700;
+        font-size: 20px;
+        line-height: 27px;
       }
 
       p {
-        font-size: 13px;
-        line-height: 16px;
+        font-size: 14px;
+        line-height: 17px;
+        color: $grey10;
         padding: 0 20px;
+        margin-top: 10px;
       }
 
       .form-submit {

@@ -277,7 +277,7 @@ class ManageDashboardForm extends FormBase {
     $form = $this->buildForm($form, $form_state);
     // See http://api.jqueryui.com/dialog.
     $dialog_options = [
-      'width' => 700,
+      'width' => 726,
     ];
     $response->addCommand(new OpenModalDialogCommand('', $form, $dialog_options));
     return $response;

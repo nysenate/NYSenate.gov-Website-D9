@@ -166,12 +166,65 @@
     }
   }
 
-  .pager a {
-    font-size: 14px;
-    color: $blue01;
+  .pager {
+    .pager__items {
+      line-height: 17px;
 
-    &:hover {
-      text-decoration: underline;
+      .pager__item {
+        padding: 0 5px;
+        line-height: inherit;
+
+        a {
+          font-size: 14px;
+          line-height: 17px;
+          font-family: $font-sans-bold;
+          color: $gen_blue_lgt;
+          text-underline-offset: 3px;
+          text-decoration-thickness: 1px;
+          text-decoration: underline;
+
+          &:hover {
+            text-decoration: none;
+          }
+        }
+
+        &.is-active a {
+          text-decoration: none;
+          color: $grey10;
+        }
+
+        &.pager__item--next:after, &.pager__item--last:after, &.pager__item--previous:before, &.pager__item--first:before {
+          font-family: "Phosphor-Bold" !important;
+          speak: never;
+          font-style: normal;
+          font-weight: normal;
+          font-variant: normal;
+          text-transform: none;
+          line-height: 1;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+          color: $gen_blue_lgt;
+          top: 2px;
+          position: relative;
+          font-size: 14px;
+        }
+
+        &.pager__item--next:after {
+          content: "\ea00";
+        }
+
+        &.pager__item--last:after {
+          content: "\e9fc";
+        }
+
+        &.pager__item--previous:before {
+          content: "\e9ff";
+        }
+
+        &.pager__item--first:before {
+          content: "\e9fb";
+        }
+      }
     }
   }
 
@@ -179,17 +232,13 @@
     width: 70%;
 
     @include breakpoint($bp-under-sm) {
-      width: 100%;
+      display: none;
     }
 
     .pager__items {
       padding: 0;
       margin: 0;
       text-align: right;
-
-      @include breakpoint($bp-under-sm) {
-        text-align: center;
-      }
     }
   }
 

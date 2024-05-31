@@ -40,19 +40,19 @@ class RegisterForm extends UserRegisterForm {
    *
    * @var \Drupal\Core\TempStore\PrivateTempStoreFactory
    */
-  protected $tempStoreFactory;
+  protected PrivateTempStoreFactory $tempStoreFactory;
 
   /**
    * {@inheritDoc}
    */
   public function __construct(
+    RegistrationHelper $helper,
+    SenatorsHelper $senatorsHelper,
+    PrivateTempStoreFactory $tempStoreFactory,
     EntityRepositoryInterface $entity_repository,
     LanguageManagerInterface $language_manager,
     EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL,
-    TimeInterface $time = NULL,
-    RegistrationHelper $helper,
-    SenatorsHelper $senatorsHelper,
-    PrivateTempStoreFactory $tempStoreFactory
+    TimeInterface $time = NULL
   ) {
     parent::__construct($entity_repository, $language_manager, $entity_type_bundle_info, $time);
     $this->helper = $helper;
@@ -65,20 +65,20 @@ class RegisterForm extends UserRegisterForm {
    */
   public static function create(ContainerInterface $container): self {
     return new static(
+      $container->get('nys_registration.helper'),
+      $container->get('nys_senators.senators_helper'),
+      $container->get('tempstore.private'),
       $container->get('entity.repository'),
       $container->get('language_manager'),
       $container->get('entity_type.bundle.info'),
-      $container->get('datetime.time'),
-      $container->get('nys_registration.helper'),
-      $container->get('nys_senators.senators_helper'),
-      $container->get('tempstore.private')
+      $container->get('datetime.time')
     );
   }
 
   /**
    * {@inheritDoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
     // Save the form state values for the next step.
     $this->compileValues($form_state);
     parent::submitForm($form, $form_state);
@@ -136,7 +136,7 @@ class RegisterForm extends UserRegisterForm {
   /**
    * Ensures submitted values from all steps are saved in form state.
    */
-  protected function compileValues(FormStateInterface $form_state) {
+  protected function compileValues(FormStateInterface $form_state): void {
     if ($values = $form_state->get('cached_steps')) {
       $form_state->setValues($form_state->getValues() + $values);
     }
@@ -217,48 +217,8 @@ class RegisterForm extends UserRegisterForm {
     $find_my_senator_address = $tempstore->get('find_my_senator_address');
     if (!empty($find_my_senator_address)) {
       $form['field_address']['widget'][0]['address']['#default_value'] = $find_my_senator_address;
-      $this->messenger()->addStatus($this->t('We reused the address you provided in "Find My Senator".  Please check that it is correct before proceeding.'));
-    }
-
-    // Check if redirected from Senator's Page.
-    if (\Drupal::request()->headers->get('referer')) {
-      $referrer = explode('/', \Drupal::request()->headers->get('referer'));
-
-      if ($referrer[3] == 'senators') {
-        $form['#theme'] = 'register_form_step1_message_senator';
-        $title_text = 'Message a Senator';
-        $help_text = 'To send a message to any NY State Senator, please creating a profile or <a href="/user/login">login</a>.';
-
-        $query_parameters = \Drupal::request()->query->all();
-
-        if (isset($query_parameters['senator'])) {
-          $senator = \Drupal::entityTypeManager()
-            ->getStorage('taxonomy_term')
-            ->load($query_parameters['senator']);
-
-          if ($senator->field_senator_name) {
-            $given = $senator->field_senator_name->given ?? '';
-            $family = $senator->field_senator_name->family ?? '';
-            $senator_name = trim($given . ' ' . $family);
-
-            $title_text = 'Message Sen. ' . $senator_name;
-            $help_text = t('To send a message to NY State Sen.') .
-                        ' ' . trim($family) . ', ' .
-                        t('please create a profile using the form below or <a href="/user/login">login</a>.');
-          }
-
-          $form['registration_teaser'] = [
-            '#markup' => '<div class="c-login">
-                            <h2 class="nys-title">' . $title_text . '</h2>
-                            <p class="body">' . $help_text . '</p>',
-            '#weight' => -100,
-          ];
-          $form['actions']['#suffix'] = '</div>';
-
-          $form['#attached']['library'][] = 'nysenate_theme/nysenate-user-profile';
-        }
-
-      }
+      $this->messenger()
+        ->addStatus($this->t('We reused the address you provided in "Find My Senator".  Please check that it is correct before proceeding.'));
     }
 
     return $form;
@@ -284,13 +244,8 @@ class RegisterForm extends UserRegisterForm {
         ], $zip_trimmed);
     }
 
-    // Set username to avoid validation error (this gets overriden by
-    // email_registration module).
-    $email = $form_state->getValue(['mail']);
-    if ($email) {
-      $username_from_email = explode('@', $email, 2)[0];
-      $form_state->setValue('name', $username_from_email);
-    }
+    // Auto-generate a normalized username; avoid validation errors.
+    $form_state->setValue('name', $this->helper->generateUserName($form_state));
   }
 
   /**
@@ -303,7 +258,7 @@ class RegisterForm extends UserRegisterForm {
    *   - if email, first name, or last name contains cyrillic characters, or
    *   - the email address specifies the .ru TLD.
    */
-  public function formValidateStep1(array &$form, FormStateInterface $form_state) {
+  public function formValidateStep1(array &$form, FormStateInterface $form_state): void {
     $this->compileValues($form_state);
 
     // Prep some values.
@@ -316,10 +271,10 @@ class RegisterForm extends UserRegisterForm {
     // $has_non_latin = preg_match('/[^\\p{Common}\\p{Latin}]/u', $full_check)
     $is_ru = (str_ends_with($mail, '.ru'));
     // Check if valid email and does not contain any Cyrillic characters.
-    $has_cryllic = (boolean) preg_match('/[\p{Cyrillic}]/u', $full_check);
+    $has_cyrillic = (boolean) preg_match('/\p{Cyrillic}/u', $full_check);
 
     // Enforce ban on .ru email addresses and cyrillic characters.
-    if ($is_ru || $has_cryllic) {
+    if ($is_ru || $has_cyrillic) {
       $form_state->setError($form['account']['mail'], $this->t('Please enter a valid email address.'));
     }
 
@@ -339,7 +294,7 @@ class RegisterForm extends UserRegisterForm {
    *
    * Process the district and ensure the entity gets updated.
    */
-  public function formSubmitStep1(array &$form, FormStateInterface $form_state) {
+  public function formSubmitStep1(array &$form, FormStateInterface $form_state): void {
     // Process the district.
     $address = $form_state->getValue(['field_address', '0', 'address']) ?? [];
     $district_term = $this->helper->getDistrictFromAddress($address);
@@ -381,9 +336,9 @@ class RegisterForm extends UserRegisterForm {
       $fid = $media->get('field_image')->target_id;
       $file = File::load($fid);
       $senator['image'] = empty($file) ?
-            '/themes/custom/nysenate_theme/src/assets/default-avatar.png' :
-            \Drupal::service('file_url_generator')
-              ->generateAbsoluteString($file->getFileUri());
+        '/themes/custom/nysenate_theme/src/assets/default-avatar.png' :
+        \Drupal::service('file_url_generator')
+          ->generateAbsoluteString($file->getFileUri());
       $senator['party'] = $this->senatorsHelper->getPartyNames($senator_term);
       $senator['location'] = $this->helper->getMicrositeDistrictAlias($senator_term);
       $senator['name'] = $senator_name[0]['given'] . ' ' . $senator_name[0]['family'];
@@ -431,7 +386,7 @@ class RegisterForm extends UserRegisterForm {
    *
    * Make sure confirmations are checked, save the entity, and send email.
    */
-  public function formSubmitStep2(array $form, FormStateInterface $form_state) {
+  public function formSubmitStep2(array $form, FormStateInterface $form_state): void {
     // Save incoming values to state.
     $this->compileValues($form_state);
 
@@ -463,7 +418,7 @@ class RegisterForm extends UserRegisterForm {
   /**
    * Handles going back from step 2 to step 1.
    */
-  public function formSubmitBack(array &$form, FormStateInterface $form_state) {
+  public function formSubmitBack(array &$form, FormStateInterface $form_state): void {
     // Reset the district information in form state.
     $form_state->setValue('field_district', NULL)
       ->set('senate_district', 0)

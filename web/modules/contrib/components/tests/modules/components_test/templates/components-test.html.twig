@@ -1,0 +1,20 @@
+{# These templates are found using .info namespace definitions. #}
+{{ include('@components_test/components-test.twig') }}
+{{ include('@components/components-test-active-theme.twig') }}
+{{ include('@components/components-test-base-theme.twig') }}
+{{ include('@components/components-test-module.twig') }}
+
+{# This template is found using hook_components_namespaces_alter(). #}
+{{ include('@components/components-test-namespaces-alter.twig') }}
+
+{# This template is found using hook_protected_twig_namespaces_alter(). #}
+{{ include('@system/components-test-protected-twig-namespaces-alter.twig') }}
+
+{# This template is nested in a directory, but uses the no-path syntax. #}
+{{ include('@components/components-test-nested.twig') }}
+
+{# This template has a conflicting file name and output the first found. #}
+{{ include('@components/components-test-conflicting-file-name.twig') }}
+
+{# This template has a conflicting file name, so it uses the full path. #}
+{{ include('@components/nested2/components-test-conflicting-file-name.twig') }}

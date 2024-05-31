@@ -1,0 +1,38 @@
+{
+  "name": "drupal/fontawesome",
+  "description": "The web's most popular icon set and toolkit.",
+  "type": "drupal-module",
+  "license": "GPL-2.0+",
+  "minimum-stability": "dev",
+  "homepage": "https://drupal.org/project/fontawesome",
+  "authors": [
+    {
+      "name": "Daniel Moberly (Daniel.Moberly)",
+      "homepage": "https://www.drupal.org/u/danielmoberly",
+      "role": "Maintainer"
+    }
+  ],
+  "repositories": {
+    "fontawesome": {
+      "type": "package",
+      "package": {
+        "name": "fontawesome/fontawesome",
+        "version": "6.4.0",
+        "type": "drupal-library",
+        "extra": {
+          "installer-name": "fontawesome"
+        },
+        "dist": {
+          "url": "https://use.fontawesome.com/releases/v6.4.0/fontawesome-free-6.4.0-web.zip",
+          "type": "zip"
+        },
+        "require": {
+          "composer/installers": "^1.2.0"
+        }
+      }
+    }
+  },
+  "require": {
+    "fontawesome/fontawesome": "6.4.0"
+  }
+}

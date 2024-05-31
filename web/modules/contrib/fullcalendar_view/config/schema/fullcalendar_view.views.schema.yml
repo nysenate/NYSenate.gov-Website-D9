@@ -1,0 +1,113 @@
+# Schema for the views plugins of the Fullcalendar view module.
+
+views.style.fullcalendar_view_display:
+  type: views_style
+  label: 'Fullcalendar view display'
+  mapping:
+    default_date_source:
+      type: string
+      label: 'Default date source'
+    defaultDate:
+      type: string
+      label: 'Default date'
+    start:
+      type: string
+      label: 'Start'
+    end:
+      type: string
+      label: 'End'
+    title:
+      type: string
+      label: 'Title'
+    left_buttons:
+      type: string
+      label: 'Left buttons'
+    right_buttons:
+      type: string
+      label: 'Right buttons'
+    default_view:
+      type: string
+      label: 'Default view'
+    default_mobile_view:
+      type: string
+      label: 'Default mobile view'
+    mobile_width:
+      type: string
+      label: 'Mobile width'
+    firstDay:
+      type: string
+      label: 'First day'
+    nav_links:
+      type: integer
+      label: 'Navigation links'
+    timeFormat:
+      type: string
+      label: 'Time format'
+    allowEventOverlap:
+      type: integer
+      label: 'Allow event overlap'
+    updateAllowed:
+      type: integer
+      label: 'Update allowed'
+    updateConfirm:
+      type: integer
+      label: 'Update confirm'
+    defaultLanguage:
+      type: string
+      label: 'Default language'
+    languageSelector:
+      type: integer
+      label: 'Language selector'
+    dialogWindow:
+      type: integer
+      label: 'Dialog window'
+    openEntityInNewTab:
+      type: integer
+      label: 'Open entity in new tab'
+    createEventLink:
+      type: integer
+      label: 'Create event link'
+    eventLimit:
+      type: string
+      label: 'Event limit'
+    scrollTime:
+      type: string
+      label: 'Scroll time'
+    tax_field:
+      type: string
+      label: 'Tax field'
+    vocabularies:
+      type: string
+      label: 'Vocabularies'
+    color_bundle:
+      type: sequence
+      label: 'Color bundle'
+      sequence:
+        type: string
+    rrule:
+      type: string
+      label: 'Rrule'
+    dialogModal:
+      type: boolean
+      label: 'Enable modal popup'
+    dialogCanvas:
+      type: boolean
+      label: 'Enable modal canvas'
+    duration:
+      type: string
+      label: 'Duration'
+    slotDuration:
+      type: string
+      label: 'Slot duration'
+    minTime:
+      type: string
+      label: 'Start time'
+    maxTime:
+      type: string
+      label: 'End time'
+    bundle_type:
+      type: string
+      label: 'Bundle type'
+    classes:
+      type: string
+      label: 'Classes'

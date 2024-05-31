@@ -1,0 +1,30 @@
+{
+  "name": "drupal/facets",
+  "description": "The Facet module allows site builders to easily create and manage faceted search interfaces.",
+  "type": "drupal-module",
+  "homepage": "https://www.drupal.org/project/facets",
+  "authors": [
+    {
+      "name": "See all contributors",
+      "homepage": "https://www.drupal.org/node/2348769/committers"
+    }
+  ],
+  "support": {
+    "issues": "https://www.drupal.org/project/issues/facets",
+    "irc": "irc://irc.freenode.org/drupal-search-api",
+    "source": "git://git.drupal.org/project/facets.git"
+  },
+  "license": "GPL-2.0+",
+  "require-dev": {
+    "drupal/search_api": "^1.28||1.x-dev",
+    "drupal/jquery_ui_slider": "~2.0",
+    "drupal/jquery_ui_touch_punch": "~1.1"
+  },
+  "suggest": {
+    "drupal/jquery_ui_slider": "Required for the 'Facets Range Widget' module to work",
+    "drupal/jquery_ui_touch_punch": "Required for the 'Facets Range Widget' module to work"
+  },
+  "conflict": {
+    "drupal/search_api": "<1.14"
+  }
+}

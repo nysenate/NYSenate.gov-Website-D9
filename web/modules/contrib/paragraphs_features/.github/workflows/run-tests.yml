@@ -1,0 +1,96 @@
+name: Run module tests
+
+on:
+  pull_request:
+    branches:
+      - 2.x
+    paths-ignore:
+      - '**.md'
+
+  schedule:
+    - cron:  '0 6 * * *'
+
+env:
+   DRUPAL_TESTING_TEST_CODING_STYLES: false
+   DRUPAL_TESTING_DATABASE_USER: root
+   DRUPAL_TESTING_DATABASE_PASSWORD: root
+   DRUPAL_TESTING_DATABASE_ENGINE: mysql
+   DRUPAL_TESTING_HTTP_PORT: 8888
+   DRUPAL_TESTING_SELENIUM_HOST: 127.0.0.1
+   DRUPAL_TESTING_SELENIUM_PORT: 9515
+   DRUPAL_TESTING_PARALLEL_TESTING: false
+   MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome","chromeOptions":{"args":["--disable-gpu","--headless", "--no-sandbox", "--disable-dev-shm-usage"]}}, "http://127.0.0.1:9515"]'
+   SIMPLETEST_BASE_URL: http://module-testing:8888
+
+jobs:
+  build:
+
+    runs-on: ubuntu-20.04
+
+    services:
+      chrome:
+        image: drupalci/chromedriver:production
+        options: --add-host=module-testing:host-gateway --name chrome
+        ports:
+          - 9515:9515
+
+    strategy:
+      matrix:
+        THEME: ['claro', 'gin']
+        DRUPAL_TESTING_DRUPAL_VERSION: ['~10.1.0', '~10.2.0']
+        PHP_VERSION: ['8.1']
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - uses: shivammathur/setup-php@v2
+      with:
+        coverage: none
+        php-version: ${{ matrix.PHP_VERSION }}
+        extensions: Imagick, gd, pdo_mysql
+
+    - name: Start MySql service
+      run: |
+        sudo /etc/init.d/mysql start
+        mysql -uroot -proot -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root';"
+
+    - name: Cache composer dependencies
+      uses: actions/cache@v4
+      with:
+        path: ~/.composer/cache
+        key: ${{ runner.os }}-composer-cache-${{ hashFiles('**/composer.json') }}
+        restore-keys: ${{ runner.os }}-composer-cache-
+
+    - name: Get build environment
+      run: |
+        composer global config --no-plugins allow-plugins.dealerdirect/phpcodesniffer-composer-installer true
+        composer global require thunder/drupal-testing
+
+    - name: Prepare the build
+      run: test-drupal-project prepare_build
+      env:
+        DRUPAL_TESTING_DRUPAL_VERSION: ${{ matrix.DRUPAL_TESTING_DRUPAL_VERSION }}
+
+    - name: Build the docroot
+      run: test-drupal-project build
+
+    - name: Test for deprecations
+      run: test-drupal-project deprecation
+      if: ${{ matrix.DRUPAL_TESTING_DRUPAL_VERSION != '~10.0.0' }}
+
+    - name: Install drupal
+      run: test-drupal-project install
+      env:
+        DRUPAL_TESTING_TEST_DEPRECATION: false
+
+    - name: Setup Apache
+      uses: thunder/apache-shiva-php-action@v1
+      with:
+        php-version: ${{ matrix.PHP_VERSION }}
+        site-directory: /tmp/test/paragraphs_features/install/web
+        http-port: ${{ env.DRUPAL_TESTING_HTTP_PORT }}
+
+    - name: Run the tests
+      run: test-drupal-project
+      env:
+        THEME: ${{ matrix.THEME }}

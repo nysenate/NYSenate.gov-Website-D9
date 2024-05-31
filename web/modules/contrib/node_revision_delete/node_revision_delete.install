@@ -1,0 +1,76 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions.
+ */
+
+/**
+ * Add config option to disable automatic queueing.
+ */
+function node_revision_delete_update_9002() {
+  $settings = \Drupal::service('config.factory')->getEditable('node_revision_delete.settings');
+  $settings->set('disable_automatic_queueing', FALSE);
+  $settings->save();
+}
+
+/**
+ * Migrate the node revision delete settings to 2.x.
+ */
+function node_revision_delete_update_9001() {
+  $settings = \Drupal::service('config.factory')->getEditable('node_revision_delete.settings');
+
+  // Check the scale for removing old revisions by age.
+  $scales = ['months' => 1, 'weeks' => 4, 'days' => 30];
+  $scale = $scales[$settings->get('node_revision_delete_minimum_age_to_delete_time')['time'] ?? 'months'];
+
+  // Check if the "delete newer" option has been enabled.
+  $delete_newer = $settings->get('delete_newer');
+
+  // All the old settings are deprecated. We can simply remove the config.
+  $settings->delete();
+
+  $content_types = \Drupal::entityTypeManager()->getStorage('node_type')->loadMultiple();
+  foreach ($content_types as $content_type) {
+
+    // Migrate the minimum number of revisions to keep.
+    $amount = $content_type->getThirdPartySetting('node_revision_delete', 'minimum_revisions_to_keep');
+    if ($amount) {
+      $content_type->setThirdPartySetting('node_revision_delete', 'amount', [
+        'status' => TRUE,
+        'settings' => [
+          'amount' => (int) $amount,
+        ],
+      ]);
+    }
+    $content_type->unsetThirdPartySetting('node_revision_delete', 'minimum_revisions_to_keep');
+
+    // Migrate the minimum age for revisions.
+    $age = $content_type->getThirdPartySetting('node_revision_delete', 'minimum_age_to_delete');
+    if ($age) {
+      $content_type->setThirdPartySetting('node_revision_delete', 'created', [
+        'status' => TRUE,
+        'settings' => [
+          'age' => (int) ceil($age / $scale),
+        ],
+      ]);
+    }
+    $content_type->unsetThirdPartySetting('node_revision_delete', 'minimum_age_to_delete');
+
+    // Migrate the "delete newer" option.
+    if ($delete_newer) {
+      $content_type->setThirdPartySetting('node_revision_delete', 'drafts', [
+        'status' => TRUE,
+        'settings' => [
+          'age' => (int) ceil($age / $scale),
+        ],
+      ]);
+    }
+
+    // Unset the deprecated "when_to_delete" setting.
+    $content_type->unsetThirdPartySetting('node_revision_delete', 'when_to_delete');
+
+    // Save the changes.
+    $content_type->save();
+  }
+}

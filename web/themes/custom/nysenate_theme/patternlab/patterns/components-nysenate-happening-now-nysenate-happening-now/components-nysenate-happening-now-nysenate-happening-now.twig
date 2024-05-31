@@ -1,0 +1,38 @@
+{{ attach_library('nysenate_theme/featured-story') }}
+{% import '@rain_theme/icons/_icons-macro.twig' as icons %}
+
+<div class="nysenate-happening-now">
+  <div class="view-header c-container--header__top-border">
+    <h3 class="c-container--title">Happening now live</h3>
+  </div>
+  <div class="c-event-featured-story">
+    <div class="story-container">
+    <div class="l-left">
+      {% if main_image %}
+        {{ main_image }}
+      {% else %}
+        <img src="themes/custom/nysenate_theme/src/assets/nysenate_seal_380x215.png" width="380" height="215" alt="" loading="lazy" typeof="foaf:Image">
+      {% endif %}
+    </div>
+    <div class="l-right">
+      <h3 class="c-story-name">
+        {% if event_url %}<a href='{{ event_url }}'>{% endif %}
+          {{ event_name }}
+        {% if event_url %}</a>{% endif %}
+      </h3>
+      {% if livestream_cta.text %}
+        <div class="c-event-video--home ">
+        {% if livestream_cta.url %}<a class="stream-link" href="{{ event_url }}">{% endif %}
+          {# icons.get('youtube-2') #}<span class="c-meeting-video--status icon-before__youtube">{{ livestream_cta.text }}</span>
+        {% if livestream_cta.url %}</a>{% endif %}
+        </div>
+      {% endif %}
+      <div class="c-featured-story-issue-tag">
+        {% for issue in issues %}
+          <a class="c-story-link" href="{{ issue.url }}">{{ issue.text }}</a>{% if not loop.last %}, {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+    </div>
+  </div>
+</div>

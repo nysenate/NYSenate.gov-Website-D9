@@ -1,0 +1,14 @@
+# Basic data types for Sophron module.
+
+sophron.mapping_command:
+  type: mapping
+  label: 'Mapping command'
+  mapping:
+    0:
+      type: string
+      label: 'Method callback'
+    1:
+      type: sequence
+      label: 'The arguments to pass to the method'
+      sequence:
+        type: string

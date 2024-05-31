@@ -1,0 +1,6 @@
+services:
+  migrate_upgrade.commands:
+    class: \Drupal\migrate_upgrade\Commands\MigrateUpgradeCommands
+    arguments: ['@state', '@logger.factory']
+    tags:
+      - { name: drush.command }

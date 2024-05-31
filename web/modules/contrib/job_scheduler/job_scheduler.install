@@ -1,0 +1,23 @@
+<?php
+
+/**
+ * @file
+ * Schema definitions install/update/uninstall hooks.
+ */
+
+/**
+ * Rebuild cache.
+ */
+function job_scheduler_update_8001() {
+  // Empty update to cause a cache rebuild.
+}
+
+/**
+ * Sets the default config value.
+ */
+function job_scheduler_update_8002() {
+  $config = \Drupal::configFactory()->getEditable('job_scheduler.settings');
+  $config->set('limit', 200);
+  $config->set('time', 30);
+  $config->save();
+}

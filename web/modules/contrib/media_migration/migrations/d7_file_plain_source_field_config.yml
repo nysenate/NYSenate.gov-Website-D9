@@ -1,0 +1,42 @@
+id: d7_file_plain_source_field_config
+label: Plain file source field instance configuration
+migration_tags:
+  - Drupal 7
+  - Configuration
+deriver: Drupal\media_migration\Plugin\migrate\D7FileConfigDeriver
+idMap:
+  plugin: smart_sql
+source:
+  plugin: d7_file_plain_source_field_instance
+  constants:
+    entity_type_id: media
+    required: true
+process:
+  field_name:
+    -
+      plugin: migration_lookup
+      source:
+        - mimes
+        - schemes
+      migration: d7_file_plain_source_field
+      no_stub: true
+    -
+      plugin: default_value
+      default_value:
+        - NULL
+        - NULL
+    -
+      plugin: extract
+      index:
+        - 1
+  entity_type: 'constants/entity_type_id'
+  required: 'constants/required'
+  bundle: bundle
+  label: source_field_label
+  settings: settings
+destination:
+  plugin: entity:field_config
+migration_dependencies:
+  required:
+    - d7_file_plain_source_field
+    - d7_file_plain_type

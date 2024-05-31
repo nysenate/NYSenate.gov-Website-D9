@@ -1,0 +1,34 @@
+{#
+/**
+ * @file
+ * Default theme implementation for the Moderation Sidebar's translations.
+ *
+ * This is what appears when you click "Translate" in the sidebar.
+ *
+ * Available variables:
+ * - current_language: The language of the currently viewed entity.
+ * - translations: The translations of an entity, containing the language, state
+ *   and the translation links
+ * - view_all: The 'View all translations' link.
+ *
+ * @ingroup themeable
+ */
+#}
+<p class="translation-language">{% trans %}<strong>{{ current_language }}</strong> (current){% endtrans %}</p>
+{% for translation in translations %}
+  <div class="moderation-sidebar-translation-item">
+    <p class="translation-language"><strong>{{ translation.language }}</strong></p>
+    {% if translation.state %}
+      <p class="translation-info">
+        {% trans %}Status: <strong>{{ translation.state }}</strong>{% endtrans %}
+      </p>
+    {% endif %}
+    <div class="translation-links-container">
+      {{ translation.links }}
+    </div>
+  </div>
+{% endfor %}
+
+{% if view_all %}
+  <div class="moderation-sidebar-translation-view-all-container">{{ view_all }}</div>
+{% endif %}

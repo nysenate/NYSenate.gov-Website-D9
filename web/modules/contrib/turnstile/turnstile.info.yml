@@ -1,0 +1,16 @@
+name: Cloudflare Turnstile
+description: Adds Cloudflare's Turnstile product as an option to the CAPTCHA module.
+package: Spam control
+
+type: module
+core_version_requirement: ^9.4 || ^10 || ^11
+
+configure: turnstile.admin_settings_form
+
+dependencies:
+  - captcha:captcha
+
+# Information added by Drupal.org packaging script on 2024-04-10
+version: '1.1.9'
+project: 'turnstile'
+datestamp: 1712710760

@@ -1,0 +1,43 @@
+{{ attach_library('nysenate_theme/nysenate-featured-event') }}
+
+<div class="c-event-block c-event-block--featured-image">
+  <div class="c-container--header__top-border">
+    <div class="c-container--title">{{ "Featured Event"|t }}</div>
+  </div>
+  <div class="c-event-image">
+      {{ image }}
+  </div>
+  <div class="c-event-date">
+    <span class="c-event-date-day">{{ day }}</span>
+    <span class="c-event-date-month">{{ month }}</span>
+    <span class="c-event-date-year"><span class="date-display-single">{{ year }}</span></span>
+  </div>
+  <a href="{{ url }}">
+    <h3 class="c-event-name">{{ title }}</h3>
+  </a>
+  {% if location %}
+    <a class="c-event-location" href="{{ url_location }}" target="_blank">
+      <span class="icon-before__circle-pin"></span>{{ location }}
+    </a>
+  {% endif %}
+
+  {% if meeting_location %}
+    <div class="c-event-address">{{ meeting_location }}</div>
+  {% endif %}
+
+  {% if street_1 or street_2 %}
+    <div class="c-event-address">{% if street_1 %}{{ street_1 }}<br>{% endif %}{{ street_2 }}</div>
+  {% endif %}
+  <div class="c-event-time">
+    <span class="date-display-single">
+      <span class="date-display-range">
+        <span class="date-display-start">{{ time_start }}</span>
+        {% if time_end > time_start %}
+        to <span class="date-display-end">{{ time_end }}</span>
+        {% endif %}
+      </span>
+    </span>
+  </div>
+
+</div>
+

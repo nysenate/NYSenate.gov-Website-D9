@@ -1,0 +1,58 @@
+email_tfa.settings:
+  type: config_object
+  label: 'Email TFA Settings'
+  mapping:
+    subject:
+      label: 'Subject'
+      type: text
+    body:
+      label: 'Body'
+      type: text
+    routes:
+      label: 'routes'
+      type: string
+    timeouts:
+      label: 'Timeouts'
+      type: integer
+    status:
+      label: 'status'
+      type: boolean
+    tracks:
+      label: 'Tracks'
+      type: string
+    user_one:
+      label: 'User one'
+      type: boolean
+    role_exclusion_type:
+      label: 'Ignore Role Type'
+      type: string
+    ignore_role:
+      type: sequence
+      label: 'Ignore Role'
+      sequence:
+        type: string
+        label: 'Ignore Role'
+    security_code_label_text:
+      label: 'Security code field label'
+      type: text
+    security_code_description_text:
+      label: 'Security code field description'
+      type: text
+    security_code_verify_text:
+      label: 'Verify button text'
+      type: text
+    security_code_interrupt_text:
+      label: 'Cancel button text'
+      type: text
+    verification_succeeded_message:
+      label: 'Security code verification succeeded message'
+      type: text
+    verification_failed_message:
+      label: 'Security code verification failed message'
+      type: text
+    verification_interrupted_message:
+      label: 'Security code verification interrupted message'
+      type: text
+    security_code_length:
+      label: 'Security code length'
+      type: integer

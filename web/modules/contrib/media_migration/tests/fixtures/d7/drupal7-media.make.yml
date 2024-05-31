@@ -1,0 +1,71 @@
+api: 2
+core: 7.x
+
+projects:
+  # Drupal 7 core, including patches
+  drupal:
+    type: core
+    version: "7.69"
+    patch:
+      # Xss filter() ignores malicious content in data-attributes and mangles
+      # image captions.
+      # http://drupal.org/node/2105841
+      - "https://www.drupal.org/files/issues/do-2105841_no_protocol_filter-97.patch"
+
+  # CTools
+  ctools:
+    version: "1.15"
+    type: module
+
+  # Entity
+  entity:
+    version: "1.9"
+    type: module
+
+  # File Entity
+  file_entity:
+    version: "2.27"
+    type: module
+
+  # Linkit
+  linkit:
+    version: "3.6"
+    type: module
+
+  # Media
+  media:
+    version: "2.26"
+    type: module
+
+  # Media Oembed
+  media_oembed:
+    version: "2.8"
+    type: module
+
+  # Media Vimeo
+  media_vimeo:
+    version: "2.1"
+    type: module
+
+  # Media Youtube
+  media_youtube:
+    version: "3.9"
+    type: module
+
+  # Views
+  views:
+    version: "3.24"
+    type: module
+
+  # Wysiwyg
+  wysiwyg:
+    version: "2.6"
+    type: module
+
+libraries:
+  # CKEditor
+  ckeditor:
+    download:
+      type: get
+      url: "https://download.cksource.com/CKEditor/CKEditor/CKEditor%204.12.1/ckeditor_4.12.1_full.zip"
+      destination: libraries

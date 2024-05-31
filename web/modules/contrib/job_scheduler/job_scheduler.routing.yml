@@ -1,0 +1,7 @@
+job_scheduler.admin_settings:
+  path: '/admin/config/system/job-scheduler'
+  defaults:
+    _title: 'Job Scheduler'
+    _form: '\Drupal\job_scheduler\Form\SettingsForm'
+  requirements:
+    _permission: 'administer site configuration'

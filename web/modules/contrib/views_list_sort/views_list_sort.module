@@ -1,0 +1,37 @@
+<?php
+
+/**
+ * @file
+ * Provide views data for our custom module_name.
+ */
+
+use Drupal\field\FieldStorageConfigInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function views_list_sort_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the views_list_sort module.
+    case 'help.page.views_list_sort':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t("Views List Sort allows views to be sorted by a list
+        field's allowed values.This is useful if the allowed values are stored
+        in a non-alphabetical order, but you want to present your view results
+        in the same order as your allowed values are stored") . '</p>';
+      return $output;
+  }
+}
+
+/**
+ * Implements hook_field_views_data_alter().
+ */
+function views_list_sort_field_views_data_alter(array &$data, FieldStorageConfigInterface $field_storage) {
+  if ($field_storage->getType() == 'list_string') {
+    foreach ($data as $table_name => $table_data) {
+      $data[$table_name][$field_storage->getName() . '_value']['sort']['id'] = 'sort_allowed_values';
+    }
+  }
+}

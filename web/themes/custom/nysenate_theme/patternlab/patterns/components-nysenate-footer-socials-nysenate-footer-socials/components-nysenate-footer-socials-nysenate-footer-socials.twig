@@ -1,0 +1,10 @@
+{{ attach_library('nysenate_theme/nysenate-footer') }}
+{% import '@rain_theme/icons/_icons-macro.twig' as icons %}
+
+<ul class="menu-socials">
+  {% for social in socials %}
+    <li class="{% if loop.first %}first {% endif %}leaf">
+      <a href="{{ social.url }}" target="_blank">{{ icons.get(social.icon) }}</a>
+    </li>
+  {% endfor %}
+</ul>

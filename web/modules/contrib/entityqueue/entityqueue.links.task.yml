@@ -1,0 +1,13 @@
+entityqueue.entities:
+  class: \Drupal\Core\Menu\LocalTaskDefault
+  deriver: \Drupal\entityqueue\Plugin\Derivative\EntityqueueLocalTask
+
+entity.entity_subqueue.canonical:
+  route_name: entity.entity_subqueue.canonical
+  base_route: entity.entity_subqueue.canonical
+  title: 'Edit'
+entity.entity_subqueue.delete_form:
+  route_name: entity.entity_subqueue.delete_form
+  base_route: entity.entity_subqueue.canonical
+  title: 'Delete'
+  weight: 10

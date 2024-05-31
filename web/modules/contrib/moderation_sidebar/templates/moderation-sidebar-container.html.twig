@@ -1,0 +1,32 @@
+{#
+/**
+ * @file
+ * Default theme implementation for the Moderation Sidebar's container.
+ *
+ * This is what appears in the Moderation sidebar when moderating an entity.
+ *
+ * Available variables:
+ * - element: Render element.
+ *   - info: Information about the moderation state.
+ *   - actions: The moderation actions that can be performed.
+ *
+ * @ingroup themeable
+ */
+#}
+<div{{ attributes }}>
+  {% if element.info %}
+    {{ element.info }}
+  {% endif %}
+
+  {% if element.actions.primary %}
+    <div class="moderation-sidebar-primary-tasks">
+      {{ element.actions.primary }}
+    </div>
+  {% endif %}
+
+  {% if element.actions.secondary %}
+    <div class="moderation-sidebar-secondary-tasks">
+      {{ element.actions.secondary }}
+    </div>
+  {% endif %}
+</div>

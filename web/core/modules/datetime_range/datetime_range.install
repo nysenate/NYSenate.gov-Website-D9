@@ -1,0 +1,30 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the Datetime range module.
+ */
+
+/**
+ * Allow NULL in the field end_value column.
+ */
+function datetime_range_update_8900() {
+  $database_schema = \Drupal::database()->schema();
+  $storage_schema = \Drupal::keyValue('entity.storage_schema.sql');
+  $configs = \Drupal::entityTypeManager()
+    ->getStorage('field_storage_config')
+    ->loadByProperties(['type' => 'daterange']);
+
+  foreach ($configs as $config) {
+    $schema_key = $config->getTargetEntityTypeId() . '.field_schema_data.' . $config->getName();
+    $tables = $storage_schema->get($schema_key);
+
+    $field_name = $config->getName() . '_end_value';
+    foreach ($tables as $table_name => &$table) {
+      $table['fields'][$field_name]['not null'] = FALSE;
+      $database_schema->changeField($table_name, $field_name, $field_name, $table['fields'][$field_name]);
+    }
+
+    $storage_schema->set($schema_key, $tables);
+  }
+}

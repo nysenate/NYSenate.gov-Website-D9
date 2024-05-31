@@ -1,0 +1,44 @@
+# Defines static routes.
+site_verify.verifications_list:
+  path: '/admin/config/search/verifications'
+  defaults:
+    _controller: '\Drupal\site_verify\Controller\SiteVerifyController::verificationsListPage'
+    _title: 'Verifications'
+  requirements:
+    _permission: 'administer site verify'
+
+site_verify.verification_add:
+  path: '/admin/config/search/verifications/add'
+  defaults:
+    _form: '\Drupal\site_verify\Form\SiteVerifyAdminForm'
+    _title: 'Add verification'
+  requirements:
+    _permission: 'administer site verify'
+
+site_verify.verification_edit:
+  path: '/admin/config/search/verifications/{site_verify}/edit'
+  defaults:
+    _form: '\Drupal\site_verify\Form\SiteVerifyAdminForm'
+    _title: 'Edit verification'
+  requirements:
+    _permission: 'administer site verify'
+
+site_verify.verification_delete:
+  path: '/admin/config/search/verifications/{site_verify}/delete'
+  defaults:
+    _form: '\Drupal\site_verify\Form\SiteVerifyDeleteForm'
+    _title: 'Delete verification'
+  requirements:
+    _permission: 'administer site verify'
+
+site_verify.verification_add_engine:
+  path: '/admin/config/search/verifications/add/{site_verify_engine}'
+  defaults:
+    _form: '\Drupal\site_verify\Form\SiteVerifyAdminForm'
+    _title: 'Add'
+  requirements:
+    _permission: 'administer site verify'
+
+# Dynamic routes
+route_callbacks:
+  - '\Drupal\site_verify\Routing\SiteVerifyRoutes::routes'

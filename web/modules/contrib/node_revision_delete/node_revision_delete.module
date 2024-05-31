@@ -1,0 +1,266 @@
+<?php
+
+/**
+ * @file
+ * Contains node_revision_delete.module.
+ */
+
+use Drupal\Component\Utility\Xss;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Form\SubformState;
+use Drupal\Core\Link;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
+use Drupal\node\NodeInterface;
+use Drupal\node\NodeTypeInterface;
+
+/**
+ * Implements hook_help().
+ */
+function node_revision_delete_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+
+    case 'help.page.node_revision_delete':
+
+      $output = '';
+      $output .= '<h3>' . t('Introduction') . '</h3>';
+      $output .= '<p>' . t('The Node Revision Delete module lets you track and prune old revisions of content types.') . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Configuring the module') . '</dt>';
+      $output .= '<dd>' . t('You can manage the module settings via the <a href=":config-page">configuration page</a>. You can configure how many revisions you want to keep per content type and configure how long revision should be kept. When saving the configuration you can optionally start a batch job to queue all content to delete revisions that are allowed to be deleted. For this you need the <em>Administer Node Revision Delete</em> permission.', [':config-page' => Url::fromRoute('node_revision_delete.admin_settings')->toString()]) . '</dd>';
+      $output .= '<dt>' . t('Configuring content types') . '</dt>';
+      $output .= '<dd>' . t('You can override the default settings of the module for each content type. Under the Publishing options tab of the content type, configure how many revisions you want to keep for the content type and how long revision should be kept.') . '</dd>';
+      $output .= '</dl>';
+
+      return $output;
+
+  }
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function node_revision_delete_form_node_type_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  /** @var \Drupal\node_revision_delete\Plugin\NodeRevisionDeletePluginManager $plugin_manager */
+  $plugin_manager = \Drupal::service('plugin.manager.node_revision_delete');
+  $plugin_definitions = $plugin_manager->getDefinitions();
+
+  // Getting the content type entity.
+  /** @var \Drupal\Core\Entity\ContentEntityFormInterface $form_object */
+  $form_object = $form_state->getFormObject();
+  $content_type = $form_object->getEntity();
+
+  // Getting the content type settings.
+  $content_type_settings = $content_type->isNew() ? [] : $plugin_manager->getSettingsNodeType($content_type->id())['plugin'];
+
+  $form['node_revision_delete'] = [
+    '#type' => 'details',
+    '#title' => t('Node Revision Delete settings'),
+    '#collapsed' => FALSE,
+    '#collapsible' => TRUE,
+    '#tree' => FALSE,
+    '#weight' => 10,
+    '#group' => 'additional_settings',
+    '#attributes' => ['class' => ['node-revision-delete-settings-form']],
+  ];
+
+  foreach ($plugin_definitions as $plugin_id => $plugin_definition) {
+    /** @var \Drupal\node_revision_delete\Plugin\NodeRevisionDeleteInterface $plugin */
+    $plugin = $plugin_manager->getPlugin($plugin_id, $content_type_settings[$plugin_id]['settings'] ?? []);
+    $form['node_revision_delete'][$plugin_id] = [
+      '#type' => 'details',
+      '#title' => $plugin_definition['label'],
+      '#open' => TRUE,
+      // We need the #tree key for subforms to work.
+      // @see https://www.drupal.org/project/drupal/issues/3053890
+      '#tree' => TRUE,
+      '#attributes' => [
+        'class' => ['node-revision-delete-plugin-settings'],
+      ],
+    ];
+    $form['node_revision_delete'][$plugin_id]['status'] = [
+      '#type' => 'checkbox',
+      '#title' => t('Enabled'),
+      '#default_value' => $content_type_settings[$plugin_id]['status'] ?? 0,
+    ];
+    $form['node_revision_delete'][$plugin_id]['settings'] = [
+      '#type' => 'fieldgroup',
+      '#states' => [
+        'visible' => [
+          ':input[name="' . $plugin_id . '[status]"]' => ['checked' => TRUE],
+        ],
+      ],
+    ];
+    $plugin_form_state = SubformState::createForSubform($form['node_revision_delete'][$plugin_id]['settings'], $form, $form_state);
+    $form['node_revision_delete'][$plugin_id]['settings'] = $plugin->buildConfigurationForm($form['node_revision_delete'][$plugin_id]['settings'] ?? [], $plugin_form_state);
+  }
+  $form['#attached']['library'][] = 'node_revision_delete/summaries';
+
+  $form['#entity_builders'][] = 'node_revision_delete_form_node_type_form_builder';
+}
+
+/**
+ * Custom form builder to save the configuration variables.
+ *
+ * @param string $entity_type
+ *   The entity type.
+ * @param Drupal\node\NodeTypeInterface $type
+ *   The entity type object.
+ * @param array $form
+ *   The form element.
+ * @param Drupal\Core\Form\FormStateInterface $form_state
+ *   The form state.
+ */
+function node_revision_delete_form_node_type_form_builder(string $entity_type, NodeTypeInterface $type, array &$form, FormStateInterface $form_state) {
+  /** @var \Drupal\node_revision_delete\Plugin\NodeRevisionDeletePluginManager $plugin_manager */
+  $plugin_manager = \Drupal::service('plugin.manager.node_revision_delete');
+  $plugin_definitions = $plugin_manager->getDefinitions();
+  foreach ($plugin_definitions as $plugin_id => $plugin_definition) {
+    $plugin_form_state = SubformState::createForSubform($form['node_revision_delete'][$plugin_id], $form, $form_state);
+    $content_type_values = $plugin_form_state->getValues();
+    if ($content_type_values !== $plugin_manager->getDefaultPluginSettings($plugin_id)) {
+      $type->setThirdPartySetting('node_revision_delete', $plugin_id, $plugin_form_state->getValues());
+    }
+    else {
+      $type->unsetThirdPartySetting('node_revision_delete', $plugin_id);
+    }
+  }
+}
+
+/**
+ * Implements hook_node_update().
+ */
+function node_revision_delete_node_update(NodeInterface $node) {
+  $disable_automatic_queueing = \Drupal::config('node_revision_delete.settings')->get('disable_automatic_queueing');
+  $has_enabled_plugins = \Drupal::service('node_revision_delete')->contentTypeHasEnabledPlugins($node->getType());
+  if ($disable_automatic_queueing || !$has_enabled_plugins) {
+    return;
+  }
+
+  // Add updated nodes to the queue to determine if any revisions are ready to
+  // be deleted.
+  $nid = (int) $node->id();
+  if (!\Drupal::service('node_revision_delete')->nodeExistsInQueue($nid)) {
+    \Drupal::queue('node_revision_delete')->createItem($nid);
+    \Drupal::messenger()->addMessage('The node was added to the Node Revision Delete queue.');
+  }
+}
+
+/**
+ * Implements hook_node_delete().
+ */
+function node_revision_delete_node_delete(NodeInterface $node) {
+  // Remove the node from the queue if is there.
+  $nid = (int) $node->id();
+  $node_revision_delete = \Drupal::service('node_revision_delete');
+  $item_id = $node_revision_delete->nodeExistsInQueue($nid);
+  if ($item_id) {
+    $node_revision_delete->deleteItemFromQueue($item_id);
+    \Drupal::messenger()->addMessage('The node was deleted from the Node Revision Delete queue.');
+  }
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function node_revision_delete_form_node_revision_delete_confirm_alter(&$form, FormStateInterface &$form_state, $form_id) {
+  // Get the node id from URL.
+  $nid = \Drupal::routeMatch()->getRawParameter('node');
+  // Get the revision id from URL.
+  $revision_id = \Drupal::routeMatch()->getRawParameter('node_revision');
+
+  // Get list of revisions older than current revision.
+  $revisions_before = \Drupal::service('node_revision_delete')->getPreviousRevisions($nid, $revision_id);
+  // Count sum of old revisions.
+  $revision_number = count($revisions_before);
+
+  // If there are old revisions.
+  if ($revision_number > 0) {
+    $form['revision_list'] = [
+      '#type' => 'details',
+      '#title' => t('Delete prior revisions'),
+      '#open' => FALSE,
+    ];
+
+    $form['revision_list']['delete_prior_revisions'] = [
+      '#type' => 'checkbox',
+      '#title' => t('Also delete %revs_no revisions prior to this one.', ['%revs_no' => $revision_number]),
+    ];
+
+    $headers = [
+      t('Revision ID'),
+      [
+        'data' => t('Revision'),
+        // Hide the description on narrow width devices.
+        'class' => [RESPONSIVE_PRIORITY_MEDIUM],
+      ],
+    ];
+    // Cache service for later uses.
+    $renderer = \Drupal::service('renderer');
+    $dateFormatter = \Drupal::service('date.formatter');
+
+    $rows = [];
+    foreach ($revisions_before as $revision) {
+      $username = [
+        '#theme' => 'username',
+        '#account' => $revision->getRevisionUser(),
+      ];
+
+      // Build link to view revision.
+      $date = $dateFormatter->format($revision->revision_timestamp->value, 'short');
+      $revision_url = new Url('entity.node.revision', [
+        'node' => $revision->id(),
+        'node_revision' => $revision->getRevisionId(),
+      ]);
+      $revision_link = Link::fromTextAndUrl($date, $revision_url)->toRenderable();
+
+      $revision_info = [
+        '#type' => 'inline_template',
+        '#template' => '{% trans %}{{ date }} by {{ username }}{% endtrans %}{% if message %}<p class="revision-log">{{ message }}</p>{% endif %}',
+        '#context' => [
+          'date' => $renderer->renderPlain($revision_link),
+          'username' => $renderer->renderPlain($username),
+          'message' => [
+            '#markup' => $revision->revision_log->value,
+            '#allowed_tags' => Xss::getHtmlTagList(),
+          ],
+        ],
+      ];
+
+      $rows[] = [
+        $revision->getRevisionId(),
+        ['data' => $revision_info],
+      ];
+    }
+
+    $form['revision_list']['table_markup'] = [
+      '#type' => 'table',
+      '#header' => $headers,
+      '#rows' => $rows,
+    ];
+
+    // Custom submit handler to handle bulk revisions delete.
+    $form['#submit'][] = '_node_revision_bulk_delete_submit';
+  }
+}
+
+/**
+ * Custom submit handler to bulk delete revisions.
+ *
+ * @param array $form
+ *   The form element.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The form state.
+ */
+function _node_revision_bulk_delete_submit(array &$form, FormStateInterface $form_state) {
+  if ($form_state->getValue('delete_prior_revisions') == 1) {
+    // Get the node id from URL.
+    $nid = \Drupal::routeMatch()->getRawParameter('node');
+    // Get the revision id from URL.
+    $vid = \Drupal::routeMatch()->getRawParameter('node_revision');
+
+    // Call the batch.
+    \Drupal::service('node_revision_delete.batch')->previousRevisionDeletionBatch($nid, $vid);
+  }
+}

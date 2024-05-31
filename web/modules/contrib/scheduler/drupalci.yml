@@ -1,0 +1,52 @@
+# See docs at https://www.drupal.org/drupalorg/docs/drupal-ci/customizing-drupalci-testing-for-projects
+build:
+  assessment:
+    validate_codebase:
+      container_composer: {}
+      container_command:
+        commands:
+          # Show the eslint version
+          - echo "eslint version $(${SOURCE_DIR}/core/node_modules/.bin/eslint --version)"
+          # Show the codesniffer and coder versions.
+          - composer show | grep -E "(php_codesniffer|phpcs|coder)"
+      host_command:
+        commands: {}
+      phplint: {}
+      csslint: {}
+      eslint:
+        halt-on-fail: true
+      phpcs:
+        # phpcs halt-on-fail:true gives a gray 'build successful' message but does not stop the job.
+        halt-on-fail: true
+      phpstan:
+        halt-on-fail: false
+    testing:
+      container_command:
+        commands:
+          # Rules 3.0-alpha7 is not compatible with PHP8.1 but the dev version has been fixed.
+          # Added mglaman/phpstan-drupal:* to allow downgrade. See https://www.drupal.org/i/3326114
+          - cd ${SOURCE_DIR} && sudo -u www-data composer require drupal/rules:3.x-dev mglaman/phpstan-drupal:*
+          - drush core:status | awk "NR==1{print \$2\$3\$4}"
+          # When running with PHP8.2 get the latest Devel 5.x-dev version. This can be removed when Devel 5.1.2 is released.
+          - php -v | awk "NR==1{print \$2}" | grep '8.2' && cd ${SOURCE_DIR} && sudo -u www-data composer require drupal/devel:5.x-dev
+      run_tests.functional:
+        types: 'PHPUnit-Functional'
+        # testgroups: '--all'
+        # The groups are 'scheduler,scheduler_api,scheduler_drush,scheduler_rules_integration'
+        # @todo add back scheduler_drush when https://www.drupal.org/i/3359998 is solved.
+        testgroups: 'scheduler,scheduler_api'
+        # Suppress deprecations until 3rd-party modules (address and commerce) are fixed.
+        # @see https://www.drupal.org/project/scheduler/issues/3413015
+        suppress-deprecations: true
+      run_tests.kernel:
+        types: 'PHPUnit-Kernel'
+        testgroups: 'scheduler_kernel'
+        suppress-deprecations: false
+      run_tests.js:
+        types: 'PHPUnit-FunctionalJavascript'
+        testgroups: 'scheduler_js'
+        # Suppress deprecations until 3rd-party modules (address and commerce) are fixed.
+        # @see https://www.drupal.org/project/scheduler/issues/3413015
+        suppress-deprecations: true
+        concurrency: 1
+        halt-on-fail: false

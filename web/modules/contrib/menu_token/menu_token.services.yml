@@ -1,0 +1,24 @@
+services:
+
+  menu_token.event_subscriber:
+    class: Drupal\menu_token\EventSubscriber\MenuTokenSubscriber
+    arguments: ['@menu_token.context_manager']
+    tags:
+      - { name: 'event_subscriber' }
+
+  menu_token.token_replacer:
+      class: Drupal\menu_token\Service\TokenReplacer
+      arguments: ['@token', '@context.repository','@token.entity_mapper','@entity_type.manager']
+
+  menu_token.context_manager:
+      class: Drupal\menu_token\Service\MenuTokenContextManager
+      arguments: ['@token', '@context.repository','@token.entity_mapper','@entity_type.manager','@state','@menu_token.manager.menu.link']
+
+  menu_token.manager.menu.link:
+      class: Drupal\menu_token\Service\MenuTokenMenuLinkManager
+      arguments: ['@menu.tree_storage', '@menu_link.static.overrides', '@module_handler']
+
+
+  menu_token.tree_storage:
+      class: Drupal\menu_token\Service\MenuTokenTreeStorage
+      arguments: ['@database', '@cache.menu', '@cache_tags.invalidator', 'menu_tree']

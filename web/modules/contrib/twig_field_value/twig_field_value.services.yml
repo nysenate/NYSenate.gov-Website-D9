@@ -1,0 +1,6 @@
+services:
+  twig_field_value.twig.extension:
+    class: Drupal\twig_field_value\Twig\Extension\FieldValueExtension
+    arguments: ['@language_manager', '@entity.repository', '@controller_resolver', '@logger.factory']
+    tags:
+      - { name: twig.extension }

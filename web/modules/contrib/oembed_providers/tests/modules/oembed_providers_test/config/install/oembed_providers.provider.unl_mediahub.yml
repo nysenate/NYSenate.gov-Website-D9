@@ -1,0 +1,17 @@
+uuid: 894927f4-30b4-4906-a131-e68647d9b210
+langcode: en
+status: true
+dependencies: {  }
+id: unl_mediahub
+label: 'UNL MediaHub'
+provider_url: 'https://mediahub.unl.edu'
+endpoints:
+  -
+    schemes:
+      - 'https://mediahub.unl.edu/media/*'
+      - 'http://mediahub.unl.edu/media/*'
+    url: 'https://mediahub.unl.edu/oembed'
+    discovery: false
+    formats:
+      json: true
+      xml: false

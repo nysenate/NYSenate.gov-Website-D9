@@ -1,0 +1,9 @@
+<li class="carousel-item">
+  <div class="carousel-item__media">
+    {%
+      include '@rain_theme/media/media.twig' with {
+        "image": item.image,
+      } only
+    %}
+  </div>
+</li>

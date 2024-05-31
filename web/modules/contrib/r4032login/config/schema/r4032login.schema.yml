@@ -1,0 +1,52 @@
+r4032login.settings:
+  type: config_object
+  label: 'Redirect 403 to User Login (r4032login) settings'
+  mapping:
+    display_denied_message:
+      type: boolean
+      label: 'Display access denied message on login page'
+    access_denied_message:
+      type: label
+      label: "User login 'access denied' message"
+    access_denied_message_type:
+      type: string
+      label: "User login 'access denied' message type"
+    redirect_authenticated_users_to:
+      type: label
+      label: 'Redirect authenticated users to'
+    throw_authenticated_404:
+      type: boolean
+      label: 'Throw authenticated users a 404 error'
+    display_auth_denied_message:
+      type: boolean
+      label: 'Display access denied message on authenticated landing page'
+    access_denied_auth_message:
+      type: label
+      label: "Authenticated user 'access denied' message"
+    access_denied_auth_message_type:
+      type: string
+      label: "Authenticated user 'access denied' message type"
+    user_login_path:
+      type: path
+      label: '/user/login'
+    default_redirect_code:
+      type: integer
+      label: 'HTTP redirect code'
+    add_noindex_header:
+      type: boolean
+      label: 'Add noindex header'
+    destination_parameter_override:
+      type: string
+      label: 'Custom final destination parameter'
+    match_noredirect_pages:
+      type: string
+      label: 'Listed pages for which to redirect or not'
+    match_noredirect_negate:
+      type: integer
+      label: 'Allow to negate the redirect pages condition'
+    redirect_to_destination:
+      type: boolean
+      label: 'Redirect user to the page they tried to access after login'
+    langcode:
+      type: string
+      label: 'Language code'

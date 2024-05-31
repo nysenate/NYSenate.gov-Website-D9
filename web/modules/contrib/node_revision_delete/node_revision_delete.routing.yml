@@ -1,0 +1,9 @@
+node_revision_delete.admin_settings:
+  path: '/admin/config/content/node_revision_delete'
+  defaults:
+    _form: '\Drupal\node_revision_delete\Form\AdminSettingsForm'
+    _title: 'Node Revision Delete'
+  requirements:
+    _permission: 'administer node_revision_delete'
+  options:
+    _admin_route: TRUE

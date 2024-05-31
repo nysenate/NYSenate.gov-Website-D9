@@ -1,0 +1,166 @@
+################
+# DrupalCI includes:
+# As long as you include this, any future includes added by the Drupal Association will be accessible to your pipelines automatically.
+# View these include files at https://git.drupalcode.org/project/gitlab_templates/
+################
+include:
+  - project: $_GITLAB_TEMPLATES_REPO
+    ref: $_GITLAB_TEMPLATES_REF
+    file:
+      - '/includes/include.drupalci.main.yml'
+      - '/includes/include.drupalci.variables.yml'
+      - '/includes/include.drupalci.workflows.yml'
+
+################
+# Pipeline configuration variables
+################
+variables:
+  OPT_IN_TEST_CURRENT: 1
+  OPT_IN_TEST_NEXT_MINOR: 1
+  OPT_IN_TEST_NEXT_MAJOR: 1
+  OPT_IN_TEST_PREVIOUS_MINOR: 1
+  OPT_IN_TEST_PREVIOUS_MAJOR: 1
+  OPT_IN_TEST_MAX_PHP: 1
+
+  _SHOW_ENVIRONMENT_VARIABLES: 1
+  _PHPUNIT_CONCURRENT: 1
+  _PHPUNIT_TESTGROUPS: ''
+
+################
+# Job overrides
+################
+
+.show-variables: &show-variables
+  - |
+    printf "CI_PIPELINE_SOURCE          = %s\n" $CI_PIPELINE_SOURCE &&
+    printf "CI_DEFAULT_BRANCH           = %s\n" $CI_DEFAULT_BRANCH &&
+    printf "CI_COMMIT_BRANCH            = %s\n" $CI_COMMIT_BRANCH &&
+    printf "CI_COMMIT_TAG               = %s\n" $CI_COMMIT_TAG &&
+    printf "CI_MERGE_REQUEST_IID        = %s\n" $CI_MERGE_REQUEST_IID &&
+    printf "CI_MERGE_REQUEST_TITLE      = %s\n" "$CI_MERGE_REQUEST_TITLE" &&
+    printf "CI_PROJECT_ROOT_NAMESPACE   = %s\n" $CI_PROJECT_ROOT_NAMESPACE &&
+    printf "CI_PAGES_URL                = %s\n" $CI_PAGES_URL &&
+    printf "CI_PROJECT_NAME             = %s\n" $CI_PROJECT_NAME &&
+    printf "CI_JOB_NAME                 = %s\n" "$CI_JOB_NAME" &&
+    printf "CI_JOB_NAME chopped         = %s\n" "${CI_JOB_NAME%:*}" &&
+    printf "MODULE_NAME                 = %s\n" $MODULE_NAME
+
+# -------------------------------- BUILD ---------------------------------------
+
+.composer-base:
+  after_script:
+    # Show the last two commits. Current directory /builds/project/scheduler ($CI_PROJECT_DIR) is correct.
+    - git show -2 --stat --oneline
+
+composer (max PHP version):
+  rules:
+    - !reference [ .opt-in-max-php-rule ]
+    - when: manual
+  allow_failure: true
+
+composer (previous minor):
+  # Using when: manual needs 'allow failure: true' otherwise the overall pipeline status shows 'blocked'
+  rules:
+    - !reference [ .opt-in-previous-minor-rule ]
+    - when: manual
+  allow_failure: true
+
+composer (previous major):
+  rules:
+    - !reference [ .opt-in-previous-major-rule ]
+    - when: manual
+  allow_failure: true
+
+composer (next major):
+  allow_failure: true
+  rules:
+    - !reference [ .opt-in-next-major-rule ]
+    - when: manual
+  variables:
+    _LENIENT_ALLOW_LIST: devel,devel_generate,rules,commerce,entity,address,state_machine,entity_reference_revisions,profile,inline_entity_form,token,workbench_moderation,workbench_moderation_actions
+
+# -------------------------------- VALIDATE ------------------------------------
+
+eslint:
+  allow_failure: false
+
+stylelint:
+  allow_failure: false
+
+phpcs:
+  allow_failure: false
+
+phpstan:
+  after_script:
+    - test -f phpstan.neon && echo "=== This is phpstan.neon ===" && cat phpstan.neon
+    - php $CI_PROJECT_DIR/scripts/phpstan-baseline-summary.php phpstan-baseline-to-fix.neon
+
+# Do not automatically run, but allow the jobs to be started manually.
+phpstan (next minor):
+  rules:
+    - !reference [ .opt-in-next-minor-rule ]
+    - !reference [ .skip-phpstan-rule ]
+    - when: manual
+
+phpstan (next major):
+  rules:
+    - !reference [ .opt-in-next-major-rule ]
+    - !reference [ .skip-phpstan-rule ]
+    - when: manual
+
+# -------------------------------- TEST ----------------------------------------
+
+phpunit:
+  parallel:
+    matrix:
+      # Run test groups in parallel. This also speeds up identification of failing tests.
+      # @todo put back "scheduler_drush" when https://www.drupal.org/i/3359998 is solved.
+      - _MATRIX_VALUE:
+        - scheduler
+        - scheduler_api
+        # - scheduler_drush
+        - scheduler_js
+        - scheduler_kernel
+        - scheduler_rules_integration
+  before_script:
+    - *show-variables
+    - |
+      printf "_MATRIX_VALUE               = %s\n" $_MATRIX_VALUE &&
+      printf "_PHPUNIT_CONCURRENT         = %s\n" $_PHPUNIT_CONCURRENT &&
+      printf "_PHPUNIT_TESTGROUPS         = %s\n" "$_PHPUNIT_TESTGROUPS" &&
+      printf "_PHPUNIT_EXTRA              = %s\n" "$_PHPUNIT_EXTRA" &&
+      printf "SYMFONY_DEPRECATIONS_HELPER = %s\n" $SYMFONY_DEPRECATIONS_HELPER
+    - |
+      if [[ "$_MATRIX_VALUE" != "" ]]; then
+        if [[ "$_PHPUNIT_CONCURRENT" == "0" ]]; then
+          # Specify parameters that will be passed to PHPUNIT (needs --group)
+          export _PHPUNIT_EXTRA="$_PHPUNIT_EXTRA --group $_MATRIX_VALUE"
+        else
+          # Specify parameters that will be passed to RUN-TESTS.SH (without --group)
+          export _PHPUNIT_EXTRA="$_PHPUNIT_EXTRA $_MATRIX_VALUE"
+          # Ensure the value is 1 if it is not 0.
+          export _PHPUNIT_CONCURRENT=1
+        fi
+      fi
+    - echo "End of before_script _PHPUNIT_CONCURRENT=$_PHPUNIT_CONCURRENT _PHPUNIT_EXTRA=$_PHPUNIT_EXTRA"
+
+phpunit (next minor):
+  allow_failure: true
+  rules:
+    - !reference [ .opt-in-next-minor-rule ]
+    - !reference [ .skip-phpunit-rule ]
+    # Do not automatically run, but allow the job to be started manually.
+    # To do this the .phpunit-tests-exist-rule has to be removed.
+    - when: manual
+  variables:
+    # Use core ignoreFile to show deprecations.
+    SYMFONY_DEPRECATIONS_HELPER: "ignoreFile=$CI_PROJECT_DIR/$_WEB_ROOT/core/.deprecation-ignore.txt"
+
+phpunit (next major):
+  rules:
+    - !reference [ .opt-in-next-major-rule ]
+    - !reference [ .skip-phpunit-rule ]
+    - when: manual
+  variables:
+    # Use core ignoreFile to show deprecations.
+    SYMFONY_DEPRECATIONS_HELPER: "ignoreFile=$CI_PROJECT_DIR/$_WEB_ROOT/core/.deprecation-ignore.txt"

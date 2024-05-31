@@ -1,0 +1,29 @@
+services:
+  stage_file_proxy.download_manager:
+    class: Drupal\stage_file_proxy\DownloadManager
+    arguments: ['@http_client', '@file_system', '@logger.channel.stage_file_proxy', '@config.factory', '@lock']
+
+  stage_file_proxy.fetch_manager:
+    deprecated: 'The "%service_id% service is deprecated. Use "stage_file_proxy.download_manager" instead'
+    class: Drupal\stage_file_proxy\FetchManager
+    arguments: ['@http_client', '@file_system', '@logger.channel.stage_file_proxy', '@config.factory', '@stage_file_proxy.download_manager']
+
+  stage_file_proxy.proxy_subscriber:
+    class: Drupal\stage_file_proxy\EventSubscriber\StageFileProxySubscriber
+    tags:
+      - { name: event_subscriber }
+    arguments: ['@stage_file_proxy.download_manager', '@logger.channel.stage_file_proxy', '@event_dispatcher', '@config.factory', '@request_stack']
+
+  stage_file_proxy.subscriber:
+    class: Drupal\stage_file_proxy\EventSubscriber\ProxySubscriber
+    deprecated: 'The "%service_id% service is deprecated. Use "stage_file_proxy.proxy_subscriber" instead'
+    arguments: ['@stage_file_proxy.fetch_manager', '@logger.channel.stage_file_proxy', '@event_dispatcher', '@config.factory', '@request_stack']
+
+  logger.channel.stage_file_proxy:
+    parent: logger.channel_base
+    arguments: ['stage_file_proxy']
+
+  stage_file_proxy.image_download_controller:
+    class: Drupal\stage_file_proxy\EventSubscriber\ImageDownloadControllerSubscriber
+    tags:
+      - { name: event_subscriber }

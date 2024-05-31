@@ -1,0 +1,13 @@
+name: Override Node Options
+description: Allow non-admins to override the default publishing options for nodes they can edit.
+type: module
+core_version_requirement: ^9 || ^10
+package: Permissions
+configure: override_node_options.settings
+dependencies:
+  - drupal:node
+
+# Information added by Drupal.org packaging script on 2024-04-18
+version: '8.x-2.8'
+project: 'override_node_options'
+datestamp: 1713475053

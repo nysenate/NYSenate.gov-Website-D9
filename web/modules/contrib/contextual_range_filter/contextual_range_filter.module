@@ -1,0 +1,47 @@
+<?php
+
+/**
+ * @file
+ * contextual_range_filter.module
+ *
+ * Adds to Views an option to contextually filter by range.
+ * For instance, if you have a View with a float field (eg Price or Distance)
+ * and have added this field as the first contextual filter, then you can filter
+ * your View page like so:
+ *
+ *   http://yoursite.com/yourview/100--199.99
+ *
+ * Date, number and string types are supported. Lists are really numbers.
+ * The OR ('+') operator is supported.
+ * The negate operator ("Exclude" tick box) is supported.
+ * "Glossary mode" (match on first N characters of a string) is supported.
+ */
+
+use Drupal\Core\Url;
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function contextual_range_filter_help($route_name, RouteMatchInterface $route_match) {
+
+  switch ($route_name) {
+    // Main module help for the contextual_range_filter module.
+    case 'help.page.contextual_range_filter':
+      $options = [
+        ':one' => Url::fromRoute('contextual_range_filter.settings')->toString(),
+      ];
+      $help1 = t('You must first add contextual filters in the advanced section of the Views UI before they appear on this <a href=":one">configuration</a> page.<br/>When defined contextual range filters are employed like normal contextual filters, i.e. by apppending "arguments" to the URL. You separate "from" and "to" values by a double hyphen, e.g., <em>http://yoursite.com/yourview/50--149.95</em><br/>You may omit the from or to values to create open-ended ranges, e.g., <em>http://yoursite.com/yourview/--149.95</em> or <em>http://yoursite.com/yourview/50--</em><br/>All filter ranges are inclusive of from and to values.<br/>Instead of "<strong>--</strong>" you may use a colon "<strong>:</strong>"', $options);
+      $extra1_options = [
+        ':README' => Url::fromUri('internal:/' . \Drupal::service('extension.list.module')->getPath('contextual_range_filter') . '/README.txt')->toString(),
+      ];
+      $extra1 = t('Configuration and usage instructions with examples can be found in the <a target="readme" href=":README">README</a> file.', $extra1_options);
+      $extra2_options = [
+        ':contextual_range_filter' => Url::fromUri('http://drupal.org/project/contextual_range_filter')->toString(),
+      ];
+      $extra2 = t('Known issues and solutions may be found on the <a target="project-page" href=":contextual_range_filter">Views Contextual Range Filter</a> project page.', $extra2_options);
+      return $help1 . '<p>' . $extra1 . '</p><p>' . $extra2 . '</p>';
+
+    default:
+  }
+}

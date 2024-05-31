@@ -1,0 +1,164 @@
+<?php
+
+/**
+ * @file
+ * Contains hook implementations for moderation_sidebar.
+ */
+
+use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityPublishedInterface;
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_toolbar().
+ */
+function moderation_sidebar_toolbar() {
+  $items = [];
+
+  // @todo Can we set cache contexts based on the entity revision?
+  $items['moderation_sidebar'] = [];
+  $cacheability = (new CacheableMetadata())
+    ->addCacheContexts(['route'])
+    ->addCacheContexts(['user.permissions']);
+
+  if (!\Drupal::currentUser()->hasPermission('use moderation sidebar')) {
+    $cacheability->applyTo($items['moderation_sidebar']);
+    return $items;
+  }
+
+  /** @var \Drupal\Core\Routing\AdminContext $admin_context */
+  $admin_context = \Drupal::service('router.admin_context');
+
+  /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
+  $current_route = \Drupal::routeMatch();
+  $entity = NULL;
+  foreach ($current_route->getParameters() as $param) {
+    if ($param instanceof ContentEntityInterface) {
+      $entity = $param;
+      // Stop at the first found instance.
+      break;
+    }
+  }
+
+  if (!($entity instanceof ContentEntityInterface) || !($entity->getEntityType()->isRevisionable()) || $admin_context->isAdminRoute()) {
+    $cacheability->applyTo($items['moderation_sidebar']);
+    return $items;
+  }
+
+  if ($entity->isNew()) {
+    return $items;
+  }
+
+  $cacheability->addCacheableDependency($entity);
+
+  /** @var \Drupal\content_moderation\ModerationInformation $moderation_information */
+  $moderation_information = \Drupal::service('content_moderation.moderation_information');
+
+  $params = [
+    'entity' => $entity->id(),
+    'entity_type' => $entity->getEntityTypeId(),
+  ];
+
+  // We maintain two separate routes depending on what context we're viewing
+  // the entity in.
+  if ($moderation_information->hasPendingRevision($entity) && $entity->isDefaultRevision()) {
+    $url = Url::fromRoute('moderation_sidebar.sidebar', $params);
+  }
+  else {
+    $url = Url::fromRoute('moderation_sidebar.sidebar_latest', $params);
+  }
+
+  // Grab the state label for the quick hover feature.
+  $is_published = TRUE;
+  if ($entity instanceof EntityPublishedInterface) {
+    $is_published = $entity->isPublished();
+  }
+
+  if ($moderation_information->isModeratedEntity($entity)) {
+    $state_label = $moderation_information
+      ->getWorkflowForEntity($entity)
+      ->getTypePlugin()
+      ->getState($entity->moderation_state->value)
+      ->label();
+  }
+  else {
+    $state_label = $is_published ? t('Published') : t('Draft');
+  }
+
+  if ($moderation_information->hasPendingRevision($entity) && $entity->isDefaultRevision()) {
+    $state_label = t('Draft available');
+    $label_class = 'moderation-label-draft-available';
+  }
+  else {
+    $label_class = 'moderation-label-' . ($is_published ? 'published' : 'draft');
+  }
+
+  $items['moderation_sidebar'] += [
+    '#type' => 'toolbar_item',
+    '#wrapper_attributes' => [
+      'class' => ['moderation-sidebar-toolbar-tab'],
+    ],
+    'tab' => [
+      '#type' => 'link',
+      '#title' => t('Tasks'),
+      '#url' => $url,
+      '#attributes' => [
+        'class' => [
+          'use-ajax',
+          'toolbar-icon',
+          'toolbar-icon-moderation-sidebar',
+          $label_class,
+        ],
+        'data-dialog-type' => 'dialog',
+        'data-dialog-renderer' => 'off_canvas',
+        'data-label' => $state_label,
+      ],
+    ],
+    '#attached' => [
+      'library' => [
+        'moderation_sidebar/main',
+      ],
+    ],
+  ];
+
+  $cacheability->applyTo($items['moderation_sidebar']);
+  return $items;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function moderation_sidebar_theme() {
+  return [
+    'moderation_sidebar_container' => [
+      'render element' => 'element',
+    ],
+    'moderation_sidebar_info' => [
+      'variables' => [
+        'state' => '',
+        'revision_time' => NULL,
+        'revision_time_pretty' => NULL,
+        'revision_author' => NULL,
+        'revision_author_link' => NULL,
+      ],
+    ],
+    'moderation_sidebar_revision' => [
+      'variables' => [
+        'revision_message' => '',
+        'revision_time' => NULL,
+        'revision_time_pretty' => NULL,
+        'revision_author' => NULL,
+        'revision_author_link' => NULL,
+        'revision_link' => NULL,
+      ],
+    ],
+    'moderation_sidebar_translations' => [
+      'variables' => [
+        'current_language' => NULL,
+        'translations' => NULL,
+        'view_all' => NULL,
+      ],
+    ],
+  ];
+}

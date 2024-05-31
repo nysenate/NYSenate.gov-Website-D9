@@ -1,0 +1,26 @@
+uuid: 894927f4-30d4-4206-a131-e69648d9b210
+langcode: en
+status: true
+dependencies: {  }
+id: example_provider
+label: 'Example Provider'
+provider_url: 'https://example-oembed-provider.com'
+endpoints:
+  -
+    schemes:
+      - 'https://example-oembed-provider.com/video/*'
+      - 'http://example-oembed-provider.com/video/*'
+    url: 'https://example-oembed-provider.com/oembed/v1/video'
+    discovery: true
+    formats:
+      json: false
+      xml: false
+  -
+    schemes:
+      - 'https://example-oembed-provider.com/post/*'
+      - 'http://example-oembed-provider.com/post/*'
+    url: 'https://example-oembed-provider.com/oembed/v1/post'
+    discovery: true
+    formats:
+      json: false
+      xml: false

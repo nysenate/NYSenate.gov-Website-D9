@@ -1,0 +1,125 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the Honeypot module.
+ */
+
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_schema().
+ */
+function honeypot_schema() {
+  $schema['honeypot_user'] = [
+    'description' => 'Table that stores failed attempts to submit a form.',
+    'fields' => [
+      'id' => [
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Unique record ID.',
+      ],
+      'uid' => [
+        'description' => 'Foreign key to {users}.uid; uniquely identifies a Drupal user to whom this ACL data applies.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'hostname' => [
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'description' => 'Hostname of user that that triggered honeypot.',
+      ],
+      'timestamp' => [
+        'description' => 'Date/time when the form submission failed, as Unix timestamp.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+    ],
+    'primary key' => ['id'],
+    'indexes' => [
+      'uid' => ['uid'],
+      'timestamp' => ['timestamp'],
+    ],
+  ];
+  return $schema;
+}
+
+/**
+ * Implements hook_install().
+ */
+function honeypot_install() {
+  if (PHP_SAPI !== 'cli') {
+    // Rebuild so that routes defined in honeypot.routing.yml become available.
+    \Drupal::service('router.builder')->rebuild();
+    // Prompt the user to configure Honeypot.
+    \Drupal::messenger()->addMessage(t('Honeypot installed successfully. Please <a href=":url">configure Honeypot</a> to protect your forms from spam bots.', [
+      ':url' => Url::fromRoute('honeypot.config')->toString(),
+    ]));
+  }
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function honeypot_uninstall() {
+  // Clear the bootstrap cache.
+  \Drupal::cache('bootstrap')->deleteAll();
+}
+
+/**
+ * Adds the 'hostname' column to the {honeypot_user} table.
+ */
+function honeypot_update_8100() {
+  // The body of this update function has been removed.
+  //
+  // hook_update_8100() does not technically comply with the update hook
+  // numbering scheme. This may cause various problems when updating.
+  //
+  // To ensure that all sites get properly updated, a new hook_update_8101()
+  // is added to conditionally perform the updates that used to be here.
+  // - For new sites, update hooks aren't run. The schema will already be
+  //   correct upon install.
+  // - For existings sites that have already run hook_update_8100(), the new
+  //   update hook won't make any changes.
+  // - For existing sites that try to re-execute hook_update_8100() as
+  //   described in https://www.drupal.org/project/honeypot/issues/3121331,
+  //   this empty hook won't fail.
+  // - For existing sites that haven't yet been updated, the new update hook
+  //   will make the necessary changes.
+  //
+  // This is what honeypot_update_8100() used to do:
+  // $schema = honeypot_schema();
+  // $spec = $schema['honeypot_user']['fields']['hostname'];
+  // $spec['initial'] = '';
+  // \Drupal::database()->schema()->addField('honeypot_user', 'hostname', $spec);
+}
+
+/**
+ * Corrects a sometimes-missing 'hostname' column in the {honeypot_user} table.
+ */
+function honeypot_update_8101() {
+  if (!\Drupal::database()->schema()->fieldExists('honeypot_user', 'hostname')) {
+    $schema = honeypot_schema();
+    $spec = $schema['honeypot_user']['fields']['hostname'];
+    $spec['initial'] = '';
+    \Drupal::database()->schema()->addField('honeypot_user', 'hostname', $spec);
+  }
+}
+
+/**
+ * Creates an 'id' column for the {honeypot_user} table to act as a primary key.
+ */
+function honeypot_update_8102() {
+  $schema = \Drupal::database()->schema();
+  $schema->addField('honeypot_user', 'id', [
+    'type' => 'serial',
+    'not null' => TRUE,
+    'description' => 'Unique record ID.',
+  ],
+  [
+    'primary key' => ['id'],
+  ]);
+}

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html class="pl">
+  <head>
+    <title>Pattern Lab</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="../../css/pattern-scaffolding.css?1717190112700" media="all" />
+    <link rel="stylesheet" href="../../css/all.css?1717190112700" media="all" />
+
+    <!-- Begin Pattern Lab (Required for Pattern Lab to run properly) -->
+    
+    <!-- End Pattern Lab -->
+
+  </head>
+  <body class="body"><div class="review-submission__container">
+  
+
+<section class="l-messages">
+  <div data-alert="" class="alert-box success">
+    <div class="alert-box-message">
+      <h2 class="element-invisible">Status message</h2>
+      Please review your submission
+    <a href="#" class="close">×</a>
+    </div>
+  </div>
+</section>
+  <form class="entityform entitytype-earth_day-form"
+    action="/eform/submit/earth-day"
+    method="post">
+    <div class="ds-1col entity entity-entityform entityform-earth-day view-mode-review clearfix">
+      <p class="label-inline">
+        Teacher's Name:
+      </p>
+      <div>
+        <p class="form-results">
+          Test Teacher
+        </p>
+      </div>
+      <p class="label-inline">
+        Teacher's Email:
+      </p>
+      <div>
+        <p class="form-results">
+          <a href="mailto:test@mail.com">test@mail.com</a>
+        </p>
+      </div>
+      <p class="label-inline">
+        Grade:
+      </p>
+      <div>
+        <p class="form-results">
+          Kindergarten
+        </p>
+      </div>
+      <p class="label-inline form-label">
+        School Name:
+      </p>
+      <div>
+        <p class="form-results">
+          Langan School - Center for Disability Services, Albany, 12208
+        </p>
+      </div>
+      <h3 class="label-above label-above">
+        Student Submissions:
+      </h3>
+              <div class="ds-1col entity entity-field-collection-item field-collection-item-field-school-stud-earthday-subm view-mode-full clearfix">
+          <p class="label-inline form-label">
+            Student's Name:
+          </p>
+
+          <div>
+            <p class="form-results">
+              Test Student
+            </p>
+          </div>
+
+          
+                      <p class="label-inline form-label">
+              Submission:
+            </p>
+
+            <div>
+              <p class="form-results">
+                <img src='https://source.unsplash.com/pFqrYbhIAXs' alt='Photo of person quoted' width='165' height='220' />
+              </p>
+           </div>
+                 </div>
+          </div>
+
+          <div class="button-wrapper">
+                  
+
+  <a href="#" class="button">Change</a>
+        
+                  <div class="edit-submit">
+            
+
+  <a href="#" class="button">Your Final Submission</a>
+          </div>
+              </div>
+      </form>
+</div><!--DO NOT REMOVE-->
+<script type="text/json" id="pl-pattern-data-footer" class="pl-js-pattern-data">
+  {"cssEnabled":false,"patternLineageExists":true,"patternLineages":[{"lineagePattern":"components-alert-box","lineagePath":"../../patterns/components-alert-box-alert-box/components-alert-box-alert-box.rendered.html"},{"lineagePattern":"components-button","lineagePath":"../../patterns/components-button-button/components-button-button.rendered.html"}],"lineage":[{"lineagePattern":"components-alert-box","lineagePath":"../../patterns/components-alert-box-alert-box/components-alert-box-alert-box.rendered.html"},{"lineagePattern":"components-button","lineagePath":"../../patterns/components-button-button/components-button-button.rendered.html"}],"patternLineageRExists":false,"patternLineagesR":[],"lineageR":[],"patternLineageEExists":true,"patternDesc":"","patternBreadcrumb":{"patternType":"components","patternSubtype":"nysenate-review-submission"},"patternExtension":"twig","patternName":"Nysenate Review Submission File","patternPartial":"components-nysenate-review-submission-file","patternState":"","patternEngineName":"twig-php","extraOutput":{}}
+</script>
+
+<script>
+  window.patternData = {"cssEnabled":false,"patternLineageExists":true,"patternLineages":[{"lineagePattern":"components-alert-box","lineagePath":"../../patterns/components-alert-box-alert-box/components-alert-box-alert-box.rendered.html"},{"lineagePattern":"components-button","lineagePath":"../../patterns/components-button-button/components-button-button.rendered.html"}],"lineage":[{"lineagePattern":"components-alert-box","lineagePath":"../../patterns/components-alert-box-alert-box/components-alert-box-alert-box.rendered.html"},{"lineagePattern":"components-button","lineagePath":"../../patterns/components-button-button/components-button-button.rendered.html"}],"patternLineageRExists":false,"patternLineagesR":[],"lineageR":[],"patternLineageEExists":true,"patternDesc":"","patternBreadcrumb":{"patternType":"components","patternSubtype":"nysenate-review-submission"},"patternExtension":"twig","patternName":"Nysenate Review Submission File","patternPartial":"components-nysenate-review-submission-file","patternState":"","patternEngineName":"twig-php","extraOutput":{}};
+</script>
+
+<script>
+  /*!
+   * scriptLoader - v0.1
+   *
+   * Copyright (c) 2014 Dave Olsen, http://dmolsen.com
+   * Licensed under the MIT license
+   *
+   */
+
+  var scriptLoader = {
+
+    run: function(js,cb,target) {
+      var s  = document.getElementById(target+'-'+cb);
+      for (var i = 0; i < js.length; i++) {
+        var src = (typeof js[i] != 'string') ? js[i].src : js[i];
+        var c   = document.createElement('script');
+        c.src   = '../../'+src+'?'+cb;
+        if (typeof js[i] != 'string') {
+          if (js[i].dep !== undefined) {
+            c.onload = function(dep,cb,target) {
+              return function() {
+                scriptLoader.run(dep,cb,target);
+              }
+            }(js[i].dep,cb,target);
+          }
+        }
+        s.parentNode.insertBefore(c,s);
+      }
+    }
+
+  }
+</script>
+
+<script id="pl-js-polyfill-insert-1717190112700">
+  (function() {
+    if (self != top) {
+      var cb = '1717190112700';
+      var js = [];
+      scriptLoader.run(js,cb,'pl-js-polyfill-insert');
+    }
+  })();
+</script>
+
+
+<script type="module">
+  // always load Pattern-specific JS so UI like accordions, etc can continue to work even when viewed as a standalone HTML page
+  import('../../styleguide/js/patternlab-pattern.modern.js');
+</script>
+
+<script id="pl-js-insert-1717190112700" nomodule>
+  /*! loadJS: load a JS file asynchronously. [c]2014 @scottjehl, Filament Group, Inc. (Based on http://goo.gl/REQGQ by Paul Irish). Licensed MIT */
+  !function(e){var t=function(t,n){"use strict";var o=e.document.getElementsByTagName("script")[0],r=e.document.createElement("script");return r.src=t,r.async=!0,o.parentNode.insertBefore(r,o),n&&"function"==typeof n&&(r.onload=n),r};"undefined"!=typeof module?module.exports=t:e.loadJS=t}("undefined"!=typeof global?global:this);
+
+  // always load Pattern-specific JS so UI like accordions, etc can continue to work even when viewed as a standalone HTML page
+  loadJS('../../styleguide/js/patternlab-pattern.js');
+</script>
+
+  <!-- Fake drupalSettings if you need it. -->
+  <!--
+  <script type="application/json" data-drupal-selector="drupal-settings-json">
+  </script>
+  -->
+  <!-- Drupal-provided JS so we can mock Drupal JS Behaviors. -->
+  <script src="/core/assets/vendor/jquery/jquery.min.js"></script>
+  <script src="/core/assets/vendor/jquery-once/jquery.once.min.js"></script>
+  <script src="/core/misc/drupalSettingsLoader.js"></script>
+  <script src="/core/misc/drupal.js"></script>
+  <script src="/core/misc/drupal.init.js"></script>
+  <script src="/core/misc/debounce.js"></script>
+  <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+  <script src="https://unpkg.com/@popperjs/core@2"></script>
+  <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+  <!-- Concatenated by Gulp so you don't have to manually add each file. -->
+  <script src="../../js/all.js?1717190112700"></script>
+</body>
+</html>

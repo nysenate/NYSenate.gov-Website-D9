@@ -1,0 +1,55 @@
+{{ attach_library('nysenate_theme/nysenate-actionbar') }}
+{{ attach_library('nysenate_theme/hero') }}
+{% import '@nysenate_theme/icons/_icons-macro.twig' as icons %}
+
+{% if actionbar.status %}
+  <div class="c-senate-status">
+    The New York State Senate is: <span class="c-status-text">{{ actionbar.status|upper }}</span>
+  </div>
+{% endif %}
+<div class="l-row l-row--hero c-actionbar {% if actionbar.type is empty %}hidden{% endif %}">
+  {% if actionbar.type == 'committee' %}
+    <div class="c-actionbar--info">
+      {% if actionbar.committee_type == 'standing' %}
+        <p class="actionbar--cta">Get updates on important news and legislation from the {{ actionbar.committee_title }} Committee.</p>
+      {% elseif actionbar.committee_type == 'taskforce' or actionbar.committee_type == 'legislative_commissions' or actionbar.committee_type == 'conferences_caucuses'  %}
+        <p class="actionbar--cta">Get updates on important news and legislation from the {{ actionbar.committee_title }}.</p>
+      {% elseif actionbar.committee_type == 'subcommittee' %}
+        <p class="actionbar--cta">Get updates on important news and legislation from the {{ actionbar.committee_title }} Subcommittee.</p>
+      {% elseif actionbar.committee_type == 'temporary' %}
+        <p class="actionbar--cta">Get updates on important news and legislation from the {{ actionbar.committee_title }} Temporary Committee.</p>
+      {% endif %}
+    </div>
+    <span class="c-block--btn">
+      {% if is_logged and actionbar.flag_follow_committee %}
+        {{ actionbar.flag_follow_committee }}
+      {% else %}
+        <a href="/user/login" class="icon-before__committee-follow" title="follow this committee">follow this committee</a>
+      {% endif %}
+    </span>
+  {% elseif actionbar.type == 'issue' %}
+    <div class="c-actionbar--info">
+      <p class="actionbar--cta">Get updates about Senate activity regarding {{ actionbar.issue_title }}.</p>
+    </div>
+    <span class="c-block--btn">
+      {% if is_logged and actionbar.flag_follow_issue %}
+        {{ actionbar.flag_follow_issue }}
+      {% else %}
+        <a href="/user/login" class="icon-before__issue-follow" title="follow this committee">follow this issue</a>
+      {% endif %}
+    </span>
+  {% elseif actionbar.type == 'default' %}
+    <div class="c-actionbar--info {{ is_logged ? 'content-logged' }}">
+      <p class="actionbar--cta">{{ is_logged ? "See activity on Issues, Bills and Committees you're following."|t :
+        "Find your Senator and share your views on important issues." }}</p>
+    </div>
+    <span class="c-block--btn {{ is_logged ? 'logged' }}">
+      <a class="{{ is_logged ? 'icon-before__arrow' : 'icon-before__find-senator' }}"
+         href="{{ is_logged ? '/dashboard/issues' : '/find-my-senator' }}">
+        <label class="{{ is_logged ? 'logged-text' : '' }}" for="">
+          {{ is_logged ? "your dashboard"|t : "find your senator"|t }}
+        </label>
+      </a>
+    </span>
+  {% endif %}
+</div>

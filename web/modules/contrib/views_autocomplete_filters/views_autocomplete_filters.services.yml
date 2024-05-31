@@ -1,0 +1,4 @@
+services:
+  views_autocomplete_filters.install_helper:
+    class: Drupal\views_autocomplete_filters\ViewsAutocompleteFiltersInstallHelper
+    arguments: ['@config.factory', '@config.storage']

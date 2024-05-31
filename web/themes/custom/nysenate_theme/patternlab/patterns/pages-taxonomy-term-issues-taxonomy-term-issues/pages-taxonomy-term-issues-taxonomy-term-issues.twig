@@ -1,0 +1,68 @@
+<div class="taxonomy-issues__header">
+{%
+  include '@nysenate_theme/heading/heading.twig' with {
+    heading: {
+      title: "#IssuesTaxonomy",
+      heading_level: heading_level|default('2'),
+      attributes: title_attributes,
+      modifier: modifier,
+    }
+  }
+%}
+{# TO DO: add this on heading.twig as a variation of heading #}
+<p class="heading__subtitle"><span>128</span> Followers</p>
+</div>
+<div class="taxonomy-issues__header-cta">
+  <div class="header-meta">
+    {%
+      include '@nysenate_theme/eyebrow/eyebrow.twig' with {
+        eyebrow: eyebrow
+      }
+    %}
+    {%
+      include '@nysenate_theme/button/button.twig' with {
+        button: button
+      }
+    %}
+  </div>
+  {% if social %}
+    <div class="c-detail--social header-social">
+      <h3 class="c-detail--subhead">raise awareness</h3>
+        {%
+          include '@nysenate_theme/social-menu/_social-menu.twig' with
+            {
+              items: social,
+              link_modifier: 'c-detail--social-item'
+            }
+        %}
+    </div>
+  {% endif %}
+</div>
+
+{% if quickFacts %}
+  {% include "@nysenate_theme/quick-facts/quick-facts.twig" with {
+    classes: classes|join(' '),
+    title: quickFacts.title,
+    facts: quickFacts.facts
+  } only %}
+{% endif %}
+
+{% if video %}
+  {%
+    include '@rain_theme/media/media.twig' with {
+      video: video
+    } only
+  %}
+{% endif %}
+
+{% if banner %}
+  {% include "@nysenate_theme/nysenate-promotional-banner/nysenate-promotional-banner.twig" with {
+    image: banner.image,
+    title: banner.title,
+    cta: banner.cta
+  } only %}
+{% endif %}
+
+{# integration to do: add senator name variable #}
+
+

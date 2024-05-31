@@ -1,0 +1,29 @@
+{#
+/**
+ * @file
+ * Default implementation for Font Awesome Icon field.
+ *
+ * Available variables:
+ * - tag: the HTML tag being used to create the icon.
+ * - iconset: the name of the iconset being used. Blank for classic.
+ * - icon: the name of the icon being used for templating.
+ * - style: the Font Awesome style for the icon.
+ * - settings: the additional Font Awesome style settings.
+ * - transforms: Font Awesome power transforms.
+ * - mask: Font Awesome mask.
+ * - css: Additional inline CSS styles (for duotone, etc).
+ *
+ * @ingroup themeable
+ */
+#}
+{%
+  set classes = [
+    iconset,
+    style,
+    name,
+    settings,
+  ]
+%}
+<div class="fontawesome-icon">
+  <{{tag }}{{ attributes.addClass(classes) }} data-fa-transform="{{ transforms }}" data-fa-mask="{{ mask }}" style="{{ css }}"></{{ tag }}>
+</div>

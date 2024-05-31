@@ -6,6 +6,7 @@ use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
+use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
@@ -43,6 +44,13 @@ class RegisterForm extends UserRegisterForm {
   protected PrivateTempStoreFactory $tempStoreFactory;
 
   /**
+   * Drupal's File URL Generator service.
+   *
+   * @var \Drupal\Core\File\FileUrlGeneratorInterface
+   */
+  protected FileUrlGeneratorInterface $fileUrlGenerator;
+
+  /**
    * {@inheritDoc}
    */
   public function __construct(
@@ -51,6 +59,7 @@ class RegisterForm extends UserRegisterForm {
     PrivateTempStoreFactory $tempStoreFactory,
     EntityRepositoryInterface $entity_repository,
     LanguageManagerInterface $language_manager,
+    FileUrlGeneratorInterface $fileUrlGenerator,
     EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL,
     TimeInterface $time = NULL
   ) {
@@ -58,6 +67,7 @@ class RegisterForm extends UserRegisterForm {
     $this->helper = $helper;
     $this->senatorsHelper = $senatorsHelper;
     $this->tempStoreFactory = $tempStoreFactory;
+    $this->fileUrlGenerator = $fileUrlGenerator;
   }
 
   /**
@@ -70,6 +80,7 @@ class RegisterForm extends UserRegisterForm {
       $container->get('tempstore.private'),
       $container->get('entity.repository'),
       $container->get('language_manager'),
+      $container->get('file_url_generator'),
       $container->get('entity_type.bundle.info'),
       $container->get('datetime.time')
     );
@@ -337,8 +348,7 @@ class RegisterForm extends UserRegisterForm {
       $file = File::load($fid);
       $senator['image'] = empty($file) ?
         '/themes/custom/nysenate_theme/src/assets/default-avatar.png' :
-        \Drupal::service('file_url_generator')
-          ->generateAbsoluteString($file->getFileUri());
+        $this->fileUrlGenerator->generateAbsoluteString($file->getFileUri());
       $senator['party'] = $this->senatorsHelper->getPartyNames($senator_term);
       $senator['location'] = $this->helper->getMicrositeDistrictAlias($senator_term);
       $senator['name'] = $senator_name[0]['given'] . ' ' . $senator_name[0]['family'];

@@ -5,4 +5,4 @@ services:
       - { name: event_subscriber }
   nys_registration.helper:
     class: Drupal\nys_registration\RegistrationHelper
-    arguments: ['@entity_type.manager', '@sage_api']
+    arguments: ['@entity_type.manager', '@sage_api', '@path_alias.manager']

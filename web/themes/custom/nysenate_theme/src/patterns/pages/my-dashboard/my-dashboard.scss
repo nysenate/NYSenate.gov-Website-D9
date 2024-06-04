@@ -223,6 +223,7 @@
           font-family: $font-sans-bold;
           color: $gen_blue_lgt;
           text-underline-offset: 3px;
+          padding-bottom: 3px;
           text-decoration-thickness: 1px;
           text-decoration: underline;
 
@@ -234,6 +235,7 @@
         &.is-active a {
           text-decoration: none;
           color: $grey10;
+          cursor: default;
         }
 
         &.pager__item--next:after, &.pager__item--last:after, &.pager__item--previous:before, &.pager__item--first:before {

@@ -173,7 +173,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: '<a href="{{ url(''entity.user.canonical'', {''user'': uid}) }}">{{ field_last_name }}{% if field_first_name %}, {{ field_first_name }}{% endif %}</a>'
+            text: "<a href=\"{{ url('entity.user.canonical', {'user': uid}) }}\">{{ field_last_name }}{% if field_first_name %}, {{ field_first_name }}{% endif %}</a>"
             make_link: false
             path: ''
             absolute: false
@@ -863,7 +863,6 @@ display:
           title: 'Constituents in District {{ arguments.field_district_number_value }}'
           default_argument_type: node
           default_argument_options: {  }
-          default_argument_skip_url: false
           summary_options:
             base_path: ''
             count: true
@@ -1103,7 +1102,7 @@ display:
           field: field_district
           relationship: none
           group_type: group
-          admin_label: 'User''s District'
+          admin_label: "User's District"
           plugin_id: standard
           required: true
         field_senator:
@@ -1112,7 +1111,7 @@ display:
           field: field_senator
           relationship: field_district
           group_type: group
-          admin_label: 'User''s District''s Senator'
+          admin_label: "User's District's Senator"
           plugin_id: standard
           required: false
       header:

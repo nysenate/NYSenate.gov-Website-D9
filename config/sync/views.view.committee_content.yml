@@ -226,7 +226,6 @@ display:
             limit: false
             vids: {  }
             anyall: ','
-          default_argument_skip_url: false
           summary_options:
             base_path: ''
             count: true
@@ -794,7 +793,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: '<a href="/senators/{{ field_senator_name|lower|replace({'' '':''-'',''.'':''''}) }}">{{ field_senator_name }}</a>'
+            text: "<a href=\"/senators/{{ field_senator_name|lower|replace({' ':'-','.':''}) }}\">{{ field_senator_name }}</a>"
             make_link: false
             path: ''
             absolute: false
@@ -924,7 +923,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: '{{ field_date_range  | split('' - '')[0] | striptags}}'
+            text: "{{ field_date_range  | split(' - ')[0] | striptags}}"
             make_link: false
             path: ''
             absolute: false
@@ -1034,7 +1033,6 @@ display:
             limit: false
             vids: {  }
             anyall: ','
-          default_argument_skip_url: false
           summary_options:
             base_path: ''
             count: true
@@ -1555,7 +1553,6 @@ display:
             limit: false
             vids: {  }
             anyall: ','
-          default_argument_skip_url: false
           summary_options:
             base_path: ''
             count: true
@@ -1994,7 +1991,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: '{{ field_date_range  | split('' - '')[0] | striptags}}'
+            text: "{{ field_date_range  | split(' - ')[0] | striptags}}"
             make_link: false
             path: ''
             absolute: false
@@ -2628,7 +2625,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: '<a href="/senators/{{ field_senator_name|lower|replace({'' '':''-'',''.'':''''}) }}">{{ field_senator_name }}</a>'
+            text: "<a href=\"/senators/{{ field_senator_name|lower|replace({' ':'-','.':''}) }}\">{{ field_senator_name }}</a>"
             make_link: false
             path: ''
             absolute: false
@@ -2802,7 +2799,6 @@ display:
             limit: false
             vids: {  }
             anyall: ','
-          default_argument_skip_url: false
           summary_options:
             base_path: ''
             count: true
@@ -3475,7 +3471,6 @@ display:
           title: ''
           default_argument_type: node
           default_argument_options: {  }
-          default_argument_skip_url: false
           summary_options:
             base_path: ''
             count: true
@@ -3514,7 +3509,6 @@ display:
             limit: false
             vids: {  }
             anyall: +
-          default_argument_skip_url: false
           summary_options:
             base_path: ''
             count: true

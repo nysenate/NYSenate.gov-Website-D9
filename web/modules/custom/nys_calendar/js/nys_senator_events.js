@@ -26,7 +26,7 @@
               $submit.click();
             }
 
-            $('html', context).once('submitDefaultValues').each(
+            $(once('submitDefaultValues', 'html', context)).each(
                 function (i) {
                     submitDateValues();
                 }

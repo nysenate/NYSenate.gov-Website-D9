@@ -504,7 +504,6 @@ display:
             limit: false
             vids: {  }
             anyall: ','
-          default_argument_skip_url: false
           summary_options:
             base_path: ''
             count: true
@@ -1623,7 +1622,7 @@ display:
           expose:
             operator_id: field_ol_session_value_op
             label: ''
-            description: 'Use ''2019'' for 2019-20 session OR ''2021'' for the 2021-22 session'
+            description: "Use '2019' for 2019-20 session OR '2021' for the 2021-22 session"
             use_operator: false
             operator: field_ol_session_value_op
             operator_limit_selection: false
@@ -1979,7 +1978,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: '{{ field_date_range__value|date(''U'')|format_date(''html_year'') }}'
+            text: "{{ field_date_range__value|date('U')|format_date('html_year') }}"
             make_link: false
             path: ''
             absolute: false
@@ -2044,7 +2043,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: '{{ field_date_range_1__value|date(''U'')|format_date(''month_only'') }}'
+            text: "{{ field_date_range_1__value|date('U')|format_date('month_only') }}"
             make_link: false
             path: ''
             absolute: false
@@ -2109,7 +2108,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: '{{ field_date_range_3__value|date(''U'')|format_date(''day_only'') }}'
+            text: "{{ field_date_range_3__value|date('U')|format_date('day_only') }}"
             make_link: false
             path: ''
             absolute: false
@@ -2983,7 +2982,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: '{{ field_date_range_4__value|date(''U'')|format_date(''long_notime'') }}'
+            text: "{{ field_date_range_4__value|date('U')|format_date('long_notime') }}"
             make_link: false
             path: ''
             absolute: false
@@ -3074,7 +3073,6 @@ display:
             limit: false
             vids: {  }
             anyall: ','
-          default_argument_skip_url: false
           summary_options:
             base_path: ''
             count: true

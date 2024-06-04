@@ -248,11 +248,10 @@
         }
       }
 
-      mobileNavToggle
-        .once('nySenateHeaderMobile')
-        .on('click touch', function () {
-          self.toggleMobileNav(menu);
-        });
+      $(once('nySenateHeaderMobile', mobileNavToggle))
+      .on('click touch', function () {
+        self.toggleMobileNav(menu);
+      });
 
       searchToggle = $('.js-search--toggle');
       searchToggle.once('nySenateHeader').on('click touch', function (e) {

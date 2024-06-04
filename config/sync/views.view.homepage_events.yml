@@ -46,7 +46,7 @@ display:
           exclude: true
           alter:
             alter_text: true
-            text: '{{ field_date_range  | split('' - '')[0] | striptags}}'
+            text: "{{ field_date_range  | split(' - ')[0] | striptags}}"
             make_link: false
             path: ''
             absolute: false
@@ -174,7 +174,7 @@ display:
           exclude: true
           alter:
             alter_text: true
-            text: '/senators/{{ field_senator_name|lower|replace({'' '':''-'',''.'':''''}) }}'
+            text: "/senators/{{ field_senator_name|lower|replace({' ':'-','.':''}) }}"
             make_link: false
             path: ''
             absolute: false
@@ -518,7 +518,7 @@ display:
           exclude: true
           alter:
             alter_text: true
-            text: '{{ field_date_range_2  | split('' - '')[0] | striptags}}'
+            text: "{{ field_date_range_2  | split(' - ')[0] | striptags}}"
             make_link: false
             path: ''
             absolute: false
@@ -583,7 +583,7 @@ display:
           exclude: true
           alter:
             alter_text: true
-            text: '{{ field_date_range_3  | split('' - '')[0] | striptags}}'
+            text: "{{ field_date_range_3  | split(' - ')[0] | striptags}}"
             make_link: false
             path: ''
             absolute: false
@@ -704,7 +704,6 @@ display:
           default_argument_type: fixed
           default_argument_options:
             argument: ''
-          default_argument_skip_url: false
           summary_options:
             base_path: ''
             count: true
@@ -1630,7 +1629,7 @@ display:
           exclude: true
           alter:
             alter_text: true
-            text: '{{ field_date_range  | split('' - '')[0] | striptags}}'
+            text: "{{ field_date_range  | split(' - ')[0] | striptags}}"
             make_link: false
             path: ''
             absolute: false

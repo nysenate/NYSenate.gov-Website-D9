@@ -104,13 +104,15 @@ form.nys-dashboard-manage-dashboard {
         .form-type-checkbox {
           float: left;
           margin: 4px;
-          padding: 4px 8px 4px 31px;
           background-color: $dash_grey_2;
           position: relative;
 
           label {
             font-family: $font-sans-bold;
             color: $gen_blue_lgt;
+            display: inline-block;
+            padding: 8px 8px 8px 31px;
+            margin: 0;
             font-size: 14px;
             line-height: 17px;
             text-transform: none;
@@ -119,7 +121,7 @@ form.nys-dashboard-manage-dashboard {
           input {
             accent-color: $gen_blue_lgt;
             position: absolute;
-            top: 11px;
+            top: 10px;
             left: 10px;
           }
         }

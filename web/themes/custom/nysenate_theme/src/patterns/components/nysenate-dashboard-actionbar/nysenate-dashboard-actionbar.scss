@@ -14,8 +14,12 @@
   height: 287px;
 
   @include breakpoint($bp-under-md) {
-    padding: 20px 9%;
-    height: 115px;
+    padding: 20px 40px;
+    height: auto;
+  }
+
+  @include breakpoint($bp-under-sm) {
+    padding: 20px;
   }
 
   h1.dashboard-actionbar-heading {

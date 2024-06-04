@@ -10,7 +10,7 @@
     margin-bottom: 5px;
   }
 
-  @include breakpoint($bp-under-sm) {
+  @include breakpoint($bp-under-md) {
     margin-top: 0;
     margin-bottom: 20px;
 
@@ -39,7 +39,7 @@
     padding: 0;
     cursor: default;
 
-    @include breakpoint($bp-under-sm) {
+    @include breakpoint($bp-under-md) {
       padding: 20px;
       border: 1px solid $grey04;
       margin: 0;
@@ -163,12 +163,12 @@
         }
       }
 
-      @include breakpoint($bp-under-sm) {
+      @include breakpoint($bp-under-md) {
         margin-bottom: 0;
       }
     }
 
-    @include breakpoint($bp-under-sm) {
+    @include breakpoint($bp-under-md) {
       padding: 10px 20px 20px;
       border: 1px solid $grey04;
       border-top: none;

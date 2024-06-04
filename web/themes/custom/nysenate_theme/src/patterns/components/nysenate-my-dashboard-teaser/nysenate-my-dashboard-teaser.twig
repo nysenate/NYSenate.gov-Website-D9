@@ -1,7 +1,7 @@
 {{ attach_library('nysenate_theme/nysenate-my-dashboard-teaser') }}
 {{ attach_library('nysenate_theme/bill-item') }}
 {%
-  set classes, type_icon_map, type_label_map, truncate  = [
+  set classes, type_icon_map, type_label_map, truncate_length  = [
     'node',
     'node--type-' ~ node.bundle|clean_class,
     view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
@@ -30,9 +30,6 @@
   },
   150
 %}
-{% set read_more %}
-  <span class="c-my-dashboard--read-more">...</span>
-{% endset %}
 <article{{ attributes.addClass(classes) }}>
   {% if 'node--teaser-with-extras' in classes %}
     <div class="c-my-dashboard--extras">
@@ -75,13 +72,14 @@
   </h3>
   <p class="c-my-dashboard--blurb">
     {% if node.field_subtitle.value %}
-      {{ node.field_subtitle.value|render|striptags|truncate(truncate, true)|raw }}
+      {{ node.field_subtitle.value|render|striptags|raw }}
     {% elseif node.field_subhead.value %}
-      {{ node.field_subhead.value|render|striptags|truncate(truncate, true)|raw }}
+      {{ node.field_subhead.value|render|striptags|raw }}
     {% elseif node.field_ol_name.value %}
-      {{ node.field_ol_name.value|render|striptags|truncate(truncate, true)|raw }}
+      {{ node.field_ol_name.value|render|striptags|raw }}
     {% elseif node.body.value %}
-      {{ node.body.value|render|striptags|truncate(truncate, true)|raw }}{{ read_more }}
+      {% set body_text = node.body.value|render|striptags %}
+      {{ body_text|length > truncate_length ? body_text|truncate(truncate_length, true)|raw ~ ' ...' : body_text|raw }}
     {% endif %}
   </p>
   <div class="c-my-dashboard--details">
@@ -89,11 +87,11 @@
       <div class="c-my-dashboard--detail">
       {% if node.field_date_range.value %}
         <p>
-          {{ node.field_date_range.value|date('U')|format_date('publish_date') }}
+          {{ node.field_date_range.start_date|date('U')|format_date('publish_date') }}
         </p>
         <p class="c-my-dashboard--pipe">|</p>
         <p>
-          {{ node.field_date_range.value|date('U')|format_date('time') }}
+          {{ node.field_date_range.start_date|date('U')|format_date('time') }}
         </p>
       {% elseif node.field_date.value %}
         <p>

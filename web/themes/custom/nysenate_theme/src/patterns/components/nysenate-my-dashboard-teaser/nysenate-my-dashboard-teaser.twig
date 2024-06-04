@@ -31,7 +31,7 @@
   150
 %}
 {% set read_more %}
-  <span class="c-my-dashboard--read-more"><a href="{{ url }}">... Read More</a></span>
+  <span class="c-my-dashboard--read-more">...</span>
 {% endset %}
 <article{{ attributes.addClass(classes) }}>
   {% if 'node--teaser-with-extras' in classes %}
@@ -75,11 +75,11 @@
   </h3>
   <p class="c-my-dashboard--blurb">
     {% if node.field_subtitle.value %}
-      {{ node.field_subtitle.value|render|striptags|truncate(truncate, true)|raw }}{{ read_more }}
+      {{ node.field_subtitle.value|render|striptags|truncate(truncate, true)|raw }}
     {% elseif node.field_subhead.value %}
-      {{ node.field_subhead.value|render|striptags|truncate(truncate, true)|raw }}{{ read_more }}
+      {{ node.field_subhead.value|render|striptags|truncate(truncate, true)|raw }}
     {% elseif node.field_ol_name.value %}
-      {{ node.field_ol_name.value|render|striptags|truncate(truncate, true)|raw }}{{ read_more }}
+      {{ node.field_ol_name.value|render|striptags|truncate(truncate, true)|raw }}
     {% elseif node.body.value %}
       {{ node.body.value|render|striptags|truncate(truncate, true)|raw }}{{ read_more }}
     {% endif %}

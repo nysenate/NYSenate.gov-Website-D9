@@ -74,10 +74,16 @@
 
   #views-exposed-form-my-dashboard-main {
     min-width: 186px;
+    margin-bottom: 40px;
 
     .form-item {
       width: 100%;
       margin: 10px 0 5px 0;
+
+      label, input {
+        font-weight: 700;
+        letter-spacing: 1px;
+      }
 
       input, select {
         margin-bottom: 0;
@@ -135,6 +141,7 @@
     .form-actions {
       input {
         width: 100%;
+        font-weight: 700;
 
         &[id^=edit-submit] {
           background-color: $gen_blue_lgt;

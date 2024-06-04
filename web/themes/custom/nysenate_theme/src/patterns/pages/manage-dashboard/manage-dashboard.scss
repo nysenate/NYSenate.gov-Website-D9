@@ -9,6 +9,11 @@ form.nys-dashboard-manage-dashboard {
   padding-bottom: 40px;
   border-bottom: 1px solid $dash_grey_1;
 
+  label {
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+
   @include breakpoint($bp-under-md) {
     margin: 0 10px 60px;
   }
@@ -126,6 +131,8 @@ form.nys-dashboard-manage-dashboard {
     margin-top: 30px;
 
     input {
+      font-weight: 700;
+      letter-spacing: 1px;
       background-color: $gen_blue_lgt;
       border: 2px solid $gen_blue_lgt;
 
@@ -207,6 +214,7 @@ form.nys-dashboard-manage-dashboard {
         color: white;
         line-height: 15px;
         letter-spacing: 1px;
+        font-weight: 700;
 
         &:hover {
           background-color: white;

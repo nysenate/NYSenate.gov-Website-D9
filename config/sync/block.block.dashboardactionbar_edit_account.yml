@@ -1,0 +1,39 @@
+uuid: d279e668-2993-4c9b-b00e-83ae979fec56
+langcode: en
+status: true
+dependencies:
+  module:
+    - nys_dashboard
+    - system
+  theme:
+    - nysenate_theme
+id: dashboardactionbar_edit_account
+theme: nysenate_theme
+region: above_content
+weight: 0
+provider: null
+plugin: dashboard_action_bar
+settings:
+  id: dashboard_action_bar
+  label: 'Dashboard Actionbar - Edit Account'
+  label_display: '0'
+  provider: nys_dashboard
+  heading: 'Edit Account'
+  subheading: 'Edit your account information.'
+  featured_link:
+    text: 'My Dashboard'
+    url: /dashboard
+    icon: gauge
+  featured_link_1:
+    text: 'My Dashboard'
+    url: /dashboard
+    icon: gauge
+  featured_link_2:
+    text: ''
+    url: ''
+    icon: ''
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: /dashboard/edit

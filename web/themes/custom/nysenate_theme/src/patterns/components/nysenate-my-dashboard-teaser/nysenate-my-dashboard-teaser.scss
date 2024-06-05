@@ -1,0 +1,219 @@
+@import '../../global/utils/breakpoints';
+@import '../../global/colors/colors';
+@import '../../global/fonts/fonts';
+@import '../../global/fonts/phosphor';
+@import '../../global/utils/typography';
+
+// My Dashboard Teaser display mode styling.
+.node--view-mode-my-dashboard-teaser {
+  padding: 20px;
+  border-top: 1px solid $grey04;
+  font-family: $font-sans;
+
+  @include breakpoint($bp-under-md) {
+    padding: 20px 0;
+  }
+
+  .c-my-dashboard--type-wrapper {
+    position: relative;
+    color: $gen_blue_lgt;
+    line-height: 26px;
+
+    .c-my-dashboard--type {
+      position: absolute;
+      text-transform: uppercase;
+      font-family: $font-sans-bold;
+      font-size: 12px;
+      letter-spacing: 1px;
+      left: 20px;
+      top: 0;
+      margin: 0;
+      color: inherit;
+      line-height: 22px;
+    }
+  }
+
+  h3 {
+    font-family: $font-serif-bold;
+    margin-bottom: 4px;
+    font-size: 22px;
+    line-height: 29px;
+
+    a {
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  a {
+    color: $gen_blue_lgt;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-thickness: 1px;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  .c-my-dashboard--blurb {
+    font-family: $font-sans-bold;
+    color: $grey10;
+    line-height: 17px;
+    font-size: 14px;
+    margin: 0 0 12px;
+  }
+
+  .c-my-dashboard--details {
+    overflow: hidden;
+
+    .c-my-dashboard--detail {
+      line-height: 14px;
+      margin-bottom: 5px;
+      font-family: $font-sans;
+      font-size: 12px;
+      font-weight: 400;
+      color: $grey10;
+      overflow: hidden;
+
+      p, h4 {
+        font-family: inherit;
+        font-size: inherit;
+        font-weight: inherit;
+        line-height: inherit;
+        color: inherit;
+        margin: 0;
+        display: inline;
+      }
+
+      h4 {
+        display: inline;
+        float: left;
+        margin-right: 3px;
+      }
+
+      p.c-my-dashboard--pipe {
+        margin-right: 4px;
+        margin-left: 4px;
+      }
+
+      .field--name-field-issues, .field--name-field-committee {
+        display: inline;
+
+        ul {
+          list-style-type: none;
+          margin: 0;
+          display: inline;
+
+          li {
+            margin: 0;
+            display: inline;
+            font-size: inherit;
+            font-family: inherit;
+            line-height: inherit;
+
+            :after {
+              content: ", ";
+              display: inline-block;
+              margin-right: 3px;
+            }
+
+            &:last-of-type {
+              :after {
+                content: "";
+                margin-right: 0;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .nys-bill-vote .button-wrapper {
+      display: inline;
+    }
+  }
+
+  &.node--teaser-with-extras {
+    padding-right: 308px;
+    position: relative;
+    overflow: hidden;
+
+    @include breakpoint($bp-under-md) {
+      padding-right: 0;
+    }
+
+    .c-my-dashboard--extras {
+      position: absolute;
+      right: 20px;
+      top: 20px;
+      width: 268px;
+      font-size: 12px;
+      line-height: 17px;
+      font-family: $font-sans;
+
+      .nys-bill-status, .field {
+        float: right;
+        clear: both;
+      }
+
+      .nys-bill-status {
+        line-height: 1.625;
+      }
+
+      .field {
+        .field__label {
+          font-weight: normal;
+        }
+
+        .field__item {
+          float: left;
+          padding-right: 0;
+        }
+      }
+
+      @include breakpoint($bp-under-md) {
+        position: relative;
+        margin: 10px 0;
+      }
+    }
+
+    @include breakpoint($bp-under-md) {
+      .c-my-dashboard--extras {
+        width: 240px;
+        height: 160px;
+        overflow: hidden;
+        top: 0;
+        left: 0;
+        margin: 10px 0 20px;
+      }
+    }
+
+    @include breakpoint($bp-under-md) {
+      &.node--type-bill .c-my-dashboard--extras {
+        float: right;
+      }
+    }
+  }
+
+  &.node--type-bill {
+    padding-right: 300px;
+
+    @include breakpoint($bp-under-md) {
+      padding-right: 0;
+    }
+
+    .c-my-dashboard--extras {
+      width: auto;
+      height: auto;
+      margin: 0 0 10px 20px;
+    }
+  }
+
+  &.node--teaser-with-image {
+    min-height: 220px;
+  }
+}

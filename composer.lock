@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "857b5167e00b792c3381879b84448fe2",
+    "content-hash": "478fedb68d00b94243d28180e62729ba",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2028,6 +2028,10 @@
                 {
                     "name": "japerry",
                     "homepage": "https://www.drupal.org/user/45640"
+                },
+                {
+                    "name": "mandclu",
+                    "homepage": "https://www.drupal.org/user/52136"
                 },
                 {
                     "name": "Pravin Ajaaz",
@@ -8128,6 +8132,50 @@
             }
         },
         {
+            "name": "drupal/other_view_filter",
+            "version": "1.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/other_view_filter.git",
+                "reference": "8.x-1.3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/other_view_filter-8.x-1.3.zip",
+                "reference": "8.x-1.3",
+                "shasum": "70944dbd31df1fad2834277eb707cfd73b446c1c"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9 || ^10"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-1.3",
+                    "datestamp": "1688658364",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Antonnavi",
+                    "homepage": "https://www.drupal.org/user/875410"
+                }
+            ],
+            "description": "Adds a filter to views that uses the results of another view.",
+            "homepage": "https://www.drupal.org/project/other_view_filter",
+            "support": {
+                "source": "https://git.drupalcode.org/project/other_view_filter"
+            }
+        },
+        {
             "name": "drupal/override_node_options",
             "version": "2.8.0",
             "source": {
@@ -11374,6 +11422,55 @@
                 "source": "https://git.drupalcode.org/project/views_bulk_operations/-/tree/8.x-3.x",
                 "issues": "https://www.drupal.org/project/issues/views_bulk_operations?version=8.x",
                 "docs": "https://www.drupal.org/docs/8/modules/views-bulk-operations-vbo"
+            }
+        },
+        {
+            "name": "drupal/views_combine",
+            "version": "1.0.0-alpha4",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/views_combine.git",
+                "reference": "1.0.0-alpha4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/views_combine-1.0.0-alpha4.zip",
+                "reference": "1.0.0-alpha4",
+                "shasum": "c5ace58021e32f0f36befc4bd9aa551ca9c5588e"
+            },
+            "require": {
+                "drupal/core": "^8.8 || ^9 || ^10"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "1.0.0-alpha4",
+                    "datestamp": "1671731468",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Alpha releases are not covered by Drupal security advisories."
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "b_sharpe",
+                    "homepage": "https://www.drupal.org/user/2512258"
+                },
+                {
+                    "name": "robphillips",
+                    "homepage": "https://www.drupal.org/user/459772"
+                }
+            ],
+            "description": "Allows creating unions between views to combine the output into one view.",
+            "homepage": "https://www.drupal.org/project/views_combine",
+            "support": {
+                "source": "https://git.drupalcode.org/project/views_combine",
+                "issues": "https://www.drupal.org/project/issues/views_combine"
             }
         },
         {
@@ -24831,6 +24928,7 @@
         "drupal/site_verify": 15,
         "drupal/twitter_block": 15,
         "drupal/ultimate_cron": 15,
+        "drupal/views_combine": 15,
         "drupal/views_exclude_previous": 10,
         "drupal/views_field_view": 10,
         "drupal/views_ical": 15,

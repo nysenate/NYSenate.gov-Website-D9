@@ -1,19 +1,17 @@
-nys_dashboard.overview:
-  path: '/dashboard'
+nys_dashboard.manage_dashboard:
+  path: '/dashboard/manage'
   defaults:
-    _title: 'Profile Overview'
-    _controller: '\Drupal\nys_dashboard\Controller\DashboardController::overview'
+    _title: 'Manage Dashboard'
+    _form: '\Drupal\nys_dashboard\Form\ManageDashboardForm'
   requirements:
     _user_is_logged_in: 'TRUE'
   options:
     no_cache: 'TRUE'
 
-nys_dashboard.edit_profile:
+nys_dashboard.edit_account:
   path: '/dashboard/edit'
   defaults:
-    _title: 'Edit Profile'
-    _form: '\Drupal\nys_dashboard\Form\EditProfileForm'
+    _title: 'Edit Account'
+    _entity_form: 'user.edit_account'
   requirements:
     _user_is_logged_in: 'TRUE'
-  options:
-    no_cache: 'TRUE'

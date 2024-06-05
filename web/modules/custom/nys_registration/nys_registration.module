@@ -116,7 +116,7 @@ function nys_registration_user_login_form_submit($form, FormStateInterface $form
   if ((isset($referrer[3]) && $referrer[3] == 'user') &&
     (isset($referrer[4]) && $referrer[4] == 'login')) {
     // Redirect to the /dashboard page.
-    $form_state->setRedirectUrl(Url::fromRoute('nys_dashboard.overview'));
+    $form_state->setRedirectUrl(Url::fromRoute('view.my_dashboard.main'));
   }
   else {
     $form_state->setRedirectUrl(Url::fromUri($url));

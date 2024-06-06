@@ -3,14 +3,6 @@ name: Pantheon Refresh Multidev
 on:
   workflow_dispatch:
     inputs:
-      sync_type:
-        description: 'Refresh Type'
-        required: true
-        default: 'Code and Database'
-        type: choice
-        options:
-          - Code and Database
-          - Database Only
       sync_to:
         description: 'Multidev being refreshed'
         required: true
@@ -56,9 +48,11 @@ jobs:
             exit 1
           fi
 
-      - name: Merge the latest code from master into the multidev
-        if: ${{ inputs.sync_type == 'Code and Database' }}
-        run: terminus multidev:merge-from-dev ${{ vars.PANTHEON_SITE }}.${{ inputs.sync_to }} --yes
+      - name: Mirror the latest code from master into the training environment
+        if: ${{ inputs.sync_to == 'training' }}
+        run: |
+          git clone -o pantheon -b master ${{ vars.PANTHEON_GIT_REMOTE }} ./
+          git push -f pantheon training
 
       - name: Refresh a multidev environment (no files)
         run: terminus env:clone-content ${{ vars.PANTHEON_SITE }}.${{ inputs.sync_from }} ${{ inputs.sync_to }} --yes --db-only

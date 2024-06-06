@@ -4,7 +4,7 @@
     attach: function (context) {
       let self = this;
       let searchToggle = $('.js-search--toggle');
-      searchToggle.once('nySenateHeader').on('click touch', function (e) {
+      $(once('nySenateHeader', searchToggle)).on('click touch', function (e) {
         self.toggleSearchBar(0, e);
       });
 
@@ -254,7 +254,7 @@
       });
 
       searchToggle = $('.js-search--toggle');
-      searchToggle.once('nySenateHeader').on('click touch', function (e) {
+      $(once('nySenateHeader', searchToggle)).on('click touch', function (e) {
         self.toggleSearchBar(userScroll, e);
       });
 

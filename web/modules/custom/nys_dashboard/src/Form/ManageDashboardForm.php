@@ -9,6 +9,7 @@ use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Markup;
+use Drupal\Core\Render\Renderer;
 use Drupal\Core\Session\AccountProxy;
 use Drupal\Core\Url;
 use Drupal\flag\FlagService;
@@ -33,13 +34,19 @@ class ManageDashboardForm extends FormBase {
    */
   public AccountProxy $currentUser;
 
-
   /**
    * Flag service.
    *
    * @var \Drupal\flag\FlagService
    */
   public FlagService $flagService;
+
+  /**
+   * Renderer service.
+   *
+   * @var \Drupal\Core\Render\Renderer
+   */
+  public Renderer $renderer;
 
   /**
    * Mapping of field names to flag types.
@@ -72,11 +79,19 @@ class ManageDashboardForm extends FormBase {
    *   Current user service.
    * @param \Drupal\flag\FlagService $flagService
    *   Flag service.
+   * @param \Drupal\Core\Render\Renderer $renderer
+   *   Renderer service.
    */
-  public function __construct(EntityTypeManager $entityTypeManager, AccountProxy $currentUser, FlagService $flagService) {
+  public function __construct(
+    EntityTypeManager $entityTypeManager,
+    AccountProxy $currentUser,
+    FlagService $flagService,
+    Renderer $renderer,
+  ) {
     $this->entityTypeManager = $entityTypeManager;
     $this->currentUser = $currentUser;
     $this->flagService = $flagService;
+    $this->renderer = $renderer;
   }
 
   /**
@@ -87,6 +102,7 @@ class ManageDashboardForm extends FormBase {
       $container->get('entity_type.manager'),
       $container->get('current_user'),
       $container->get('flag'),
+      $container->get('renderer'),
     );
   }
 
@@ -381,7 +397,13 @@ class ManageDashboardForm extends FormBase {
       }
     }
 
-    $message = 'Successfully unfollowed the followed content: ' . $form_state->get('unfollow_content_ul');
+    $unfollow_content_render_array = [
+      '#theme' => 'item_list',
+      '#type' => 'ul',
+      '#items' => $form_state->get('unfollow_content_list'),
+    ];
+    $unfollow_content_ul = $this->renderer->render($unfollow_content_render_array);
+    $message = 'Successfully unfollowed the followed content:' . $unfollow_content_ul;
     $rendered_message = Markup::create($message);
     $this->messenger()->addStatus($this->t('@rendered_message', ['@rendered_message' => $rendered_message]));
   }

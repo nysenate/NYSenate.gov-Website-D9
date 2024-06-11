@@ -78,7 +78,7 @@
     {% elseif node.field_ol_name.value %}
       {{ node.field_ol_name.value|render|striptags|raw }}
     {% elseif node.body.value %}
-      {% set body_text = node.body.value|render|striptags %}
+      {% set body_text = node.body.value|render|striptags|replace({'&nbsp;': ' '}) %}
       {{ body_text|length > truncate_length ? body_text|truncate(truncate_length, true)|raw ~ ' ...' : body_text|raw }}
     {% endif %}
   </p>

@@ -148,7 +148,7 @@
   {% endif %}
 
 
-  {% for key, item in content.field_meeting_agenda if key|first != '#' %}
+  {% for key, item in content.field_meeting_agenda %}
     {% if key|first != '#' %}
       {% if item['#options']['entity'].field_ol_agenda_notes.0.value|trim %}
         <pre class="c-meeting--agenda-notes">

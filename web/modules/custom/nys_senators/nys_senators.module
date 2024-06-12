@@ -1277,6 +1277,10 @@ function nys_senators_query_taxonomy_term_access_alter(AlterableInterface $query
 
   $committee_tids = UsersHelper::getManagedCommittees($current_user);
   if (empty($committee_tids)) {
+    // Prevent MCP users from selecting a committee if their managed senator
+    // isn't a committee chair.
+    $query->alwaysFalse();
+
     return;
   }
 

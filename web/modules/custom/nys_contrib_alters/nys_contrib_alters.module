@@ -48,7 +48,7 @@ function nys_contrib_alters_form_alter(&$form, $form_state, $form_id) {
   }
   //Don't all MCP's to assign roles for the following webform actions
   if ($form_id === 'webform_settings_access_form') {
-    if (in_array("microsite_content_producers", $user)) {
+    if (in_array("microsite_content_producer", $user)) {
       unset($form['access']['view_any']['roles']);
       unset($form['access']['update_any']['roles']);
       unset($form['access']['delete_any']['roles']);

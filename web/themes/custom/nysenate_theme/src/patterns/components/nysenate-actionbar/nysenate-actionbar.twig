@@ -7,7 +7,7 @@
     The New York State Senate is: <span class="c-status-text">{{ actionbar.status|upper }}</span>
   </div>
 {% endif %}
-<div class="l-row l-row--hero c-actionbar {% if actionbar.type is empty %}hidden{% endif %}">
+<div class="l-row l-row--hero c-actionbar {% if actionbar.type is empty or actionbar.type == 'disabled' %}hidden{% endif %}">
   {% if actionbar.type == 'committee' %}
     <div class="c-actionbar--info">
       {% if actionbar.committee_type == 'standing' %}
@@ -45,10 +45,10 @@
     </div>
     <span class="c-block--btn {{ is_logged ? 'logged' }}">
       <a class="{{ is_logged ? 'icon-before__arrow' : 'icon-before__find-senator' }}"
-         href="{{ is_logged ? '/dashboard/issues' : '/find-my-senator' }}">
-        <label class="{{ is_logged ? 'logged-text' : '' }}" for="">
+         href="{{ is_logged ? '/dashboard' : '/find-my-senator' }}">
+        <span class="{{ is_logged ? 'logged-text' : '' }}">
           {{ is_logged ? "your dashboard"|t : "find your senator"|t }}
-        </label>
+        </span>
       </a>
     </span>
   {% endif %}

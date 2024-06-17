@@ -6,8 +6,10 @@ dependencies:
     - filter.format.basic_html
   module:
     - field_permissions
+    - file
     - filter
     - flag
+    - help
     - private_message
     - system
 id: senator
@@ -15,43 +17,13 @@ label: Senator
 weight: 4
 is_admin: null
 permissions:
-  - 'Access Admin Link in Dashboard'
   - 'access administration pages'
-  - 'access dashboard'
-  - 'allow disabling privatemsg'
-  - 'create chapter content'
-  - 'create initiative content'
-  - 'create photo content'
-  - 'create press_release content'
-  - 'create questionnaire content'
-  - 'dashboard inbox check all'
-  - 'dashboard inbox forward messages'
-  - 'dashboard inbox search bills'
-  - 'dashboard inbox search issues'
-  - 'dashboard inbox search names'
-  - 'delete own chapter content'
-  - 'delete own initiative content'
-  - 'delete own photo content'
-  - 'delete own press_release content'
-  - 'delete own questionnaire content'
-  - 'delete own webform submissions'
-  - 'delete privatemsg'
-  - 'edit own chapter content'
-  - 'edit own initiative content'
-  - 'edit own photo content'
-  - 'edit own press_release content'
-  - 'edit own questionnaire content'
-  - 'edit own webform submissions'
-  - 'flag bookmarks'
+  - 'access help pages'
+  - 'delete own files'
   - 'flag follow_issue'
   - 'flag sign_petition'
-  - 'read privatemsg'
-  - 'unflag bookmarks'
   - 'unflag follow_issue'
   - 'use private messaging system'
   - 'use text format basic_html'
-  - 'view field_members'
-  - 'view own field_members'
   - 'view own field_senator_multiref'
   - 'view the administration theme'
-  - 'write privatemsg'

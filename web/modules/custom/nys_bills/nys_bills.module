@@ -9,6 +9,9 @@ use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\node\Entity\Node;
 use Drupal\pathauto\PathautoState;
+use Drupal\views\Plugin\views\query\QueryPluginBase;
+use Drupal\views\Plugin\views\query\Sql;
+use Drupal\views\ViewExecutable;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -157,6 +160,28 @@ function nys_bills_entity_insert($entity) {
         ->condition('fid', 0)
         ->condition('bid', $entity->entity_id ?? NULL)
         ->execute();
+    }
+  }
+}
+
+/**
+ * Implements hook_views_query_alter().
+ */
+function nys_bills_views_query_alter(ViewExecutable $view, QueryPluginBase $query) {
+  if ($query instanceof Sql) {
+    if ($view->id() == 'upcoming_legislation' &&
+      in_array($view->current_display, ['passed_senate', 'signed_by_gov'])) {
+      // Get year.
+      $session_year = date('Y', strtotime('now'));
+      // If even, go back 1 yr to session start year.
+      if ($session_year % 2 == 0) {
+        $session_year--;
+      }
+
+      // Update filter to current session year.
+      if ($query->where[1]['conditions'][2]['field'] == 'node__field_ol_session.field_ol_session_value') {
+        $query->where[1]['conditions'][2]['value'] = (string) $session_year;
+      }
     }
   }
 }

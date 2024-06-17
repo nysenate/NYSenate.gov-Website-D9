@@ -367,6 +367,8 @@ h6 {
   font-size: 1.25rem;
   margin: 0 0 1rem;
   line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 a {
@@ -414,7 +416,7 @@ p {
 
 label {
   font-size: 0.8rem;
-  color: $grey04;
+  color: $grey_accessible;
   cursor: pointer;
   display: block;
   font-weight: normal;
@@ -837,4 +839,10 @@ section.print.hero--senator {
   .accordion button {
     display: none;
   }
+}
+
+// Esnure skip link never clipped when focussed.
+.skip-link.visually-hidden.focusable:focus {
+  z-index: 5000;
+  position: relative !important;
 }

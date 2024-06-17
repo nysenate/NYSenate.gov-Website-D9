@@ -1,87 +1,38 @@
-# These lines define the rain_theme/global library.
-global:
-  css:
-    # The SMACSS category, "base", is loaded before other categories. Drupal 8
-    # loads stylesheets based on the SMACSS ordering of:
-    # base, layout, component, state, theme
-    base:
-      dist/css/global.css: {}
-  dependencies:
-    - rain_theme/button
-
-# Example external library.
-# webfonts:
-#   version: 1.x
-#   js:
-#     https://fast.fonts.net/example.js: { type: external, attributes: { async: true }}
-
-# Attach each library by using attach_library() within the components twig template.
-# More info: https://www.drupal.org/node/2456753
-
-# Example component library.
-# site-logo:
-#   css:
-#     component:
-#       dist/css/site-logo.css: {}
-#   # If this library had JavaScript you could specify it like this:
-#   js:
-#     js/script.js: {}
-#   # If this library had dependencies on other libraries, you could specify it like this:
-#   dependencies:
-#     - rain_theme/clearfix
-#     - rain_theme/visually-hidden
-
 about:
   css:
     component:
       dist/css/about.css: {}
-
 accordion:
   css:
     component:
       dist/css/accordion.css: {}
   js:
     dist/js/accordion.es6.js: {}
-
 add-to-calendar:
   css:
     component:
       dist/css/add-to-calendar.css: {}
-  js:
-    dist/js/add-to-calendar.es6.js: {}
   dependencies:
     - core/drupal
     - core/drupalSettings
     - core/once
     - core/jquery
-
+  js:
+    dist/js/add-to-calendar.es6.js: {}
 alert-box:
   css:
     component:
       dist/css/alert-box.css: {}
   js:
     dist/js/alert-box.es6.js: {}
-
 article-page:
   css:
     component:
       dist/css/article-page.css: {}
-
 authors:
   css:
     component:
       dist/css/authors.css: {}
-
-button:
-  css:
-    component:
-      dist/css/button.css: {}
-
-breadcrumb:
-  css:
-    component:
-      dist/css/breadcrumb.css: {}
-
 bill:
   css:
     component:
@@ -90,319 +41,247 @@ bill:
     - nysenate_theme/registration-form
     - nysenate_theme/votes
     - nysenate_theme/bill-item
-
-bill-vote-widget:
-  css:
-    component:
-      dist/css/bill-vote-widget.css: {}
-
-calendar-downloads:
-  css:
-    component:
-      dist/css/calendar-downloads.css: {}
-
-card:
-  css:
-    component:
-      dist/css/card.css: {}
-
-card-carousel:
-  css:
-    component:
-      dist/css/card-carousel.css: {}
-  js:
-    dist/js/card-carousel.es6.js: {}
-  dependencies:
-    - rain_theme/card
-    - rain_theme/slick
-    - rain_theme/colorbox
-
-card-list:
-  css:
-    component:
-      dist/css/card-list.css: {}
-  dependencies:
-    - rain_theme/card
-
-carousel:
-  css:
-    component:
-      dist/css/carousel.css: {}
-  js:
-    dist/js/carousel.es6.js: {}
-  dependencies:
-    - nysenate_theme/slick
-
-chart:
-  css:
-    component:
-      dist/css/chart.css: {}
-  js:
-    dist/js/chart.es6.js: {}
-  dependencies:
-    - nysenate_theme/highcharts
-    - core/drupal
-    - core/drupalSettings
-    - core/once
-    - core/jquery
-
-colorbox:
-  css:
-    theme:
-      dist/css/colorbox.css: {}
-  js:
-    dist/js/jquery.colorbox.js: {}
-  dependencies:
-    - core/drupal
-    - core/drupalSettings
-    - core/once
-    - core/jquery
-
-columns:
-  css:
-    component:
-      dist/css/columns.css: {}
-
-comments:
-  css:
-    component:
-      dist/css/comments.css: {}
-  js:
-    dist/js/comments.es6.js: {}
-  dependencies:
-    - nysenate_theme/button
-
-committee-listing:
-  css:
-    component:
-      dist/css/committee-listing.css: {}
-
-contact-block:
-  css:
-    component:
-      dist/css/contact-block.css: {}
-  js:
-    dist/js/contact-block.es6.js: {}
-
-contact-form:
-  css:
-    component:
-      dist/css/contact-form.css: {}
-
-contact-your-senator:
-  css:
-    component:
-      dist/css/contact-your-senator.css: {}
-
-content-card:
-  css:
-    component:
-      dist/css/content-card.css: {}
-
-content-carousel:
-  css:
-    component:
-      dist/css/content-carousel.css: {}
-  js:
-    dist/js/content-carousel.es6.js: {}
-  dependencies:
-    - rain_theme/slick
-
-dashboard:
-  css:
-    component:
-      dist/css/dashboard.css: {}
-  js:
-    dist/js/dashboard.es6.js: {}
-  dependencies:
-    - nysenate_theme/nysenate-header
-    - nysenate_theme/sidebar
-
-dashboard-inbox:
-  css:
-    component:
-      dist/css/dashboard-inbox.css: {}
-  js:
-    dist/js/dashboard-inbox.es6.js: {}
-  dependencies:
-    - core/drupal
-    - core/drupalSettings
-    - core/once
-    - core/jquery
-
-dashboard-lists:
-  css:
-    component:
-      dist/css/dashboard-lists.css: {}
-
-dashboard-petitions-questionnaires:
-  css:
-    component:
-      dist/css/dashboard-petitions-questionnaires.css: {}
-
-dashboard-profile:
-  css:
-    component:
-      dist/css/dashboard-profile.css: {}
-  js:
-    dist/js/dashboard-profile.js: {}
-  dependencies:
-    - core/drupal
-    - core/drupalSettings
-    - core/once
-    - core/jquery
-
-dashboard-profile-edit:
-  css:
-    component:
-      dist/css/dashboard-profile-edit.css: {}
-
-district:
-  css:
-    component:
-      dist/css/district.css: {}
-
-gallery-lightbox:
-  css:
-    theme:
-      dist/css/gallery-lightbox.css: {}
-  js:
-    dist/js/gallery-lightbox.js: {}
-  dependencies:
-    - rain_theme/colorbox
-
-initiatives:
-  css:
-    component:
-      dist/css/initiatives.css: {}
-
-resolution-page:
-  css:
-    component:
-      dist/css/resolution-page.css: {}
-  js:
-    dist/js/resolution-page.js: {}
-  dependencies:
-    - core/jquery
-    - core/once
-    - core/drupal
-    - core/drupalSettings
-
-event:
-  css:
-    component:
-      dist/css/event.css: {}
-  dependencies:
-    - nysenate_theme/nysenate-featured-event
-
-event-calendar:
-  css:
-    component:
-      dist/css/event-calendar.css: {}
-      dist/css/zebra.css: {}
-  js:
-    dist/js/event-calendar.js: {}
-  dependencies:
-    - nysenate_theme/zebra-datepicker
-
-event-card:
-  css:
-    component:
-      dist/css/event-card.css: {}
-
-event-carousel:
-  css:
-    component:
-      dist/css/event-carousel.css: {}
-  js:
-    dist/js/event-carousel.es6.js: {}
-  dependencies:
-    - rain_theme/slick
-
-eyebrow:
-  css:
-    component:
-      dist/css/eyebrow.css: {}
-
-event-teaser:
-  css:
-    component:
-      dist/css/event-teaser.css: {}
-
 bill-item:
   css:
     component:
       dist/css/bill-item.css: {}
   dependencies:
     - nysenate_theme/bill-status-graph
-
 bill-status-graph:
   css:
     component:
       dist/css/bill-status-graph.css: {}
-
+bill-vote-widget:
+  css:
+    component:
+      dist/css/bill-vote-widget.css: {}
+bill-vote-widget-simple:
+  css:
+    component:
+      dist/css/bill-vote-widget-simple.css: {}
+breadcrumb:
+  css:
+    component:
+      dist/css/breadcrumb.css: {}
+button:
+  css:
+    component:
+      dist/css/button.css: {}
+calendar-downloads:
+  css:
+    component:
+      dist/css/calendar-downloads.css: {}
+card:
+  css:
+    component:
+      dist/css/card.css: {}
+card-carousel:
+  css:
+    component:
+      dist/css/card-carousel.css: {}
+  dependencies:
+    - rain_theme/card
+    - rain_theme/slick
+    - rain_theme/colorbox
+  js:
+    dist/js/card-carousel.es6.js: {}
+card-list:
+  css:
+    component:
+      dist/css/card-list.css: {}
+  dependencies:
+    - rain_theme/card
+carousel:
+  css:
+    component:
+      dist/css/carousel.css: {}
+  dependencies:
+    - nysenate_theme/slick
+  js:
+    dist/js/carousel.es6.js: {}
+chart:
+  css:
+    component:
+      dist/css/chart.css: {}
+  dependencies:
+    - nysenate_theme/highcharts
+    - core/drupal
+    - core/drupalSettings
+    - core/once
+    - core/jquery
+  js:
+    dist/js/chart.es6.js: {}
+colorbox:
+  css:
+    theme:
+      dist/css/colorbox.css: {}
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+    - core/once
+    - core/jquery
+  js:
+    dist/js/jquery.colorbox.js: {}
+columns:
+  css:
+    component:
+      dist/css/columns.css: {}
+comments:
+  css:
+    component:
+      dist/css/comments.css: {}
+  dependencies:
+    - nysenate_theme/button
+  js:
+    dist/js/comments.es6.js: {}
+committee-listing:
+  css:
+    component:
+      dist/css/committee-listing.css: {}
+contact-block:
+  css:
+    component:
+      dist/css/contact-block.css: {}
+  js:
+    dist/js/contact-block.es6.js: {}
+contact-form:
+  css:
+    component:
+      dist/css/contact-form.css: {}
+contact-your-senator:
+  css:
+    component:
+      dist/css/contact-your-senator.css: {}
+content-card:
+  css:
+    component:
+      dist/css/content-card.css: {}
+content-carousel:
+  css:
+    component:
+      dist/css/content-carousel.css: {}
+  dependencies:
+    - rain_theme/slick
+  js:
+    dist/js/content-carousel.es6.js: {}
+district:
+  css:
+    component:
+      dist/css/district.css: {}
+edit-account:
+  css:
+    component:
+      dist/css/edit-account.css: {}
+event:
+  css:
+    component:
+      dist/css/event.css: {}
+  dependencies:
+    - nysenate_theme/nysenate-featured-event
+event-calendar:
+  css:
+    component:
+      dist/css/event-calendar.css: {}
+      dist/css/zebra.css: {}
+  dependencies:
+    - nysenate_theme/zebra-datepicker
+  js:
+    dist/js/event-calendar.js: {}
+event-card:
+  css:
+    component:
+      dist/css/event-card.css: {}
+event-carousel:
+  css:
+    component:
+      dist/css/event-carousel.css: {}
+  dependencies:
+    - rain_theme/slick
+  js:
+    dist/js/event-carousel.es6.js: {}
+event-teaser:
+  css:
+    component:
+      dist/css/event-teaser.css: {}
+eyebrow:
+  css:
+    component:
+      dist/css/eyebrow.css: {}
 featured-bills:
   css:
     component:
       dist/css/featured-bills.css: {}
-
-featured-issue:
-  css:
-    component:
-      dist/css/featured-issue.css: {}
-
-featured-story:
-  css:
-    component:
-      dist/css/featured-story.css: {}
-
 featured-image:
   css:
     component:
       dist/css/featured-image.css: {}
-
+featured-issue:
+  css:
+    component:
+      dist/css/featured-issue.css: {}
 featured-legislation:
   css:
     component:
       dist/css/featured-legislation.css: {}
-  js:
-    dist/js/featured-legislation.js: {}
   dependencies:
     - core/jquery
     - core/once
     - core/drupal
     - core/drupalSettings
     - nysenate_theme/nysenate-social-buttons
-
+  js:
+    dist/js/featured-legislation.js: {}
+featured-story:
+  css:
+    component:
+      dist/css/featured-story.css: {}
 file-uploads:
   css:
     component:
       dist/css/file-uploads.css: {}
-
+full-width-main:
+  css:
+    component:
+      dist/css/full-width-main.css: {}
 gallery-carousel:
   css:
     component:
       dist/css/gallery-carousel.css: {}
-  js:
-    dist/js/gallery-carousel.es6.js: {}
   dependencies:
     - rain_theme/slick
-
+  js:
+    dist/js/gallery-carousel.es6.js: {}
+gallery-lightbox:
+  css:
+    theme:
+      dist/css/gallery-lightbox.css: {}
+  dependencies:
+    - rain_theme/colorbox
+  js:
+    dist/js/gallery-lightbox.js: {}
+global:
+  css:
+    base:
+      dist/css/global.css: {}
+  dependencies:
+    - rain_theme/button
 global-search-form:
   css:
     component:
       dist/css/global-search-form.css: {}
-
 hammer:
-  js:
-    dist/js/hammer.min.js: {}
-    dist/js/jquery.hammer.js: {}
   dependencies:
     - core/drupal
     - core/drupalSettings
     - core/once
     - core/jquery
-
+  js:
+    dist/js/hammer.min.js: {}
+    dist/js/jquery.hammer.js: {}
+heading:
+  css:
+    component:
+      dist/css/heading.css: {}
 hero:
   css:
     component:
@@ -411,98 +290,107 @@ hero:
     - core/jquery
     - core/drupal
     - core/drupalSettings
-
-heading:
-  css:
-    component:
-      dist/css/heading.css: {}
-
+highcharts:
+  js:
+    dist/js/highcharts.js: {}
 how-senate-works:
   css:
     component:
       dist/css/how-senate-works.css: {}
-  js:
-    dist/js/how-senate-works.es6.js: {}
   dependencies:
     - nysenate_theme/hammer
     - core/drupal.debounce
-
-latest-news:
+  js:
+    dist/js/how-senate-works.es6.js: {}
+initiatives:
   css:
     component:
-      dist/css/latest-news.css: {}
-
+      dist/css/initiatives.css: {}
 l-2x:
   css:
     component:
       dist/css/l-2x.css: {}
-
 l-3x:
   css:
     component:
       dist/css/l-3x.css: {}
-
 l-flex:
   css:
     component:
       dist/css/l-flex.css: {}
-
 landing-page-hero:
   css:
     component:
       dist/css/landing-page-hero.css: {}
   dependencies:
     - nysenate_theme/hero
-
+latest-news:
+  css:
+    component:
+      dist/css/latest-news.css: {}
 legislation-search-form:
   css:
     component:
       dist/css/legislation-search-form.css: {}
-
-map:
-  css:
-    component:
-      dist/css/map.css: {}
-
-media:
-  css:
-    component:
-      dist/css/media.css: {}
-
 main-menu:
   css:
     component:
       dist/css/main-menu.css: {}
-  js:
-    dist/js/main-menu.js: {}
   dependencies:
     - core/jquery
     - core/once
     - core/drupal
     - core/drupalSettings
-
+  js:
+    dist/js/main-menu.js: {}
+manage-dashboard:
+  css:
+    component:
+      dist/css/manage-dashboard.css: {}
+  js:
+    dist/js/manage-dashboard.js: {}
+map:
+  css:
+    component:
+      dist/css/map.css: {}
+media:
+  css:
+    component:
+      dist/css/media.css: {}
+media-library:
+  css:
+    component:
+      dist/css/media-library.css: {}
 meeting-detail:
   css:
     component:
       dist/css/meeting-detail.css: {}
-
 message:
   css:
     component:
       dist/css/message.css: {}
-
 message-block:
   css:
     component:
       dist/css/message-block.css: {}
-
 microsite-menu:
   css:
     component:
       dist/css/microsite-menu.css: {}
   dependencies:
     - nysenate_theme/nysenate-header
-
+my-dashboard:
+  css:
+    component:
+      dist/css/my-dashboard.css: {}
+  dependencies:
+    - core/once
+  js:
+    dist/js/my-dashboard.js: {}
+news-teaser:
+  css:
+    component:
+      dist/css/news-teaser.css: {}
 newsroom-content:
   css:
     component:
@@ -512,7 +400,6 @@ newsroom-content:
     - nysenate_theme/bill-item
     - nysenate_theme/event
     - nysenate_theme/bill
-
 newsroom-landing:
   css:
     component:
@@ -522,135 +409,193 @@ newsroom-landing:
     - nysenate_theme/bill
     - nysenate_theme/bill-item
     - nysenate_theme/bill-vote-widget
-
-news-teaser:
-  css:
-    component:
-      dist/css/news-teaser.css: {}
-
 nysenate-about-access:
   css:
     component:
       dist/css/nysenate-about-access.css: {}
-
 nysenate-about-leadership:
   css:
     component:
       dist/css/nysenate-about-leadership.css: {}
-
 nysenate-about-rules:
   css:
     component:
       dist/css/nysenate-about-rules.css: {}
-
 nysenate-about-senate-seal:
   css:
     component:
       dist/css/nysenate-about-senate-seal.css: {}
-
 nysenate-about-tour:
   css:
     component:
       dist/css/nysenate-about-tour.css: {}
   dependencies:
     - nysenate_theme/carousel
-
 nysenate-accordion:
   css:
     component:
       dist/css/nysenate-accordion.css: {}
-  js:
-    dist/js/nysenate-accordion.es6.js: {}
   dependencies:
     - core/jquery
     - core/once
     - core/drupal
     - core/drupalSettings
-
+  js:
+    dist/js/nysenate-accordion.es6.js: {}
 nysenate-accordion-nested:
   css:
     component:
       dist/css/nysenate-accordion-nested.css: {}
-  js:
-    dist/js/nysenate-accordion-nested.es6.js: {}
   dependencies:
     - core/jquery
     - core/once
     - core/drupal
     - core/drupalSettings
-
+  js:
+    dist/js/nysenate-accordion-nested.es6.js: {}
+nysenate-actionbar:
+  css:
+    component:
+      dist/css/nysenate-actionbar.css: {}
+nysenate-almost-there:
+  css:
+    component:
+      dist/css/nysenate-almost-there.css: {}
+nysenate-chapters:
+  css:
+    component:
+      dist/css/nysenate-chapters.css: {}
+  dependencies:
+    - core/jquery
+  js:
+    dist/js/nysenate-chapters.js: {}
+nysenate-committee-card:
+  css:
+    component:
+      dist/css/nysenate-committee-card.css: {}
+nysenate-committee-detail:
+  css:
+    component:
+      dist/css/nysenate-committee-detail.css: {}
 nysenate-committee-updates:
   css:
     component:
       dist/css/nysenate-committee-updates.css: {}
-
-nysenate-upcoming-events:
-  css:
-    component:
-      dist/css/nysenate-upcoming-events.css: {}
-
-nysenate-featured-event:
-  css:
-    component:
-      dist/css/nysenate-featured-event.css: {}
-
-nysenate-legislation:
-  css:
-    component:
-      dist/css/nysenate-legislation.css: {}
-
-nysenate-legislative-event:
-  css:
-    component:
-      dist/css/nysenate-legislative-event.css: {}
-
-nysenate-open-data:
-  css:
-    component:
-      dist/css/nysenate-open-data.css: {}
-
-nysenate-social-buttons:
-  css:
-    component:
-      dist/css/nysenate-social-buttons.css: {}
-
-nysenate-issues:
-  css:
-    component:
-      dist/css/nysenate-issues.css: {}
-  js:
-    dist/js/nysenate-issues.js: {}
-  dependencies:
-    - core/jquery
-    - core/drupal
-    - core/drupalSettings
-
-nysenate-committees:
-  css:
-    component:
-      dist/css/nysenate-committees.css: {}
-
 nysenate-committee-widget:
   css:
     component:
       dist/css/nysenate-committee-widget.css: {}
-  js:
-    dist/js/nysenate-committee-widget.js: {}
   dependencies:
     - core/jquery
     - core/drupal
     - core/drupalSettings
-
-nysenate-search-results-listing:
+  js:
+    dist/js/nysenate-committee-widget.js: {}
+nysenate-committees:
   css:
     component:
-      dist/css/nysenate-search-results-listing.css: {}
-
+      dist/css/nysenate-committees.css: {}
+nysenate-dashboard-actionbar:
+  css:
+    component:
+      dist/css/nysenate-dashboard-actionbar.css: {}
+nysenate-featured-event:
+  css:
+    component:
+      dist/css/nysenate-featured-event.css: {}
+nysenate-find-and-follow:
+  css:
+    component:
+      dist/css/nysenate-find-and-follow.css: {}
+nysenate-footer:
+  css:
+    component:
+      dist/css/nysenate-footer.css: {}
+nysenate-footer-socials:
+  css:
+    component:
+      dist/css/nysenate-footer-socials.css: {}
+nysenate-happening-now:
+  css:
+    component:
+      dist/css/nysenate-happening-now.css: {}
+nysenate-header:
+  css:
+    component:
+      dist/css/nysenate-header.css: {}
+  dependencies:
+    - core/jquery
+    - core/once
+    - core/drupal
+    - core/drupalSettings
+  js:
+    dist/js/nysenate-header.js: {}
+nysenate-header-user-menu:
+  css:
+    component:
+      dist/css/nysenate-header-user-menu.css: {}
+nysenate-issues:
+  css:
+    component:
+      dist/css/nysenate-issues.css: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+  js:
+    dist/js/nysenate-issues.js: {}
+nysenate-legislation:
+  css:
+    component:
+      dist/css/nysenate-legislation.css: {}
+nysenate-legislative-event:
+  css:
+    component:
+      dist/css/nysenate-legislative-event.css: {}
+nysenate-legislative-events:
+  css:
+    component:
+      dist/css/nysenate-legislative-events.css: {}
+nysenate-my-dashboard-teaser:
+  css:
+    component:
+      dist/css/nysenate-my-dashboard-teaser.css: {}
+nysenate-open-data:
+  css:
+    component:
+      dist/css/nysenate-open-data.css: {}
+nysenate-promotional-banner:
+  css:
+    component:
+      dist/css/nysenate-promotional-banner.css: {}
+nysenate-promotional-banner-list:
+  css:
+    component:
+      dist/css/nysenate-promotional-banner-list.css: {}
 nysenate-review-submission:
   css:
     component:
       dist/css/nysenate-review-submission.css: {}
-
+nysenate-search-results-listing:
+  css:
+    component:
+      dist/css/nysenate-search-results-listing.css: {}
+nysenate-senate-directory:
+  css:
+    component:
+      dist/css/nysenate-senate-directory.css: {}
+nysenate-senate-seal:
+  css:
+    component:
+      dist/css/nysenate-senate-seal.css: {}
+nysenate-senator-list:
+  css:
+    component:
+      dist/css/nysenate-senator-list.css: {}
+  dependencies:
+    - core/jquery
+  js:
+    dist/js/nysenate-senator-list.js: {}
 nysenate-senators-events:
   css:
     component:
@@ -658,367 +603,251 @@ nysenate-senators-events:
       dist/css/nysenate-tabs.css: {}
   dependencies:
     - nysenate_theme/nysenate-featured-event
-
-nysenate-tabs:
-  css:
-    component:
-      dist/css/nysenate-tabs.css: {}
-  js:
-    dist/js/nysenate-tabs.js: {}
-  dependencies:
-    - core/jquery
-    - core/once
-    - core/drupal
-    - core/drupalSettings
-
-nysenate-footer:
-  css:
-    component:
-      dist/css/nysenate-footer.css: {}
-
-nysenate-footer-socials:
-  css:
-    component:
-      dist/css/nysenate-footer-socials.css: {}
-
-nysenate-happening-now:
-  css:
-    component:
-      dist/css/nysenate-happening-now.css: {}
-
-nysenate-site-branding:
-  css:
-    component:
-      dist/css/nysenate-site-branding.css: {}
-
-nysenate-twitter-block:
-  css:
-    component:
-      dist/css/nysenate-twitter-block.css: {}
-  js:
-    dist/js/nysenate-twitter-block.js: {}
-  dependencies:
-    - core/jquery
-    - core/once
-    - core/drupal
-    - core/drupalSettings
-
-nysenate-header:
-  css:
-    component:
-      dist/css/nysenate-header.css: {}
-  js:
-    dist/js/nysenate-header.js: {}
-  dependencies:
-    - core/jquery
-    - core/once
-    - core/drupal
-    - core/drupalSettings
-
-nysenate-actionbar:
-  css:
-    component:
-      dist/css/nysenate-actionbar.css: {}
-
-nysenate-almost-there:
-  css:
-    component:
-      dist/css/nysenate-almost-there.css: {}
-
-nysenate-legislative-events:
-  css:
-    component:
-      dist/css/nysenate-legislative-events.css: {}
-
-nysenate-promotional-banner:
-  css:
-    component:
-      dist/css/nysenate-promotional-banner.css: {}
-
-nysenate_sponsor_list:
-  css:
-    component:
-      dist/css/nysenate-sponsor-list.css: {}
-
-nysenate-promotional-banner-list:
-  css:
-    component:
-      dist/css/nysenate-promotional-banner-list.css: {}
-
 nysenate-senators-talking-about-this-issue:
   css:
     component:
       dist/css/nysenate-senators-talking-about-this-issue.css: {}
-
-nysenate-committee-card:
+nysenate-site-branding:
   css:
     component:
-      dist/css/nysenate-committee-card.css: {}
-
-nysenate-committee-detail:
+      dist/css/nysenate-site-branding.css: {}
+nysenate-social-buttons:
   css:
     component:
-      dist/css/nysenate-committee-detail.css: {}
-
-nysenate-senator-list:
-  css:
-    component:
-      dist/css/nysenate-senator-list.css: {}
-  js:
-    dist/js/nysenate-senator-list.js: {}
-  dependencies:
-    - core/jquery
-
-nysenate-senate-directory:
-  css:
-    component:
-      dist/css/nysenate-senate-directory.css: {}
-
-nysenate-senate-seal:
-  css:
-    component:
-      dist/css/nysenate-senate-seal.css: {}
-
-nysenate-user-profile:
-  css:
-    component:
-      dist/css/nysenate-user-profile.css: {}
-
-nysenate-chapters:
-  css:
-    component:
-      dist/css/nysenate-chapters.css: {}
-  js:
-    dist/js/nysenate-chapters.js: {}
-  dependencies:
-    - core/jquery
-
+      dist/css/nysenate-social-buttons.css: {}
 nysenate-student-programs:
   css:
     component:
       dist/css/nysenate-student-programs.css: {}
-
+nysenate-tabs:
+  css:
+    component:
+      dist/css/nysenate-tabs.css: {}
+  dependencies:
+    - core/jquery
+    - core/once
+    - core/drupal
+    - core/drupalSettings
+  js:
+    dist/js/nysenate-tabs.js: {}
+nysenate-twitter-block:
+  css:
+    component:
+      dist/css/nysenate-twitter-block.css: {}
+  dependencies:
+    - core/jquery
+    - core/once
+    - core/drupal
+    - core/drupalSettings
+  js:
+    dist/js/nysenate-twitter-block.js: {}
+nysenate-upcoming-events:
+  css:
+    component:
+      dist/css/nysenate-upcoming-events.css: {}
+nysenate-updates-from-my-senator:
+  css:
+    component:
+      dist/css/nysenate-updates-from-my-senator.css: {}
+nysenate-user-profile:
+  css:
+    component:
+      dist/css/nysenate-user-profile.css: {}
+nysenate_sponsor_list:
+  css:
+    component:
+      dist/css/nysenate-sponsor-list.css: {}
 page-layout:
   css:
     component:
       dist/css/page-layout.css: {}
-
 page-not-found:
   css:
     component:
       dist/css/page-not-found.css: {}
   js:
     dist/js/page-not-found.js: {}
-
 page-title:
   css:
     component:
       dist/css/page-title.css: {}
-
 pager:
   css:
     component:
       dist/css/pager.css: {}
-
 petitions:
   css:
     component:
       dist/css/petitions.css: {}
-
 popper:
   js:
     dist/js/popper.min.js: {}
-
+print-styles:
+  css:
+    component:
+      dist/css/global.css: {}
 quick-facts:
   css:
     component:
       dist/css/quick-facts.css: {}
-  js:
-    dist/js/quick-facts.es6.js: {}
   dependencies:
     - nysenate_theme/hammer
     - core/drupal.debounce
-
+  js:
+    dist/js/quick-facts.es6.js: {}
 quote:
   css:
     component:
       dist/css/quote.css: {}
-
 quote-carousel:
   css:
     component:
       dist/css/quote-carousel.css: {}
-  js:
-    dist/js/quote-carousel.es6.js: {}
   dependencies:
     - rain_theme/slick
-
+  js:
+    dist/js/quote-carousel.es6.js: {}
 registration-form:
   css:
     component:
       dist/css/registration-form.css: {}
-
+resolution-page:
+  css:
+    component:
+      dist/css/resolution-page.css: {}
+  dependencies:
+    - core/jquery
+    - core/once
+    - core/drupal
+    - core/drupalSettings
+  js:
+    dist/js/resolution-page.js: {}
+school-form:
+  css:
+    component:
+      dist/css/school-form.css: {}
 search-api-results:
   css:
     component:
       dist/css/search-api-results.css: {}
-
 search-box:
   css:
     component:
       dist/css/search-box.css: {}
-
 session:
   css:
     component:
       dist/css/session.css: {}
-
 sidebar:
   css:
     component:
       dist/css/sidebar.css: {}
   js:
     dist/js/sidebar.es6.js: {}
-
 site-branding:
   css:
     component:
       dist/css/site-branding.css: {}
-
 site-footer:
   css:
     component:
       dist/css/site-footer.css: {}
-
 site-header:
   css:
     component:
       dist/css/site-header.css: {}
   dependencies:
     - rain_theme/l-flex
-
 slick:
   css:
     theme:
-      dist/css/slick.css: {}
       dist/css/slick-theme.css: {}
-  js:
-    dist/js/slick.min.js: {}
+      dist/css/slick.css: {}
   dependencies:
     - core/drupal
     - core/drupalSettings
     - core/once
     - core/jquery
-
-tooltip:
-  css:
-    component:
-      dist/css/tooltip.css: {}
   js:
-    dist/js/tooltip.es6.js: {}
-  dependencies:
-    - nysenate_theme/popper
-
-highcharts:
-  js:
-    dist/js/highcharts.js: {}
-
+    dist/js/slick.min.js: {}
 sticky-nav:
   css:
     component:
       dist/css/sticky-nav.css: {}
-  js:
-    dist/js/sticky-nav.es6.js: {}
   dependencies:
     - core/jquery
     - core/once
     - core/drupal
     - core/drupalSettings
-
+  js:
+    dist/js/sticky-nav.es6.js: {}
 sticky-nav-2:
   css:
     component:
       dist/css/sticky-nav-2.css: {}
-  js:
-    dist/js/sticky-nav-2.js: {}
   dependencies:
     - core/jquery
     - core/drupal
     - core/drupalSettings
-
+  js:
+    dist/js/sticky-nav-2.js: {}
 submission-results:
   css:
     theme:
       dist/css/submission-results.css: {}
-  js:
-    dist/js/submission-results.js: {}
   dependencies:
     - core/jquery
     - core/drupal
     - core/drupalSettings
-
+  js:
+    dist/js/submission-results.js: {}
 tabs:
   css:
     component:
       dist/css/tabs.css: {}
-
 taxonomy-term-issues:
   css:
     component:
       dist/css/taxonomy-term-issues.css: {}
   js:
     dist/js/taxonomy-term-issues.js: {}
-
 text-layout:
   css:
     component:
       dist/css/text-layout.css: {}
-
+tooltip:
+  css:
+    component:
+      dist/css/tooltip.css: {}
+  dependencies:
+    - nysenate_theme/popper
+  js:
+    dist/js/tooltip.es6.js: {}
 transcript:
   css:
     component:
       dist/css/transcript.css: {}
-
 user-account-nav:
   css:
     component:
       dist/css/user-account-nav.css: {}
-
-votes:
-  css:
-    component:
-      dist/css/votes.css: {}
-
 video-embed:
   css:
     component:
       dist/css/video-embed.css: {}
-
-media-library:
+votes:
   css:
     component:
-      dist/css/media-library.css: {}
-
-print-styles:
-  css:
-    component:
-      dist/css/global.css: {}
-
+      dist/css/votes.css: {}
 want-to:
   css:
     component:
       dist/css/want-to.css: {}
-
-school-form:
-  css:
-    component:
-      dist/css/school-form.css: {}
-
 zebra-datepicker:
-  js:
-    dist/js/zebra_datepicker.js: {}
   dependencies:
     - core/drupal
     - core/drupalSettings
     - core/once
     - core/jquery
+  js:
+    dist/js/zebra_datepicker.js: {}

@@ -138,13 +138,23 @@
       {{ content.field_yt }}
     </div>
   {% endif %}
-  {% for key, item in content.field_meeting_agenda if key|first != '#'%}
-    {% if item['#options']['entity'].field_ol_agenda_notes.0.value|trim %}
-      <pre class="c-meeting--agenda-notes">
-        {% for key, item in content.field_meeting_agenda if key|first != '#'%}
+
+  {% if content.field_yt.0 %}
+    {% for key, item in content.field_yt %}
+      {% if key|first != '#' %}
+        <div class="flex-video widescreen item-{{ key + 1 }}">{{ item }}</div>
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+
+
+  {% for key, item in content.field_meeting_agenda %}
+    {% if key|first != '#' %}
+      {% if item['#options']['entity'].field_ol_agenda_notes.0.value|trim %}
+        <pre class="c-meeting--agenda-notes">
           {{ item['#options']['entity'].field_ol_agenda_notes.0.value }}
-        {% endfor %}
       </pre>
+      {% endif %}
     {% endif %}
   {% endfor %}
 

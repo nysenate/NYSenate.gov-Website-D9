@@ -1,0 +1,46 @@
+@import '../../global/colors/colors';
+@import '../../global/utils/typography';
+
+form.nys-bill-vote-form {
+  .field__label {
+    float: left;
+  }
+
+  button.button {
+    border: none;
+    background: none;
+    color: $blue01;
+    font-family: $font-sans;
+    font-size: 13px;
+    text-decoration: underline;
+    text-transform: none;
+    padding: 0;
+    margin: 0 0 0 8px;
+    display: inline;
+    position: relative;
+    height: auto;
+    width: auto;
+    line-height: normal;
+    letter-spacing: normal;
+
+    &:hover {
+      text-decoration: none;
+    }
+
+    &.current-vote {
+      font-weight: 700;
+      text-decoration: none;
+      color: $grey10;
+      cursor: default;
+    }
+
+    &.change-vote:before {
+      content: "Change to ";
+      font-size: inherit;
+      text-decoration: inherit;
+      margin: 0;
+      vertical-align: unset;
+      display: inline;
+    }
+  }
+}

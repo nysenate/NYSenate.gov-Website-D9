@@ -1,0 +1,139 @@
+uuid: da67aad6-ee15-46c2-b515-f16aec0851f8
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.my_dashboard_teaser
+    - field.field.node.resolution.field_comments
+    - field.field.node.resolution.field_featured_quote
+    - field.field.node.resolution.field_image_main
+    - field.field.node.resolution.field_issues
+    - field.field.node.resolution.field_ol_active_version
+    - field.field.node.resolution.field_ol_add_sponsor_names
+    - field.field.node.resolution.field_ol_add_sponsors
+    - field.field.node.resolution.field_ol_all_statuses
+    - field.field.node.resolution.field_ol_amendments
+    - field.field.node.resolution.field_ol_base_print_no
+    - field.field.node.resolution.field_ol_chamber
+    - field.field.node.resolution.field_ol_co_sponsor_names
+    - field.field.node.resolution.field_ol_co_sponsors
+    - field.field.node.resolution.field_ol_full_text
+    - field.field.node.resolution.field_ol_has_same_as
+    - field.field.node.resolution.field_ol_is_amended
+    - field.field.node.resolution.field_ol_law_section
+    - field.field.node.resolution.field_ol_memo
+    - field.field.node.resolution.field_ol_multi_sponsor_names
+    - field.field.node.resolution.field_ol_multi_sponsors
+    - field.field.node.resolution.field_ol_name
+    - field.field.node.resolution.field_ol_previous_versions
+    - field.field.node.resolution.field_ol_print_no
+    - field.field.node.resolution.field_ol_publish_date
+    - field.field.node.resolution.field_ol_same_as
+    - field.field.node.resolution.field_ol_session
+    - field.field.node.resolution.field_ol_sponsor
+    - field.field.node.resolution.field_ol_sponsor_name
+    - field.field.node.resolution.field_ol_summary
+    - field.field.node.resolution.rabbit_hole__settings
+    - image.style.my_dashboard_teaser_268_x_180
+    - node.type.resolution
+  module:
+    - datetime
+    - entity_print
+    - media
+    - nys_list_formatter
+    - user
+third_party_settings:
+  entity_print:
+    pdf_label: 'Download PDF'
+id: node.resolution.my_dashboard_teaser
+targetEntityType: node
+bundle: resolution
+mode: my_dashboard_teaser
+content:
+  field_image_main:
+    type: media_thumbnail
+    label: hidden
+    settings:
+      image_link: content
+      image_style: my_dashboard_teaser_268_x_180
+      image_loading:
+        attribute: lazy
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_issues:
+    type: list_formatter
+    label: hidden
+    settings:
+      type: ul
+      separator_custom: ''
+      separator_custom_tag: '0'
+      separator_custom_class: ''
+      comma_tag: '0'
+      class: list-formatter-list
+      list_formatter_contrib:
+        entity_reference_link: '1'
+      comma_and: 0
+      comma_full_stop: 0
+      comma_override: 0
+      term_plain: 0
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_ol_name:
+    type: basic_string
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_ol_publish_date:
+    type: datetime_default
+    label: hidden
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_ol_sponsor:
+    type: entity_reference_label
+    label: inline
+    settings:
+      link: false
+    third_party_settings: {  }
+    weight: 2
+    region: content
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  field_comments: true
+  field_featured_quote: true
+  field_ol_active_version: true
+  field_ol_add_sponsor_names: true
+  field_ol_add_sponsors: true
+  field_ol_all_statuses: true
+  field_ol_amendments: true
+  field_ol_base_print_no: true
+  field_ol_chamber: true
+  field_ol_co_sponsor_names: true
+  field_ol_co_sponsors: true
+  field_ol_full_text: true
+  field_ol_has_same_as: true
+  field_ol_is_amended: true
+  field_ol_law_section: true
+  field_ol_memo: true
+  field_ol_multi_sponsor_names: true
+  field_ol_multi_sponsors: true
+  field_ol_previous_versions: true
+  field_ol_print_no: true
+  field_ol_same_as: true
+  field_ol_session: true
+  field_ol_sponsor_name: true
+  field_ol_summary: true
+  langcode: true
+  links: true
+  private_message_link: true
+  rabbit_hole__settings: true
+  search_api_excerpt: true

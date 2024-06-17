@@ -6,7 +6,9 @@ dependencies:
     - filter.format.basic_html
   module:
     - field_permissions
+    - file
     - filter
+    - help
     - private_message
     - system
 id: legislative_correspondent
@@ -14,16 +16,11 @@ label: 'Legislative Correspondent'
 weight: 7
 is_admin: null
 permissions:
-  - 'access administration menu'
   - 'access administration pages'
-  - 'access dashboard'
-  - 'administer looker recipients'
-  - 'dashboard inbox search names'
-  - 'masquerade as user'
+  - 'access help pages'
+  - 'delete own files'
   - 'use private messaging system'
   - 'use text format basic_html'
-  - 'view field_members'
-  - 'view own field_members'
   - 'view own field_senator_multiref'
   - 'view the administration theme'
   - 'view user email addresses'

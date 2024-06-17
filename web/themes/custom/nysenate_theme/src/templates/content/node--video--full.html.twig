@@ -46,8 +46,10 @@
 
   <section class="c-news--body">
     {% if content.field_yt.0 %}
-      {% for key, item in content.field_yt if key|first != '#' %}
-        <div class="flex-video widescreen item-{{ key + 1 }}">{{ item }}</div>
+      {% for key, item in content.field_yt %}
+        {% if key|first != '#' %}
+          <div class="flex-video widescreen item-{{ key + 1 }}">{{ item }}</div>
+        {% endif %}
       {% endfor %}
     {% endif %}
 

@@ -1262,10 +1262,8 @@ function nys_senators_query_taxonomy_term_access_alter(AlterableInterface $query
   $is_committees_vid = FALSE;
   foreach ($query->conditions() as $condition) {
     if (
-      isset($condition['field'])
-      && isset($condition['value'])
-      && $condition['field'] === 't.vid'
-      && $condition['value'] === 'committees'
+      (($condition['field'] ?? '') === 't.vid')
+      && (($condition['value'] ?? '') === 'committees')
     ) {
       $is_committees_vid = TRUE;
     }
@@ -1275,7 +1273,7 @@ function nys_senators_query_taxonomy_term_access_alter(AlterableInterface $query
   }
 
   // If the user is not an MCP, return.
-  $current_user = \Drupal::currentUser();
+  $current_user = UsersHelper::resolveUser();
   if (!UsersHelper::isMcp($current_user)) {
     return;
   }

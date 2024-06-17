@@ -1,28 +1,8 @@
-name: Pantheon Refresh Multidev
+name: Pantheon Refresh Training Environment
 
 on:
   workflow_dispatch:
-    inputs:
-      sync_type:
-        description: 'Refresh Type'
-        required: true
-        default: 'Code and Database'
-        type: choice
-        options:
-          - Code and Database
-          - Database Only
-      sync_to:
-        description: 'Multidev being refreshed'
-        required: true
-        default: 'training'
-        type: string
-      sync_from:
-        description: 'Environment to refresh from'
-        required: true
-        default: 'live'
-        type: choice
-        options:
-          - live
+
 jobs:
   refresh:
     runs-on: ubuntu-latest
@@ -46,19 +26,10 @@ jobs:
         with:
           pantheon-machine-token: ${{ secrets.PANTHEON_MACHINE_TOKEN }}
 
-      - name: Get a list of all the multidev environments
-        run: echo MULTIDEV_LIST=$(terminus multidev:list ${{ vars.PANTHEON_SITE }} --fields=id --format=list) >> $GITHUB_ENV
-
-      - name: Quit workflow if inputs.sync_to does not exist as a multidev
+      - name: Mirror the latest code from master into the training environment
         run: |
-          if ! [[ " $MULTIDEV_LIST " =~ " ${{ inputs.sync_to }} " ]]; then
-            echo "${{ inputs.sync_to }} is not a multidev environment. Valid options are: $MULTIDEV_LIST."
-            exit 1
-          fi
+          git clone -o pantheon -b master ${{ vars.PANTHEON_GIT_REMOTE }} ./
+          git push -f pantheon training
 
-      - name: Merge the latest code from master into the multidev
-        if: ${{ inputs.sync_type == 'Code and Database' }}
-        run: terminus multidev:merge-from-dev ${{ vars.PANTHEON_SITE }}.${{ inputs.sync_to }} --yes
-
-      - name: Refresh a multidev environment (no files)
-        run: terminus env:clone-content ${{ vars.PANTHEON_SITE }}.${{ inputs.sync_from }} ${{ inputs.sync_to }} --yes --db-only
+      - name: Refresh the training environment from live without files
+        run: terminus env:clone-content ${{ vars.PANTHEON_SITE }}.live training --yes --db-only

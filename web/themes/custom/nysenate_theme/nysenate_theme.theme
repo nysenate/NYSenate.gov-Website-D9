@@ -3019,24 +3019,17 @@ function nysenate_theme_preprocess_page__node__microsite_page(&$variables) {
     }
   }
 
-  // Override the main content, if not in a Webform confirmation context.
-  $route_name = \Drupal::routeMatch()->getRouteName();
-  $in_webform_confirm_context = (
-    $route_name == 'entity.node.webform.confirmation'
-    || in_array(
-      'webform/webform.confirmation',
-      $variables['page']['content']['system_main']['#attached']['library']
-    )
-  );
-  if (!$in_webform_confirm_context) {
-    // Display the microsite node with altered contents.
+  // Re-render microsite_page node content in order for block content
+  // manipulations (above) to be part of final rendered content.
+  // @todo refactor to eliminate need to re-render node content.
+  $node_type = $node->getType();
+  if ($node_type === 'microsite_page') {
     $variables['page']['content']['system_main'] = \Drupal::entityTypeManager()
       ->getViewBuilder('node')
       ->view($node, 'full');
   }
 
   // If microsite page is assigned to committee, show committee action bar.
-  $node_type = $node->getType();
   $relevant_node_types = ['event', 'in_the_news', 'article', 'video'];
   if (in_array($node_type, $relevant_node_types) && !empty($node->field_committee->target_id)) {
     $tid = $node->field_committee->target_id;

@@ -1248,7 +1248,7 @@ function nys_senators_query_taxonomy_term_access_alter(AlterableInterface $query
     return;
   }
 
-  // Only alter the query when we routes we care about.
+  // If not on a node add or edit route, return.
   $route_match = \Drupal::routeMatch();
   $routes = [
     'node.add',
@@ -1258,12 +1258,34 @@ function nys_senators_query_taxonomy_term_access_alter(AlterableInterface $query
     return;
   }
 
-  $current_user = \Drupal::currentUser();
+  // If taxonomy is not 'committees', return.
+  $is_committees_vid = FALSE;
+  foreach ($query->conditions() as $condition) {
+    if (
+      (($condition['field'] ?? '') === 't.vid')
+      && (($condition['value'] ?? '') === 'committees')
+    ) {
+      $is_committees_vid = TRUE;
+    }
+  }
+  if (!$is_committees_vid) {
+    return;
+  }
+
   // If the user is not an MCP, return.
+  $current_user = UsersHelper::resolveUser();
   if (!UsersHelper::isMcp($current_user)) {
     return;
   }
 
+  // Show no committee options if an MCPs senator isn't a committee chair.
+  $committee_tids = UsersHelper::getManagedCommittees($current_user);
+  if (empty($committee_tids)) {
+    $query->alwaysFalse();
+    return;
+  }
+
+  // Limit MCPs to only select committee that their senator chairs.
   $primary_table = '';
   $tables = $query->getTables();
   $target_tables = ['taxonomy_term_data', 'taxonomy_term_field_data'];
@@ -1274,12 +1296,6 @@ function nys_senators_query_taxonomy_term_access_alter(AlterableInterface $query
     }
     $primary_table = $info['alias'];
   }
-
-  $committee_tids = UsersHelper::getManagedCommittees($current_user);
-  if (empty($committee_tids)) {
-    return;
-  }
-
   $vids = ['committees'];
   $query->leftJoin('taxonomy_term_field_data', 'ttfd', $primary_table . '.tid = ttfd.tid');
   $or = new Condition('OR');

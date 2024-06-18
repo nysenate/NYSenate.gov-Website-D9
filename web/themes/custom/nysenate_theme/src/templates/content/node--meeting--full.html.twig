@@ -134,12 +134,6 @@
   {% endif %}
 
   {% if content.field_yt.0 %}
-    <div class="c-meeting-detail--descript">
-      {{ content.field_yt }}
-    </div>
-  {% endif %}
-
-  {% if content.field_yt.0 %}
     {% for key, item in content.field_yt %}
       {% if key|first != '#' %}
         <div class="flex-video widescreen item-{{ key + 1 }}">{{ item }}</div>

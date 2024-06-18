@@ -3,14 +3,14 @@
   Drupal.behaviors.nysenateHeader = {
     attach: function (context) {
       let self = this;
-      let searchToggle = $('.js-search--toggle');
-      searchToggle.once('nySenateHeader').on('click touch', function (e) {
-        self.toggleSearchBar(0, e);
-      });
 
       // If admin toolbar is present and the user is not on mobile,
       // abort and use static nav bar.
       if ($('#toolbar-administration').length > 0 && !self.isMobileWidth()) {
+        let searchToggle = $('.js-search--toggle');
+        $(once('nySenateHeader', searchToggle)).on('click touch', function (e) {
+          self.toggleSearchBar(0, e);
+        });
         return;
       }
 
@@ -248,14 +248,13 @@
         }
       }
 
-      mobileNavToggle
-        .once('nySenateHeaderMobile')
-        .on('click touch', function () {
-          self.toggleMobileNav(menu);
-        });
+      $(once('nySenateHeaderMobile', mobileNavToggle))
+      .on('click touch', function () {
+        self.toggleMobileNav(menu);
+      });
 
-      searchToggle = $('.js-search--toggle');
-      searchToggle.once('nySenateHeader').on('click touch', function (e) {
+      let searchToggle = $('.js-search--toggle');
+      $(once('nySenateHeader', searchToggle)).on('click touch', function (e) {
         self.toggleSearchBar(userScroll, e);
       });
 

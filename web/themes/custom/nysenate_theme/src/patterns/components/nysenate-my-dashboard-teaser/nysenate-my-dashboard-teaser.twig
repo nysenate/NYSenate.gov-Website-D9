@@ -1,0 +1,135 @@
+{{ attach_library('nysenate_theme/nysenate-my-dashboard-teaser') }}
+{{ attach_library('nysenate_theme/bill-item') }}
+{%
+  set classes, type_icon_map, type_label_map, truncate_length  = [
+    'node',
+    'node--type-' ~ node.bundle|clean_class,
+    view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+    node.field_image_main.value ? 'node--teaser-with-extras',
+    node.field_image_main.value ? 'node--teaser-with-image',
+    positions ? 'node--teaser-with-extras'
+  ],
+  {
+    'article': 'article',
+    'bill': 'gavel',
+    'in_the_news': 'newspaper-clipping',
+    'meeting': 'calendar',
+    'petition': 'clipboard',
+    'public_hearing': 'calendar-blank',
+    'resolution': 'scales',
+    'webform': 'question',
+  },
+  {
+    'bill': 'Bill',
+    'in_the_news': 'News',
+    'meeting': 'Meeting',
+    'petition': 'Petition',
+    'public_hearing': 'Public Hearing',
+    'resolution': 'Resolution',
+    'webform': 'Questionnaire',
+  },
+  150
+%}
+<article{{ attributes.addClass(classes) }}>
+  {% if 'node--teaser-with-extras' in classes %}
+    <div class="c-my-dashboard--extras">
+      {% if node.field_image_main.value %}
+        {{ content.field_image_main }}
+      {% elseif node.bundle == 'bill' %}
+        {% if node.field_ol_last_status_date.value %}
+          <div class="field">Updated {{ node.field_ol_last_status_date.value|date('U')|format_date('publish_date') }}</div>
+        {% elseif node.field_ol_publish_date.value %}
+          <div class="field">Introduced {{ node.field_ol_publish_date.value|date('U')|format_date('publish_date') }}</div>
+        {% endif %}
+        {% if node.field_ol_sponsor.value %}
+          {{ content.field_ol_sponsor }}
+        {% endif %}
+        {% if node.field_ol_last_status.value %}
+          {{ content.field_ol_last_status }}
+        {% endif %}
+        {% if positions %}
+          {%
+            include '@nysenate_theme/src/templates/includes/nys-bill-status.html.twig'
+            with {positions: positions, is_small: true}
+            only
+          %}
+        {% endif %}
+      {% endif %}
+    </div>
+  {% endif %}
+  <div class="c-my-dashboard--type-wrapper">
+    <i class="ph-fill ph-{{ attribute(type_icon_map, node.bundle) }}"></i>
+    <p class="c-my-dashboard--type">
+      {% if node.bundle == 'article' %}
+        {{ content.field_category.0 }}
+      {% else %}
+        {{ attribute(type_label_map, node.bundle) }}
+      {% endif %}
+    </p>
+  </div>
+  <h3{{ title_attributes }}>
+    <a href="{{ url }}" rel="bookmark">{{ label }}</a>
+  </h3>
+  <p class="c-my-dashboard--blurb">
+    {% if node.field_subtitle.value %}
+      {{ node.field_subtitle.value|render|striptags|raw }}
+    {% elseif node.field_subhead.value %}
+      {{ node.field_subhead.value|render|striptags|raw }}
+    {% elseif node.field_ol_name.value %}
+      {{ node.field_ol_name.value|render|striptags|raw }}
+    {% elseif node.body.value %}
+      {% set body_text = node.body.value|render|striptags|replace({'&nbsp;': ' '}) %}
+      {{ body_text|length > truncate_length ? body_text|truncate(truncate_length, true)|raw ~ ' ...' : body_text|raw }}
+    {% endif %}
+  </p>
+  <div class="c-my-dashboard--details">
+    {% if node.bundle != 'bill' %}
+      <div class="c-my-dashboard--detail">
+      {% if node.field_date_range.value %}
+        <p>
+          {{ node.field_date_range.start_date|date('U')|format_date('publish_date') }}
+        </p>
+        <p class="c-my-dashboard--pipe">|</p>
+        <p>
+          {{ node.field_date_range.start_date|date('U')|format_date('time') }}
+        </p>
+      {% elseif node.field_date.value %}
+        <p>
+          {{ node.field_date.value|date('U')|format_date('publish_date') }}
+        </p>
+        {% if node.field_senator_multiref.value %}
+          <p class="c-my-dashboard--pipe">|</p>
+          <p>
+            By Senator <a href="{{ senator_microsite_url }}">{{ content.field_senator_multiref.0 }}</a>
+          </p>
+        {% endif %}
+      {% elseif node.field_ol_publish_date.value %}
+        <p>
+          {{ node.field_ol_publish_date.value|date('U')|format_date('publish_date') }}
+        </p>
+        {% if node.field_ol_sponsor.value  %}
+          <p class="c-my-dashboard--pipe">|</p>
+          <p>
+            Sponsored by <a href="{{ senator_microsite_url }}">{{ content.field_ol_sponsor.0 }}</a>
+          </p>
+        {% endif %}
+      {% endif %}
+      </div>
+    {% endif %}
+    {% if content.vote_widget %}
+      <div class="c-my-dashboard--detail">
+        {{ content.vote_widget }}
+      </div>
+    {% endif %}
+    {% if node.field_issues.value %}
+      <div class="c-my-dashboard--detail">
+        <h4>Issues:</h4> {{ content.field_issues }}
+      </div>
+    {% endif %}
+    {% if node.field_committee.value %}
+      <div class="c-my-dashboard--detail">
+        <h4>Committees:</h4> {{ content.field_committee }}
+      </div>
+    {% endif %}
+  </div>
+</article>

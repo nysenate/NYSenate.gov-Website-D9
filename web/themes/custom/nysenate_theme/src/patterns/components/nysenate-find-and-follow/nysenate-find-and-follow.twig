@@ -1,0 +1,30 @@
+{#
+/**
+ * @file nysenate-find-and-follow.twig
+ */
+#}
+{% if content %}
+  {{ attach_library('nysenate_theme/nysenate-find-and-follow') }}
+  {%
+    set classes = [
+      'find-and-follow-block',
+      'block',
+    ]
+  %}
+  <div{{ attributes.addClass(classes) }}>
+    {% if label %}
+      <h2>{{ label }}</h2>
+    {% endif %}
+    {{ title_suffix }}
+    <ul>
+      {% for item in content %}
+        <li class="find-and-follow-button-wrapper">
+          <a class="find-and-follow-button" href="{{ item.url }}">
+            <i class="ph-fill ph-{{ item.icon }}"></i><br>
+            <span>{{ item.text }}</span>
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endif %}

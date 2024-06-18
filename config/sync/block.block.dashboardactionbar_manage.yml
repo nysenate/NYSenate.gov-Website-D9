@@ -1,0 +1,39 @@
+uuid: 491c63a0-2ed2-457f-a515-841b48583dd4
+langcode: en
+status: true
+dependencies:
+  module:
+    - nys_dashboard
+    - system
+  theme:
+    - nysenate_theme
+id: dashboardactionbar_manage
+theme: nysenate_theme
+region: above_content
+weight: 0
+provider: null
+plugin: dashboard_action_bar
+settings:
+  id: dashboard_action_bar
+  label: 'Dashboard Actionbar - Manage'
+  label_display: '0'
+  provider: nys_dashboard
+  heading: 'Manage Dashboard'
+  subheading: 'Update content you''re following.'
+  featured_link:
+    text: 'My Dashboard'
+    url: /dashboard
+    icon: gauge
+  featured_link_1:
+    text: 'My Dashboard'
+    url: /dashboard
+    icon: gauge
+  featured_link_2:
+    text: ''
+    url: ''
+    icon: ''
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: /dashboard/manage

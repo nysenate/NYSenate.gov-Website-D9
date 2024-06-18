@@ -88,6 +88,7 @@
   height: 55px;
   vertical-align: middle;
   padding: 0 15px;
+  margin-left: 20px;
   transition: background 0.2s ease;
 
   .nys-senator {
@@ -96,7 +97,7 @@
   }
 
   .nys-senator--info {
-    margin-right: 8px;
+    margin-left: 8px;
   }
 
   .nys-senator--title,
@@ -105,9 +106,9 @@
   }
 
   .nys-senator--title {
-    text-transform: capitalize;
-    font-size: 12px;
+    text-transform: uppercase;
     font-family: $font-sans-bold;
+    font-size: 12px;
     margin: 0;
   }
 
@@ -123,6 +124,10 @@
     img {
       min-height: 30px;
       width: auto;
+    }
+
+    .contextual {
+      display: none;
     }
   }
 
@@ -287,6 +292,10 @@
       padding: 155px 0 0;
       overflow: scroll;
       @extend .lgt-bg;
+
+      @include breakpoint($bp-under-sm) {
+        padding: 100px 0 0;
+      }
     }
 
     nav {
@@ -703,16 +712,16 @@ nav ul.c-nav--list {
 .c-header--btn.c-header--btn__taking_action,
 .c-header--btn.c-header--btn__primary {
   font-family: $font-sans-bold;
+  text-transform: uppercase;
   cursor: pointer;
   position: relative;
   height: 100%;
-  margin-left: -1px;
-  padding: 0 15px 0 20px;
-  background-color: transparent;
+  padding: 0 10px 0 5px;
+  background-color: $color-white;
   line-height: 55px;
   transition: background 0.2s ease 0s;
 
-  &::after {
+  &::before, &::after {
     display: inline-block;
     vertical-align: middle;
     speak: none;
@@ -720,7 +729,7 @@ nav ul.c-nav--list {
     font-weight: normal;
     font-variant: normal;
     text-transform: none;
-    padding-left: 3px;
+    padding-left: 1px;
     -webkit-font-smoothing: antialiased;
     font-family: 'senate_icons';
     height: 30px;
@@ -728,8 +737,7 @@ nav ul.c-nav--list {
     line-height: 30px;
     text-align: center;
     font-size: 20px;
-    margin-left: 8px;
-    padding-left: 3px;
+    margin: 0 6px 0;
     color: $color-white;
     @extend .lgt-bg;
     overflow: hidden;
@@ -738,102 +746,16 @@ nav ul.c-nav--list {
   }
 }
 
-.c-header--btn.c-header--btn__taking_action::after {
+.c-header--btn.c-header--btn__taking_action {
+  margin-left: 20px;
+}
+
+.c-header--btn.c-header--btn__taking_action::before {
   content: '\69';
 }
 
-.c-header--btn.c-header--btn__primary::after {
+.c-header--btn.c-header--btn__primary::before {
   content: '\66';
-}
-
-ul.c-login--list {
-  position: relative;
-  display: inline-block;
-  vertical-align: middle;
-  list-style: none;
-  height: 100%;
-  margin-left: -1px;
-  margin-top: 0;
-  padding-left: 0;
-
-  .c-header--btn {
-    margin-left: 0;
-
-    &.c-header--btn__primary {
-      transition: background 0.2s ease;
-    }
-  }
-
-  li {
-    position: relative;
-    top: 0;
-    height: 100%;
-    z-index: 4;
-
-    a {
-      display: block;
-      height: 100%;
-      width: 100%;
-      padding: 0 15px 0 20px;
-      color: $color-white;
-      line-height: 55px;
-    }
-
-    & + li {
-      position: absolute;
-      width: 100%;
-      margin-top: 0;
-      z-index: 3;
-      transition: top 0.2s ease-in;
-
-      a {
-        transition: background 0.2s ease;
-      }
-
-      &.c-login--admin {
-        z-index: 3;
-      }
-
-    }
-  }
-
-  &:hover {
-    .c-header--btn__primary {
-      color: $color-white;
-      transition: background 0.2s ease;
-      @extend .lgt-bg;
-
-      &:hover {
-        @extend .lgt-bg;
-      }
-    }
-
-    .c-login--edit {
-      top: 100%;
-    }
-
-    .c-login--logout {
-      top: 200%;
-    }
-
-    .c-login--admin {
-      top: 300%;
-    }
-
-    li + li {
-      transition: top 0.2s ease-in;
-
-      a {
-        background: $grey05;
-        transition: background 0.1s ease;
-      }
-
-      a:hover {
-        transition: background 0.15s ease;
-        @extend .drk-bg;
-      }
-    }
-  }
 }
 
 .inactive-pallette {
@@ -842,25 +764,6 @@ ul.c-login--list {
     &.c-header--btn__taking_action {
       &::after {
         background: $gen_blue_lgt;
-      }
-    }
-  }
-
-  .c-login--list {
-    &:hover {
-      .c-header--btn__primary,
-      .c-header--btn__taking_action {
-        background: $gen_blue_lgt;
-
-        &:hover {
-          background: $gen_blue_lgt;
-        }
-      }
-
-      li + li {
-        a:hover {
-          background: $gen_blue_drk;
-        }
       }
     }
   }
@@ -880,7 +783,7 @@ ul.c-login--list {
   font-size: 12px;
   line-height: 28px;
   text-transform: capitalize;
-  letter-spacing: 0.25em;
+  letter-spacing: 1px;
 
   &.has-avatar {
 
@@ -1012,6 +915,11 @@ a:hover.c-header--btn.c-header--btn__taking_action {
   margin: 0;
 
   @include breakpoint($bp-sm) {
+    display: block;
+  }
+
+  @include breakpoint($bp-under-sm) {
+    top: 0;
     display: block;
   }
 

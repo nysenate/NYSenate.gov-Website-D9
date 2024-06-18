@@ -1,0 +1,109 @@
+uuid: 3f9da04f-8d28-4aeb-9de7-c60cc7359a9e
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.my_dashboard_teaser
+    - field.field.node.petition.body
+    - field.field.node.petition.field_article_author
+    - field.field.node.petition.field_date
+    - field.field.node.petition.field_expiration_date
+    - field.field.node.petition.field_featured
+    - field.field.node.petition.field_image_main
+    - field.field.node.petition.field_issues
+    - field.field.node.petition.field_last_notified
+    - field.field.node.petition.field_senator_multiref
+    - field.field.node.petition.field_subhead
+    - field.field.node.petition.field_title_stub
+    - field.field.node.petition.rabbit_hole__settings
+    - image.style.my_dashboard_teaser_268_x_180
+    - node.type.petition
+  module:
+    - datetime
+    - media
+    - nys_list_formatter
+    - text
+    - user
+id: node.petition.my_dashboard_teaser
+targetEntityType: node
+bundle: petition
+mode: my_dashboard_teaser
+content:
+  body:
+    type: text_trimmed
+    label: hidden
+    settings:
+      trim_length: 300
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_date:
+    type: datetime_default
+    label: hidden
+    settings:
+      timezone_override: ''
+      format_type: publish_date
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_image_main:
+    type: media_thumbnail
+    label: hidden
+    settings:
+      image_link: content
+      image_style: my_dashboard_teaser_268_x_180
+      image_loading:
+        attribute: lazy
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  field_issues:
+    type: list_formatter
+    label: hidden
+    settings:
+      type: ul
+      separator_custom: ''
+      separator_custom_tag: '0'
+      separator_custom_class: list-formatter-separator
+      comma_tag: '0'
+      class: list-formatter-list
+      list_formatter_contrib:
+        entity_reference_link: '1'
+      comma_and: 0
+      comma_full_stop: 0
+      comma_override: 0
+      term_plain: 0
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_senator_multiref:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: false
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_subhead:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  field_article_author: true
+  field_expiration_date: true
+  field_featured: true
+  field_last_notified: true
+  field_title_stub: true
+  flag_sign_petition: true
+  langcode: true
+  links: true
+  private_message_link: true
+  rabbit_hole__settings: true
+  search_api_excerpt: true

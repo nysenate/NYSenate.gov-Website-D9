@@ -11,7 +11,9 @@ dependencies:
   module:
     - captcha
     - field_permissions
+    - file
     - filter
+    - help
     - media
     - node
     - override_node_options
@@ -21,49 +23,30 @@ label: 'Student Programs'
 weight: 8
 is_admin: null
 permissions:
-  - 'Access Admin Link in Dashboard'
-  - 'access administration menu'
   - 'access administration pages'
-  - 'access dashboard'
-  - 'access media browser'
-  - 'access own webform results'
-  - 'access own webform submissions'
-  - 'add media from remote sources'
-  - 'create chapter content'
+  - 'access help pages'
   - 'create field_featured'
   - 'create file media'
-  - 'create files'
   - 'create image media'
   - 'create media'
   - 'create remote_video media'
   - 'create student_program content'
   - 'delete media'
-  - 'delete own chapter content'
   - 'delete own file media'
+  - 'delete own files'
   - 'delete own image media'
   - 'delete own remote_video media'
   - 'delete own student_program content'
-  - 'delete own webform submissions'
   - 'edit any student_program content'
-  - 'edit own chapter content'
   - 'edit own field_featured'
   - 'edit own file media'
   - 'edit own image media'
   - 'edit own remote_video media'
   - 'edit own student_program content'
-  - 'edit own webform submissions'
-  - 'execute node_publish_action'
-  - 'execute node_save_action'
-  - 'execute node_unpublish_action'
-  - 'execute views_bulk_operations_modify_action'
   - 'override student_program published option'
   - 'skip CAPTCHA'
   - 'update media'
-  - 'use media wysiwyg'
   - 'use text format basic_html'
-  - 'view disqus comments'
   - 'view own field_featured'
-  - 'view own files'
-  - 'view own private files'
   - 'view own unpublished media'
   - 'view the administration theme'

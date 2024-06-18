@@ -385,16 +385,20 @@ display:
                   sort_options: false
                   rewrite:
                     filter_rewrite_values: '- Any -|Filter by Committee'
+                    filter_rewrite_values_key: false
                   collapsible: false
                   is_secondary: false
+                  collapsible_disable_automatic_open: false
               field_party_value:
                 plugin_id: default
                 advanced:
                   sort_options: false
                   rewrite:
                     filter_rewrite_values: '- Any -|Filter by Party'
+                    filter_rewrite_values_key: false
                   collapsible: false
                   is_secondary: false
+                  collapsible_disable_automatic_open: false
       access:
         type: perm
         options:

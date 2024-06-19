@@ -162,7 +162,7 @@ function nys_dashboard_entity_type_build(array &$entity_types) {
 function nys_dashboard_preprocess_block(&$variables) {
   // Disable dashboard exposed filters caching, to ensure manage dashboard
   // (e.g. followed issues) changes appear immediately.
-  if ($variables['plugin_id'] === 'views_exposed_filter_block:my_dashboard-main') {
+  if (($variables['plugin_id'] ?? '') === 'views_exposed_filter_block:my_dashboard-main') {
     $variables['#cache']['max-age'] = 0;
   }
 }

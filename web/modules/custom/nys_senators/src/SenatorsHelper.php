@@ -6,12 +6,12 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Http\RequestStack;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\nys_senators\Service\Microsites;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\TermInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Collects "helper" functions for Senator entities.
@@ -53,7 +53,7 @@ class SenatorsHelper {
    *   The entity type manager service.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   The backend cache.
-   * @param \Drupal\Core\Http\RequestStack $request_stack
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   A request stack service.
    * @param \Drupal\nys_senators\Service\Microsites $microsites
    *   NYS Senators Microsites service.
@@ -207,7 +207,7 @@ class SenatorsHelper {
     if (!empty($node->field_ol_add_sponsor_names->value)) {
       $sponsor_names = [];
       $ol_add_sponsor_names = json_decode($node->field_ol_add_sponsor_names->value);
-      foreach ($ol_add_sponsor_names as $key => $sponsor) {
+      foreach ($ol_add_sponsor_names as $sponsor) {
         $sponsor_names[] = $sponsor->fullName;
       }
 
@@ -225,13 +225,19 @@ class SenatorsHelper {
    * @return bool
    *   Returns TRUE if it has an Inactive microsite page.
    */
-  public function hasMicroSiteInactive(array $nodes) {
+  public function hasMicroSiteInactive(array $nodes): bool {
     foreach ($nodes as $node) {
       if ($node->hasField('field_microsite_page_type')
             && !$node->get('field_microsite_page_type')->isEmpty()
         ) {
         $tid = $node->field_microsite_page_type->getValue()[0]['target_id'] ?? '';
-        $micrositeTerm = Term::load($tid);
+        try {
+          $micrositeTerm = $this->entityTypeManager->getStorage('taxonomy_term')
+            ->load($tid);
+        }
+        catch (\Throwable) {
+          $micrositeTerm = NULL;
+        }
         if ($micrositeTerm instanceof TermInterface && !empty($micrositeTerm->getName()) && $micrositeTerm->getName() === 'Inactive') {
           return TRUE;
         }

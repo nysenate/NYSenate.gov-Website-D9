@@ -1,5 +1,6 @@
 {{ attach_library('nysenate_theme/session') }}
 {{ attach_library('nysenate_theme/nysenate-issues') }}
+{{ attach_library('nysenate_theme/meeting-detail') }}
 
 
 {% if video_status.key == 'streaming_live_now' %}
@@ -133,9 +134,7 @@
 
   {% if content.field_yt[0] %}
     <div class="c-meeting-detail--descript">
-      {% include '@nysenate_theme/video-embed/video-embed.twig' with {
-        video: content.field_yt
-      } only %}
+      {{ content.field_yt }}
     </div>
   {% endif %}
 </article>

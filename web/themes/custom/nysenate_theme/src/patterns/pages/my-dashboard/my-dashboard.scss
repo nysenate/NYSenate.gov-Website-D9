@@ -1,0 +1,298 @@
+@import '../../global/utils/breakpoints';
+@import '../../global/colors/colors';
+@import '../../global/fonts/fonts';
+@import '../../global/fonts/phosphor';
+@import '../../global/utils/typography';
+
+// My Dashboard exposed filter styling.
+.block-views-exposed-filter-blockmy-dashboard-main {
+  h2 {
+    margin-bottom: 5px;
+  }
+
+  @include breakpoint($bp-under-md) {
+    margin-top: 0;
+    margin-bottom: 20px;
+
+    .container {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.2s ease-out;
+    }
+
+    h2 {
+      margin: 0;
+    }
+  }
+
+  button {
+    color: $grey08;
+    text-transform: uppercase;
+    font-family: $font-sans;
+    font-size: 12px;
+    letter-spacing: 1px;
+    position: relative;
+    background: white;
+    width: 100%;
+    text-align: left;
+    border: 0;
+    padding: 0;
+    cursor: default;
+
+    @include breakpoint($bp-under-md) {
+      padding: 20px;
+      border: 1px solid $grey04;
+      margin: 0;
+
+      &:after {
+        position: absolute;
+        right: 16px;
+        top: 13px;
+        font-size: 25px;
+        color: $gen_blue_lgt;
+        pointer-events: none;
+        cursor: pointer;
+        content: '\65';
+        font-family: $senate-icons;
+        display: inline-block;
+        vertical-align: middle;
+        speak: none;
+        font-style: normal;
+        font-weight: normal;
+        font-variant: normal;
+        text-transform: none;
+        padding-left: 3px;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      &.active:after {
+        content: '\5e';
+      }
+    }
+  }
+
+  #views-exposed-form-my-dashboard-main {
+    min-width: 186px;
+    margin-bottom: 40px;
+
+    .form-item {
+      width: 100%;
+      margin: 10px 0 5px 0;
+
+      label, input {
+        font-weight: 700;
+        letter-spacing: 1px;
+      }
+
+      input, select {
+        margin-bottom: 0;
+      }
+
+      &.form-type-select:after {
+        bottom: 1px;
+      }
+
+      &.form-item-search {
+        position: relative;
+
+        input {
+          height: 45px;
+          padding-right: 40px;
+        }
+
+        &:after {
+          text-indent: 0;
+          position: absolute;
+          bottom: 4px;
+          right: 12px;
+          font-family: 'senate_icons';
+          speak: none;
+          font-style: normal;
+          font-weight: normal;
+          font-variant: normal;
+          text-transform: none;
+          padding-left: 3px;
+          content: '\6d';
+          font-size: 22px;
+          color: $gen_blue_lgt;
+        }
+      }
+
+      &.form-item-your-senator-filter {
+        margin: 20px 5px 30px;
+        position: relative;
+
+        @include breakpoint($bp-under-md) {
+          max-width: 240px;
+        }
+
+        label {
+          position: absolute;
+          top: 0;
+          left: 24px;
+          font-size: 15px;
+          line-height: 18px;
+          color: $blue01;
+        }
+      }
+    }
+
+    .form-actions {
+      input {
+        width: 100%;
+        font-weight: 700;
+
+        &[id^=edit-submit] {
+          background-color: $gen_blue_lgt;
+          border-color: $gen_blue_lgt;
+          color: white;
+        }
+
+        &[id^=edit-reset] {
+          margin: 20px 0 0;
+          background-color: white;
+          border-color: $gen_blue_lgt;
+          color: $gen_blue_lgt;
+        }
+
+        &[id^=edit-submit]:hover, &[id^=edit-reset]:hover {
+          background-color: white;
+          border-color: black;
+          color: black;
+        }
+      }
+
+      @include breakpoint($bp-under-md) {
+        margin-bottom: 0;
+      }
+    }
+
+    @include breakpoint($bp-under-md) {
+      padding: 10px 20px 20px;
+      border: 1px solid $grey04;
+      border-top: none;
+      margin: 0;
+    }
+  }
+
+  @include breakpoint($bp-md) {
+    &.sticky-filter {
+      position: fixed;
+    }
+
+    &.sticky-filter-bottom {
+      position: absolute;
+      top: auto !important;
+      bottom: 0;
+    }
+  }
+}
+
+// My Dashboard view pagination styling.
+.view-my-dashboard {
+  .view-header, .view-header-pager {
+    float: left;
+
+    @include breakpoint($bp-under-sm) {
+      text-align: center;
+    }
+  }
+
+  .view-header {
+    width: 30%;
+    font-size: 14px;
+    font-style: italic;
+
+    @include breakpoint($bp-under-sm) {
+      width: 100%;
+    }
+  }
+
+  .pager {
+    .pager__items {
+      line-height: 17px;
+
+      .pager__item {
+        padding: 0 5px;
+        line-height: inherit;
+
+        a {
+          font-size: 14px;
+          line-height: 17px;
+          font-family: $font-sans-bold;
+          color: $gen_blue_lgt;
+          text-underline-offset: 3px;
+          padding-bottom: 3px;
+          text-decoration-thickness: 1px;
+          text-decoration: underline;
+
+          &:hover {
+            text-decoration: none;
+          }
+        }
+
+        &.is-active a {
+          text-decoration: none;
+          color: $grey10;
+          cursor: default;
+        }
+
+        &.pager__item--next:after, &.pager__item--last:after, &.pager__item--previous:before, &.pager__item--first:before {
+          font-family: "Phosphor-Bold" !important;
+          speak: never;
+          font-style: normal;
+          font-weight: normal;
+          font-variant: normal;
+          text-transform: none;
+          line-height: 1;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+          color: $gen_blue_lgt;
+          top: 2px;
+          position: relative;
+          font-size: 14px;
+        }
+
+        &.pager__item--next:after {
+          content: "\ea00";
+        }
+
+        &.pager__item--last:after {
+          content: "\e9fc";
+        }
+
+        &.pager__item--previous:before {
+          content: "\e9ff";
+        }
+
+        &.pager__item--first:before {
+          content: "\e9fb";
+        }
+      }
+    }
+  }
+
+  .view-header-pager {
+    width: 70%;
+
+    @include breakpoint($bp-under-sm) {
+      display: none;
+    }
+
+    .pager__items {
+      padding: 0;
+      margin: 0;
+      text-align: right;
+    }
+  }
+
+  .view-content {
+    padding-top: 20px;
+    clear: both;
+  }
+
+  .view-footer-pager {
+    border-top: 1px solid $grey04;
+  }
+}

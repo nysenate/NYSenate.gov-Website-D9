@@ -6,395 +6,152 @@
  */
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\views\Plugin\views\query\QueryPluginBase;
-use Drupal\views\Plugin\views\query\Sql;
 use Drupal\views\ViewExecutable;
-use Drupal\views\Views;
 
 /**
- * Implements hook_theme().
+ * Implements hook_views_data().
  */
-function nys_dashboard_theme($existing, $type, $theme, $path): array {
-  return [
-    'nys_dashboard_overview' => [
-      'variables' => [
-        'user' => NULL,
-        'my_senator' => NULL,
-        'message_form' => NULL,
-      ],
+function nys_dashboard_views_data() {
+  $data['node__field_date']['year_month_filter'] = [
+    'title' => t('Filter on year and month'),
+    'filter' => [
+      'title' => t('Filter on year and month'),
+      'help' => t('Custom NYS year/month filter based on field_date, field_ol_publish_date, or field_date_range .'),
+      'group' => t('Content'),
+      'field' => 'field_date_value',
+      'id' => 'year_month_filter',
     ],
   ];
-}
-
-/**
- * Implements hook_views_query_alter().
- */
-function nys_dashboard_views_query_alter(ViewExecutable $view, QueryPluginBase $query) {
-  $user_storage = \Drupal::entityTypeManager()->getStorage('user');
-
-  if ($query instanceof Sql) {
-    if ($view->id() == 'private_message_inbox') {
-      foreach ($query->where as $key => $where) {
-        // Join private_message__field_subject table.
-        if (!empty($where['conditions'])) {
-          foreach ($where['conditions'] as $c_key => $condition) {
-            if ($condition['field'] == 'private_messages.message__value') {
-              $configuration = [
-                'type' => 'left',
-                'table' => 'private_message__field_subject',
-                'field' => 'entity_id',
-                'left_table' => 'private_messages',
-                'left_field' => 'id',
-              ];
-              $join = Views::pluginManager('join')->createInstance('standard', $configuration);
-              $query->addRelationship('private_message__field_subject', $join, 'private_messages');
-
-              // Search Subject value as well.
-              $query->addWhere(
-                $key,
-                'private_message__field_subject.field_subject_value',
-                $condition['value'],
-                $condition['operator']
-              );
-              $query->where[$key]['type'] = 'OR';
-            }
-            elseif ($condition['field'] == 'node_field_data_private_message__field_bill.title') {
-              // Search Bill Title.
-              $bill_ids = [];
-              $bills = \Drupal::database()->query(
-                "SELECT n.nid FROM node_field_data n
-                  WHERE n.title LIKE '%" . $condition['value'] . "%'"
-              );
-              $result = $bills->fetchAll();
-
-              foreach ($result as $res) {
-                if (!in_array($res->nid, $bill_ids)) {
-                  $bill_ids[] = $res->nid;
-                }
-              }
-
-              // Add an empty string is there are no bill_ids.
-              $bill_ids = $bill_ids == [] ? [''] : $bill_ids;
-
-              $query->where[$key]['conditions'][$c_key]['field'] = 'private_message__field_bill.field_bill_target_id';
-              $query->where[$key]['conditions'][$c_key]['value'] = $bill_ids;
-              $query->where[$key]['conditions'][$c_key]['operator'] = 'IN';
-            }
-            elseif ($view->current_display == 'inbox') {
-              if ($condition['field'] == 'private_messages.owner') {
-                // Search Owner's Name.
-                $user_ids = [];
-                $users = \Drupal::database()->query(
-                  "SELECT u.uid FROM users u
-                    LEFT JOIN users_field_data ufd ON ufd.uid = u.uid
-                    LEFT JOIN user__field_first_name f ON f.entity_id = u.uid AND f.bundle = 'user'
-                    LEFT JOIN user__field_last_name l ON l.entity_id = u.uid AND l.bundle = 'user'
-                    WHERE ufd.name LIKE '%" . $condition['value'] . "%'
-                      OR f.field_first_name_value LIKE '%" . $condition['value'] . "%'
-                      OR l.field_last_name_value LIKE '%" . $condition['value'] . "%'"
-                );
-                $result = $users->fetchAll();
-
-                foreach ($result as $res) {
-                  if (!in_array($res->uid, $user_ids)) {
-                    $user_ids[] = $res->uid;
-                  }
-                }
-
-                if (!empty($user_ids)) {
-                  $query->where[$key]['conditions'][$c_key]['value'] = $user_ids;
-                  $query->where[$key]['conditions'][$c_key]['operator'] = 'IN';
-                }
-              }
-              elseif ($condition['field'] == 'private_message__field_to.field_to_target_id = :private_message__field_to_field_to_target_id') {
-                if (is_array($condition['value'])) {
-                  $value = $condition['value'][':private_message__field_to_field_to_target_id'];
-                  if (!is_numeric($value)) {
-                    // Get uid from pathAlias.
-                    $path = \Drupal::service('path_alias.manager')->getPathByAlias('/users/' . $value);
-
-                    if (preg_match('/user\/(\d+)/', $path, $matches)) {
-                      $query->where[$key]['conditions'][$c_key]['value'][':private_message__field_to_field_to_target_id'] = $matches[1];
-                    }
-                    else {
-                      // Get user data from username.
-                      $user = $user_storage->loadByProperties(['name' => $value]);
-                      $user = reset($user);
-                      $query->where[$key]['conditions'][$c_key]['value'][':private_message__field_to_field_to_target_id'] = $user->id();
-                    }
-                  }
-                }
-              }
-            }
-            elseif ($view->current_display == 'sent') {
-              if ($condition['field'] == 'private_message__field_to.field_to_target_id') {
-                // Search Sent To's Name.
-                $user_ids = [];
-                $users = \Drupal::database()->query(
-                  "SELECT u.uid FROM users u
-                      LEFT JOIN users_field_data ufd ON ufd.uid = u.uid
-                      LEFT JOIN user__field_first_name f ON f.entity_id = u.uid AND f.bundle = 'user'
-                      LEFT JOIN user__field_last_name l ON l.entity_id = u.uid AND l.bundle = 'user'
-                    WHERE ufd.name LIKE '%" . $condition['value'] . "%'
-                      OR f.field_first_name_value LIKE '%" . $condition['value'] . "%'
-                      OR l.field_last_name_value LIKE '%" . $condition['value'] . "%'"
-                );
-                $result = $users->fetchAll();
-
-                foreach ($result as $res) {
-                  if (!in_array($res->uid, $user_ids)) {
-                    $user_ids[] = $res->uid;
-                  }
-                }
-
-                if (!empty($user_ids)) {
-                  $query->where[$key]['conditions'][$c_key]['value'] = $user_ids;
-                  $query->where[$key]['conditions'][$c_key]['operator'] = 'IN';
-                }
-              }
-              elseif ($condition['field'] == 'private_messages.owner = :private_messages_owner') {
-                if (is_array($condition['value'])) {
-                  $value = $condition['value'][':private_messages_owner'];
-                  if (!is_numeric($value)) {
-                    // Get uid from pathAlias.
-                    $path = \Drupal::service('path_alias.manager')->getPathByAlias('/users/' . $value);
-
-                    if (preg_match('/user\/(\d+)/', $path, $matches)) {
-                      $query->where[$key]['conditions'][$c_key]['value'][':private_messages_owner'] = $matches[1];
-                    }
-                    else {
-                      // Get user data from username.
-                      $user = $user_storage->loadByProperties(['name' => $value]);
-                      $user = reset($user);
-                      $query->where[$key]['conditions'][$c_key]['value'][':private_message__field_to_field_to_target_id'] = $user->id();
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-
-    if ($view->id() == 'events') {
-      $calendar_filter = FALSE;
-      foreach ($query->where as $key => $where) {
-        $conditions = $where['conditions'];
-        $calendar_index = 0;
-        foreach ($conditions as $index => $condition) {
-          // Modify the date filters according to the view block.
-          if (strpos($condition['field'], 'node__field_date_range.field_date_range_value') > 0) {
-            $calendar_filter = TRUE;
-            $calendar_index = $index;
-
-            // Get value.
-            $value = $condition['value'];
-            if (in_array($view->current_display, ['page_3', 'week_block'])) {
-              if (strpos($condition['field'], "BETWEEN DATE_FORMAT(('") > 0 && strpos($condition['field'], "' + INTERVAL") > 0) {
-                $value_array = explode("BETWEEN DATE_FORMAT(('", $condition['field']);
-                $value_array = explode("' + INTERVAL", $value_array[1]);
-                $value = $value_array[0];
-              }
-            }
-            else {
-              if (strpos($condition['field'], "= DATE_FORMAT(('") > 0 && strpos($condition['field'], "' + INTERVAL") > 0) {
-                $value_array = explode("= DATE_FORMAT(('", $condition['field']);
-                $value_array = explode("' + INTERVAL", $value_array[1]);
-                $value = $value_array[0];
-              }
-            }
-
-            if (in_array($view->current_display, ['page_1', 'day_block'])) {
-              $query->where[$key]['conditions'][$index]['field'] = str_replace('%Y-%m', '%Y-%m-%d', $condition['field']);
-            }
-            elseif (in_array($view->current_display, ['page_3', 'week_block'])) {
-              [$start_of_week, $end_of_week] = nys_dashboard_get_date('week', $value);
-
-              $query->where[$key]['conditions'][$index] = [
-                'field' => 'DATE_FORMAT(node__field_date_range.field_date_range_value, \'%Y-%m-%d\') >= :field_date_range_value AND DATE_FORMAT(node__field_date_range.field_date_range_value, \'%Y-%m-%d\') <= :field_date_range_value1',
-                'value' => [
-                  ':field_date_range_value' => $start_of_week,
-                  ':field_date_range_value1' => $end_of_week,
-                ],
-                'operator' => 'formula',
-              ];
-            }
-            else {
-              [$start_of_month, $end_of_month] = nys_dashboard_get_date('month', $value);
-
-              $query->where[$key]['conditions'][$index] = [
-                'field' => 'DATE_FORMAT(node__field_date_range.field_date_range_value, \'%Y-%m-%d\') >= :field_date_range_value AND DATE_FORMAT(node__field_date_range.field_date_range_value, \'%Y-%m-%d\') <= :field_date_range_value1',
-                'value' => [
-                  ':field_date_range_value' => $start_of_month,
-                  ':field_date_range_value1' => $end_of_month,
-                ],
-                'operator' => 'formula',
-              ];
-            }
-          }
-        }
-      }
-
-      if (!$calendar_filter) {
-        // Add date format for exposed filters on calendar view.
-        if (in_array($view->current_display, ['page_1', 'day_block'])) {
-          $query->where[1]['conditions'][] = [
-            'field' => 'DATE_FORMAT(node__field_date_range.field_date_range_value, \'%Y-%m-%d\') = :field_date_range_value',
-            'value' => [
-              ':field_date_range_value' => date('Y-m-d', time()),
-            ],
-            'operator' => 'formula',
-          ];
-        }
-        elseif (in_array($view->current_display, ['page_3', 'week_block'])) {
-          [$start_of_week, $end_of_week] = nys_dashboard_get_date('week');
-
-          $query->where[1]['conditions'][] = [
-            'field' => 'DATE_FORMAT(node__field_date_range.field_date_range_value, \'%Y-%m-%d\') >= :field_date_range_value AND DATE_FORMAT(node__field_date_range.field_date_range_value, \'%Y-%m-%d\') <= :field_date_range_value1',
-            'value' => [
-              ':field_date_range_value' => $start_of_week,
-              ':field_date_range_value1' => $end_of_week,
-            ],
-            'operator' => 'formula',
-          ];
-        }
-        elseif (in_array($view->current_display, ['page_2', 'month_block'])) {
-          [$start_of_month, $end_of_month] = nys_dashboard_get_date('month');
-
-          $query->where[1]['conditions'][] = [
-            'field' => 'DATE_FORMAT(node__field_date_range.field_date_range_value, \'%Y-%m-%d\') >= :field_date_range_value AND DATE_FORMAT(node__field_date_range.field_date_range_value, \'%Y-%m-%d\') <= :field_date_range_value1',
-            'value' => [
-              ':field_date_range_value' => $start_of_month,
-              ':field_date_range_value1' => $end_of_month,
-            ],
-            'operator' => 'formula',
-          ];
-        }
-      }
-    }
-
-    if ($view->id() == 'upcoming_legislation' &&
-      in_array($view->current_display, ['passed_senate', 'signed_by_gov'])) {
-      // Get year.
-      $session_year = date('Y', strtotime('now'));
-      // If even, go back 1 yr to session start year.
-      if ($session_year % 2 == 0) {
-        $session_year--;
-      }
-
-      // Update filter to current session year.
-      if ($query->where[1]['conditions'][2]['field'] == 'node__field_ol_session.field_ol_session_value') {
-        $query->where[1]['conditions'][2]['value'] = (string) $session_year;
-      }
-    }
-
-    if ($view->id() == 'homepage_events' && $view->current_display == 'block_1') {
-      // Fix node__field_date_range join query.
-      $table_date_range = $query->getTableInfo('node__field_date_range');
-      if (isset($table_date_range['join']->extra[2])) {
-        unset($table_date_range['join']->extra[2]);
-      }
-      // Fix node__field_accessible_sitewide join query.
-      $table_accessible_sitewide = $query->getTableInfo('node__field_accessible_sitewide');
-      if (isset($table_accessible_sitewide['join']->extra[2])) {
-        unset($table_accessible_sitewide['join']->extra[2]);
-      }
-      // Fix field_accessible_sitewide query condition.
-      if ($query->where[1]['conditions'][4]['field'] = 'node__field_accessible_sitewide.field_accessible_sitewide_value') {
-        $query->where[1]['conditions'][4] = [
-          'field' => 'node__field_accessible_sitewide.field_accessible_sitewide_value IS NULL OR node__field_accessible_sitewide.field_accessible_sitewide_value = 0',
-          'value' => [],
-          'operator' => 'formula',
-        ];
-      }
-    }
-  }
-}
-
-/**
- * Get the date ranges to use on calendar page.
- */
-function nys_dashboard_get_date($range = 'week', $start_date = NULL, $end_date = NULL) {
-  if (!$start_date) {
-    $start_date = date('Y-m-d', time());
-  }
-  if (!$end_date) {
-    $end_date = date('Y-m-d');
-  }
-
-  if ($range == 'week') {
-    if (date('l', strtotime($start_date)) == 'Sunday') {
-      $start_date = date('Y-m-d', strtotime($start_date));
-    }
-    else {
-      $start_date = date('Y-m-d', strtotime('previous sunday', strtotime($start_date)));
-    }
-
-    $end_date = date('Y-m-d', strtotime('next saturday', strtotime($start_date)));
-  }
-  elseif ($range == 'month') {
-    $start_date = date('Y-m-d', strtotime('first day of this month', strtotime($start_date)));
-    $end_date = date('Y-m-t', strtotime($start_date));
-  }
-
-  return [$start_date, $end_date];
-}
-
-/**
- * Change the date format for exposed filters on calendar page date field.
- */
-function nys_dashboard_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  $values = $form_state->getValues();
-  $calendar_page = [
-    'views-exposed-form-events-page-1',
-    'views-exposed-form-events-day-block',
-    'views-exposed-form-events-page-2',
-    'views-exposed-form-events-month-block',
-    'views-exposed-form-events-page-3',
-    'views-exposed-form-events-week-block',
+  $data['node__field_senator_multiref']['your_senator_filter'] = [
+    'title' => t('Only show content from my senator'),
+    'filter' => [
+      'title' => t('Only show content from my senator'),
+      'help' => t("Custom NYS filter to only show content linked to current user's senator."),
+      'group' => t('Content'),
+      'field' => 'field_senator_multiref_target_id',
+      'id' => 'your_senator_filter',
+    ],
   ];
-  if (!empty($form['#id']) && (in_array($form['#id'], $calendar_page))) {
-    if (in_array($form['#id'], [
-      'views-exposed-form-events-page-1',
-      'views-exposed-form-events-day-block',
-      'views-exposed-form-events-page-3',
-      'views-exposed-form-events-week-block',
-    ])) {
-      $form['date']['#date_format'] = 'm/d/Y';
-      $form['date']['#default_value'] = date('m/d/Y');
-      $form['date']['#description'] = 'E.g., ' . date('m/d/Y');
-      $form['date']['#placeholder'] = date('m/d/Y');
-    }
-    if (in_array($form['#id'], [
-      'views-exposed-form-events-page-2',
-      'views-exposed-form-events-month-block',
-    ])) {
-      $form['date']['#date_format'] = 'm/Y';
-      $form['date']['#default_value'] = date('m/Y');
-      $form['date']['#description'] = 'E.g., ' . date('m/Y');
-      $form['date']['#placeholder'] = date('m/Y');
-    }
-    if (in_array($form['#id'], [
-      'views-exposed-form-events-page-3',
-      'views-exposed-form-events-week-block',
-    ])) {
-      [$start_of_week, $end_of_week] = nys_dashboard_get_date('week');
-      if (isset($form['date_wrapper'])) {
-        $form['date'] = $form['date_wrapper']['date_wrapper']['date'];
-        unset($form['date_wrapper']);
-      }
-      $form['date']['min']['#date_format'] = 'm/d/Y';
-      $form['date']['max']['#date_format'] = 'm/d/Y';
-      $form['date']['min']['#default_value'] = $start_of_week;
-      $form['date']['max']['#default_value'] = $end_of_week;
-      $form['date']['min']['#description'] = 'E.g., ' . date('m/d/Y');
-      $form['date']['max']['#description'] = 'E.g., ' . date('m/d/Y');
-      $form['date']['min']['#placeholder'] = $start_of_week;
-      $form['date']['max']['#placeholder'] = $end_of_week;
-      $form['date']['min']['#title'] = [];
-      $form['date']['max']['#title'] = [];
-      $form['date']['max']['#access'] = FALSE;
+  $data['node__field_issues']['your_issues_filter'] = [
+    'title' => t('Filter followed issues'),
+    'filter' => [
+      'title' => t('Filter followed issues'),
+      'help' => t("Custom NYS filter based on current user's followed issues."),
+      'group' => t('Content'),
+      'field' => 'field_issues_target_id',
+      'id' => 'your_issues_filter',
+    ],
+  ];
+  return $data;
+}
+
+/**
+ * Implements hook_form_views_exposed_form_alter().
+ */
+function nys_dashboard_form_views_exposed_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if ($form['#id'] === 'views-exposed-form-my-dashboard-main') {
+    // Manually set exposed field order due to items_per_page UI limitations.
+    $field_order = [
+      'search',
+      'type',
+      'your_issues_filter',
+      'year_month_filter',
+      'year_month_filter__month',
+      'items_per_page',
+      'your_senator_filter',
+    ];
+    foreach ($field_order as $key => $field) {
+      $form[$field]['#weight'] = $key;
     }
   }
+}
+
+/**
+ * Implements hook_preprocess_page().
+ */
+function nys_dashboard_preprocess_page(&$variables) {
+  // Setup variables for top nav dashboard menu.
+  $user_storage = \Drupal::entityTypeManager()->getStorage('user');
+  $user = $user_storage->load(\Drupal::currentUser()->id());
+  $variables['user_first_name'] = $user?->field_first_name?->value ?? 'Guest';
+  $variables['dashboard_link'] = '/dashboard';
+  $variables['manage_dashboard_link'] = '/dashboard/manage';
+  $variables['edit_account_link'] = '/dashboard/edit';
+
+  // Attach full width library to dashboard.
+  $request_uri = \Drupal::request()->getRequestUri();
+  if (str_starts_with($request_uri, '/dashboard')) {
+    $variables['#attached']['library'][] = 'nysenate_theme/full-width-main';
+    $variables['actionbar']['type'] = 'disabled';
+  }
+}
+
+/**
+ * Implements hook_preprocess_node().
+ */
+function nys_dashboard_preprocess_node(&$variables) {
+  if ($variables['view_mode'] !== 'my_dashboard_teaser') {
+    return;
+  }
+
+  // Provide bill milestone information to my dashboard teasers.
+  if ($variables['node']->getType() === 'bill') {
+    /** @var \Drupal\nys_bills\BillsHelper $bills_helper_service */
+    $bills_helper_service = \Drupal::service('nys_bill.bills_helper');
+    $variables['positions'] = $bills_helper_service->calculateMilestones(
+      $bills_helper_service->resolveBillSubstitution($variables['node'])
+    );
+  }
+
+  // Provide senator microsite link to my dashboard teasers.
+  if (
+    !empty($variables['node']->field_senator_multiref->target_id)
+    || !empty($variables['node']->field_ol_sponsor->target_id)
+  ) {
+    $senator_term_id = !empty($variables['node']->field_senator_multiref->target_id)
+      ? $variables['node']->field_senator_multiref->target_id
+      : $variables['node']->field_ol_sponsor->target_id;
+    $senator_term = \Drupal::entityTypeManager()
+      ->getStorage('taxonomy_term')
+      ->load($senator_term_id);
+    /** @var \Drupal\nys_senators\Service\Microsites $microsites_service */
+    $microsites_service = \Drupal::service('nys_senators.microsites');
+    $variables['senator_microsite_url'] = $microsites_service->getMicrosite($senator_term);
+  }
+}
+
+/**
+ * Implements hook_preprocess_views_view__VIEW_ID().
+ */
+function nys_dashboard_preprocess_views_view__my_dashboard(&$variables) {
+  $variables['#attached']['library'][] = 'nysenate_theme/my-dashboard';
+}
+
+/**
+ * Implements hook_preprocess_views_view__VIEW_ID().
+ */
+function nys_dashboard_preprocess_views_view__updates_from_my_senator(&$variables) {
+  $variables['#attached']['library'][] = 'nysenate_theme/nysenate-updates-from-my-senator';
+}
+
+/**
+ * Implements hook_views_pre_build().
+ */
+function nys_dashboard_views_pre_build(ViewExecutable $view) {
+  if ($view->id() == 'my_senator') {
+    $current_user_district_tid = \Drupal::entityTypeManager()
+      ->getStorage('user')
+      ->load(\Drupal::currentUser()->id())
+      ?->field_district
+      ?->entity
+      ?->id();
+    $view->setArguments(["$current_user_district_tid"]);
+  }
+}
+
+/**
+ * Implements hook_entity_type_build().
+ */
+function nys_dashboard_entity_type_build(array &$entity_types) {
+  $entity_types['user']->setFormClass('edit_account', 'Drupal\nys_dashboard\Form\EditAccountForm');
 }

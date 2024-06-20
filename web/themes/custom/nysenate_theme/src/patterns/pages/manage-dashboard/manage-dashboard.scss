@@ -1,0 +1,278 @@
+@import '../../global/utils/breakpoints';
+@import '../../global/colors/colors';
+@import '../../global/fonts/fonts';
+@import '../../global/utils/typography';
+
+// Manage Dashboard form styling.
+form.nys-dashboard-manage-dashboard {
+  margin-bottom: 40px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid $dash_grey_1;
+
+  @include breakpoint($bp-under-md) {
+    margin: 0 10px 60px;
+  }
+
+  .form-item-type-filter {
+    width: 240px;
+    margin: 10px 0 0;
+
+    label {
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    #edit-type-filter {
+      margin-bottom: 20px;
+    }
+  }
+
+  #followed-types-fieldset-wrapper {
+    clear: both;
+
+    & > fieldset.form-wrapper {
+      border: none;
+      margin: 0;
+      padding: 0;
+
+      h2 {
+        font-family: $font-serif-bold;
+        font-size: 22px;
+        line-height: 29px;
+        margin: 20px 0 0;
+
+        @include breakpoint($bp-under-sm) {
+          font-size: 16px;
+          line-height: 21px;
+        }
+      }
+
+      p {
+        font-family: $font-serif;
+        font-size: 16px;
+        line-height: 21px;
+        font-style: italic;
+        margin: 6px 0 0 0;
+
+        @include breakpoint($bp-under-sm) {
+          font-size: 14px;
+          line-height: 18px;
+        }
+
+        &.manage-dashboard--not-following {
+          color: $grey10;
+          font-family: $font-sans-bold;
+          font-size: 14px;
+          line-height: 17px;
+          font-style: normal;
+          margin-top: 10px;
+        }
+      }
+
+      a {
+        font-family: $font-sans;
+        color: $gen_blue_lgt;
+        text-decoration: underline;
+
+        &:hover {
+          text-decoration: none;
+        }
+      }
+
+      button.uncheck-all-button {
+        background: none;
+        border: none;
+        display: block;
+        clear: both;
+        font-size: 14px;
+        font-style: normal;
+        font-family: $font-sans;
+        color: $gen_blue_lgt;
+        font-weight: 700;
+        line-height: 40px;
+        padding: 0;
+        letter-spacing: 0.25px;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+
+      .form-checkboxes {
+        overflow: hidden;
+
+        .form-type-checkbox {
+          float: left;
+          margin: 4px;
+          background-color: $dash_grey_2;
+          position: relative;
+
+          label {
+            font-family: $font-sans-bold;
+            color: $gen_blue_lgt;
+            display: inline-block;
+            padding: 8px 8px 8px 31px;
+            margin: 0;
+            font-size: 14px;
+            line-height: 17px;
+            text-transform: none;
+          }
+
+          input {
+            accent-color: $gen_blue_lgt;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+          }
+        }
+      }
+    }
+  }
+
+  #edit-actions {
+    margin-top: 30px;
+
+    input {
+      font-weight: 700;
+      letter-spacing: 1px;
+      background-color: $gen_blue_lgt;
+      border: 2px solid $gen_blue_lgt;
+
+      &:hover {
+        color: $gen_blue_lgt;
+        background: white;
+      }
+    }
+
+    input:disabled {
+      cursor: default;
+      color: white;
+      background-color: $dash_grey_1;
+      border-color: $dash_grey_1;
+    }
+  }
+}
+
+// Manage dashboard confirmation modal.
+.page--dashboard-manage {
+  .ui-dialog {
+    background: white;
+    border-radius: 0;
+    border: 0;
+    text-align: center;
+    box-shadow: none;
+    z-index: 601;
+
+    &:not(.ui-dialog-off-canvas) {
+      background: white;
+      border-radius: 0;
+      border: 0;
+    }
+
+    .ui-dialog-titlebar {
+      margin: 50px 0 10px;
+      background-color: white;
+      padding: 0;
+      border: 0;
+
+      &:before {
+        content: "\edc2";
+        color: $dash_red;
+        width: 100%;
+        font-size: 34px;
+        font-family: "Phosphor-Fill" !important;
+        speak: never;
+        font-style: normal;
+        font-weight: normal;
+        font-variant: normal;
+        text-transform: none;
+        line-height: 1;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      .ui-dialog-title, .ui-dialog-titlebar-close {
+        display: none;
+      }
+    }
+
+    #drupal-modal {
+      padding-top: 0;
+      padding-bottom: 40px;
+
+      ul {
+        text-align: left;
+        margin: 20px 0 35px;
+        padding-left: 20px;
+
+        li {
+          font-size: 14px;
+        }
+      }
+
+      .button {
+        font-family: $font-sans-bold;
+        font-size: 12px;
+        padding: .5rem 1rem;
+        color: white;
+        line-height: 15px;
+        letter-spacing: 1px;
+        font-weight: 700;
+
+        &:hover {
+          background-color: white;
+        }
+      }
+
+      input.button {
+        background-color: $gen_blue_lgt;
+        border-color: $gen_blue_lgt;
+
+        &:hover {
+          color: $gen_blue_lgt;
+        }
+      }
+
+      a.button {
+        background-color: $grey08;
+        border-color: $grey08;
+
+        &:hover {
+          color: $grey08;
+        }
+      }
+    }
+
+    form.nys-dashboard-manage-dashboard {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+
+      h2 {
+        font-family: $font-serif-bold;
+        color: $grey10;
+        padding-bottom: 0;
+        font-size: 20px;
+        line-height: 27px;
+      }
+
+      p {
+        font-size: 14px;
+        line-height: 17px;
+        color: $grey10;
+        padding: 0 20px;
+        margin-top: 10px;
+      }
+
+      .form-submit {
+        margin-bottom: 20px;
+      }
+    }
+  }
+
+  .ui-widget-overlay {
+    opacity: .6;
+    background: black;
+    z-index: 600;
+  }
+}

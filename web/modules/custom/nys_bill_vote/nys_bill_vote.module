@@ -49,9 +49,17 @@ function nys_bill_vote_node_view_alter(array &$build, EntityInterface $entity, E
       'entity_type' => $entity->bundle(),
       'entity_id' => $entity->id(),
       'is_embed' => empty($route_node) || $route_node->id() !== $entity->id(),
+      'simple_mode' => FALSE,
     ];
 
     if ($display->getComponent('vote_widget')) {
+      $build['vote_widget'] = [
+        'form' => \Drupal::formBuilder()->getForm('Drupal\nys_bill_vote\Form\BillVoteWidgetForm', $bill_vote_form_settings),
+      ];
+    }
+
+    if ($display->getComponent('vote_widget_simple')) {
+      $bill_vote_form_settings['simple_mode'] = TRUE;
       $build['vote_widget'] = [
         'form' => \Drupal::formBuilder()->getForm('Drupal\nys_bill_vote\Form\BillVoteWidgetForm', $bill_vote_form_settings),
       ];
@@ -64,17 +72,17 @@ function nys_bill_vote_node_view_alter(array &$build, EntityInterface $entity, E
  */
 function nys_bill_vote_entity_extra_field_info() {
   $extra = [];
-
-  foreach (NodeType::loadMultiple() as $bundle) {
-    if ($bundle->id() == 'bill') {
-      $extra['node'][$bundle->id()]['display']['vote_widget'] = [
-        'label' => t('Vote Widget'),
-        'description' => t('Vote widget from nys_bill_vote'),
-        'weight' => 100,
-        'visible' => TRUE,
-      ];
-    }
-  }
-
+  $extra['node']['bill']['display']['vote_widget'] = [
+    'label' => t('Vote Widget'),
+    'description' => t('Vote widget from nys_bill_vote'),
+    'weight' => 100,
+    'visible' => TRUE,
+  ];
+  $extra['node']['bill']['display']['vote_widget_simple'] = [
+    'label' => t('Vote Widget Simple'),
+    'description' => t('Simple vote widget from nys_bill_vote'),
+    'weight' => 100,
+    'visible' => TRUE,
+  ];
   return $extra;
 }

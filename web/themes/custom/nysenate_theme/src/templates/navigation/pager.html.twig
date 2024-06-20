@@ -30,10 +30,13 @@
  * @see template_preprocess_pager()
  */
 #}
-
+{% if 'pager__my_dashboard__main' not in pager['#theme'] %}
 {%
   include '@nysenate_theme/pager/pager.twig' with {
     items: items,
     current: current
   } only
 %}
+{% else %}
+  {% include '@classy/templates/navigation/pager.html.twig' %}
+{% endif %}

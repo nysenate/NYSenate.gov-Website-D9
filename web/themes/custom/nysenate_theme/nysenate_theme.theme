@@ -5027,6 +5027,12 @@ function get_item_cta($node) {
  * Implements hook_preprocess_page().
  */
 function nysenate_theme_preprocess_node__microsite_page__full(&$variables) {
+  // Disable page caching, to ensure field_block modifications in
+  // nysenate_theme_preprocess_page__node__microsite_page always run.
+  // @todo reimplement field_block modifications and turn page caching back on.
+  $variables['#cache']['max-age'] = 0;
+  \Drupal::service('page_cache_kill_switch')->trigger();
+
   $node = \Drupal::routeMatch()->getParameter('node');
 
   if (!empty($node) && $node->hasField('field_microsite_page_type') &&

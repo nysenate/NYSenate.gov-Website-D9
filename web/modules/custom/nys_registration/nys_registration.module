@@ -7,6 +7,10 @@
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+use SendGrid\Mail\From;
+use SendGrid\Mail\Mail;
+use SendGrid\Mail\Personalization;
+use SendGrid\Mail\To;
 
 /**
  * Implements hook_entity_type_alter().
@@ -120,5 +124,56 @@ function nys_registration_user_login_form_submit($form, FormStateInterface $form
   }
   else {
     $form_state->setRedirectUrl(Url::fromUri($url));
+  }
+}
+
+/**
+ * Implements hook_mail_alter().
+ */
+function nys_registration_mail_alter(&$message) {
+  if ($message['key'] ?? '' === 'register_no_approval_required') {
+    // Build the \SendGrid\Mail\Mail object.
+    try {
+      $from_mail = $message['from'] ?? '';
+      $from = new From($from_mail, $from_mail);
+      $mail = new Mail($from);
+
+      // Set the SendGrid template ID.
+      // @todo replace with new template ID.
+      $mail->setTemplateId('5182d9b2-8670-41cb-9f65-5f671541907f');
+
+      // Add the email variables.
+      $personalization = new Personalization();
+      /** @var \Drupal\user\Entity\User $account */
+      $account = $message['params']['account'] ?? NULL;
+      $user_first_name = $account?->field_first_name?->value;
+      $user_reset_link = user_pass_reset_url($account);
+      // @todo replace with new vars.
+      $substitutions = [
+        '%bill.base_print%' => $user_first_name,
+        '%bill.session%' => $user_first_name,
+        '%bill.print_number%' => $user_first_name,
+        '%bill.chamber%' => $user_first_name,
+        '%bill.summary%' => $user_first_name,
+        '%bill.sponsor%' => $user_first_name,
+        '%confirm_url%' => $user_reset_link,
+      ];
+      foreach ($substitutions as $s_key => $s_val) {
+        $personalization->addSubstitution($s_key, $s_val);
+      }
+      $mail->addPersonalization($personalization);
+    }
+    catch (Throwable $e) {
+      \Drupal::messenger()
+        ->addError('There was an error sending the registration email. Please contact a site admin.');
+      \Drupal::logger('nys_registration')
+        ->error('Failed to build \SendGrid\Mail\Mail object for mail with key: register_no_approval_required.');
+      $message['send'] = FALSE;
+      return;
+    }
+
+    // Attach Mail object to $messages array, so that the email gets sent using
+    // SendGrid template.
+    $message['params']['sendgrid_mail'] = $mail;
   }
 }

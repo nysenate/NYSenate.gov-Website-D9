@@ -73,10 +73,17 @@ class MicrositeLinkFormatter extends UriLinkFormatter {
       throw new ContextException('The microsite_link format may only be applied to a Senator taxonomy term');
     }
 
+    try {
+      $url = Url::fromUri($this->helper->getMicrositeUrl($entity));
+    }
+    catch (\Throwable) {
+      $url = '';
+    }
+
     return [
       0 => [
         '#type' => 'link',
-        '#url' => Url::fromUri($this->helper->getMicrositeUrl($entity)),
+        '#url' => $url,
         '#title' => $entity->getName(),
         '#attributes' => ['class' => ['microsite-link']],
       ],

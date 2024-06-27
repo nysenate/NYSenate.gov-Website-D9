@@ -228,7 +228,7 @@ class Microsites {
         $senator_id = $page->field_senator_multiref->entity->id() ?? 0;
         $url_options = [
           'absolute' => TRUE,
-          'base_url' => $this->request->getBaseUrl(),
+          'base_url' => $this->request->getSchemeAndHttpHost(),
         ];
         $url = $page->toUrl('canonical', $url_options)->toString();
       }
@@ -240,14 +240,6 @@ class Microsites {
         $urls[$senator_id] = $url;
       }
     }
-
-    // Save to cache.
-    $this->cache->set(
-          static::CACHE_NAME_MICROSITES,
-          $urls,
-          $this->cache::CACHE_PERMANENT,
-          ['node_list:microsite_page', 'taxonomy_term_list:senator']
-      );
 
     return $urls;
   }

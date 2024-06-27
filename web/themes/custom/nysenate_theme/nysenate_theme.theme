@@ -2919,11 +2919,11 @@ function nysenate_theme_preprocess_field__node__field_block(&$variables) {
   // Remove microsite_hero and senator_microsite_menu blocks from field
   // rendering, as these blocks are rendered directly through
   // page--node--microsite-page.html.twig
-  foreach ($variables['items'] ?? [] as $key => $item) {
-    $block_types = [
-      'microsite_hero',
-      'senator_microsite_menu',
-    ];
+  $block_types = [
+    'microsite_hero',
+    'senator_microsite_menu',
+  ];
+  foreach (($variables['items'] ?? []) as $key => $item) {
     /** @var \Drupal\block_content\Entity\BlockContent $block_content */
     $block_content = ($item['content']['#block_content'] ?? []);
     if ($block_content instanceof BlockContent) {

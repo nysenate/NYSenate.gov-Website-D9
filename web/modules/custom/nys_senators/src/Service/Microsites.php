@@ -6,6 +6,8 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\taxonomy\Entity\Term;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Provides access to the microsite themes defined in CSS.
@@ -69,12 +71,25 @@ class Microsites {
   protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
+   * Symphony's Request object.
+   *
+   * @var \Symfony\Component\HttpFoundation\Request
+   */
+  protected Request $request;
+
+  /**
    * Constructor.
    */
-  public function __construct(EntityTypeManagerInterface $entityTypeManager, CacheBackendInterface $cache, ThemeHandlerInterface $theme) {
+  public function __construct(
+    EntityTypeManagerInterface $entityTypeManager,
+    CacheBackendInterface $cache,
+    ThemeHandlerInterface $theme,
+    RequestStack $requestStack,
+  ) {
     $this->cache = $cache;
     $this->theme = $theme;
     $this->entityTypeManager = $entityTypeManager;
+    $this->request = $requestStack->getCurrentRequest();
   }
 
   /**
@@ -211,7 +226,11 @@ class Microsites {
     foreach ($pages as $page) {
       try {
         $senator_id = $page->field_senator_multiref->entity->id() ?? 0;
-        $url = $page->toUrl('canonical', ['absolute' => TRUE])->toString();
+        $url_options = [
+          'absolute' => TRUE,
+          'base_url' => $this->request->getBaseUrl(),
+        ];
+        $url = $page->toUrl('canonical', $url_options)->toString();
       }
       catch (\Throwable) {
         $senator_id = 0;

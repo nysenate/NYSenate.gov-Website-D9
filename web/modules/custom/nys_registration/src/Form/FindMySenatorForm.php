@@ -2,21 +2,34 @@
 
 namespace Drupal\nys_registration\Form;
 
-use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
-use Drupal\file\Entity\File;
-use Drupal\media\Entity\Media;
 use Drupal\nys_registration\RegistrationHelper;
 use Drupal\nys_senators\SenatorsHelper;
+use Drupal\taxonomy\Entity\Term;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Form for "Find My Senator" functionality.
  */
 class FindMySenatorForm extends FormBase {
+
+  /**
+   * List of address fields to include in the variable going to Twig.
+   *
+   * @var array
+   */
+  private array $twigFields = [
+    'address_line1',
+    'address_line2',
+    'locality',
+    'administrative_area',
+    'postal_code',
+  ];
 
   /**
    * NYS Registration Helper service.
@@ -33,7 +46,7 @@ class FindMySenatorForm extends FormBase {
   protected SenatorsHelper $senatorsHelper;
 
   /**
-   * Default object for messenger serivce.
+   * Default object for messenger service.
    *
    * @var \Drupal\Core\Messenger\MessengerInterface
    */
@@ -44,7 +57,21 @@ class FindMySenatorForm extends FormBase {
    *
    * @var \Drupal\Core\TempStore\PrivateTempStoreFactory
    */
-  protected $tempStoreFactory;
+  protected PrivateTempStoreFactory $tempStoreFactory;
+
+  /**
+   * Log facility for nys_registration.
+   *
+   * @var \Psr\Log\LoggerInterface
+   */
+  protected LoggerInterface $logger;
+
+  /**
+   * Drupal's Entity Type Manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
    * Constructor for service injection.
@@ -53,12 +80,15 @@ class FindMySenatorForm extends FormBase {
     RegistrationHelper $helper,
     SenatorsHelper $senatorsHelper,
     MessengerInterface $messenger,
-    PrivateTempStoreFactory $tempStoreFactory
+    PrivateTempStoreFactory $tempStoreFactory,
+    EntityTypeManagerInterface $entityTypeManager,
   ) {
     $this->helper = $helper;
     $this->senatorsHelper = $senatorsHelper;
     $this->messenger = $messenger;
     $this->tempStoreFactory = $tempStoreFactory;
+    $this->entityTypeManager = $entityTypeManager;
+    $this->logger = $this->getLogger('nys_find_my_senator');
   }
 
   /**
@@ -69,7 +99,8 @@ class FindMySenatorForm extends FormBase {
       $container->get('nys_registration.helper'),
       $container->get('nys_senators.senators_helper'),
       $container->get('messenger'),
-      $container->get('tempstore.private')
+      $container->get('tempstore.private'),
+      $container->get('entity_type.manager')
     );
   }
 
@@ -103,6 +134,7 @@ class FindMySenatorForm extends FormBase {
       '#field_overrides' => [
         'addressLine1' => 'required',
         'addressLine2' => 'optional',
+        'addressLine3' => 'hidden',
         'administrativeArea' => 'required',
         'locality' => 'required',
         'postalCode' => 'required',
@@ -122,15 +154,26 @@ class FindMySenatorForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state): array {
     // Initialize the form and result.
-    $title = $this->getRouteMatch()->getRouteObject()->getDefault('_title');
+    // @todo The explicit title is required because of custom code.
+    // Something in our custom theme or modules is disabling the internal title
+    // block normally created by Drupal.  Once that is found and killed, the
+    // title field found here can be removed.
+    $title = $this->getRouteMatch()?->getRouteObject()?->getDefault('_title')
+      ?? "Find My Senator";
     $form = [
+      '#prefix' => '<div class="c-find-my-senator">',
+      // '#prefix' => '<div class="c-login"><div class="c-find-my-senator">',
+      '#suffix' => '</div>',
+      '#attached' => [
+        'library' => ['nys_registration/find_my_senator'],
+      ],
       'title' => [
         '#markup' => '<h2 class="nys-title">' . $title . '</h2>',
         '#weight' => 1,
       ],
       'intro' => [
         '#markup' => '<p>Please enter your street address and zip code to find out who your Senator is.</p>',
-        '#weight' => 10,
+        '#weight' => 50,
       ],
       'field_address' => $this->getAddressDefinition(),
       'submit' => [
@@ -138,121 +181,36 @@ class FindMySenatorForm extends FormBase {
         '#value' => 'Find My Senator',
         '#weight' => 60,
       ],
-      'result' => ['#markup' => '', '#weight' => 100],
+      // 'result' => ['#markup' => '', '#weight' => 100],
     ];
-    $form['#attached']['library'][] = 'nysenate_theme/nysenate-user-profile';
-    $form['#prefix'] = '<div class="c-login"><div class="c-find-my-senator">';
-    $form['#suffix'] = '</div></div>';
 
     if ($form_state->isSubmitted()) {
-      $district = $form_state->get('district');
-
-      if ($district) {
-        // Set Senator and District markup.
-        $party = [];
-        $address = $form_state->getValue('field_address') ?? [];
-        $district_term = $form_state->get('district_term');
-        $district_map = $district_term->get('field_map_url')->value;
-        $senator_term = $district_term ? $district_term->get('field_senator')->entity : 0;
-        $senator_name = $senator_term->get('field_senator_name')->getValue();
-        $senator_name = $senator_name[0]['given'] . ' ' . $senator_name[0]['family'];
-        $mid = $senator_term->get('field_member_headshot')->target_id;
-        $media = Media::load($mid);
-        $fid = $media->get('field_image')->target_id;
-        $file = File::load($fid);
-        $image = empty($file) ?
-          '/themes/custom/nysenate_theme/src/assets/default-avatar.png' :
-          \Drupal::service('file_url_generator')
-            ->generateAbsoluteString($file->getFileUri());
-
-        $parties = $this->senatorsHelper->getPartyNames($senator_term);
-        foreach ($parties as $value) {
-          $party[] = $value;
-        }
-
-        // Senator microsite link.
-        $senator_link = \Drupal::service('nys_senators.microsites')
-          ->getMicrosite($senator_term);
-
-        // Create Account message markup.
-        $create_message = '';
-        if (!\Drupal::currentUser()->isAuthenticated()) {
-          $create_message = '
-            <div class="row">
-              <div class="columns large-12">
-                <h2 class="c-container--title">Connect</h2>
-                <hr/>
-                <p>
-                  <a class="c-find-my-senator--senator-link" href="/user/register">
-                    Create an account
-                  </a>
-                  on nysenate.gov so you can share your thoughts and feedback with
-                  your senator.
-                </p>
-              </div>
-          </div>';
-        }
-
-        $form['#attached']['library'][] = 'nysenate_theme/nysenate-user-profile';
-        $form['result']['#markup'] = new FormattableMarkup('
-          <div class="c-find-my-senator--results">
-            <div class="row c-find-my-senator--row">
-              <div class="columns medium-6 l-padded-column">
-                <h2 class="c-container--title">Your Senator</h2>
-                <hr class="c-find-my-senator--divider"/>
-                <img class="c-find-my-senator--senator-img" src="' . $image . '"/>
-                <div class="c-find-my-senator--district-info">
-                  <p>
-                    <a class="c-find-my-senator--senator-link" href="' . $senator_link . '">
-                       ' . $senator_name . '
-                    </a>
-                  </p>
-                  <p>NY Senate District ' . $district . '</p>
-                </div>
-                <div>
-                  <p class="c-login-create">
-                    <a class="c-msg-senator icon-before__contact" href="' . $senator_link . '/contact">
-                      Message Senator
-                    </a>
-                  </p>
-                </div>
-              </div>
-              <div class="columns medium-6 r-padded-column">
-                <h2 class="c-container--title">Matched Address</h2>
-                <hr class="c-find-my-senator--divider"/>
-                <p class="c-find-my-senator--address-line">
-                  ' . $address['address_line1'] . '
-                </p>
-                <p class="c-find-my-senator--address-line">
-                  ' . $address['locality'] . ', ' . $address['administrative_area'] . ' ' .
-                  $address['postal_code'] . '
-                </p>
-              </div>
-            </div>
-            ' . $create_message . '
-            <div class="row c-find-my-senator--row">
-              <div class="columns large-12">
-                <h2 class="c-container--title">Senate District Map</h2>
-                <hr class="c-find-my-senator--divider"/>
-                <iframe class="c-find-my-senator--map-frame" src="' . $district_map . '">
-                </iframe>
-              </div>
-            </div>
-          </div>',
-          []
-        );
-        $form['result']['#weight'] = 9;
+      // Normalize the address fields.
+      $submitted = $form_state->getValue('field_address') ?? [];
+      $address = [];
+      foreach ($this->twigFields as $field) {
+        $address[$field] = $submitted[$field] ?? '';
       }
-      else {
-        // Set error message.
-        $form['result']['#markup'] = '
-          <div class="c-find-my-senator--results">
-            <p>Sorry we couldn\'t find a matching senate district based on the address you provided. Please
-              check the address and try again.
-            </p>
-          </div>';
-        $form['result']['#weight'] = 9;
-      }
+
+      // Set up the senator's card.
+      $district_term = $form_state->get('district_term');
+      $senator_term = $district_term?->field_senator?->entity ?? NULL;
+      $senator = ($senator_term instanceof Term)
+        ? $this->entityTypeManager->getViewBuilder('taxonomy_term')
+          ->view($senator_term, 'senator_search_list')
+        : NULL;
+      $district = $this->entityTypeManager->getViewBuilder('taxonomy_term')
+        ->view($district_term, 'matched_district');
+      $form['result'] = [
+        '#theme' => 'nys_find_my_senator',
+        '#address' => $address,
+        '#district' => $district,
+        '#district_term' => $district_term,
+        '#map_url' => $district_term->field_map_url->value ?? '',
+        '#senator' => $senator,
+        '#is_anonymous' => $this->currentUser()->isAnonymous(),
+        '#weight' => 30,
+      ];
     }
 
     return $form;
@@ -268,19 +226,21 @@ class FindMySenatorForm extends FormBase {
   /**
    * {@inheritDoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
     $address = $form_state->getValue('field_address') ?? [];
 
     // Save input address to current session for later reuse.
-    $tempstore = $this->tempStoreFactory->get('nys_registration');
-    $tempstore->set('find_my_senator_address', $address);
+    try {
+      $this->tempStoreFactory->get('nys_registration')
+        ->set('find_my_senator_address', $address);
+    }
+    catch (\Throwable $e) {
+      // Do nothing.  The only side effect is that the form will not be auto-
+      // populated with the previously submitted address.  Oh well.
+    }
 
-    $district_term = $this->helper->getDistrictFromAddress($address);
-    $district_num = $district_term ? $district_term->field_district_number->value : 0;
-    $form_state->set('district_term', $district_term)
-      ->set('district', $district_num)
-      ->set('district_success', (bool) $district_num);
-    $form_state->setRebuild();
+    $form_state->set('district_term', $this->helper->getDistrictFromAddress($address))
+      ->setRebuild();
   }
 
 }

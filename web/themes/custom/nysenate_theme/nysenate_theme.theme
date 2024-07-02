@@ -3145,6 +3145,14 @@ function nysenate_theme_preprocess_taxonomy_term__senator__sponsor_list_bill_det
 /**
  * Implements hook_preprocess_taxonomy_term__TAXONOMY().
  */
+function nysenate_theme_preprocess_taxonomy_term__senator__find_my_senator(&$variables) {
+  $term = $variables['term'];
+  $variables['district'] = (int) get_senator_district($term->id());
+}
+
+/**
+ * Implements hook_preprocess_taxonomy_term__TAXONOMY().
+ */
 function nysenate_theme_preprocess_taxonomy_term__senator__senator_profile(&$variables) {
   $term = $variables['term'];
   if ($term) {

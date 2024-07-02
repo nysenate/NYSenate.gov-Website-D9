@@ -25,10 +25,16 @@
 #}
 
 {{ attach_library('nysenate_theme/district') }}
-
-{# vardumper(content.field_senator.0['#taxonomy_term']) #}
-
-<div class="c-find-my-senator">
-    <h2 class="c-container--title">Your Senator</h2>
-    <div class="nys-title nys-title--district">{{ content.field_senator }}</div>
+<div class="c-find-my-senator--senator">
+    <div class="c-find-my-senator--senator-img">
+        {{ content.field_member_headshot }}
+    </div>
+    <div class="c-find-my-senator--senator-info">
+        {{ content.field_senator_name }}
+        <div class="c-find-my-senator--senator-info--district">NY Senate District {{ district }}</div>
+        <a class="c-msg-senator icon-before__contact" href="{{ content.field_senator_name.0['#url'].uri }}/contact">
+            Message Senator
+        </a>
+    </div>
 </div>
+

@@ -31,10 +31,9 @@
       </p>
     </div>
   {% endif %}
-  Headshot target id: {{ district_term.field_senator.entity.field_member_headshot.target_id }}
+
   <div class="senator-and-address-container">
     <div class="senator-card">
-      <h2 class="c-container--title">Your District</h2>
       <div class="found-senator">{{ district }}</div>
     </div>
     <div class="matched-address">
@@ -47,15 +46,18 @@
       {% endif %}
       {% endfor %}
     </div>
+    {#
     {% if senator %}
     <div class="matched_senator">
       <h2 class="c-container--title">Your Senator</h2>
       {{ senator }}
     </div>
     {% endif %}
+    #}
   </div>
 
   {% if map_url %}
+    <h2 class="c-container--title">Senate District Map</h2>
   <iframe class="c-find-my-senator--map-frame" src="{{ map_url }}">
   </iframe>
     {% endif %}

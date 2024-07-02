@@ -1,0 +1,21 @@
+include:
+  # This include centralizes our CI "golden path" https://docs.gitlab.com/ee/ci/yaml/#includefile
+  - remote: https://git.drupalcode.org/project/gitlab_templates/-/raw/default-ref/includes/include.drupalci.main.yml
+  - remote: https://git.drupalcode.org/project/gitlab_templates/-/raw/default-ref/includes/include.drupalci.variables.yml
+  - remote: https://git.drupalcode.org/project/gitlab_templates/-/raw/default-ref/includes/include.drupalci.workflows.yml
+
+# Start custom overrides.
+
+variables:
+  SKIP_CSPELL: 1
+  # Show more log output
+  _PHPUNIT_EXTRA: --verbose
+  # Convenient, and we have no secrets.
+  _SHOW_ENVIRONMENT_VARIABLES: 1
+
+phpcs:
+  allow_failure: false
+eslint:
+  allow_failure: false
+stylelint:
+  allow_failure: false

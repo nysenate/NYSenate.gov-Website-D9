@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * @file
+ * The install file of the transliterate_filenames module.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function transliterate_filenames_requirements($phase) {
+  $requirements = [];
+  // If we are not in runtime phase, there is nothing to do. So bail out early.
+  if ($phase !== 'runtime') {
+    return [];
+  }
+
+  // This module is deprecated for Drupal ^10.2.0:
+  if (version_compare(\Drupal::VERSION, '10.2.0', '>=')) {
+    $requirements['transliterate_filenames'] = [
+      'title' => t('Transliterate Filenames for Uploads is obsolete'),
+      'severity' => REQUIREMENT_WARNING,
+      'description' => t('The "Transliterate Filenames for Uploads" module is obsolete with Drupal core >= 10.2. All features of this module are now in core. See <a href="@link" target="_blank">here</a> for further information.', ['@link' => 'https://www.drupal.org/node/2972665']),
+    ];
+  }
+  return $requirements;
+}

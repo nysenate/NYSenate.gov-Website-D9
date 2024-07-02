@@ -1,0 +1,18 @@
+{{ attach_library('nysenate_theme/nysenate-senate-directory') }}
+
+<div class="c-block c-container c-senate-directory--container">
+  <h3 class="c-container--title">{{ title }}</h3>
+  {% if patternlab %}
+    <div class="c-senate-directory">
+    {% for directory in directories %}
+      <div class="l-col l-col-2 c-directory--section c-directory--members">
+        <h4 class="c-directory--title">{{ directory.title }}</h4>
+        <a href="{{ directory.cta.url }}" class="c-directory--link c-download--link  c-view--link" target="_blank">{{ directory.cta.text }}</a>
+      </div>
+    {% endfor %}
+    </div>
+  {% elseif content %}
+    {{ content|raw }}
+  {% endif %}
+  <div id="committees-pre"></div>
+</div>

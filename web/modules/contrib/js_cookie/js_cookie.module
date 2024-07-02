@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * @file
+ * Hooks for the JavaScript Cookie library module.
+ */
+
+/**
+ * Implements hook_library_info_alter().
+ */
+function js_cookie_library_info_alter(array &$libraries, $extension) {
+  if ($extension === 'js_cookie' && is_dir(DRUPAL_ROOT . '/libraries/js-cookie/dist')) {
+    unset($libraries['js-cookie']['js']);
+    unset($libraries['js-cookie']['version']);
+    $libraries['js-cookie']['js']['/libraries/js-cookie/dist/js.cookie.min.js'] = ['minified' => TRUE];
+  }
+}

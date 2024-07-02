@@ -1,0 +1,30 @@
+views.pager.load_more:
+  type: views.pager.full
+  label: 'Load more pager'
+  mapping:
+    more_button_text:
+      type: label
+      label: 'Load more text'
+    end_text:
+      type: label
+      label: 'Finished text'
+    advanced:
+      type: mapping
+      label: 'Advanced Options'
+      mapping:
+        content_selector:
+          type: string
+          label: 'Content selector'
+        pager_selector:
+          type: string
+          label: 'Pager selector'
+    effects:
+      type: mapping
+      label: 'JQuery Effects'
+      mapping:
+        type:
+          type: string
+          label: 'Effect Type'
+        speed:
+          type: string
+          label: 'Effect Speed'

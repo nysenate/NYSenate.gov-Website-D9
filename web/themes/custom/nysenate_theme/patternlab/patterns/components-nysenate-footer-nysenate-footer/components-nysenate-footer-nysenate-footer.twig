@@ -1,0 +1,65 @@
+{{ attach_library('nysenate_theme/nysenate-footer') }}
+{% import '@rain_theme/icons/_icons-macro.twig' as icons %}
+
+<footer class="l-footer" role="contentinfo">
+	<div id="footer-first">
+		<div class="panel-pane pane-block pane-nys-blocks-sitewide-footer">
+
+
+			<div class="pane-content">
+				<section class="c-senator-footer">
+					<div class="l-row">
+						<div class="c-senator-footer-col c-senator-footer-col__home">
+							<a title="nysenate.gov" href="{{ site_branding.link }}">
+								<span class="lgt-text icon-before__left">{{ site_branding.text }}</span>
+								{{ site_branding.img }}
+							</a>
+						</div>
+
+						<div class="c-senator-footer-col c-senator-footer-col__nav">
+							<nav>
+								<ul>
+									{% for menu_item in menu_items %}
+										<li class="{% if loop.first %}first {% endif %}leaf">
+											<a class="lgt-text" href="{{ menu_item.url }}">{{ menu_item.title }}</a>
+										</li>
+									{% endfor %}
+								</ul>
+							</nav>
+						</div>
+
+						<div class="c-senator-footer-col c-senator-footer-col__social">
+							<p class="c-senator-footer-caption">Follow the New York Senate</p>
+							<ul>
+								{% for social in socials %}
+									<li class="{% if loop.first %}first {% endif %}leaf">
+										<a href="{{ social.url }}" target="_blank">{{ icons.get(social.icon) }}</a>
+									</li>
+								{% endfor %}
+							</ul>
+						</div>
+
+					</div>
+				</section>
+			</div>
+
+
+		</div>
+		<div class="panel-separator"></div>
+		<div class="panel-pane pane-block pane-menu-menu-global-footer c-site-footer">
+
+
+			<div class="pane-content">
+				<ul class="menu">
+					{% for policy in policies %}
+						<li class="{% if loop.first %}first {% endif %}leaf">
+							<a href="{{ policy.link }}">{{ policy.text }}</a>
+						</li>
+					{% endfor %}
+				</ul>
+			</div>
+
+
+		</div>
+	</div>
+</footer>

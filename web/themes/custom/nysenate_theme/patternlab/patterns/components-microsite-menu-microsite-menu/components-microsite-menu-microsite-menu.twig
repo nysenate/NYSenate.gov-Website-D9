@@ -1,0 +1,53 @@
+{{ attach_library('nysenate_theme/nysenate-header') }}
+{{ attach_library('nysenate_theme/microsite-menu') }}
+
+<div class="c-nav--wrap c-senator-nav--wrap">
+  <div class="c-nav c-senator-nav l-row l-row--nav">
+
+    <nav>
+
+      <ul class="c-nav--list c-senator-nav--list">
+        {% for link in links %}
+          <li class="{% if loop.first %}first {% elseif loop.last %} last {% endif %}leaf">
+            <a href="{{ link.url }}">{{ link.text }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+
+      <div class="u-mobile-only">
+        {{ form }}
+        <div>
+          <a class="c-site-search--link icon-after__right u-tablet-plus" href="{{ search.link.href }}">{{ search.link.text }}</a>
+        </div>
+      </div>
+
+      <button class="js-search--toggle u-tablet-plus c-site-search--btn icon-replace__search">search</button>
+
+      {% if socials %}
+        <ul class="c-nav--social u-mobile-only">
+          {% for social in socials %}
+            <li class="{% if loop.first %}first {% endif %}leaf">
+              <a href="{{ social.url }}" target="_blank">{{ icons.get(social.icon) }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+
+
+      <div class="c-mobile-login--list u-mobile-only">
+        <span class="c-header--btn c-header--btn-login icon-before__recruit-friends">
+          <a href="/user/login">login</a>
+        </span>
+      </div>
+
+
+    </nav>
+  </div>
+
+  <div class="u-tablet-plus c-site-search--container">
+    <div>
+      {{ form }}
+    </div>
+    <a class="c-site-search--link icon-after__right u-tablet-plus" href="{{ search.link.href }}">{{ search.link.text }}</a>
+  </div>
+</div>

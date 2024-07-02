@@ -1,0 +1,14 @@
+paragraphs_features_split_paragraph:
+  ckeditor5:
+    plugins:
+      - split_paragraph.SplitParagraph
+  drupal:
+    label: Split paragraph
+    library: paragraphs_features/splitParagraph
+    admin_library: paragraphs_features/splitParagraph.admin
+    toolbar_items:
+      splitParagraph:
+        label: Split paragraph
+    elements:
+      - <p>
+      - <div>

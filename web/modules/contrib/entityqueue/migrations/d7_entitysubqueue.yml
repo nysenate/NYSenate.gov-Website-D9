@@ -1,0 +1,20 @@
+id: d7_entitysubqueue
+label: Entitysubqueues
+migration_tags:
+  - Drupal 7
+  - Content
+deriver: Drupal\entityqueue\Plugin\migrate\D7EntitysubqueueDeriver
+source:
+  plugin: d7_entitysubqueue
+process:
+  name: name
+  queue: queue
+  langcode: language
+  uid: uid
+  title: label
+  items: items
+destination:
+  plugin: 'entity:entity_subqueue'
+migration_dependencies:
+  required:
+    - d7_entityqueue

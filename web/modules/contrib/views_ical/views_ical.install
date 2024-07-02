@@ -1,0 +1,9 @@
+<?php
+
+/**
+ * Implements hook_uninstall().
+ */
+function views_ical_uninstall() {
+  \Drupal::configFactory()->getEditable('core.date_format.views_ical')->delete();
+//  \Drupal::configFactory()->getEditable('core.date_format')->clear('views_ical')->delete();
+}

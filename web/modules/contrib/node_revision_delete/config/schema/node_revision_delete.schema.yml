@@ -1,0 +1,25 @@
+node_revision_delete.settings:
+  type: config_object
+  label: 'Node Revision Delete settings'
+  mapping:
+    defaults:
+      type: sequence
+      label: 'Default node revision delete plugin settings'
+      orderby: key
+      sequence:
+        type: plugin.plugin_configuration.node_revision_delete.[%key]
+        label: 'The configuration for the plugin'
+    disable_automatic_queueing:
+      type: boolean
+      label: 'Disable automatic queueing'
+    verbose_log:
+      type: boolean
+      label: 'Generates a log of deleted nodes'
+
+node.type.*.third_party.node_revision_delete:
+  type: sequence
+  label: 'Per-content type node revision delete plugin settings'
+  orderby: key
+  sequence:
+    type: plugin.plugin_configuration.node_revision_delete.[%key]
+    label: 'The configuration for the plugin'

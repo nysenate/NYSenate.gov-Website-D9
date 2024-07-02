@@ -1,0 +1,92 @@
+<?php
+
+/**
+ * @file
+ * Records a history of the site's user logins.
+ */
+
+/**
+ * Implements hook_cron().
+ */
+function login_history_cron() {
+  // If user threshold is larger than 0 run per-user removal.
+  $user_count = \Drupal::config('login_history.settings')->get('keep_user');
+  if ($user_count > 0) {
+    // Get uids for all users with login history over the configured limit.
+    $query = \Drupal::database()->select('login_history', 'lh');
+    $query->addExpression('COUNT(uid)', 'uid_count');
+    $uids = $query
+      ->fields('lh', ['uid'])
+      ->having('uid_count > :count', [':count' => $user_count])
+      ->groupBy('uid')
+      ->execute()
+      ->fetchCol(0);
+
+    _login_history_remove_user_events($user_count, $uids);
+  }
+}
+
+/**
+ * Implements hook_user_login().
+ */
+function login_history_user_login($account) {
+  $request = \Drupal::request();
+  // Is this a one-time login?
+  $one_time = \Drupal::routeMatch()->getRouteName() === 'user.reset.login' ? 1 : 0;
+
+  // Limit user agent strings to 255 characters. For example, some versions of
+  // IE8 return long user agent strings causing an error upon login.
+  $user_agent = $request->server->get('HTTP_USER_AGENT');
+  if (strlen($user_agent) > 255) {
+    $user_agent = substr($user_agent, 0, 255);
+  }
+
+  // Now save the user's current login timestamp to login_history.
+  $uid = $account->id();
+  \Drupal::database()->insert('login_history')
+    ->fields([
+      'uid' => $uid,
+      'login' => $account->getLastLoginTime(),
+      'hostname' => $request->getClientIP(),
+      'one_time' => $one_time,
+      'user_agent' => $user_agent,
+    ])
+    ->execute();
+
+  // Cleanup login_history table over the configured limit.
+  $user_count = \Drupal::config('login_history.settings')->get('keep_user');
+  if ($user_count > 0) {
+    _login_history_remove_user_events($user_count, [$uid]);
+  }
+}
+
+/**
+ * Remove login histories over the threshold for the specified uids.
+ *
+ * @param int $user_count
+ *   Number of login histories to keep for each user.
+ * @param array $uids
+ *   Set of user IDs to process.
+ */
+function _login_history_remove_user_events($user_count, array $uids = []) {
+  $database = \Drupal::database();
+
+  // Remove extra login history events for each user.
+  foreach ($uids as $uid) {
+    // Get all logins by user.
+    $history = $database->select('login_history', 'lh')
+      ->fields('lh', ['login_id'])
+      ->condition('uid', $uid)
+      ->orderBy('login')
+      ->execute()
+      ->fetchAll();
+
+    $lh_count = count($history);
+    if ($lh_count > $user_count) {
+      $database->delete('login_history')
+        ->condition('uid', $uid)
+        ->condition('login_id', $history[$lh_count - $user_count]->login_id, '<')
+        ->execute();
+    }
+  }
+}

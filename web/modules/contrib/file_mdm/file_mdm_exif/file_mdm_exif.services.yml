@@ -1,0 +1,8 @@
+services:
+  _defaults:
+    autowire: true
+  Drupal\file_mdm_exif\ExifTagMapper:
+    arguments:
+      $logger: '@logger.channel.file_mdm'
+      $cache: '@cache.file_mdm'
+  Drupal\file_mdm_exif\ExifTagMapperInterface: '@Drupal\file_mdm_exif\ExifTagMapper'

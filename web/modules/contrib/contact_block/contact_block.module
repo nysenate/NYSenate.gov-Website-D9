@@ -1,0 +1,21 @@
+<?php
+
+/**
+ * @file
+ * File for module hooks.
+ */
+
+/**
+ * Implements hook_entity_type_alter().
+ *
+ * Register all the contact_message's form displays as class types.
+ */
+function contact_block_entity_type_alter(array &$entity_types) {
+  /** @var \Drupal\Core\Entity\EntityTypeInterface $entity_type */
+  $entity_type = $entity_types['contact_message'];
+  $form_modes = \Drupal::service('entity_display.repository')->getFormModes($entity_type->id());
+  foreach (array_keys($form_modes) as $machine_name) {
+    $class = $entity_type->getFormClass('default');
+    $entity_type->setFormClass($machine_name, $class);
+  }
+}

@@ -1,0 +1,17 @@
+oembed_providers.settings:
+  title: 'oEmbed Providers'
+  parent: system.admin_config_media
+  description: 'Configure oEmbed Providers'
+  route_name: oembed_providers.settings
+
+entity.oembed_provider.collection:
+  title: 'Custom oEmbed Providers'
+  parent: oembed_providers.settings
+  description: 'Manage custom oEmbed providers'
+  route_name: entity.oembed_provider.collection
+
+entity.oembed_provider_bucket.collection:
+  title: 'Provider Buckets'
+  parent: oembed_providers.settings
+  description: 'Manage provider buckets'
+  route_name: entity.oembed_provider_bucket.collection

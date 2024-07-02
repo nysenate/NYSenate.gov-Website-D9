@@ -1,0 +1,12 @@
+services:
+  security_review:
+    class: Drupal\security_review\SecurityReview
+    arguments: ['@config.factory', '@state', '@module_handler', '@current_user']
+
+  security_review.checklist:
+    class: Drupal\security_review\Checklist
+    arguments: ['@security_review', '@module_handler', '@current_user']
+
+  security_review.security:
+    class: Drupal\security_review\Security
+    arguments: ['@security_review', '@module_handler', '@config.factory', '@kernel']

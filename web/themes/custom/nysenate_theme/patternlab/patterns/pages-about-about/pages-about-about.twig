@@ -1,0 +1,111 @@
+{% include "@nysenate_theme/sticky-nav-2/sticky-nav-2.twig" with sticky_nav only %}
+
+<main role="main" class="l-row l-row--main l-main l-main--about">
+  <div class="large-12 <!--main columns-->">
+    {% if senate_chamber_visit_video %}
+      {{ senate_chamber_visit_video }}
+    {% endif %}
+
+    <div class="panel-pane pane-block pane-nys-blocks-about-quick-facts">
+
+      <div class="pane-content">
+        {% if quick_facts_block %}
+          {{ quick_facts_block }}
+        {% else %}
+          {% include "@nysenate_theme/quick-facts/quick-facts.twig" with quick_facts only %}
+        {% endif %}
+      </div>
+
+    </div>
+    <div class="panel-separator"></div>
+    <div class="panel-pane pane-block pane-nys-blocks-about-how-works">
+
+      <div class="pane-content">
+        <div id="section-2" class="c-block c-block--about c-block--full-bleed c-block--about-how text-layout text-layout--full-bleed text-layout--with-bg">
+          {% if how_senate_works_title %}
+            <h3 class="nys-subtitle-title">{{ how_senate_works_title }}</h3>
+          {% endif %}
+
+          {% if media %}
+            {% include "@nysenate_theme/media/media.twig" with media only %}
+          {% endif %}
+
+          {{ how_senate_works_text }}
+
+          {% if how_senate_works_block %}
+            {{ how_senate_works_block }}
+          {% else %}
+            {% include "@nysenate_theme/how-senate-works/how-senate-works.twig" with how_senate_works only %}
+          {% endif %}
+
+          {{ job_of_senate }}
+
+          {% include "@nysenate_theme/nysenate-about-rules/nysenate-about-rules.twig" with about_rules only %}
+
+          {% include "@nysenate_theme/nysenate-about-leadership/nysenate-about-leadership.twig" with about_leadership only %}
+        </div>
+      </div>
+
+    </div>
+    <div class="panel-separator"></div>
+    <div class="panel-pane pane-block pane-nys-blocks-about-map">
+
+      <div class="pane-content">
+        <div id="section-3" class="c-block c-block--about c-block--about-map">
+          {% if district_map_title %}
+            <h3 class="nys-subtitle-title">{{ district_map_title }}</h3>
+          {% endif %}
+          {% if district_map_embed %}
+            {{ district_map_embed }}
+          {% else %}
+            <div class="c-about-map-wrap">
+              <iframe src="//pubgeo.nysenate.gov/map/senate" width="100%" height="100%"></iframe>
+              <button class="u-mobile-only c-map--btn"></button>
+            </div>
+            <a class="nys-btn--gold u-mobile-only" href="//pubgeo.nysenate.gov/map/senate" target="_blank">view map</a>
+          {% endif %}
+        </div>
+      </div>
+
+    </div>
+    <div class="panel-separator"></div>
+    <div class="panel-pane pane-block pane-nys-blocks-about-seal">
+
+      <div id="section-4" class="pane-content">
+        {% include "@nysenate_theme/nysenate-about-senate-seal/nysenate-about-senate-seal.twig" with senate_seal only %}
+      </div>
+
+    </div>
+    <div class="panel-separator"></div>
+    <div class="panel-pane pane-block pane-nys-blocks-about-tour">
+
+      <div id="section-5" class="pane-content">
+        {% include "@nysenate_theme/nysenate-about-tour/nysenate-about-tour.twig" with about_tour only %}
+      </div>
+
+    </div>
+    <div class="panel-separator"></div>
+    <div class="panel-pane pane-block pane-nys-blocks-stdnt-prog-are-you">
+
+      <div id="section-6" class="pane-content">
+        {% include "@nysenate_theme/nysenate-student-programs/nysenate-student-programs.twig" with about_student_programs only %}
+      </div>
+
+    </div>
+    <div class="panel-separator"></div>
+    <div class="panel-pane pane-block pane-nys-blocks-about-access">
+
+      <div id="section-7" class="pane-content">
+        {% include "@nysenate_theme/nysenate-about-access/nysenate-about-access.twig" with about_access only %}
+      </div>
+    </div>
+    <div class="panel-separator"></div>
+    <div class="panel-pane pane-views pane-promo-banner-senators-committees">
+      <div class="pane-content">
+        {% if promotional_banner_list %}
+          {% include "@nysenate_theme/nysenate-promotional-banner-list/nysenate-promotional-banner-list.twig" with promotional_banner_list only %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</main>

@@ -1,0 +1,15 @@
+rabbit_hole.settings:
+  path: '/admin/config/content/rabbit-hole'
+  defaults:
+    _form: '\Drupal\rabbit_hole\Form\RabbitHoleSettingsForm'
+    _title: 'Rabbit Hole settings'
+  requirements:
+    _permission: 'administer rabbit_hole settings'
+
+rabbit_hole.settings.entity_type:
+  path: '/admin/config/content/rabbit-hole/{entity_type_id}'
+  defaults:
+    _form: '\Drupal\rabbit_hole\Form\RabbitHoleEntityTypeSettingsForm'
+    _title: 'Rabbit Hole settings'
+  requirements:
+    _permission: 'administer rabbit_hole settings'

@@ -1,0 +1,29 @@
+services:
+  _defaults:
+    autowire: true
+  Drupal\imagemagick\ImagemagickFormatMapperInterface:
+    class: Drupal\imagemagick\ImagemagickFormatMapper
+    # The sophron.mime_map.manager argument is only optional to avoid problems
+    # when the new dependency is not yet enabled.
+    arguments:
+      $cache: '@cache.default'
+      $mimeMapManager: '@?sophron.mime_map.manager'
+  Drupal\imagemagick\ImagemagickExecManagerInterface:
+    class: Drupal\imagemagick\ImagemagickExecManager
+    arguments:
+      $logger: '@logger.channel.image'
+      $appRoot: '%app.root%'
+  Drupal\imagemagick\EventSubscriber\ImagemagickEventSubscriber:
+    arguments:
+      $logger: '@logger.channel.image'
+    tags:
+      - { name: 'event_subscriber' }
+  imagemagick.format_mapper:
+    alias: Drupal\imagemagick\ImagemagickFormatMapperInterface
+    deprecated: 'The "%alias_id%" service alias is deprecated. Use "Drupal\imagemagick\ImagemagickFormatMapperInterface" service id instead.'
+  imagemagick.exec_manager:
+    alias: Drupal\imagemagick\ImagemagickExecManagerInterface
+    deprecated: 'The "%alias_id%" service alias is deprecated. Use "Drupal\imagemagick\ImagemagickExecManagerInterface" service id instead.'
+  imagemagick.event_subscriber:
+    alias: Drupal\imagemagick\EventSubscriber\ImagemagickEventSubscriber
+    deprecated: 'The "%alias_id%" service alias is deprecated. Use "Drupal\imagemagick\EventSubscriber\ImagemagickEventSubscriber" service id instead.'

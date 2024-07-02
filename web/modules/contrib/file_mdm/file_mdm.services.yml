@@ -1,0 +1,25 @@
+services:
+  _defaults:
+    autowire: true
+  cache.file_mdm:
+    class: Drupal\Core\Cache\CacheBackendInterface
+    tags:
+      - { name: cache.bin }
+    factory: cache_factory:get
+    arguments: ['file_mdm']
+  logger.channel.file_mdm:
+    parent: logger.channel_base
+    arguments: ['file_mdm']
+  Drupal\file_mdm\FileMetadataManager:
+    arguments:
+      $logger: '@logger.channel.file_mdm'
+      $cache: '@cache.file_mdm'
+  Drupal\file_mdm\FileMetadataManagerInterface: '@Drupal\file_mdm\FileMetadataManager'
+  file_metadata_manager:
+    alias: Drupal\file_mdm\FileMetadataManagerInterface
+    deprecated: 'The "%alias_id%" service alias is deprecated. Use "Drupal\file_mdm\FileMetadataManagerInterface" service id instead.'
+  Drupal\file_mdm\Plugin\FileMetadataPluginManager:
+    arguments:
+      $namespaces: '@container.namespaces'
+      $cache: '@cache.discovery'
+  Drupal\file_mdm\Plugin\FileMetadataPluginManagerInterface: '@Drupal\file_mdm\Plugin\FileMetadataPluginManager'

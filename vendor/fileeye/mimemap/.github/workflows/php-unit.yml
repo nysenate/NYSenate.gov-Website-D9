@@ -1,0 +1,64 @@
+name: PHPUnit Tests
+
+on:
+  push:
+    branches: [ master ]
+  schedule:
+    - cron: "0 6 * * 3"
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  phpunit:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - php-version: "7.4"
+            php-unit-args: "-c phpunit-10.xml"
+          - php-version: "8.0"
+            php-unit-args: "-c phpunit-10.xml"
+          - php-version: "8.1"
+            php-unit-args: "-c phpunit.xml"
+          - php-version: "8.2"
+            php-unit-args: "-c phpunit.xml"
+          - php-version: "8.3"
+            php-unit-args: "-c phpunit.xml"
+          - php-version: "8.4"
+            php-unit-args: "-c phpunit.xml --display-deprecations"
+
+    steps:
+
+        - uses: actions/checkout@v4
+
+        - name: Install PHP
+          uses: "shivammathur/setup-php@v2"
+          with:
+            php-version: "${{ matrix.php-version }}"
+            coverage: "pcov"
+            ini-values: "zend.assertions=1"
+
+        - name: Install Composer dependencies
+          run: composer install --no-progress --ansi
+
+        - name: "Require tools"
+          continue-on-error: true
+          run: composer require --ansi --dev "phpunit/phpunit:^9 | ^10 | ^11"
+
+        - name: Run tests
+          run: ./vendor/bin/phpunit --color=always --coverage-clover=coverage.xml ${{ matrix.php-unit-args }}
+
+        - name: Send code coverage report to Codecov.io
+          uses: codecov/codecov-action@v4
+          with:
+            files: coverage.xml
+
+        - name: Mapping test
+          if: ${{ matrix.php-version == 8.1 }}
+          continue-on-error: true
+          run: |
+            php ./bin/fileeye-mimemap --version
+            php ./bin/fileeye-mimemap update --diff --fail-on-diff --ansi

@@ -1,0 +1,23 @@
+{{ attach_library('nysenate_theme/contact-your-senator') }}
+
+{% if logged_in %}
+  <p class="eyebrow">{{ title }}</p>
+  <a class="c-issue--contact-btn {% if senator_image is empty %} no-senator {% endif %}" href="{{ link.url }}">
+    {% if senator_image %}
+      <div class="nys-senator--thumb">
+        {{ senator_image }}
+      </div>
+    {% endif %}
+    <span>{{ link.text }}</span>
+  </a>
+{% else %}
+  <p>{{ 'Find and contact your Senator about this issue'|t }}</p>
+  {% if with_modal %}
+    <button class="c-user-login button c-block--btn c-issue--contact-btn no-senator ctools-modal-login-modal">
+      Find your Senator
+    </button>
+  {% else %}
+    {% set link_url = link.url ?? "registration/nojs/login" %}
+    <a href="{{ link_url }}" class="button c-block--btn c-issue--contact-btn no-senator ctools-modal-login-modal">Find your Senator</a>
+  {% endif %}
+{% endif %}

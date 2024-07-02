@@ -1,0 +1,42 @@
+<?php
+
+/**
+ * @file
+ * Webform Analysis - Module.
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\webform_analysis\EntityTypeInfo;
+
+/**
+ * Implements hook_theme().
+ */
+function webform_analysis_theme() {
+  return [
+    'webform_analysis_component' => [
+      'variables' => [
+        'name'  => '',
+        'title' => '',
+        'data'  => NULL,
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_entity_type_build().
+ */
+function webform_analysis_entity_type_build(array &$entity_types) {
+  return \Drupal::service('class_resolver')
+    ->getInstanceFromDefinition(EntityTypeInfo::class)
+    ->entityTypeAlter($entity_types);
+}
+
+/**
+ * Implements hook_entity_operation().
+ */
+function webform_analysis_entity_operation(EntityInterface $entity) {
+  return \Drupal::service('class_resolver')
+    ->getInstanceFromDefinition(EntityTypeInfo::class)
+    ->entityOperation($entity);
+}

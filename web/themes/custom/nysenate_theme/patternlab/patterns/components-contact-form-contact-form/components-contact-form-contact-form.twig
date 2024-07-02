@@ -1,0 +1,106 @@
+{{ attach_library('nysenate_theme/contact-form') }}
+
+<form class="has-nys-captcha contact-form" action="/senators/joseph-griffo/contact" method="post" id="nys-messaging-senator-contact-form" accept-charset="UTF-8">
+  <div>
+    <h3>Send a message to Joseph A. Griffo's office</h3>
+    <p>If you would like to send a message related to legislation or issues, please create an account
+      <a href="/user/login">here</a>.</p>
+
+    <div class="small-12 large-12 medium-12 columns">
+      <div id="edit-inquiry-type" class="form-radios">
+        <div class="form-item form-type-radio form-item-inquiry-type">
+          <input type="radio" id="edit-inquiry-type-general-inquiry" name="inquiry_type" value="General Inquiry" checked="checked" class="form-radio">
+          <label class="option" for="edit-inquiry-type-general-inquiry">General Inquiry
+          </label>
+
+        </div>
+        <div class="form-item form-type-radio form-item-inquiry-type">
+          <input type="radio" id="edit-inquiry-type-press-inquiry" name="inquiry_type" value="Press Inquiry" class="form-radio">
+          <label class="option" for="edit-inquiry-type-press-inquiry">Press Inquiry
+          </label>
+
+        </div>
+      </div>
+    </div>
+    <div class="small-12 large-6 medium-6 columns">
+      <div class="form-item form-type-textfield form-item-first-name">
+        <label for="edit-first-name">First name
+          <span class="form-required" title="This field is required.">*</span>
+        </label>
+        <input type="text" id="edit-first-name" name="first_name" value="" size="60" maxlength="255" class="form-text required">
+      </div>
+    </div>
+    <div class="small-12 large-6 medium-6 columns">
+      <div class="form-item form-type-textfield form-item-last-name">
+        <label for="edit-last-name">Last name
+          <span class="form-required" title="This field is required.">*</span>
+        </label>
+        <input type="text" id="edit-last-name" name="last_name" value="" size="60" maxlength="255" class="form-text required">
+      </div>
+    </div>
+    <div class="small-12 large-12 medium-12 columns">
+      <div class="form-item form-type-textfield form-item-subject">
+        <label for="edit-subject">Subject
+          <span class="form-required" title="This field is required.">*</span>
+        </label>
+        <input type="text" id="edit-subject" name="subject" value="" size="60" maxlength="50" class="form-text required">
+      </div>
+    </div>
+    <div class="small-12 large-12 medium-12 columns">
+      <div class="form-item form-type-textarea form-item-email-body">
+        <label for="edit-email-body">Message
+          <span class="form-required" title="This field is required.">*</span>
+        </label>
+        <div class="form-textarea-wrapper resizable textarea-processed resizable-textarea">
+          <textarea id="edit-email-body" name="email_body" cols="60" rows="10" class="form-textarea required"></textarea>
+          <div class="grippie"></div>
+        </div>
+      </div>
+    </div>
+    <div class="small-12 large-6 medium-6 columns">
+      <div class="form-item form-type-textfield form-item-from-email">
+        <label for="edit-from-email">Your e-mail address
+          <span class="form-required" title="This field is required.">*</span>
+        </label>
+        <input type="text" id="edit-from-email" name="from_email" value="" size="60" maxlength="255" class="form-text required">
+      </div>
+    </div>
+    <div class="small-12 large-6 medium-6 columns">
+      <div class="form-item form-type-textfield form-item-phone">
+        <label for="edit-phone">Phone Number (Optional)
+        </label>
+        <input type="text" id="edit-phone" name="phone" value="" size="60" maxlength="255" class="form-text">
+      </div>
+    </div>
+    <div class="small-12 large-12 medium-12 columns">
+      <div class="form-item form-type-textfield form-item-address">
+        <label for="edit-address">Street Address
+          <span class="form-required" title="This field is required.">*</span>
+        </label>
+        <input type="text" id="edit-address" name="address" value="" size="60" maxlength="255" class="form-text required">
+      </div>
+    </div>
+    <div class="small-12 large-6 medium-6 columns">
+      <div class="form-item form-type-textfield form-item-city">
+        <label for="edit-city">City
+          <span class="form-required" title="This field is required.">*</span>
+        </label>
+        <input type="text" id="edit-city" name="city" value="" size="60" maxlength="255" class="form-text required">
+      </div>
+    </div>
+    <div class="small-12 large-6 medium-6 columns">
+      <div class="form-item form-type-textfield form-item-zip">
+        <label for="edit-zip">Zip
+          <span class="form-required" title="This field is required.">*</span>
+        </label>
+        <input type="text" id="edit-zip" name="zip" value="" size="60" maxlength="5" class="form-text required">
+      </div>
+    </div>
+    <div class="small-12 large-12 medium-12 columns">
+      <button class="button" id="edit-submit" name="op" value="Send message" type="submit">Send message</button>
+    </div>
+    <input type="hidden" name="senator_uid" value="144741">
+    <input type="hidden" name="form_build_id" value="form-BnkV_kGqPMPCZJYg50XfY-JxYsxY28tLepv36AT8Nb0">
+    <input type="hidden" name="form_id" value="nys_messaging_senator_contact_form">
+  </div>
+</form>

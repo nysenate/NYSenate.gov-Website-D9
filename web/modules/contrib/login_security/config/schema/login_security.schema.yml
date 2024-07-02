@@ -1,0 +1,61 @@
+login_security.settings:
+  type: config_object
+  label: 'Login security settings'
+  mapping:
+    track_time:
+      type: integer
+      label: 'Track time'
+    user_wrong_count:
+      type: integer
+      label: 'Maximum number of login failures before blocking a user'
+    host_wrong_count:
+      type: integer
+      label: 'Maximum number of login failures before soft blocking a host'
+    host_wrong_count_hard:
+      type: integer
+      label: 'Maximum number of login failures before blocking a host'
+    activity_threshold:
+      type: integer
+      label: 'Maximum number of login failures before detecting an ongoing attack'
+    disable_core_login_error:
+      type: integer
+      label: 'Disable login failure error message'
+    notice_attempts_available:
+      type: integer
+      label: 'Notify the user about the number of remaining login attempts'
+    last_login_timestamp:
+      type: integer
+      label: 'Display last login timestamp'
+    last_access_timestamp:
+      type: integer
+      label: 'Display last access timestamp'
+    notice_attempts_message:
+      type: text
+      label: 'Message to be shown on each failed login attempt'
+    host_soft_banned:
+      type: text
+      label: 'Message for banned host (Soft IP ban)'
+    host_hard_banned:
+      type: text
+      label: 'Message for banned host (Hard IP ban)'
+    user_blocked:
+      type: text
+      label: 'Message when user is blocked by uid'
+    user_blocked_email_subject:
+      type: label
+      label: 'Email subject'
+    user_blocked_email_body:
+      type: text
+      label: 'Email body'
+    login_activity_email_subject:
+      type: label
+      label: 'Email subject'
+    login_activity_email_body:
+      type: text
+      label: 'Email body'
+    user_blocked_notification_emails:
+      type: string
+      label: 'Emails to be notified when users are blocked'
+    login_activity_notification_emails:
+      type: string
+      label: 'Emails to be notified during excess activity'

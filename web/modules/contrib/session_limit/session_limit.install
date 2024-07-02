@@ -1,0 +1,15 @@
+<?php
+
+/**
+ * @file
+ * Contains install and update functions for Session Limit.
+ */
+
+/**
+ * Sets the default value for event logging.
+ */
+function session_limit_update_8001(&$sandbox) {
+  $config = \Drupal::configFactory()->getEditable('session_limit.settings');
+  $config->set('session_limit_log_events', FALSE);
+  $config->save(TRUE);
+}

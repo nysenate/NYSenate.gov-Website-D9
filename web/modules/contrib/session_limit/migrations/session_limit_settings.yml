@@ -1,0 +1,21 @@
+id: session_limit_settings
+label: Session limit configuration
+migration_tags:
+  - Drupal 7
+  - Configuration
+source:
+  plugin: session_limit
+process:
+  session_limit_max: session_limit_max
+  session_limit_masquerade_ignore: session_limit_masquerade_ignore
+  session_limit_behaviour: session_limit_behaviour
+  session_limit_logged_out_message_severity: session_limit_logged_out_message_severity
+  session_limit_admin_inclusion: session_limit_include_root_user
+  session_limit_roles:
+    plugin: session_limit_rid_variables_to_roles_array
+destination:
+  plugin: config
+  config_name: session_limit.settings
+migration_dependencies:
+  optional:
+    - d7_user_role

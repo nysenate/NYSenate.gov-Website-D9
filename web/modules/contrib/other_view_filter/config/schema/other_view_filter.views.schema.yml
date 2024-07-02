@@ -1,0 +1,37 @@
+# Schema for the other_views_filter plugin.
+
+views.filter.other_views_filter:
+  type: views.filter.in_operator
+  label: 'Other view result filter'
+  mapping:
+    operator:
+      type: string
+      label: 'Operator'
+    value:
+      type: sequence
+      label: 'Values'
+      sequence:
+        type: string
+        label: 'Value'
+    group_info:
+      mapping:
+        group_items:
+          sequence:
+            type: views.filter.group_item.other_views_filter
+            label: 'Group item'
+    inherit_contextual_filters:
+      type: boolean
+      label: 'Inherit contextual filter'
+
+views.filter.group_item.other_views_filter:
+  type: views_filter_group_item
+  mapping:
+    value:
+      type: views.filter_value.other_views_filter
+
+views.filter_value.other_views_filter:
+  type: sequence
+  label: 'Values'
+  sequence:
+    type: string
+    label: 'Value'

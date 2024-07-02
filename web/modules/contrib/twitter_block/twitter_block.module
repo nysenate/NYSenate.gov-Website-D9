@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * @file
+ * Provides configurable blocks for a Twitter feed.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function twitter_block_help($route_name, RouteMatchInterface $route_match) {
+  if ($route_name == 'help.page.twitter_block') {
+    return '<p>' . t('This module provides configurable blocks for a Twitter feed.') . '</p>';
+  }
+}

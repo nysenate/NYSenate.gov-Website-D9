@@ -1,0 +1,14 @@
+name: Drupal Upgrade
+type: module
+description: 'Drush support for direct upgrades from older Drupal versions.'
+package: Migration
+core_version_requirement: '>=9'
+dependencies:
+  - drupal:migrate
+  - drupal:migrate_drupal
+  - migrate_plus:migrate_plus
+
+# Information added by Drupal.org packaging script on 2022-12-28
+version: '4.0.1'
+project: 'migrate_upgrade'
+datestamp: 1672260599

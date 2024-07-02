@@ -1,0 +1,14 @@
+<?php
+
+/**
+ * @file
+ * Contains install functions for Views Contextual Range Filter module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function contextual_range_filter_install() {
+  // Set module weight 1 higher than Views module. May not be necessary.
+  module_set_weight('contextual_range_filter', 10 + 1);
+}

@@ -1,0 +1,9 @@
+services:
+  email_registration.route_subscriber:
+    class: Drupal\email_registration\Routing\RouteSubscriber
+    tags:
+      - { name: event_subscriber }
+  Drupal\email_registration\UsernameGenerator: '@email_registration.username_generator'
+  email_registration.username_generator:
+    class: Drupal\email_registration\UsernameGenerator
+    arguments: ['@uuid']

@@ -1,0 +1,11 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Property Drupal\\\\sophron_guesser\\\\ProxyClass\\\\SophronMimeTypeGuesser\\:\\:\\$service \\(Drupal\\\\sophron_guesser\\\\SophronMimeTypeGuesser\\) in isset\\(\\) is not nullable\\.$#"
+			count: 1
+			path: sophron_guesser/src/ProxyClass/SophronMimeTypeGuesser.php
+
+		-
+			message: "#^Parameter \\#2 \\$message of method Drupal\\\\Core\\\\Form\\\\FormStateInterface\\:\\:setErrorByName\\(\\) expects string, Drupal\\\\Core\\\\StringTranslation\\\\TranslatableMarkup given\\.$#"
+			count: 3
+			path: src/Form/SettingsForm.php

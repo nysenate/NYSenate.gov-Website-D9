@@ -1,0 +1,61 @@
+# ------------------------------------------------------------------------------
+# This phpstan-baseline-ok.neon file contains the messages for code that will
+# not be changed. This is a permanent list of ignored messages.
+# ------------------------------------------------------------------------------
+parameters:
+  ignoreErrors:
+
+    #---------------------------------------------------------------------------------------------------------------------------
+    # rules_defaults.inc is still 7.x, not converted to 8.x+ and may never be, as development on the Rules project has slowed.
+    #---------------------------------------------------------------------------------------------------------------------------
+    -
+      message: "#^Function rule not found\\.$#"
+      count: 4
+      path: scheduler_rules_integration/scheduler_rules_integration.rules_defaults.inc
+
+    -
+      message: "#^Function rules_condition not found\\.$#"
+      count: 2
+      path: scheduler_rules_integration/scheduler_rules_integration.rules_defaults.inc
+
+    -
+      message: "#^Function rules_reaction_rule not found\\.$#"
+      count: 2
+      path: scheduler_rules_integration/scheduler_rules_integration.rules_defaults.inc
+
+    #---------------------------------------------------------------------------------------------------------------------------
+    # scheduler_form_pane was added for ctools in 7.x, probably does not work in 8.x+
+    #---------------------------------------------------------------------------------------------------------------------------
+    -
+      message: "#^Instantiated class ctools_context_required not found\\.$#"
+      count: 1
+      path: plugins/content_types/scheduler_form_pane.inc
+
+    #---------------------------------------------------------------------------------------------------------------------------
+    # Scheduler Manager has a nested function formatOutputText() in resetFormDisplayFields().
+    #---------------------------------------------------------------------------------------------------------------------------
+    -
+      message: "#^Function formatOutputText not found\\.$#"
+      count: 4
+      path: src/SchedulerManager.php
+
+    -
+      message: "#^Inner named functions are not supported by PHPStan\\. Consider refactoring to an anonymous function, class method, or a top\\-level\\-defined function\\. See issue \\#165 \\(https\\://github\\.com/phpstan/phpstan/issues/165\\) for more details\\.$#"
+      count: 1
+      path: src/SchedulerManager.php
+
+    #---------------------------------------------------------------------------------------------------------------------------
+    # Allow $p1-$p8 and $message in throwSchedulerException()
+    #---------------------------------------------------------------------------------------------------------------------------
+    -
+      message: "#^Variable \\$(p\\d|message) might not be defined\\.$#"
+      count: 9
+      path: src/SchedulerManager.php
+
+    #---------------------------------------------------------------------------------------------------------------------------
+    # Mapping callback for the Feeds module is still no ported to Drupal 8.
+    #---------------------------------------------------------------------------------------------------------------------------
+    -
+      message: "#^Instantiated class FeedsValidationException not found\\.$#"
+      count: 1
+      path: scheduler.module

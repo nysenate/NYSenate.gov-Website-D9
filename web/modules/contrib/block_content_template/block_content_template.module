@@ -1,0 +1,76 @@
+<?php
+
+/**
+ * @file
+ * Block content template main file.
+ */
+
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Render\Element;
+
+/**
+ * Implements hook_theme().
+ */
+function block_content_template_theme($existing, $type, $theme, $path) {
+
+  return [
+    'block_content' => [
+      'render element' => 'elements',
+    ],
+  ];
+
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view_alter() for block_content.
+ */
+function block_content_template_block_content_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
+  $build['#theme'] = 'block_content';
+}
+
+/**
+ * Preprocess function for block content template.
+ */
+function template_preprocess_block_content(&$variables) {
+  $block_content = $variables['elements']['#block_content'];
+  $variables['id'] = $block_content->id();
+  $variables['bundle'] = $block_content->bundle();
+  $variables['view_mode'] = $variables['elements']['#view_mode'];
+  $variables['content'] = [];
+
+  if (isset($variables['elements']['_layout_builder'][0])) {
+    $variables['content'][] = $variables['elements']['_layout_builder'];
+  }
+  else {
+    $content = [];
+    foreach (Element::children($variables['elements']) as $key) {
+      $content[$key] = $variables['elements'][$key];
+    }
+    $variables['content'] = $content;
+  }
+
+  if (isset($variables['attributes']['data-quickedit-entity-id'])) {
+    unset($variables['attributes']['data-quickedit-entity-id']);
+  }
+
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function block_content_template_theme_suggestions_block_content(array $variables) {
+
+  $suggestions = [];
+  $block_content = $variables['elements']['#block_content'];
+  $sanitized_view_mode = strtr($variables['elements']['#view_mode'], '.', '_');
+
+  $suggestions[] = implode('__', ['block_content', $sanitized_view_mode]);
+  $suggestions[] = implode('__', ['block_content', $block_content->bundle()]);
+  $suggestions[] = implode('__', ['block_content', $block_content->bundle(), $sanitized_view_mode]);
+  $suggestions[] = implode('__', ['block_content', $block_content->id()]);
+  $suggestions[] = implode('__', ['block_content', $block_content->id(), $sanitized_view_mode]);
+
+  return $suggestions;
+
+}

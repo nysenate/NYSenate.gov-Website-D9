@@ -1,0 +1,21 @@
+login_history.report:
+  path: '/admin/reports/login-history'
+  defaults:
+    _title: 'Login history'
+  requirements:
+    _permission: 'view all login histories'
+
+login_history.user_report:
+  path: '/user/{user}/login-history'
+  requirements:
+    _permission: 'view own login history'
+
+login_history.settings:
+  path: '/admin/config/people/login-history'
+  defaults:
+    _form: '\Drupal\login_history\Form\AdminSettingsForm'
+    _title: 'Login History Settings'
+  requirements:
+    _permission: 'administer login_history'
+  options:
+    _admin_route: TRUE

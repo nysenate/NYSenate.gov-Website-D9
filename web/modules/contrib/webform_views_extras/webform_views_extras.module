@@ -1,0 +1,155 @@
+<?php
+
+/**
+ * @file
+ * Contains webform_views_extras.module.
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Entity\ContentEntityTypeInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\webform_views_extras\Entity\WebformSubmissionRelationships;
+
+/**
+ * Implements hook_help().
+ */
+function webform_views_extras_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the webform_views_extras module.
+    case 'help.page.webform_views_extras':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Extends webform views and support relationship views with all content entities not only node.') . '</p>';
+
+      return $output;
+  }
+}
+
+/**
+ * Return list content entities.
+ *
+ * @return array
+ */
+function webform_views_extras_content_entities($filter = FALSE) {
+  $content_entities = [];
+  foreach (Drupal::entityTypeManager()->getDefinitions() as $definition) {
+    if ($definition instanceof ContentEntityTypeInterface) {
+      $content_entities[$definition->id()] = $definition->getLabel();
+    }
+  }
+  // Unset webform submission entity.
+  if (isset($content_entities['webform_submission'])) {
+    unset($content_entities['webform_submission']);
+  }
+  // Get active content entity type.
+  if ($filter == TRUE) {
+    if (!empty(webform_views_extras_get_relationship_active_content_entities())) {
+      $content_entities = array_intersect($content_entities, webform_views_extras_get_relationship_active_content_entities());
+    }
+  }
+
+  return $content_entities;
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function webform_views_extras_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  switch ($form_id) {
+    case 'webform_submission_relationships_add_form':
+      $content_entities = webform_views_extras_content_entities(TRUE);
+      // Remove used content entities to not duplicate relationships with webform submissions.
+      $webform_submissions_entities_relationships = WebformSubmissionRelationships::loadMultiple();
+      if (!empty($webform_submissions_entities_relationships)) {
+        /**
+         * @var \Drupal\webform_views_extras\Entity\WebformSubmissionRelationships $content_entity
+         */
+        foreach ($webform_submissions_entities_relationships as $content_entity) {
+          unset($content_entities[$content_entity->getContentEntityTypeId()]);
+        }
+        $form['content_entity_type_id']['#options'] = $content_entities;
+        if (empty($content_entities)) {
+          $form['disable_form_message'] = ['#markup' => t('You already added all content entities relationships with Webform Submission entity.')];
+          $form['disable_form'] = $form['#disabled'] = TRUE;
+        }
+      }
+      break;
+
+    case 'webform_submission_relationships_edit_form':
+      $form['content_entity_type_id']['#disabled'] = TRUE;
+      break;
+  }
+}
+
+
+/**
+ * Implements hook_entity_presave().
+ * @param EntityInterface $entity
+ */
+function webform_views_extras_entity_presave(EntityInterface $entity) {
+  $type = $entity->getEntityType()->id();
+  // Update the new field.
+  if ($type == "webform_submission") {
+    $entity_id = $entity->get('entity_id')->value;
+    $entity_type = $entity->get('entity_type')->value;
+    if ($entity_id) {
+      $entity->set("entity_id_" . $entity_type, $entity_id);
+    }
+  }
+}
+
+/**
+ * Implements hook_entity_base_field_info().
+ * @param EntityTypeInterface $entity_type
+ * @return array
+ */
+function webform_views_extras_entity_base_field_info(EntityTypeInterface $entity_type) {
+  $fields = [];
+  switch ($entity_type->id()) {
+    case 'webform_submission':
+      $content_entity_ids = array_keys(webform_views_extras_content_entities());
+      if (!empty($content_entity_ids)) {
+        foreach ($content_entity_ids as $content_entity_id) {
+          $fields["entity_id_{$content_entity_id}"] = BaseFieldDefinition::create('string')
+            ->setLabel(t('Submitted to: Entity ID - @entity_type', ['@entity_type' => $content_entity_id]))
+            ->setDescription(t('The @entity_type ID of the entity of which this webform submission was submitted from.', ['@entity_type' => $content_entity_id]))
+            ->setProvider('webform')
+            ->setName("entity_id_{$content_entity_id}")
+            ->setTargetEntityTypeId('webform_submission')
+            ->setTargetBundle(NULL)
+            ->setDefaultValue("1")
+            ->setSetting('max_length', 255);
+        }
+      }
+      break;
+  }
+  return $fields;
+}
+
+/**
+ * Return active content entities.
+ *
+ * @return array
+ */
+function webform_views_extras_get_relationship_active_content_entities() {
+  $active_entity_types = [];
+  $webform_ref_fields = Drupal::entityTypeManager()->getStorage('field_storage_config')->loadByProperties(
+    [
+      'settings' => [
+        'target_type' => 'webform',
+      ],
+    ]
+  );
+  if (isset($webform_ref_fields) && !empty($webform_ref_fields)) {
+    $webform_ref_fields_keys = array_keys($webform_ref_fields);
+    foreach ($webform_ref_fields_keys as $webform_ref_fields_key) {
+      $entity_type = explode('.', $webform_ref_fields_key)[0];
+      $definition = Drupal::entityTypeManager()->getDefinition($entity_type);
+      $active_entity_types[$entity_type] = $definition->getLabel();
+    }
+  }
+  return $active_entity_types;
+}

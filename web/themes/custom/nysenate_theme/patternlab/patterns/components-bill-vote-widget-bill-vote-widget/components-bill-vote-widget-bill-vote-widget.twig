@@ -1,0 +1,87 @@
+{{ attach_library('nysenate_theme/bill-vote-widget') }}
+
+<form class="nys-bill-vote-form nys-bill-vote-form-embedded"
+  action="{{ action }}"
+  method="post"
+  id="nys-bill-vote-vote-widget-{{ node_id }}"
+  accept-charset="UTF-8">
+  <div>
+    <div class="nys-bill-vote form-wrapper"
+      id="edit-nys-bill-vote-container-{{ node_id }}">
+      <input type="hidden" name="nid" value="{{ node_id }}" />
+      <input type="hidden" name="tid" value="53928" />
+      <p class="c-bill-polling--cta">
+        {{ poll_text|default("what's your position?") }}
+      </p>
+      <div class="button-wrapper">
+        {% if not hide_subscribe %}
+        <button class="c-block--btn nys-subscribe-button ajax-processed"
+          value="subscribe"
+          type="submit"
+          id="edit-nys-bill-subscribe-{{ node_id }}"
+          name="op">
+          Subscribe
+        </button>
+        {% endif %}
+        <button class="c-block--btn c-half-btn c-half-btn--left nys-bill-vote-yes ajax-processed"
+          value="yes"
+          type="submit"
+          id="edit-nys-bill-vote-yes-{{ node_id }}"
+          name="op">
+          Aye
+        </button>
+        <button class="c-block--btn c-half-btn c-half-btn--right nys-bill-vote-no ajax-processed"
+          value="no"
+          type="submit"
+          id="edit-nys-bill-vote-no-{{ node_id }}"
+          name="op">
+          Nay
+        </button>
+      </div>
+    </div>
+    <input type="hidden"
+      name="form_build_id"
+      value="form-2gOXX8I3ViFaOvuk_aR1E-XMWDROIJrD67azMp2hBX8" />
+    <input type="hidden"
+      name="form_token"
+      value="AK8DG406363rshaueZ8vUUpz3LxtHdVb6fNkCatsp_k" />
+    <input type="hidden" name="form_id" value="nys_bill_vote_vote_widget" />
+
+    {# subscribe #}
+    {% if has_sub %}
+    <div class="nys-bill-subscribe form-wrapper"
+      id="edit-nys-bill-subscribe-container-{{ node_id }}">
+      <div class="nys-bill-subscribe-beta">
+        <a href="/citizen-guide/bill-alerts"
+          style="color: #ffffff; font-weight: bold">
+          BETA ⓘ
+        </a>
+      </div>
+      <div class="nys-bill-subscribe-title">
+        Get Status Alerts for S7617
+      </div>
+      <div class="subscribe_email_container form-wrapper" id="edit-email-form">
+        <div class="form-item form-type-textfield form-item-email">
+          <label for="edit-email-address-entry-{{ node_id }}">Email Address</label>
+          <input type="text"
+            id="edit-email-address-entry-{{ node_id }}"
+            name="email"
+            value=""
+            size="20"
+            maxlength="128"
+            class="form-text" />
+        </div>
+      </div>
+      <input type="hidden" name="nid" value="{{ node_id }}" />
+      <input type="hidden" name="tid" value="92289" />
+      <button class="c-block--btn nys-subscribe-button ajax-processed"
+        value="subscribe"
+        type="submit"
+        id="edit-nys-bill-subscribe-{{ node_id }}"
+        name="op">
+        Subscribe
+      </button>
+    </div>
+    {% endif %}
+  </div>
+</form>

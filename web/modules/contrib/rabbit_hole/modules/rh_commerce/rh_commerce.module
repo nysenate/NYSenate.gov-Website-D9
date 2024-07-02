@@ -1,0 +1,18 @@
+<?php
+
+/**
+ * @file
+ * Contains rh_commerce.module.
+ */
+
+use Drupal\Core\Entity\EntityTypeInterface;
+
+/**
+ * Implements hook_entity_base_field_info().
+ */
+function rh_commerce_entity_base_field_info(EntityTypeInterface $entity_type) {
+  if ($entity_type->id() === 'commerce_product') {
+    return \Drupal::service('rabbit_hole.entity_extender')
+      ->getRabbitHoleFields('commerce_product');
+  }
+}

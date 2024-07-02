@@ -1,0 +1,13 @@
+// This file does not strictly need to exist in contrib, because eslint config
+// files placed futher up in the directory structure will be merged and
+// inherited. The top-level .eslintrc.json extends ./core/.eslintrc.json.
+//
+// However, this file is added for two reasons:
+// (a) Drupalci eslint does not have a 'sniff all files' argument, but making a
+//     change to this file will cause all js and yml files to be checked.
+//     See https://www.drupal.org/project/scheduler/issues/3314451
+// (b) If a patch has changes to .yml files but no changes to .js files then
+//     eslint is not executed allowing a .yml fault to be missed. Making a
+//     temporary change to this file will cause the modified .yml to be checked.
+//     See https://www.drupal.org/project/drupalci_testbot/issues/3333051
+{}

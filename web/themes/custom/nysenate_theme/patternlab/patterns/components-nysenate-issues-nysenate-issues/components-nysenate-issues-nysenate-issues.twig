@@ -1,0 +1,46 @@
+{{ attach_library('nysenate_theme/nysenate-issues') }}
+
+{% for issue in issues %}
+  <div class="c-block--issue">
+    <h4 class="c-issue-block--title">
+      <a href="{{ issue.issue_link.url }}">{{ issue.issue_link.text }}</a>
+    </h4>
+    <div class="c-block--btn">
+
+      {% if is_patternlab %}
+        <span class="flag-wrapper flag-follow-issue flag-follow-issue-{{ issue.issue_id }}">
+          <a data-unfollow-link={{ issue.flag_link.unfollow_url }} data-follow-link={{ issue.flag_link.follow_url }} class="flag {% if issue.is_followed %} unflag-action {% else %} flag-action {% endif %} flag-link-toggle flag-processed" rel="nofollow"></a>
+          <span class="flag-throbber">&nbsp;</span>
+
+          {% if issue.is_followed %}
+            <span class="flag-message flag-success-message flag-unflagged-message">
+              <div class="message-text">
+                <p>
+                  No longer following this issue.
+                </p>
+              </div>
+              <span class="close-message">X</span>
+            </span>
+
+          {# {% else %}
+            <span class="flag-message flag-success-message flag-flagged-message message-senator-link">
+              <div class="message-text">
+                <p>
+                  <span>Following this issue.</span>
+                </p>
+              </div>
+              <a class="flag-success-btn" href="/user/dashboard/inbox/new?context=issue&amp;issue_id=77124">
+                message your senator
+              </a>
+              <span class="close-message">X</span>
+            </span> #}
+          {% endif %}
+        </span>
+      {% else %}
+        {% if issue.flag_follow_issue %}
+          {{ issue.flag_follow_issue }}
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
+{% endfor %}

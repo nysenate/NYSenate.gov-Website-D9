@@ -1,0 +1,7 @@
+services:
+  fancy_file_delete.commands:
+    class: \Drupal\fancy_file_delete\Commands\FancyFileDeleteCommands
+    arguments:
+      - '@fancy_file_delete.batch'
+    tags:
+      - { name: drush.command }

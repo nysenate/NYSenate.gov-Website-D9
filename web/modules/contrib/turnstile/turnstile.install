@@ -1,0 +1,20 @@
+<?php
+
+/**
+ * @file
+ * Defines the install/schema hooks for the turnstile module.
+ */
+
+/**
+ * Adds new configuration settings to support the language, size, retry, retry interval, and appearance options.
+ */
+function turnstile_update_8001() {
+  $config = \Drupal::configFactory()->getEditable('turnstile.settings');
+  $config
+    ->set('widget.language', 'auto')
+    ->set('widget.size', 'auto')
+    ->set('widget.retry', 'auto')
+    ->set('widget.retry_interval', 8000)
+    ->set('widget.appearance', 'auto')
+    ->save();
+}

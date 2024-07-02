@@ -1,0 +1,67 @@
+<?php
+
+/**
+ * @file
+ * This module allows site builders and developers to manage oEmbed providers.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\oembed_providers\Traits\HelperTrait;
+
+/**
+ * Implements hook_media_source_info_alter().
+ */
+function oembed_providers_media_source_info_alter(array &$sources) {
+  $buckets = \Drupal::service('entity_type.manager')->getStorage('oembed_provider_bucket')->loadMultiple();
+
+  $provider_repository = \Drupal::service('media.oembed.provider_repository');
+  $available_providers = [];
+  foreach ($provider_repository->getAll() as $provider) {
+    $available_providers[] = $provider->getName();
+  }
+
+  foreach ($buckets as $bucket) {
+    $id = 'oembed:' . $bucket->id();
+
+    // Return providers that are 1) allowed per config and 2) exist as
+    // an available provider.
+    $providers = array_intersect($available_providers, $bucket->get('providers'));
+    $sources[$id] = [
+      'id' => $bucket->id(),
+      'label' => $bucket->label(),
+      'description' => $bucket->get('description'),
+      'allowed_field_types' => ['string'],
+      'default_thumbnail_filename' => 'no-thumbnail.png',
+      'providers' => $providers,
+      'class' => 'Drupal\oembed_providers\Plugin\media\Source\OEmbed',
+      'default_name_metadata_attribute' => 'default_name',
+      'thumbnail_uri_metadata_attribute' => 'thumbnail_uri',
+      'thumbnail_width_metadata_attribute' => 'thumbnail_width',
+      'thumbnail_height_metadata_attribute' => 'thumbnail_height',
+      'forms' => [
+        'media_library_add' => 'Drupal\media_library\Form\OEmbedForm',
+      ],
+      'provider' => 'oembed_providers',
+    ];
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function oembed_providers_form_media_type_edit_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  /** @var \Drupal\Core\Entity\EntityFormInterface */
+  $callback_object = $form_state->getBuildInfo()['callback_object'];
+  /** @var \Drupal\media\MediaSourceInterface */
+  $source = $callback_object->getEntity()->getSource();
+  // Only render warning message for media types with oEmbed source.
+  if ($source instanceof OEmbedInterface) {
+    $warning = [
+      '#markup' => HelperTrait::disabledProviderSecurityWarning(),
+      // Simulate warning message.
+      '#prefix' => '<div role="contentinfo" aria-label="Warning message" class="messages messages--warning">',
+      '#suffix' => '</div>',
+    ];
+    array_unshift($form['source_dependent']['source_configuration'], $warning);
+  }
+}

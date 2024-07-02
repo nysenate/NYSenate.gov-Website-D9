@@ -1,0 +1,5 @@
+services:
+  prepopulate.populator:
+    class: Drupal\prepopulate\Populate
+    arguments: ['@request_stack', '@entity_type.manager', '@module_handler']
+    required_cache_contexts: ['languages:language_interface', 'theme', 'user.permissions', 'url.query_args']

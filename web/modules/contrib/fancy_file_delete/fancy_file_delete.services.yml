@@ -1,0 +1,7 @@
+services:
+  fancy_file_delete.unmanaged_files:
+    class: Drupal\fancy_file_delete\UnmanagedFilesService
+    arguments: ['@file_system', '@database', '@state']
+  fancy_file_delete.batch:
+    class: Drupal\fancy_file_delete\FancyFileDeleteBatch
+    arguments: ['@database', '@entity_type.manager', '@messenger', '@string_translation', '@file_system']

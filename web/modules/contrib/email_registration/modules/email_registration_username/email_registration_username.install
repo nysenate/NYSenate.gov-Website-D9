@@ -1,0 +1,26 @@
+<?php
+
+/**
+ * @file
+ * Install functions for the Email registration username module.
+ */
+
+/**
+ * Rename "obfuscation_value" and add "username_display_override_mode" config.
+ */
+function email_registration_username_update_9001() {
+  $config = \Drupal::configFactory()->getEditable('email_registration_username.settings');
+  $config->set('username_display_override_mode', 'disabled')
+    ->set('username_display_custom', $config->get('obfuscation_value'))
+    ->clear('obfuscation_value')
+    ->save();
+}
+
+/**
+ * Implements hook_install().
+ */
+function email_registration_username_install() {
+  // Disable the "login_with_username" config, as it doesn't make sense with
+  // this module:
+  \Drupal::configFactory()->getEditable('email_registration.settings')->set('login_with_username', FALSE)->save();
+}

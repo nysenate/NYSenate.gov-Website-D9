@@ -1,0 +1,11 @@
+{#
+/**
+ * @file
+ * Include top-bar.html.twig template from Gin.
+ */
+#}
+{% include '@gin/navigation/top-bar--gin.html.twig' ignore missing %}
+
+{% if secondary_toolbar_frontend %}
+  {% include '@gin_toolbar/toolbar--gin--secondary--frontend.html.twig' ignore missing %}
+{% endif %}

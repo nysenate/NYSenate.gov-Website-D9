@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html class="pl">
+  <head>
+    <title>Pattern Lab</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="../../css/pattern-scaffolding.css?1719952725579" media="all" />
+    <link rel="stylesheet" href="../../css/all.css?1719952725579" media="all" />
+
+    <!-- Begin Pattern Lab (Required for Pattern Lab to run properly) -->
+    
+    <!-- End Pattern Lab -->
+
+  </head>
+  <body class="body"><div class="view-header event-calendar">
+  <div id="datepicker">
+    <div class="mobile-calendar-toggle icon-after__calendar-view">Viewing Day of March 15</div><input type="text"/><div id="container"></div>
+  </div>
+  <div class="view-filters">
+    <form class="ctools-auto-submit-full-form ctools-auto-submit-processed jquery-once-2-processed" action="/events" method="get" id="views-exposed-form-calendar-page-page" accept-charset="UTF-8">
+      <div>
+        <div class="views-exposed-form">
+          <div class="views-exposed-widgets clearfix">
+            <div id="edit-type-wrapper" class="views-exposed-widget views-widget-filter-type">
+              <div class="views-widget">
+                <div class="form-item form-type-select form-item-type">
+                  <select id="edit-type" name="type" class="form-select">
+                    <option value="All" selected="selected">Filter by Type</option>
+                    <option value="event">Event</option>
+                    <option value="meeting">Meeting</option>
+                    <option value="public_hearing">Public Hearing</option>
+                    <option value="session">Session</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div id="edit-field-committee-tid-wrapper" class="views-exposed-widget views-widget-filter-field_committee_tid">
+              <div class="views-widget">
+                <div class="form-item form-type-select form-item-field-committee-tid">
+                  <select id="edit-field-committee-tid" name="field_committee_tid" class="form-select">
+                    <option value="All" selected="selected">Filter by Committee</option>
+                    <option value="6641">Administrative Regulations Review Commission (ARRC)</option>
+                    <option value="6466">Aging</option>
+                    <option value="6461">Agriculture</option>
+                    <option value="6646">Alcoholism and Substance Use Disorders</option>
+                    <option value="6471">Banks</option>
+                    <option value="64535">Budget and Revenue</option>
+                    <option value="6476">Children and Families</option>
+                    <option value="6481">Cities 1</option>
+                    <option value="82654">Cities 2</option>
+                    <option value="6486">Civil Service and Pensions</option>
+                    <option value="6491">Codes</option>
+                    <option value="6566">Commerce, Economic Development and Small Business</option>
+                    <option value="6571">Consumer Protection</option>
+                    <option value="6576">Corporations, Authorities and Commissions</option>
+                    <option value="6581">Crime Victims, Crime and Correction</option>
+                    <option value="6586">Cultural Affairs, Tourism, Parks and Recreation</option>
+                    <option value="82655">Disabilities</option>
+                    <option value="64559">Domestic Animal Welfare</option>
+                    <option value="6591">Education</option>
+                    <option value="6596">Elections</option>
+                    <option value="6496">Energy and Telecommunications</option>
+                    <option value="6501">Environmental Conservation</option>
+                    <option value="6506">Ethics and Internal Governance</option>
+                    <option value="6511">Finance</option>
+                    <option value="6516">Health</option>
+                    <option value="6681">Heroin Task Force</option>
+                    <option value="6521">Higher Education</option>
+                    <option value="6526">Housing, Construction and Community Development</option>
+                    <option value="6666">Infrastructure and Capital Investment</option>
+                    <option value="6531">Insurance</option>
+                    <option value="64569">Internet and Technology</option>
+                    <option value="6536">Investigations and Government Operations</option>
+                    <option value="75016">Joint Senate Task Force on Opioids, Addiction &amp; Overdose Prevention</option>
+                    <option value="6541">Judiciary</option>
+                    <option value="6546">Labor</option>
+                    <option value="6626">Latino Caucus</option>
+                    <option value="6631">Legislative Commission on Rural Resources</option>
+                    <option value="70378">Legislative Women's Caucus</option>
+                    <option value="6661">Libraries</option>
+                    <option value="6551">Local Government</option>
+                    <option value="6556">Mental Health</option>
+                    <option value="6671">New York City Education</option>
+                    <option value="6621">New York State Conference of Black Senators</option>
+                    <option value="72372">NYS Legislative Ethics Commission</option>
+                    <option value="82656">Procurement and Contracts</option>
+                    <option value="6561">Racing, Gaming and Wagering</option>
+                    <option value="6611">Rules</option>
+                    <option value="6676">Science, Technology, Incubation and Entrepreneurship</option>
+                    <option value="9978">Senate Majority Task Force on Counterterrorism and Public Protection</option>
+                    <option value="6616">Social Services</option>
+                    <option value="6651">State-Native American Relations</option>
+                    <option value="9992">Task Force for Demographic Research and Reapportionment</option>
+                    <option value="6686">Task Force on Lyme and Tick-Borne Diseases</option>
+                    <option value="10532">Task Force on Workforce Development</option>
+                    <option value="10273">Technology and Innovation</option>
+                    <option value="6636">The New York State Black, Puerto Rican, Hispanic and Asian Legislative Caucus</option>
+                    <option value="6606">Transportation</option>
+                    <option value="6601">Veterans, Homeland Security and Military Affairs</option>
+                    <option value="64567">Women's Issues</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div id="edit-field-senator-target-id-wrapper" class="views-exposed-widget views-widget-filter-field_senator_target_id">
+              <div class="views-widget">
+                <div class="form-item form-type-select form-item-field-senator-target-id">
+                  <select id="edit-field-senator-target-id" name="field_senator_target_id" class="form-select">
+                    <option value="All" selected="selected">Filter by Senator</option>
+                    <option value="4518476">
+                      Joseph P. Addabbo Jr
+                    </option>
+                    <option value="8368700">
+                      Jacob Ashby
+                    </option>
+                    <option value="6253905">
+                      Jamaal T. Bailey
+                    </option>
+                    <option value="7546135">
+                      George M. Borrello
+                    </option>
+                    <option value="4518596">
+                      Neil D. Breslin
+                    </option>
+                    <option value="8080819">
+                      Jabari Brisport
+                    </option>
+                    <option value="8065031">
+                      Samra G. Brouk
+                    </option>
+                    <option value="8368545">
+                      Patricia Canzoneri-Fitzpatrick
+                    </option>
+                    <option value="8368710">
+                      Iwen Chu
+                    </option>
+                    <option value="8353780">
+                      Cordell Cleare
+                    </option>
+                    <option value="4518911">
+                      Leroy Comrie
+                    </option>
+                    <option value="8080823">
+                      Jeremy A. Cooney
+                    </option>
+                    <option value="4518846">
+                      Simcha Felder
+                    </option>
+                    <option value="8368581">
+                      Nathalia Fernandez
+                    </option>
+                    <option value="4518786">
+                      Patrick M. Gallivan
+                    </option>
+                    <option value="4518811">
+                      Michael Gianaris
+                    </option>
+                    <option value="8368477">
+                      Kristen Gonzalez
+                    </option>
+                    <option value="6867324">
+                      Andrew Gounardes
+                    </option>
+                    <option value="4518646">
+                      Joseph A. Griffo
+                    </option>
+                    <option value="6867328">
+                      Pete Harckham
+                    </option>
+                    <option value="6253901">
+                      Pamela Helming
+                    </option>
+                    <option value="8065016">
+                      Michelle Hinchey
+                    </option>
+                    <option value="4518851">
+                      Brad Hoylman-Sigal
+                    </option>
+                    <option value="6867325">
+                      Robert Jackson
+                    </option>
+                    <option value="6397156">
+                      Brian Kavanagh
+                    </option>
+                    <option value="4518816">
+                      Timothy M. Kennedy
+                    </option>
+                    <option value="4518521">
+                      Liz Krueger
+                    </option>
+                    <option value="4518661">
+                      Andrew J. Lanza
+                    </option>
+                    <option value="6867319">
+                      John C. Liu
+                    </option>
+                    <option value="8065017">
+                      John W. Mannion
+                    </option>
+                    <option value="6867315">
+                      Monica R. Martinez
+                    </option>
+                    <option value="4518766">
+                      Jack M. Martins
+                    </option>
+                    <option value="8065030">
+                      Mario R. Mattera
+                    </option>
+                    <option value="6867330">
+                      Rachel May
+                    </option>
+                    <option value="6618371">
+                      Shelley B. Mayer
+                    </option>
+                    <option value="8368530">
+                      Dean Murray
+                    </option>
+                    <option value="6867323">
+                      Zellnor Myrie
+                    </option>
+                    <option value="4518781">
+                      Thomas F. O'Mara
+                    </option>
+                    <option value="8065131">
+                      Peter Oberacker
+                    </option>
+                    <option value="4518906">
+                      Robert G. Ortt
+                    </option>
+                    <option value="8065126">
+                      Anthony H. Palumbo
+                    </option>
+                    <option value="4518506">
+                      Kevin S. Parker
+                    </option>
+                    <option value="6191151">
+                      Roxanne J. Persaud
+                    </option>
+                    <option value="6867320">
+                      Jessica Ramos
+                    </option>
+                    <option value="8368543">
+                      Steven D. Rhoads
+                    </option>
+                    <option value="4518806">
+                      Gustavo Rivera
+                    </option>
+                    <option value="8368663">
+                      Rob Rolison
+                    </option>
+                    <option value="8080824">
+                      Sean M. Ryan
+                    </option>
+                    <option value="6867322">
+                      Julia Salazar
+                    </option>
+                    <option value="4518841">
+                      James Sanders Jr.
+                    </option>
+                    <option value="8368580">
+                      Jessica Scarcella-Spanton
+                    </option>
+                    <option value="6618369">
+                      Luis R. Sepúlveda
+                    </option>
+                    <option value="4518531">
+                      José M. Serrano
+                    </option>
+                    <option value="6867327">
+                      James Skoufis
+                    </option>
+                    <option value="4518481">
+                      Toby Ann Stavisky
+                    </option>
+                    <option value="8065034">
+                      Daniel G. Stec
+                    </option>
+                    <option value="4518551">
+                      Andrea Stewart-Cousins
+                    </option>
+                    <option value="6253898">
+                      James Tedisco
+                    </option>
+                    <option value="6867317">
+                      Kevin Thomas
+                    </option>
+                    <option value="8368701">
+                      Mark Walczyk
+                    </option>
+                    <option value="8368478">
+                      Lea Webb
+                    </option>
+                    <option value="8368662">
+                      Bill Weber
+                    </option>
+                    <option value="8065122">
+                      Alexis Weik
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div id="date_views_exposed_filter-e866a655fc617d44417644ad95c76c6f-wrapper" class="views-exposed-widget views-widget-filter-field_date_value">
+              <div class="views-widget">
+                <div id="date_views_exposed_filter-e866a655fc617d44417644ad95c76c6f" class="form-wrapper">
+                  <div id="edit-field-date-value-min-wrapper">
+                    <div id="edit-field-date-value-min-inside-wrapper">
+                      <div class="container-inline-date">
+                        <div class="form-item form-type-date-popup form-item-field-date-value-min">
+                          <div id="edit-field-date-value-min" class="date-padding">
+                            <div class="form-item form-type-textfield form-item-field-date-value-min-date">
+                              <label class="element-invisible" for="edit-field-date-value-min-datepicker-popup-0">Date
+                              </label>
+                              <input type="text" id="edit-field-date-value-min-datepicker-popup-0" name="field_date_value[min][date]" value="03/12/2023" size="20" maxlength="30" class="form-text ctools-auto-submit-processed">
+                              <div class="description">
+                                E.g., 03/15/2023</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div id="edit-field-date-value-max-wrapper">
+                    <div id="edit-field-date-value-max-inside-wrapper">
+                      <div class="container-inline-date">
+                        <div class="form-item form-type-date-popup form-item-field-date-value-max">
+                          <div id="edit-field-date-value-max" class="date-padding">
+                            <div class="form-item form-type-textfield form-item-field-date-value-max-date">
+                              <label class="element-invisible" for="edit-field-date-value-max-datepicker-popup-0">Date
+                              </label>
+                              <input type="text" id="edit-field-date-value-max-datepicker-popup-0" name="field_date_value[max][date]" value="03/18/2023" size="20" maxlength="30" class="form-text ctools-auto-submit-processed">
+                              <div class="description">
+                                E.g., 03/15/2023</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div><!--DO NOT REMOVE-->
+<script type="text/json" id="pl-pattern-data-footer" class="pl-js-pattern-data">
+  {"cssEnabled":false,"patternLineageExists":false,"patternLineages":[],"lineage":[],"patternLineageRExists":false,"patternLineagesR":[],"lineageR":[],"patternLineageEExists":false,"patternDesc":"","patternBreadcrumb":{"patternType":"components","patternSubtype":"event-calendar"},"patternExtension":"twig","patternName":"Event Calendar","patternPartial":"components-event-calendar","patternState":"","patternEngineName":"twig-php","extraOutput":{}}
+</script>
+
+<script>
+  window.patternData = {"cssEnabled":false,"patternLineageExists":false,"patternLineages":[],"lineage":[],"patternLineageRExists":false,"patternLineagesR":[],"lineageR":[],"patternLineageEExists":false,"patternDesc":"","patternBreadcrumb":{"patternType":"components","patternSubtype":"event-calendar"},"patternExtension":"twig","patternName":"Event Calendar","patternPartial":"components-event-calendar","patternState":"","patternEngineName":"twig-php","extraOutput":{}};
+</script>
+
+<script>
+  /*!
+   * scriptLoader - v0.1
+   *
+   * Copyright (c) 2014 Dave Olsen, http://dmolsen.com
+   * Licensed under the MIT license
+   *
+   */
+
+  var scriptLoader = {
+
+    run: function(js,cb,target) {
+      var s  = document.getElementById(target+'-'+cb);
+      for (var i = 0; i < js.length; i++) {
+        var src = (typeof js[i] != 'string') ? js[i].src : js[i];
+        var c   = document.createElement('script');
+        c.src   = '../../'+src+'?'+cb;
+        if (typeof js[i] != 'string') {
+          if (js[i].dep !== undefined) {
+            c.onload = function(dep,cb,target) {
+              return function() {
+                scriptLoader.run(dep,cb,target);
+              }
+            }(js[i].dep,cb,target);
+          }
+        }
+        s.parentNode.insertBefore(c,s);
+      }
+    }
+
+  }
+</script>
+
+<script id="pl-js-polyfill-insert-1719952725579">
+  (function() {
+    if (self != top) {
+      var cb = '1719952725579';
+      var js = [];
+      scriptLoader.run(js,cb,'pl-js-polyfill-insert');
+    }
+  })();
+</script>
+
+
+<script type="module">
+  // always load Pattern-specific JS so UI like accordions, etc can continue to work even when viewed as a standalone HTML page
+  import('../../styleguide/js/patternlab-pattern.modern.js');
+</script>
+
+<script id="pl-js-insert-1719952725579" nomodule>
+  /*! loadJS: load a JS file asynchronously. [c]2014 @scottjehl, Filament Group, Inc. (Based on http://goo.gl/REQGQ by Paul Irish). Licensed MIT */
+  !function(e){var t=function(t,n){"use strict";var o=e.document.getElementsByTagName("script")[0],r=e.document.createElement("script");return r.src=t,r.async=!0,o.parentNode.insertBefore(r,o),n&&"function"==typeof n&&(r.onload=n),r};"undefined"!=typeof module?module.exports=t:e.loadJS=t}("undefined"!=typeof global?global:this);
+
+  // always load Pattern-specific JS so UI like accordions, etc can continue to work even when viewed as a standalone HTML page
+  loadJS('../../styleguide/js/patternlab-pattern.js');
+</script>
+
+  <!-- Fake drupalSettings if you need it. -->
+  <!--
+  <script type="application/json" data-drupal-selector="drupal-settings-json">
+  </script>
+  -->
+  <!-- Drupal-provided JS so we can mock Drupal JS Behaviors. -->
+  <script src="/core/assets/vendor/jquery/jquery.min.js"></script>
+  <script src="/core/assets/vendor/jquery-once/jquery.once.min.js"></script>
+  <script src="/core/misc/drupalSettingsLoader.js"></script>
+  <script src="/core/misc/drupal.js"></script>
+  <script src="/core/misc/drupal.init.js"></script>
+  <script src="/core/misc/debounce.js"></script>
+  <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+  <script src="https://unpkg.com/@popperjs/core@2"></script>
+  <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+  <!-- Concatenated by Gulp so you don't have to manually add each file. -->
+  <script src="../../js/all.js?1719952725579"></script>
+</body>
+</html>

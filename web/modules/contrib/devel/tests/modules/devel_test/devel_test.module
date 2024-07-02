@@ -1,0 +1,20 @@
+<?php
+
+/**
+ * @file
+ * Helper module for devel test.
+ */
+
+/**
+ * Implements hook_mail().
+ */
+function devel_test_mail($key, array &$message, array $params): void {
+  switch ($key) {
+    case 'devel_mail_log':
+      $message['subject'] = $params['subject'];
+      $message['body'][] = $params['body'];
+      $message['headers']['From'] = $params['headers']['from'];
+      $message['headers'] += $params['headers']['additional'];
+      break;
+  }
+}

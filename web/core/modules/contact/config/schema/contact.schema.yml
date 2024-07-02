@@ -1,0 +1,56 @@
+# Schema for the configuration files of the Contact module.
+
+contact.form.*:
+  type: config_entity
+  label: 'Contact form'
+  mapping:
+    id:
+      type: machine_name
+      label: 'ID'
+      constraints:
+        Length:
+          # Contact form IDs are specifically limited to 32 characters.
+          # @see \Drupal\contact\ContactFormEditForm::form()
+          max: 32
+    label:
+      type: required_label
+      label: 'Label'
+    recipients:
+      type: sequence
+      label: 'Recipients'
+      sequence:
+        type: email
+        label: 'Email address'
+    reply:
+      type: text
+      label: 'Auto-reply'
+    weight:
+      type: integer
+      label: 'Weight'
+    message:
+      type: text
+      label: 'Message displayed to user on submission'
+    redirect:
+      type: path
+      label: 'Redirect path on submission'
+
+contact.settings:
+  type: config_object
+  label: 'Contact settings'
+  mapping:
+    default_form:
+      type: string
+      label: 'Default form identifier'
+    flood:
+      type: mapping
+      label: 'Flood control'
+      mapping:
+        limit:
+          type: integer
+          label: 'Limit'
+        interval:
+          type: integer
+          label: 'Interval'
+    user_default_enabled:
+      type: boolean
+      label: 'Personal contact form enabled by default'

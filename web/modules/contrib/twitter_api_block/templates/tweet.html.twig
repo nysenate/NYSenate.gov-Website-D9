@@ -1,0 +1,27 @@
+{#
+/**
+ * @file
+ * Default theme implementation for a Tweet from the Twitter API.
+ *
+ * Available variables:
+ * - tweet: The original tweets values received from Twitter.
+ * - oembed: If set, contains data to be rendered by the Twitter JS library.
+ *
+ * @ingroup themeable
+ */
+#}
+{%
+  set classes = [
+    'tweet',
+    oembed ? 'tweet--oembed',
+  ]
+%}
+<div {{ attributes.addClass(classes) }}>
+  {% if oembed %}
+    {{ oembed.html|raw }}
+  {% elseif tweet.text %}
+    <p>{{ tweet.text }}</p>
+  {% else %}
+    <p>{{ 'Empty tweet'|t }}</p>
+  {% endif %}
+</div>

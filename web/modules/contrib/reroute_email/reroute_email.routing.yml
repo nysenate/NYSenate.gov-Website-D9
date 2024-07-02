@@ -1,0 +1,14 @@
+reroute_email.settings:
+  path: /admin/config/development/reroute_email
+  defaults:
+    _title: 'Reroute Email'
+    _form: \Drupal\reroute_email\Form\SettingsForm
+  requirements:
+    _permission: 'administer reroute email'
+reroute_email.test_email_form:
+  path: /admin/config/development/reroute_email/test
+  defaults:
+    _title: 'Test email form'
+    _form: \Drupal\reroute_email\Form\TestEmailForm
+  requirements:
+    _permission: 'administer reroute email'

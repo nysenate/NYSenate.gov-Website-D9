@@ -1,0 +1,45 @@
+{{ attach_library('rain_theme/event-date-time') }}
+
+{%
+  set classes = [
+    'event-date-time'
+  ]
+%}
+
+{% set attributes = attributes ? attributes.addClass(classes) : ' class="' ~ classes|join(' ') ~ '"' %}
+
+<div {{ attributes|raw }}>
+  <div class="event-date-time__dates">
+    {%
+      include '@rain_theme/event-date-tiles/event-date-tiles.twig' with {
+        start_date: {
+          day: start_date.day,
+          month: start_date.month,
+          year: start_date.year,
+          time: start_date.time,
+        },
+        end_date: {
+          day: end_date.day,
+          month: end_date.month,
+          year: end_date.year,
+          time: end_date.time,
+        }
+      } only
+    %}
+  </div>
+  <div class="event-date-time__times">
+    <div class="event-date-time__time">
+      <span class="event-date-time__label">Starts:</span>
+      {# Use a block so you can either pass the values individually or the entire date object #}
+      {% block start_date %}
+        {{ start_date.month }} {{ start_date.day }}, {{ start_date.year }} - {{ start_date.time }}
+      {% endblock %}
+    </div>
+    <div class="event-date-time__time">
+      <span class="event-date-time__label">Ends:</span>
+      {% block end_date %}
+        {{ end_date.month }} {{ end_date.day }}, {{ end_date.year }} - {{ end_date.time }}
+      {% endblock %}
+    </div>
+  </div>
+</div>

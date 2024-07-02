@@ -1,0 +1,46 @@
+services:
+  plugin.manager.rabbit_hole_entity_plugin:
+    class: Drupal\rabbit_hole\Plugin\RabbitHoleEntityPluginManager
+    parent: default_plugin_manager
+    arguments:
+      - '@entity_type.manager'
+    deprecated: The "%service_id%" service is deprecated. See https://www.drupal.org/node/3359194
+  plugin.manager.rabbit_hole_behavior_plugin:
+    class: Drupal\rabbit_hole\Plugin\RabbitHoleBehaviorPluginManager
+    parent: default_plugin_manager
+  rabbit_hole.behavior_settings_manager:
+    class: Drupal\rabbit_hole\BehaviorSettingsManager
+    arguments:
+      - '@config.factory'
+      - '@entity_type.manager'
+      - '@rabbit_hole.entity_helper'
+  rabbit_hole.form_mangler:
+    class: Drupal\rabbit_hole\FormManglerService
+    arguments:
+      - '@entity_type.manager'
+      - '@plugin.manager.rabbit_hole_behavior_plugin'
+      - '@rabbit_hole.behavior_settings_manager'
+      - "@string_translation"
+      - '@rabbit_hole.behavior_invoker'
+      - '@rabbit_hole.entity_helper'
+  rabbit_hole.behavior_invoker:
+    class: Drupal\rabbit_hole\BehaviorInvoker
+    arguments:
+      - "@rabbit_hole.behavior_settings_manager"
+      - "@plugin.manager.rabbit_hole_behavior_plugin"
+      - "@current_user"
+      - "@module_handler"
+  rabbit_hole.rabbit_hole_subscriber:
+    class: Drupal\rabbit_hole\EventSubscriber\RabbitHoleSubscriber
+    arguments: ["@rabbit_hole.behavior_invoker"]
+    tags:
+      - { name: event_subscriber }
+  rabbit_hole.entity_extender:
+    class: Drupal\rabbit_hole\EntityExtender
+    arguments:
+      - "@plugin.manager.rabbit_hole_behavior_plugin"
+      - "@plugin.manager.rabbit_hole_entity_plugin"
+    deprecated: The "%service_id%" service is deprecated. See https://www.drupal.org/node/3359194
+  rabbit_hole.entity_helper:
+    class: Drupal\rabbit_hole\EntityHelper
+    arguments: ['@entity_type.manager', '@entity_type.bundle.info', '@entity_display.repository']

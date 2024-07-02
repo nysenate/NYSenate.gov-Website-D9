@@ -1,0 +1,22 @@
+{{ attach_library('nysenate_theme/nysenate-header-user-menu') }}
+<nav nav aria-label="dashboard">
+  <ul class="c-login--list u-tablet-plus{{ mobile_mode ? ' mobile-mode' : ' desktop-mode'}}">
+    <li>
+      <a class="c-header--btn c-header--btn__primary" href="{{ dashboard_link }}">
+        Welcome, {{ user_first_name }}!
+      </a>
+    </li>
+    <li class="c-login--dashboard">
+      <a class="c-header--btn" href="{{ dashboard_link }}">My Dashboard</a>
+    </li>
+    <li class="c-login--manage">
+      <a class="c-header--btn" href="{{ manage_dashboard_link }}">Manage Dashboard</a>
+    </li>
+    <li class="c-login--edit">
+      <a class="c-header--btn" href="{{ edit_account_link }}">Edit Account</a>
+    </li>
+    <li class="c-login--logout">
+      <a class="c-header--btn" href="/user/logout">Logout</a>
+    </li>
+  </ul>
+</nav>

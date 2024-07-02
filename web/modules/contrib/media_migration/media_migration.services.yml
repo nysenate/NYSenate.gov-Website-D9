@@ -1,0 +1,39 @@
+services:
+  media_migration.event_subscriber:
+    class: Drupal\media_migration\EventSubscriber\MediaMigrationSubscriber
+    arguments:
+      - '@entity_type.manager'
+      - '@plugin.manager.migration'
+      - '@migrate.lookup'
+    tags:
+      - { name: event_subscriber }
+
+  plugin.manager.media_wysiwyg:
+    class: Drupal\media_migration\MediaWysiwygPluginManager
+    parent: default_plugin_manager
+
+  media_migration.migrate_plugin_alterer:
+    class: Drupal\media_migration\MigratePluginAlterer
+    arguments:
+      - '@plugin.manager.media_wysiwyg'
+      - '@logger.channel.media_migration'
+      - '@module_handler'
+
+  media_migration.media_uuid_oracle:
+    class: Drupal\media_migration\MediaMigrationUuidOracle
+    arguments:
+      - '@database'
+      - '@entity_type.manager'
+      - '@uuid'
+
+  plugin.manager.file_dealer:
+    class: Drupal\media_migration\FileDealerManager
+    parent: default_plugin_manager
+
+  plugin.manager.file_entity_dealer:
+    class: Drupal\media_migration\FileEntityDealerManager
+    parent: default_plugin_manager
+
+  logger.channel.media_migration:
+    parent: logger.channel_base
+    arguments: ['media_migration']

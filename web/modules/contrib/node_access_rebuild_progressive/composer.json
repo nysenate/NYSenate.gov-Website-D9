@@ -1,0 +1,22 @@
+{
+    "name": "drupal/node_access_rebuild_progressive",
+    "description": "Utility module that provides an alternative mean of rebuilding the Content Access table.",
+    "type": "drupal-module",
+    "authors": [
+        {
+            "name": "Pascal Morin (bellesmanieres)",
+            "email": "pm98zz.c@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.6.0",
+        "consolidation/site-alias": "*"
+    },
+    "extra": {
+        "drush": {
+            "services": {
+                "drush.services.yml": "^9"
+            }
+        }
+    }
+}

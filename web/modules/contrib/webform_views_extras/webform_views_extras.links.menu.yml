@@ -1,0 +1,25 @@
+# Webform submission relationships menu items definition
+entity.webform_submission_relationships.collection:
+  title: 'Webform submission relationships'
+  route_name: entity.webform_submission_relationships.collection
+  description: 'List Webform submission relationships (bundles)'
+  parent: entity.webform.collection
+  weight: 99
+
+entity.webform_submission.collection:
+  title: 'Submissions'
+  route_name: entity.webform_submission.collection
+  parent: entity.webform.collection
+  weight: 0
+
+entity.webform_options.collection:
+  title: 'Options'
+  route_name: entity.webform_options.collection
+  parent: entity.webform.collection
+  weight: 1
+
+webform.config:
+  title: 'Configurations'
+  route_name: webform.config
+  parent: entity.webform.collection
+  weight: 2

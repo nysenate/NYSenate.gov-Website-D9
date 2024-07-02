@@ -1,0 +1,12 @@
+<?php
+
+use Drupal\Core\Entity\ContentEntityInterface;
+
+/**
+ * Implements hook_rabbit_hole_values_alter().
+ */
+function rabbit_hole_test_hooks_rabbit_hole_values_alter(array &$values, ContentEntityInterface $entity) {
+  if ($values['action'] === 'page_redirect') {
+    $values['redirect'] = '<front>';
+  }
+}

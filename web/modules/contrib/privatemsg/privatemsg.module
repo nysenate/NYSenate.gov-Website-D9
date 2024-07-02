@@ -1,0 +1,59 @@
+<?php
+
+/**
+ * @file
+ * Module file for privatemsg module.
+ */
+
+use Drupal\Core\Entity\EntityForm;
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Save email notification user settings.
+ */
+function _privatemsg_user_save(array &$form, FormStateInterface $form_state): void {
+  $form_object = $form_state->getFormObject();
+
+  if ($form_object instanceof EntityForm) {
+    $user = $form_object->getEntity();
+    $new_status = $form_state->getValue('pm_send_notifications');
+    $privatemsg_service = \Drupal::service('privatemsg.common');
+    $privatemsg_service->enableDisableEmailNotification($user->id(), $new_status);
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function privatemsg_form_alter(array &$form, FormStateInterface $form_state, string $form_id): void {
+  if ($form_id == 'user_form') {
+    $user = \Drupal::routeMatch()->getParameter('user');
+    $privatemsg_service = \Drupal::service('privatemsg.common');
+
+    $form['privatemsg'] = [
+      '#type' => 'fieldset',
+      '#title' => t('Private messages'),
+      '#collapsible' => TRUE,
+      '#collapsed' => FALSE,
+      '#weight' => 10,
+    ];
+
+    $form['privatemsg']['pm_send_notifications'] = [
+      '#type' => 'checkbox',
+      '#title' => t('Receive email notification for incoming private messages'),
+      '#default_value' => $privatemsg_service->isEnabledEmailNotification($user->id()),
+    ];
+
+    $form['actions']['submit']['#submit'][] = '_privatemsg_user_save';
+  }
+}
+
+/**
+ * Implements hook_mail().
+ */
+function privatemsg_mail(string $key, array &$message, array $params): void {
+  if ($key == 'privatemsg_mail') {
+    $message['subject'] = $params['subject'];
+    $message['body'][] = $params['message'];
+  }
+}

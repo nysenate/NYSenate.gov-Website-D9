@@ -1,0 +1,112 @@
+{{ attach_library('nysenate_theme/nysenate-review-submission') }}
+{{ attach_library('nysenate_theme/article-page') }}
+
+<div class="review-submission__container">
+  {% include '@nysenate_theme/alert-box/alert-box.twig' with {
+    status: 'success',
+    message: alert_message
+  } only %}
+
+  <form class="entityform entitytype-earth_day-form"
+    action="{{ form_action }}"
+    method="post">
+    <div class="ds-1col entity entity-entityform entityform-earth-day view-mode-review clearfix">
+      <p class="label-inline">
+        Teacher's Name:
+      </p>
+      <div>
+        <p class="form-results">
+          {{ teachers_name }}
+        </p>
+      </div>
+      <p class="label-inline">
+        Teacher's Email:
+      </p>
+      <div>
+        <p class="form-results">
+          <a href="mailto:{{ teachers_email }}">{{ teachers_email }}</a>
+        </p>
+      </div>
+      <p class="label-inline">
+        Grade:
+      </p>
+      <div>
+        <p class="form-results">
+          {{ grade }}
+        </p>
+      </div>
+      <p class="label-inline form-label">
+        School Name:
+      </p>
+      <div>
+        <p class="form-results">
+          {{ school_name }}
+        </p>
+      </div>
+      <h3 class="label-above label-above">
+        Student Submissions:
+      </h3>
+      {% for submission in student_submissions %}
+        <div class="ds-1col entity entity-field-collection-item field-collection-item-field-school-stud-earthday-subm view-mode-full clearfix">
+          <p class="label-inline form-label">
+            Student's Name:
+          </p>
+
+          <div>
+            <p class="form-results">
+              {{ submission.students_name }}
+            </p>
+          </div>
+
+          {% if submission.category is not empty %}
+            <p class="label-inline form-label">
+              Category:
+            </p>
+
+            <div>
+              <p class="form-results">
+                {{ submission.category }}
+              </p>
+            </div>
+          {% endif %}
+
+          {% if submission.attachment is not empty %}
+            <p class="label-inline form-label">
+              Submission:
+            </p>
+
+            <div>
+              <p class="form-results">
+                {{ submission.attachment }}
+              </p>
+           </div>
+         {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+
+    {% if edit or submit %}
+      <div class="button-wrapper">
+        {% if edit %}
+          {% include '@nysenate_theme/button/button.twig' with {
+            button: {
+              url: edit.href,
+              text: edit.button_text
+            }
+          } only %}
+        {% endif %}
+
+        {% if submit %}
+          <div class="edit-submit">
+            {% include '@nysenate_theme/button/button.twig' with {
+              button: {
+                url: submit.href,
+                text: submit.button_text
+              }
+            } only %}
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+  </form>
+</div>

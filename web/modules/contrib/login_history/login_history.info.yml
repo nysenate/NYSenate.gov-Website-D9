@@ -1,0 +1,13 @@
+name: 'Login History'
+description: "A history of the site's user logins."
+package: Security
+core_version_requirement: ^9.3 || ^10 || ^11
+type: module
+configure: login_history.settings
+dependencies:
+ - drupal:views
+
+# Information added by Drupal.org packaging script on 2024-06-15
+version: '2.0.0-alpha3'
+project: 'login_history'
+datestamp: 1718443603

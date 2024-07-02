@@ -1,0 +1,43 @@
+id: d7_file_plain_widget
+label: File Plain media source field widget
+migration_tags:
+  - Drupal 7
+  - Configuration
+deriver: Drupal\media_migration\Plugin\migrate\D7FileConfigDeriver
+idMap:
+  plugin: smart_sql
+source:
+  plugin: d7_file_plain_field_widget
+  constants:
+    entity_type_id: media
+    form_mode: default
+process:
+  entity_type: 'constants/entity_type_id'
+  bundle: bundle
+  form_mode: 'constants/form_mode'
+  # We need the actually migrated field name (because it might be shortened by
+  # the make_unique_entity_field process plugin in the source field storage
+  # migration).
+  field_name:
+    -
+      plugin: migration_lookup
+      source:
+        - mimes
+        - schemes
+      migration: d7_file_plain_source_field
+      no_stub: true
+    -
+      plugin: default_value
+      default_value:
+        - NULL
+        - NULL
+    -
+      plugin: extract
+      index:
+        - 1
+  options: options
+destination:
+  plugin: component_entity_form_display
+migration_dependencies:
+  required:
+    - d7_file_plain_source_field_config

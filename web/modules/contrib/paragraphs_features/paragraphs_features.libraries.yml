@@ -1,0 +1,47 @@
+
+add_in_between:
+  js:
+    js/paragraphs-features.add-in-between.js: {}
+  css:
+    theme:
+      css/paragraphs-features.add-in-between.css: {}
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - core/once
+    - paragraphs/drupal.paragraphs.modal
+    - paragraphs_features/widget
+
+delete_confirmation:
+  js:
+    js/paragraphs-features.delete-confirmation.js: {}
+  css:
+    theme:
+      css/paragraphs-features.delete-confirmation.css: {}
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - core/once
+
+widget:
+  css:
+    theme:
+      css/paragraphs-features.widget.css: { }
+
+scroll_to_element:
+  js:
+    js/paragraphs-features.scroll-to-element.js: {}
+  dependencies:
+    - core/drupal
+
+splitParagraph:
+  js:
+    js/build/split_paragraph.js: { preprocess: false, minified: true }
+  dependencies:
+    - core/ckeditor5
+    - core/drupal
+
+splitParagraph.admin:
+  css:
+    theme:
+      css/split_paragraph.admin.css: {}

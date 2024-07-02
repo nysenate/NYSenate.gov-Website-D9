@@ -1,0 +1,10 @@
+entity.node.webform.results_analysis:
+  path: '/node/{node}/webform/results/analysis/{field_name}'
+  defaults:
+    _entity_form: node.webform_analysis
+    operation: webform_submission_view
+    entity_access: webform.submission_view_any
+  requirements:
+    _entity_access: node.view
+    _custom_access: '\Drupal\webform_node_analysis\Access\WebformNodeAnalysisAccess::checkWebformNodeAnalysisAccess'
+    node: \d+

@@ -1,0 +1,59 @@
+node_revision_delete.default_plugin_configuration:
+  type: mapping
+  label: 'Default plugin configuration'
+  mapping:
+    status:
+      type: boolean
+      label: 'Whether a plugin is enabled or not.'
+
+plugin.plugin_configuration.node_revision_delete.*:
+  type: node_revision_delete.default_plugin_configuration
+
+plugin.plugin_configuration.node_revision_delete.amount:
+  type: node_revision_delete.default_plugin_configuration
+  label: 'Amount plugin configuration'
+  mapping:
+    settings:
+      type: mapping
+      label: 'The amount plugin settings'
+      mapping:
+        amount:
+          type: integer
+          label: 'Minimum number of revisions to keep (per language)'
+
+
+plugin.plugin_configuration.node_revision_delete.created:
+  type: node_revision_delete.default_plugin_configuration
+  label: 'Created plugin configuration'
+  mapping:
+    settings:
+      type: mapping
+      label: 'The created plugin settings'
+      mapping:
+        age:
+          type: integer
+          label: 'The minimum amount of months a revision must be kept for'
+
+plugin.plugin_configuration.node_revision_delete.drafts:
+  type: node_revision_delete.default_plugin_configuration
+  label: 'Drafts plugin configuration'
+  mapping:
+    settings:
+      type: mapping
+      label: 'The drafts plugin settings'
+      mapping:
+        age:
+          type: integer
+          label: 'The minimum amount of months a new revision must be kept for'
+
+plugin.plugin_configuration.node_revision_delete.only_drafts:
+  type: node_revision_delete.default_plugin_configuration
+  label: 'Only Drafts plugin configuration'
+  mapping:
+    settings:
+      type: mapping
+      label: 'Only delete revisions that use draft state.'
+      mapping:
+        age:
+          type: integer
+          label: 'The minimum amount of months a draft revision must be kept for'

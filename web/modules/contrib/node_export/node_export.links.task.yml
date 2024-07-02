@@ -1,0 +1,32 @@
+node_export.export:
+  route_name: node_export.export_content_type
+  title: Export nodes
+  base_route: system.admin_content
+node_export.export_content_type:
+  route_name: node_export.export_content_type
+  title: Content Type
+  weight: -10
+  parent_id: node_export.export
+node_export.export_nids:
+  route_name: node_export.export_nids
+  title: Node IDs
+  weight: 3
+  parent_id: node_export.export
+node_export.import:
+  route_name: node_export.import
+  title: Import nodes
+  base_route: system.admin_content
+node_export.import_code:
+  route_name: node_export.import
+  title: Exported Code
+  weight: -10
+  parent_id: node_export.import
+node_export.import_file:
+  route_name: node_export.import_file
+  title: File
+  weight: 3
+  parent_id: node_export.import
+node_export.node_export:
+  route_name: node_export.export
+  base_route: entity.node.canonical
+  title: Export

@@ -1,0 +1,6 @@
+services:
+  security_review.commands:
+    class: Drupal\security_review\Commands\SecurityReviewCommands
+    arguments: ['@security_review', '@security_review.checklist']
+    tags:
+      - { name: drush.command }

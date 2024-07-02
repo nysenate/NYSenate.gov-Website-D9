@@ -1,0 +1,75 @@
+rabbit_hole.settings:
+  type: config_object
+  mapping:
+    enabled_entity_types:
+      label: 'Enabled entity types'
+      type: sequence
+      sequence:
+        type: string
+
+field.widget.settings.rabbit_hole_default:
+  type: mapping
+  label: 'Rabbit hole widget settings'
+  mapping:
+    advanced:
+      type: boolean
+      label: 'Show the setting field on the advanced sidebar.'
+
+rabbit_hole.behavior_settings.*.*:
+  type: config_entity
+  label: 'Rabbit hole settings'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    targetEntityType:
+      type: string
+      label: 'Target entity type'
+    bundle:
+      type: string
+      label: 'Bundle'
+    entity_type_id:
+      deprecated: "The 'entity_type_id' property of Rabbit Hole settings is deprecated in rabbit_hole:2.0.0 and is removed from rabbit_hole:3.0.0. See https://www.drupal.org/node/3374669."
+      type: string
+      label: 'Entity Type ID'
+    entity_id:
+      deprecated: "The 'entity_id' property of Rabbit Hole settings is deprecated in rabbit_hole:2.0.0 and is removed from rabbit_hole:3.0.0. See https://www.drupal.org/node/3374669."
+      type:  string
+      label: 'Bundle'
+    action:
+      type: string
+      label: 'Action'
+    no_bypass:
+      type: boolean
+      label: 'No bypass'
+    bypass_message:
+      type: boolean
+      label: 'Show bypass message'
+    configuration:
+      type: rabbit_hole.behavior.[%parent.action]
+
+rabbit_hole.behavior.access_denied:
+  type: sequence
+  label: 'Access Denied'
+
+rabbit_hole.behavior.display_page:
+  type: sequence
+  label: 'Display page'
+
+rabbit_hole.behavior.page_not_found:
+  type: sequence
+  label: 'Page not found'
+
+rabbit_hole.behavior.page_redirect:
+  type: mapping
+  label: 'Page redirect'
+  mapping:
+    redirect:
+      type: string
+      label: 'Redirect path'
+    redirect_code:
+      type: integer
+      label: 'Redirect code'
+    redirect_fallback_action:
+      type: string
+      label: 'Fallback action'

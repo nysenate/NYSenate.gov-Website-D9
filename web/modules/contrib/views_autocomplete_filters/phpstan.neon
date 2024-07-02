@@ -1,0 +1,15 @@
+# Configuration file for PHPStan static code checking, see https://phpstan.org.
+
+includes:
+  - phar://phpstan.phar/conf/bleedingEdge.neon
+  - phpstan-baseline.neon
+
+parameters:
+  level: 2
+  paths:
+    - .
+  excludePaths:
+    - src/Plugin/views/filter/ViewsAutocompleteFiltersSearchApiFulltext.php
+    - src/Plugin/views/filter/ViewsAutocompleteFiltersSearchApiText.php
+  ignoreErrors:
+    - "#^Unsafe usage of new static#"

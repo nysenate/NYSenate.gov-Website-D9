@@ -1,0 +1,188 @@
+<?php
+
+/**
+ * @file
+ * Contains conditional_fields.module.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\WidgetInterface;
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_help().
+ */
+function conditional_fields_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the conditional_fields module.
+    case 'help.page.conditional_fields':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Define dependencies between fields based on their states and values.') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function conditional_fields_theme() {
+  $theme = [];
+  $theme['conditional_field'] = [
+    'render element' => 'elements',
+    'file' => 'conditional_field.page.inc',
+    'template' => 'conditional_field',
+  ];
+  $theme['conditional_field_content_add_list'] = [
+    'render element' => 'content',
+    'variables' => ['content' => NULL],
+    'file' => 'conditional_field.page.inc',
+  ];
+  return $theme;
+}
+
+/**
+ * Implements hook_entity_operation().
+ */
+function conditional_fields_entity_operation(EntityInterface $entity) {
+  $operations = [];
+  if ($entity->getEntityTypeId() == 'node_type') {
+    $operations['dependencies'] = [
+      'title' => t('Dependencies'),
+      'url' => Url::fromRoute('conditional_fields.tab.node', [$entity->getEntityTypeId() => $entity->id()]),
+      'weight' => 29,
+    ];
+  }
+  return $operations;
+}
+
+/**
+ * Implements hook_element_info_alter().
+ *
+ * @see conditional_fields_element_after_build()
+ */
+function conditional_fields_element_info_alter(array &$types) {
+  foreach ($types as $type => $info) {
+    $types[$type]['#after_build'][] = 'conditional_fields_element_after_build';
+  }
+}
+
+/**
+ * Implements hook_conditional_fields().
+ *
+ * We implement this on behalf of the core Field module.
+ */
+function conditional_fields_conditional_fields($entity_type, $bundle_name) {
+  $fields = [];
+  $instances = \Drupal::getContainer()->get("entity_field.manager")
+    ->getFieldDefinitions($entity_type, $bundle_name);
+  foreach ($instances as $field) {
+    $fields[$field->getName()] = $field->getLabel();
+  }
+  return $fields;
+}
+
+/**
+ * Implements hook_conditional_fields_alter().
+ */
+function conditional_fields_conditional_fields_alter(&$fields, $entity_type, $bundle_name) {
+  asort($fields);
+}
+
+/**
+ * After build function to process field depencies.
+ */
+function conditional_fields_element_after_build($element, FormStateInterface &$form_state) {
+  return \Drupal::service('conditional_fields.element_alter_helper')->afterBuild($element, $form_state);
+}
+
+/**
+ * Builds a jQuery selector from the name or id attribute of a field.
+ *
+ * @todo support custom selectors with %lang and %key placeholders.
+ *
+ * @param array $field
+ *   The field form element.
+ *
+ * @return string|FALSE
+ *   A jQuery selector string.
+ */
+function conditional_fields_field_selector($field) {
+  if (isset($field['#attributes']['name'])) {
+    return '[name="' . $field['#attributes']['name'] . '"]';
+  }
+
+  if (isset($field['#name'])) {
+    return '[name="' . $field['#name'] . '"]';
+  }
+
+  // Try with id if name is not found.
+  if (isset($field['#attributes']['id'])) {
+    return '#' . $field['#attributes']['id'];
+  }
+
+  if (isset($field['#id'])) {
+    return '#' . $field['#id'];
+  }
+
+  return FALSE;
+}
+
+/**
+ * Implements hook_field_widget_third_party_settings_form().
+ *
+ * If the field has conditional fields, then ensure they are added on the form
+ * display widget settings page so they are not lost.
+ */
+function conditional_fields_field_widget_third_party_settings_form(WidgetInterface $plugin, FieldDefinitionInterface $field_definition, $form_mode, $form, FormStateInterface $form_state) {
+  $element = [];
+  $settings = $plugin->getThirdPartySettings('conditional_fields');
+
+  if (!empty($settings)) {
+    foreach ($settings as $uuid => $setting) {
+      $element[$uuid] = [
+        '#type' => 'value',
+        '#value' => $setting,
+      ];
+    }
+  }
+  return $element;
+}
+
+/**
+ * Implements hook_form_alter().
+ *
+ * Hook_form_alter() that attaches an 'afterbuild' function to the form.
+ *
+ * @param $form
+ *   The form to attach the callback to.
+ * @param $form_state
+ *   Not used, part of the hook interface.
+ * @param $form_id
+ *   Not used, part of the hook interface.
+ */
+function conditional_fields_form_alter(&$form, &$form_state, $form_id) {
+  $form['#after_build'][] = 'conditional_fields_form_after_build';
+}
+
+/**
+ * Runs the 'afterbuild' validation of a form with dependencies.
+ *
+ * This function will run only once per form.
+ *
+ * @param $form
+ *   The form to validate
+ * @param $form_state
+ *   The form's state.
+ *
+ * @return mixed
+ *   The form.
+ */
+function conditional_fields_form_after_build($form, &$form_state) {
+  return \Drupal::service('conditional_fields.form_helper')->afterBuild($form, $form_state);
+}

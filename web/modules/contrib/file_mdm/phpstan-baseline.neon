@@ -1,0 +1,26 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^If condition is always true\\.$#"
+			count: 1
+			path: file_mdm_exif/src/Plugin/FileMetadata/Exif.php
+
+		-
+			message: "#^Strict comparison using \\=\\=\\= between lsolesen\\\\pel\\\\PelIfd and null will always evaluate to false\\.$#"
+			count: 11
+			path: file_mdm_exif/src/Plugin/FileMetadata/Exif.php
+
+		-
+			message: "#^Strict comparison using \\=\\=\\= between lsolesen\\\\pel\\\\PelTiff and null will always evaluate to false\\.$#"
+			count: 2
+			path: file_mdm_exif/src/Plugin/FileMetadata/Exif.php
+
+		-
+			message: "#^Parameter \\#2 \\$value of class lsolesen\\\\pel\\\\PelEntryShort constructor expects int\\|null, array\\<int, int\\> given\\.$#"
+			count: 1
+			path: file_mdm_exif/tests/src/Kernel/FileMetadataExifTest.php
+
+		-
+			message: "#^Parameter \\#2 \\$message of method Drupal\\\\Core\\\\Form\\\\FormStateInterface\\:\\:setError\\(\\) expects string, Drupal\\\\Core\\\\StringTranslation\\\\TranslatableMarkup given\\.$#"
+			count: 1
+			path: src/Element/FileMetadataCaching.php

@@ -1,0 +1,116 @@
+{{ attach_library('nysenate_theme/bill-item') }}
+
+<div
+    class="c-block c-block-legislation {% if bill.featured %} c-block-legislation-featured {% endif %} {% if body %}c-block--half-wrap{% endif %} {{ modifier ? '' ~ modifier }}">
+  <div class="c-legislation-info {% if bill.issues %} with-issues {% endif %} {% if bill.list %} leg-list {% endif %}">
+    {% if bill.list %}
+        <div class="left-col">
+    {% endif %}
+
+    <h3 class="c-bill-num {% if bill.issues %}no-issues{% endif %} {{ bill.number_large ? 'c-bill-num--large' : '' }}">
+        <a href="{{ bill.link }}">{{ bill.number }}</a>
+    </h3>
+
+      {% if bill.issues %}
+        <div class="bill-type">
+          {% for issue in bill.issues %}
+            {% if loop.last %}
+              <a href="{{ issue.url }}"
+                 class="c-press-release--topic">{{ issue.text }}</a>
+            {% else %}
+              <a href="{{ issue.url }}"
+                 class="c-press-release--topic">{{ issue.text }}</a>,
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% endif %}
+      {% if bill.list %}
+        </div>
+      {% endif %}
+
+    <div class="right-col">
+    {% if bill.description_position == "top" %}
+        <p class="c-bill-descript">
+            <a href="{{ bill.link }}">{{ bill.description }}</a>
+        </p>
+    {% endif %}
+
+    {% if bill.bundle == "bill" %}
+      {% if bill.positions %}
+        {% include '@nysenate_theme/src/templates/includes/nys-bill-status.html.twig' with {positions: bill.positions, is_small: bill.small, is_featured: bill.featured} only %}
+      {% endif %}
+    {% endif %}
+    {% if bill.description_position == "bottom" %}
+        <p class="c-bill-descript">
+            <a href="{{ bill.link }}">{{ bill.description }}</a>
+        </p>
+    {% endif %}
+        {% if bill.bundle == 'resolution' %}
+        <div class="c-bill-update {% if bill.small %} bill-status__sml {% endif %}">
+          <div>
+            <p class="c-bill-update--date">
+              <span class="date-display-single">{{ bill.date }}</span>
+                {% if bill.resolution_last_status %}| {{ bill.resolution_last_status }}{% endif %}
+            </p>
+            {% if bill.update_location %}
+              <p class="c-bill-update--location">
+                <span>
+                  {{ bill.update_location }}
+                  {% if bill.committee_link %}
+                    <a class="committee-link" href="{{ bill.committee_link.url }}">{{ bill.committee_link.text }}</a>
+                  {% endif %}
+                </span>
+              </p>
+            {% endif %}
+          </div>
+        </div>
+      {% else %}
+        <div class="c-bill-update">
+          <p class="c-bill-update--date">
+            <span class="date-display-single">{{ bill.date }}</span>
+          </p>
+          {% if bill.update_location %}
+            <p class="c-bill-update--location">
+              <span>
+                {{ bill.update_location }}
+              </span>
+                {% if bill.committee_link %}
+                    <a class="committee-link"
+                       href="{{ bill.committee_link.url }}">{{ bill.committee_link.text }}</a>
+                {% endif %}
+            </p>
+          {% endif %}
+          {% if bill.ol_sponsor %}
+            <p class="c-bill-update--sponsor">
+              Sponsor:
+              <a href={{ bill.ol_sponsor.url }}>{{ bill.ol_sponsor.text }}</a>
+            </p>
+          {% endif %}
+        </div>
+
+      {% endif %}
+
+      {% if bill.sponsor %}
+        <div class="sponsors {{ bill.sponsor_modifier }}">
+          <span>{{ bill.sponsor_text|default('Sponsored by') }}</span>
+            <span class="sponsor-name"><a href="{{ bill.sponsor_link }}">{{ bill.sponsor }}</a></span>
+        </div>
+      {% endif %}
+
+      {% if bill.is_poll %}
+        <div class="c-bill-polling med-bg embed">
+          {% if bill.vote_widget %}
+            {{ bill.vote_widget }}
+          {% else %}
+            {% include "@nysenate_theme/bill-vote-widget/bill-vote-widget.twig" with {
+              action: bill.action,
+              node_id: bill.node_id,
+              poll_text: bill.poll_text,
+              hide_subscribe: bill.hide_subscribe,
+            } only %}
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>

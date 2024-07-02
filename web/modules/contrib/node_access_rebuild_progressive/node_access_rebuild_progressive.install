@@ -1,0 +1,9 @@
+<?php
+
+/**
+ * Implements hook_uninstall().
+ */
+function node_access_rebuild_progressive_uninstall(): void {
+  // Make sure to not leave any unprocessed node.
+  node_access_needs_rebuild(TRUE);
+}

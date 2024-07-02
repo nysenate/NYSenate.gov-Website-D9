@@ -1,0 +1,105 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the Login History module.
+ */
+
+use Drupal\Core\Database\Database;
+use Drupal\views\Entity\View;
+use Symfony\Component\Yaml\Yaml;
+
+/**
+ * Implements hook_schema().
+ */
+function login_history_schema() {
+  $schema['login_history'] = [
+    'description' => 'Base table to record data about login events.',
+    'fields' => [
+      'login_id' => [
+        'description' => 'The primary identifier for a login.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'uid' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'description' => 'uid of user.',
+      ],
+      'login' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'description' => "Timestamp for user's login.",
+      ],
+      'hostname' => [
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => "The user's host name.",
+      ],
+      'one_time' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+        'description' => 'Indicates whether the login was from a one-time login link (e.g. password reset).',
+      ],
+      'user_agent' => [
+        'type' => 'varchar',
+        'length' => 256,
+        'not null' => FALSE,
+        'default' => '',
+        'description' => 'User agent (i.e. browser) of the device used during the login.',
+      ],
+    ],
+    'primary key' => ['login_id'],
+    'indexes' => [
+      'login_history_uid' => ['uid'],
+      'login_history_onetime' => ['one_time'],
+      'login_history_uid_host_ua' => ['uid', 'hostname'],
+    ],
+  ];
+  return $schema;
+}
+
+/**
+ * Adds the primary key field for existing tables.
+ */
+function login_history_update_8001() {
+  $spec = login_history_schema();
+  $field = $spec['login_history']['fields']['login_id'];
+
+  $schema = Database::getConnection()->schema();
+  $schema->addField('login_history', 'login_id', $field, ['primary key' => ['login_id']]);
+}
+
+/**
+ * Creates the new default login_history view.
+ */
+function login_history_update_8002() {
+  // Only create if the login_history view doesn't exist and views is enabled.
+  if (\Drupal::moduleHandler()->moduleExists('views') && !View::load('login_history')) {
+    $config_path = \Drupal::service('extension.list.module')->getPath('login_history') . '/config/install/views.view.login_history.yml';
+    $data = Yaml::parseFile($config_path);
+    \Drupal::configFactory()->getEditable('views.view.login_history')->setData($data)->save(TRUE);
+    return 'The new login_history view has been created.';
+  }
+  else {
+    return 'Not creating a login_history view since it already exists.';
+  }
+}
+
+/**
+ * Alters the user_agent field to allow NULL values.
+ */
+function login_history_update_8003() {
+  $spec = login_history_schema();
+  $field = 'user_agent';
+  $field_spec = $spec['login_history']['fields'][$field];
+
+  $schema = Database::getConnection()->schema();
+  $schema->changeField('login_history', $field, $field, $field_spec);
+}

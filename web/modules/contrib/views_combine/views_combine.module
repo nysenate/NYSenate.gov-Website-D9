@@ -1,0 +1,63 @@
+<?php
+
+/**
+ * @file
+ * Primarily Drupal hooks and global API functions to manipulate views.
+ */
+
+use Drupal\views\ViewExecutable;
+use Drupal\views_combine\ViewsCombiner;
+
+/**
+ * Implements hook_views_data().
+ */
+function views_combine_views_data() {
+  $data['views']['views_combine'] = [
+    'title' => t('Views combine'),
+    'help' => t('Combine view into the current display.'),
+    'field' => [
+      'id' => 'views_combine',
+    ],
+    'filter' => [
+      'id' => 'views_combine',
+    ],
+    'sort' => [
+      'id' => 'views_combine',
+      'help' => t('Sort combined results by combined view order.'),
+    ],
+  ];
+  return $data;
+}
+
+/**
+ * Implements hook_views_post_build().
+ */
+function views_combine_views_post_build(ViewExecutable $view) {
+  $combiner = new ViewsCombiner($view);
+  $combiner->combine();
+}
+
+/**
+ * Implements hook_views_pre_render().
+ */
+function views_combine_views_pre_render(ViewExecutable $view) {
+  $combiner = new ViewsCombiner($view);
+  $combiner->results();
+}
+
+/**
+ * Implements hook_views_plugins_style_alter().
+ *
+ * @todo Support additional display styles.
+ */
+function views_combine_views_plugins_style_alter(array &$plugins) {
+  $overrides = [
+    'default' => 'Drupal\views_combine\Plugin\views\style\DefaultStyle',
+    'views_bootstrap_grid' => 'Drupal\views_combine\Plugin\views\style\ViewsBootstrapGrid',
+  ];
+  foreach ($overrides as $plugin_name => $plugin_class) {
+    if (isset($plugins[$plugin_name])) {
+      $plugins[$plugin_name]['class'] = $plugin_class;
+    }
+  }
+}

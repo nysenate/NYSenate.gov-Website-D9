@@ -72,6 +72,7 @@ class MailSubscriber implements EventSubscriberInterface {
       // Setup sendgrid variables.
       $sendgrid_template_id = '4b3a17d7-d47b-446a-a08e-ab2fbda04794';
       $user_reset_link = user_pass_reset_url($account);
+      $mail->setSubject('Your new NYSenate.gov account requires confirmation');
       $substitutions = [
         '%confirm_url%' => $user_reset_link,
       ];

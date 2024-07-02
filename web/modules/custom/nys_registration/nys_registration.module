@@ -7,6 +7,10 @@
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+use SendGrid\Mail\From;
+use SendGrid\Mail\Mail;
+use SendGrid\Mail\Personalization;
+use SendGrid\Mail\To;
 
 /**
  * Implements hook_entity_type_alter().

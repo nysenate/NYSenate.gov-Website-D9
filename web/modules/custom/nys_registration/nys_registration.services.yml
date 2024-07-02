@@ -3,6 +3,11 @@ services:
     class: Drupal\nys_registration\EventSubscriber\Routing\RouteSubscriber
     tags:
       - { name: event_subscriber }
+  nys_registration.mail_event_subscriber:
+    class: Drupal\nys_registration\EventSubscriber\Mailer\MailSubscriber
+    arguments: ['@messenger', '@logger.factory']
+    tags:
+      - { name: event_subscriber }
   nys_registration.helper:
     class: Drupal\nys_registration\RegistrationHelper
     arguments: ['@entity_type.manager', '@sage_api', '@path_alias.manager']

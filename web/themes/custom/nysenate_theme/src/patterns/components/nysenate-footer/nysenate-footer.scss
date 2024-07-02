@@ -315,6 +315,7 @@ footer {
 .c-senator-footer-col__social {
   width: 100%;
   padding-top: 20px;
+  text-align: center;
 
   @include breakpoint($bp-sm) {
     padding-top: 27px;
@@ -345,14 +346,16 @@ footer {
     list-style: none;
     display: flex;
     padding: 0;
-    justify-content: flex-start;
+    align-items: stretch;
+    justify-content: center;
     flex-direction: row;
     gap: 15px;
     margin: 0;
 
     @include breakpoint($bp-sm) {
       flex-direction: row;
-      justify-content: flex-start;
+      align-items: stretch;
+      justify-content: center;
     }
   }
 

@@ -125,7 +125,11 @@ footer {
   padding-bottom: 10px;
   border-bottom: 2px solid #e1e1e3;
   margin: 10px 0 20px;
-  height: 70px;
+  height: 170px;
+
+  #block-sitebranding {
+    margin-top: 24px;
+  }
 
   @include breakpoint($bp-sm) {
     width: 31%;
@@ -134,6 +138,9 @@ footer {
     border-bottom: 0;
     margin: 0;
     height: inherit;
+    #block-sitebranding {
+      margin-top: 0;
+    }
   }
 
   @include breakpoint($bp-md) {
@@ -142,7 +149,7 @@ footer {
   }
 
   a {
-    float: left;
+    //float: left;
     text-transform: uppercase;
     color: $gen_blue_drk;
     text-decoration: none;
@@ -204,7 +211,7 @@ footer {
       width: 42px;
       height: 42px;
       float: left;
-      margin-top: -15px;
+      margin-top: -5px;
       background: none;
 
       @include breakpoint($bp-sm) {
@@ -315,12 +322,16 @@ footer {
 .c-senator-footer-col__social {
   width: 100%;
   padding-top: 20px;
-  text-align: center;
+  border-top: 2px solid #e1e1e3;
+  margin-top: 30px;
 
   @include breakpoint($bp-sm) {
     padding-top: 34px;
     float: none;
     width: 100%;
+    text-align: center;
+    margin-top: 0;
+    border-top: none;
   }
 
   @include breakpoint($bp-md) {
@@ -330,7 +341,7 @@ footer {
   p {
     @include font-stack-secondary;
     //display: none;
-    margin: 0 0 20px;
+    margin: 0;
     color: $grey10;
     font-size: 12px;
     line-height: 14.62px;
@@ -346,8 +357,6 @@ footer {
     list-style: none;
     display: flex;
     padding: 0;
-    align-items: stretch;
-    justify-content: center;
     flex-direction: row;
     gap: 15px;
     margin: 0;

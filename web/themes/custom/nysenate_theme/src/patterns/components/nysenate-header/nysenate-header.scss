@@ -1163,3 +1163,14 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     position: relative;
   }
 }
+
+// Ensure header doesn't fall behind admin toolbar
+.toolbar-vertical {
+  #js-sticky--clone {
+    top: 39px
+  }
+
+  &.nav-open .c-nav--wrap {
+    top: 99px;
+  }
+}

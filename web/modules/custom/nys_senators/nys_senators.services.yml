@@ -12,6 +12,7 @@ services:
       - '@entity_type.manager'
       - '@cache.default'
       - '@theme_handler'
+      - '@request_stack'
   nys_senators.json_feed:
     class: Drupal\nys_senators\Service\SenatorsJson
     arguments:

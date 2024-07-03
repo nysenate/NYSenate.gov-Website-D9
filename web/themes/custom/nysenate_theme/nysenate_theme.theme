@@ -2913,6 +2913,28 @@ function get_issue_card($term) {
 }
 
 /**
+ * Implements hook_preprocess_HOOK().
+ */
+function nysenate_theme_preprocess_field__node__field_block(&$variables) {
+  // Remove microsite_hero and senator_microsite_menu blocks from field
+  // rendering, as these blocks are rendered directly through
+  // page--node--microsite-page.html.twig
+  $block_types = [
+    'microsite_hero',
+    'senator_microsite_menu',
+  ];
+  foreach (($variables['items'] ?? []) as $key => $item) {
+    /** @var \Drupal\block_content\Entity\BlockContent $block_content */
+    $block_content = ($item['content']['#block_content'] ?? []);
+    if ($block_content instanceof BlockContent) {
+      if (in_array($block_content->bundle(), $block_types)) {
+        unset($variables['items'][$key]);
+      }
+    }
+  }
+}
+
+/**
  * Implements hook_preprocess_page__node__TYPE().
  */
 function nysenate_theme_preprocess_page__node__microsite_page(&$variables) {
@@ -2930,7 +2952,8 @@ function nysenate_theme_preprocess_page__node__microsite_page(&$variables) {
       $block_content = $value->entity;
 
       if ($block_content instanceof BlockContent) {
-        // Alter the field_block contents to be displayed.
+        // Provide microsite_hero and senator_microsite_menu blocks directly to
+        // page--node--microsite-page.html.twig.
         if (in_array($block_content->bundle(), $block_types)) {
           if ($block_content->bundle() == 'microsite_hero') {
             $variables['microsite_hero'] = \Drupal::entityTypeManager()
@@ -2942,10 +2965,6 @@ function nysenate_theme_preprocess_page__node__microsite_page(&$variables) {
               ->getViewBuilder('block_content')
               ->view($block_content);
           }
-
-          // Set both microsite blocks to empty array
-          // to prevent from rendering in the display.
-          $node->get('field_block')[$key] = [];
         }
       }
     }
@@ -5035,12 +5054,6 @@ function get_item_cta($node) {
  * Implements hook_preprocess_page().
  */
 function nysenate_theme_preprocess_node__microsite_page__full(&$variables) {
-  // Disable page caching, to ensure field_block modifications in
-  // nysenate_theme_preprocess_page__node__microsite_page always run.
-  // @todo reimplement field_block modifications and turn page caching back on.
-  $variables['#cache']['max-age'] = 0;
-  \Drupal::service('page_cache_kill_switch')->trigger();
-
   $node = \Drupal::routeMatch()->getParameter('node');
 
   if (!empty($node) && $node->hasField('field_microsite_page_type') &&

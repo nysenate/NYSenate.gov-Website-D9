@@ -162,7 +162,6 @@ class FindMySenatorForm extends FormBase {
       ?? "Find My Senator";
     $form = [
       '#prefix' => '<div class="c-find-my-senator">',
-      // '#prefix' => '<div class="c-login"><div class="c-find-my-senator">',
       '#suffix' => '</div>',
       '#attached' => [
         'library' => ['nys_registration/find_my_senator'],
@@ -181,7 +180,6 @@ class FindMySenatorForm extends FormBase {
         '#value' => 'Find My Senator',
         '#weight' => 60,
       ],
-      // 'result' => ['#markup' => '', '#weight' => 100],
     ];
 
     if ($form_state->isSubmitted()) {
@@ -199,8 +197,10 @@ class FindMySenatorForm extends FormBase {
         ? $this->entityTypeManager->getViewBuilder('taxonomy_term')
           ->view($senator_term, 'senator_search_list')
         : NULL;
-      $district = $this->entityTypeManager->getViewBuilder('taxonomy_term')
-        ->view($district_term, 'matched_district');
+      $district = $district_term instanceof Term
+        ? $this->entityTypeManager->getViewBuilder('taxonomy_term')
+          ->view($district_term, 'matched_district')
+        : NULL;
       $form['result'] = [
         '#theme' => 'nys_find_my_senator',
         '#address' => $address,

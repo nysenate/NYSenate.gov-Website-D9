@@ -12,6 +12,12 @@ ul.c-login--list {
   margin-top: 0;
   padding-left: 0;
 
+  @include breakpoint($bp-under-md) {
+    &.desktop-mode {
+      margin-left: 20px;
+    }
+  }
+
   &.mobile-mode {
     width: 100%;
     margin-top: 15px;

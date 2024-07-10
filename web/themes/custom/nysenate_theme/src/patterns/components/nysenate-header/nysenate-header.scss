@@ -91,7 +91,7 @@
   margin-left: 20px;
   transition: background 0.2s ease;
 
-  @include breakpoint($bp-under-md) {
+  @media screen and (max-width: 1080px) {
     display: none;
   }
 
@@ -249,8 +249,6 @@
   top: -110vh;
   left: 0;
   right: 0;
-  bottom: 0;
-  height: 100vh;
   width: 100vw;
   z-index: 6;
   transition: all 0.3s ease-out 0s;
@@ -324,6 +322,7 @@
 
   .c-nav--wrap {
     top: 60px;
+    bottom: 0;
     height: auto;
   }
 

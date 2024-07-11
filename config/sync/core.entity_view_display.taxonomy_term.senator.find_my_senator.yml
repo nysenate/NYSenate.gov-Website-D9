@@ -1,0 +1,107 @@
+uuid: 3878d9ba-4f7a-452a-82ee-43956878f835
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.taxonomy_term.find_my_senator
+    - field.field.taxonomy_term.senator.field_about
+    - field.field.taxonomy_term.senator.field_active_senator
+    - field.field.taxonomy_term.senator.field_auto_reply_text
+    - field.field.taxonomy_term.senator.field_conference
+    - field.field.taxonomy_term.senator.field_current_duties
+    - field.field.taxonomy_term.senator.field_email
+    - field.field.taxonomy_term.senator.field_email_auto_reply_text
+    - field.field.taxonomy_term.senator.field_facebook_url
+    - field.field.taxonomy_term.senator.field_image_hero
+    - field.field.taxonomy_term.senator.field_inactive_senator_message
+    - field.field.taxonomy_term.senator.field_instagram_url
+    - field.field.taxonomy_term.senator.field_media_contact
+    - field.field.taxonomy_term.senator.field_media_email
+    - field.field.taxonomy_term.senator.field_media_fax
+    - field.field.taxonomy_term.senator.field_media_phone
+    - field.field.taxonomy_term.senator.field_member_headshot
+    - field.field.taxonomy_term.senator.field_message_notification_email
+    - field.field.taxonomy_term.senator.field_microsite_theme
+    - field.field.taxonomy_term.senator.field_office_contacts
+    - field.field.taxonomy_term.senator.field_offices
+    - field.field.taxonomy_term.senator.field_ol_member_id
+    - field.field.taxonomy_term.senator.field_ol_shortname
+    - field.field.taxonomy_term.senator.field_party
+    - field.field.taxonomy_term.senator.field_press_inquiries
+    - field.field.taxonomy_term.senator.field_press_kit
+    - field.field.taxonomy_term.senator.field_promotional_banners
+    - field.field.taxonomy_term.senator.field_senator_name
+    - field.field.taxonomy_term.senator.field_store_settings
+    - field.field.taxonomy_term.senator.field_top_issue
+    - field.field.taxonomy_term.senator.field_twitter_url
+    - field.field.taxonomy_term.senator.field_user_account
+    - field.field.taxonomy_term.senator.field_youtube_url
+    - field.field.taxonomy_term.senator.rabbit_hole__settings
+    - taxonomy.vocabulary.senator
+  module:
+    - nys_senators
+id: taxonomy_term.senator.find_my_senator
+targetEntityType: taxonomy_term
+bundle: senator
+mode: find_my_senator
+content:
+  field_member_headshot:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: 160x160
+      link: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_senator_name:
+    type: microsite_link
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  admin_microsite_content_senator_admin_content_eva: true
+  admin_microsite_content_senator_admin_content_eva_form: true
+  admin_microsite_legislation_senator_admin_legislation_eva: true
+  admin_microsite_legislation_senator_admin_legislation_eva_form: true
+  admin_microsite_questionnaires_senator_admin_q_eva: true
+  admin_microsite_questionnaires_senator_admin_q_eva_form: true
+  description: true
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  field_about: true
+  field_active_senator: true
+  field_auto_reply_text: true
+  field_conference: true
+  field_current_duties: true
+  field_email: true
+  field_email_auto_reply_text: true
+  field_facebook_url: true
+  field_image_hero: true
+  field_inactive_senator_message: true
+  field_instagram_url: true
+  field_media_contact: true
+  field_media_email: true
+  field_media_fax: true
+  field_media_phone: true
+  field_message_notification_email: true
+  field_microsite_theme: true
+  field_office_contacts: true
+  field_offices: true
+  field_ol_member_id: true
+  field_ol_shortname: true
+  field_party: true
+  field_press_inquiries: true
+  field_press_kit: true
+  field_promotional_banners: true
+  field_store_settings: true
+  field_top_issue: true
+  field_twitter_url: true
+  field_user_account: true
+  field_youtube_url: true
+  langcode: true
+  rabbit_hole__settings: true
+  search_api_excerpt: true

@@ -1,8 +1,9 @@
-uuid: 10a8e9e0-1ac4-4ca2-b7f6-8f72ebe1d851
+uuid: 923118db-eb60-47ab-830a-587879376d13
 langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_view_mode.taxonomy_term.matched_district
     - field.field.taxonomy_term.districts.field_chapters
     - field.field.taxonomy_term.districts.field_district_number
     - field.field.taxonomy_term.districts.field_map_url
@@ -11,28 +12,18 @@ dependencies:
     - field.field.taxonomy_term.districts.field_subheading
     - field.field.taxonomy_term.districts.rabbit_hole__settings
     - taxonomy.vocabulary.districts
-  module:
-    - metatag
-    - text
-id: taxonomy_term.districts.default
+id: taxonomy_term.districts.matched_district
 targetEntityType: taxonomy_term
 bundle: districts
-mode: default
+mode: matched_district
 content:
-  description:
-    type: text_default
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
-    weight: 0
-    region: content
   field_chapters:
     type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    weight: 5
+    weight: 2
     region: content
   field_district_number:
     type: number_integer
@@ -41,31 +32,16 @@ content:
       thousand_separator: ''
       prefix_suffix: true
     third_party_settings: {  }
-    weight: 1
-    region: content
-  field_map_url:
-    type: string
-    label: above
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    weight: 3
-    region: content
-  field_metatags:
-    type: metatag_empty_formatter
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    weight: 6
+    weight: 0
     region: content
   field_senator:
     type: entity_reference_entity_view
-    label: above
+    label: hidden
     settings:
-      view_mode: microsite_link
+      view_mode: find_my_senator
       link: false
     third_party_settings: {  }
-    weight: 7
+    weight: 3
     region: content
   field_subheading:
     type: string
@@ -73,12 +49,15 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 4
+    weight: 1
     region: content
 hidden:
+  description: true
   entity_print_view_epub: true
   entity_print_view_pdf: true
   entity_print_view_word_docx: true
+  field_map_url: true
+  field_metatags: true
   langcode: true
   rabbit_hole__settings: true
   search_api_excerpt: true

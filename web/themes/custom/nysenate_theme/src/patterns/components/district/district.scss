@@ -10,3 +10,58 @@
     flex-direction: column;
   }
 }
+
+
+.c-find-my-senator {
+  margin-bottom: 24px;
+  .media {
+    padding-top: 9px;
+  }
+  img {
+    border-radius: 50%;
+    height: 75px;
+    width: 75px;
+  }
+  .c-find-my-senator--senator {
+    display: flex;
+    flex-direction: row;
+    grid-gap: 12px;
+  }
+  .c-find-my-senator--senator-info {
+    a.microsite-link {
+      font-size: 20px;
+      color: #008CBF;
+    }
+    .c-find-my-senator--senator-info--district {
+      font-size: 20px;
+      font-family: $font-serif;
+      line-height: 2;
+    }
+    .field--name-field-senator-name {
+      line-height: 1;
+    }
+  }
+  a.c-msg-senator.icon-before__contact {
+    cursor: pointer;
+    appearance: none;
+    border: 0;
+    padding: 0 5px;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.25em;
+    font-family: "Proxima Nova SemiBold", "Arial", sans-serif;
+    width: 210px;
+    display: block;
+    color: #fff;
+    text-decoration: none;
+    text-align: center;
+    background-color: #175b81;
+    margin-top: 4px;
+  }
+  a.c-msg-senator.icon-before__contact::before {
+    margin-right: 0;
+    font-size: 32px;
+    line-height: 1;
+  }
+}
+

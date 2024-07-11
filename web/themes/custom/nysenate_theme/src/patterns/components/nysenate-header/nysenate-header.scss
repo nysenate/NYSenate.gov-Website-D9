@@ -1168,7 +1168,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
   }
 }
 
-// Ensure header doesn't fall behind admin toolbar
+// Ensure header doesn't fall behind admin toolbar.
 .toolbar-vertical {
   #js-sticky--clone {
     top: 39px
@@ -1177,4 +1177,9 @@ a:hover.c-header--btn.c-header--btn__taking_action {
   &.nav-open .c-nav--wrap {
     top: 99px;
   }
+}
+
+// Ensure header remains center-aligned when admin toolbar is present.
+.toolbar-horizontal header {
+  padding-left: var(--gin-toolbar-x-offset, 256px);
 }

@@ -92,7 +92,7 @@ function nys_registration_form_user_login_form_alter(&$form, FormStateInterface 
     '#type' => 'html_tag',
     '#tag' => 'a',
     '#attributes' => [
-      'href' => Url::fromRoute('user.register')->toString(),
+      'href' => Url::fromRoute('user.pass')->toString(),
       'id' => 'forgot-password-link',
     ],
     '#value' => 'I forgot my password',

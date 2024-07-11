@@ -167,11 +167,16 @@ class FindMySenatorForm extends FormBase {
         'library' => ['nys_registration/find_my_senator'],
       ],
       'title' => [
-        '#markup' => '<h2 class="nys-title">' . $title . '</h2>',
+        '#type' => 'html_tag',
+        '#tag' => 'h2',
+        '#value' => $title,
+        '#attributes' => ['class' => 'nys-title'],
         '#weight' => 1,
       ],
       'intro' => [
-        '#markup' => '<p>Please enter your street address and zip code to find out who your Senator is.</p>',
+        '#type' => 'html_tag',
+        '#tag' => 'p',
+        '#value' => 'Please enter your street address and zip code to find out who your Senator is.',
         '#weight' => 50,
       ],
       'field_address' => $this->getAddressDefinition(),

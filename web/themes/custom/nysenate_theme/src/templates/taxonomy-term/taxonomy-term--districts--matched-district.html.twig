@@ -27,6 +27,12 @@
 {{ attach_library('nysenate_theme/district') }}
 
 <div class="c-find-my-senator">
-    <h2 class="c-container--title">Your Senator</h2>
-    <div class="nys-title nys-title--district">{{ content.field_senator }}</div>
+  <h2 class="c-container--title">Your Senator</h2>
+  {% if content.field_senator.0 is defined %}
+    <div class="nys-title nys-title--district">
+      {{ content.field_senator }}
+    </div>
+  {% else %}
+    <div class="nys-vacant-seat">This Senate seat is currently vacant.</div>
+  {% endif %}
 </div>

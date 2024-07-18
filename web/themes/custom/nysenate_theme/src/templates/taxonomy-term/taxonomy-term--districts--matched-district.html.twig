@@ -23,19 +23,16 @@
  * @see template_preprocess_taxonomy_term()
  */
 #}
-{%
-  set classes = [
-    'taxonomy-term',
-    'vocabulary-' ~ term.bundle|clean_class,
-  ]
-%}
 
-{% include "@nysenate_theme/district/district.twig" with {
-  name: name[0]['#context']['value'],
-  video: content.field_map_url[0]['#context']['value'],
-  subhead: content.field_subheading[0]['#context']['value'],
-  body: content.description,
-  senator: content.field_senator[0]['#title'],
-  senator_link: senator_link,
-  view_mode: view_mode
-} only %}
+{{ attach_library('nysenate_theme/district') }}
+
+<div class="c-find-my-senator">
+  <h2 class="c-container--title">Your Senator</h2>
+  {% if content.field_senator.0 is defined %}
+    <div class="nys-title nys-title--district">
+      {{ content.field_senator }}
+    </div>
+  {% else %}
+    <div class="nys-vacant-seat">This Senate seat is currently vacant.</div>
+  {% endif %}
+</div>

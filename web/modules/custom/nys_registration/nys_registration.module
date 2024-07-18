@@ -15,7 +15,7 @@ use SendGrid\Mail\To;
 /**
  * Implements hook_entity_type_alter().
  *
- * Replace the core user registration form with our custom multi-step version.
+ * Replace the core user registration form with our custom multistep version.
  */
 function nys_registration_entity_type_alter(array &$entity_types): void {
   if ($user = ($entity_types['user'] ?? NULL)) {
@@ -26,8 +26,24 @@ function nys_registration_entity_type_alter(array &$entity_types): void {
 /**
  * Implements hook_theme().
  */
-function nys_registration_theme($existing, $type, $theme, $path) {
+function nys_registration_theme($existing, $type, $theme, $path): array {
   return [
+    'nys_find_my_senator' => [
+      'variables' => [
+        'is_anonymous' => TRUE,
+        'district' => NULL,
+        'district_term' => NULL,
+        'map_url' => '',
+        'senator' => NULL,
+        'address' => [
+          'address_line1' => '',
+          'address_line2' => '',
+          'locality' => '',
+          'administrative_area' => '',
+          'postal_code' => '',
+        ],
+      ],
+    ],
     'register_form_step2' => [
       'render element' => 'form',
     ],
@@ -43,7 +59,7 @@ function nys_registration_theme($existing, $type, $theme, $path) {
 /**
  * Implements hook_form_FORM_ID_alter().
  */
-function nys_registration_form_user_login_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+function nys_registration_form_user_login_form_alter(&$form, FormStateInterface $form_state, $form_id): void {
   $form['#attributes']['class'][] = 'registration-form';
 
   $form['registration_block_opener'] = [
@@ -116,7 +132,7 @@ function nys_registration_form_user_login_form_alter(&$form, FormStateInterface 
 /**
  * Implements hook_form_FORM_ID_alter().
  */
-function nys_registration_form_user_pass_reset_alter(&$form, FormStateInterface $form_state, $form_id) {
+function nys_registration_form_user_pass_reset_alter(&$form, FormStateInterface $form_state, $form_id): void {
   // Redirect the submit action to the custom function.
   $form['#action'] = '/nys' . $form['#action'];
 }
@@ -124,7 +140,7 @@ function nys_registration_form_user_pass_reset_alter(&$form, FormStateInterface 
 /**
  * Custom submit handler for the login form.
  */
-function nys_registration_user_login_form_submit($form, FormStateInterface $form_state) {
+function nys_registration_user_login_form_submit($form, FormStateInterface $form_state): void {
   $url = \Drupal::request()->headers->get('referer');
   $referrer = explode('/', $url);
 

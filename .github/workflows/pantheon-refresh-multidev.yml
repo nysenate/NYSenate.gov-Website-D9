@@ -29,7 +29,7 @@ jobs:
       - name: Mirror the latest code from master into the training environment
         run: |
           git clone -o pantheon -b master ${{ vars.PANTHEON_GIT_REMOTE }} ./
-          git push -f pantheon training
+          git push -f pantheon master:training
 
       - name: Refresh the training environment from live without files
         run: terminus env:clone-content ${{ vars.PANTHEON_SITE }}.live training --yes --db-only

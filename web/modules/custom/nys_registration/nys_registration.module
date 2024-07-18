@@ -159,6 +159,6 @@ function nys_registration_user_login_form_submit($form, FormStateInterface $form
  */
 function nys_registration_menu_local_tasks_alter(&$data, $route_name, &$cacheability) {
   if ($route_name === 'user.login') {
-    unset($data['tabs'][0]['user.pass']);
+    unset($data['tabs']);
   }
 }

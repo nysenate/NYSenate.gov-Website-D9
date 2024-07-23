@@ -179,8 +179,10 @@ function nys_bills_views_query_alter(ViewExecutable $view, QueryPluginBase $quer
       }
 
       // Update filter to current session year.
-      if ($query->where[1]['conditions'][2]['field'] == 'node__field_ol_session.field_ol_session_value') {
-        $query->where[1]['conditions'][2]['value'] = (string) $session_year;
+      foreach ($query->where[1]['conditions'] as $key => $condition) {
+        if ($condition['field'] === 'node__field_ol_session.field_ol_session_value') {
+          $query->where[1]['conditions'][$key]['value'] = (string) $session_year;
+        }
       }
     }
   }

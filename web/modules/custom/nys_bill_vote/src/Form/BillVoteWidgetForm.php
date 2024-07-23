@@ -317,7 +317,7 @@ class BillVoteWidgetForm extends FormBase {
           '#attributes' => ['class' => ['nys-bill-subscribe']],
           '#id' => 'edit-nys-bill-subscribe-container-' . $node_id,
           'nys_bill_subscribe_title' => [
-            '#markup' => '<div class="nys-bill-subscribe-beta"><a href="/citizen-guide/bill-alerts" style="color: #ffffff; font-weight: bold">BETA ⓘ</a></div><div class="nys-bill-subscribe-title">' . 'Get Status Alerts for ' . $ref_node->label() . '</div>',
+            '#markup' => '<div class="nys-bill-subscribe-title">' . 'Get Status Alerts for ' . $ref_node->label() . '</div>',
           ],
         ];
         if (!$this->currentUser->isAuthenticated()) {

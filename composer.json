@@ -135,7 +135,7 @@
         "drupal/seven": "^1.0",
         "drupal/simple_sitemap": "^4.1",
         "drupal/site_verify": "^2.0@alpha",
-        "drupal/stage_file_proxy": "^2.0",
+        "drupal/stage_file_proxy": "^3.1",
         "drupal/svg_image": "^3.0",
         "drupal/token": "~1.0",
         "drupal/transliterate_filenames": "^2.0",
@@ -271,6 +271,7 @@
         },
         "patches": {
             "drupal/core": {
+                "2983456 - Expose triggering update of media metadata + thumbnail to end users": "https://www.drupal.org/files/issues/2024-07-09/2983456-10.3.1-159_0.patch",
                 "2827921 - Exception thrown by responsive srcset images when the image is not yet in the file system (such as with Stage File Proxy)": "https://www.drupal.org/files/issues/2021-09-03/responsive_image-remove_missing_response_image_width_exception-2827921-22.patch",
                 "1671190 - Use <button /> form element type instead of <input type='submit'/>": "https://www.drupal.org/files/issues/2022-01-07/1671190-92.patch",
                 "2868014 - [PP-1] Views Date Filter Datetime Granularity Option": "https://www.drupal.org/files/issues/2023-05-19/2868014-136.patch",

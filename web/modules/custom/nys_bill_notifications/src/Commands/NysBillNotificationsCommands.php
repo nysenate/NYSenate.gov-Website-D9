@@ -57,6 +57,8 @@ class NysBillNotificationsCommands extends DrushCommands {
   /**
    * Processes OpenLeg update blocks to queue subscription emails.
    *
+   * NOTE: return code is a shell success (0)/fail (1).
+   *
    * @param array $options
    *   An associative array of options whose values come from cli, aliases,
    *   config, etc.
@@ -81,11 +83,13 @@ class NysBillNotificationsCommands extends DrushCommands {
    *
    * @aliases nysbn-pu
    */
-  public function processUpdates(array $options = [
-    'from' => NULL,
-    'to' => NULL,
-    'force' => FALSE,
-  ]): int {
+  public function processUpdates(
+    array $options = [
+      'from' => NULL,
+      'to' => NULL,
+      'force' => FALSE,
+    ],
+  ): int {
     $this->options = $this->resolveOptions($options);
 
     // Check for a lock, and set the lock.
@@ -93,10 +97,10 @@ class NysBillNotificationsCommands extends DrushCommands {
       $this->logger()->warning("Process lock detected ...");
       if (!$this->options['force']) {
         $message = "Process lock in place since " .
-                date(Request::OPENLEG_TIME_SIMPLE, $has_lock) .
-                ".  Wait for release, or use option --force to ignore it.";
+          date(Request::OPENLEG_TIME_SIMPLE, $has_lock) .
+          ".  Wait for release, or use option --force to ignore it.";
         $this->logger()->critical($message);
-        return DRUSH_FRAMEWORK_ERROR;
+        return 1;
       }
       $this->logger()->info("Ignoring lock because --force was used.");
     }
@@ -108,7 +112,7 @@ class NysBillNotificationsCommands extends DrushCommands {
     $this->setState('last_run', $ts);
     /* @phpstan-ignore-next-line */
     $this->logger()->success(dt('Update processing complete.'));
-    return DRUSH_SUCCESS;
+    return 0;
   }
 
   /**

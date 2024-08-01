@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Drupal\nys_issues\EventSubscriber;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Logger\LoggerChannelFactoryInterface;
+use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\flag\FlagServiceInterface;
 use Drupal\term_merge\TermMergeEventNames;
 use Drupal\term_merge\TermsMergedEvent;
@@ -14,6 +17,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  * Event subscriber for term merge events on the 'issues' vocabulary.
  */
 final class TermMergeSubscriber implements EventSubscriberInterface {
+  use StringTranslationTrait;
 
   /**
    * Constructs a TermMergeSubscriber object.
@@ -21,6 +25,8 @@ final class TermMergeSubscriber implements EventSubscriberInterface {
   public function __construct(
     private readonly FlagServiceInterface $flag,
     private readonly EntityTypeManagerInterface $entityTypeManager,
+    private readonly LoggerChannelFactoryInterface $loggerFactory,
+    private readonly MessengerInterface $messenger,
   ) {}
 
   /**
@@ -32,8 +38,18 @@ final class TermMergeSubscriber implements EventSubscriberInterface {
       $flag_id = 'follow_issue';
       $merged_tids = array_keys($event->getSourceTerms());
       $target_tid = $event->getTargetTerm()->id();
-      $flag_storage = $this->entityTypeManager
-        ->getStorage('flagging');
+
+      try {
+        $flag_storage = $this->entityTypeManager
+          ->getStorage('flagging');
+      }
+      catch (\Throwable $e) {
+        $message = 'Unable to recreate flags from term merge operation due to missing flag module.';
+        $this->messenger->addError($message);
+        $this->loggerFactory->get('nys_issues')->error($message);
+        return;
+      }
+
       $flagging_ids = $flag_storage->getQuery()
         ->accessCheck(FALSE)
         ->condition('flag_id', $flag_id)
@@ -56,14 +72,28 @@ final class TermMergeSubscriber implements EventSubscriberInterface {
         }
 
         // Otherwise, recreate flag for user on trunk term.
-        $flag_interface = $this->flag->getFlagById($flag_id);
-        $target_term = $this->entityTypeManager
-          ->getStorage('taxonomy_term')
-          ->load($target_tid);
-        $flagging_user = $this->entityTypeManager
-          ->getStorage('user')
-          ->load($flagging_uid);
-        $this->flag->flag($flag_interface, $target_term, $flagging_user);
+        $message_vars = [
+          '@flagging_term_id' => $flagging->entity_id->value,
+          '@flagging_uid' => $flagging_uid,
+        ];
+        try {
+          $flag_interface = $this->flag->getFlagById($flag_id);
+          $target_term = $this->entityTypeManager
+            ->getStorage('taxonomy_term')
+            ->load($target_tid);
+          $flagging_user = $this->entityTypeManager
+            ->getStorage('user')
+            ->load($flagging_uid);
+          $this->flag->flag($flag_interface, $target_term, $flagging_user);
+        }
+        catch (\Throwable $e) {
+          $message_vars['@error_msg'] = $e->getMessage();
+          $this->messenger->addError($this->t("There was an error re-creating flag for term ID @flagging_term_id for user ID @flagging_uid. Here's the full error: @error_msg.", $message_vars));
+          $this->loggerFactory->get('nys_issues')->error("There was an error re-creating flag for term ID @flagging_term_id for user ID @flagging_uid. Here's the full error: @error_msg.", $message_vars);
+          continue;
+        }
+        $this->messenger->addStatus($this->t("Successfully re-created flag for merged term ID @flagging_term_id for user ID @flagging_uid.", $message_vars));
+        $this->loggerFactory->get('nys_issues')->info("Successfully re-created flag for merged term ID @flagging_term_id for user ID @flagging_uid.", $message_vars);
       }
     }
   }

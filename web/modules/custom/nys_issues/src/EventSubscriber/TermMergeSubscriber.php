@@ -88,8 +88,8 @@ final class TermMergeSubscriber implements EventSubscriberInterface {
         }
         catch (\Throwable $e) {
           $message_vars['@error_msg'] = $e->getMessage();
-          $this->messenger->addError($this->t("There was an error re-creating flag for term ID @flagging_term_id for user ID @flagging_uid. Here's the full error: @error_msg.", $message_vars));
-          $this->loggerFactory->get('nys_issues')->error("There was an error re-creating flag for term ID @flagging_term_id for user ID @flagging_uid. Here's the full error: @error_msg.", $message_vars);
+          $this->messenger->addError($this->t("There was an error re-creating flag for term ID @flagging_term_id for user ID @flagging_uid. Here's the full error: @error_msg", $message_vars));
+          $this->loggerFactory->get('nys_issues')->error("There was an error re-creating flag for term ID @flagging_term_id for user ID @flagging_uid. Here's the full error: @error_msg", $message_vars);
           continue;
         }
         $this->messenger->addStatus($this->t("Successfully re-created flag for merged term ID @flagging_term_id for user ID @flagging_uid.", $message_vars));

@@ -28,6 +28,8 @@ class SageCommands extends DrushCommands {
   /**
    * Import objects from OpenLeg.
    *
+   * NOTE: return code is a shell success (0)/fail (1).
+   *
    * @option integer $max-age
    *   Overrides the module's configured max retention setting; number of days.
    * @usage drush nys_sage:cron
@@ -46,7 +48,7 @@ class SageCommands extends DrushCommands {
     else {
       $this->sageLogger->expireEntries($max_age * $this->sageLogger::SAGE_ONE_DAY);
     }
-    return DRUSH_SUCCESS;
+    return 0;
   }
 
 }

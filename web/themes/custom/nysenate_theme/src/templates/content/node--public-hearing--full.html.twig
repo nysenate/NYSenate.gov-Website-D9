@@ -139,6 +139,14 @@
   {% endif %}
 </article>
 
+{% if content.field_transcript.0 %}
+  <div class="c-container--header__top-border transcript">
+    <h3 class="c-container--title">transcript</h3>
+    <p>There is a full transcript of this meeting available.</p>
+    <a href="{{ path('entity.node.canonical', {'node':  node.field_transcript.entity.id}) }}" class="c-container--link">Read Full Transcript</a>
+  </div>
+{% endif %}
+
 {% if content.field_attachment[0] %}
   {% include "@nysenate_theme/file-uploads/file-uploads.twig" with {
     title: title,

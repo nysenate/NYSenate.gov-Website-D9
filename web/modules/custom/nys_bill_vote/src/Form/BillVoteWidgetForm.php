@@ -258,7 +258,8 @@ class BillVoteWidgetForm extends FormBase {
       $form_state->addBuildInfo('tid', $tid);
 
       // Check if already subscribed.
-      if ($this->billHelper->findSubscription($ref_node)) {
+      $subscription = $this->billHelper->findSubscription($ref_node);
+      if ($subscription && !$subscription->getCanceled()) {
         $nys_bill_subscribe = [
           '#type' => 'markup',
           '#markup' => '<hr /><div class="subscribe_result">You Are Subscribed.</div>',
@@ -316,7 +317,7 @@ class BillVoteWidgetForm extends FormBase {
           '#attributes' => ['class' => ['nys-bill-subscribe']],
           '#id' => 'edit-nys-bill-subscribe-container-' . $node_id,
           'nys_bill_subscribe_title' => [
-            '#markup' => '<div class="nys-bill-subscribe-beta"><a href="/citizen-guide/bill-alerts" style="color: #ffffff; font-weight: bold">BETA ⓘ</a></div><div class="nys-bill-subscribe-title">' . 'Get Status Alerts for ' . $ref_node->label() . '</div>',
+            '#markup' => '<div class="nys-bill-subscribe-title">' . 'Get Status Alerts for ' . $ref_node->label() . '</div>',
           ],
         ];
         if (!$this->currentUser->isAuthenticated()) {

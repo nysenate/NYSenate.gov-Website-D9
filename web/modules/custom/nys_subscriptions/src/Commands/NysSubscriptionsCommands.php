@@ -66,6 +66,8 @@ class NysSubscriptionsCommands extends DrushCommands {
    * If no queues are specified, all registered queues will be processed.  Each
    * queue specified must be registered.
    *
+   * NOTE: return code is a shell success (0)/fail (1).
+   *
    * @param array $options
    *   An associative array of options whose values come from cli, aliases,
    *   config, etc.
@@ -85,11 +87,13 @@ class NysSubscriptionsCommands extends DrushCommands {
    *
    * @aliases nysub-pq
    */
-  public function processQueues(array $options = [
-    'queues' => '',
-    'max_runtime' => NULL,
-  ]): int {
-    $ret = DRUSH_SUCCESS;
+  public function processQueues(
+    array $options = [
+      'queues' => '',
+      'max_runtime' => NULL,
+    ],
+  ): int {
+    $ret = 0;
     $queues = $this->resolveQueues($options['queues'] ?? '');
     foreach ($queues as $one_queue) {
       $this->logger()->info('Processing queue: @name', ['@name' => $one_queue]);
@@ -99,18 +103,18 @@ class NysSubscriptionsCommands extends DrushCommands {
         $results = $queue->process($bedtime);
         $this->logger()
           ->info(
-                  "Completed processing for queue @name, @success success, @fail fail, @skip skipped",
-                  [
-                    '@success' => $results->getSuccess(),
-                    '@fail' => $results->getFail(),
-                    '@skip' => $results->getSkipped(),
-                  ]
-              );
+            "Completed processing for queue @name, @success success, @fail fail, @skip skipped",
+            [
+              '@success' => $results->getSuccess(),
+              '@fail' => $results->getFail(),
+              '@skip' => $results->getSkipped(),
+            ]
+          );
       }
       catch (\Throwable $e) {
         $this->logger()
           ->error("Queue @name failed to process, message:\n@msg", ['@msg' => $e->getMessage()]);
-        $ret = DRUSH_APPLICATION_ERROR;
+        $ret = 1;
       }
     }
     return $ret;

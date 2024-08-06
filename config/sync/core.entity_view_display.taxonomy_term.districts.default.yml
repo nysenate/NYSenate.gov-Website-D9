@@ -59,10 +59,11 @@ content:
     weight: 6
     region: content
   field_senator:
-    type: entity_reference_label
+    type: entity_reference_entity_view
     label: above
     settings:
-      link: true
+      view_mode: microsite_link
+      link: false
     third_party_settings: {  }
     weight: 7
     region: content

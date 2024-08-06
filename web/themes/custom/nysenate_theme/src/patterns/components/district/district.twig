@@ -2,7 +2,7 @@
 
 <div class="district">
   <div class="district__header">
-    {% if view_mode == "district" %}
+    {% if view_mode == "district" or view_mode == "matched_district" %}
       <h2 class="nys-title nys-title--district">Our District</h2>
       {% if name %}
         <h3 class="c-subpage-header--subtitle03">{{ name }}</h3>

@@ -20,7 +20,7 @@
     attach: function () {
       // Init variables
       var viewType = '';
-      var formatType = 'm/d/Y';
+      var formatType = 'Y-m-d';
       var submit = '';
 
       // Check the type of view i.e day/week/month and initialize datepicker options
@@ -34,27 +34,27 @@
       }
       if ($('.view-events.view-display-id-page_2').length > 0) {
         viewType = 'month';
-        formatType = 'm/Y';
+        formatType = 'Y-m';
         submit = $('#views-exposed-form-events-page-2 input[type="submit"]');
-        $('.form-item-date.js-form-type-textfield').hide();
+        $('.form-item-date.js-form-type-date').hide();
       }
       if ($('.view-events.view-display-id-page_3').length > 0) {
         viewType = 'week';
         submit = $('#views-exposed-form-events-page-3 input[type="submit"]');
-        $('.form-item-date-min.form-type-textfield').hide();
+        formatType = 'm/d/Y';
+        $('.form-item-date-min.form-type-date').hide();
       }
 
-      if ($('.form-item-date.js-form-type-textfield input').val()) {
+      if ($('.form-item-date.js-form-type-date input').val()) {
         if (viewType === 'day') {
-          $('#datepicker input').val($('.form-item-date.js-form-type-textfield input').val());
+          $('#datepicker input').val($('.form-item-date.js-form-type-date input').val());
         }
         else if (viewType === 'month') {
-          const splitDate = $('.form-item-date.js-form-type-textfield  input')
+          const splitDate = $('.form-item-date.js-form-type-date input')
             .val()
-            .split('/');
-          const lastIndex = splitDate.length - 1;
+            .split('-');
 
-          $('#datepicker input').val(`${splitDate[0]}/${splitDate[lastIndex]}`);
+          $('#datepicker input').val(`${splitDate[0]}-${splitDate[1]}`);
         }
       }
       if ($('.js-form-item-date-min input').val()) {
@@ -94,14 +94,16 @@
             inputElement = $('.js-form-item-date-min input');
           }
           else {
-            inputElement = $('.form-item-date.js-form-type-textfield input');
+            inputElement = $('.form-item-date.js-form-type-date input');
           }
           if (viewType === 'month') {
-            // Temporarily set date value to avoid conflict with the views form.
-            const splitDate = format.split('/');
-            inputElement.val(`${splitDate[0]}/01/${splitDate[1]}`);
+            inputElement.val(format + '-01');
             submit.click();
-            inputElement.val(`${splitDate[0]}/${splitDate[1]}`);
+          }
+          if (viewType === 'week') {
+            const splitDate = format.split('/');
+            inputElement.val(`${splitDate[2]}-${splitDate[0]}-${splitDate[1]}`);
+            submit.click();
           }
           else {
             inputElement.val(format);
@@ -178,7 +180,7 @@
                   inputElement = $('.js-form-item-date-min input');
                 }
                 else {
-                  inputElement = $('.form-item-date.js-form-type-textfield input');
+                  inputElement = $('.form-item-date.js-form-type-date input');
                 }
 
                 if (inputElement.val() === '') {

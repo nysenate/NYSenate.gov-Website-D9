@@ -1,0 +1,63 @@
+uuid: 923118db-eb60-47ab-830a-587879376d13
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.taxonomy_term.matched_district
+    - field.field.taxonomy_term.districts.field_chapters
+    - field.field.taxonomy_term.districts.field_district_number
+    - field.field.taxonomy_term.districts.field_map_url
+    - field.field.taxonomy_term.districts.field_metatags
+    - field.field.taxonomy_term.districts.field_senator
+    - field.field.taxonomy_term.districts.field_subheading
+    - field.field.taxonomy_term.districts.rabbit_hole__settings
+    - taxonomy.vocabulary.districts
+id: taxonomy_term.districts.matched_district
+targetEntityType: taxonomy_term
+bundle: districts
+mode: matched_district
+content:
+  field_chapters:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_district_number:
+    type: number_integer
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_senator:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: find_my_senator
+      link: false
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_subheading:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  description: true
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  field_map_url: true
+  field_metatags: true
+  langcode: true
+  rabbit_hole__settings: true
+  search_api_excerpt: true

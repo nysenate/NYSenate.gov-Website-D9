@@ -7,6 +7,8 @@
 {% if links %}
   {% include "@nysenate_theme/microsite-menu/microsite-menu.twig" with {
     links: links,
+    is_logged: is_logged,
+    user_first_name: user_first_name,
     search: {
       title: "Search",
       placeholder: "Search Sen. " ~ senatorName,

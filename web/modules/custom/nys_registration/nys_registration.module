@@ -104,6 +104,17 @@ function nys_registration_form_user_login_form_alter(&$form, FormStateInterface 
     '#weight' => 100,
   ];
 
+  $form['reset_password'] = [
+    '#type' => 'html_tag',
+    '#tag' => 'a',
+    '#attributes' => [
+      'href' => Url::fromRoute('user.pass')->toString(),
+      'id' => 'forgot-password-link',
+    ],
+    '#value' => 'I forgot my password',
+    '#weight' => 101,
+  ];
+
   $form['login_right_bottom'] = [
     '#weight' => 10001,
     '#markup' => '</div>',
@@ -140,5 +151,14 @@ function nys_registration_user_login_form_submit($form, FormStateInterface $form
   }
   else {
     $form_state->setRedirectUrl(Url::fromUri($url));
+  }
+}
+
+/**
+ * Implements hook_menu_local_tasks_alter().
+ */
+function nys_registration_menu_local_tasks_alter(&$data, $route_name, &$cacheability) {
+  if ($route_name === 'user.login') {
+    unset($data['tabs']);
   }
 }

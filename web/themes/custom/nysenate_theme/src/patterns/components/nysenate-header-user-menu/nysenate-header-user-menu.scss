@@ -12,6 +12,12 @@ ul.c-login--list {
   margin-top: 0;
   padding-left: 0;
 
+  .c-header--btn.c-header--btn__primary {
+    span.c-user-menu--shrunk-dashboard-link {
+      display: none;
+    }
+  }
+
   &.mobile-mode {
     width: 100%;
     margin-top: 15px;
@@ -83,6 +89,21 @@ ul.c-login--list {
   }
 
   &.desktop-mode {
+    @include breakpoint($bp-under-lg2) {
+      .c-header--btn.c-header--btn__primary {
+        span.c-user-menu--full-width-dashboard-link {
+          display: none;
+        }
+        span.c-user-menu--shrunk-dashboard-link {
+          display: inline;
+        }
+      }
+    }
+
+    @include breakpoint($bp-under-md) {
+      margin-left: 20px;
+    }
+
     &:hover, &:focus-within {
       .c-header--btn__primary {
         color: $color-white;

@@ -54,6 +54,10 @@
     bottom: 40px;
     right: 150px;
 
+    @include breakpoint($bp-under-lg2) {
+      display: none;
+    }
+
     a.dashboard-actionbar-link {
       position: relative;
       float: right;
@@ -71,10 +75,6 @@
 
       &:hover {
         background-color: rgba(0, 0, 0, 0.4);
-      }
-
-      @include breakpoint($bp-under-md) {
-        display: none;
       }
 
       i {

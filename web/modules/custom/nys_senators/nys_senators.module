@@ -30,7 +30,11 @@ use Drupal\user\UserInterface;
 function nys_senators_theme($existing, $type, $theme, $path): array {
   return [
     'senator_microsite_menu_block' => [
-      'variables' => ['menu_links' => NULL],
+      'variables' => [
+        'menu_links' => NULL,
+        'is_logged' => NULL,
+        'user_first_name' => NULL,
+      ],
     ],
     'nys_senators_management_overview' => [
       'variables' => ['stats' => NULL, 'active_list' => NULL],

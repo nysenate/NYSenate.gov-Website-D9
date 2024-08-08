@@ -7,7 +7,6 @@ use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\State\State;
 use Drupal\nys_openleg_api\ConditionalLogger;
 use Drupal\nys_openleg_api\Plugin\OpenlegApi\Response\EmptyList;
-use Drupal\nys_openleg_api\Plugin\OpenlegApi\Response\ResponseSearch;
 use Drupal\nys_openleg_api\Plugin\OpenlegApi\Response\YearBasedSearchList;
 use Drupal\nys_openleg_api\Request;
 use Drupal\nys_openleg_api\Service\Api;
@@ -86,7 +85,7 @@ class OpenlegImport extends DrushCommands {
   /**
    * An importer to be used with this execution.
    *
-   * @var ImporterInterface
+   * @var \Drupal\nys_openleg_imports\ImporterInterface
    */
   protected ImporterInterface $importer;
 
@@ -178,16 +177,6 @@ class OpenlegImport extends DrushCommands {
     }
     $options['ids'] = $list;
 
-    // This is here to trigger a sniffer error preventing a commit until this line and below is removed
-    /*
-        // Change any hyphens to slashes.
-        $options['ids'] = array_map(
-          function ($v) {
-            return str_replace('-', '/', $v);
-          },
-          array_filter(array_unique($list))
-        );
-    */
     return $options;
   }
 
@@ -280,18 +269,21 @@ class OpenlegImport extends DrushCommands {
   /**
    * Wrapper to execute an import command.
    *
+   * Note that the return is a shell success/fail in the context of drush.
+   * Non-zero returns indicate an error condition.
+   *
    * @throws \Drush\Exceptions\CommandFailedException
    */
   protected function execute(string $type, array $options, string $callback): int {
     // Set up or die.
     if (!$this->doSetup($type, $options)) {
-      return DRUSH_FRAMEWORK_ERROR;
+      return 1;
     }
 
     // Call the handler and send the result through clean up.
     $this->doCleanup($this->$callback($options));
 
-    return DRUSH_SUCCESS;
+    return 0;
   }
 
   /**
@@ -322,11 +314,9 @@ class OpenlegImport extends DrushCommands {
    *
    * @throws \Drush\Exceptions\CommandFailedException
    */
-  public function importUpdates(string $type, array $options = [
-    'from' => NULL,
-    'to' => NULL,
-    'force' => FALSE,
-  ]
+  public function importUpdates(
+    string $type,
+    array $options = ['from' => NULL, 'to' => NULL, 'force' => FALSE],
   ): int {
     return $this->execute($type, $options, 'doImportUpdate');
   }
@@ -335,12 +325,12 @@ class OpenlegImport extends DrushCommands {
    * Handler/callback to import updates.
    *
    * @param array $options
-   *   The original drush command-line options.
+   *   The original command-line options.
    *
    * @see importUpdates()
    */
   protected function doImportUpdate(array $options): ImportResult {
-    // If no "to" time was passed, set the last run marker to the current time.
+    // Only set the last_run.updates marker if no `to` time was specified.
     if (!($options['to'] ?? 0)) {
       $this->setState('last_run.updates', time());
     }
@@ -384,14 +374,15 @@ class OpenlegImport extends DrushCommands {
    *
    * @throws \Drush\Exceptions\CommandFailedException
    */
-  public function import(string $type, array $options = [
-    'ids' => [],
-    'session' => 0,
-    'limit' => 0,
-    'offset' => 1,
-    'force' => FALSE,
-    'log-level' => RfcLogLevel::NOTICE,
-  ]
+  public function import(
+    string $type,
+    array $options = [
+      'ids' => [],
+      'session' => 0,
+      'limit' => 0,
+      'offset' => 1,
+      'force' => FALSE,
+    ],
   ): int {
     return $this->execute($type, $options, 'doImport');
   }
@@ -400,7 +391,7 @@ class OpenlegImport extends DrushCommands {
    * Handler/callback for a standard import.
    *
    * @param array $options
-   *   The original drush command-line options.
+   *   The original command-line options.
    *
    * @see import()
    */

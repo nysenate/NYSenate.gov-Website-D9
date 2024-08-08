@@ -109,6 +109,7 @@
         "drupal/node_export": "^1.0@alpha",
         "drupal/node_revision_delete": "^2.0@RC",
         "drupal/oembed_providers": "^2.0",
+        "drupal/optional_end_date": "^1.3",
         "drupal/other_view_filter": "^1.3",
         "drupal/override_node_options": "^2.7",
         "drupal/pantheon_advanced_page_cache": "^2.1",
@@ -134,8 +135,11 @@
         "drupal/seven": "^1.0",
         "drupal/simple_sitemap": "^4.1",
         "drupal/site_verify": "^2.0@alpha",
-        "drupal/stage_file_proxy": "^2.0",
+        "drupal/stage_file_proxy": "^3.1",
         "drupal/svg_image": "^3.0",
+        "drupal/taxonomy_manager": "^2.0",
+        "drupal/term_merge": "^2.0@beta",
+        "drupal/term_merge_manager": "^2.0",
         "drupal/token": "~1.0",
         "drupal/transliterate_filenames": "^2.0",
         "drupal/turnstile": "^1.1",
@@ -270,19 +274,18 @@
         },
         "patches": {
             "drupal/core": {
+                "2983456 - Expose triggering update of media metadata + thumbnail to end users": "https://www.drupal.org/files/issues/2024-07-09/2983456-10.3.1-159_0.patch",
                 "2827921 - Exception thrown by responsive srcset images when the image is not yet in the file system (such as with Stage File Proxy)": "https://www.drupal.org/files/issues/2021-09-03/responsive_image-remove_missing_response_image_width_exception-2827921-22.patch",
                 "1671190 - Use <button /> form element type instead of <input type='submit'/>": "https://www.drupal.org/files/issues/2022-01-07/1671190-92.patch",
                 "2868014 - [PP-1] Views Date Filter Datetime Granularity Option": "https://www.drupal.org/files/issues/2023-05-19/2868014-136.patch",
                 "2993688 - Views relationships with multi-valued entity reference fields invalidate Distinct query option": "https://www.drupal.org/files/issues/2022-06-16/2993688-99.patch",
-                "2983456 - Expose triggering update of media metadata + thumbnail to end users": "https://www.drupal.org/files/issues/2024-02-06/2983456-144.patch",
                 "2701575 - : TypeError: Drupal\\Core\\Routing\\RequestContext::fromRequest() https://www.drupal.org/project/drupal/issues/2701575": "https://www.drupal.org/files/issues/2022-02-28/2701575-14.patch",
                 "3202896 - Don't display OEmbed error to anonymous visitors when resource stops being available: https://www.drupal.org/project/drupal/issues/3202896": "https://www.drupal.org/files/issues/2022-02-23/issue-3202896-6.patch",
-                "2972846 - Improve oEmbed exception logging: https://www.drupal.org/project/drupal/issues/2972846": "https://www.drupal.org/files/issues/2022-12-20/drupal-9.4.x-core-media-oembed-2972846-25.patch",
-                "2769407 - Views UI should offer a 'Treat NULL values as FALSE' on boolean field": "https://www.drupal.org/files/issues/2024-01-19/2769407_views_ui_null_option-10.1.x-85.patch",
-                "2741877 - Nested modals don't work - fixed focal point preview modal": "https://www.drupal.org/files/issues/2021-04-29/2741877-77.patch",
+                "2769407 - Views UI should offer a 'Treat NULL values as FALSE' on boolean field": "https://www.drupal.org/files/issues/2024-06-26/2769407_views_ui_null_option-10.3.x-90.patch",
+                "2741877 - Nested modals don't work - fixed focal point preview modal": "https://www.drupal.org/files/issues/2024-06-20/drupal-core--2024-06-20--2741877--mr-8105.patch",
                 "3049216 - ajax error": "https://www.drupal.org/files/issues/2023-01-31/3049216-21_0.patch",
-                "2794481 - Allow end date to be optional": "https://www.drupal.org/files/issues/2021-05-15/2794481-126.patch",
-                "3315678 - strnatcasecmp(): Passing null to parameter #2 ($string2) of type string is deprecated": "https://www.drupal.org/files/issues/2023-01-30/categorizing_plugin_error-3315678-16.patch"
+                "3315678 - strnatcasecmp(): Passing null to parameter #2 ($string2) of type string is deprecated": "https://www.drupal.org/files/issues/2023-01-30/categorizing_plugin_error-3315678-16.patch",
+                "3456738 - breaks log in": "https://www.drupal.org/files/issues/2024-06-25/3456738-9.patch"
             },
             "drupal/htmlpurifier": {
                 "2989756 - HTMLPurifier Serializer caches into vendor directory by default": "https://www.drupal.org/files/issues/2021-09-24/serializer-caches-into-vendor-d9-2989756-14.patch"
@@ -323,6 +326,15 @@
             },
             "drupal/clamav": {
                 "3383653 -Support image upload plugin for CKEditor5\n": "https://git.drupalcode.org/project/clamav/-/merge_requests/7.patch"
+            },
+            "drupal/email_registration": {
+                "3456461 - Login fails with Drupal 10.3": "https://git.drupalcode.org/project/email_registration/-/merge_requests/43.patch"
+            },
+            "drupal/stage_file_proxy": {
+                "3457368 - createProxyHeadersArray(): Argument #1 ($headers_string) must be of type string": "https://git.drupalcode.org/project/stage_file_proxy/-/merge_requests/74.patch"
+            },
+            "drupal/term_merge": {
+                "3311345 - better UI": "https://www.drupal.org/files/issues/2024-04-20/term_merge_ajax-filter3311345-17.patch"
             }
         }
     }

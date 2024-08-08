@@ -56,3 +56,7 @@ sure every time a change is saved it automatically gets compiled to CSS_
 
 _This will perform a one-time deletion of all compiled files within the dist/
 directory._
+
+### Access Pattern Lab Style guide
+
+https://www.nysenate.gov/themes/custom/nysenate_theme/patternlab/?p=all

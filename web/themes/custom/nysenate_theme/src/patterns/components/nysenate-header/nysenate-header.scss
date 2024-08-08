@@ -1179,6 +1179,16 @@ a:hover.c-header--btn.c-header--btn__taking_action {
   }
 }
 
+// On mobile, ensure admin toolbar doesn't expand over header
+@include breakpoint($bp-under-xsm) {
+  .toolbar-vertical {
+    #gin-toolbar-bar {
+      height: 39.5px;
+      overflow: hidden;
+    }
+  }
+}
+
 // Ensure header remains center-aligned when admin toolbar is present.
 .toolbar-horizontal header.fixed {
   padding-left: var(--gin-toolbar-x-offset, 256px);

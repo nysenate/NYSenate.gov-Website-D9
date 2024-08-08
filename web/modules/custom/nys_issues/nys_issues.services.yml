@@ -1,6 +1,6 @@
 services:
   nys_issues.event_subscriber:
     class: Drupal\nys_issues\EventSubscriber\TermMergeSubscriber
-    arguments: ['@flag', '@entity_type.manager', '@logger.factory', '@messenger']
+    arguments: ['@flag', '@entity_type.manager', '@logger.factory', '@messenger', '@string_translation']
     tags:
       - { name: event_subscriber }

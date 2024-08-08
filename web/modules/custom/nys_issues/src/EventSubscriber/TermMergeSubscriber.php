@@ -7,7 +7,7 @@ namespace Drupal\nys_issues\EventSubscriber;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Messenger\MessengerInterface;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\StringTranslation\TranslationManager;
 use Drupal\flag\FlagServiceInterface;
 use Drupal\term_merge\TermMergeEventNames;
 use Drupal\term_merge\TermsMergedEvent;
@@ -17,7 +17,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  * Event subscriber for term merge events on the 'issues' vocabulary.
  */
 final class TermMergeSubscriber implements EventSubscriberInterface {
-  use StringTranslationTrait;
 
   /**
    * Constructs a TermMergeSubscriber object.
@@ -27,12 +26,13 @@ final class TermMergeSubscriber implements EventSubscriberInterface {
     private readonly EntityTypeManagerInterface $entityTypeManager,
     private readonly LoggerChannelFactoryInterface $loggerFactory,
     private readonly MessengerInterface $messenger,
+    private readonly TranslationManager $stringTranslation,
   ) {}
 
   /**
    * Recreate flags on to-delete branch terms pointing to preserved trunk terms.
    */
-  public function onTermMerge(TermsMergedEvent $event): void {
+  public function recreateIssueFlagsOnTermMerge(TermsMergedEvent $event): void {
     $flaggable_vid = 'issues';
     if ($event->getTargetTerm()->bundle() == $flaggable_vid) {
       $flag_id = 'follow_issue';
@@ -45,7 +45,7 @@ final class TermMergeSubscriber implements EventSubscriberInterface {
       }
       catch (\Throwable $e) {
         $message = 'Unable to recreate flags from term merge operation due to missing flag module.';
-        $this->messenger->addError($message);
+        $this->messenger->addError($this->stringTranslation->translate($message));
         $this->loggerFactory->get('nys_issues')->error($message);
         return;
       }
@@ -88,11 +88,11 @@ final class TermMergeSubscriber implements EventSubscriberInterface {
         }
         catch (\Throwable $e) {
           $message_vars['@error_msg'] = $e->getMessage();
-          $this->messenger->addError($this->t("There was an error re-creating flag for term ID @flagging_term_id for user ID @flagging_uid. Here's the full error: @error_msg", $message_vars));
+          $this->messenger->addError($this->stringTranslation->translate("There was an error re-creating flag for term ID @flagging_term_id for user ID @flagging_uid. Here's the full error: @error_msg", $message_vars));
           $this->loggerFactory->get('nys_issues')->error("There was an error re-creating flag for term ID @flagging_term_id for user ID @flagging_uid. Here's the full error: @error_msg", $message_vars);
           continue;
         }
-        $this->messenger->addStatus($this->t("Successfully re-created flag for merged term ID @flagging_term_id for user ID @flagging_uid.", $message_vars));
+        $this->messenger->addStatus($this->stringTranslation->translate("Successfully re-created flag for merged term ID @flagging_term_id for user ID @flagging_uid.", $message_vars));
         $this->loggerFactory->get('nys_issues')->info("Successfully re-created flag for merged term ID @flagging_term_id for user ID @flagging_uid.", $message_vars);
       }
     }
@@ -102,8 +102,12 @@ final class TermMergeSubscriber implements EventSubscriberInterface {
    * {@inheritdoc}
    */
   public static function getSubscribedEvents(): array {
+    if (!class_exists('Drupal\term_merge\TermMergeEventNames')) {
+      return [];
+    }
+
     return [
-      TermMergeEventNames::TERMS_MERGED => ['onTermMerge'],
+      TermMergeEventNames::TERMS_MERGED => ['recreateIssueFlagsOnTermMerge'],
     ];
   }
 

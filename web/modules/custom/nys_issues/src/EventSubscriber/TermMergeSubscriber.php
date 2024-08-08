@@ -102,6 +102,10 @@ final class TermMergeSubscriber implements EventSubscriberInterface {
    * {@inheritdoc}
    */
   public static function getSubscribedEvents(): array {
+    if (!class_exists('Drupal\term_merge\TermMergeEventNames')) {
+      return [];
+    }
+
     return [
       TermMergeEventNames::TERMS_MERGED => ['onTermMerge'],
     ];

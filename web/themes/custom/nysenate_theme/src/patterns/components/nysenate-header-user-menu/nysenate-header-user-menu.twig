@@ -3,7 +3,8 @@
   <ul class="c-login--list u-tablet-plus{{ mobile_mode ? ' mobile-mode' : ' desktop-mode'}}">
     <li>
       <a class="c-header--btn c-header--btn__primary" href="{{ dashboard_link }}">
-        Welcome, {{ user_first_name }}!
+        <span class="c-user-menu--full-width-dashboard-link">Welcome, {{ user_first_name }}!</span>
+        <span class="c-user-menu--shrunk-dashboard-link">My Stuff</span>
       </a>
     </li>
     {% if senator_microsite_link %}

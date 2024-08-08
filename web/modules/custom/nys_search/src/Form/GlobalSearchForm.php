@@ -68,6 +68,20 @@ class GlobalSearchForm extends FormBase {
       ],
     ];
 
+    $form['advanced_leg_search_link'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'a',
+      '#value' => 'Advanced Legislation Search',
+      '#attributes' => [
+        'href' => '/search/legislation',
+        'class' => [
+          'c-site-search--link',
+          'icon-after__right',
+          'u-tablet-plus',
+        ],
+      ],
+    ];
+
     return $form;
   }
 

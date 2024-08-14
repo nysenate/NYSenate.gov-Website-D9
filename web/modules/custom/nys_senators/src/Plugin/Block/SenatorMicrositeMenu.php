@@ -7,6 +7,7 @@ use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Routing\CurrentRouteMatch;
 use Drupal\Core\Session\AccountInterface;
@@ -55,6 +56,13 @@ class SenatorMicrositeMenu extends BlockBase implements ContainerFactoryPluginIn
   protected AccountProxyInterface $currentUser;
 
   /**
+   * Current user.
+   *
+   * @var \Drupal\Core\Logger\LoggerChannelFactoryInterface
+   */
+  protected LoggerChannelFactoryInterface $loggerFactory;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
@@ -64,6 +72,7 @@ class SenatorMicrositeMenu extends BlockBase implements ContainerFactoryPluginIn
       $container->get('entity_type.manager'),
       $container->get('current_route_match'),
       $container->get('current_user'),
+      $container->get('logger.factory'),
     );
   }
 
@@ -78,12 +87,15 @@ class SenatorMicrositeMenu extends BlockBase implements ContainerFactoryPluginIn
     EntityTypeManagerInterface $entity_type_manager,
     CurrentRouteMatch $route_match,
     AccountProxyInterface $current_user,
+    LoggerChannelFactoryInterface $loggerFactory,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->cache = $cache_backend;
     $this->entityTypeManager = $entity_type_manager;
     $this->routeMatch = $route_match;
     $this->currentUser = $current_user;
+    $this->loggerFactory = $loggerFactory;
+
   }
 
   /**
@@ -115,7 +127,13 @@ class SenatorMicrositeMenu extends BlockBase implements ContainerFactoryPluginIn
         $tids[] = (int) $tid['target_id'];
       }
       $nids = &drupal_static(__FUNCTION__);
-      $node_storage = $this->entityTypeManager->getStorage('node');
+      try {
+        $node_storage = $this->entityTypeManager->getStorage('node');
+      }
+      catch (\Exception $e) {
+        $this->loggerFactory->get('nys_senators')->error("Failed to render nys_senators_microsite_menu block due to missing node module.");
+        return [];
+      }
       if (!isset($nids)) {
         // Get all 'Microsite Pages' with the same senator reference.
         $nids = $node_storage->getQuery()
@@ -148,7 +166,13 @@ class SenatorMicrositeMenu extends BlockBase implements ContainerFactoryPluginIn
         }
       }
       ksort($menu_links);
-      $user_storage = $this->entityTypeManager->getStorage('user');
+      try {
+        $user_storage = $this->entityTypeManager->getStorage('user');
+      }
+      catch (\Exception $e) {
+        $this->loggerFactory->get('nys_senators')->error("Failed to render nys_senators_microsite_menu block due to missing user module.");
+        return [];
+      }
       $user = $user_storage->load($this->currentUser->id());
       return [
         '#theme' => 'senator_microsite_menu_block',

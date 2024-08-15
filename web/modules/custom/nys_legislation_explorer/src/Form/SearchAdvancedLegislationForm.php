@@ -445,7 +445,7 @@ class SearchAdvancedLegislationForm extends FormBase {
       '#type' => 'checkbox',
       '#title' => t('Only show active revisions'),
       '#size' => 10,
-      '#default_value' => $args['is-active-version'] ?? NULL,
+      '#default_value' => $args['is_active_version'] ?? NULL,
       '#states' => [
         'visible' => [
           'select[name="type"]' => [
@@ -503,7 +503,7 @@ class SearchAdvancedLegislationForm extends FormBase {
           'sponsor' => $values['sponsor'] ?: '',
           'full_text' => $values['full_text'] ?: '',
           'committee' => $values['committee'] ?: '',
-          'is-active-version' => $values['is_active_version'] ?: '',
+          'is_active_version' => $values['is_active_version'] ?: '',
         ];
         break;
 

@@ -109,8 +109,8 @@ function nys_openleg_preprocess_block__nys_blocks_bythe_numbers(&$variables): vo
   /** @var \Drupal\nys_openleg_api\Service\Api $openApiService */
   $openApiService = Drupal::service('openleg_api');
   foreach ($variables['facts'] as &$v) {
-    $v['link'] = '/search/legislation?type=bill&session_year=' .
-      $legislative_session . '&status=' . $v['statusType'];
+    $v['link'] =
+      "/search/legislation?type=bill&session_year=$legislative_session&status={$v['statusType']}&is_active_version=1";
     $search = 'session:' . $legislative_session .
       ' AND status.statusType:' . $v['statusType'];
     try {

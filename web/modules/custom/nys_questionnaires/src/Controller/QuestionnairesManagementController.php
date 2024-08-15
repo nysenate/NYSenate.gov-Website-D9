@@ -100,7 +100,7 @@ class QuestionnairesManagementController extends ControllerBase {
     else {
       $ret = ['#markup' => 'Could not find any submissions'];
     }
-    $ret = $this->renderer->renderPlain($ret);
+    $ret = $this->renderer->renderInIsolation($ret);
 
     return new HtmlResponse($ret);
   }

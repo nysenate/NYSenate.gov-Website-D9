@@ -9,6 +9,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Messenger\Messenger;
 use Drupal\Core\State\State;
+use Drupal\Core\StringTranslation\ByteSizeMarkup;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\nys_school_importer\ImporterHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -123,7 +124,7 @@ class NysedPageForm extends FormBase {
       'csvfile' => [
         '#title' => $this->t('CSV File'),
         '#type'  => 'file',
-        '#description' => ($max_size = ini_get('upload_max_filesize')) ? $this->t('Due to server restrictions, the <strong>maximum upload file size is %max_size</strong>. Files that exceed this size will be disregarded.', ['%max_size' => format_size($max_size)]) : '',
+        '#description' => ($max_size = ini_get('upload_max_filesize')) ? $this->t('Due to server restrictions, the <strong>maximum upload file size is %max_size</strong>. Files that exceed this size will be disregarded.', ['%max_size' => ByteSizeMarkup::create($max_size)]) : '',
       ],
       'submit' => [
         '#type' => 'submit',

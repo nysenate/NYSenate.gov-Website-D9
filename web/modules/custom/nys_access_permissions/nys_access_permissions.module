@@ -10,6 +10,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\node\NodeInterface;
 use Drupal\user\Entity\User;
+use Drupal\user\RoleInterface;
 
 /**
  * Implements hook_node_access().
@@ -29,7 +30,9 @@ function nys_access_permissions_node_access(NodeInterface $node, $operation, Acc
     if (!empty($node->uid->target_id) && $operation == 'update' && $account->hasPermission('edit same role')) {
       $author = User::load($node->uid->target_id);
       if (array_intersect($account->getRoles(), $author->getRoles())) {
-        $edit_same_roles = user_roles(TRUE, 'edit same role');
+        $edit_same_roles = Role::loadMultiple();
+        unset($edit_same_roles[RoleInterface::ANONYMOUS_ID]);
+        $edit_same_roles = array_filter($edit_same_roles, fn(RoleInterface $edit_same_roles) => $edit_same_roles->hasPermission('edit same role'));
         foreach ($author->getRoles() as $role) {
           if (in_array($role, $account->getRoles()) && in_array($role, array_keys($edit_same_roles))) {
             return AccessResult::allowed();

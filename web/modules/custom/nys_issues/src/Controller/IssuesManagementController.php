@@ -74,7 +74,7 @@ class IssuesManagementController extends ControllerBase {
 
     $link = Link::fromTextAndUrl($tid->getName(), $tid->toUrl())->toString();
 
-    $ret = $this->renderer->renderPlain($ret);
+    $ret = $this->renderer->renderInIsolation($ret);
 
     return new HtmlResponse($ret);
   }

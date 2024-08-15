@@ -4,6 +4,7 @@ namespace Drupal\nys_school_forms\Form;
 
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\File\FileExists;
 use Drupal\Core\File\FileSystem;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\ConfirmFormBase;
@@ -213,7 +214,7 @@ class SchoolFormShowStudentForm extends ConfirmFormBase {
               $directory = 'public://' . 'webform' . '/' . $webform->id() . '/' . $sid . '/';
             }
             $file_uri = $file->getFileUri();
-            $file_exists_error = $this->fileSystem->getDestinationFilename($file_uri, FileSystemInterface::EXISTS_ERROR);
+            $file_exists_error = $this->fileSystem->getDestinationFilename($file_uri, FileExists::Error);
 
             if (!$file_exists_error) {
               $this->fileSystem->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY);

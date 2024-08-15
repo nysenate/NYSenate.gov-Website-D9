@@ -441,6 +441,24 @@ class SearchAdvancedLegislationForm extends FormBase {
       ],
     ];
 
+    $form['is_active_version'] = [
+      '#type' => 'checkbox',
+      '#title' => t('Only show active revisions'),
+      '#size' => 10,
+      '#default_value' => $args['is-active-version'] ?? NULL,
+      '#states' => [
+        'visible' => [
+          'select[name="type"]' => [
+            ['value' => 'bill'],
+            ['value' => 'resolution'],
+          ],
+        ],
+      ],
+      '#attributes' => [
+        'class' => ['is-active-version'],
+      ],
+    ];
+
     $form['actions']['#type'] = 'actions';
     $form['#attached']['library'][] = 'nys_legislation_explorer/nys_legislation_explorer';
     $form['actions']['submit'] = [
@@ -485,6 +503,7 @@ class SearchAdvancedLegislationForm extends FormBase {
           'sponsor' => $values['sponsor'] ?: '',
           'full_text' => $values['full_text'] ?: '',
           'committee' => $values['committee'] ?: '',
+          'is-active-version' => $values['is_active_version'] ?: '',
         ];
         break;
 

@@ -85,7 +85,6 @@ class SenatorMicrositeMenu extends BlockBase implements ContainerFactoryPluginIn
     $this->entityTypeManager = $entity_type_manager;
     $this->routeMatch = $route_match;
     $this->loggerFactory = $loggerFactory;
-
   }
 
   /**

@@ -11,8 +11,8 @@ use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Routing\CurrentRouteMatch;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\node\NodeInterface;
+use Drupal\nys_users\UsersHelper;
 use Drupal\taxonomy\TermInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -51,13 +51,6 @@ class SenatorMicrositeMenu extends BlockBase implements ContainerFactoryPluginIn
   /**
    * Current user.
    *
-   * @var \Drupal\Core\Session\AccountProxyInterface
-   */
-  protected AccountProxyInterface $currentUser;
-
-  /**
-   * Current user.
-   *
    * @var \Drupal\Core\Logger\LoggerChannelFactoryInterface
    */
   protected LoggerChannelFactoryInterface $loggerFactory;
@@ -71,7 +64,6 @@ class SenatorMicrositeMenu extends BlockBase implements ContainerFactoryPluginIn
       $container->get('cache.default'),
       $container->get('entity_type.manager'),
       $container->get('current_route_match'),
-      $container->get('current_user'),
       $container->get('logger.factory'),
     );
   }
@@ -86,14 +78,12 @@ class SenatorMicrositeMenu extends BlockBase implements ContainerFactoryPluginIn
     CacheBackendInterface $cache_backend,
     EntityTypeManagerInterface $entity_type_manager,
     CurrentRouteMatch $route_match,
-    AccountProxyInterface $current_user,
     LoggerChannelFactoryInterface $loggerFactory,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->cache = $cache_backend;
     $this->entityTypeManager = $entity_type_manager;
     $this->routeMatch = $route_match;
-    $this->currentUser = $current_user;
     $this->loggerFactory = $loggerFactory;
 
   }
@@ -166,19 +156,12 @@ class SenatorMicrositeMenu extends BlockBase implements ContainerFactoryPluginIn
         }
       }
       ksort($menu_links);
-      try {
-        $user_storage = $this->entityTypeManager->getStorage('user');
-      }
-      catch (\Exception $e) {
-        $this->loggerFactory->get('nys_senators')->error("Failed to render nys_senators_microsite_menu block due to missing user module.");
-        return [];
-      }
-      $user = $user_storage->load($this->currentUser->id());
+      $current_user = UsersHelper::resolveUser();
       return [
         '#theme' => 'senator_microsite_menu_block',
         '#menu_links' => $menu_links,
-        '#is_logged' => $this->currentUser->isAuthenticated(),
-        '#user_first_name' => $user?->field_first_name?->value ?? 'Guest',
+        '#is_logged' => $current_user->isAuthenticated(),
+        '#user_first_name' => $current_user->field_first_name?->value ?? 'Guest',
       ];
     }
     return [];

@@ -443,7 +443,7 @@ class SearchAdvancedLegislationForm extends FormBase {
 
     $form['is_active_version'] = [
       '#type' => 'checkbox',
-      '#title' => t('Only show active revisions'),
+      '#title' => t('Only show active amendments'),
       '#size' => 10,
       '#default_value' => $args['is_active_version'] ?? NULL,
       '#states' => [

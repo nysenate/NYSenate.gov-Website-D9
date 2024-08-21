@@ -13,10 +13,11 @@ bundle: committee_featured_legislation
 mode: default
 content:
   field_featured_bill:
-    type: entity_reference_label
+    type: entity_reference_entity_view
     label: hidden
     settings:
-      link: true
+      view_mode: featured_content
+      link: false
     third_party_settings: {  }
     weight: 0
     region: content
@@ -37,4 +38,7 @@ content:
     weight: 1
     region: content
 hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
   search_api_excerpt: true

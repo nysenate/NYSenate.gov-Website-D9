@@ -59,7 +59,7 @@
                 </li>
             </ul>
         </div>
-
+        <!--embed featured bill view mode -->
         {{ content.field_featured_bill }}
 
         <div class="c-legislation--quote">
@@ -68,31 +68,20 @@
                 <p class="c-pullquote icon-before__quotes">
                     {{ content.field_featured_quote.0['#context'].value }}
                 </p>
-                <span class="c-pullquote--citation icon-before__minus u-quote--has-img">
-          Senator
-          <a href="{{ senator_link }}">
-            {{ senator_name }}
-          </a>
-        </span>
-
+                <span class="c-pullquote--citation icon-before__minus u-quote--has-img">Senator<a href="{{ senator_link }}">{{ senator_name }}</a></span>
                 <div class="c-legislation--sponsor">
                     <div class="c-sponsor--img">
-                        <a href="{{ senator_link }}">
-                            {{ senator_image }}
-                        </a>
+                        <a href="{{ senator_link }}">{{ senator_image }}</a>
                     </div>
                     <div class="c-sponsor--info">
                         <p class="c-sponsor--name">
-                            <a href="{{ senator_link }}">
-                                {{ senator_name }}
-                            </a>
+                            <a href="{{ senator_link }}">{{ senator_name }}</a>
                         </p>
                         {% if party %}
                             <p class="c-sponsor--party">{{ party }}</p>
                         {% endif %}
                         {% if district_number %}
-                            <a class="c-sponsor--dist" href="{{ district_link }}">District
-                                {{ district_number }}</a>
+                            <a class="c-sponsor--dist" href="{{ district_link }}">District{{ district_number }}</a>
                         {% endif %}
                     </div>
                 </div>

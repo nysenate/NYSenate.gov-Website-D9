@@ -6,7 +6,6 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\taxonomy\Entity\Term;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -71,11 +70,11 @@ class Microsites {
   protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
-   * Symphony's Request object.
+   * Symfony's RequestStack service.
    *
-   * @var \Symfony\Component\HttpFoundation\Request
+   * @var \Symfony\Component\HttpFoundation\RequestStack
    */
-  protected Request $request;
+  protected RequestStack $requestStack;
 
   /**
    * Constructor.
@@ -89,7 +88,7 @@ class Microsites {
     $this->cache = $cache;
     $this->theme = $theme;
     $this->entityTypeManager = $entityTypeManager;
-    $this->request = $requestStack->getCurrentRequest();
+    $this->requestStack = $requestStack;
   }
 
   /**
@@ -228,7 +227,7 @@ class Microsites {
         $senator_id = $page->field_senator_multiref->entity->id() ?? 0;
         $url_options = [
           'absolute' => TRUE,
-          'base_url' => $this->request->getSchemeAndHttpHost(),
+          'base_url' => $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost(),
         ];
         $url = $page->toUrl('canonical', $url_options)->toString();
       }

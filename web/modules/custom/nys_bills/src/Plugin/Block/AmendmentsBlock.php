@@ -8,6 +8,7 @@ use Drupal\Core\Link;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
+use Drupal\node\Entity\Node;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -175,6 +176,21 @@ class AmendmentsBlock extends BlockBase implements ContainerFactoryPluginInterfa
         $prev_vers_pre = $this->t('Versions Introduced in @current Legislative Session:', ['@current' => $current]);
       }
 
+      // Create $amended_versions_tab_data array.
+      $amended_versions_tab_data = [];
+      foreach ($amendments as $amendment_title => $amendment_array) {
+        $amendment_node = $amendment_array['node'];
+        if ($amendment_node instanceof Node) {
+          try {
+            $amendment_node_url = $amendment_node->toUrl()->toString();
+          }
+          catch (\Exception $e) {
+            $amendment_node_url = '/node/' . $amendment_node->id();
+          }
+          $amended_versions_tab_data[$amendment_title] = $amendment_node_url;
+        }
+      }
+
       return [
         '#theme' => 'nys_bills__amendments_block',
         '#content' => [
@@ -182,7 +198,7 @@ class AmendmentsBlock extends BlockBase implements ContainerFactoryPluginInterfa
           'bill_wrapper' => $node,
           'base_print_no' => $node->field_ol_base_print_no->value,
           'session_year' => $bill_session_year,
-          'amended_versions' => $amended_versions_result,
+          'amended_versions_tab_data' => $amended_versions_tab_data,
           'active_version' => $session_root_id,
           'comm_status_pre' => $comm_status_pre,
           'same_as' => $same_as,

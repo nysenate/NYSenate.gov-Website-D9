@@ -1081,6 +1081,9 @@ function nysenate_theme_preprocess_paragraph(&$variables) {
     $variables['senator_image'] = \Drupal::entityTypeManager()
       ->getViewBuilder('media')
       ->view($headshot, '160x160');
+
+    $sid = $paragraph->field_featured_senator[0]->target_id;
+    $variables['district_number'] = get_senator_district($sid) ?? '';
   }
 
   if($bundle == 'featured_legislation') {
@@ -1111,6 +1114,8 @@ function nysenate_theme_preprocess_paragraph(&$variables) {
         $variables['senator_image'] = $media_image ? $entity_manager->getViewBuilder('media')->view($media_image, '160x160') : NULL;
       }
     }
+    $sid = $current_node->field_senator_multiref[0]->target_id;
+    $variables['district_number'] = get_senator_district($sid) ?? '';
   }
 }
 

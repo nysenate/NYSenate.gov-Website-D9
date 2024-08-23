@@ -120,7 +120,15 @@ class Accumulator implements ContainerInjectionInterface {
       $ret = '\\' . $all_events[strtoupper($name)];
       return new ($ret)(\Drupal::entityTypeManager(), $context);
     }
-    catch (\Throwable) {
+    catch (\Throwable $e) {
+      \Drupal::logger('nys_accumulator')->log->error(
+        'Failed to generate an accumulator event "@name"',
+        [
+          '@msg' => $e->getMessage(),
+          '@name' => $name,
+          '@context' => gettype($context),
+        ]
+      );
       return NULL;
     }
   }
@@ -136,8 +144,7 @@ class Accumulator implements ContainerInjectionInterface {
    * @see \Drupal\nys_accumulator\Events
    */
   public function dispatch(string $name, mixed $context = NULL): void {
-    $event = static::createEvent($name, $context);
-    if ($event) {
+    if ($event = static::createEvent($name, $context)) {
       $this->dispatcher->dispatch($event);
     }
   }

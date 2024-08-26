@@ -1,0 +1,30 @@
+table {
+  width: 100%
+}
+
+table,
+table thead,
+table tr,
+table td {
+  border: 1px solid $blue02;
+  padding: 1%;
+  a {
+    color: $blue02;
+    font-weight: 600;
+  }
+}
+
+table tr:nth-child(even){
+  background-color: $color-light-gray;
+}
+table thead {
+  background-color: $blue02;
+  color: #fff;
+
+  th:first-child {
+    border-right: 1px solid #fff;
+  }
+  th {
+    font-size: 24px;
+  }
+}

@@ -359,15 +359,19 @@ class AccumulatorEntry {
    */
   public function save(): int {
 
+    // Compile the fields and allow for other modules to edit the result.
+    // If an event cannot be dispatched, we'll just stick with the original.
     $fields = $this->compileFields();
-    $event = Accumulator::createEvent('pre_save', $fields);
-    $this->dispatcher->dispatch($event);
-    $event->context['event_data'] = json_encode($event->context['event_data']);
+    if ($event = Accumulator::createEvent('pre_save', $fields)) {
+      $this->dispatcher->dispatch($event);
+      $event->context['event_data'] = json_encode($event->context['event_data']);
+      $fields = $event->context;
+    }
 
     try {
       $id = $this->database
         ->insert('accumulator')
-        ->fields($event->context)
+        ->fields($fields)
         ->execute();
     }
     catch (\Throwable $e) {

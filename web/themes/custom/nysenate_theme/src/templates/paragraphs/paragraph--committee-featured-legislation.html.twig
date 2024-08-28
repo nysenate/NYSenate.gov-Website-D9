@@ -59,7 +59,25 @@
 ]
 %}
 
-<section class="c-legislation">
+<div{{ attributes.addClass(classes) }}>
+    {{ title_prefix }}
+    {{ title_suffix }}
+    <div class="block-content__content">
+            {% include "@nysenate_theme/featured-legislation/featured-legislation.twig" with {
+                bill: content.field_featured_bill,
+                sponsor: 'Sponsor',
+                senator_name: senator_name,
+                senator_link: senator_link,
+                quote: content.field_featured_quote.0['#context'].value,
+                identifier: identifier ?? '',
+                senator_image: senator_image,
+                party: party,
+                district: district_number
+            } only %}
+    </div>
+</div>
+
+{#  <section class="c-legislation">
     {% if title %}
         <div class="c-container--header__top-border">
             <h3 class="c-container--title">{{ title }}</h3>
@@ -108,3 +126,4 @@
         </div>
     </div>
 </section>
+#}

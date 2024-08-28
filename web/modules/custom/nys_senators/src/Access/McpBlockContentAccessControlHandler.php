@@ -62,7 +62,9 @@ class McpBlockContentAccessControlHandler extends BlockContentAccessControlHandl
     $current_user = UsersHelper::resolveUser();
     if (UsersHelper::isMcp($current_user)) {
       $managed_senator_tids = UsersHelper::getManagedSenators($current_user);
-      $is_block_linked_to_managed_senator = \Drupal::entityTypeManager()->getStorage('node')->getQuery()
+      $is_block_linked_to_managed_senator = $this->entityTypeManager
+        ->getStorage('node')
+        ->getQuery()
         ->accessCheck(FALSE)
         ->condition('field_block', $entity->id(), 'CONTAINS')
         ->condition('field_senator_multiref', $managed_senator_tids, 'IN')

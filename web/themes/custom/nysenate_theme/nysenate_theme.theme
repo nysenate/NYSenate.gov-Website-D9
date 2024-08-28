@@ -1060,7 +1060,7 @@ function nysenate_theme_preprocess_paragraph(&$variables) {
   /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
   $paragraph = $variables['paragraph'];
   $bundle = $paragraph->bundle();
-  if (($bundle == 'committee_featured_legislation')) {
+  if ($bundle == 'committee_featured_legislation') {
     $term = $paragraph->field_featured_senator->entity;
     $senator_link = \Drupal::service('nys_senators.microsites')
       ->getMicrosite($term);
@@ -4318,7 +4318,6 @@ function nysenate_theme_preprocess_node__honoree__featured_content(&$variables) 
  * Implements hook_preprocess_node_TYPE().
  */
 function nysenate_theme_preprocess_node__bill__featured_content(&$variables) {
-  //dump($variables);
   $variables['item_cta'] = [
     'url' => $variables['url'],
     'text' => 'Read More',

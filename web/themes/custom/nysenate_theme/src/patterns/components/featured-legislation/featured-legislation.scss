@@ -1,6 +1,10 @@
 // Import site utilities.
 @import '../../global/utils/init';
 
+.node--view-mode-featured-content.c-block {
+  margin-bottom: 0;
+}
+
 .c-block.c-block-legislation-featured .c-block--btn-toggle,
 .c-block-legislation .c-block--btn-toggle {
   @extend .icon-replace__share;
@@ -158,11 +162,11 @@
   line-height: 18px;
 }
 
-.c-sponsor--dist {
+a.c-sponsor--dist {
   display: inline-block;
-  color: $grey03;
+  @extend .med-text;
   text-transform: uppercase;
-  font-family: $font-sans;
+  font-family: $font-sans-bold;
   font-size: 12px;
 }
 

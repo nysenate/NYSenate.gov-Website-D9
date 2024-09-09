@@ -91,6 +91,10 @@
   margin-left: 20px;
   transition: background 0.2s ease;
 
+  @media screen and (max-width: 900px) {
+    display: none;
+  }
+
   .nys-senator {
     height: 100%;
     margin: 0;
@@ -245,8 +249,6 @@
   top: -110vh;
   left: 0;
   right: 0;
-  bottom: 0;
-  height: 100vh;
   width: 100vw;
   z-index: 6;
   transition: all 0.3s ease-out 0s;
@@ -320,6 +322,8 @@
 
   .c-nav--wrap {
     top: 60px;
+    bottom: 0;
+    height: auto;
   }
 
 	.c-nav--toggle {
@@ -659,7 +663,7 @@ nav ul.c-nav--list {
 .c-header--connect .c-nav--social {
   display: none;
 
-  @media screen and (min-width: 900px) {
+  @media screen and (min-width: 1080px) {
     position: relative;
     display: block;
     float: left;
@@ -1162,4 +1166,30 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     margin: 0 auto;
     position: relative;
   }
+}
+
+// Ensure header doesn't fall behind admin toolbar.
+.toolbar-vertical {
+  #js-sticky--clone {
+    top: 39px
+  }
+
+  &.nav-open .c-nav--wrap {
+    top: 99px;
+  }
+}
+
+// On mobile, ensure admin toolbar doesn't expand over header
+@include breakpoint($bp-under-sm) {
+  .toolbar-vertical {
+    #gin-toolbar-bar {
+      height: 39.5px;
+      overflow: hidden;
+    }
+  }
+}
+
+// Ensure header remains center-aligned when admin toolbar is present.
+.toolbar-horizontal header.fixed {
+  padding-left: var(--gin-toolbar-x-offset, 256px);
 }

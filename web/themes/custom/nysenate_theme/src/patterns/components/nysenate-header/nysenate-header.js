@@ -2,35 +2,21 @@
   'use strict';
   Drupal.behaviors.nysenateHeader = {
     attach: function (context) {
+      const origNav = $('#js-sticky', context);
+      const $adminToolbar = $('#toolbar-bar');
+      const $adminTray = $('#toolbar-item-administration-tray.toolbar-tray');
+
       let self = this;
-
-      // If admin toolbar is present and the user is not on mobile,
-      // abort and use static nav bar.
-      if ($('#toolbar-administration').length > 0 && !self.isMobileWidth()) {
-        let searchToggle = $('.js-search--toggle');
-        $(once('nySenateHeader', searchToggle)).on('click touch', function (e) {
-          self.toggleSearchBar(0, e);
-        });
-        return;
-      }
-
       let userScroll = 0;
       let currentTop = $(window).scrollTop();
       let previousTop = 0;
-      let nav;
+      let nav = origNav.clone().attr('id', 'js-sticky--clone').addClass('fixed');
       let actionBar;
       let origActionBar;
-      const origNav = $('#js-sticky', context);
-
-      nav = origNav.clone().attr('id', 'js-sticky--clone').addClass('fixed');
-
       let menu;
       let headerBar;
       let mobileNavToggle;
       let topbarDropdown;
-
-      const $adminToolbar = $('#toolbar-bar');
-      const $adminTray = $('#toolbar-item-administration-tray.toolbar-tray');
 
       if ($adminToolbar.length > 0) {
         const observer = new MutationObserver(function (mutations) {

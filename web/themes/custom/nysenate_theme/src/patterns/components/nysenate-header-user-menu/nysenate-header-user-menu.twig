@@ -3,9 +3,15 @@
   <ul class="c-login--list u-tablet-plus{{ mobile_mode ? ' mobile-mode' : ' desktop-mode'}}">
     <li>
       <a class="c-header--btn c-header--btn__primary" href="{{ dashboard_link }}">
-        Welcome, {{ user_first_name }}!
+        <span class="c-user-menu--full-width-dashboard-link">Welcome, {{ user_first_name }}!</span>
+        <span class="c-user-menu--shrunk-dashboard-link">My Stuff</span>
       </a>
     </li>
+    {% if senator_microsite_link %}
+    <li class="c-login--my-senator">
+      <a class="c-header--btn" href="{{ senator_microsite_link }}">My Senator</a>
+    </li>
+    {% endif %}
     <li class="c-login--dashboard">
       <a class="c-header--btn" href="{{ dashboard_link }}">My Dashboard</a>
     </li>

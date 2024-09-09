@@ -7,11 +7,12 @@ use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Routing\CurrentRouteMatch;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
+use Drupal\nys_users\UsersHelper;
 use Drupal\taxonomy\TermInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -31,49 +32,59 @@ class SenatorMicrositeMenu extends BlockBase implements ContainerFactoryPluginIn
    *
    * @var \Drupal\Core\Cache\CacheBackendInterface
    */
-  protected $cache;
+  protected CacheBackendInterface $cache;
 
   /**
    * The Entity TypeManager Interfacee.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityTypeManager;
-
+  protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
    * Current Route Match.
    *
    * @var \Drupal\Core\Routing\CurrentRouteMatch
    */
-  protected $routeMatch;
+  protected CurrentRouteMatch $routeMatch;
+
+  /**
+   * Current user.
+   *
+   * @var \Drupal\Core\Logger\LoggerChannelFactoryInterface
+   */
+  protected LoggerChannelFactoryInterface $loggerFactory;
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
-          $configuration, $plugin_id, $plugin_definition,
-          $container->get('cache.default'),
-          $container->get('entity_type.manager'),
-          $container->get('current_route_match')
-      );
+      $configuration, $plugin_id, $plugin_definition,
+      $container->get('cache.default'),
+      $container->get('entity_type.manager'),
+      $container->get('current_route_match'),
+      $container->get('logger.factory'),
+    );
   }
 
   /**
    * Constructor.
    */
-  public function __construct(array $configuration,
-        $plugin_id,
-        $plugin_definition,
-        CacheBackendInterface $cache_backend,
-        EntityTypeManagerInterface $entity_type_manager,
-        CurrentRouteMatch $route_match
-    ) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    CacheBackendInterface $cache_backend,
+    EntityTypeManagerInterface $entity_type_manager,
+    CurrentRouteMatch $route_match,
+    LoggerChannelFactoryInterface $loggerFactory,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->cache = $cache_backend;
     $this->entityTypeManager = $entity_type_manager;
     $this->routeMatch = $route_match;
+    $this->loggerFactory = $loggerFactory;
   }
 
   /**
@@ -105,9 +116,16 @@ class SenatorMicrositeMenu extends BlockBase implements ContainerFactoryPluginIn
         $tids[] = (int) $tid['target_id'];
       }
       $nids = &drupal_static(__FUNCTION__);
+      try {
+        $node_storage = $this->entityTypeManager->getStorage('node');
+      }
+      catch (\Exception $e) {
+        $this->loggerFactory->get('nys_senators')->error("Failed to render nys_senators_microsite_menu block due to missing node module.");
+        return [];
+      }
       if (!isset($nids)) {
         // Get all 'Microsite Pages' with the same senator reference.
-        $nids = $this->entityTypeManager->getStorage('node')->getQuery()
+        $nids = $node_storage->getQuery()
           ->accessCheck(FALSE)
           ->condition('status', 1)
           ->condition('type', 'microsite_page')
@@ -115,7 +133,7 @@ class SenatorMicrositeMenu extends BlockBase implements ContainerFactoryPluginIn
           ->condition("field_senator_multiref.%delta", [0], 'IN')
           ->execute();
       }
-      $nodes = Node::loadMultiple($nids);
+      $nodes = $node_storage->loadMultiple($nids);
       $menu_links = [];
       /**
        * @var \Drupal\node\Entity\Node $node
@@ -137,9 +155,12 @@ class SenatorMicrositeMenu extends BlockBase implements ContainerFactoryPluginIn
         }
       }
       ksort($menu_links);
+      $current_user = UsersHelper::resolveUser();
       return [
         '#theme' => 'senator_microsite_menu_block',
         '#menu_links' => $menu_links,
+        '#is_logged' => $current_user->isAuthenticated(),
+        '#user_first_name' => $current_user->field_first_name?->value ?? 'Guest',
       ];
     }
     return [];
@@ -150,15 +171,6 @@ class SenatorMicrositeMenu extends BlockBase implements ContainerFactoryPluginIn
    */
   protected function blockAccess(AccountInterface $account) {
     return AccessResult::allowedIfHasPermission($account, 'access content');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function blockForm($form, FormStateInterface $form_state) {
-    $config = $this->getConfiguration();
-
-    return $form;
   }
 
   /**

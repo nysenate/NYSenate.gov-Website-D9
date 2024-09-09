@@ -872,21 +872,7 @@ p.c-senate-works-step-description {
 }
 
 //I WANT TO BLOCK
-.pane-nys-blocks-want-to {
-  display: none;
-
-  @include breakpoint($bp-sm) {
-    display: block;
-  }
-}
-
 .c-block.c-container--want-to {
-  display: none;
-
-  @include breakpoint($bp-sm) {
-    display: block;
-  }
-
   .c-container--header {
     padding-bottom: 15px;
   }
@@ -897,6 +883,7 @@ p.c-senate-works-step-description {
     text-transform: none;
     font-size: 32px;
     letter-spacing: normal;
+    line-height: normal;
   }
 
   .c-want-to--item {

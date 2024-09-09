@@ -1916,6 +1916,38 @@ display:
           fields:
             - field_ol_base_print_no
             - field_ol_print_no
+        field_ol_is_active_version:
+          id: field_ol_is_active_version
+          table: search_api_index_core_search
+          field: field_ol_is_active_version
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: search_api
+          default_action: default
+          exception:
+            value: all
+            title_enable: false
+            title: All
+          title_enable: false
+          title: ''
+          default_argument_type: query_parameter
+          default_argument_options:
+            query_param: is_active_version
+            fallback: all
+            multiple: and
+          summary_options: {  }
+          summary:
+            sort_order: asc
+            number_of_records: 0
+            format: default_summary
+          specify_validation: false
+          validate:
+            type: none
+            fail: 'not found'
+          validate_options: {  }
+          break_phrase: false
+          not: false
       filters:
         status:
           id: status

@@ -17,6 +17,7 @@ dependencies:
     - field.storage.node.field_ol_co_sponsors
     - field.storage.node.field_ol_full_text
     - field.storage.node.field_image_caption
+    - field.storage.node.field_ol_is_active_version
     - field.storage.node.field_issues
     - field.storage.node.field_ol_last_status
     - field.storage.node.field_ol_last_status_date
@@ -275,6 +276,14 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_ol_full_text
+  field_ol_is_active_version:
+    label: 'Is Active Version'
+    datasource_id: 'entity:node'
+    property_path: field_ol_is_active_version
+    type: boolean
+    dependencies:
+      config:
+        - field.storage.node.field_ol_is_active_version
   field_ol_last_status:
     label: 'Last Status'
     datasource_id: 'entity:node'

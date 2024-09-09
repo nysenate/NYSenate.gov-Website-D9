@@ -10,7 +10,6 @@ use Drupal\nys_accumulator\Events;
 use Drupal\nys_senators\SenatorsHelper;
 use Drupal\taxonomy\Entity\Term;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
@@ -34,11 +33,11 @@ class Accumulator implements ContainerInjectionInterface {
   protected Connection $database;
 
   /**
-   * Drupal's Current Request service.
+   * Symfony's RequestStack service.
    *
-   * @var \Symfony\Component\HttpFoundation\Request
+   * @var \Symfony\Component\HttpFoundation\RequestStack
    */
-  protected Request $request;
+  protected RequestStack $requestStack;
 
   /**
    * NYS Senators Helper service.
@@ -50,10 +49,15 @@ class Accumulator implements ContainerInjectionInterface {
   /**
    * Constructor.
    */
-  public function __construct(EventDispatcherInterface $dispatcher, Connection $database, RequestStack $request, SenatorsHelper $helper) {
+  public function __construct(
+    EventDispatcherInterface $dispatcher,
+    Connection $database,
+    RequestStack $requestStack,
+    SenatorsHelper $helper,
+  ) {
     $this->dispatcher = $dispatcher;
     $this->database = $database;
-    $this->request = $request->getCurrentRequest();
+    $this->requestStack = $requestStack;
     $this->helper = $helper;
   }
 
@@ -76,7 +80,7 @@ class Accumulator implements ContainerInjectionInterface {
     return new AccumulatorEntry(
       $this->dispatcher,
       $this->database,
-      $this->request,
+      $this->requestStack->getCurrentRequest(),
       $this->helper
     );
   }

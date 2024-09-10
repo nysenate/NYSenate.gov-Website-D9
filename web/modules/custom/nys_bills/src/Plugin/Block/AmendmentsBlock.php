@@ -185,7 +185,7 @@ class AmendmentsBlock extends BlockBase implements ContainerFactoryPluginInterfa
             $amendment_node_url = $amendment_node->toUrl()->toString();
           }
           catch (\Exception $e) {
-            $amendment_node_url = '/node/' . $amendment_node->id();
+            $amendment_node_url = '';
           }
           $amended_versions_tab_data[$amendment_title] = $amendment_node_url;
         }

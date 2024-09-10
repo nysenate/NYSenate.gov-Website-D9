@@ -228,9 +228,15 @@ class GeneralEventSubscriber implements EventSubscriberInterface {
      */
     $original = $user->original ?? NULL;
 
-    // If this account is new (or has not been accessed), register the
+    // This event should only be responding to users already assigned
+    // a user id.  If it is missing, skip.
+    if (!$user->id()) {
+      return;
+    }
+
+    // If this account is new (i.e., has not been accessed), register the
     // "created" message and leave.
-    if ($user->isNew() || !$user->access->value) {
+    if (!$user->access->value) {
       $this->accumulator->createEntry('account', 'created')
         ->setUser($user)
         ->save();

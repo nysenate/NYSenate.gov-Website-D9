@@ -81,3 +81,10 @@ function nys_contrib_alters_customize_address($element, $form_state): array {
   $element['address']['country_code']['#access'] = FALSE;
   return $element;
 }
+
+/**
+ * Implements hook_page_attachments().
+ */
+function nys_contrib_alters_page_attachments(array &$attachments) {
+  $attachments['#attached']['library'][] = 'nys_contrib_alters/gin_overrides';
+}

@@ -20,6 +20,9 @@
 // Import base styles.
 @import 'print/print-styles';
 
+// Import base styles.
+@import 'tables/table';
+
 // Base
 //
 // Plain html element styling. Shouldn't require
@@ -848,4 +851,9 @@ section.print.hero--senator {
 .skip-link.visually-hidden.focusable:focus {
   z-index: 5000;
   position: relative !important;
+}
+
+// Disable admin menu body padding when on TFA page.
+[dir="ltr"] body.gin--vertical-toolbar {
+  padding-left: 0 !important;
 }

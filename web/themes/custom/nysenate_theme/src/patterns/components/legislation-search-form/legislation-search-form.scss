@@ -27,6 +27,7 @@
   .nys-title,
   .form-item-type,
   .form-item-full-text,
+  .form-item-is-active-version,
   .form-description {
     grid-column: span 2;
   }
@@ -167,6 +168,13 @@
     color: $grey03;
     padding-bottom: 1.26rem;
     border-bottom: solid 1px $color-alto;
+  }
+
+  .form-item-is-active-version {
+    input {
+      height: auto;
+      margin: 8px;
+    }
   }
 }
 

@@ -10,7 +10,6 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\nys_senators\Service\Microsites;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\TermInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -33,11 +32,11 @@ class SenatorsHelper {
   protected CacheBackendInterface $cache;
 
   /**
-   * The current request from Drupal's Request Stack service.
+   * Symfony's RequestStack service.
    *
-   * @var \Symfony\Component\HttpFoundation\Request
+   * @var \Symfony\Component\HttpFoundation\RequestStack
    */
-  protected Request $request;
+  protected RequestStack $requestStack;
 
   /**
    * NYS Senators Microsites service.
@@ -53,20 +52,20 @@ class SenatorsHelper {
    *   The entity type manager service.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   The backend cache.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   A request stack service.
    * @param \Drupal\nys_senators\Service\Microsites $microsites
    *   NYS Senators Microsites service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, CacheBackendInterface $cache_backend, RequestStack $request_stack, Microsites $microsites) {
+  public function __construct(
+    EntityTypeManagerInterface $entity_type_manager,
+    CacheBackendInterface $cache_backend,
+    RequestStack $requestStack,
+    Microsites $microsites,
+  ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->cache = $cache_backend;
-    // Adding this condition because for some reason
-    // it throws an error for anonymous users
-    // when viewing a bill.
-    if ($request_stack->getCurrentRequest() !== NULL) {
-      $this->request = $request_stack->getCurrentRequest();
-    }
+    $this->requestStack = $requestStack;
     $this->microsites = $microsites;
   }
 
@@ -111,7 +110,7 @@ class SenatorsHelper {
    * @see static::compileMicrosites()
    */
   protected function generateMicrositeUrl(string $name): string {
-    return $this->request->getSchemeAndHttpHost() .
+    return $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost() .
         '/senators/' . strtolower(str_replace([' ', '.'], ['-', ''], $name));
   }
 

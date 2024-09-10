@@ -575,122 +575,6 @@ function nysenate_theme_preprocess_block_content__featured_image(&$variables) {
 }
 
 /**
- * Implements hook_preprocess_block_content_ID().
- */
-function nysenate_theme_preprocess_block_content__featured_legislation(&$variables) {
-
-  if (isset($variables['content']['field_featured_legislation']) && !empty($variables['content']['field_featured_legislation'])) {
-
-    $current_node = \Drupal::routeMatch()->getParameter('node');
-    if (!empty($current_node->field_senator_multiref)) {
-      $senator = $current_node->field_senator_multiref->entity;
-      $party = $senator->field_party->getValue();
-      $parties = implode(', ', array_map(function ($item) {
-        return $item['value'];
-      }, $party));
-      $variables['senator_name'] = $senator->getName();
-      $variables['party'] = '(' . $parties . ')';
-
-      $senator_link = \Drupal::service('nys_senators.microsites')
-        ->getMicrosite($senator);
-      $variables['senator_link'] = $senator_link;
-
-      $variables['senator_image'] = NULL;
-      if ($senator->hasField('field_member_headshot') && !$senator->get('field_member_headshot')->isEmpty()) {
-        $mid = $senator->field_member_headshot->target_id ?? 0;
-        $entity_manager = \Drupal::entityTypeManager();
-        try {
-
-          $media_image = \Drupal::entityTypeManager()->getStorage('media')->load($mid);
-        }
-        catch (\Throwable) {
-          $media_image = NULL;
-        }
-        $variables['senator_image'] = $media_image ? $entity_manager->getViewBuilder('media')->view($media_image, '160x160') : NULL;
-      }
-    }
-
-    $bills = [];
-    $itemsFeaturedLegislation = $variables['content']['field_featured_legislation']['#items']->getValue();
-    foreach ($itemsFeaturedLegislation as $item) {
-
-      $content = Paragraph::load($item['target_id']);
-      if ($content->hasField('field_featured_quote') && !$content->get('field_featured_quote')->isEmpty()) {
-
-        $quote = $content->field_featured_quote->value;
-        $bill_id = $content->get('field_featured_bill')->first()->getValue()['target_id'];
-        $bill = Node::load($bill_id);
-
-        $allowed_values = '';
-        if ($bill->hasField('field_ol_last_status')) {
-          $allowed_values = $bill->field_ol_last_status->getSetting('allowed_values');
-        }
-        $published_date = '';
-        if ($bill->hasField('field_ol_publish_date') &&
-          !$bill->get('field_ol_publish_date')->isEmpty()) {
-          $published_date = $bill->field_ol_publish_date->value;
-        }
-
-        // If published_date is not timestamp, use strtotime().
-        if (!empty($published_date) && strpos($published_date, 'T') !== FALSE) {
-          $published_date = strtotime($published_date);
-        }
-
-        $last_status = '';
-        if ($bill->hasField('field_ol_last_status') && !$bill->get('field_ol_last_status')->isEmpty()) {
-          $last_status = $allowed_values[$bill->field_ol_last_status->value];
-        }
-
-        $committee_link = ['text' => '', 'url' => ''];
-        if ($bill->hasField('field_ol_latest_status_committee') &&
-          !$bill->get('field_ol_latest_status_committee')->isEmpty() &&
-          $last_status == 'In Senate Committee') {
-          $committee_field = $bill->field_ol_latest_status_committee->getValue();
-          $committee_name = $committee_field[0]['value'];
-
-          $committee = \Drupal::entityTypeManager()->getStorage('taxonomy_term')
-            ->loadByProperties([
-              'vid' => 'committees',
-              'name' => $committee_name,
-            ]);
-
-          if ($committee) {
-            $committee = reset($committee);
-            $committee_link = [
-              'text' => $committee->getName(),
-              'url' => $committee->toUrl()->toString(),
-            ];
-          }
-        }
-
-        $bills[] = [
-          'bill' => [
-            'featured' => TRUE,
-            'small' => FALSE,
-            'is_poll' => TRUE,
-            'list' => FALSE,
-            'resolution' => TRUE,
-            'bundle' => "bill",
-            'committee_link' => $committee_link,
-            'link' => $bill->toUrl()->toString(),
-            'number' => $bill->getTitle(),
-            'description_position' => 'bottom',
-            'description' => !empty($bill->field_ol_name->value) ? $bill->field_ol_name->value : '',
-            'date' => !empty($published_date) ? \Drupal::service('date.formatter')->format($published_date, '', 'F d, Y') : '',
-            'update_location' => $last_status,
-            'positions' => nysenate_bill_positions($bill),
-            'action' => \Drupal::service('path.current')->getPath(),
-          ],
-          'quote' => $quote,
-        ];
-      }
-    }
-
-    $variables['bills'] = $bills;
-  }
-}
-
-/**
  * Implements hook_preprocess_block().
  */
 function nysenate_theme_preprocess_block_content__featured_content(&$variables) {
@@ -1177,10 +1061,6 @@ function nysenate_theme_preprocess_paragraph(&$variables) {
   $paragraph = $variables['paragraph'];
   $bundle = $paragraph->bundle();
   if ($bundle == 'committee_featured_legislation') {
-    if ($variables['content']['field_featured_quote'][0]['#context']['value']) {
-      $variables['quote'] = $variables['content']['field_featured_quote'][0]['#context']['value'];
-    }
-
     $term = $paragraph->field_featured_senator->entity;
     $senator_link = \Drupal::service('nys_senators.microsites')
       ->getMicrosite($term);
@@ -1200,80 +1080,43 @@ function nysenate_theme_preprocess_paragraph(&$variables) {
       ->load($headshot_id);
     $variables['senator_image'] = \Drupal::entityTypeManager()
       ->getViewBuilder('media')
-      ->view($headshot, 'thumbnail');
+      ->view($headshot, '160x160');
+
+    $sid = $paragraph->field_featured_senator[0]->target_id;
+    $variables['district_number'] = get_senator_district($sid) ?? '';
   }
 
-  $bills = [];
-  $bill = $paragraph->field_featured_bill->entity ?? NULL;
-  if ($bill) {
-    $allowed_values = '';
-    // @phpstan-ignore-next-line
-    if ($bill->hasField('field_ol_last_status')) {
-      // @phpstan-ignore-next-line
-      $allowed_values = $bill->field_ol_last_status->getSetting('allowed_values');
-    }
-    $published_date = '';
-    // @phpstan-ignore-next-line
-    if ($bill->hasField('field_ol_publish_date') && !$bill->get('field_ol_publish_date')->isEmpty()) {
-      // @phpstan-ignore-next-line
-      $published_date = $bill->field_ol_publish_date->value;
-    }
+  if($bundle == 'featured_legislation') {
+    $current_node = \Drupal::routeMatch()->getParameter('node');
+    if (!empty($current_node->field_senator_multiref)) {
+      $senator = $current_node->field_senator_multiref->entity;
+      $party = $senator->field_party->getValue();
+      $parties = implode(', ', array_map(function ($item) {
+        return $item['value'];
+      }, $party));
+      $variables['senator_name'] = $senator->getName();
+      $variables['party'] = '(' . $parties . ')';
 
-    // If published_date is not timestamp, use strtotime().
-    if (!empty($published_date) && strpos($published_date, 'T') !== FALSE) {
-      $published_date = strtotime($published_date);
-    }
+      $senator_link = \Drupal::service('nys_senators.microsites')
+        ->getMicrosite($senator);
+      $variables['senator_link'] = $senator_link;
 
-    $last_status = '';
-    // @phpstan-ignore-next-line
-    if ($bill->hasField('field_ol_last_status') && !$bill->get('field_ol_last_status')->isEmpty()) {
-      // @phpstan-ignore-next-line
-      $last_status = $allowed_values[$bill->field_ol_last_status->value];
-    }
-
-    $committee_link = ['text' => '', 'url' => ''];
-    if ($bill->hasField('field_ol_latest_status_committee') &&
-      !$bill->get('field_ol_latest_status_committee')->isEmpty() &&
-      $last_status == 'In Senate Committee') {
-      $committee_field = $bill->field_ol_latest_status_committee->getValue();
-      $committee_name = $committee_field[0]['value'];
-
-      $committee = \Drupal::entityTypeManager()->getStorage('taxonomy_term')
-        ->loadByProperties([
-          'vid' => 'committees',
-          'name' => $committee_name,
-        ]);
-
-      if ($committee) {
-        $committee = reset($committee);
-        $committee_link = [
-          'text' => $committee->getName(),
-          'url' => $committee->toUrl()->toString(),
-        ];
+      $variables['senator_image'] = NULL;
+      if ($senator->hasField('field_member_headshot') && !$senator->get('field_member_headshot')->isEmpty()) {
+        $mid = $senator->field_member_headshot->target_id ?? 0;
+        $entity_manager = \Drupal::entityTypeManager();
+        try {
+          $media_image = \Drupal::entityTypeManager()->getStorage('media')->load($mid);
+        }
+        catch (\Throwable) {
+          $media_image = NULL;
+        }
+        $variables['senator_image'] = $media_image ? $entity_manager->getViewBuilder('media')->view($media_image, '160x160') : NULL;
       }
     }
-    // @phpstan-ignore-next-line
-    $bill_title = $bill->getTitle();
-    $bills[] = [
-      'bill' => [
-        'featured' => TRUE,
-        'small' => FALSE,
-        'is_poll' => TRUE,
-        'resolution' => TRUE,
-        'link' => $bill->toUrl()->toString(),
-        'committee_link' => $committee_link,
-        'bundle' => "bill",
-        'number' => $bill_title,
-        'description_position' => 'bottom',
-        'description' => !empty($bill->field_ol_name->value) ? $bill->field_ol_name->value : '',
-        'date' => !empty($published_date) ? \Drupal::service('date.formatter')->format($published_date, '', 'F d, Y') : '',
-        'update_location' => $last_status,
-        'positions' => nysenate_bill_positions($bill),
-        'action' => \Drupal::service('path.current')->getPath(),
-      ],
-    ];
+    $sid = $current_node->field_senator_multiref[0]->target_id;
+    $variables['district_number'] = get_senator_district($sid) ?? '';
   }
-  $variables['bills'] = $bills;
 }
 
 /**

@@ -900,7 +900,37 @@ p.c-hero--welcome {
   }
 
   .c-senator-hero--social {
-    display: none;
+    display: block;
+    margin: -5px 0 20px 0px;
+    padding-left: 10px;
+    height: 1em;
+    font-size: 27px;
+  }
+
+  .c-senator-hero--social-item {
+    display: inline-block;
+    margin-right: 8px;
+
+    a {
+      position: relative;
+      display: block;
+      height: 30px;
+      width: 30px;
+      filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(104deg) brightness(103%) contrast(103%);
+
+      &::after {
+        line-height: 1em;
+        width: 100%;
+        height: 100%;
+        color: $color-white;
+      }
+    }
+
+    &.twitter {
+      a::after {
+        left: 3px;
+      }
+    }
   }
 
   .c-senator-hero--contact-btn {
@@ -989,6 +1019,10 @@ p.c-hero--welcome {
       margin-bottom: 0;
     }
 
+    .c-senator-hero--social {
+      margin: 20px 0 0 -0.3em;
+    }
+
     .inactive-pallette {
       .c-senator-hero--roles {
         font-size: 13px;
@@ -1024,40 +1058,6 @@ p.c-hero--welcome {
 
     .c-senator-hero--district {
       margin-bottom: 20px;
-    }
-
-    .c-senator-hero--social {
-      display: block;
-      margin: 20px 0 0 -0.3em;
-      padding-left: 10px;
-      height: 1em;
-      font-size: 27px;
-    }
-
-    .c-senator-hero--social-item {
-      display: inline-block;
-      margin-right: 8px;
-
-      a {
-        position: relative;
-        display: block;
-        height: 30px;
-        width: 30px;
-        filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(104deg) brightness(103%) contrast(103%);
-
-        &::after {
-          line-height: 1em;
-          width: 100%;
-          height: 100%;
-          color: $color-white;
-        }
-      }
-
-      &.twitter {
-        a::after {
-          left: 3px;
-        }
-      }
     }
 
     .inactive-pallette {

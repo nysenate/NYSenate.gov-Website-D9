@@ -38,42 +38,18 @@
  * @ingroup themeable
  */
 #}
-
 {{ attach_library('nysenate_theme/featured-legislation') }}
-{%
-  set classes = [
-    'paragraph',
-    'paragraph--type--' ~ paragraph.bundle|clean_class,
-    view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
-    not paragraph.isPublished() ? 'paragraph--unpublished',
-    'container'
-  ]
-%}
 
-{%
-    set classes = [
-    'block-content',
-    'block-content--type-' ~ bundle|clean_class,
-    'block-content--' ~ id,
-    'block-content--view-mode-' ~ view_mode|clean_class
-]
-%}
-
-<div{{ attributes.addClass(classes) }}>
-    {{ title_prefix }}
-    {{ title_suffix }}
-    <div class="block-content__content">
-            {% include "@nysenate_theme/featured-legislation/featured-legislation.twig" with {
-                bill: content.field_featured_bill,
-                sponsor: 'Sponsor',
-                senator_name: senator_name,
-                senator_link: senator_link,
-                quote: content.field_featured_quote.0['#context'].value,
-                identifier: identifier ?? '',
-                senator_image: senator_image,
-                party: party,
-                district: district_number
-            } only %}
-    </div>
+<div class="block-content__content">
+    {% include "@nysenate_theme/featured-legislation/featured-legislation.twig" with {
+        bill: content.field_featured_bill,
+        sponsor: 'Senator',
+        senator_name: senator_name,
+        senator_link: senator_link,
+        quote: content.field_featured_quote.0['#context'].value,
+        identifier: identifier ?? '',
+        senator_image: senator_image,
+        party: party,
+        district: district_number
+    } only %}
 </div>
-

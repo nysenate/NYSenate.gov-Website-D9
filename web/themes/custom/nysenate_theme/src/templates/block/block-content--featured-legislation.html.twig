@@ -24,21 +24,6 @@
     <div class="c-container--header__top-border">
       <h3 class="c-container--title">Featured Legislation</h3>
     </div>
-    {% for bill in bills %}
-        {% if not loop.first %}
-          {% set identifier = 'c-block__collapsed' %}
-        {% endif %}
-        {% include "@nysenate_theme/featured-legislation/featured-legislation.twig" with {
-          bill: bill.bill,
-          sponsor: 'Sponsor',
-          senator_name: senator_name,
-          senator_link: senator_link,
-          quote: bill.quote,
-          identifier: identifier ?? '',
-          senator_image: senator_image,
-          party: party
-        } only %}
-    {% endfor %}
-
+    {{ content }}
   </div>
 </div>

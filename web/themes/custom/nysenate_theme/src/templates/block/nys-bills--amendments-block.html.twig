@@ -9,12 +9,12 @@
     <h3 class="c-detail--subhead c-detail--section-title">Bill Amendments</h3>
 
     <dl class="l-tab-bar">
-      {% for title, amendment_id in content.amended_versions %}
+      {% for title, amendment_url in content.amended_versions_tab_data %}
         {% set version = title|replace({ (content.session_year ~ '-' ~ content.base_print_no) : ''}) %}
         {% set is_active_version = (version == content.bill_wrapper.field_ol_active_version.value) %}
         {% set is_active_tab = content.bill_wrapper.label() == title %}
 
-        <dd class="c-tab {{ is_active_tab ? 'active' : '' }}"  data-version="{{ title }}" data-target="/node/{{ amendment_id }}">
+        <dd class="c-tab {{ is_active_tab ? 'active' : '' }}"  data-version="{{ title }}" data-target="{{ amendment_url }}">
           <input class="c-tab-link form-radio" type="radio" name="{{ version is empty ? "Original" : version }}" value="#{{ title }}">
           <label class="c-tab-link" for="{{ version is empty ? "Original" : version }}">{{ version is empty ? "Original" : version }}
             {{ is_active_version ? " (Active) " : "" }}</label>

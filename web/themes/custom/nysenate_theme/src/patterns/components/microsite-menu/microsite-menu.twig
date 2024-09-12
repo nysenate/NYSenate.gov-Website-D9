@@ -33,12 +33,23 @@
         </ul>
       {% endif %}
 
-
-      <div class="c-mobile-login--list u-mobile-only">
-        <span class="c-header--btn c-header--btn-login icon-before__recruit-friends">
-          <a href="/user/login">login</a>
-        </span>
-      </div>
+      {% if not is_logged %}
+        <div class="c-mobile-login--list u-mobile-only">
+          <span class="c-header--btn c-header--btn-login icon-before__recruit-friends">
+            <a href="/user/login">login</a>
+          </span>
+        </div>
+      {% else %}
+        {%
+          include '@nysenate_theme/nysenate-header-user-menu/nysenate-header-user-menu.twig' with {
+          dashboard_link: '/dashboard',
+          user_first_name: user_first_name,
+          manage_dashboard_link: '/dashboard/manage',
+          edit_account_link: '/dashboard/edit',
+          mobile_mode: 1,
+        } only
+        %}
+      {% endif %}
 
 
     </nav>

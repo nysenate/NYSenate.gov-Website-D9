@@ -29,6 +29,7 @@
         "composer/installers": "^1.2",
         "cweagans/composer-patches": "^1.7.0",
         "dompdf/dompdf": "^2.0",
+        "drupal/action": "^0.2",
         "drupal/address": "^2.0",
         "drupal/address_map_link": "^1.4",
         "drupal/admin_toolbar": "^3.0",
@@ -59,7 +60,7 @@
         "drupal/diff": "^1.0",
         "drupal/eck": "^2.0",
         "drupal/email_registration": "^2.0@RC",
-        "drupal/email_tfa": "^1.0",
+        "drupal/email_tfa": "^2.0",
         "drupal/entity_print": "^2.13",
         "drupal/entity_reference_revisions": "^1.10",
         "drupal/entityqueue": "^1.2",
@@ -67,7 +68,7 @@
         "drupal/eva": "^3.0",
         "drupal/facets": "^2.0",
         "drupal/fancy_file_delete": "^2.0",
-        "drupal/field_group": "^3.4",
+        "drupal/field_group": "3.4",
         "drupal/field_permissions": "^1.1",
         "drupal/field_validation": "^1.0@beta",
         "drupal/filefield_paths": "^1.0@beta",
@@ -287,14 +288,13 @@
                 "2769407 - Views UI should offer a 'Treat NULL values as FALSE' on boolean field": "https://www.drupal.org/files/issues/2024-06-26/2769407_views_ui_null_option-10.3.x-90.patch",
                 "2741877 - Nested modals don't work - fixed focal point preview modal": "https://www.drupal.org/files/issues/2024-06-20/drupal-core--2024-06-20--2741877--mr-8105.patch",
                 "3049216 - ajax error": "https://www.drupal.org/files/issues/2023-01-31/3049216-21_0.patch",
-                "3315678 - strnatcasecmp(): Passing null to parameter #2 ($string2) of type string is deprecated": "https://www.drupal.org/files/issues/2023-01-30/categorizing_plugin_error-3315678-16.patch",
-                "3456738 - breaks log in": "https://www.drupal.org/files/issues/2024-06-25/3456738-9.patch"
+                "3315678 - strnatcasecmp(): Passing null to parameter #2 ($string2) of type string is deprecated": "https://www.drupal.org/files/issues/2023-01-30/categorizing_plugin_error-3315678-16.patch"
             },
             "drupal/htmlpurifier": {
                 "2989756 - HTMLPurifier Serializer caches into vendor directory by default": "https://www.drupal.org/files/issues/2021-09-24/serializer-caches-into-vendor-d9-2989756-14.patch"
             },
             "drupal/inline_entity_form": {
-                "3099844 - Required fields make an optional IEF (erroneously) required": "https://www.drupal.org/files/issues/2021-07-19/inline_entity_form-required_fields_optional_ief-3099844-24.patch"
+                "3099844 - Required fields make an optional IEF (erroneously) required": "https://www.drupal.org/files/issues/2024-02-01/inline_entity_form-required_fields_optional_ief-3099844-35.patch"
             },
             "drupal/votingapi": {
                 "#3192657-2: Update drush command declaration with regard to options": "https://www.drupal.org/files/issues/2022-07-07/votingapi-3294809.patch"
@@ -329,9 +329,6 @@
             },
             "drupal/clamav": {
                 "3383653 -Support image upload plugin for CKEditor5\n": "https://git.drupalcode.org/project/clamav/-/merge_requests/7.patch"
-            },
-            "drupal/email_registration": {
-                "3456461 - Login fails with Drupal 10.3": "https://git.drupalcode.org/project/email_registration/-/merge_requests/43.patch"
             },
             "drupal/stage_file_proxy": {
                 "3457368 - createProxyHeadersArray(): Argument #1 ($headers_string) must be of type string": "https://git.drupalcode.org/project/stage_file_proxy/-/merge_requests/74.patch"

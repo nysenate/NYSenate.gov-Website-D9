@@ -275,6 +275,15 @@ function nys_senators_entity_access(EntityInterface $entity, $operation, Account
 }
 
 /**
+ * Implements hook_entity_type_build().
+ */
+function nys_senators_entity_type_build(array &$entity_types) {
+  if (isset($entity_types['block_content'])) {
+    $entity_types['block_content']->setHandlerClass('access', '\Drupal\nys_senators\Access\McpBlockContentAccessControlHandler');
+  }
+}
+
+/**
  * Implements hook_entity_presave().
  */
 function nys_senators_user_presave(UserInterface $user) {

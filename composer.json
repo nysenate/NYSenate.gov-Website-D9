@@ -44,13 +44,13 @@
         "drupal/clamav": "^2.0",
         "drupal/classy": "^1.0",
         "drupal/comments_ban": "^1.0",
-        "drupal/components": "^3.0@beta",
+        "drupal/components": "^3.1",
         "drupal/conditional_fields": "^4.0@alpha",
         "drupal/config_filter": "^2.6",
         "drupal/config_ignore": "^3.1",
         "drupal/config_split": "^2.0",
         "drupal/contact_block": "^2.0",
-        "drupal/contact_storage": "^1.3",
+        "drupal/contact_storage": "^1.4",
         "drupal/contextual_range_filter": "^2.0",
         "drupal/core-composer-scaffold": "^10",
         "drupal/core-project-message": "^10",
@@ -84,7 +84,7 @@
         "drupal/google_analytics": "^3.1 || ^4.0.0",
         "drupal/google_tag": "^2.0",
         "drupal/guardr_core": "2.x-dev",
-        "drupal/honeypot": "^2.0",
+        "drupal/honeypot": "^2.2",
         "drupal/htmlpurifier": "^1.0@RC",
         "drupal/image_style_quality": "^1.4",
         "drupal/image_widget_crop": "^2.4",
@@ -109,7 +109,7 @@
         "drupal/node_access_rebuild_progressive": "^2.0",
         "drupal/node_export": "^1.0@alpha",
         "drupal/node_revision_delete": "^2.0@RC",
-        "drupal/oembed_providers": "^2.0",
+        "drupal/oembed_providers": "^2.2",
         "drupal/optional_end_date": "^1.3",
         "drupal/other_view_filter": "^1.3",
         "drupal/override_node_options": "^2.7",
@@ -135,7 +135,7 @@
         "drupal/seckit": "^2.0",
         "drupal/semanticviews": "^3.0",
         "drupal/seven": "^1.0",
-        "drupal/simple_sitemap": "^4.1",
+        "drupal/simple_sitemap": "^4.2",
         "drupal/site_verify": "^2.0@alpha",
         "drupal/stage_file_proxy": "^3.1",
         "drupal/svg_image": "^3.0",
@@ -148,7 +148,7 @@
         "drupal/turnstile": "^1.1",
         "drupal/twig_field_value": "~1.0 || ~2.0",
         "drupal/twig_tweak": "^3.2",
-        "drupal/twig_vardumper": "^3.1",
+        "drupal/twig_vardumper": "^3.2",
         "drupal/twitter_api_block": "^4.0",
         "drupal/twitter_block": "^4.0",
         "drupal/ultimate_cron": "^2.0@alpha",
@@ -305,9 +305,7 @@
                 "#3111965-2: Rendering empty text in a table causes empty text to be rendered twice": "https://www.drupal.org/files/issues/2020-02-07/eva-empty-text-3111965-2.patch"
             },
             "drupal/flag": {
-                "Implement Migration Paths for Flag 7.x": "https://www.drupal.org/files/issues/2019-04-25/2409901_flag_migration_paths_52.patch",
-                "3207400-TypeError in FlagCountManager when flaggable no longer exists\n": "https://www.drupal.org/files/issues/2021-12-02/flag-3207400-3.patch",
-                "3336839 - FlagCountManager: Call to a member function id() on null": "https://www.drupal.org/files/issues/2023-06-08/patch-5.patch"
+                "3336839 - FlagCountManager: Call to a member function id() on null": "https://www.drupal.org/files/issues/2024-09-09/3336839.patch"
             },
             "drupal/webform": {
                 "3323334: Allow Disabling open/closed/scheduled on field widget": "https://www.drupal.org/files/issues/2022-11-25/3323334-allow-disabling-open-closed-scheduled-on-field-widget-6.2.x-with-schema-and-testing-coverage.patch"
@@ -320,10 +318,6 @@
             },
             "drupal/field_group": {
                 "3205504 - Add support for #description_display":"https://www.drupal.org/files/issues/2022-10-27/3205504-20.patch"
-            },
-            "drupal/contact_storage": {
-                "Error while field storage definition\n": "https://www.drupal.org/files/issues/2022-10-19/contact_storage.patch",
-                "3191567 - Undefined index: entity:delete_action:contact_message": "https://www.drupal.org/files/issues/2022-11-07/contact_storage-bc_action_fix-3191567-31.patch"
             },
             "drupal/image_widget_crop": {
                 "3153736 - Enforce hard limit": "https://www.drupal.org/files/issues/2020-06-22/3153736-2.patch",

@@ -6,20 +6,42 @@
       //   - Sticky header (on scroll) [done]
       //   - Header collapse (on scroll) [done]
       //   - Peak-a-boo nav (on scroll up) [done]
-      //   - Peak-a-boo actionbar (on scroll below homepage actionbar)
+      //   - Peak-a-boo actionbar (on scroll below homepage actionbar) [done]
       //   - Expand/collapse search bar
       //   - Senator microsite peak-a-boo nav (on scroll up)
-      //   - DRY code / helper methods
+      //   - In session variations
+      //   - DRY code / helper methods?
+      const header = document.getElementById('js-sticky');
+      const actionBarClone = document.querySelector('.c-actionbar')
+        .cloneNode(true);
+      actionBarClone.classList.add('hidden');
+
+      const isFrontpage = document.querySelector('body.path-frontpage');
+      if (isFrontpage) {
+        header.append(actionBarClone);
+      }
+
+      function isScrolledBelowElement(element) {
+        const elementRect = element.getBoundingClientRect();
+        return elementRect.bottom < 0;
+      }
+
+      const navWrap = document.querySelector('.c-nav--wrap');
+      const headerBar = document.querySelector('section.c-header-bar');
+      const homepageHero = document.querySelector('.hero--homepage');
+
       let lastScrollTop = 0;
-      window.addEventListener('scroll', () => {
+      window.addEventListener('scroll', function () {
         const currentScrollTop = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop;
-        const navWrap = document.querySelector('.c-nav--wrap');
-        const headerBar = document.querySelector('section.c-header-bar');
         if (currentScrollTop > lastScrollTop) {
           // Scrolling down.
           navWrap.classList.add('closed');
           headerBar.classList.add('collapsed');
           document.body.classList.add('nav-and-header-collapsed');
+
+          if (isFrontpage && isScrolledBelowElement(homepageHero)) {
+            actionBarClone.classList.remove('hidden');
+          }
         } else {
           // Scrolling up.
           if (currentScrollTop > 50) {
@@ -32,6 +54,10 @@
             headerBar.classList.remove('collapsed');
             document.body.classList.remove('nav-and-header-collapsed');
             document.body.classList.remove('nav-collapsed');
+          }
+
+          if (isFrontpage && !isScrolledBelowElement(homepageHero)) {
+            actionBarClone.classList.add('hidden');
           }
         }
         // Store previous scroll position.

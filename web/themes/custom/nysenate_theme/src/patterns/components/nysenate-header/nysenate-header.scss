@@ -7,15 +7,27 @@
 }
 
 body {
-  margin-top: 155px;
+  margin-top: 255px;
   transition: margin-top 0.3s ease-out 0s;
 
+  &.path-frontpage {
+    margin-top: 155px;
+  }
+
   &.nav-and-header-collapsed {
-    margin-top: 40px;
+    margin-top: 140px;
+
+    &.path-frontpage {
+      margin-top: 40px;
+    }
   }
 
   &.nav-collapsed {
-    margin-top: 100px;
+    margin-top: 200px;
+
+    &.path-frontpage {
+      margin-top: 100px;
+    }
   }
 }
 

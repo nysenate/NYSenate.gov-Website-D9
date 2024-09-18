@@ -3,12 +3,40 @@
   Drupal.behaviors.nysenateHeader = {
     attach: function (context) {
       // @todo: reimplement:
-      //   - Sticky header (on scroll)
-      //   - Header collapse (on scroll)
-      //   - Peak-a-boo nav (on scroll up)
+      //   - Sticky header (on scroll) [done]
+      //   - Header collapse (on scroll) [done]
+      //   - Peak-a-boo nav (on scroll up) [done]
       //   - Peak-a-boo actionbar (on scroll below homepage actionbar)
       //   - Expand/collapse search bar
       //   - Senator microsite peak-a-boo nav (on scroll up)
+      //   - DRY code / helper methods
+      let lastScrollTop = 0;
+      window.addEventListener('scroll', () => {
+        const currentScrollTop = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop;
+        const navWrap = document.querySelector('.c-nav--wrap');
+        const headerBar = document.querySelector('section.c-header-bar');
+        if (currentScrollTop > lastScrollTop) {
+          // Scrolling down.
+          navWrap.classList.add('closed');
+          headerBar.classList.add('collapsed');
+          document.body.classList.add('nav-and-header-collapsed');
+        } else {
+          // Scrolling up.
+          if (currentScrollTop > 50) {
+            navWrap.classList.remove('closed');
+            document.body.classList.remove('nav-and-header-collapsed');
+            document.body.classList.add('nav-collapsed');
+          }
+          else {
+            navWrap.classList.remove('closed');
+            headerBar.classList.remove('collapsed');
+            document.body.classList.remove('nav-and-header-collapsed');
+            document.body.classList.remove('nav-collapsed');
+          }
+        }
+        // Store previous scroll position.
+        lastScrollTop = currentScrollTop;
+      });
 
       // const origNav = $('#js-sticky', context);
       // const $adminToolbar = $('#toolbar-bar');

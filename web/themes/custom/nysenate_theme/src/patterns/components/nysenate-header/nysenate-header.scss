@@ -1,5 +1,24 @@
 @import '../../global/utils/init';
 
+// Establish baseline header positioning and sticky behavior, augmented in
+// nysenate-header.js
+#js-sticky {
+  position: fixed;
+}
+
+body {
+  margin-top: 155px;
+  transition: margin-top 0.3s ease-out 0s;
+
+  &.nav-and-header-collapsed {
+    margin-top: 40px;
+  }
+
+  &.nav-collapsed {
+    margin-top: 100px;
+  }
+}
+
 // Skip to main content
 .element-invisible {
   @include element-invisible;

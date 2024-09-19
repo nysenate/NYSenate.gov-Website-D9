@@ -2,13 +2,13 @@
 
 // Establish baseline header positioning and sticky behavior, augmented in
 // nysenate-header.js
-#js-sticky {
-  position: fixed;
-}
-
 body {
   margin-top: 255px;
   transition: margin-top 0.3s ease-out 0s;
+
+  #js-sticky {
+    position: fixed;
+  }
 
   &.search-open {
     margin-top: 605px;
@@ -56,6 +56,37 @@ body {
       margin-top: 95px;
       &.search-open {
         margin-top: 320px;
+      }
+    }
+  }
+}
+
+body.microsite-path {
+  margin-top: 100px;
+
+  #js-sticky {
+    position: relative;
+  }
+
+  .c-header-bar {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 0;
+
+    .c-topbar {
+      margin: 0 9%;
+      width: 82%;
+    }
+
+    .hero--senator, .block-content--type-senator-microsite-menu {
+      height: 0;
+      overflow: hidden;
+      transition: height 0.3s ease-out 0s;
+
+      &.expanded {
+        height: 100px;
       }
     }
   }

@@ -8,19 +8,30 @@
       //   - Peak-a-boo nav (on scroll up) [done]
       //   - Peak-a-boo actionbar (on scroll below homepage actionbar) [done]
       //   - Expand/collapse search bar [done]
-      //   - Senator microsite peak-a-boo nav (on scroll up)
+      //   - Senator microsite variations [WIP]
       //   - In session variations
       //   - Mobile variations
       //   -- Dup search form from nysenate-header.twig:94
       //   - DRY code / helper methods?
       //   -- Calc body margin method?
+      //   -- Remove node clone?
       const header = document.getElementById('js-sticky');
-      const actionBarClone = document.querySelector('.c-actionbar')
-        .cloneNode(true);
-      actionBarClone.classList.add('hidden');
-
+      const isMicrosite = document.querySelector('body.microsite-path');
       const isFrontpage = document.querySelector('body.path-frontpage');
-      if (isFrontpage) {
+      const actionBar = document.querySelector('.c-actionbar');
+      const navWrap = document.querySelector('.c-nav--wrap');
+      const headerBar = document.querySelector('section.c-header-bar');
+      const headerBarWrapper = document.querySelector('header#js-sticky > .pane-nys-blocks-sitewide-header-bar-block > .pane-content');
+      const homepageHero = document.querySelector('.hero--homepage');
+      const senatorHero = document.querySelector('.hero--senator');
+      const micrositeMenu = document.querySelector('.block-content--type-senator-microsite-menu');
+
+      let actionBarClone = null;
+      let lastScrollTop = 0;
+
+      if (isFrontpage && actionBar) {
+        actionBarClone = actionBar.cloneNode(true);
+        actionBarClone.classList.add('hidden');
         header.append(actionBarClone);
       }
 
@@ -29,36 +40,59 @@
         return elementRect.bottom < 0;
       }
 
-      const navWrap = document.querySelector('.c-nav--wrap');
-      const headerBar = document.querySelector('section.c-header-bar');
-      const homepageHero = document.querySelector('.hero--homepage');
-
-      let lastScrollTop = 0;
       window.addEventListener('scroll', function () {
         const currentScrollTop = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop;
         if (currentScrollTop > lastScrollTop) {
           // Scrolling down.
-          navWrap.classList.add('closed');
           headerBar.classList.add('collapsed');
-          document.body.classList.add('header-collapsed', 'nav-collapsed');
+          document.body.classList.add('header-collapsed');
 
-          if (isFrontpage && isScrolledBelowElement(homepageHero)) {
-            actionBarClone.classList.remove('hidden');
+          if (!isMicrosite) {
+            navWrap.classList.add('closed');
+            document.body.classList.add('nav-collapsed');
+
+            if (isFrontpage && isScrolledBelowElement(homepageHero)) {
+              actionBarClone.classList.remove('hidden');
+            }
+          }
+
+          else {
+            if (isScrolledBelowElement(senatorHero)) {
+              let senatorHeroHeight = senatorHero.getBoundingClientRect().height;
+              let micrositeMenuHeight = micrositeMenu.getBoundingClientRect().height;
+              document.body.style.paddingTop = (senatorHeroHeight + micrositeMenuHeight) + 'px';
+              headerBar.append(senatorHero, micrositeMenu);
+              header.classList.add('l-header__collapsed');
+
+              setTimeout(() => {
+                senatorHero.classList.add('expanded')
+              }, 1);
+            }
           }
         } else {
           // Scrolling up.
-          if (currentScrollTop > 50) {
-            navWrap.classList.remove('closed');
-            document.body.classList.remove('nav-collapsed');
-          }
-          else {
-            navWrap.classList.remove('closed');
+          if (currentScrollTop < 50) {
             headerBar.classList.remove('collapsed');
-            document.body.classList.remove('header-collapsed', 'nav-collapsed');
+            document.body.classList.remove('header-collapsed');
           }
 
-          if (isFrontpage && !isScrolledBelowElement(homepageHero)) {
-            actionBarClone.classList.add('hidden');
+          if (!isMicrosite) {
+            navWrap.classList.remove('closed');
+            document.body.classList.remove('nav-collapsed');
+
+            if (isFrontpage && !isScrolledBelowElement(homepageHero)) {
+              actionBarClone.classList.add('hidden');
+            }
+          }
+
+          else {
+            senatorHero.classList.remove('expanded')
+            setTimeout(() => {
+              document.body.style.paddingTop = 0;
+              headerBarWrapper.append(senatorHero, micrositeMenu);
+              header.classList.remove('l-header__collapsed');
+            }, 300);
+            // @todo: complete implementation.
           }
         }
         // Store previous scroll position.

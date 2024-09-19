@@ -7,10 +7,13 @@
       //   - Header collapse (on scroll) [done]
       //   - Peak-a-boo nav (on scroll up) [done]
       //   - Peak-a-boo actionbar (on scroll below homepage actionbar) [done]
-      //   - Expand/collapse search bar
+      //   - Expand/collapse search bar [done]
       //   - Senator microsite peak-a-boo nav (on scroll up)
       //   - In session variations
+      //   - Mobile variations
+      //   -- Dup search form from nysenate-header.twig:94
       //   - DRY code / helper methods?
+      //   -- Calc body margin method?
       const header = document.getElementById('js-sticky');
       const actionBarClone = document.querySelector('.c-actionbar')
         .cloneNode(true);
@@ -37,7 +40,7 @@
           // Scrolling down.
           navWrap.classList.add('closed');
           headerBar.classList.add('collapsed');
-          document.body.classList.add('nav-and-header-collapsed');
+          document.body.classList.add('header-collapsed', 'nav-collapsed');
 
           if (isFrontpage && isScrolledBelowElement(homepageHero)) {
             actionBarClone.classList.remove('hidden');
@@ -46,14 +49,12 @@
           // Scrolling up.
           if (currentScrollTop > 50) {
             navWrap.classList.remove('closed');
-            document.body.classList.remove('nav-and-header-collapsed');
-            document.body.classList.add('nav-collapsed');
+            document.body.classList.remove('nav-collapsed');
           }
           else {
             navWrap.classList.remove('closed');
             headerBar.classList.remove('collapsed');
-            document.body.classList.remove('nav-and-header-collapsed');
-            document.body.classList.remove('nav-collapsed');
+            document.body.classList.remove('header-collapsed', 'nav-collapsed');
           }
 
           if (isFrontpage && !isScrolledBelowElement(homepageHero)) {
@@ -62,6 +63,18 @@
         }
         // Store previous scroll position.
         lastScrollTop = currentScrollTop;
+      });
+
+      const searchButton = document.querySelector('button.js-search--toggle');
+      const searchForm = document.getElementById('nys-searchglobal-form');
+      const searchInput = document.getElementById('edit-keys');
+      searchButton.addEventListener('click', () => {
+        navWrap.classList.toggle('search-open');
+        searchForm.classList.toggle('open');
+        document.body.classList.toggle('search-open');
+        if (navWrap.classList.contains('search-open')) {
+          searchInput.focus();
+        }
       });
 
       // const origNav = $('#js-sticky', context);

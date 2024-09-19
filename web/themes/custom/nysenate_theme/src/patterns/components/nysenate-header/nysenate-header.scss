@@ -10,23 +10,53 @@ body {
   margin-top: 255px;
   transition: margin-top 0.3s ease-out 0s;
 
-  &.path-frontpage {
-    margin-top: 155px;
+  &.search-open {
+    margin-top: 605px;
   }
 
-  &.nav-and-header-collapsed {
-    margin-top: 140px;
+  &.path-frontpage {
+    margin-top: 155px;
+    &.search-open {
+      margin-top: 380px;
+    }
+  }
 
+  &.nav-collapsed.header-collapsed {
+    margin-top: 140px;
+    &.search-open {
+      margin-top: 365px;
+    }
     &.path-frontpage {
       margin-top: 40px;
+      &.search-open {
+        margin-top: 265px;
+      }
     }
   }
 
   &.nav-collapsed {
     margin-top: 200px;
-
+    &.search-open {
+      margin-top: 425px;
+    }
     &.path-frontpage {
       margin-top: 100px;
+      &.search-open {
+        margin-top: 325px;
+      }
+    }
+  }
+
+  &.header-collapsed {
+    margin-top: 195px;
+    &.search-open {
+      margin-top: 420px;
+    }
+    &.path-frontpage {
+      margin-top: 95px;
+      &.search-open {
+        margin-top: 320px;
+      }
     }
   }
 }
@@ -1110,18 +1140,6 @@ a:hover.c-header--btn.c-header--btn__taking_action {
         }
       }
     }
-  }
-
-  .search-open .c-site-search .c-site-search--btn,
-  .search-open .c-site-search .c-site-search--btn:focus,
-  .c-site-search--btn:focus {
-    position: absolute;
-    height: 45px;
-    width: 45px;
-    top: 15px;
-    right: 15px;
-    color: $grey08;
-    font-size: 22px;
   }
 
   .c-site-search {

@@ -73,13 +73,13 @@ class SchoolFormsService {
    *   The file URL generator.
    */
   public function __construct(
-        PagerParametersInterface $pager_param,
-        PagerManagerInterface $pager_manager,
-        EntityTypeManager $entityTypeManager,
-        RouteMatchInterface $current_route_match,
-        StreamWrapperManager $streamWrapperManager,
-        FileUrlGeneratorInterface $file_url_generator
-    ) {
+    PagerParametersInterface $pager_param,
+    PagerManagerInterface $pager_manager,
+    EntityTypeManager $entityTypeManager,
+    RouteMatchInterface $current_route_match,
+    StreamWrapperManager $streamWrapperManager,
+    FileUrlGeneratorInterface $file_url_generator,
+  ) {
     $this->pagerParam = $pager_param;
     $this->pagerManager = $pager_manager;
     $this->entityTypeManager = $entityTypeManager;
@@ -171,7 +171,7 @@ class SchoolFormsService {
        */
       $district = $school_node->get('field_district')->entity;
       $school_senator = $district->get('field_senator')->entity;
-      if ($params['senator'] && $params['senator'] != $school_senator->id()) {
+      if (($params['senator'] ?? NULL) != ($school_senator?->id())) {
         continue;
       }
       if ($params['teacher_name'] && $params['teacher_name'] != $submission_data['contact_name']) {

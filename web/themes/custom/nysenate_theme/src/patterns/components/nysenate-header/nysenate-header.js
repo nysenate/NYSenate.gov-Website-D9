@@ -9,7 +9,7 @@
       //   - Peak-a-boo actionbar (on scroll below homepage actionbar) [done]
       //   - Expand/collapse search bar [done]
       //   - Senator microsite variations [done]
-      //   - In session variations
+      //   - In session variations [done]
       //   - Mobile variations
       //   -- Dup search form from nysenate-header.twig:94
       //   - DRY code / helper methods?
@@ -18,6 +18,7 @@
       const header = document.getElementById('js-sticky');
       const isMicrositeLandingPage = document.querySelector('body.page-node-type-microsite-page');
       const isFrontpage = document.querySelector('body.path-frontpage');
+      const inSession = document.querySelector('body.in-session');
       const actionBar = document.querySelector('.c-actionbar');
       const navWrap = document.querySelector('.c-nav--wrap');
       const headerBar = document.querySelector('section.c-header-bar');
@@ -59,7 +60,7 @@
             navWrap.classList.add('closed');
             document.body.classList.add('nav-collapsed');
 
-            if (isFrontpage && isScrolledBelowElement(homepageHero)) {
+            if (isFrontpage && !inSession && isScrolledBelowElement(homepageHero)) {
               actionBarClone.classList.remove('hidden');
             }
           }
@@ -80,7 +81,7 @@
             navWrap.classList.remove('closed');
             document.body.classList.remove('nav-collapsed');
 
-            if (isFrontpage && !isScrolledBelowElement(homepageHero)) {
+            if (isFrontpage && !inSession && !isScrolledBelowElement(homepageHero)) {
               actionBarClone.classList.add('hidden');
             }
           }

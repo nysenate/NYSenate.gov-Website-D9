@@ -61,6 +61,7 @@ body {
   }
 }
 
+// Updates to support nysenate-header.js refactor
 body.page-node-type-microsite-page {
   margin-top: 100px;
 
@@ -87,9 +88,17 @@ body.page-node-type-microsite-page {
 
       &.expanded {
         height: 100px;
+
+        &.expanded-with-search {
+          height: 355px;
+        }
       }
     }
   }
+}
+
+.c-senator-nav--wrap .c-nav nav button.js-search--toggle.u-tablet-plus::after {
+  top: 10px;
 }
 
 // Skip to main content

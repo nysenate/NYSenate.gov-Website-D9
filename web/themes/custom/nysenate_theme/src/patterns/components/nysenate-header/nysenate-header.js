@@ -9,6 +9,7 @@
       //   - Peak-a-boo actionbar (on scroll below homepage actionbar) [done]
       //   - Expand/collapse search bar [done]
       //   - Senator microsite variations [done]
+      //   - Senator microsite search [done]
       //   - In session variations [done]
       //   - Mobile variations
       //   -- Dup search form from nysenate-header.twig:94
@@ -99,16 +100,25 @@
         lastScrollTop = currentScrollTop;
       });
 
-      const searchButton = document.querySelector('button.js-search--toggle');
-      const searchForm = document.getElementById('nys-searchglobal-form');
-      const searchInput = document.getElementById('edit-keys');
-      searchButton.addEventListener('click', () => {
-        navWrap.classList.toggle('search-open');
-        searchForm.classList.toggle('open');
-        document.body.classList.toggle('search-open');
-        if (navWrap.classList.contains('search-open')) {
-          searchInput.focus();
-        }
+      const searchButtons = document.querySelectorAll('button.js-search--toggle');
+      const searchForms = document.querySelectorAll('div.u-tablet-plus form.nys-searchglobal-form');
+      const searchInputs = document.querySelectorAll('div.u-tablet-plus input.c-site-search--box');
+      const navWraps = document.querySelectorAll('.c-nav--wrap');
+
+      searchButtons.forEach((searchButton, index) => {
+        searchButton.addEventListener('click', () => {
+          navWraps.item(index).classList.toggle('search-open');
+          searchForms.item(index).classList.toggle('open');
+          if (!isMicrositeLandingPage) {
+            document.body.classList.toggle('search-open');
+          }
+          if (micrositeMenuClone) {
+            micrositeMenuClone.classList.toggle('expanded-with-search');
+          }
+          if (navWraps.item(index).classList.contains('search-open')) {
+            searchInputs.item(index).focus();
+          }
+        });
       });
 
       // const origNav = $('#js-sticky', context);

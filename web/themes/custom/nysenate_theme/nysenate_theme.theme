@@ -39,21 +39,6 @@ function nysenate_theme_preprocess_html(&$variables) {
       $variables['attributes']['class'][] = $suggestion;
     }
   }
-
-  $microsite_node_types = [
-    'article',
-    'event',
-    'honoree',
-    'in_the_news',
-    'petition',
-    'webform',
-    'video',
-    'microsite_page',
-  ];
-  $node_type = $variables['node_type'] ?? '';
-  if (in_array($node_type, $microsite_node_types)) {
-    $variables['attributes']['class'][] = 'microsite-path';
-  }
 }
 
 /**

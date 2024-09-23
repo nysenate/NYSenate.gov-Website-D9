@@ -61,7 +61,7 @@ body {
   }
 }
 
-body.microsite-path {
+body.page-node-type-microsite-page {
   margin-top: 100px;
 
   #js-sticky {
@@ -76,14 +76,14 @@ body.microsite-path {
     padding: 0;
 
     .c-topbar {
-      margin: 0 9%;
-      width: 82%;
+      margin: 0 auto;
+      max-width: 1189px;
     }
 
     .hero--senator, .block-content--type-senator-microsite-menu {
       height: 0;
       overflow: hidden;
-      transition: height 0.3s ease-out 0s;
+      transition: height 0.3s;
 
       &.expanded {
         height: 100px;

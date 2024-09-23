@@ -8,7 +8,7 @@
       //   - Peak-a-boo nav (on scroll up) [done]
       //   - Peak-a-boo actionbar (on scroll below homepage actionbar) [done]
       //   - Expand/collapse search bar [done]
-      //   - Senator microsite variations [WIP]
+      //   - Senator microsite variations [done]
       //   - In session variations
       //   - Mobile variations
       //   -- Dup search form from nysenate-header.twig:94
@@ -16,23 +16,31 @@
       //   -- Calc body margin method?
       //   -- Remove node clone?
       const header = document.getElementById('js-sticky');
-      const isMicrosite = document.querySelector('body.microsite-path');
+      const isMicrositeLandingPage = document.querySelector('body.page-node-type-microsite-page');
       const isFrontpage = document.querySelector('body.path-frontpage');
       const actionBar = document.querySelector('.c-actionbar');
       const navWrap = document.querySelector('.c-nav--wrap');
       const headerBar = document.querySelector('section.c-header-bar');
-      const headerBarWrapper = document.querySelector('header#js-sticky > .pane-nys-blocks-sitewide-header-bar-block > .pane-content');
       const homepageHero = document.querySelector('.hero--homepage');
       const senatorHero = document.querySelector('.hero--senator');
       const micrositeMenu = document.querySelector('.block-content--type-senator-microsite-menu');
 
       let actionBarClone = null;
+      let senatorHeroClone = null;
+      let micrositeMenuClone = null;
       let lastScrollTop = 0;
 
       if (isFrontpage && actionBar) {
         actionBarClone = actionBar.cloneNode(true);
         actionBarClone.classList.add('hidden');
         header.append(actionBarClone);
+      }
+
+      if (isMicrositeLandingPage && senatorHero && micrositeMenu) {
+        senatorHeroClone = senatorHero.cloneNode(true);
+        micrositeMenuClone = micrositeMenu.cloneNode(true);
+        senatorHeroClone.classList.add('l-header__collapsed');
+        headerBar.append(senatorHeroClone, micrositeMenuClone);
       }
 
       function isScrolledBelowElement(element) {
@@ -47,7 +55,7 @@
           headerBar.classList.add('collapsed');
           document.body.classList.add('header-collapsed');
 
-          if (!isMicrosite) {
+          if (!isMicrositeLandingPage) {
             navWrap.classList.add('closed');
             document.body.classList.add('nav-collapsed');
 
@@ -55,18 +63,10 @@
               actionBarClone.classList.remove('hidden');
             }
           }
-
           else {
             if (isScrolledBelowElement(senatorHero)) {
-              let senatorHeroHeight = senatorHero.getBoundingClientRect().height;
-              let micrositeMenuHeight = micrositeMenu.getBoundingClientRect().height;
-              document.body.style.paddingTop = (senatorHeroHeight + micrositeMenuHeight) + 'px';
-              headerBar.append(senatorHero, micrositeMenu);
-              header.classList.add('l-header__collapsed');
-
-              setTimeout(() => {
-                senatorHero.classList.add('expanded')
-              }, 1);
+              senatorHeroClone.classList.add('expanded');
+              micrositeMenuClone.classList.remove('expanded');
             }
           }
         } else {
@@ -76,7 +76,7 @@
             document.body.classList.remove('header-collapsed');
           }
 
-          if (!isMicrosite) {
+          if (!isMicrositeLandingPage) {
             navWrap.classList.remove('closed');
             document.body.classList.remove('nav-collapsed');
 
@@ -84,15 +84,14 @@
               actionBarClone.classList.add('hidden');
             }
           }
-
           else {
-            senatorHero.classList.remove('expanded')
-            setTimeout(() => {
-              document.body.style.paddingTop = 0;
-              headerBarWrapper.append(senatorHero, micrositeMenu);
-              header.classList.remove('l-header__collapsed');
-            }, 300);
-            // @todo: complete implementation.
+            if (!isScrolledBelowElement(senatorHero)) {
+              senatorHeroClone.classList.remove('expanded');
+              micrositeMenuClone.classList.remove('expanded');
+            }
+            else {
+              micrositeMenuClone.classList.add('expanded');
+            }
           }
         }
         // Store previous scroll position.

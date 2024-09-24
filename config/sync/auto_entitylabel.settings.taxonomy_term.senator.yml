@@ -1,9 +1,10 @@
-status: 1
+status: 2
 pattern: '[term:field_senator_name]'
 escape: false
 preserve_titles: false
+save: false
+chunk: 50
 dependencies:
   config:
     - taxonomy.vocabulary.senator
-save: 0
-chunk: '50'
+new_content_behavior: 0

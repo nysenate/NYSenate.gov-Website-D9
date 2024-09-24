@@ -357,6 +357,13 @@ function nys_senators_form_alter(&$form, $form_state, $form_id) {
       $form['field_senator']['widget']['#options'] = $result;
     }
   }
+  //Only allow Admin to access name field on Senator taxonomy term
+  if ($form_id === 'taxonomy_term_senator_form') {
+    $user = \Drupal::currentUser()->getRoles();
+    if ((in_array("microsite_content_producer", $user)) && (!in_array("administrator", $user))) {
+      unset($form['name']['widget'][0]['value']);
+    }
+  }
 }
 
 /**

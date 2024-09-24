@@ -14,10 +14,8 @@
       //   - Main site mobile variations [done]
       //   -- Dup search form from nysenate-header.twig:94 [done]
       //   - Microsite site mobile variations [done]
-      //   - Authenticated user variations
-      //   - DRY code / helper methods?
-      //   -- Calc body margin method?
-      //   -- Remove node clone?
+      //   - Authenticated user variations [done]
+      //   - DRY code / helper methods
       const header = document.getElementById('js-sticky');
       const isMicrositeLandingPage = document.querySelector('body.page-node-type-microsite-page');
       const isFrontpage = document.querySelector('body.path-frontpage');

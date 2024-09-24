@@ -1,7 +1,6 @@
 @import '../../global/utils/init';
 
-// Establish baseline header positioning and sticky behavior, augmented in
-// nysenate-header.js
+// Updates to support nysenate-header.js refactor.
 body {
   margin-top: 255px;
   transition: margin-top 0.3s ease-out 0s;
@@ -14,11 +13,37 @@ body {
     position: fixed;
   }
 
+  &.toolbar-vertical {
+    &.nav-open #js-sticky .c-nav--wrap {
+      top: 99px;
+    }
+
+    #js-sticky {
+      top: 39px;
+
+      .c-nav--toggle {
+        top: 39px;
+      }
+    }
+  }
+
+  &.toolbar-horizontal {
+    #js-sticky {
+      left: 33px;
+    }
+
+    &[data-toolbar-menu="open"] {
+      #js-sticky {
+        left: 128px;
+      }
+    }
+  }
+
   &.search-open {
     margin-top: 605px;
   }
 
-  &.path-frontpage.out-of-session {
+  &.path-frontpage.out-of-session, &.path-dashboard {
     margin-top: 155px;
 
     @include breakpoint($bp-under-sm) {
@@ -68,59 +93,93 @@ body {
       }
     }
   }
-}
 
-// Updates to support nysenate-header.js refactor
-body.page-node-type-microsite-page {
-  margin-top: 100px;
+  &.page-node-type-microsite-page {
+    margin-top: 100px;
 
-  @include breakpoint($bp-under-sm) {
-    margin-top: 60px;
-  }
+    @include breakpoint($bp-under-sm) {
+      margin-top: 60px;
+    }
 
-  #js-sticky {
-    position: relative;
-  }
+    #js-sticky.l-header {
+      position: relative;
+      left: 0;
+    }
 
-  .c-header-bar {
-    position: fixed;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 0;
+    .c-header-bar {
+      position: fixed;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 0;
 
-    .c-topbar {
-      margin: 0 auto;
-      max-width: 1189px;
+      .c-topbar {
+        margin: 0 auto;
+        max-width: 1189px;
 
-      @include breakpoint($bp-under-lg3) {
-        margin: 0 9%;
-        max-width: 82%;
+        @include breakpoint($bp-under-lg3) {
+          margin: 0 9%;
+          max-width: 82%;
+        }
+
+        @include breakpoint($bp-under-sm) {
+          margin: 0;
+          padding: 0 6%;
+          max-width: 100%;
+        }
       }
 
-      @include breakpoint($bp-under-sm) {
-        margin: 0;
-        padding: 0 6%;
-        max-width: 100%;
+      .hero--senator, .block-content--type-senator-microsite-menu {
+        height: 0;
+        overflow: hidden;
+        transition: height 0.3s;
+
+        &.expanded {
+          height: 100px;
+
+          &.expanded-with-search {
+            height: 355px;
+          }
+        }
       }
     }
 
-    .hero--senator, .block-content--type-senator-microsite-menu {
-      height: 0;
-      overflow: hidden;
-      transition: height 0.3s;
+    &.toolbar-horizontal {
+      .c-header-bar {
+        transform: translateX(-47.8%);
+      }
 
-      &.expanded {
-        height: 100px;
+      &[data-toolbar-menu="open"] .c-header-bar {
+        transform: translateX(-40.6%);
+      }
+    }
 
-        &.expanded-with-search {
-          height: 355px;
+    &.toolbar-vertical {
+      .c-header-bar {
+        top: 39px;
+      }
+
+      #js-sticky {
+        top: 0;
+
+        .c-nav--toggle {
+          top: 39px;
+        }
+      }
+
+      &.nav-open #js-sticky {
+        .c-nav--wrap {
+          top: 99px;
+        }
+        .c-nav--toggle {
+          top: 39px;
         }
       }
     }
   }
 }
 
+// Misc fixes from header js rewrite.
 .c-senator-nav--wrap .c-nav nav button.js-search--toggle.u-tablet-plus::after {
   top: 10px;
 }

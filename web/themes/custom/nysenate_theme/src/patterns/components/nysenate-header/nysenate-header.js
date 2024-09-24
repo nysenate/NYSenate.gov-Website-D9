@@ -11,8 +11,9 @@
       //   - Senator microsite variations [done]
       //   - Senator microsite search [done]
       //   - In session variations [done]
-      //   - Mobile variations
-      //   -- Dup search form from nysenate-header.twig:94
+      //   - Main site mobile variations [done]
+      //   -- Dup search form from nysenate-header.twig:94 [done]
+      //   - Microsite site mobile variations
       //   - DRY code / helper methods?
       //   -- Calc body margin method?
       //   -- Remove node clone?
@@ -119,6 +120,11 @@
             searchInputs.item(index).focus();
           }
         });
+      });
+
+      const mobileMenu = document.querySelector('button.js-mobile-nav--btn');
+      mobileMenu.addEventListener('click', () => {
+        document.body.classList.toggle('nav-open');
       });
 
       // const origNav = $('#js-sticky', context);

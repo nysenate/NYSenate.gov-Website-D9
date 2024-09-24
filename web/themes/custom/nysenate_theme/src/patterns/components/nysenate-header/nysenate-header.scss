@@ -6,6 +6,10 @@ body {
   margin-top: 255px;
   transition: margin-top 0.3s ease-out 0s;
 
+  @include breakpoint($bp-under-sm) {
+    margin-top: 120px;
+  }
+
   #js-sticky {
     position: fixed;
   }
@@ -16,6 +20,11 @@ body {
 
   &.path-frontpage.out-of-session {
     margin-top: 155px;
+
+    @include breakpoint($bp-under-sm) {
+      margin-top: 60px;
+    }
+
     &.search-open {
       margin-top: 380px;
     }
@@ -578,10 +587,6 @@ header {
   }
 }
 
-#js-sticky .c-nav--toggle {
-  display: none;
-}
-
 .c-nav--toggle {
   cursor: pointer;
   position: absolute;
@@ -1067,7 +1072,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
   .u-mobile-only &.nys-searchglobal-form {
 
     .search__submit {
-      top: 55%;
+      top: 48%;
       transform: translateY(-50%);
       margin-right: 0;
       left: auto;

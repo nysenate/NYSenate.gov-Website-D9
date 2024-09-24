@@ -348,7 +348,7 @@ class SchoolFormEntityUpdateForm extends FormBase {
                 '@zipcode' => $school_address['postal_code'],
               ]
           ),
-          'senator' => $result['senator']->label() ?? '',
+          'senator' => ($result['senator'] ?? null)?->label() ?? '',
           'contact_information' => new FormattableMarkup(
               '@contact_name <br> @contact_email', [
                 '@contact_name' => $result['submission']->getData()['contact_name'],

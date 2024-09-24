@@ -13,7 +13,8 @@
       //   - In session variations [done]
       //   - Main site mobile variations [done]
       //   -- Dup search form from nysenate-header.twig:94 [done]
-      //   - Microsite site mobile variations
+      //   - Microsite site mobile variations [done]
+      //   - Authenticated user variations
       //   - DRY code / helper methods?
       //   -- Calc body margin method?
       //   -- Remove node clone?

@@ -74,6 +74,10 @@ body {
 body.page-node-type-microsite-page {
   margin-top: 100px;
 
+  @include breakpoint($bp-under-sm) {
+    margin-top: 60px;
+  }
+
   #js-sticky {
     position: relative;
   }
@@ -88,6 +92,17 @@ body.page-node-type-microsite-page {
     .c-topbar {
       margin: 0 auto;
       max-width: 1189px;
+
+      @include breakpoint($bp-under-lg3) {
+        margin: 0 9%;
+        max-width: 82%;
+      }
+
+      @include breakpoint($bp-under-sm) {
+        margin: 0;
+        padding: 0 6%;
+        max-width: 100%;
+      }
     }
 
     .hero--senator, .block-content--type-senator-microsite-menu {
@@ -108,6 +123,12 @@ body.page-node-type-microsite-page {
 
 .c-senator-nav--wrap .c-nav nav button.js-search--toggle.u-tablet-plus::after {
   top: 10px;
+}
+
+@include breakpoint($bp-under-sm) {
+  .c-header-bar > .block-content--type-senator-microsite-menu {
+    display: none;
+  }
 }
 
 // Skip to main content
@@ -426,7 +447,7 @@ body.page-node-type-microsite-page {
 }
 
 // nav-open - class added to body through js
-.nav-open {
+.nav-open #js-sticky {
 	max-height: 100vh;
 	overflow: hidden;
 
@@ -437,7 +458,7 @@ body.page-node-type-microsite-page {
   }
 
 	.c-nav--toggle {
-		position: absolute;
+		position: fixed;
 		height: 40px;
 		width: 40px;
 		@extend .icon-replace__x;
@@ -580,16 +601,12 @@ body.page-node-type-microsite-page {
 header {
   .pane-content {
     position: relative;
-
-    .button--menu {
-      position: absolute;
-    }
   }
 }
 
-.c-nav--toggle {
+#js-sticky .c-nav--toggle {
   cursor: pointer;
-  position: absolute;
+  position: fixed;
   z-index: 10;
   top: 0;
   right: 0;

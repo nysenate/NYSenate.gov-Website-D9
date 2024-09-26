@@ -176,7 +176,7 @@
     {% if event_place == "In Albany" or event_place == "In The District" %}
       {% if content.field_meeting_location[0]['#context']['value'] %}
         <div class="c-event-address">
-          {{ content.field_meeting_location[0]['#context']['value'] }}
+          {{ content.field_meeting_location[0]['#context']['value']|raw }}
         </div>
       {% endif %}
     {% endif %}
@@ -184,9 +184,9 @@
 
     {% if content.field_location[0]['address_line1']['#value'] %}
       <p class="c-event-address">
-        {{ content.field_location[0]['address_line1']['#value'] }} {{ content.field_location[0]['address_line2']['#value'] }}
-        <br/>{% apply spaceless %}{{ content.field_location[0]['locality']['#value'] }}{% endapply %},
-        {{ content.field_location[0]['administrative_area']['#value'] }}
+        {{ content.field_location[0]['address_line1']['#value']|raw }} {{ content.field_location[0]['address_line2']['#value']|raw }}
+        <br/>{% apply spaceless %}{{ content.field_location[0]['locality']['#value']|raw }}{% endapply %},
+        {{ content.field_location[0]['administrative_area']['#value']|raw }}
         {{ content.field_location[0]['postal_code']['#value'] }}</p>
     {% endif %}
 

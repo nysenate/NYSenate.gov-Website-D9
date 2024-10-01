@@ -29,7 +29,7 @@
 
         <div class="c-meeting-detail--info">
           <h1 class="c-meeting-detail--title">
-            {{ title }}
+            {{ title|raw }}
           </h1>
           {% if event_place == 'online' %}
             {% if event_online_link %}
@@ -55,7 +55,7 @@
 
           <p class="c-meeting-detail--location">
             {% if content.field_meeting_location.0 %}
-              {{ content.field_meeting_location.0 }}
+              {{ content.field_meeting_location.0|raw }}
             {% endif %}
           </p>
 

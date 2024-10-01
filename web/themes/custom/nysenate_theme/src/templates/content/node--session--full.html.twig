@@ -66,14 +66,14 @@
         <div class="c-meeting-detail--info">
           <h1 class="c-meeting-detail--title">Session</h1>
           {% if location_url %}
-            <a class="c-meeting-detail--location-link" href="http://maps.google.com/?q={{ location_url }}" title="{{ content.field_location[0].organization['#value'] }}" target="_blank">{{ content.field_location[0].organization['#value'] }}</a>
+            <a class="c-meeting-detail--location-link" href="http://maps.google.com/?q={{ location_url }}" title="{{ content.field_location[0].organization['#value'] }}" target="_blank">{{ content.field_location[0].organization['#value']|raw }}</a>
           {% endif %}
           <div class="c-meeting-detail--location">
             {% if content.field_meeting_location %}
-              {{ content.field_meeting_location }}
+              {{ content.field_meeting_location|raw }}
             {% endif %}
             {% if location %}
-              {{ location }}
+              {{ location|raw }}
             {% endif %}
           </div>
           <p class="c-meeting-detail--time">

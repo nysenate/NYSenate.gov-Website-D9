@@ -155,13 +155,14 @@
 
       // Implement expandable search button in header for full site.
       searchButtons.forEach((searchButton, index) => {
-        searchButton.addEventListener('click', () => {
+        searchButton.addEventListener('click', (clickElem) => {
+          let isHeaderSearchButton = clickElem.currentTarget.closest('.c-header-bar');
           navWraps.item(index).classList.toggle('search-open');
           searchForms.item(index).classList.toggle('open');
           if (!isMicrositeLandingPage) {
             document.body.classList.toggle('search-open');
           }
-          if (micrositeMenuClone) {
+          if (micrositeMenuClone && isHeaderSearchButton) {
             micrositeMenuClone.classList.toggle('expanded-with-search');
           }
           if (navWraps.item(index).classList.contains('search-open')) {

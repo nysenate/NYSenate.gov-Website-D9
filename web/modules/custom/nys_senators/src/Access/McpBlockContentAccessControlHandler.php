@@ -69,10 +69,12 @@ class McpBlockContentAccessControlHandler extends BlockContentAccessControlHandl
       catch (\Exception) {
       }
       if (isset($node_storage)) {
-        $is_block_linked_to_managed_senator = $node_storage
-          ->getQuery()
-          ->accessCheck(FALSE)
+        $query = $node_storage->getQuery()->accessCheck(FALSE);
+        $or_condition_group = $query->orConditionGroup()
           ->condition('field_block', $entity->id(), 'CONTAINS')
+          ->condition('field_layout_components', $entity->id(), 'CONTAINS');
+        $is_block_linked_to_managed_senator = $query
+          ->condition($or_condition_group)
           ->condition('field_senator_multiref', $managed_senator_tids, 'IN')
           ->count()
           ->execute();

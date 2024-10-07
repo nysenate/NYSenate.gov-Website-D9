@@ -39,6 +39,25 @@ function nysenate_theme_preprocess_html(&$variables) {
       $variables['attributes']['class'][] = $suggestion;
     }
   }
+
+  // Add in or out of session indicator to body class.
+  try {
+    $homepage_hero_queue = \Drupal::entityTypeManager()
+      ->getStorage('entity_subqueue')
+      ->load('homepage_hero');
+  }
+  catch (\Exception) {
+    $homepage_hero_queue = FALSE;
+  }
+  if ($homepage_hero_queue) {
+    $homepage_hero_items = $homepage_hero_queue->get('items')?->getValue();
+    if ($homepage_hero_items) {
+      $variables['attributes']['class'][] = 'in-session';
+    }
+    else {
+      $variables['attributes']['class'][] = 'out-of-session';
+    }
+  }
 }
 
 /**

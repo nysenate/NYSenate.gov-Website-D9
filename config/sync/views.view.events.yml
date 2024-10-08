@@ -1528,8 +1528,8 @@ display:
           value:
             min: ''
             max: ''
-            value: ''
-            type: date
+            value: now
+            type: offset
           group: 1
           exposed: true
           expose:
@@ -1548,16 +1548,13 @@ display:
               authenticated: authenticated
               anonymous: '0'
               administrator: '0'
-              web_administrator: '0'
               frontpage_editor: '0'
               senator: '0'
               microsite_content_producer: '0'
               legislative_correspondent: '0'
               student_programs: '0'
               constituent: '0'
-              senate_services: '0'
-              student_contest_judge: '0'
-              experimental_content_producer: '0'
+              comment_moderator: '0'
             min_placeholder: ''
             max_placeholder: ''
             placeholder: ''
@@ -1573,7 +1570,7 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          granularity: month
+          granularity: day
       filter_groups:
         operator: AND
         groups:
@@ -1600,7 +1597,20 @@ display:
           query_tags: {  }
       relationships: {  }
       use_ajax: true
-      header: {  }
+      header:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text
+          empty: true
+          content:
+            value: '[view:date-filter]'
+            format: basic_html
+          tokenize: true
       footer:
         view:
           id: view
@@ -1712,6 +1722,7 @@ display:
         exposed_form: false
         style: false
         row: false
+        header: true
       use_ajax: true
       display_description: ''
       display_extenders: {  }
@@ -3264,7 +3275,7 @@ display:
         - 'config:field.storage.node.field_video_status'
   page_1:
     id: page_1
-    display_title: 'Day(Default page)'
+    display_title: 'Day (default page)'
     display_plugin: page
     position: 1
     display_options:
@@ -3280,6 +3291,7 @@ display:
       defaults:
         style: false
         row: false
+        header: true
       display_description: ''
       display_extenders: {  }
       path: events
@@ -4692,12 +4704,12 @@ display:
           group_type: group
           admin_label: ''
           plugin_id: datetime
-          operator: '>='
+          operator: '='
           value:
             min: ''
             max: ''
-            value: ''
-            type: date
+            value: now
+            type: offset
           group: 1
           exposed: true
           expose:
@@ -4738,7 +4750,7 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          granularity: hour
+          granularity: month
       filter_groups:
         operator: AND
         groups:
@@ -5019,10 +5031,10 @@ display:
           plugin_id: datetime
           operator: between
           value:
-            min: ''
-            max: ''
+            min: now
+            max: now
             value: ''
-            type: date
+            type: offset
           group: 1
           exposed: true
           expose:
@@ -5047,6 +5059,7 @@ display:
               legislative_correspondent: '0'
               student_programs: '0'
               constituent: '0'
+              comment_moderator: '0'
             min_placeholder: ''
             max_placeholder: ''
             placeholder: ''
@@ -5062,7 +5075,7 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          granularity: month
+          granularity: day
       filter_groups:
         operator: AND
         groups:

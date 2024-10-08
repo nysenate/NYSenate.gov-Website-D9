@@ -44,30 +44,13 @@
   ]
 %}
 
-{% if view.current_display in ['page_1', 'day_block'] %}
-  {% set view_text = 'View by Day' %}
-{% elseif view.current_display in ['page_3', 'week_block'] %}
-  {% set view_text = 'View by Week' %}
-{% elseif view.current_display in ['page_2', 'month_block'] %}
-  {% set view_text = 'View by Month' %}
-{% endif %}
-
 <div{{ attributes.addClass(classes) }}>
-  <h2 class="nys-title">Statewide Senate Events Calendar</h2>
   {{ title_prefix }}
   {% if title %}
     {{ title }}
   {% endif %}
   {{ title_suffix }}
-  {% if header %}
-    {{ header }}
-  {% endif %}
   <div class="view-header event-calendar">
-    <div id="datepicker">
-      <div class="mobile-calendar-toggle icon-after__calendar-view">{{ view_text }}</div>
-      <input type="text" />
-      <div id="container"></div>
-    </div>
     {% if exposed %}
       <div class="view-filters">
         {{ exposed }}
@@ -76,7 +59,11 @@
   </div>
   <section class="c-block calendar-nav">
     <div class="cal-nav-wrapper">
-      <span class="title">Upcoming Events</span>
+      <span class="title">
+        {% if header %}
+          {{ header }}
+        {% endif %}
+      </span>
       <ul class="cal-nav-list">
         {% if view.current_display not in ['page_1', 'day_block'] %}
           <li><a href="/events" class="cal-nav-link icon-after__calendar-day">View By Day</a></li>

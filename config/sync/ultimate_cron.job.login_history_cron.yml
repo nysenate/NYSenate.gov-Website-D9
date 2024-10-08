@@ -1,0 +1,17 @@
+uuid: b0966951-859a-45d2-9841-66c2b6b6ce6b
+langcode: en
+status: true
+dependencies:
+  module:
+    - login_history
+title: 'Default cron handler'
+id: login_history_cron
+weight: 0
+module: login_history
+callback: login_history_cron
+scheduler:
+  id: simple
+launcher:
+  id: serial
+logger:
+  id: database

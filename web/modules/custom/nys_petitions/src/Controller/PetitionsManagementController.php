@@ -100,7 +100,7 @@ class PetitionsManagementController extends ControllerBase {
     else {
       $ret = ['#markup' => 'Could not find any signatures'];
     }
-    $ret = $this->renderer->renderPlain($ret);
+    $ret = $this->renderer->renderInIsolation($ret);
 
     return new HtmlResponse($ret);
   }

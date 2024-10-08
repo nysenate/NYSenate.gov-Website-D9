@@ -1,0 +1,31 @@
+<?php
+
+/**
+ * @file
+ * Install file for nys_bills module.
+ */
+
+/**
+ * Deletes all duplicate “original” Bill path aliases where there’s a numbered
+ * amendment for that same NID.
+ *
+ * @see https://atendesign.atlassian.net/browse/NYS-170
+ */
+function nys_bills_update_9001() {
+  $sql = <<<SQL
+    DELETE
+    FROM path_alias
+    WHERE alias LIKE '/legislation/bills/%/amendment/original'
+    AND EXISTS (
+      SELECT id
+      FROM path_alias AS a2
+      WHERE path_alias.path = a2.path
+      AND a2.alias NOT LIKE '/legislation/bills/%/amendment/original'
+      AND a2.alias LIKE '/legislation/bills/%/amendment/%'
+    );
+  SQL;
+
+  \Drupal::database()
+    ->query($sql)
+    ->execute();
+}

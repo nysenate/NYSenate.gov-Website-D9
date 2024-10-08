@@ -4,8 +4,9 @@ status: 2
 pattern: 'Quote: [block_content:field_author]'
 escape: false
 preserve_titles: false
+save: true
+chunk: 50
 dependencies:
   config:
     - block_content.type.quote
-save: 1
-chunk: '50'
+new_content_behavior: 1

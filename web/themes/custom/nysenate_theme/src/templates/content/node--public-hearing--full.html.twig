@@ -47,15 +47,15 @@
             href="http://maps.google.com/?q={{ location_url }}"
             title="{{ content.field_location[0].organization['#value'] }}"
             target="_blank">
-            {{ content.field_location[0].organization['#value'] }}
+            {{ content.field_location[0].organization['#value']|raw }}
           </a>
         {% endif %}
         <p class="c-meeting-detail--location">
           {% if content.field_meeting_location[0] %}
-            {{ content.field_meeting_location[0] }}
+            {{ content.field_meeting_location[0]|raw }}
           {% endif %}
           {% if location %}
-            {{ location }}
+            {{ location|raw }}
           {% endif %}
         </p>
         <p class="c-meeting-detail--time">

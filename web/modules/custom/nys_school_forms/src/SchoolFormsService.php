@@ -129,11 +129,11 @@ class SchoolFormsService {
     }
     $query->condition('webform_id', $webform_id);
     if (!empty($params['from_date'])) {
-      $query->condition('created', $params['from_date'], '>');
+      $query->condition('created', strtotime($params['from_date']), '>');
     }
     if (!empty($params['to_date'])) {
       // Make to date filter inclusive of the day.
-      $query->condition('created', (int) $params['to_date'] + 86399, '<');
+      $query->condition('created', strtotime($params['to_date']) + 86399, '<');
     }
     if ($params['sort_by']) {
       if ($params['sort_by'] === 'date') {
@@ -152,6 +152,8 @@ class SchoolFormsService {
     $query_results = $query
       ->accessCheck(FALSE)
       ->execute();
+    $filter_senator = $params['senator'] ?? NULL;
+    $filter_teacher = $params['teacher_name'] ?? NULL;
     foreach ($query_results as $query_result) {
       $submission = $this->entityTypeManager->getStorage('webform_submission')->load($query_result);
       /**
@@ -171,10 +173,10 @@ class SchoolFormsService {
        */
       $district = $school_node->get('field_district')->entity;
       $school_senator = $district->get('field_senator')->entity;
-      if (($params['senator'] ?? NULL) != ($school_senator?->id())) {
+      if ($filter_senator && ($filter_senator != $school_senator?->id())) {
         continue;
       }
-      if ($params['teacher_name'] && $params['teacher_name'] != $submission_data['contact_name']) {
+      if ($filter_teacher && $filter_teacher != $submission_data['contact_name']) {
         continue;
       }
       foreach ($submission_data['attach_your_submission'] as $student) {

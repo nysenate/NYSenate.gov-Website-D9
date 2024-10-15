@@ -1,0 +1,23 @@
+<?php
+
+/**
+ * @file
+ * Install file for nys_bills module.
+ */
+
+/**
+ * Deletes '/events' node alias, falling back on view page with same path.
+ *
+ * @see https://atendesign.atlassian.net/browse/NYS-164
+ */
+function nys_calendar_update_9001() {
+  $sql = <<<SQL
+    DELETE
+    FROM path_alias
+    WHERE alias = '/events'
+  SQL;
+
+  \Drupal::database()
+    ->query($sql)
+    ->execute();
+}

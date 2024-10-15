@@ -31,7 +31,7 @@
  * @ingroup themeable
  */
 #}
-{% if view.current_display == 'day_block' %}
+{% if view.current_display == 'page_1' %}
   <div class="c-event-date">
     {% if fields.field_video_status.content|striptags|trim != 'cancelled' %}
       {{ fields.field_date_range.content|replace({' - ':' TO '})|raw }}
@@ -124,12 +124,12 @@
       <div>{{ fields.field_video_status_1.content }}</div>
     {% endif %}
   {% else %}
-    {% if view.current_display != 'day_block' %}
+    {% if view.current_display != 'page_1' %}
       {{ fields.field_date_range.content|replace({' - ':' TO '})|raw }}
     {% endif %}
 
     {% if fields.field_video_status_1.content is defined and fields.field_video_status_1.content|striptags|trim is not empty  %}
-      {% if view.current_display != 'day_block' %}| {% endif %}
+      {% if view.current_display != 'page_1' %}| {% endif %}
       {% if fields.field_video_status_1.content|striptags|trim == "Streaming (Redirect)" %}
         <a class="c-video-status icon-before__youtube" href="{{ url }}">
           Streaming Live Now

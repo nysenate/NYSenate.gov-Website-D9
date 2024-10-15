@@ -29,3 +29,126 @@ function nys_bills_update_9001() {
     ->query($sql)
     ->execute();
 }
+
+/**
+ * Deletes duplicate nodes with missing data; repoints flags to preserved node.
+ *
+ * @see https://atendesign.atlassian.net/browse/NYS-171
+ */
+function nys_bills_update_9002() {
+  // Query for NIDs of duplicate bills and resolutions to delete.
+  $nids_to_del_sql = <<<SQL
+    SELECT nid
+    FROM node_field_data nd1
+    WHERE type IN ('bill', 'resolution')
+    AND nid NOT IN (
+      SELECT entity_id FROM node__field_ol_name
+    )
+    AND EXISTS (
+      SELECT nid FROM node_field_data nd2
+      WHERE nd1.nid != nd2.nid
+      AND nd1.title = nd2.title
+      AND nid IN (
+        SELECT entity_id FROM node__field_ol_name
+      )
+    )
+  SQL;
+  $nids_to_del_ret = \Drupal::database()
+    ->query($nids_to_del_sql)
+    ->fetchAllAssoc('nid');
+  $nids_to_del_arr = array_column($nids_to_del_ret, 'nid');
+  $nids_to_del_str = implode(', ', $nids_to_del_arr);
+
+  // Query for flags on NIDs to delete.
+  $fids_on_nids_to_del_sql = <<<SQL
+    SELECT id
+    FROM flagging
+    WHERE uid != 0
+    AND entity_id IN ($nids_to_del_str);
+  SQL;
+  $fids_on_nids_to_del_ret = \Drupal::database()
+    ->query($fids_on_nids_to_del_sql)
+    ->fetchAllAssoc('id');
+  $fids_on_nids_to_del_arr = array_column($fids_on_nids_to_del_ret, 'id');
+
+  // Recreate flags on preserved copies of nodes.
+  /** @var Drupal\flag\FlagService $flag_service */
+  $flag_service = \Drupal::service('flag');
+  $flagging_storage = \Drupal::entityTypeManager()->getStorage('flagging');
+  $node_storage = \Drupal::entityTypeManager()->getStorage('node');
+  $flaggings_on_nids_to_del = $flagging_storage->loadMultiple($fids_on_nids_to_del_arr);
+  /** @var \Drupal\flag\FlaggingInterface $flagging */
+  foreach ($flaggings_on_nids_to_del as $flagging) {
+    $node_to_delete = $flagging->getFlaggable();
+    $nid_to_flag = $node_storage
+      ->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('title', $node_to_delete->label())
+      ->condition('nid', $node_to_delete->id(), '!=')
+      ->execute();
+    $node_to_flag = $node_storage->load(reset($nid_to_flag));
+    $flag = $flagging->getFlag();
+    $user = $flagging->getOwner();
+    try {
+      $flag_service->flag($flag, $node_to_flag, $user);
+    }
+    catch (\LogicException $e) {
+      \Drupal::messenger()->addWarning($e->getMessage());
+    }
+  }
+
+  // Delete duplicate nodes.
+  $nodes_to_del = $node_storage->loadMultiple($nids_to_del_arr);
+  $node_storage->delete($nodes_to_del);
+}
+
+/**
+ * Deletes newer duplicate bills with matching data; ensures no flags affected.
+ *
+ * @see https://atendesign.atlassian.net/browse/NYS-171
+ *
+ * @throws \Exception
+ */
+function nys_bills_update_9003() {
+  // Query for NIDs to delete.
+  $nids_to_del_sql = <<<SQL
+    SELECT nid
+    FROM node_field_data nd1
+    WHERE type IN ('bill', 'resolution')
+    AND nid IN (
+      SELECT entity_id FROM node__field_ol_name
+    )
+    AND EXISTS (
+      SELECT nid FROM node_field_data nd2
+      WHERE nd1.nid > nd2.nid
+      AND nd1.title = nd2.title
+      AND nid IN (
+        SELECT entity_id FROM node__field_ol_name
+      )
+    )
+  SQL;
+  $nids_to_del_ret = \Drupal::database()
+    ->query($nids_to_del_sql)
+    ->fetchAllAssoc('nid');
+  $nids_to_del_arr = array_column($nids_to_del_ret, 'nid');
+  $nids_to_del_str = implode(', ', $nids_to_del_arr);
+
+  // Ensure there are no flags on the nodes we're deleting (there shouldn't be).
+  $fids_on_nids_to_del_sql = <<<SQL
+    SELECT id
+    FROM flagging
+    WHERE uid != 0
+    AND entity_id IN ($nids_to_del_str);
+  SQL;
+   $fids_on_nids_to_del_ret = \Drupal::database()
+     ->query($fids_on_nids_to_del_sql)
+     ->fetchAllAssoc('id');
+   if (!empty($fids_on_nids_to_del_ret)) {
+     throw new \Exception('Encountered unexpected flagging data.');
+   }
+
+  // Delete duplicate nodes.
+  $node_storage = \Drupal::entityTypeManager()->getStorage('node');
+  $nodes_to_del = $node_storage->loadMultiple($nids_to_del_arr);
+  $node_storage->delete($nodes_to_del);
+ }

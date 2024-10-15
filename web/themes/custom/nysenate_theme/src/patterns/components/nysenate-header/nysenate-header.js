@@ -79,24 +79,25 @@
         // Scrolling down.
         if (currentScrollTop > lastScrollTop) {
           // Shrink header.
-          headerBar.classList.add('collapsed');
-          document.body.classList.add('header-collapsed');
+          if (currentScrollTop > 100) {
+            headerBar.classList.add('collapsed');
+          }
 
           if (!isMicrositeLandingPage) {
             // Hide menu.
             navWrap.classList.add('closed');
-            document.body.classList.add('nav-collapsed');
 
+            // On frontpage, display actionbar in header when scrolled below
+            // fixed actionbar.
             if (isFrontpage && !inSession && self.isScrolledBelowElement(homepageHero)) {
-              // On frontpage, display actionbar in header when scrolled below
-              // fixed actionbar.
               actionBarClone.classList.remove('hidden');
             }
           }
+
+          // On microsite landing page, display senator hero and menu in
+          // header when scrolled below fixed hero and menu.
           else {
             if (self.isScrolledBelowElement(senatorHero)) {
-              // On microsite landing page, display senator hero and menu in
-              // header when scrolled below fixed hero and menu.
               senatorHeroClone.classList.add('expanded');
               micrositeMenuClone.classList.remove('expanded');
             }
@@ -105,31 +106,30 @@
 
         // Scrolling up.
         else {
-          if (currentScrollTop < 50) {
-            // Expand header when scrolled near the top.
+          // Expand header when scrolled near the top.
+          if (currentScrollTop < 100) {
             headerBar.classList.remove('collapsed');
-            document.body.classList.remove('header-collapsed');
           }
 
+          // Display nav menu in header when scrolling up.
           if (!isMicrositeLandingPage) {
-            // Display nav menu in header when scrolling up.
             navWrap.classList.remove('closed');
-            document.body.classList.remove('nav-collapsed');
 
+            // On frontpage, hide actionbar from header when scrolled above
+            // fixed actionbar.
             if (isFrontpage && !inSession && !self.isScrolledBelowElement(homepageHero)) {
-              // On frontpage, hide actionbar from header when scrolled above
-              // fixed actionbar.
               actionBarClone.classList.add('hidden');
             }
           }
+
+          // On microsite landing page.
           else {
+            // Display menu when scrolling up.
             if (self.isScrolledBelowElement(senatorHero)) {
-              // On microsite landing page, display menu when scrolling up.
               micrositeMenuClone.classList.add('expanded');
             }
+            // Hide menu and hero when scrolled above fixed versions.
             else {
-              // On microsite landing page, hide menu and hero when scrolled
-              // above fixed versions.
               senatorHeroClone.classList.remove('expanded');
               micrositeMenuClone.classList.remove('expanded');
             }

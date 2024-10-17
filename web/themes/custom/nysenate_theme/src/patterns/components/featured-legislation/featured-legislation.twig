@@ -1,5 +1,5 @@
 {{ attach_library('nysenate_theme/featured-legislation') }}
-
+{% import '@rain_theme/icons/_icons-macro.twig' as icons %}
 <section class="c-legislation">
   {% if title %}
     <div class="c-container--header__top-border">
@@ -12,10 +12,10 @@
     <div class="c-social">
       <ul class="c-social--list">
         <li>
-          <a target="_blank" href="https://www.facebook.com/" class="icon-replace__facebook">facebook</a>
+          <a target="_blank" href="https://www.facebook.com/" class="c-detail--social-item">{{ icons.get("facebook") }}</a>
         </li>
         <li>
-          <a target="_blank" href="http://twitter.com/" class="icon-replace__twitter">twitter</a>
+          <a target="_blank" href="http://twitter.com/" class="c-detail--social-item">{{ icons.get("twitter") }}</a>
         </li>
       </ul>
     </div>

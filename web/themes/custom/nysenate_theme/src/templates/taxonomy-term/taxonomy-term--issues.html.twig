@@ -27,13 +27,15 @@
 {{ attach_library('nysenate_theme/nysenate-tabs') }}
 {{ attach_library('nysenate_theme/nysenate-accordion') }}
 {{ attach_library('nysenate_theme/taxonomy-term-issues') }}
-
+{{ attach_library('nysenate_theme/nysenate-social-buttons') }}
+{% import '@rain_theme/icons/_icons-macro.twig' as icons %}
 {%
   set classes = [
     'taxonomy-term',
     'vocabulary-' ~ term.bundle|clean_class,
   ]
 %}
+
 <div{{ attributes.setAttribute('id', 'taxonomy-term-' ~ term.id).addClass(classes) }}>
   {{ title_prefix }}
   {% if name and not page %}
@@ -68,14 +70,14 @@
             <h3 class="c-detail--subhead">{{ 'raise awareness'|t }}</h3>
             <ul>
               <li><a target="_blank"
-                    href="https://www.facebook.com/sharer/sharer.php?u={{ absolute_url }}"
-                    class="c-detail--social-item facebook"></a></li>
+                    href="https://www.facebook.com/sharer/sharer.php?u={{ absolute_url }}" class="c-detail--social-item">{{ icons.get("facebook") }}</a>
+              </li>
               <li><a target="_blank"
-                    href="https://twitter.com/intent/tweet?text={{ name[0]['#context']['value'] }} Via: @nysenate: {{ absolute_url }}"
-                    class="c-detail--social-item twitter"></a></li>
-              <li>
-                  <a href="mailto:?&subject=From NYSenate.gov: {{ name[0]['#context']['value'] }}&body=Check out this issue: {{ name[0]['#context']['value'] }}: < {{ absolute_url }} >."
-                    class="c-detail--social-item email"></a></li>
+                    href="https://twitter.com/intent/tweet?text={{ name[0]['#context']['value'] }} Via: @nysenate: {{ absolute_url }}" class="c-detail--social-item">{{ icons.get("twitter") }}</a>
+              </li>
+              <li class="email">
+                  <a href="mailto:?&subject=From NYSenate.gov: {{ name[0]['#context']['value'] }}&body=Check out this issue: {{ name[0]['#context']['value'] }}: < {{ absolute_url }} >." class="c-detail--social-item">{{ icons.get("envelope") }}</a>
+              </li>
             </ul>
           </div>
         </div>

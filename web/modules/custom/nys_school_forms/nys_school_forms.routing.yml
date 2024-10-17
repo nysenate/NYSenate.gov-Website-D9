@@ -50,3 +50,12 @@ nys_school_forms.webform.archives:
     _permission: "access all webform results"
   options:
       _admin_route: TRUE
+nys_school_forms.config:
+  path: /admin/settings/nysenate/webform_events
+  defaults:
+    _form: '\Drupal\nys_school_forms\Form\ConfigForm'
+    _title: "Config points for webform events (e.g., Thanksgiving, Earth Day)"
+  requirements:
+    _permission: 'administer site configuration'
+  options:
+    _admin_route: TRUE

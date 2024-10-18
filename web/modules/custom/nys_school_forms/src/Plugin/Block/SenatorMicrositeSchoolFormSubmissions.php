@@ -101,36 +101,24 @@ class SenatorMicrositeSchoolFormSubmissions extends BlockBase implements Contain
      */
     $node = $this->routeMatch->getParameter('node');
     $build = [];
+    $date_ranges = $this->schoolFormsService->config->get('default_search_range');
     if ($node instanceof NodeInterface && $node->getType() === 'microsite_page') {
       $term_id = $node->get('field_microsite_page_type')->target_id;
       $term = $this->entityTypeManager->getStorage('taxonomy_term')->load($term_id);
       $form_type = $term->getName();
+      $safe_form_type = strtolower(preg_replace('/[\W]/', '_', $form_type));
       $senator_term = ($node->hasField('field_senator_multiref') && !$node->get('field_senator_multiref')->isEmpty()) ? $node->get('field_senator_multiref')->entity : [];
 
-      if ($form_type == 'Thankful') {
-        $last_year_params = $params = [
-          'form_type' => $form_type,
-          'senator' => $senator_term->id(),
-          'school' => NULL,
-          'teacher_name' => NULL,
-          'from_date' => strtotime('September 1, 2023'),
-          'to_date' => strtotime('December 31, 2023'),
-          'sort_by' => NULL,
-          'sort_order' => NULL,
-        ];
-      }
-      elseif ($form_type == 'Earth Day') {
-        $last_year_params = $params = [
-          'form_type' => $form_type,
-          'senator' => $senator_term->id(),
-          'school' => NULL,
-          'teacher_name' => NULL,
-          'from_date' => strtotime('January 1, 2024'),
-          'to_date' => strtotime('December 31, 2024'),
-          'sort_by' => NULL,
-          'sort_order' => NULL,
-        ];
-      }
+      $last_year_params = $params = [
+        'form_type' => $form_type,
+        'senator' => $senator_term->id(),
+        'school' => NULL,
+        'teacher_name' => NULL,
+        'from_date' => $date_ranges[$safe_form_type]['begin'] ?? NULL,
+        'to_date' => $date_ranges[$safe_form_type]['end'] ?? NULL,
+        'sort_by' => NULL,
+        'sort_order' => NULL,
+      ];
 
       $last_year_params['from_date'] = NULL;
       $last_year_params['to_date'] = strtotime('last year December 31st');
@@ -229,8 +217,6 @@ class SenatorMicrositeSchoolFormSubmissions extends BlockBase implements Contain
    * {@inheritdoc}
    */
   public function blockForm($form, FormStateInterface $form_state) {
-    $config = $this->getConfiguration();
-
     return $form;
   }
 

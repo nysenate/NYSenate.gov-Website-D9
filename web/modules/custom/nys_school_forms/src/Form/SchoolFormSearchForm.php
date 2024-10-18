@@ -129,18 +129,18 @@ class SchoolFormSearchForm extends FormBase {
    *   Current route match.
    */
   public function __construct(
-        RequestStack $request,
-        ModuleHandler $moduleHandler,
-        Connection $database,
-        MessengerInterface $messenger,
-        PagerParametersInterface $pager_param,
-        PagerManagerInterface $pager_manager,
-        FormBuilder $form_builder,
-        AliasManagerInterface $alias_manager,
-        StreamWrapperManager $streamWrapperManager,
-        EntityTypeManager $entityTypeManager,
-        RouteMatchInterface $current_route_match
-    ) {
+    RequestStack $request,
+    ModuleHandler $moduleHandler,
+    Connection $database,
+    MessengerInterface $messenger,
+    PagerParametersInterface $pager_param,
+    PagerManagerInterface $pager_manager,
+    FormBuilder $form_builder,
+    AliasManagerInterface $alias_manager,
+    StreamWrapperManager $streamWrapperManager,
+    EntityTypeManager $entityTypeManager,
+    RouteMatchInterface $current_route_match,
+  ) {
     $this->request = $request;
     $this->moduleHandler = $moduleHandler;
     $this->database = $database;
@@ -159,18 +159,18 @@ class SchoolFormSearchForm extends FormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-          $container->get('request_stack'),
-          $container->get('module_handler'),
-          $container->get('database'),
-          $container->get('messenger'),
-          $container->get('pager.parameters'),
-          $container->get('pager.manager'),
-          $container->get('form_builder'),
-          $container->get('path_alias.manager'),
-          $container->get('stream_wrapper_manager'),
-          $container->get('entity_type.manager'),
-          $container->get('current_route_match')
-      );
+      $container->get('request_stack'),
+      $container->get('module_handler'),
+      $container->get('database'),
+      $container->get('messenger'),
+      $container->get('pager.parameters'),
+      $container->get('pager.manager'),
+      $container->get('form_builder'),
+      $container->get('path_alias.manager'),
+      $container->get('stream_wrapper_manager'),
+      $container->get('entity_type.manager'),
+      $container->get('current_route_match')
+    );
   }
 
   /**
@@ -181,6 +181,37 @@ class SchoolFormSearchForm extends FormBase {
   }
 
   /**
+   * Standardizes the date search ranges based on config and form filter.
+   *
+   * @param array $params
+   *   Expects to find elements for 'from_date' and 'to_date'.
+   *
+   * @return array
+   *   With elements for 'begin' and 'end', using "Y-m-d" format.
+   */
+  protected function resolveDates(array $params = []): array {
+    $type = strtolower(preg_replace('/\W/', '_', $params['form_type'] ?? ''));
+
+    $config = $this->config('nys_school_forms.config');
+    $config_dates = $config->get('default_search_range.' . $type)
+      ?? ['begin' => NULL, 'end' => NULL];
+
+    if ($params['from_date'] ?? NULL) {
+      $config_dates['begin'] = $params['from_date'];
+    }
+    if ($params['to_date'] ?? NULL) {
+      $config_dates['end'] = $params['to_date'];
+    }
+    if (!$config_dates['begin']) {
+      $config_dates['begin'] = date("Y", time()) . '-01-01';
+    }
+    if (!$config_dates['end']) {
+      $config_dates['end'] = date("Y", time()) . '-12-31';
+    }
+    return $config_dates;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, $params = []) {
@@ -188,7 +219,10 @@ class SchoolFormSearchForm extends FormBase {
     $senator_options = [];
     $senator_options[''] = '- Any -';
 
-    $senator_terms = $this->entityTypeManager->getStorage('taxonomy_term')->loadTree('senator');
+    $config_dates = $this->resolveDates($params);
+
+    $senator_terms = $this->entityTypeManager->getStorage('taxonomy_term')
+      ->loadTree('senator');
     foreach ($senator_terms as $senator_term) {
       $senator_options[$senator_term->tid] = $senator_term->name;
     }
@@ -219,12 +253,12 @@ class SchoolFormSearchForm extends FormBase {
     $form['from_date'] = [
       '#type' => 'date',
       '#title' => $this->t('From'),
-      '#default_value' => $params['from_date'] ? date('Y-m-d', strtotime($params['from_date'])) : date("Y", time()) . '-01-01',
+      '#default_value' => $config_dates['begin'],
     ];
     $form['to_date'] = [
       '#type' => 'date',
       '#title' => $this->t('To'),
-      '#default_value' => $params['from_date'] ? date('Y-m-d', strtotime($params['to_date'])) : date("Y", time()) . '-12-01',
+      '#default_value' => $config_dates['end'],
     ];
     $form['sort_by'] = [
       '#title' => $this->t('Sort By'),
@@ -270,18 +304,18 @@ class SchoolFormSearchForm extends FormBase {
     $from_date = $form_state->getValue('from_date');
     $to_date = $form_state->getValue('to_date');
     $url = Url::fromRoute(
-          $this->currentRouteMatch->getRouteName(), [], [
-            'query' => [
-              'senator' => $senator,
-              'school' => $school,
-              'teacher_name' => $teacher_name,
-              'from_date' => $from_date,
-              'to_date' => $to_date,
-              'sort_by' => $sort_by,
-              'sort_order' => $sort_order,
-            ],
-          ]
-      );
+      $this->currentRouteMatch->getRouteName(), [], [
+        'query' => [
+          'senator' => $senator,
+          'school' => $school,
+          'teacher_name' => $teacher_name,
+          'from_date' => $from_date,
+          'to_date' => $to_date,
+          'sort_by' => $sort_by,
+          'sort_order' => $sort_order,
+        ],
+      ]
+    );
     $form_state->setRedirectUrl($url);
   }
 

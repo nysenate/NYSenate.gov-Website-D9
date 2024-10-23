@@ -1,12 +1,10 @@
 @import "../../global/utils/init";
 
 .event-calendar {
-  display: flex;
-  flex-direction: column;
-
   @include breakpoint($bp-sm) {
-    flex-direction: row;
-    justify-content: space-between;
+    display: block;
+    float: right;
+    margin: 16px 0 80px;
   }
 
   .view-filters {
@@ -91,8 +89,11 @@
     td.dp_selected {
       position: relative;
       background: #5A4B4B;
-      color: #fff !important;
       z-index: 3;
+    }
+
+    table.week td.dp_selected {
+      color: #000000 !important;
     }
 
     .dp_header {
@@ -238,8 +239,7 @@
   }
 
   @include breakpoint($bp-sm) {
-    position: relative;
-    float: left;
+    position: absolute;
     width: 400px;
 
     .mobile-calendar-toggle {
@@ -330,7 +330,6 @@
     position: relative;
     font-size: 20px;
     margin-top: 25px;
-    display: none;
     font-family: $font-serif-semibold;
     color: $grey08;
   }
@@ -403,4 +402,10 @@
 			}
 		}
 	}
+}
+
+// Ensure system messages aren't hidden by calendar.
+.container .message {
+  position: absolute;
+  top: 10px;
 }

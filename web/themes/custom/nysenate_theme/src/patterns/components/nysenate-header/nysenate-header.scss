@@ -1,5 +1,156 @@
 @import '../../global/utils/init';
 
+// Updates to support nysenate-header.js refactor.
+body {
+  margin-top: 255px;
+  transition: margin-top 0.3s ease-out 0s;
+
+  @include breakpoint($bp-under-sm) {
+    margin-top: 120px;
+  }
+
+  #js-sticky {
+    position: fixed;
+  }
+
+  &.toolbar-vertical {
+    &.nav-open #js-sticky .c-nav--wrap {
+      top: 99px;
+    }
+
+    #js-sticky {
+      top: 39px;
+
+      .c-nav--toggle {
+        top: 39px;
+      }
+    }
+  }
+
+  &.toolbar-horizontal {
+    #js-sticky {
+      left: 33px;
+    }
+
+    &[data-toolbar-menu="open"] {
+      #js-sticky {
+        left: 128px;
+      }
+    }
+  }
+
+  &.search-open {
+    margin-top: 605px;
+  }
+
+  &.path-frontpage.out-of-session, &.path-dashboard {
+    margin-top: 155px;
+
+    @include breakpoint($bp-under-sm) {
+      margin-top: 60px;
+    }
+
+    &.search-open {
+      margin-top: 380px;
+    }
+  }
+
+  &.page-node-type-microsite-page {
+    margin-top: 100px;
+
+    @include breakpoint($bp-under-sm) {
+      margin-top: 60px;
+    }
+
+    #js-sticky.l-header {
+      position: relative;
+      left: 0;
+    }
+
+    .c-header-bar {
+      position: fixed;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 0;
+
+      .c-topbar {
+        margin: 0 auto;
+        max-width: 1189px;
+
+        @include breakpoint($bp-under-lg3) {
+          margin: 0 9%;
+          max-width: 82%;
+        }
+
+        @include breakpoint($bp-under-sm) {
+          margin: 0;
+          padding: 0 6%;
+          max-width: 100%;
+        }
+      }
+
+      .hero--senator, .block-content--type-senator-microsite-menu {
+        height: 0;
+        overflow: hidden;
+        transition: height 0.3s;
+
+        &.expanded {
+          height: 100px;
+
+          &.expanded-with-search {
+            height: 355px;
+          }
+        }
+      }
+    }
+
+    &.toolbar-horizontal {
+      .c-header-bar {
+        transform: translateX(-47.8%);
+      }
+
+      &[data-toolbar-menu="open"] .c-header-bar {
+        transform: translateX(-40.6%);
+      }
+    }
+
+    &.toolbar-vertical {
+      .c-header-bar {
+        top: 39px;
+      }
+
+      #js-sticky {
+        top: 0;
+
+        .c-nav--toggle {
+          top: 39px;
+        }
+      }
+
+      &.nav-open #js-sticky {
+        .c-nav--wrap {
+          top: 99px;
+        }
+        .c-nav--toggle {
+          top: 39px;
+        }
+      }
+    }
+  }
+}
+
+// Misc fixes from header js rewrite.
+.c-senator-nav--wrap .c-nav nav button.js-search--toggle.u-tablet-plus::after {
+  top: 10px;
+}
+
+@include breakpoint($bp-under-sm) {
+  .c-header-bar > .block-content--type-senator-microsite-menu {
+    display: none;
+  }
+}
+
 // Skip to main content
 .element-invisible {
   @include element-invisible;
@@ -316,7 +467,7 @@
 }
 
 // nav-open - class added to body through js
-.nav-open {
+.nav-open #js-sticky {
 	max-height: 100vh;
 	overflow: hidden;
 
@@ -327,7 +478,7 @@
   }
 
 	.c-nav--toggle {
-		position: absolute;
+		position: fixed;
 		height: 40px;
 		width: 40px;
 		@extend .icon-replace__x;
@@ -470,20 +621,12 @@
 header {
   .pane-content {
     position: relative;
-
-    .button--menu {
-      position: absolute;
-    }
   }
 }
 
 #js-sticky .c-nav--toggle {
-  display: none;
-}
-
-.c-nav--toggle {
   cursor: pointer;
-  position: absolute;
+  position: fixed;
   z-index: 10;
   top: 0;
   right: 0;
@@ -966,7 +1109,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
   .u-mobile-only &.nys-searchglobal-form {
 
     .search__submit {
-      top: 55%;
+      top: 48%;
       transform: translateY(-50%);
       margin-right: 0;
       left: auto;
@@ -1079,18 +1222,6 @@ a:hover.c-header--btn.c-header--btn__taking_action {
         }
       }
     }
-  }
-
-  .search-open .c-site-search .c-site-search--btn,
-  .search-open .c-site-search .c-site-search--btn:focus,
-  .c-site-search--btn:focus {
-    position: absolute;
-    height: 45px;
-    width: 45px;
-    top: 15px;
-    right: 15px;
-    color: $grey08;
-    font-size: 22px;
   }
 
   .c-site-search {

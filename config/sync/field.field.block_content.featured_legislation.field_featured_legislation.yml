@@ -14,7 +14,7 @@ entity_type: block_content
 bundle: featured_legislation
 label: 'Featured Legislation'
 description: ''
-required: false
+required: true
 translatable: false
 default_value: {  }
 default_value_callback: ''
@@ -69,6 +69,12 @@ settings:
         enabled: false
       slider_item:
         weight: 31
+        enabled: false
+      steps:
+        weight: 34
+        enabled: false
+      summer_reading:
+        weight: 35
         enabled: false
       votes:
         weight: 32

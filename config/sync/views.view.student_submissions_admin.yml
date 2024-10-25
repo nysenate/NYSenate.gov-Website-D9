@@ -130,7 +130,7 @@ display:
           empty_zero: false
           hide_alter_empty: true
           webform_element_format: link
-          webform_multiple_value: true
+          webform_multiple_value: 1
           webform_multiple_delta: 0
           webform_check_access: 1
         name_1:
@@ -315,7 +315,7 @@ display:
           empty_zero: false
           hide_alter_empty: true
           webform_element_format: value
-          webform_multiple_value: true
+          webform_multiple_value: 1
           webform_multiple_delta: 0
           webform_check_access: 1
         webform_submission_value_4:
@@ -368,7 +368,7 @@ display:
           empty_zero: false
           hide_alter_empty: true
           webform_element_format: link
-          webform_multiple_value: true
+          webform_multiple_value: 1
           webform_multiple_delta: 0
           webform_check_access: 1
         webform_submission_value_1:
@@ -474,7 +474,7 @@ display:
           empty_zero: false
           hide_alter_empty: true
           webform_element_format: details
-          webform_multiple_value: true
+          webform_multiple_value: 1
           webform_multiple_delta: 0
           webform_check_access: 1
           webform_multiple_field:
@@ -1067,19 +1067,28 @@ display:
           group: 1
           exposed: false
           expose:
-            operator_id: ''
-            label: ''
+            operator_id: created_op
+            label: Created
             description: ''
             use_operator: false
-            operator: ''
+            operator: created_op
             operator_limit_selection: false
             operator_list: {  }
-            identifier: ''
+            identifier: created
             required: false
             remember: false
             multiple: false
             remember_roles:
               authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+              frontpage_editor: '0'
+              senator: '0'
+              microsite_content_producer: '0'
+              legislative_correspondent: '0'
+              student_programs: '0'
+              constituent: '0'
+              comment_moderator: '0'
             min_placeholder: ''
             max_placeholder: ''
             placeholder: ''

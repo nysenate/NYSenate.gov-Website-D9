@@ -127,7 +127,14 @@
 
   {% set excluded_type = ['landing', 'message'] %}
 
+  {% if microsite_type == 'earth day' %}
+    <h2 class="c-container-title student-submissions">2024 Poster Submissions</h2>
+    {{ drupal_view('student_senator_pages', 'earthday') }}
+  {% endif %}
+
   {% if content.field_senator_multiref['#items'] and microsite_type not in excluded_type %}
     {{ drupal_view('senator_microsite_content', 'promo_footer') }}
   {% endif %}
 </article>
+
+

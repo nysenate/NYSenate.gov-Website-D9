@@ -193,5 +193,80 @@ function nys_calendar_form_views_exposed_form_alter(&$form, FormStateInterface $
         $form['date_wrapper']['date_wrapper']['date']['max']['#attributes']['readonly'] = 'readonly';
       }
       break;
+    case 'views-exposed-form-senator-events-upcoming-events':
+      $current_time = time();
+      $first_day_of_month = new Datetime(date('m/d/Y', strtotime('first day of this month')));
+      $last_day_of_month = new Datetime(date('m/d/Y', strtotime('last day of this month')));
+      $user_input = $form_state->getUserInput();
+      $current_month_year = \Drupal::service('date.formatter')->format($current_time, 'custom', 'F Y');
+      $next_month = new Datetime(date('M', strtotime('next month')));
+      $previous_month = new Datetime(date('M', strtotime('previous month')));
+      $first_day_of_next_month = new Datetime(date('m/d/Y', strtotime('first day of next month')));
+      $last_day_of_next_month = new Datetime(date('m/d/Y', strtotime('last day of next month')));
+      $first_day_of_previous_month = new Datetime(date('m/d/Y', strtotime('first day of previous month')));
+      $last_day_of_previous_month = new Datetime(date('m/d/Y', strtotime('last day of previous month')));
+
+      if (array_key_exists('field_date_range_value', $user_input)) {
+        $current_values = $user_input['field_date_range_value'];
+        if ($current_values['min'] !== $first_day_of_month && $current_values['max'] !== $last_day_of_month) {
+          $current_time = strtotime($current_values['min']);
+          $current_month_year = \Drupal::service('date.formatter')->format($current_time, 'custom', 'F Y');
+          $next_month = new Datetime(date('M', strtotime('next month', strtotime($current_values['min']))));
+          $previous_month = new Datetime(date('M', strtotime('previous month', strtotime($current_values['min']))));
+          $first_day_of_next_month = new Datetime(date('m/d/Y', strtotime('first day of next month', strtotime($current_values['min']))));
+          $last_day_of_next_month = new Datetime(date('m/d/Y', strtotime('last day of next month', strtotime($current_values['min']))));
+          $first_day_of_previous_month = new Datetime(date('m/d/Y', strtotime('first day of previous month', strtotime($current_values['min']))));
+          $last_day_of_previous_month = new Datetime(date('m/d/Y', strtotime('last day of previous month', strtotime($current_values['min']))));
+        }
+      }
+
+      $form['current_month_year'] = [
+        '#type' => 'hidden',
+        '#default_value' => $current_month_year,
+      ];
+      $form['next_month'] = [
+        '#type' => 'hidden',
+        '#default_value' => $next_month->format('F'),
+      ];
+      $form['previous_month'] = [
+        '#type' => 'hidden',
+        '#default_value' => $previous_month->format('F'),
+      ];
+      $form['first_day_of_month'] = [
+        '#type' => 'hidden',
+        '#default_value' => $first_day_of_month->format('m/d/Y'),
+      ];
+      $form['last_day_of_month'] = [
+        '#type' => 'hidden',
+        '#default_value' => $last_day_of_month->format('m/d/Y'),
+      ];
+      // Next month values.
+      $form['first_day_of_next_month'] = [
+        '#type' => 'hidden',
+        '#default_value' => $first_day_of_next_month->format('m/d/Y'),
+      ];
+      $form['last_day_of_next_month'] = [
+        '#type' => 'hidden',
+        '#default_value' => $last_day_of_next_month->format('m/d/Y'),
+      ];
+      // Previous month values.
+      $form['first_day_of_previous_month'] = [
+        '#type' => 'hidden',
+        '#default_value' => $first_day_of_previous_month->format('m/d/Y'),
+      ];
+      $form['last_day_of_previous_month'] = [
+        '#type' => 'hidden',
+        '#default_value' => $last_day_of_previous_month->format('m/d/Y'),
+      ];
+      $form['events_per_month'] = [
+        '#markup' => '<div class="c-upcoming--header" id="tab_top_bar">
+                      <h3 class="c-month-title" id="current-month-year">' . $current_month_year . '</h3>
+                      <div class="c-upcoming--nav">
+                        <a class="c-upcoming--nav-item ajax-processed" id="previous-month" data-first-day="' . $form['first_day_of_previous_month']['#default_value'] . '" data-last-day="' . $form['last_day_of_previous_month']['#default_value'] . '">' . $previous_month->format('F') . '</a>
+                        <a class="c-upcoming--nav-item ajax-processed" id="next-month" data-first-day="' . $form['first_day_of_next_month']['#default_value'] . '" data-last-day="' . $form['last_day_of_next_month']['#default_value'] . '">' . $next_month->format('F') . '</a>
+                      </div>
+                    </div>',
+      ];
+      break;
   }
 }

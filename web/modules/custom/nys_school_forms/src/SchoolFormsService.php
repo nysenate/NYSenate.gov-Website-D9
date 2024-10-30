@@ -2,6 +2,8 @@
 
 namespace Drupal\nys_school_forms;
 
+use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Config\ImmutableConfig;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Pager\PagerManagerInterface;
@@ -57,6 +59,13 @@ class SchoolFormsService {
   protected $fileUrlGenerator;
 
   /**
+   * Config object for nys_school_forms.config.
+   *
+   * @var \Drupal\Core\Config\ImmutableConfig
+   */
+  public ImmutableConfig $config;
+
+  /**
    * Class constructor.
    *
    * @param \Drupal\Core\Pager\PagerParametersInterface $pager_param
@@ -71,6 +80,8 @@ class SchoolFormsService {
    *   The StreamWrapperManager.
    * @param \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator
    *   The file URL generator.
+   * @param \Drupal\Core\Config\ConfigFactory $configFactory
+   *   Drupal's ConfigFactory service.
    */
   public function __construct(
     PagerParametersInterface $pager_param,
@@ -79,6 +90,7 @@ class SchoolFormsService {
     RouteMatchInterface $current_route_match,
     StreamWrapperManager $streamWrapperManager,
     FileUrlGeneratorInterface $file_url_generator,
+    ConfigFactory $configFactory,
   ) {
     $this->pagerParam = $pager_param;
     $this->pagerManager = $pager_manager;
@@ -86,6 +98,7 @@ class SchoolFormsService {
     $this->currentRouteMatch = $current_route_match;
     $this->streamWrapperManager = $streamWrapperManager;
     $this->fileUrlGenerator = $file_url_generator;
+    $this->config = $configFactory->get('nys_school_forms.config');
   }
 
   /**

@@ -1,4 +1,4 @@
-!((document, Drupal) => {
+!((document, Drupal, once) => {
   'use strict';
   Drupal.behaviors.nysenateHeader = {
     attach: function (context) {
@@ -7,9 +7,9 @@
       const isFrontpage = document.querySelector('body.path-frontpage');
 
       // Setup references to globally-used elements.
-      const header = document.getElementById('js-sticky');
+      const header = once('nys-header-once', '#js-sticky').shift();
       const actionBar = document.querySelector('.c-actionbar');
-      const headerBar = document.querySelector('section.c-header-bar');
+      const headerBar = once('nys-header-bar-once', 'section.c-header-bar').shift();
       const senatorHero = document.querySelector('.hero--senator');
       const micrositeMenu = document.querySelector('.block-content--type-senator-microsite-menu');
 
@@ -195,4 +195,4 @@
       return elementRect.bottom < 0;
     },
   };
-})(document, Drupal);
+})(document, Drupal, once);

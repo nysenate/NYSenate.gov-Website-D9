@@ -82,8 +82,8 @@ elements: |-
         student_name:
           '#type': textfield
           '#required': true
-          '#title': 'Student''s Name'
-          '#description': 'Student''s last name is optional.'
+          '#title': "Student's Name"
+          '#description': "Student's last name is optional."
         submission_type:
           '#type': radios
           '#options':
@@ -97,7 +97,7 @@ elements: |-
           '#required': true
           '#title': 'Attach your submission'
           '#max_filesize': '10'
-          '#file_extensions': 'txt png jpg jpeg pdf doc docx'
+          '#file_extensions': 'txt png jpg jpeg pdf'
           '#sanitize': true
           '#button': true
           '#button__title': 'Select file to add'

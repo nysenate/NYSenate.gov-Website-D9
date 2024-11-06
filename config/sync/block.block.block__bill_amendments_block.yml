@@ -1,0 +1,33 @@
+uuid: 55fd06ae-26a7-4c5c-852e-18dc980fde81
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.bill_amendments
+  module:
+    - node
+    - views
+  theme:
+    - nysenate_theme
+id: block__bill_amendments_block
+theme: nysenate_theme
+region: content
+weight: 0
+provider: null
+plugin: 'views_block:bill_amendments-bill_amendments_block'
+settings:
+  id: 'views_block:bill_amendments-bill_amendments_block'
+  label: ''
+  label_display: visible
+  provider: views
+  context_mapping: {  }
+  views_label: ''
+  items_per_page: none
+visibility:
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'
+    bundles:
+      bill: bill

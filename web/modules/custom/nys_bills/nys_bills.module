@@ -193,14 +193,6 @@ function nys_bills_views_query_alter(ViewExecutable $view, QueryPluginBase $quer
  */
 function nys_bills_views_data() {
   $data = [];
-  $data['node']['bill_amendments_contextual_filter'] = [
-    'title' => t('Bill Amendments Contextual Filter'),
-    'help' => t("Contextual filter for displaying a bill, and it's amendment versions."),
-    'argument' => [
-      'id' => 'bill_amendments_contextual_filter',
-      'name' => t('Bill Amendments Contextual Filter'),
-    ],
-  ];
   $data['node_field_data']['bill_amendments_filter'] = [
     'title' => t('Bill Amendments Filter'),
     'help' => t('Filter Bills by their amendment versions.'),

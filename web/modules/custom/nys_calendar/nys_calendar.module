@@ -47,6 +47,16 @@ function nys_calendar_views_data() {
       'field_type' => 'year_only',
     ],
   ];
+  $data['node__field_senator_multiref']['active_senators_filter'] = [
+    'title' => t('Active senators'),
+    'filter' => [
+      'title' => t('Active senators'),
+      'help' => t('Custom NYS filter to filter on active senators referenced via field_senator_multiref.'),
+      'group' => t('Content'),
+      'field' => 'field_senator_multiref_target_id',
+      'id' => 'active_senators_filter',
+    ],
+  ];
   return $data;
 }
 
@@ -183,8 +193,20 @@ function nys_calendar_views_pre_build(ViewExecutable $view) {
 function nys_calendar_form_views_exposed_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   switch ($form['#id']) {
     case 'views-exposed-form-events-page-1':
+      $default_date = date('Y-m-d');
     case 'views-exposed-form-events-page-2':
       $form['date']['#description'] = 'E.g., ' . date('m/d/Y');
+      if (!isset($default_date)) {
+        $default_date = date('Y') . date('-m-') . '01';
+      }
+      if (
+        !empty($form_state->getUserInput()['date'])
+        && $form_state->getUserInput()['date'] === 'now'
+      ) {
+        // Ensure default event day and month date filters are set on exposed
+        // form prior to user input.
+        $form['date']['#value'] = $default_date;
+      }
       break;
     case 'views-exposed-form-events-page-3':
       if (!empty($form['date_wrapper']['date_wrapper']['date'])) {

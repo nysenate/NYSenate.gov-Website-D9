@@ -67,6 +67,7 @@ class ActiveSenatorsFilter extends FilterPluginBase {
       ->accessCheck(FALSE)
       ->condition('vid', 'senator')
       ->condition('field_active_senator', TRUE)
+      ->sort('field_senator_name.family')
       ->execute();
     if (!empty($active_senators_tids)) {
       $active_senators = $taxonomy_storage->loadMultiple($active_senators_tids);
@@ -74,7 +75,6 @@ class ActiveSenatorsFilter extends FilterPluginBase {
         $options[$senator->id()] = $senator->label();
       }
     }
-    asort($options);
     $form['value'] = [
       '#type' => 'select',
       '#title' => 'Active senators',

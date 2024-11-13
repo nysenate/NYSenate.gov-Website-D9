@@ -47,6 +47,16 @@ function nys_calendar_views_data() {
       'field_type' => 'year_only',
     ],
   ];
+  $data['node__field_senator_multiref']['active_senators_filter'] = [
+    'title' => t('Active senators'),
+    'filter' => [
+      'title' => t('Active senators'),
+      'help' => t('Custom NYS filter to filter on active senators referenced via field_senator_multiref.'),
+      'group' => t('Content'),
+      'field' => 'field_senator_multiref_target_id',
+      'id' => 'active_senators_filter',
+    ],
+  ];
   return $data;
 }
 

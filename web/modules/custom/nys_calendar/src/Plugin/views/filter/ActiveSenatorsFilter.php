@@ -22,7 +22,7 @@ class ActiveSenatorsFilter extends FilterPluginBase {
   public $entityTypeManager;
 
   /**
-   * Constructs a YourSenaterFilter object.
+   * Constructs a ActiveSenatorsFilter object.
    *
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.

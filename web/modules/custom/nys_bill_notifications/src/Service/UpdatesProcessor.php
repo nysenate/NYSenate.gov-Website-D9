@@ -304,7 +304,7 @@ class UpdatesProcessor {
     $updates = $this->retrieveUpdates($time_from, $time_to, $params);
 
     // Get the test results.
-    $matches = $this->testUpdates($updates->result()->items);
+    $matches = $this->testUpdates($updates->result()->items ?? []);
 
     // Process the results.
     $this->processResults($matches);

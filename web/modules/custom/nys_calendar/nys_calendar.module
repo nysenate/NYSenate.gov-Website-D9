@@ -199,10 +199,7 @@ function nys_calendar_form_views_exposed_form_alter(&$form, FormStateInterface $
       if (!isset($default_date)) {
         $default_date = date('Y') . date('-m-') . '01';
       }
-      if (
-        !empty($form_state->getUserInput()['date'])
-        && $form_state->getUserInput()['date'] === 'now'
-      ) {
+      if (empty($form_state->getUserInput()['date'])) {
         // Ensure default event day and month date filters are set on exposed
         // form prior to user input.
         $form['date']['#value'] = $default_date;

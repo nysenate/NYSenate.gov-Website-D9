@@ -23,8 +23,8 @@
       <div class="c-senator-hero--info {% if not is_active %} inactive-pallette {% endif %}">
         <div>
           <h2 class="c-senator-hero--title">
-            {% if incoming == "yes" %}incoming{% endif %}
-            {% if not is_active and incoming == "no" %}former
+            {% if incoming %}incoming{% endif %}
+            {% if not is_active and not incoming %}former
             {% endif %}New York State Senator<br>
             {% if senator_microsite_link %}
               <a href="{{ senator_microsite_link }}" class="c-senator-hero--name">{{ senator_name }}</a>

@@ -397,14 +397,8 @@ function nysenate_theme_preprocess_block_content__microsite_hero(&$variables) {
   }
   $party = implode(', ', $arr_party);
 
-  // incoming
-  $incoming = $senator->get('field_microsite_theme')->getValue();
-  if($incoming == NULL){
-    $incoming = 'yes';
-  } else {
-    $incoming = 'no';
-  }
-  //dump($incoming);
+  // incoming senators
+  $incoming = empty($senator->get('field_microsite_theme')->getValue());
 
   // District.
   $district_url = '';

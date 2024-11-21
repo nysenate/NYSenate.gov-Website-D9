@@ -1,0 +1,22 @@
+uuid: 5764062d-c986-4176-8e97-fd0f1088f2ea
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.student_submission_container
+id: node.student_submission_container.status
+field_name: status
+entity_type: node
+bundle: student_submission_container
+label: Published
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

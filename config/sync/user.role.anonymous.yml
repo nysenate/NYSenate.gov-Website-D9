@@ -2,12 +2,16 @@ uuid: a6aabff9-3e0c-493c-943f-b1e1c1f49ec6
 langcode: en
 status: true
 dependencies:
+  config:
+    - node.type.student_submission
+    - node.type.student_submission_container
   module:
     - comment
     - contact
     - entity_print
     - field_permissions
     - media
+    - node
     - system
 _core:
   default_config_hash: j5zLMOdJBqC0bMvSdth5UebkprJB8g_2FXHqhfpJzow
@@ -19,6 +23,8 @@ permissions:
   - 'access comments'
   - 'access content'
   - 'access site-wide contact form'
+  - 'create student_submission content'
+  - 'create student_submission_container content'
   - 'entity print access bundle article'
   - 'entity print access bundle resolution'
   - 'view field_associated_senators'

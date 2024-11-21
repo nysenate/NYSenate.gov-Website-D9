@@ -1,0 +1,61 @@
+uuid: 99a7cb85-eb46-42a3-8680-cf44e09e3e3f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.student_submission.field_file_submission
+    - field.field.node.student_submission.field_image_submission
+    - field.field.node.student_submission.field_student_name
+    - field.field.node.student_submission.field_submission_type
+    - image.style.thumbnail
+    - node.type.student_submission
+  module:
+    - file
+    - svg_image
+id: node.student_submission.default
+targetEntityType: node
+bundle: student_submission
+mode: default
+content:
+  field_file_submission:
+    type: file_generic
+    weight: 3
+    region: content
+    settings:
+      progress_indicator: throbber
+    third_party_settings: {  }
+  field_image_submission:
+    type: image_image
+    weight: 2
+    region: content
+    settings:
+      progress_indicator: throbber
+      preview_image_style: thumbnail
+    third_party_settings: {  }
+  field_student_name:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_submission_type:
+    type: options_select
+    weight: 1
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  created: true
+  langcode: true
+  path: true
+  promote: true
+  publish_on: true
+  simple_sitemap: true
+  status: true
+  sticky: true
+  title: true
+  uid: true
+  unpublish_on: true
+  url_redirects: true

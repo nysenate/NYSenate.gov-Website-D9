@@ -397,6 +397,9 @@ function nysenate_theme_preprocess_block_content__microsite_hero(&$variables) {
   }
   $party = implode(', ', $arr_party);
 
+  // incoming senators
+  $incoming = empty($senator->get('field_microsite_theme')->getValue());
+
   // District.
   $district_url = '';
   $query = \Drupal::database()->select('taxonomy_term__field_senator', 's')
@@ -454,6 +457,7 @@ function nysenate_theme_preprocess_block_content__microsite_hero(&$variables) {
   $variables['is_active'] = $senator->field_active_senator->value == 1 ? TRUE : FALSE;
   $variables['socials'] = $socials;
   $variables['actionbar']['type'] = 'microsite';
+  $variables['incoming'] = $incoming;
 }
 
 /**

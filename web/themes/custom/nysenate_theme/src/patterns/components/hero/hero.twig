@@ -23,7 +23,8 @@
       <div class="c-senator-hero--info {% if not is_active %} inactive-pallette {% endif %}">
         <div>
           <h2 class="c-senator-hero--title">
-            {% if not is_active %}former
+            {% if incoming %}incoming{% endif %}
+            {% if not is_active and not incoming %}former
             {% endif %}New York State Senator<br>
             {% if senator_microsite_link %}
               <a href="{{ senator_microsite_link }}" class="c-senator-hero--name">{{ senator_name }}</a>
@@ -53,7 +54,7 @@
             <ul class="c-senator-hero--social">
               {% for social in socials %}
                 <li class="{% if loop.first %}first {% endif %}leaf c-senator-hero--social-item {{ social.name }}">
-                  <a href="{{ social.url }}" target="_blank"}">{{ icons.get(social.name) }}</a>
+                  <a href="{{ social.url }}" target="_blank"%}">{{ icons.get(social.name) }}</a>
                 </li>
               {% endfor %}
             </ul>

@@ -107,6 +107,9 @@ class SenatorMicrositeSchoolFormSubmissions extends BlockBase implements Contain
       $term = $this->entityTypeManager->getStorage('taxonomy_term')->load($term_id);
       $form_type = $term->getName();
       $safe_form_type = strtolower(preg_replace('/[\W]/', '_', $form_type));
+      if ($form_type == 'Thankful') {
+        $safe_form_type = 'thankgiving';
+      }
       $senator_term = ($node->hasField('field_senator_multiref') && !$node->get('field_senator_multiref')->isEmpty()) ? $node->get('field_senator_multiref')->entity : [];
 
       $last_year_params = $params = [
@@ -156,7 +159,7 @@ class SenatorMicrositeSchoolFormSubmissions extends BlockBase implements Contain
             'panels' => [
               [
                 'tab_text' => 'Current Year',
-                'title' => '2023 Submissions',
+                'title' => '2024 Submissions',
                 'filter' => $filter,
                 'years' => $this->schoolFormsService->getResults($params, FALSE),
               ],

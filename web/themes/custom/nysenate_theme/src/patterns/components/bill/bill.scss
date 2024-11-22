@@ -735,3 +735,33 @@ th.c-bill--actions-table-header strong {
     height: 20px;
   }
 }
+
+// Bill amendments view exposed form styling
+form#views-exposed-form-bill-amendments-bill-amendments-block {
+  .form-type-radio {
+    display: inline-block;
+
+    input[type="radio"] {
+      display: none;
+    }
+
+    label {
+      padding: 10px 20px;
+      margin-right: 5px;
+      background-color: #f0f0f0;
+      color: #333;
+      border: 1px solid transparent;
+      cursor: pointer;
+      text-align: center;
+      font-size: 14px;
+      transition: background-color 0.3s, border-color 0.3s;
+    }
+
+    input[type="radio"]:checked + label {
+      border-color: #333; /* 1px border for selected tab */
+      background-color: #ddd;
+      font-weight: bold;
+    }
+  }
+
+}

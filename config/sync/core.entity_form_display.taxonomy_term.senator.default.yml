@@ -6,6 +6,7 @@ dependencies:
     - field.field.taxonomy_term.senator.field_about
     - field.field.taxonomy_term.senator.field_active_senator
     - field.field.taxonomy_term.senator.field_auto_reply_text
+    - field.field.taxonomy_term.senator.field_bluesky_url
     - field.field.taxonomy_term.senator.field_conference
     - field.field.taxonomy_term.senator.field_current_duties
     - field.field.taxonomy_term.senator.field_email
@@ -31,6 +32,7 @@ dependencies:
     - field.field.taxonomy_term.senator.field_promotional_banners
     - field.field.taxonomy_term.senator.field_senator_name
     - field.field.taxonomy_term.senator.field_store_settings
+    - field.field.taxonomy_term.senator.field_threads_url
     - field.field.taxonomy_term.senator.field_top_issue
     - field.field.taxonomy_term.senator.field_twitter_url
     - field.field.taxonomy_term.senator.field_user_account
@@ -95,6 +97,8 @@ third_party_settings:
         - field_twitter_url
         - field_youtube_url
         - field_instagram_url
+        - field_threads_url
+        - field_bluesky_url
       label: 'Social Media Links'
       region: content
       parent_name: group_microsite_settings
@@ -114,7 +118,7 @@ third_party_settings:
       label: 'Key Staff'
       region: content
       parent_name: group_contact_page
-      weight: 31
+      weight: 13
       format_type: details
       format_settings:
         classes: ''
@@ -263,7 +267,7 @@ content:
     third_party_settings: {  }
   field_active_senator:
     type: boolean_checkbox
-    weight: 8
+    weight: 102
     region: content
     settings:
       display_label: true
@@ -274,6 +278,14 @@ content:
     region: content
     settings:
       rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_bluesky_url:
+    type: string_textfield
+    weight: 11
+    region: content
+    settings:
+      size: 60
       placeholder: ''
     third_party_settings: {  }
   field_conference:
@@ -292,7 +304,7 @@ content:
     third_party_settings: {  }
   field_email:
     type: email_default
-    weight: 29
+    weight: 11
     region: content
     settings:
       placeholder: ''
@@ -323,7 +335,7 @@ content:
     third_party_settings: {  }
   field_inactive_senator_message:
     type: string_textfield
-    weight: 12
+    weight: 106
     region: content
     settings:
       size: 60
@@ -362,7 +374,7 @@ content:
     third_party_settings: {  }
   field_media_phone:
     type: telephone_default
-    weight: 7
+    weight: 8
     region: content
     settings:
       placeholder: ''
@@ -421,14 +433,14 @@ content:
     third_party_settings: {  }
   field_ol_member_id:
     type: number
-    weight: 10
+    weight: 104
     region: content
     settings:
       placeholder: ''
     third_party_settings: {  }
   field_ol_shortname:
     type: string_textfield
-    weight: 9
+    weight: 103
     region: content
     settings:
       size: 60
@@ -442,7 +454,7 @@ content:
     third_party_settings: {  }
   field_press_inquiries:
     type: email_default
-    weight: 30
+    weight: 12
     region: content
     settings:
       placeholder: ''
@@ -503,13 +515,22 @@ content:
         family: description
         generational: description
         credentials: description
+      field_title_display: before
     third_party_settings: {  }
   field_store_settings:
     type: boolean_checkbox
-    weight: 11
+    weight: 105
     region: content
     settings:
       display_label: true
+    third_party_settings: {  }
+  field_threads_url:
+    type: string_textfield
+    weight: 10
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
   field_top_issue:
     type: entity_reference_autocomplete

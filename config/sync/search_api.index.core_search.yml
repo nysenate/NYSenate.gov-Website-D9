@@ -3,51 +3,50 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_ol_add_sponsor_names
-    - field.storage.node.field_ol_all_statuses
-    - field.storage.node.field_ol_base_print_no
     - field.storage.block_content.field_body_left
-    - field.storage.node.field_landing_blocks
     - field.storage.block_content.field_body_right
     - field.storage.node.body
     - field.storage.node.field_calendar_number
     - field.storage.node.field_comments
     - field.storage.node.field_committee
+    - field.storage.node.field_date_range
+    - field.storage.node.field_image_caption
+    - field.storage.node.field_issues
+    - field.storage.node.field_landing_blocks
+    - field.storage.node.field_ol_add_sponsor_names
+    - field.storage.node.field_ol_all_statuses
+    - field.storage.node.field_ol_base_print_no
     - field.storage.node.field_ol_co_sponsor_names
     - field.storage.node.field_ol_co_sponsors
     - field.storage.node.field_ol_full_text
-    - field.storage.node.field_image_caption
     - field.storage.node.field_ol_is_active_version
-    - field.storage.node.field_issues
     - field.storage.node.field_ol_last_status
     - field.storage.node.field_ol_last_status_date
-    - field.storage.node.field_ol_latest_status_committee
     - field.storage.node.field_ol_latest_status
+    - field.storage.node.field_ol_latest_status_committee
     - field.storage.node.field_ol_meeting_date
-    - field.storage.node.field_date_range
     - field.storage.node.field_ol_memo
     - field.storage.node.field_ol_print_no
     - field.storage.node.field_ol_program_info
     - field.storage.node.field_ol_publish_date
-    - field.storage.node.field_senator_multiref
-    - field.storage.node.field_session_calendars
     - field.storage.node.field_ol_session
-    - field.storage.node.field_short_title
     - field.storage.node.field_ol_sponsor
     - field.storage.node.field_ol_sponsor_name
+    - field.storage.node.field_ol_summary
+    - field.storage.node.field_ol_transcript_type
+    - field.storage.node.field_senator_multiref
+    - field.storage.node.field_session_calendars
+    - field.storage.node.field_short_title
     - field.storage.node.field_subhead
     - field.storage.node.field_subtitle
-    - field.storage.node.field_ol_summary
     - field.storage.node.field_summary
-    - field.storage.node.field_ol_transcript_type
     - field.storage.taxonomy_term.field_committee_types
     - search_api.server.pantheon_solr8
   module:
-    - search_api_solr
     - block_content
     - node
+    - search_api_solr
     - taxonomy
-    - search_api
 third_party_settings:
   search_api_solr:
     finalize: false

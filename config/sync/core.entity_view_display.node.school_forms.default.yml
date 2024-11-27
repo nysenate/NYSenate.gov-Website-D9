@@ -4,19 +4,12 @@ status: true
 dependencies:
   config:
     - field.field.node.school_forms.field_form_banner_image
-    - field.field.node.school_forms.field_form_date
     - field.field.node.school_forms.field_form_summary
-    - field.field.node.school_forms.field_form_title
-    - field.field.node.school_forms.field_issues
-    - field.field.node.school_forms.field_school_form
-    - field.field.node.school_forms.field_school_form_type
     - field.field.node.school_forms.rabbit_hole__settings
     - node.type.school_forms
   module:
-    - datetime
     - text
     - user
-    - webform
 id: node.school_forms.default
 targetEntityType: node
 bundle: school_forms
@@ -31,15 +24,6 @@ content:
     third_party_settings: {  }
     weight: 101
     region: content
-  field_form_date:
-    type: datetime_default
-    label: above
-    settings:
-      timezone_override: ''
-      format_type: publish_date
-    third_party_settings: {  }
-    weight: 104
-    region: content
   field_form_summary:
     type: text_default
     label: hidden
@@ -47,47 +31,12 @@ content:
     third_party_settings: {  }
     weight: 102
     region: content
-  field_form_title:
-    type: text_default
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    weight: 103
-    region: content
-  field_issues:
-    type: entity_reference_label
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    weight: 107
-    region: content
-  field_school_form:
-    type: webform_entity_reference_entity_view
-    label: above
-    settings:
-      source_entity: true
-    third_party_settings: {  }
-    weight: 105
-    region: content
-  field_school_form_type:
-    type: entity_reference_label
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    weight: 106
-    region: content
-  links:
-    settings: {  }
-    third_party_settings: {  }
-    weight: 100
-    region: content
 hidden:
   entity_print_view_epub: true
   entity_print_view_pdf: true
   entity_print_view_word_docx: true
   langcode: true
+  links: true
   private_message_link: true
   rabbit_hole__settings: true
   search_api_excerpt: true

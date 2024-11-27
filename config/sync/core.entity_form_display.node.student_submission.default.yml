@@ -7,9 +7,11 @@ dependencies:
     - field.field.node.student_submission.field_image_submission
     - field.field.node.student_submission.field_student_name
     - field.field.node.student_submission.field_submission_type
+    - field.field.node.student_submission.field_upload_type
     - image.style.thumbnail
     - node.type.student_submission
   module:
+    - conditional_fields
     - file
     - svg_image
 id: node.student_submission.default
@@ -23,7 +25,8 @@ content:
     region: content
     settings:
       progress_indicator: throbber
-    third_party_settings: {  }
+    third_party_settings:
+      conditional_fields: {  }
   field_image_submission:
     type: image_image
     weight: 2
@@ -41,6 +44,12 @@ content:
       placeholder: ''
     third_party_settings: {  }
   field_submission_type:
+    type: options_select
+    weight: 4
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_upload_type:
     type: options_select
     weight: 1
     region: content

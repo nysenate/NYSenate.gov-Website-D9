@@ -855,7 +855,8 @@ section.print.hero--senator {
 
 // Disable admin menu body padding when on TFA page.
 [dir="ltr"] body.gin--vertical-toolbar {
-  padding-left: 0 !important;
+  padding-left: var(--gin-toolbar-x-offset, 256px) !important;
+  margin-left: 0;
 }
 
 .trad_blue {

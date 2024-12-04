@@ -8,6 +8,7 @@ dependencies:
   module:
     - filefield_paths
     - image
+    - simple_image_rotate
 third_party_settings:
   filefield_paths:
     enabled: false
@@ -26,12 +27,14 @@ third_party_settings:
     redirect: false
     retroactive_update: false
     active_updating: false
+  simple_image_rotate:
+    enable_rotate: 1
 id: node.student_submission.field_image_submission
 field_name: field_image_submission
 entity_type: node
 bundle: student_submission
 label: 'Image submission'
-description: ''
+description: '<strong>After choosing your image, use the rotate image button to ensure your image is properly oriented.</strong>'
 required: true
 translatable: false
 default_value: {  }

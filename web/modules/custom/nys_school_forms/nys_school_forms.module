@@ -66,7 +66,7 @@ function nys_school_forms_form_node_student_submission_container_form_alter(&$fo
   }
 
   // Custom validation to make only one upload field required.
-  array_unshift($form['#validate'], '_nys_school_forms_validate_ss_container_form');
+  $form['#validate'][] = '_nys_school_forms_validate_ss_container_form';
 }
 
 /**

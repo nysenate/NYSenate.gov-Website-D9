@@ -458,3 +458,39 @@
     }
   }
 }
+
+// Form block styling tweaks.
+.block-formblock {
+  // Hide submission reordering.
+  #field-student-submissions-add-more-wrapper {
+    .tabledrag-toggle-weight-wrapper, .field-multiple-drag {
+      display: none;
+    }
+  }
+
+  // Normalize select elements.
+  .js-form-type-select {
+    float: none;
+    width: 100%;
+    margin-right: 0;
+
+    select {
+      margin-bottom: 16px;
+    }
+  }
+
+  // Ensure room for image to rotate without overlap.
+  .js-form-wrapper .form-type-managed-file {
+    margin-bottom: 1em;
+    .image-preview {
+      min-height: 70px;
+      margin: 35px;
+    }
+  }
+
+  // Padding fix.
+  td.field-multiple-drag + td {
+    max-width: 548px;
+    padding: 10px;
+  }
+}

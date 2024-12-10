@@ -1,30 +1,24 @@
-uuid: 95c2bc1a-7a0b-4306-95a5-97e811098173
+uuid: ce90fe7e-c375-4e78-832a-74f650e77f10
 langcode: en
 status: true
 dependencies:
   config:
     - field.storage.node.field_file_submission
-    - field.storage.node.field_form_type
+    - field.storage.node.field_grade
     - field.storage.node.field_image_submission
-    - field.storage.node.field_school
     - field.storage.node.field_student_name
-    - field.storage.node.field_submission_type
-    - field.storage.node.field_teacher_email
-    - field.storage.node.field_teacher_name
-    - field.storage.node.field_upload_type
     - image.style.thumbnail
     - node.type.student_submission
-    - system.menu.admin
   module:
     - better_exposed_filters
+    - colorbox
     - file
     - node
     - options
-    - svg_image
-    - taxonomy
     - user
-id: student_submissions
-label: 'Student submissions'
+    - views_list_sort
+id: display_student_submissions
+label: 'Display student submissions'
 module: views
 description: ''
 tag: ''
@@ -37,75 +31,19 @@ display:
     display_plugin: default
     position: 0
     display_options:
-      title: 'Manage student submissions'
+      title: 'Display student submissions'
       fields:
-        node_bulk_form:
-          id: node_bulk_form
-          table: node
-          field: node_bulk_form
-          relationship: none
-          group_type: group
-          admin_label: ''
-          entity_type: node
-          plugin_id: node_bulk_form
-          label: 'Node operations bulk form'
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: true
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          action_title: Action
-          include_exclude: include
-          selected_actions:
-            - node_delete_action
-            - node_publish_action
-            - node_unpublish_action
-        created:
-          id: created
+        title:
+          id: title
           table: node_field_data
-          field: created
-          relationship: none
+          field: title
+          relationship: field_school
           group_type: group
           admin_label: ''
           entity_type: node
-          entity_field: created
+          entity_field: title
           plugin_id: field
-          label: 'Submission date'
+          label: School
           exclude: false
           alter:
             alter_text: false
@@ -147,21 +85,134 @@ display:
           empty_zero: false
           hide_alter_empty: true
           click_sort_column: value
-          type: timestamp
+          type: string
           settings:
-            date_format: publish_date
-            custom_date_format: ''
-            timezone: ''
-            tooltip:
-              date_format: long
-              custom_date_format: ''
-            time_diff:
-              enabled: false
-              future_format: '@interval hence'
-              past_format: '@interval ago'
-              granularity: 2
-              refresh: 60
-              description: ''
+            link_to_entity: false
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+        field_grade:
+          id: field_grade
+          table: node__field_grade
+          field: field_grade
+          relationship: reverse__node__field_student_submissions
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: Grade
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: list_default
+          settings: {  }
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+        field_student_name:
+          id: field_student_name
+          table: node__field_student_name
+          field: field_student_name
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: 'Student name'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: string
+          settings:
+            link_to_entity: false
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -222,16 +273,15 @@ display:
           empty_zero: false
           hide_alter_empty: true
           click_sort_column: target_id
-          type: image
+          type: colorbox
           settings:
-            image_link: file
-            image_style: thumbnail
-            image_loading:
-              attribute: lazy
-            svg_attributes:
-              width: null
-              height: null
-            svg_render_as_image: false
+            colorbox_image_style: ''
+            colorbox_gallery: page
+            colorbox_gallery_custom: ''
+            colorbox_caption: auto
+            colorbox_caption_custom: ''
+            colorbox_node_style: thumbnail
+            colorbox_node_style_first: ''
           group_column: ''
           group_columns: {  }
           group_rows: true
@@ -305,143 +355,19 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-        field_submission_type:
-          id: field_submission_type
-          table: node__field_submission_type
-          field: field_submission_type
+        nothing:
+          id: nothing
+          table: views
+          field: nothing
           relationship: none
           group_type: group
           admin_label: ''
-          plugin_id: field
-          label: 'Submission type'
-          exclude: true
-          alter:
-            alter_text: true
-            text: '<strong>Submission type:</strong> {{ field_submission_type }}<br>'
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: true
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: value
-          type: list_default
-          settings: {  }
-          group_column: value
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-        field_upload_type:
-          id: field_upload_type
-          table: node__field_upload_type
-          field: field_upload_type
-          relationship: none
-          group_type: group
-          admin_label: ''
-          plugin_id: field
-          label: 'Upload type'
-          exclude: true
-          alter:
-            alter_text: true
-            text: '<strong>Upload type:</strong> {{ field_upload_type }}<br>'
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: true
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: value
-          type: list_default
-          settings: {  }
-          group_column: value
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-        field_student_name:
-          id: field_student_name
-          table: node__field_student_name
-          field: field_student_name
-          relationship: none
-          group_type: group
-          admin_label: ''
-          plugin_id: field
+          plugin_id: custom
           label: Submission
           exclude: false
           alter:
             alter_text: true
-            text: "{{ field_image_submission }}\r\n{{ field_file_submission }}\r\n<strong>Student name:</strong> {{ field_student_name }}<br>\r\n{{ field_upload_type }}\r\n{{ field_submission_type }}"
+            text: "{{ field_image_submission }}\r\n{{ field_file_submission }}"
             make_link: false
             path: ''
             absolute: false
@@ -477,348 +403,18 @@ display:
           empty: ''
           hide_empty: false
           empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: value
-          type: string
-          settings:
-            link_to_entity: false
-          group_column: value
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-        field_teacher_email:
-          id: field_teacher_email
-          table: node__field_teacher_email
-          field: field_teacher_email
-          relationship: reverse__node__field_student_submissions
-          group_type: group
-          admin_label: ''
-          plugin_id: field
-          label: 'Teacher email'
-          exclude: true
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: true
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: value
-          type: basic_string
-          settings: {  }
-          group_column: value
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-        field_teacher_name:
-          id: field_teacher_name
-          table: node__field_teacher_name
-          field: field_teacher_name
-          relationship: reverse__node__field_student_submissions
-          group_type: group
-          admin_label: ''
-          plugin_id: field
-          label: Teacher
-          exclude: false
-          alter:
-            alter_text: true
-            text: "{{ field_teacher_name }}<br>\r\n<strong>Email:</strong> {{ field_teacher_email }}"
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: true
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: value
-          type: string
-          settings:
-            link_to_entity: false
-          group_column: value
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-        field_school:
-          id: field_school
-          table: node__field_school
-          field: field_school
-          relationship: reverse__node__field_student_submissions
-          group_type: group
-          admin_label: ''
-          plugin_id: field
-          label: School
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: true
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: target_id
-          type: entity_reference_label
-          settings:
-            link: true
-          group_column: target_id
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-        name:
-          id: name
-          table: taxonomy_term_field_data
-          field: name
-          relationship: field_senator
-          group_type: group
-          admin_label: ''
-          entity_type: taxonomy_term
-          entity_field: name
-          plugin_id: term_name
-          label: Senator
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: true
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: value
-          type: string
-          settings:
-            link_to_entity: true
-          group_column: value
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-          convert_spaces: false
-        field_form_type:
-          id: field_form_type
-          table: node__field_form_type
-          field: field_form_type
-          relationship: reverse__node__field_student_submissions
-          group_type: group
-          admin_label: ''
-          plugin_id: field
-          label: 'School form type'
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: true
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: value
-          type: list_default
-          settings: {  }
-          group_column: value
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-        status:
-          id: status
+          hide_alter_empty: false
+        created:
+          id: created
           table: node_field_data
-          field: status
+          field: created
           relationship: none
           group_type: group
           admin_label: ''
           entity_type: node
-          entity_field: status
+          entity_field: created
           plugin_id: field
-          label: Published
+          label: 'Submission year'
           exclude: false
           alter:
             alter_text: false
@@ -860,11 +456,21 @@ display:
           empty_zero: false
           hide_alter_empty: true
           click_sort_column: value
-          type: boolean
+          type: timestamp
           settings:
-            format: yes-no
-            format_custom_false: ''
-            format_custom_true: ''
+            date_format: html_year
+            custom_date_format: ''
+            timezone: ''
+            tooltip:
+              date_format: html_year
+              custom_date_format: ''
+            time_diff:
+              enabled: false
+              future_format: '@interval hence'
+              past_format: '@interval ago'
+              granularity: 2
+              refresh: 60
+              description: ''
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -901,7 +507,7 @@ display:
         type: bef
         options:
           submit_button: Apply
-          reset_button: false
+          reset_button: true
           reset_button_label: Reset
           exposed_sorts_label: 'Sort by'
           expose_sort_order: true
@@ -921,7 +527,14 @@ display:
               secondary_open: false
               reset_button_always_show: false
             filter:
-              status:
+              title:
+                plugin_id: default
+                advanced:
+                  placeholder_text: ''
+                  collapsible: false
+                  collapsible_disable_automatic_open: false
+                  is_secondary: false
+              field_grade_value:
                 plugin_id: default
                 advanced:
                   sort_options: false
@@ -931,21 +544,7 @@ display:
                   collapsible: false
                   collapsible_disable_automatic_open: false
                   is_secondary: false
-              name:
-                plugin_id: default
-                advanced:
-                  placeholder_text: ''
-                  collapsible: false
-                  collapsible_disable_automatic_open: false
-                  is_secondary: false
-              title:
-                plugin_id: default
-                advanced:
-                  placeholder_text: ''
-                  collapsible: false
-                  collapsible_disable_automatic_open: false
-                  is_secondary: false
-              field_teacher_name_value:
+              field_student_name_value:
                 plugin_id: default
                 advanced:
                   placeholder_text: ''
@@ -953,14 +552,7 @@ display:
                   collapsible_disable_automatic_open: false
                   is_secondary: false
               created:
-                plugin_id: bef_datepicker
-                advanced:
-                  placeholder_text: ''
-                  collapsible: false
-                  collapsible_disable_automatic_open: false
-                  is_secondary: false
-              created_1:
-                plugin_id: bef_datepicker
+                plugin_id: default
                 advanced:
                   placeholder_text: ''
                   collapsible: false
@@ -971,26 +563,53 @@ display:
         options:
           perm: 'access content'
       cache:
-        type: tag
+        type: none
         options: {  }
-      empty: {  }
-      sorts:
-        created:
-          id: created
-          table: node_field_data
-          field: created
+      empty:
+        area:
+          id: area
+          table: views
+          field: area
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: text
+          empty: true
+          content:
+            value: '<p>No submissions found. Please check your filters.</p>'
+            format: basic_html
+          tokenize: false
+      sorts:
+        title:
+          id: title
+          table: node_field_data
+          field: title
+          relationship: field_school
+          group_type: group
+          admin_label: ''
           entity_type: node
-          entity_field: created
-          plugin_id: date
-          order: DESC
+          entity_field: title
+          plugin_id: standard
+          order: ASC
           expose:
             label: ''
             field_identifier: ''
           exposed: false
-          granularity: second
+        field_grade_value:
+          id: field_grade_value
+          table: node__field_grade
+          field: field_grade_value
+          relationship: reverse__node__field_student_submissions
+          group_type: group
+          admin_label: ''
+          plugin_id: sort_allowed_values
+          order: ASC
+          expose:
+            label: ''
+            field_identifier: ''
+          exposed: false
+          allowed_values: '0'
+          null_heavy: '0'
       arguments: {  }
       filters:
         status:
@@ -1004,9 +623,9 @@ display:
           entity_field: status
           plugin_id: boolean
           operator: '='
-          value: All
+          value: '1'
           group: 1
-          exposed: true
+          exposed: false
           expose:
             operator_id: ''
             label: 'Published status'
@@ -1085,65 +704,6 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-        name:
-          id: name
-          table: taxonomy_term_field_data
-          field: name
-          relationship: field_senator
-          group_type: group
-          admin_label: ''
-          entity_type: taxonomy_term
-          entity_field: name
-          plugin_id: string
-          operator: '='
-          value: ''
-          group: 1
-          exposed: true
-          expose:
-            operator_id: name_op
-            label: Senator
-            description: ''
-            use_operator: false
-            operator: name_op
-            operator_limit_selection: false
-            operator_list: {  }
-            identifier: name
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
-              frontpage_editor: '0'
-              senator: '0'
-              microsite_content_producer: '0'
-              legislative_correspondent: '0'
-              student_programs: '0'
-              constituent: '0'
-              comment_moderator: '0'
-            placeholder: ''
-            autocomplete_filter: 1
-            autocomplete_min_chars: '0'
-            autocomplete_items: '10'
-            autocomplete_field: name
-            autocomplete_raw_suggestion: 1
-            autocomplete_raw_dropdown: 1
-            autocomplete_dependent: 0
-            autocomplete_contextual: 0
-            autocomplete_autosubmit: 0
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
         title:
           id: title
           table: node_field_data
@@ -1154,7 +714,7 @@ display:
           entity_type: node
           entity_field: title
           plugin_id: string
-          operator: '='
+          operator: contains
           value: ''
           group: 1
           exposed: true
@@ -1185,9 +745,9 @@ display:
             autocomplete_filter: 1
             autocomplete_min_chars: '0'
             autocomplete_items: '10'
-            autocomplete_field: ''
-            autocomplete_raw_suggestion: 1
-            autocomplete_raw_dropdown: 1
+            autocomplete_field: title
+            autocomplete_raw_suggestion: 0
+            autocomplete_raw_dropdown: 0
             autocomplete_dependent: 0
             autocomplete_contextual: 0
             autocomplete_autosubmit: 0
@@ -1203,27 +763,76 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-        field_teacher_name_value:
-          id: field_teacher_name_value
-          table: node__field_teacher_name
-          field: field_teacher_name_value
+        field_grade_value:
+          id: field_grade_value
+          table: node__field_grade
+          field: field_grade_value
+          relationship: reverse__node__field_student_submissions
+          group_type: group
+          admin_label: ''
+          plugin_id: list_field
+          operator: or
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_grade_value_op
+            label: Grade
+            description: ''
+            use_operator: false
+            operator: field_grade_value_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: field_grade_value
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+              frontpage_editor: '0'
+              senator: '0'
+              microsite_content_producer: '0'
+              legislative_correspondent: '0'
+              student_programs: '0'
+              constituent: '0'
+              comment_moderator: '0'
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+        field_student_name_value:
+          id: field_student_name_value
+          table: node__field_student_name
+          field: field_student_name_value
           relationship: none
           group_type: group
           admin_label: ''
           plugin_id: string
-          operator: '='
+          operator: contains
           value: ''
           group: 1
           exposed: true
           expose:
-            operator_id: field_teacher_name_value_op
-            label: 'Teacher name'
+            operator_id: field_student_name_value_op
+            label: 'Student name'
             description: ''
             use_operator: false
-            operator: field_teacher_name_value_op
+            operator: field_student_name_value_op
             operator_limit_selection: false
             operator_list: {  }
-            identifier: field_teacher_name_value
+            identifier: field_student_name_value
             required: false
             remember: false
             multiple: false
@@ -1242,7 +851,7 @@ display:
             autocomplete_filter: 1
             autocomplete_min_chars: '0'
             autocomplete_items: '10'
-            autocomplete_field: field_teacher_name
+            autocomplete_field: field_student_name
             autocomplete_raw_suggestion: 1
             autocomplete_raw_dropdown: 1
             autocomplete_dependent: 0
@@ -1270,17 +879,17 @@ display:
           entity_type: node
           entity_field: created
           plugin_id: date
-          operator: '>='
+          operator: '='
           value:
             min: ''
             max: ''
             value: ''
-            type: date
+            type: date_year
           group: 1
           exposed: true
           expose:
             operator_id: created_op
-            label: From
+            label: 'Submission year'
             description: ''
             use_operator: false
             operator: created_op
@@ -1316,62 +925,10 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-        created_1:
-          id: created_1
-          table: node_field_data
-          field: created
-          relationship: none
-          group_type: group
-          admin_label: ''
-          entity_type: node
-          entity_field: created
-          plugin_id: date
-          operator: '<='
-          value:
-            min: ''
-            max: ''
-            value: ''
-            type: date
-          group: 1
-          exposed: true
-          expose:
-            operator_id: created_1_op
-            label: To
-            description: ''
-            use_operator: false
-            operator: created_1_op
-            operator_limit_selection: false
-            operator_list: {  }
-            identifier: created_1
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
-              frontpage_editor: '0'
-              senator: '0'
-              microsite_content_producer: '0'
-              legislative_correspondent: '0'
-              student_programs: '0'
-              constituent: '0'
-              comment_moderator: '0'
-            min_placeholder: ''
-            max_placeholder: ''
-            placeholder: ''
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
       style:
         type: table
         options:
@@ -1379,29 +936,32 @@ display:
           row_class: ''
           default_row_class: true
           columns:
-            node_bulk_form: node_bulk_form
-            created: created
+            title: title
+            field_grade: field_grade
+            field_student_name: field_student_name
             field_image_submission: field_image_submission
             field_file_submission: field_file_submission
-            field_submission_type: field_submission_type
-            field_upload_type: field_upload_type
-            field_student_name: field_student_name
-            field_teacher_email: field_teacher_email
-            field_teacher_name: field_teacher_name
-            field_school: field_school
-            name: name
-            field_form_type: field_form_type
-            status: status
-          default: created
+            nothing: nothing
+            created: created
+          default: title
           info:
-            node_bulk_form:
+            title:
+              sortable: true
+              default_sort_order: asc
               align: ''
               separator: ''
               empty_column: false
               responsive: ''
-            created:
+            field_grade:
               sortable: true
-              default_sort_order: desc
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            field_student_name:
+              sortable: true
+              default_sort_order: asc
               align: ''
               separator: ''
               empty_column: false
@@ -1420,63 +980,12 @@ display:
               separator: ''
               empty_column: false
               responsive: ''
-            field_submission_type:
-              sortable: false
-              default_sort_order: asc
+            nothing:
               align: ''
               separator: ''
               empty_column: false
               responsive: ''
-            field_upload_type:
-              sortable: false
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            field_student_name:
-              sortable: true
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            field_teacher_email:
-              sortable: false
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            field_teacher_name:
-              sortable: true
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            field_school:
-              sortable: true
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            name:
-              sortable: true
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            field_form_type:
-              sortable: true
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            status:
+            created:
               sortable: true
               default_sort_order: asc
               align: ''
@@ -1520,29 +1029,26 @@ display:
           admin_label: 'field_school: Content'
           plugin_id: standard
           required: false
-        field_district:
-          id: field_district
-          table: node__field_district
-          field: field_district
-          relationship: field_school
+      use_ajax: true
+      group_by: false
+      header:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
           group_type: group
-          admin_label: 'field_district: Taxonomy term'
-          plugin_id: standard
-          required: false
-        field_senator:
-          id: field_senator
-          table: taxonomy_term__field_senator
-          field: field_senator
-          relationship: field_district
-          group_type: group
-          admin_label: 'field_senator: Taxonomy term'
-          plugin_id: standard
-          required: false
-      header: {  }
+          admin_label: ''
+          plugin_id: text
+          empty: false
+          content:
+            value: '<h2>{{ created }} Student Submissions</h2>'
+            format: basic_html
+          tokenize: true
       footer: {  }
       display_extenders: {  }
     cache_metadata:
-      max-age: 0
+      max-age: -1
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
@@ -1552,34 +1058,19 @@ display:
         - user.permissions
       tags:
         - 'config:field.storage.node.field_file_submission'
-        - 'config:field.storage.node.field_form_type'
+        - 'config:field.storage.node.field_grade'
         - 'config:field.storage.node.field_image_submission'
-        - 'config:field.storage.node.field_school'
         - 'config:field.storage.node.field_student_name'
-        - 'config:field.storage.node.field_submission_type'
-        - 'config:field.storage.node.field_teacher_email'
-        - 'config:field.storage.node.field_teacher_name'
-        - 'config:field.storage.node.field_upload_type'
-  page_1:
-    id: page_1
-    display_title: Page
-    display_plugin: page
-    position: 1
+  block_1:
+    id: block_1
+    display_title: Block
+    display_plugin: block
+    position: 2
     display_options:
       display_extenders: {  }
-      path: admin/content/student-submissions
-      menu:
-        type: normal
-        title: 'Manage student submissions'
-        description: ''
-        weight: 20
-        expanded: false
-        menu_name: admin
-        parent: system.admin_content
-        context: '0'
-      use_admin_theme: true
+      block_hide_empty: false
     cache_metadata:
-      max-age: 0
+      max-age: -1
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
@@ -1589,11 +1080,6 @@ display:
         - user.permissions
       tags:
         - 'config:field.storage.node.field_file_submission'
-        - 'config:field.storage.node.field_form_type'
+        - 'config:field.storage.node.field_grade'
         - 'config:field.storage.node.field_image_submission'
-        - 'config:field.storage.node.field_school'
         - 'config:field.storage.node.field_student_name'
-        - 'config:field.storage.node.field_submission_type'
-        - 'config:field.storage.node.field_teacher_email'
-        - 'config:field.storage.node.field_teacher_name'
-        - 'config:field.storage.node.field_upload_type'

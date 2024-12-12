@@ -61,14 +61,44 @@ function nys_school_forms_form_node_student_submission_container_form_alter(&$fo
     $form['field_form_type']['#access'] = FALSE;
   }
   if ($current_path == '/questionnaires/what-are-you-thankful') {
-    $form['field_form_type']['widget']['#default_value'] = 'thanksgiving';
+    $form_type = 'thanksgiving';
+    $form['field_form_type']['widget']['#default_value'] = $form_type;
   }
   elseif ($current_path == '/earthday') {
-    $form['field_form_type']['widget']['#default_value'] = 'earth_day';
+    $form_type = 'earth_day';
+    $form['field_form_type']['widget']['#default_value'] = $form_type;
   }
 
   // Custom validation to make only one upload field required.
   $form['#validate'][] = '_nys_school_forms_validate_ss_container_form';
+
+  // Custom submit handler to alter redirect and success message.
+   $form['actions']['submit']['#submit'][] = '_nys_school_forms_ss_container_submit_handler';
+
+  // Disable form if not in submission period.
+  $is_form_active = FALSE;
+  $form_open_time = strtotime(\Drupal::state()->get('nys_school_forms.submission_periods')[$form_type]['begin']);
+  $form_close_time = strtotime(\Drupal::state()->get('nys_school_forms.submission_periods')[$form_type]['end']);
+  if ($form_open_time <= time() && $form_close_time >= time()) {
+    $is_form_active = TRUE;
+  }
+  if (!$is_form_active) {
+    foreach ($form as $key => $value) {
+      // Removes all input fields.
+      if (!str_starts_with($key, '#')) {
+        unset($form[$key]);
+      }
+    }
+    $form['#attached']['library'][] = 'rain_theme/message';
+    $form['#markup'] = <<<HTML
+    <div role="contentinfo" aria-label="Status message" class="message message--status">
+      <h2 class="visually-hidden message__heading">Status message</h2>
+        <ul class="messages__list">
+          <li class="messages__item">The submission period is currently closed.</li>
+      </ul>
+    </div>
+  HTML;
+  }
 }
 
 /**
@@ -172,4 +202,12 @@ function _nys_school_forms_validate_ss_container_form(array &$form, FormStateInt
   foreach ($errors as $field_name => $message) {
     $form_state->setErrorByName($field_name, $message);
   }
+}
+
+/**
+ * Custom submit handler for custom redirect.
+ */
+function _nys_school_forms_ss_container_submit_handler(array &$form, \Drupal\Core\Form\FormStateInterface $form_state) {
+  $form_state->setRedirect('<front>');
+  \Drupal::messenger()->addMessage(t('Your student submission has been received.'));
 }

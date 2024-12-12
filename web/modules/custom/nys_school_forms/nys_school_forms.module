@@ -7,6 +7,8 @@
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\node\Entity\Node;
+use Drupal\views\ViewExecutable;
 use Drupal\webform\WebformSubmissionInterface;
 
 /**
@@ -103,6 +105,39 @@ function nys_school_forms_form_views_exposed_form_alter(&$form, FormStateInterfa
     $default_empty_fields_empty = empty(array_filter(array_intersect_key($user_input, array_flip($default_empty_fields))));
     if ($default_empty_fields_empty && $user_input['field_grade_value'] === 'All') {
       $form_state->setUserInput(['created' => date('Y')]);
+    }
+  }
+}
+
+/**
+ * Implements hook_views_pre_view().
+ */
+function nys_school_forms_views_pre_view(ViewExecutable $view, $display_id, &$args) {
+  if ($view->id() === 'display_student_submissions' && $display_id === 'block_1') {
+    $aliased_path = \Drupal::requestStack()->getCurrentRequest()->getPathInfo();
+    $source_path = \Drupal::service('path_alias.manager')->getPathByAlias($aliased_path);
+
+    // Contextual filter to limit results to proper form type.
+    $form_type = substr($aliased_path, strrpos($aliased_path, '/') + 1);
+    switch ($form_type) {
+      case 'earthday':
+        $args[0] = 'earth_day';
+        break;
+      case 'thankful':
+        $args[0] = 'thanksgiving';
+        break;
+    }
+
+    // Contextual filter to limit results to schools in senator's district.
+    if (preg_match('/^\/node\/(\d+)$/', $source_path, $matches)) {
+      $node_id = $matches[1];
+      $microsite_node = Node::load($node_id);
+      if (
+        $microsite_node instanceof \Drupal\node\NodeInterface
+        && !empty($microsite_node->field_senator_multiref->target_id)
+      ) {
+        $args[1] = $microsite_node->field_senator_multiref->target_id;
+      }
     }
   }
 }

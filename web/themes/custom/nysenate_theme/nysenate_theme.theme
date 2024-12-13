@@ -65,6 +65,7 @@ function nysenate_theme_preprocess_html(&$variables) {
  */
 function nysenate_theme_preprocess_menu__socials(&$variables) {
   $socials = [];
+
   foreach ($variables['items'] as $link) {
     $socials[] = [
       'icon' => $link['title'],

@@ -75,6 +75,9 @@ function nys_school_forms_form_node_student_submission_container_form_alter(&$fo
   // Custom submit handler to alter redirect and success message.
    $form['actions']['submit']['#submit'][] = '_nys_school_forms_ss_container_submit_handler';
 
+  // Add JS confirmation pop-up to form.
+  $form['#attached']['library'][] = 'nys_school_forms/submission_confirmation_popup';
+
   // Disable form if not in submission period.
   $is_form_active = FALSE;
   $submission_periods = \Drupal::state()->get('nys_school_forms.submission_periods');

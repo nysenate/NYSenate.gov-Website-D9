@@ -1312,15 +1312,6 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
       if ($node instanceof NodeInterface) {
 
         try {
-          $term = $node->get('field_issues')->entity ?? NULL;
-          $term_url = $term ? $term->toUrl()->toString() ?? '' : '';
-        }
-        catch (\Throwable) {
-          $term = NULL;
-          $term_url = 'Could not build URL';
-        }
-
-        try {
           $media = $node->get('field_image_main')->entity ?? NULL;
           $news_image = $media
             ? $entityManager->getViewBuilder('media')->view($media, '380x215')
@@ -1363,6 +1354,19 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
           $url = 'Could not build URL';
         }
 
+        $issues = NULL;
+        if ($node->hasField('field_issues') && !$node->get('field_issues')->isEmpty()) {
+          $node->field_issues->entity;
+          foreach ($node->field_issues as $value) {
+            /** @var \Drupal\taxonomy\Entity\Term $term */
+            $term = $value->entity;
+            $issues[] = [
+              'text' => $term->getName(),
+              'url' => $term->toUrl()->toString(),
+            ];
+          }
+        }
+
         $items[] = [
           'news_title' => $title,
           'news_url' => $url,
@@ -1370,10 +1374,7 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
           'video_src' => $video_image,
           'news_name' => $node->getTitle() ?? 'No Title',
           'date' => $date,
-          'news_topic' => [
-            'url' => $term_url,
-            'text' => $term ? $term->label() : '',
-          ],
+          'news_topics' => $issues,
         ];
       }
     }

@@ -2,9 +2,9 @@
 
 <div class="c-block c-event-featured-story">
   <div class="c-container--header__top-border">
-    <h3 class="c-container--title">
+    <h2 class="c-container--title">
       Featured Story
-    </h3>
+    </h2>
   </div>
 
   <div class="story-container">
@@ -22,9 +22,11 @@
       </h3>
       {% if tags %}
       <div class="c-featured-story-issue-tag">
+        <ul>
         {% for tag in tags %}
-          <a class="c-story-link" href="{{ tag.url }}">{{ tag.text }}</a>{% if not loop.last %}, {% endif %}
+          <li><a class="c-story-link" href="{{ tag.url }}">{{ tag.text }}</a></li>{% if not loop.last %}, {% endif %}
         {% endfor %}
+        </ul>
       </div>
       {% endif %}
     </div>

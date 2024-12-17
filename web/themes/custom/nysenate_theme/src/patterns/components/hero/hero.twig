@@ -22,7 +22,7 @@
       {% endif %}
       <div class="c-senator-hero--info {% if not is_active %} inactive-pallette {% endif %}">
         <div>
-          <h2 class="c-senator-hero--title">
+          <h1 class="c-senator-hero--title">
             {% if incoming %}incoming{% endif %}
             {% if not is_active and not incoming %}former
             {% endif %}New York State Senator<br>
@@ -31,7 +31,7 @@
             {% else %}
               <span class="c-senator-hero--name">{{ senator_name }}</span>
             {% endif %}
-          </h2>
+          </h1>
           <div class="c-senator-hero--info-secondary">
             <p class="c-senator-hero--roles">
               {% if not is_active %}

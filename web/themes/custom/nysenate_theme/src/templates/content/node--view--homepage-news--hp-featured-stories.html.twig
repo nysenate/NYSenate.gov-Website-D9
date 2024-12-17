@@ -94,9 +94,11 @@
           <a href="{{ url }}">{{ label }}</a>
         </h3>
         <div class="c-featured-story-issue-tag">
+          <ul>
           {% for tag in tags %}
-            <a class="c-story-link" href="{{ tag.url }}">{{ tag.text }}</a>
+            <li><a class="c-story-link" href="{{ tag.url }}">{{ tag.text }}</a></li>{% if not loop.last %}, {% endif %}
           {% endfor %}
+          </ul>
         </div>
       </div>
     </div>

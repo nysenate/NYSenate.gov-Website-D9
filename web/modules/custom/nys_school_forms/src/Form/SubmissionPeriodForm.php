@@ -80,13 +80,13 @@ class SubmissionPeriodForm extends ConfigFormBase {
         '#type' => 'date',
         '#title' => 'Start',
         '#date_date_format' => 'Y-m-d',
-        '#default_value' => $this->stateInterface->get('nys_school_forms.submission_periods')[$type]['begin'],
+        '#default_value' => $this->stateInterface->get('nys_school_forms.submission_periods')[$type]['begin'] ?? NULL,
       ];
       $submission_period_field['end'] = [
         '#type' => 'date',
         '#title' => 'End',
         '#date_date_format' => 'Y-m-d',
-        '#default_value' => $this->stateInterface->get('nys_school_forms.submission_periods')[$type]['end'],
+        '#default_value' => $this->stateInterface->get('nys_school_forms.submission_periods')[$type]['end'] ?? NULL,
       ];
       $form['submission_periods'][$type] = $submission_period_field;
     }

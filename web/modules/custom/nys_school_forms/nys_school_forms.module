@@ -77,9 +77,15 @@ function nys_school_forms_form_node_student_submission_container_form_alter(&$fo
 
   // Disable form if not in submission period.
   $is_form_active = FALSE;
-  $form_open_time = strtotime(\Drupal::state()->get('nys_school_forms.submission_periods')[$form_type]['begin']);
-  $form_close_time = strtotime(\Drupal::state()->get('nys_school_forms.submission_periods')[$form_type]['end']);
-  if ($form_open_time <= time() && $form_close_time >= time()) {
+  $submission_periods = \Drupal::state()->get('nys_school_forms.submission_periods');
+  if (!empty($submission_periods[$form_type]['begin']) && !empty($submission_periods[$form_type]['end'])) {
+    $form_open_time = strtotime($submission_periods[$form_type]['begin']);
+    $form_close_time = strtotime($submission_periods[$form_type]['end']);
+  }
+  if (
+    isset($form_open_time) && isset($form_close_time)
+    && $form_open_time <= time() && $form_close_time >= time()
+  ) {
     $is_form_active = TRUE;
   }
   if (!$is_form_active) {

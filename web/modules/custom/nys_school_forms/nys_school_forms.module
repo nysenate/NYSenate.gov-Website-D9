@@ -55,6 +55,15 @@ function nys_school_forms_webform_submission_access(WebformSubmissionInterface $
  * Implements hook_form_FORM_ID_alter.
  */
 function nys_school_forms_form_node_student_submission_container_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // Custom validation to make only one upload field required.
+  $form['#validate'][] = '_nys_school_forms_validate_ss_container_form';
+
+  // Custom submit handler to alter redirect and success message.
+  $form['actions']['submit']['#submit'][] = '_nys_school_forms_ss_container_submit_handler';
+
+  // Add JS confirmation pop-up to form.
+  $form['#attached']['library'][] = 'nys_school_forms/submission_confirmation_popup';
+
   // Set and hide form type field if default available from context.
   $current_path = \Drupal::requestStack()->getCurrentRequest()->getPathInfo();
   if ($current_path != '/node/add/student_submission_container') {
@@ -68,15 +77,6 @@ function nys_school_forms_form_node_student_submission_container_form_alter(&$fo
     $form_type = 'earth_day';
     $form['field_form_type']['widget']['#default_value'] = $form_type;
   }
-
-  // Custom validation to make only one upload field required.
-  $form['#validate'][] = '_nys_school_forms_validate_ss_container_form';
-
-  // Custom submit handler to alter redirect and success message.
-   $form['actions']['submit']['#submit'][] = '_nys_school_forms_ss_container_submit_handler';
-
-  // Add JS confirmation pop-up to form.
-  $form['#attached']['library'][] = 'nys_school_forms/submission_confirmation_popup';
 
   // Disable form if not in submission period.
   $is_form_active = FALSE;

@@ -14,7 +14,9 @@
           modal.innerHTML = `
             <div class="submission-modal">
               <h2>Wait!</h2>
-              <p>Have you double-checked that all uploaded images have been rotated to their correct orientations? (There is a rotate button next to each uploaded image.)</p>
+              <p>Image orientations can change after upload.</p>
+              <p><strong>Have you double-checked that all uploaded images have been rotated to their proper orientations?</strong></p>
+              <p>(There is a rotate button next to each uploaded image.)</p>
               <div class="modal-buttons">
                 <button id="confirm-no" class="modal-button">No, go back</button>
                 <button id="confirm-yes" class="modal-button">Yes, I've confirmed that all image orientations are correct</button>

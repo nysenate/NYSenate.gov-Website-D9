@@ -462,7 +462,7 @@
 // Form block styling tweaks.
 .block-formblock {
   // Hide submission reordering.
-  #field-student-submissions-add-more-wrapper {
+  #edit-field-student-submissions-wrapper {
     .tabledrag-toggle-weight-wrapper, .field-multiple-drag {
       display: none;
     }
@@ -482,9 +482,30 @@
   // Ensure room for image to rotate without overlap.
   .js-form-wrapper .form-type-managed-file {
     margin-bottom: 1em;
-    .image-preview {
-      min-height: 70px;
-      margin: 35px;
+
+    .image-widget {
+      .image-preview {
+        min-height: 70px;
+        margin: 35px;
+      }
+
+      a.rotate-icon {
+        font-size: 50px;
+        color: $cont_red_lgt;
+        padding-left: 10px;
+
+        &:hover {
+          color: $cont_red_drk;
+        }
+      }
+    }
+
+    .description strong {
+      font-size: 18px;
+      color: $cont_red_lgt;
+      line-height: 20px;
+      margin: 18px 0;
+      display: inline-block;
     }
   }
 

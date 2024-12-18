@@ -134,17 +134,31 @@ function nys_school_forms_inline_entity_form_entity_form_alter(&$form, FormState
 }
 
 /**
- * Implements hook_form_FORM_ID_alter() for views_exposed_form.
+ * Implements hook_form_FORM_ID_alter().
  */
 function nys_school_forms_form_views_exposed_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  if ($form['#id'] === 'views-exposed-form-display-student-submissions-block-1') {
-    // Set submission year filter to current year, if no user input.
-    $user_input = $form_state->getUserInput();
-    $default_empty_fields = ['title', 'field_student_name_value', 'created'];
-    $default_empty_fields_empty = empty(array_filter(array_intersect_key($user_input, array_flip($default_empty_fields))));
-    if ($default_empty_fields_empty && $user_input['field_grade_value'] === 'All') {
-      $form_state->setUserInput(['created' => date('Y')]);
-    }
+  switch ($form['#id']) {
+    case 'views-exposed-form-display-student-submissions-block-1':
+      // Set submission year filter to current year, if no user input.
+      $user_input = $form_state->getUserInput();
+      $default_empty_fields = ['title', 'field_student_name_value', 'created'];
+      $default_empty_fields_empty = empty(array_filter(array_intersect_key($user_input, array_flip($default_empty_fields))));
+      if ($default_empty_fields_empty && $user_input['field_grade_value'] === 'All') {
+        $form_state->setUserInput(['created' => date('Y')]);
+      }
+      break;
+    case 'views-exposed-form-manage-student-submissions-page-1':
+      // Set date filters to current year, if no user input.
+      $user_input = $form_state->getUserInput();
+      $default_empty_fields = ['name', 'title', 'field_teacher_name_value', 'created', 'created_1'];
+      $default_empty_fields_empty = empty(array_filter(array_intersect_key($user_input, array_flip($default_empty_fields))));
+      if ($default_empty_fields_empty && $user_input['status'] === 'All') {
+        $form_state->setUserInput([
+          'created' => date('Y') . '-01-01',
+          'created_1' => date('Y') . '-12-31',
+        ]);
+      }
+      break;
   }
 }
 
@@ -218,5 +232,6 @@ function _nys_school_forms_validate_ss_container_form(array &$form, FormStateInt
  */
 function _nys_school_forms_ss_container_submit_handler(array &$form, \Drupal\Core\Form\FormStateInterface $form_state) {
   $form_state->setRedirect('<front>');
+  \Drupal::messenger()->deleteAll();
   \Drupal::messenger()->addMessage(t('Your student submission has been received.'));
 }

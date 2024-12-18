@@ -234,8 +234,13 @@
     margin: 0 1% 0 0;
     padding: 0;
 
+    @include breakpoint($bp-under-sm) {
+      width: 100%;
+    }
+
     &.js-form-item-created {
-      width: 15%
+      width: 15%;
+      min-width: 110px;
     }
 
     input, select {
@@ -261,6 +266,7 @@
 
   .view-content {
     line-height: 20px;
+    overflow: scroll;
 
     thead th {
       padding: 10px;

@@ -22,7 +22,7 @@
       {% endif %}
       <div class="c-senator-hero--info {% if not is_active %} inactive-pallette {% endif %}">
         <div>
-          <h2 class="c-senator-hero--title">
+          <h1 class="c-senator-hero--title">
             {% if incoming %}incoming{% endif %}
             {% if not is_active and not incoming %}former
             {% endif %}New York State Senator<br>
@@ -31,7 +31,7 @@
             {% else %}
               <span class="c-senator-hero--name">{{ senator_name }}</span>
             {% endif %}
-          </h2>
+          </h1>
           <div class="c-senator-hero--info-secondary">
             <p class="c-senator-hero--roles">
               {% if not is_active %}
@@ -138,10 +138,15 @@
     <div class="first last odd">
 
       <div class="l-header-region l-row l-row--hero c-hero">
+        {% if is_front %}
+          <h1 class="visually-hidden">New York State Senate Home Page</h1>
+        {% endif %}
         {% if image_hero %}
+          <h1 class="visually-hidden">New York State Senate Home Page</h1>
           {{ image_hero }}
         {% else %}
-          <img src="/themes/custom/nysenate_theme/src/assets/default_image.jpeg"/>
+          <h1 class="visually-hidden">New York State Senate Home Page</h1>
+          <img alt="Statue of Liberty" src="/themes/custom/nysenate_theme/src/assets/default_image.jpeg"/>
         {% endif %}
         {% if title %}
           <div class="l-row c-hero--tout c-hero--featured">

@@ -217,3 +217,99 @@
 		}
 	}
 }
+
+// Styling for new views-based submissions results.
+.view-id-display_student_submissions {
+  margin-bottom: 90px;
+  margin-top: 30px;
+
+  h2 {
+    font-size: 37px;
+    font-family: $font-serif-semibold;
+  }
+
+  .js-form-item {
+    float: left;
+    width: 27%;
+    margin: 0 1% 0 0;
+    padding: 0;
+
+    @include breakpoint($bp-under-sm) {
+      width: 100%;
+    }
+
+    &.js-form-item-created {
+      width: 15%;
+      min-width: 110px;
+    }
+
+    input, select {
+      min-height: 45px;
+      margin-bottom: 20px;
+    }
+
+    input.form-autocomplete {
+      background-position: 95% center;
+    }
+
+    &.js-form-type-select {
+      &::after {
+        top: 30px;
+      }
+    }
+  }
+
+  .form-actions {
+    clear: both;
+    margin-bottom: 30px;
+  }
+
+  .view-content {
+    line-height: 20px;
+    overflow: scroll;
+
+    thead th {
+      padding: 10px;
+      font-size: 20px;
+      font-weight: normal;
+      border: none;
+
+      a {
+        color: #fff;
+        font-weight: normal;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+        text-decoration-thickness: 1.5px;
+
+        &:hover {
+          text-decoration: none;
+        }
+      }
+    }
+
+    tbody td {
+      border: 1px solid $grey15;
+
+      a {
+        word-break: break-all;
+      }
+    }
+  }
+
+}
+
+// Override to ensure datepicker JS doesn't get confused.
+body[class*="thankful"], body[class*="earthday"] {
+  margin-top: 0;
+  padding-top: 100px;
+
+  .datepicker-years {
+    thead tr {
+      background-color: $gen_blue_drk;
+
+      th:hover {
+        background-color: $gen_blue_drk;
+      }
+    }
+  }
+}

@@ -59,3 +59,12 @@ nys_school_forms.config:
     _permission: 'administer site configuration'
   options:
     _admin_route: TRUE
+nys_school_forms.submission_period:
+  path: /admin/settings/nysenate/submission-period
+  defaults:
+    _form: '\Drupal\nys_school_forms\Form\SubmissionPeriodForm'
+    _title: 'Configure open submission periods'
+  requirements:
+    _permission: 'administer site configuration'
+  options:
+    _admin_route: TRUE

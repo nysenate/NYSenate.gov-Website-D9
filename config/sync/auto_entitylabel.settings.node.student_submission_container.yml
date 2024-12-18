@@ -1,0 +1,10 @@
+status: 1
+pattern: "[node:field_teacher_name]'s [node:field_form_type] student submissions"
+escape: false
+preserve_titles: false
+save: false
+chunk: 50
+dependencies:
+  config:
+    - node.type.student_submission_container
+new_content_behavior: 0

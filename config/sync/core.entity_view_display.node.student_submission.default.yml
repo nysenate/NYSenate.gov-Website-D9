@@ -1,0 +1,78 @@
+uuid: 3bad3737-8935-4a79-b606-df3969ae90da
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.student_submission.field_file_submission
+    - field.field.node.student_submission.field_image_submission
+    - field.field.node.student_submission.field_student_name
+    - field.field.node.student_submission.field_submission_type
+    - field.field.node.student_submission.field_upload_type
+    - node.type.student_submission
+  module:
+    - file
+    - options
+    - svg_image
+    - user
+id: node.student_submission.default
+targetEntityType: node
+bundle: student_submission
+mode: default
+content:
+  field_file_submission:
+    type: file_default
+    label: above
+    settings:
+      use_description_as_link_text: true
+    third_party_settings: {  }
+    weight: 103
+    region: content
+  field_image_submission:
+    type: image
+    label: above
+    settings:
+      image_link: ''
+      image_style: ''
+      image_loading:
+        attribute: lazy
+      svg_attributes:
+        width: null
+        height: null
+      svg_render_as_image: true
+    third_party_settings: {  }
+    weight: 102
+    region: content
+  field_student_name:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 104
+    region: content
+  field_submission_type:
+    type: list_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 101
+    region: content
+  field_upload_type:
+    type: list_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 105
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  langcode: true
+  private_message_link: true
+  search_api_excerpt: true

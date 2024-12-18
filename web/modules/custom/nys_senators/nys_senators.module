@@ -23,6 +23,7 @@ use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\TermInterface;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
+use Drupal\views\Views;
 
 /**
  * Implements hook_theme().
@@ -1322,6 +1323,45 @@ function nys_senators_query_taxonomy_term_access_alter(AlterableInterface $query
   $or->condition($primary_table . '.tid', array_values($committee_tids), 'IN');
   $or->condition('ttfd.vid', $vids, 'NOT IN');
   $query->condition($or);
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function nys_senators_preprocess_field__node__field_block(&$variables) {
+  $block_types_to_remove = [
+    'microsite_hero',
+    'senator_microsite_menu',
+  ];
+  foreach (($variables['items'] ?? []) as $key => $item) {
+    /** @var \Drupal\block_content\Entity\BlockContent $block_content */
+    $block_content = ($item['content']['#block_content'] ?? []);
+    if ($block_content instanceof BlockContent) {
+      // Remove microsite_hero and senator_microsite_menu blocks from field
+      // rendering, as these blocks are rendered directly through
+      // page--node--microsite-page.html.twig
+      if (in_array($block_content->bundle(), $block_types_to_remove)) {
+        unset($variables['items'][$key]);
+      }
+
+      // Add new student submissions view above old student submission form
+      // block.
+      if ($block_content->bundle() == 'senator_microsite_school_forms') {
+        $old_student_submissions = $variables['items'][$key];
+        unset($variables['items'][$key]);
+        $view = Views::getView('display_student_submissions');
+        if ($view) {
+          $view->setDisplay('block_1');
+          $view->preExecute();
+          $view->execute();
+          if (!empty($view->total_rows)) {
+            $variables['items'][]['content'] = $view->render();
+          }
+        }
+        $variables['items'][] = $old_student_submissions;
+      }
+    }
+  }
 }
 
 /**

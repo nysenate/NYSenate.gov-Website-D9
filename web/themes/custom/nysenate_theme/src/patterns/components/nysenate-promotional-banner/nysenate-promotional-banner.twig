@@ -4,7 +4,7 @@
     {% if is_landing %} c-block--initiative__landing{% endif %}
     {% if image %} c-block--initiative__has-img {% else %} c-block--initiative__no-img{% endif %}">
   {% if image %}
-    <a href="{{ cta.url }}" aria-hidden=true tab-index=-1 class="c-initiative--img">{{ image }}</a>
+    <a href="{{ cta.url }}" aria-hidden=true tabindex=-1 class="c-initiative--img">{{ image }}</a>
   {% endif %}
   <div class="c-initiative--content">
     <div class="c-initiative--inner">
@@ -20,10 +20,6 @@
       </h2>
     </div>
   </div>
-  <a
-    href="{{ cta.url }}"
-    class="c-block--btn promotional-banner__button icon-before__awards icon-before__{{cta.value}} med-bg"
-  >
-    {{ cta.text }}
-  </a>
+  <a aria-hidden=true tabindex=-1 href="{{ cta.url }}" class="c-block--btn promotional-banner__button icon-before__awards icon-before__{{cta.value}} med-bg"
+  >{{ cta.text }}</a>
 </article>

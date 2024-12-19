@@ -82,3 +82,39 @@ function nys_school_forms_update_8003() {
     }
   }
 }
+
+/**
+ * Implements hook_update_N().
+ *
+ * Deletes all submissions for the archived Earth Day and Thanksgiving webforms.
+ */
+function nys_school_forms_update_8004() {
+  $submission_storage = \Drupal::entityTypeManager()
+    ->getStorage('webform_submission');
+  $webform_ids = ['school_form_earth_day', 'school_form_thanksgiving'];
+  foreach ($webform_ids as $webform_id) {
+    $deleted_count = 0;
+    do {
+      $submission_ids = $submission_storage->getQuery()
+        ->accessCheck(FALSE)
+        ->condition('webform_id', $webform_id)
+        ->range(0, 100)
+        ->execute();
+      if (!$submission_ids) {
+        break;
+      }
+
+      $submissions = $submission_storage->loadMultiple($submission_ids);
+      $submission_storage->delete($submissions);
+      $deleted_count += count($submission_ids);
+    } while (TRUE);
+
+    \Drupal::logger('nys_school_forms')->notice(
+      'Deleted @count submissions for webform @webform_id.',
+      [
+        '@count' => $deleted_count,
+        '@webform_id' => $webform_id,
+      ]
+    );
+  }
+}

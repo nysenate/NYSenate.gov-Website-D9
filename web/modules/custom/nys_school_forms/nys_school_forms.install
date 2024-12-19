@@ -1,0 +1,44 @@
+<?php
+
+/**
+ * Implements hook_update_N().
+ *
+ * Deletes all submissions for the school_form_X webforms.
+ */
+function nys_school_forms_update_8001() {
+  $webform_ids = ['school_form_earth_day', 'school_form_thanksgiving'];
+  foreach ($webform_ids as $webform_id) {
+    $webform = \Drupal\webform\Entity\Webform::load($webform_id);
+    if ($webform) {
+      $submission_storage = \Drupal::entityTypeManager()
+        ->getStorage('webform_submission');
+      $submission_ids = $submission_storage->getQuery()
+        ->accessCheck(FALSE)
+        ->condition('webform_id', $webform_id)
+        ->execute();
+      if (!empty($submission_ids)) {
+        $submissions = $submission_storage->loadMultiple($submission_ids);
+        $submission_storage->delete($submissions);
+        \Drupal::logger('mymodule')
+          ->notice(
+            'Deleted all submissions for webform: @webform_id.',
+            ['@webform_id' => $webform_id]
+          );
+      }
+      else {
+        \Drupal::logger('mymodule')
+          ->notice(
+            'No submissions found for webform: @webform_id.',
+            ['@webform_id' => $webform_id]
+          );
+      }
+    }
+    else {
+      \Drupal::logger('mymodule')
+        ->warning(
+          'Webform not found: @webform_id.',
+          ['@webform_id' => $webform_id]
+        );
+    }
+  }
+}

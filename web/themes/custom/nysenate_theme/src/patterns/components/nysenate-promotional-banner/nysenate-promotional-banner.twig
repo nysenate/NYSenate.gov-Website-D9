@@ -20,6 +20,6 @@
       </h2>
     </div>
   </div>
-  <a aria-hidden=true tabindex=-1 href="{{ cta.url }}" class="c-block--btn promotional-banner__button icon-before__awards icon-before__{{cta.value}} med-bg"
+  <a aria-hidden=true tabindex=-1 href="{{ cta.url }}" aria-labelledby="{{ title|render|striptags|trim }}" class="c-block--btn promotional-banner__button icon-before__awards icon-before__{{cta.value}} med-bg"
   >{{ cta.text }}</a>
 </article>

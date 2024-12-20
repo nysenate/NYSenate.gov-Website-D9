@@ -51,18 +51,23 @@
           <h3 class="c-newsroom-name">
             <a href="{{ item.news_url }}">{{ item.news_name }}</a>
           </h3>
+
           {% if item.news_topic %}
             <div class="c-newsroom-link">
-              <a class="c-press-release--topic" href="{{ item.news_topic.url }}">{{ item.news_topic.text }}</a>
+              <ul>
+                <li><a class="c-press-release--topic" href="{{ item.news_topic.url }}">{{ item.news_topic.text }}</a></li>
+              </ul>
             </div>
           {% endif %}
 
-          {% if item.news_topics|length %}
+          {% if item.news_topics %}
             <div class="c-newsroom-link">
+              <ul>
               {% for topic in item.news_topics %}
-                <a class="c-press-release--topic" href="{{ topic.url }}">{{ topic.text }}</a>
-                {{ loop.first and item.news_topics <= 1 or loop.last ? '' : ', ' }}
+                <li><a class="c-press-release--topic" href="{{ topic.url }}">{{ topic.text }}</a>{% if not loop.last %}, {% endif %}</li>
+                {# loop.first and item.news_topics <= 1 or loop.last ? '' : ', ' #}
               {% endfor %}
+              </ul>
             </div>
           {% endif %}
           {% if item.news_senator_count is not empty %}

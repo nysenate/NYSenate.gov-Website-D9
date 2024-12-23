@@ -1343,23 +1343,6 @@ function nys_senators_preprocess_field__node__field_block(&$variables) {
       if (in_array($block_content->bundle(), $block_types_to_remove)) {
         unset($variables['items'][$key]);
       }
-
-      // Add new student submissions view above old student submission form
-      // block.
-      if ($block_content->bundle() == 'senator_microsite_school_forms') {
-        $old_student_submissions = $variables['items'][$key];
-        unset($variables['items'][$key]);
-        $view = Views::getView('display_student_submissions');
-        if ($view) {
-          $view->setDisplay('block_1');
-          $view->preExecute();
-          $view->execute();
-          if (!empty($view->total_rows)) {
-            $variables['items'][]['content'] = $view->render();
-          }
-        }
-        $variables['items'][] = $old_student_submissions;
-      }
     }
   }
 }

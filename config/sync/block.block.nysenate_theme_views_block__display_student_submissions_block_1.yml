@@ -1,0 +1,38 @@
+uuid: 7c96c60b-4e4c-4487-9f66-11f8fb616384
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.display_student_submissions
+  module:
+    - node
+    - system
+    - views
+  theme:
+    - nysenate_theme
+id: nysenate_theme_views_block__display_student_submissions_block_1
+theme: nysenate_theme
+region: content
+weight: 11
+provider: null
+plugin: 'views_block:display_student_submissions-block_1'
+settings:
+  id: 'views_block:display_student_submissions-block_1'
+  label: ''
+  label_display: '0'
+  provider: views
+  context_mapping: {  }
+  views_label: ''
+  items_per_page: none
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: "/senators/*/thankful\r\n/senators/*/earthday"
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'
+    bundles:
+      microsite_page: microsite_page

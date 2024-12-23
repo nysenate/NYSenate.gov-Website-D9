@@ -5,51 +5,9 @@
  * Custom functionality for the nys_school_forms module.
  */
 
-use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\Entity\Node;
 use Drupal\views\ViewExecutable;
-use Drupal\webform\WebformSubmissionInterface;
-
-/**
- * @file
- * Custom functionality for the nys_school_forms module.
- */
-
-/**
- * Implements hook_theme().
- */
-function nys_school_forms_theme() {
-  return [
-    'school_forms' => [
-      'variables' => [
-        'search_form' => NULL,
-        'entity_update_form' => NULL,
-        'export_link' => NULL,
-      ],
-    ],
-    'nys_school_forms__results_block' => [
-      'variables' => [
-        'content' => NULL,
-      ],
-    ],
-  ];
-}
-
-/**
- * Implements hook_ENTITY_TYPE_access() for webform submission entity.
- *
- * Provides access control for the webform submission entity.
- */
-function nys_school_forms_webform_submission_access(WebformSubmissionInterface $webform_submission, $op, $account) {
-  // Check if the user is anonymous.
-  if ($account->isAnonymous()) {
-    return AccessResult::forbidden();
-  }
-
-  // Allow authenticated users to access the webform submission.
-  return AccessResult::allowed();
-}
 
 /**
  * Implements hook_form_FORM_ID_alter.

@@ -125,7 +125,7 @@
     </footer>
   {% endif %}
 
-  {% set excluded_type = ['landing', 'message'] %}
+  {% set excluded_type = ['landing', 'message', 'thankful', 'earth day'] %}
 
   {% if content.field_senator_multiref['#items'] and microsite_type not in excluded_type %}
     {{ drupal_view('senator_microsite_content', 'promo_footer') }}

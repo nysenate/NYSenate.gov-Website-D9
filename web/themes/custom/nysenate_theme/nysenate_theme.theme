@@ -4942,6 +4942,9 @@ function nysenate_theme_preprocess_node__microsite_page__full(&$variables) {
           }
         }
       }
+      elseif ($name === 'Earth Day' || $name === 'Thankful' ) {
+        $variables['#attached']['library'][] = 'nysenate_theme/submission-results';
+      }
     }
   }
 

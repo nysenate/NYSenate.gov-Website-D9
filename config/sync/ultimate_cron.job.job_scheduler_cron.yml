@@ -8,7 +8,7 @@ title: 'Default cron handler'
 id: job_scheduler_cron
 weight: 0
 module: job_scheduler
-callback: job_scheduler_cron
+callback: 'job_scheduler#cron'
 scheduler:
   id: simple
   configuration:

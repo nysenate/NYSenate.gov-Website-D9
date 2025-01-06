@@ -8,7 +8,7 @@ title: 'Default cron handler'
 id: watchdog_prune_cron
 weight: 0
 module: watchdog_prune
-callback: watchdog_prune_cron
+callback: 'watchdog_prune#cron'
 scheduler:
   id: simple
 launcher:

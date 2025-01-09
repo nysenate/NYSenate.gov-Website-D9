@@ -2107,6 +2107,17 @@ function nysenate_theme_preprocess_views_view__events(&$variables) {
 
   // Invalidate cache tags on views:events.
   $variables['#cache']['tags'][] = 'views:events';
+
+  // Set filter titles to invisible for accessibility.
+  foreach ([
+    'type',
+    'field_committee_target_id',
+    'active_senators_filter',
+    'date',
+  ] as $ctrl) {
+    $variables['exposed'][$ctrl]['#title_display'] = 'invisible';
+  }
+
 }
 
 /**
@@ -2142,8 +2153,8 @@ function nysenate_theme_preprocess_views_view__news_by_issue__meeting_by_issue(&
  */
 function nysenate_theme_preprocess_views_view__senator_and_committee_lists__senators_list(&$variables) {
   // Remove filter label.
-  $variables['exposed']['senator_committee_filter']['#title_display'] = 'visually_hidden';
-  $variables['exposed']['field_party_value']['#title_display'] = 'visually_hidden';
+  $variables['exposed']['senator_committee_filter']['#title_display'] = 'invisible';
+  $variables['exposed']['field_party_value']['#title_display'] = 'invisible';
 }
 
 /**

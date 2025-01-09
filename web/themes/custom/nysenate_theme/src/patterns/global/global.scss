@@ -847,10 +847,11 @@ section.print.hero--senator {
   }
 }
 
-// Esnure skip link never clipped when focussed.
-.skip-link.visually-hidden.focusable:focus {
+.skip-link.visually-hidden.focusable {
+  position: absolute;
+  top: 5px;
+  left: 5px;
   z-index: 5000;
-  position: relative !important;
 }
 
 // Disable admin menu body padding when on TFA page.

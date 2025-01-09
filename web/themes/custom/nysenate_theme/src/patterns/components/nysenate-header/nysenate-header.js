@@ -43,6 +43,15 @@
       );
       this.jsSearchBox(isMicrositeLandingPage, micrositeMenuClone);
       this.mobileMenu();
+
+      // Add keypress event to close mobile menu.
+      document.addEventListener('keydown', (e) => {
+        if (e.keyCode == 27) {
+          document.body.classList.remove('nav-open');
+          e.currentTarget.setAttribute('aria-expanded', 'false');
+          document.querySelector('button.js-mobile-nav--btn.button--menu').focus();
+        }
+      });
     },
 
     /**
@@ -159,6 +168,8 @@
           let isHeaderSearchButton = clickElem.currentTarget.closest('.c-header-bar');
           navWraps.item(index).classList.toggle('search-open');
           searchForms.item(index).classList.toggle('open');
+          clickElem.currentTarget.setAttribute('aria-expanded', searchForms.item(index).classList.contains('open') ? 'true' : 'false');
+          clickElem.currentTarget.innerHTML = (searchForms.item(index).classList.contains('open') ? 'close' : 'open') + ' search';
           if (!isMicrositeLandingPage) {
             document.body.classList.toggle('search-open');
           }
@@ -179,8 +190,9 @@
      */
     mobileMenu: function () {
       const mobileMenu = document.querySelector('button.js-mobile-nav--btn');
-      mobileMenu.addEventListener('click', () => {
+      mobileMenu.addEventListener('click', (e) => {
         document.body.classList.toggle('nav-open');
+        e.currentTarget.setAttribute('aria-expanded', document.body.classList.contains('nav-open') ? 'true' : 'false');
       });
     },
 

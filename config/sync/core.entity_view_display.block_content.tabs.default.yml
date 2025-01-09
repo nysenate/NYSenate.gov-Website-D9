@@ -6,9 +6,7 @@ dependencies:
     - block_content.type.tabs
     - field.field.block_content.tabs.field_block_views
     - field.field.block_content.tabs.field_tab_names
-    - field.field.block_content.tabs.field_tabs_no
   module:
-    - options
     - viewsreference
 id: block_content.tabs.default
 targetEntityType: block_content
@@ -31,13 +29,6 @@ content:
       link_to_entity: false
     third_party_settings: {  }
     weight: 1
-    region: content
-  field_tabs_no:
-    type: list_key
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
-    weight: 0
     region: content
 hidden:
   entity_print_view_epub: true

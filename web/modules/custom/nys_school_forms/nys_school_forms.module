@@ -7,6 +7,7 @@
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Drupal\node\Entity\Node;
 use Drupal\views\ViewExecutable;
 use Drupal\webform\WebformSubmissionInterface;
@@ -64,34 +65,19 @@ function nys_school_forms_form_node_student_submission_container_form_alter(&$fo
   // Add JS confirmation pop-up to form.
   $form['#attached']['library'][] = 'nys_school_forms/submission_confirmation_popup';
 
-  // Set and hide form type field if default available from context.
-  $current_path = \Drupal::requestStack()->getCurrentRequest()->getPathInfo();
-  if ($current_path != '/node/add/student_submission_container') {
-    $form['field_form_type']['#access'] = FALSE;
-  }
-  if ($current_path == '/questionnaires/what-are-you-thankful') {
-    $form_type = 'thanksgiving';
-    $form['field_form_type']['widget']['#default_value'] = $form_type;
-  }
-  elseif ($current_path == '/earthday') {
-    $form_type = 'earth_day';
-    $form['field_form_type']['widget']['#default_value'] = $form_type;
-  }
+  // Hide and set default field_form_type value.
+  $form['field_form_type']['#access'] = FALSE;
+  $form_type = _nys_school_forms_get_form_type();
+  $form['field_form_type']['widget']['#default_value'] = $form_type;
 
   // Disable form if not in submission period.
-  $is_form_active = FALSE;
+  $form['#cache'] = ['max-age' => 0];
   $submission_periods = \Drupal::state()->get('nys_school_forms.submission_periods');
-  if (!empty($submission_periods[$form_type]['begin']) && !empty($submission_periods[$form_type]['end'])) {
-    $form_open_time = strtotime($submission_periods[$form_type]['begin']);
-    $form_close_time = strtotime($submission_periods[$form_type]['end']);
-  }
-  if (
-    isset($form_open_time) && isset($form_close_time)
-    && $form_open_time <= time() && $form_close_time >= time()
-  ) {
-    $is_form_active = TRUE;
-  }
-  if (!$is_form_active) {
+  $now = time();
+  $form_open = strtotime($submission_periods[$form_type]['begin'] ?? 0);
+  $form_close = strtotime($submission_periods[$form_type]['end'] ?? 0);
+  $form_active = $form_open && $form_open <= $now && $form_close >= $now;
+  if (!$form_active) {
     foreach ($form as $key => $value) {
       // Removes all input fields.
       if (!str_starts_with($key, '#')) {
@@ -99,15 +85,44 @@ function nys_school_forms_form_node_student_submission_container_form_alter(&$fo
       }
     }
     $form['#attached']['library'][] = 'rain_theme/message';
-    $form['#markup'] = <<<HTML
-    <div role="contentinfo" aria-label="Status message" class="message message--status">
-      <h2 class="visually-hidden message__heading">Status message</h2>
-        <ul class="messages__list">
-          <li class="messages__item">The submission period is currently closed.</li>
-      </ul>
-    </div>
-  HTML;
+    $form['status_message'] = [
+      '#theme' => 'status_messages',
+      '#message_list' => [
+        'status' => ['The submission period is currently closed.'],
+      ],
+      '#status_headings' => [
+        'status' => t('Status message'),
+      ],
+    ];
   }
+
+  // Attach confirmation modal HTML to form, for later rendering using jQuery UI.
+  $form['confirmation_modal'] = [
+    '#type' => 'container',
+    '#weight' => 100,
+    '#attributes' => [
+      'id' => 'submission-confirmation-modal',
+      'title' => t('Wait!'),
+    ],
+    'content' => [
+      'warning' => [
+        '#type' => 'html_tag',
+        '#tag' => 'p',
+        '#value' => t('Image orientations can change after upload.'),
+      ],
+      'question' => [
+        '#type' => 'html_tag',
+        '#tag' => 'p',
+        '#value' => t('Have you double-checked that all uploaded images have been rotated to their proper orientations?', [], ['context' => 'html']),
+      ],
+      'note' => [
+        '#type' => 'html_tag',
+        '#tag' => 'p',
+        '#value' => ('(There is a rotate button next to each uploaded image.)'),
+      ],
+    ],
+  ];
+
 }
 
 /**
@@ -124,13 +139,10 @@ function nys_school_forms_inline_entity_form_entity_form_alter(&$form, FormState
   }
 
   // Enable submission type field for thanksgiving form.
-  $current_path = \Drupal::requestStack()->getCurrentRequest()->getPathInfo();
-  if ($current_path == '/questionnaires/what-are-you-thankful') {
-    $form['field_submission_type']['widget']['#required'] = TRUE;
-  }
-  elseif ($current_path == '/earthday') {
-    $form['field_submission_type']['#access'] = FALSE;
-  }
+  match(_nys_school_forms_get_form_type()) {
+    'thanksgiving' => $form['field_submission_type']['widget']['#required'] = TRUE,
+    'earth_day' => $form['field_submission_type']['#access'] = FALSE,
+  };
 }
 
 /**
@@ -183,7 +195,7 @@ function nys_school_forms_views_pre_view(ViewExecutable $view, $display_id, &$ar
 
     // Contextual filter to limit results to schools in senator's district.
     if (preg_match('/^\/node\/(\d+)$/', $source_path, $matches)) {
-      $node_id = $matches[1];
+      $node_id = $matches[1] ?? 0;
       $microsite_node = Node::load($node_id);
       if (
         $microsite_node instanceof \Drupal\node\NodeInterface
@@ -231,7 +243,28 @@ function _nys_school_forms_validate_ss_container_form(array &$form, FormStateInt
  * Custom submit handler for custom redirect.
  */
 function _nys_school_forms_ss_container_submit_handler(array &$form, \Drupal\Core\Form\FormStateInterface $form_state) {
-  $form_state->setRedirect('<front>');
+  $form_type = $form_state->getValue('field_form_type')[0]['value'] ?? NULL;
+  $redirect_uri = match($form_type) {
+    'thanksgiving' => 'internal:/questionnaires/what-are-you-thankful/received',
+    'earth_day' => 'internal:/earthday/received',
+    default => 'internal:/',
+  };
+  $redirect_url = Url::fromUri($redirect_uri);
+  $form_state->setRedirectUrl($redirect_url);
   \Drupal::messenger()->deleteAll();
-  \Drupal::messenger()->addMessage(t('Your student submission has been received.'));
 }
+
+/**
+ * Helper function to get field_form_type from the current node request.
+ */
+function _nys_school_forms_get_form_type() {
+  $form_type = NULL;
+  $request = \Drupal::requestStack()->getCurrentRequest();
+  if ($request->attributes->has('node')) {
+    $node = $request->attributes->get('node');
+    if ($node instanceof Node) {
+      $form_type = $node->get('field_form_type')->value;
+    }
+  }
+  return $form_type;
+};

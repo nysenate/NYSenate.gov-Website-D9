@@ -5,6 +5,7 @@ dependencies:
   config:
     - field.field.node.school_forms.field_form_banner_image
     - field.field.node.school_forms.field_form_summary
+    - field.field.node.school_forms.field_form_type
     - field.field.node.school_forms.rabbit_hole__settings
     - node.type.school_forms
   module:
@@ -39,6 +40,12 @@ content:
       summary_rows: 3
       placeholder: ''
       show_summary: false
+    third_party_settings: {  }
+  field_form_type:
+    type: options_select
+    weight: -1
+    region: content
+    settings: {  }
     third_party_settings: {  }
   langcode:
     type: language_select

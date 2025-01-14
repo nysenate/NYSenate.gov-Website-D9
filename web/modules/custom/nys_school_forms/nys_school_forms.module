@@ -6,8 +6,11 @@
  */
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\File\FileExists;
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+use Drupal\file\Entity\File;
 use Drupal\node\Entity\Node;
 use Drupal\views\ViewExecutable;
 use Drupal\webform\WebformSubmissionInterface;
@@ -126,6 +129,14 @@ function nys_school_forms_form_node_student_submission_container_form_alter(&$fo
 }
 
 /**
+ * Implements hook_form_FORM_ID_alter.
+ */
+function nys_school_forms_form_node_student_submission_container_edit_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // Custom validation to make only one upload field required.
+  $form['#validate'][] = '_nys_school_forms_validate_ss_container_form';
+}
+
+/**
  * Implements hook_inline_entity_form_entity_form_alter.
  */
 function nys_school_forms_inline_entity_form_entity_form_alter(&$form, FormStateInterface $form_state) {
@@ -240,6 +251,45 @@ function _nys_school_forms_validate_ss_container_form(array &$form, FormStateInt
 }
 
 /**
+ * Implements hook_entity_presave().
+ *
+ * Rename the file in the field_file_submission field of a student_submission node
+ * during node creation or update.
+ */
+function nys_school_forms_entity_presave(Drupal\Core\Entity\EntityInterface $entity) {
+  if ($entity->bundle() === 'student_submission') {
+    $student_name = $entity->field_student_name->value ?? 'Student';
+    $current_year = date('Y');
+    $form_type = _nys_school_forms_get_form_type('label');
+    if (
+      $entity->hasField('field_file_submission')
+      && !$entity->field_file_submission->isEmpty()
+    ) {
+      $file = File::load($entity->field_file_submission->target_id);
+      if ($file) {
+        $new_filename = "$student_name's $form_type $current_year submission.pdf";
+        $original_uri = $file->getFileUri();
+        $file_directory = dirname($original_uri);
+        $new_uri = $file_directory . '/' . $new_filename;
+        // Use FileExists::Rename to ensure unique filename in filesystem.
+        $final_uri = \Drupal::service('file_system')
+          ->move($original_uri, $new_uri, FileExists::Rename);
+        if ($final_uri) {
+          $file->setFilename($new_filename);
+          $file->setFileUri($final_uri);
+          try {
+            $file->save();
+          }
+          catch (\Exception $e) {
+            \Drupal::logger('nys_school_forms')->error('Failed to save file: @message', ['@message' => $e->getMessage()]);
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
  * Custom submit handler for custom redirect.
  */
 function _nys_school_forms_ss_container_submit_handler(array &$form, \Drupal\Core\Form\FormStateInterface $form_state) {
@@ -257,14 +307,21 @@ function _nys_school_forms_ss_container_submit_handler(array &$form, \Drupal\Cor
 /**
  * Helper function to get field_form_type from the current node request.
  */
-function _nys_school_forms_get_form_type() {
-  $form_type = NULL;
+function _nys_school_forms_get_form_type($string_type = 'machine_name') {
+  $form_type_value = NULL;
   $request = \Drupal::requestStack()->getCurrentRequest();
   if ($request->attributes->has('node')) {
     $node = $request->attributes->get('node');
     if ($node instanceof Node) {
-      $form_type = $node->get('field_form_type')->value;
+      $form_type_value = $node->field_form_type->value ?? NULL;
+      if ($string_type === 'label') {
+        $allowed_values = $node->get('field_form_type')
+          ?->getFieldDefinition()
+          ?->getFieldStorageDefinition()
+          ?->getSetting('allowed_values') ?? [];
+        $form_type_label = $allowed_values[$form_type_value] ?? NULL;
+      }
     }
   }
-  return $form_type;
-};
+  return $form_type_label ?? $form_type_value;
+}

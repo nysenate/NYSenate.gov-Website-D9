@@ -37,7 +37,7 @@ class GlobalSearchForm extends FormBase {
       ],
     ];
 
-    $node = \Drupal::routeMatch()->getParameter('node');
+    $node = $this->routeMatch->getParameter('node');
     if (($node instanceof Node) && ($node->bundle() == 'microsite_page')) {
       $senator_term = $node->field_senator_multiref?->entity ?? NULL;
       if ($senator_term) {
@@ -55,12 +55,13 @@ class GlobalSearchForm extends FormBase {
         'class' => ['c-site-search--box', 'icon_after__search', 'form-text'],
         'size' => '50',
         'maxlength' => '255',
+        'aria-label' => 'Search Term',
       ],
     ];
 
     $form['submit'] = [
       '#type' => 'submit',
-      '#value' => t('Search'),
+      '#value' => $this->t('Search'),
       '#attributes' => [
         'class' => [
           'c-site-search--btn',

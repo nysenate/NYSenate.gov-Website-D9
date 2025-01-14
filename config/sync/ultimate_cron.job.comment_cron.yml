@@ -8,7 +8,7 @@ title: 'Store the maximum possible comments per thread'
 id: comment_cron
 weight: 0
 module: comment
-callback: comment_cron
+callback: 'comment#cron'
 scheduler:
   id: simple
   configuration:

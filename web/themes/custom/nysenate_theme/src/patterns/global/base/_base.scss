@@ -529,10 +529,17 @@ main.l-row--main {
       margin-top: 20px;
     }
 
-    .c-newsroom-link {
+    .c-newsroom-link li {
       font-size: 13px;
-      text-transform: uppercase;
       @extend .lgt-text;
+      font-family: $font-sans-bold;
+      text-decoration: none;
+      line-height: 1em;
+      a {
+        text-transform: uppercase;
+        line-height: 1em;
+        letter-spacing: 0.05em;
+      }
     }
 
     .l-twitter-container {

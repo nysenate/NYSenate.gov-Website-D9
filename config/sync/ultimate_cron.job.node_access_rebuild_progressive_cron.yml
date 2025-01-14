@@ -8,7 +8,7 @@ title: 'Default cron handler'
 id: node_access_rebuild_progressive_cron
 weight: 0
 module: node_access_rebuild_progressive
-callback: node_access_rebuild_progressive_cron
+callback: 'node_access_rebuild_progressive#cron'
 scheduler:
   id: simple
 launcher:

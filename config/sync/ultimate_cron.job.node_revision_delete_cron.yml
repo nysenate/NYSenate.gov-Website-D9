@@ -8,7 +8,7 @@ title: 'Default cron handler'
 id: node_revision_delete_cron
 weight: 0
 module: node_revision_delete
-callback: node_revision_delete_cron
+callback: 'node_revision_delete#cron'
 scheduler:
   id: simple
   configuration:

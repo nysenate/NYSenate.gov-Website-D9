@@ -5,6 +5,8 @@
  * Install and update hooks for the "nys_school_forms" module.
  */
 
+use Drupal\node\Entity\Node;
+
 /**
  * Implements hook_update_N().
  *
@@ -53,7 +55,7 @@ function nys_school_forms_update_8001() {
  *
  * Updates the "field_form_type" field for original school form nodes.
  */
-function nys_school_forms_update_8002() {
+function nys_school_forms_update_8003() {
   $nid_to_field_value = [
     12017207 => 'thanksgiving',
     12007481 => 'earth_day',

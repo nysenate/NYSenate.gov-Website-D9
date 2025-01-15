@@ -140,20 +140,23 @@ function nys_school_forms_form_node_student_submission_container_edit_form_alter
  * Implements hook_inline_entity_form_entity_form_alter.
  */
 function nys_school_forms_inline_entity_form_entity_form_alter(&$form, FormStateInterface $form_state) {
-  // Display image / file upload field based on prior selection.
-  $upload_types = ['image', 'file'];
-  foreach ($upload_types as $type) {
-    $trigger = [":input[name='field_student_submissions[{$form['#ief_row_delta']}][inline_entity_form][field_upload_type]']" => ['value' => $type]];
-    $form["field_{$type}_submission"]['#states'] = [
-      'visible' => $trigger,
-    ];
-  }
+  if ($form['#bundle'] == 'student_submission') {
+    // Display image / file upload field based on prior selection.
+    $upload_types = ['image', 'file'];
+    foreach ($upload_types as $type) {
+      $trigger = [":input[name='field_student_submissions[{$form['#ief_row_delta']}][inline_entity_form][field_upload_type]']" => ['value' => $type]];
+      $form["field_{$type}_submission"]['#states'] = [
+        'visible' => $trigger,
+      ];
+    }
 
-  // Enable submission type field for thanksgiving form.
-  match(_nys_school_forms_get_form_type()) {
-    'thanksgiving' => $form['field_submission_type']['widget']['#required'] = TRUE,
-    'earth_day' => $form['field_submission_type']['#access'] = FALSE,
-  };
+    // Enable submission type field for thanksgiving form.
+    match (_nys_school_forms_get_form_type()) {
+      'thanksgiving' => $form['field_submission_type']['widget']['#required'] = TRUE,
+      'earth_day' => $form['field_submission_type']['#access'] = FALSE,
+      default => NULL,
+    };
+  }
 }
 
 /**
@@ -306,6 +309,11 @@ function _nys_school_forms_ss_container_submit_handler(array &$form, \Drupal\Cor
 
 /**
  * Helper function to get field_form_type from the current node request.
+ *
+ * @param string $string_type
+ *   Optional. Set to 'label' to return the value's label.
+ *
+ * @return mixed|null
  */
 function _nys_school_forms_get_form_type($string_type = 'machine_name') {
   $form_type_value = NULL;

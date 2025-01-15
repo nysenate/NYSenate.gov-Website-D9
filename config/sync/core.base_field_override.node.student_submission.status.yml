@@ -1,0 +1,22 @@
+uuid: e01291e5-b854-44f2-88ea-ff656593de7a
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.student_submission
+id: node.student_submission.status
+field_name: status
+entity_type: node
+bundle: student_submission
+label: Published
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

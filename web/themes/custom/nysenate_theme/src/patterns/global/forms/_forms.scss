@@ -458,3 +458,60 @@
     }
   }
 }
+
+// Form block styling tweaks.
+.block-formblock {
+  // Hide submission reordering.
+  #edit-field-student-submissions-wrapper {
+    .tabledrag-toggle-weight-wrapper, .field-multiple-drag {
+      display: none;
+    }
+  }
+
+  // Normalize select elements.
+  .js-form-type-select {
+    float: none;
+    width: 100%;
+    margin-right: 0;
+
+    select {
+      margin-bottom: 16px;
+    }
+  }
+
+  // Ensure room for image to rotate without overlap.
+  .js-form-wrapper .form-type-managed-file {
+    margin-bottom: 1em;
+
+    .image-widget {
+      .image-preview {
+        min-height: 70px;
+        margin: 35px;
+      }
+
+      a.rotate-icon {
+        font-size: 50px;
+        color: $cont_red_lgt;
+        padding-left: 10px;
+
+        &:hover {
+          color: $cont_red_drk;
+        }
+      }
+    }
+
+    .description strong {
+      font-size: 18px;
+      color: $cont_red_lgt;
+      line-height: 20px;
+      margin: 18px 0;
+      display: inline-block;
+    }
+  }
+
+  // Padding fix.
+  td.field-multiple-drag + td {
+    max-width: 548px;
+    padding: 10px;
+  }
+}

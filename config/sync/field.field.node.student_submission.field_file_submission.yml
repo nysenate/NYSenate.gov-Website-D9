@@ -1,0 +1,46 @@
+uuid: 3129a125-c625-4f4f-a308-ea5970001b91
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_file_submission
+    - node.type.student_submission
+  module:
+    - file
+    - filefield_paths
+third_party_settings:
+  filefield_paths:
+    enabled: false
+    file_path:
+      value: student-file-submissions
+      options:
+        slashes: false
+        pathauto: false
+        transliterate: false
+    file_name:
+      value: '[file:ffp-name-only-original].[file:ffp-extension-original]'
+      options:
+        slashes: false
+        pathauto: false
+        transliterate: false
+    redirect: false
+    retroactive_update: false
+    active_updating: false
+id: node.student_submission.field_file_submission
+field_name: field_file_submission
+entity_type: node
+bundle: student_submission
+label: 'File submission'
+description: '<strong>On submission, files will be renamed using the Student Name field. Use full names as appropriate.</strong>'
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:file'
+  handler_settings: {  }
+  file_directory: '[date:custom:Y]-[date:custom:m]'
+  file_extensions: pdf
+  max_filesize: ''
+  description_field: false
+field_type: file

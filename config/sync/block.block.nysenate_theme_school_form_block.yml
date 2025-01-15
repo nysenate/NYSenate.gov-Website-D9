@@ -1,0 +1,36 @@
+uuid: f84afa03-50c4-4fa0-85a0-063acf48a842
+langcode: en
+status: true
+dependencies:
+  module:
+    - formblock
+    - node
+    - system
+  theme:
+    - nysenate_theme
+id: nysenate_theme_school_form_block
+theme: nysenate_theme
+region: content
+weight: 10
+provider: null
+plugin: formblock_node
+settings:
+  id: formblock_node
+  label: 'Content form'
+  label_display: '0'
+  provider: formblock
+  type: student_submission_container
+  form_mode: default
+  show_help: 0
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: "/earthday\r\n/questionnaires/what-are-you-thankful"
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'
+    bundles:
+      school_forms: school_forms

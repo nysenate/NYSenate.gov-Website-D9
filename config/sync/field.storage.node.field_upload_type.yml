@@ -1,0 +1,27 @@
+uuid: 573e19aa-2197-48c5-83c7-4892053dbbe4
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - options
+id: node.field_upload_type
+field_name: field_upload_type
+entity_type: node
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: image
+      label: Image
+    -
+      value: file
+      label: File
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

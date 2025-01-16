@@ -535,20 +535,37 @@ class BillForm extends FormBase {
     if (!$this->currentUser->isAuthenticated()) {
       return FALSE;
     }
-    $user_storage = $this->entityTypeManager->getStorage('user');
-    // Need the global user object.
-    $user = $user_storage->load($this->currentUser->id());
-    $senator = $this->nysUserHelper->getSenator($user);
 
-    $messages = NULL;
-    if ($senator) {
-      $messages = $this->entityTypeManager->getStorage('private_message')->loadByProperties(
+    $messages = [];
+    try {
+      $user_storage = $this->entityTypeManager->getStorage('user');
+      // Need the global user object.
+      $user = $user_storage->load($this->currentUser->id());
+      $senator = $this->nysUserHelper->getSenator($user);
+
+      if ($senator) {
+        $messages = $this->entityTypeManager->getStorage('private_message')
+          ->loadByProperties(
             [
               'field_to' => $senator->field_user_account->target_id ?? [],
               'owner' => $user->id(),
               'field_bill' => $entity_id,
             ]
-        );
+          );
+      }
+    }
+    catch (\Throwable) {
+      // The above query can throw an exception if the senator does not have
+      // a valid user account.  In that event, log an alert.
+      $id = isset($senator) ? $senator->id() : 'No senator loaded';
+      $name = isset($senator) ? $senator->getName() : 'Name not available';
+      $this->logger('nys_bills')->error(
+        'Failed to find an associated user for a senator (%id : @name)',
+        [
+          '%id' => $id,
+          '@name' => $name,
+        ]
+      );
     }
 
     $thread = NULL;

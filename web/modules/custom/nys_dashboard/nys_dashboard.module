@@ -6,12 +6,62 @@
  */
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
+use Drupal\user\UserInterface;
 use Drupal\views\ViewExecutable;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
+
+/**
+ * Implements hook_module_implements_alter().
+ *
+ * Ensure this module's hook_user_login fires last.
+ */
+function nys_dashboard_module_implements_alter(&$implementations, $hook): void {
+  if ($hook == 'user_login') {
+    $module = $implementations['nys_dashboard'];
+    unset($implementations['nys_dashboard']);
+    $implementations['nys_dashboard'] = $module;
+  }
+}
+
+/**
+ * Implements hook_user_login().
+ *
+ * Redirect successful logins to the user's dashboard.  Avoid redirecting
+ * the password reset links, or overriding a preset redirect target.
+ */
+function nys_dashboard_user_login(UserInterface $account): void {
+  $request = \Drupal::request();
+  $path = $request->getPathInfo();
+
+  // Make sure destination is not set, and this is not a password reset.
+  if (!(
+    $request->query->get('destination')
+    || str_starts_with($path, '/nys/user/reset/')
+  )) {
+    $url = Url::fromRoute('view.my_dashboard.main')->toString();
+
+    // This is the preferred method, left here for safe-keeping.  This
+    // fails because EmailTfaVerifyLoginForm::buildForm() redirects to
+    // entity.user.canonical if TFA is not applicable to the account,
+    // and ignores the 'destination' parameter.
+    // See https://www.drupal.org/project/email_tfa/issues/3475043.
+    //
+    // \Drupal::request()->query->set('destination', $url);
+
+    // For now, fight fire with fire - preemptive redirect and stop.
+    $response = new RedirectResponse($url, Response::HTTP_SEE_OTHER);
+    $response->send();
+    exit;
+  }
+}
+
 
 /**
  * Implements hook_views_data().
  */
-function nys_dashboard_views_data() {
+function nys_dashboard_views_data(): array {
   $data['node__field_date']['year_month_filter'] = [
     'title' => t('Filter on year and month'),
     'filter' => [
@@ -48,7 +98,7 @@ function nys_dashboard_views_data() {
 /**
  * Implements hook_form_views_exposed_form_alter().
  */
-function nys_dashboard_form_views_exposed_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+function nys_dashboard_form_views_exposed_form_alter(&$form, FormStateInterface $form_state, $form_id): void {
   if ($form['#id'] === 'views-exposed-form-my-dashboard-main') {
     // Manually set exposed field order due to items_per_page UI limitations.
     $field_order = [
@@ -69,7 +119,7 @@ function nys_dashboard_form_views_exposed_form_alter(&$form, FormStateInterface 
 /**
  * Implements hook_preprocess_page().
  */
-function nys_dashboard_preprocess_page(&$variables) {
+function nys_dashboard_preprocess_page(&$variables): void {
   // Setup variables for top nav dashboard menu.
   $user_storage = \Drupal::entityTypeManager()->getStorage('user');
   $user = $user_storage->load(\Drupal::currentUser()->id());
@@ -89,7 +139,7 @@ function nys_dashboard_preprocess_page(&$variables) {
 /**
  * Implements hook_preprocess_node().
  */
-function nys_dashboard_preprocess_node(&$variables) {
+function nys_dashboard_preprocess_node(&$variables): void {
   if ($variables['view_mode'] !== 'my_dashboard_teaser') {
     return;
   }
@@ -111,6 +161,7 @@ function nys_dashboard_preprocess_node(&$variables) {
     $senator_term_id = !empty($variables['node']->field_senator_multiref->target_id)
       ? $variables['node']->field_senator_multiref->target_id
       : $variables['node']->field_ol_sponsor->target_id;
+    /** @var \Drupal\taxonomy\Entity\Term $senator_term */
     $senator_term = \Drupal::entityTypeManager()
       ->getStorage('taxonomy_term')
       ->load($senator_term_id);
@@ -123,21 +174,21 @@ function nys_dashboard_preprocess_node(&$variables) {
 /**
  * Implements hook_preprocess_views_view__VIEW_ID().
  */
-function nys_dashboard_preprocess_views_view__my_dashboard(&$variables) {
+function nys_dashboard_preprocess_views_view__my_dashboard(&$variables): void {
   $variables['#attached']['library'][] = 'nysenate_theme/my-dashboard';
 }
 
 /**
  * Implements hook_preprocess_views_view__VIEW_ID().
  */
-function nys_dashboard_preprocess_views_view__updates_from_my_senator(&$variables) {
+function nys_dashboard_preprocess_views_view__updates_from_my_senator(&$variables): void {
   $variables['#attached']['library'][] = 'nysenate_theme/nysenate-updates-from-my-senator';
 }
 
 /**
  * Implements hook_views_pre_build().
  */
-function nys_dashboard_views_pre_build(ViewExecutable $view) {
+function nys_dashboard_views_pre_build(ViewExecutable $view): void {
   if ($view->id() == 'my_senator') {
     $current_user_district_tid = \Drupal::entityTypeManager()
       ->getStorage('user')
@@ -152,14 +203,14 @@ function nys_dashboard_views_pre_build(ViewExecutable $view) {
 /**
  * Implements hook_entity_type_build().
  */
-function nys_dashboard_entity_type_build(array &$entity_types) {
+function nys_dashboard_entity_type_build(array &$entity_types): void {
   $entity_types['user']->setFormClass('edit_account', 'Drupal\nys_dashboard\Form\EditAccountForm');
 }
 
 /**
  * Implements hook_preprocess_HOOK().
  */
-function nys_dashboard_preprocess_block(&$variables) {
+function nys_dashboard_preprocess_block(&$variables): void {
   // Disable dashboard exposed filters caching, to ensure manage dashboard
   // (e.g. followed issues) changes appear immediately.
   if (($variables['plugin_id'] ?? '') === 'views_exposed_filter_block:my_dashboard-main') {

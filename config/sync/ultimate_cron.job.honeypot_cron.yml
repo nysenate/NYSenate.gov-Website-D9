@@ -8,7 +8,7 @@ title: 'Default cron handler'
 id: honeypot_cron
 weight: 0
 module: honeypot
-callback: honeypot_cron
+callback: 'honeypot#cron'
 scheduler:
   id: simple
   configuration:

@@ -51,7 +51,11 @@ function nys_dashboard_user_login(UserInterface $account): void {
     // \Drupal::request()->query->set('destination', $url);
 
     // For now, fight fire with fire - preemptive redirect and stop.
+    // The proper way, per https://www.drupal.org/node/2023537.
     $response = new RedirectResponse($url, Response::HTTP_SEE_OTHER);
+    $request->getSession()->save();
+    $response->prepare($request);
+    \Drupal::service('kernel')->terminate($request, $response);
     $response->send();
     exit;
   }

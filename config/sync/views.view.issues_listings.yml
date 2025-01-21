@@ -258,8 +258,10 @@ display:
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
+        - user
         - user.permissions
-      tags: {  }
+      tags:
+        - flag.flag.follow_issue
   block_2:
     id: block_2
     display_title: 'Most Recent (Anon)'
@@ -600,7 +602,8 @@ display:
         - 'languages:language_interface'
         - url.query_args
         - user.roles
-      tags: {  }
+      tags:
+        - flag.flag.follow_issue
   constituent_dashboard:
     id: constituent_dashboard
     display_title: 'Constituent Dashboard'
@@ -687,7 +690,8 @@ display:
         - 'languages:language_interface'
         - url
         - user.permissions
-      tags: {  }
+      tags:
+        - flag.flag.follow_issue
   explore_issues_alpha:
     id: explore_issues_alpha
     display_title: 'Alphabetical (Auth)'
@@ -1425,8 +1429,10 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url.query_args
+        - user
         - user.permissions
-      tags: {  }
+      tags:
+        - flag.flag.follow_issue
   meeting_issues:
     id: meeting_issues
     display_title: 'Meeting related Issues'
@@ -2058,7 +2064,8 @@ display:
         - 'languages:language_interface'
         - url.query_args
         - user.roles
-      tags: {  }
+      tags:
+        - flag.flag.follow_issue
   most_followed_page:
     id: most_followed_page
     display_title: 'Most Followed Page (Auth)'
@@ -2390,7 +2397,8 @@ display:
         - 'languages:language_interface'
         - url.query_args
         - user.roles
-      tags: {  }
+      tags:
+        - flag.flag.follow_issue
   most_recent_page:
     id: most_recent_page
     display_title: 'Most Recent Page'
@@ -2477,7 +2485,7 @@ display:
           admin_label: ''
           plugin_id: text_custom
           empty: false
-          content: "<h3 class=\"nys-subtitle-title\">Find and Follow Issues</h2>\r\n<p class=\"c-explore-issues--descript\">Find and follow the issues that matter to you, and see how they're being handled in the Senate. Send your senator messages by issue, and let them know you care.</p>"
+          content: "<h2 class=\"nys-subtitle-title\">Find and Follow Issues</h2>\r\n<p class=\"c-explore-issues--descript\">Find and follow the issues that matter to you, and see how they're being handled in the Senate. Send your senator messages by issue, and let them know you care.</p>"
           tokenize: false
       footer:
         area_text_custom:
@@ -2781,7 +2789,8 @@ display:
         - 'languages:language_interface'
         - url.query_args
         - user.roles
-      tags: {  }
+      tags:
+        - flag.flag.follow_issue
   popular_senators:
     id: popular_senators
     display_title: 'Popular w Senators'

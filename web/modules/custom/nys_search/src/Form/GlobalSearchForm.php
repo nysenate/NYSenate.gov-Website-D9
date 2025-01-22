@@ -37,7 +37,7 @@ class GlobalSearchForm extends FormBase {
       ],
     ];
 
-    $node = $this->routeMatch->getParameter('node');
+    $node = $this->getRouteMatch()->getParameter('node');
     if (($node instanceof Node) && ($node->bundle() == 'microsite_page')) {
       $senator_term = $node->field_senator_multiref?->entity ?? NULL;
       if ($senator_term) {

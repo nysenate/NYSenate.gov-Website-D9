@@ -5,13 +5,15 @@
  * Contains custom module logic for NYS Senator Dashboard.
  */
 
+use Drupal\Core\Database\Query\AlterableInterface;
+
 /**
  * Implements hook_query_TAG_alter().
  *
  * Ensures views with the "senators_constituents_only" tag only display profiles
  * linked to one of the current user's managed senator's districts.
  */
-function nys_senator_dashboard_query_senators_constituents_only_alter(Drupal\Core\Database\Query\AlterableInterface $query) {
+function nys_senator_dashboard_query_senators_constituents_only_alter(AlterableInterface $query) {
   // Get the current user.
   try {
     $current_user = \Drupal::entityTypeManager()

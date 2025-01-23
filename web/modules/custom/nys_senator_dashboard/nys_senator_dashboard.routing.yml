@@ -1,0 +1,8 @@
+nys_senator_dashboard.set_active_senator:
+  path: '/senator-dashboard/set-active-senator/{senator_id}'
+  defaults:
+    _controller: '\Drupal\nys_senator_dashboard\Controller\SenatorDashboardController::setActiveSenator'
+    _title: 'Set Active Managed Senator'
+  requirements:
+    _role: 'microsite_content_producer+legislative_correspondent'
+    senator_id: '\d+'

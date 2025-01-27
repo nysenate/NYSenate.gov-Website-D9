@@ -1,0 +1,8 @@
+services:
+  nys_senator_dashboard.service:
+    class: \Drupal\nys_senator_dashboard\Service\SenatorDashboardService
+    arguments:
+      - '@tempstore.private'
+      - '@messenger'
+      - '@entity_type.manager'
+      - '@string_translation'

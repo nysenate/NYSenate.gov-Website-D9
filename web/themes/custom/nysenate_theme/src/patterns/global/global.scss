@@ -400,6 +400,17 @@ blockquote {
       color: $gen_blue_lgt;
     }
 
+    &:after {
+      position: absolute;
+      bottom: 0;
+      right: -0.2em;
+      font-size: 2.7em;
+      content: "\71";
+      font-family: $senate-icons;
+      color: $grey04;
+      transform: rotate(180deg);
+    }
+
     @include breakpoint($bp-md) {
       padding: 60px 30px 40px;
       font-size: 28px;

@@ -78,3 +78,18 @@ function nys_senator_dashboard_query_senators_constituents_only_alter(AlterableI
   );
   $query->condition('ufd.field_district_target_id', $managed_district_ids, 'IN');
 }
+
+/**
+ * Implements hook_theme().
+ */
+function nys_senator_dashboard_theme() {
+  return [
+    'senator_dashboard_menu_block' => [
+      'variables' => [
+        'active_senator_links' => [],
+        'manage_senator_links' => [],
+        'constituent_activity_links' => [],
+      ],
+    ],
+  ];
+}

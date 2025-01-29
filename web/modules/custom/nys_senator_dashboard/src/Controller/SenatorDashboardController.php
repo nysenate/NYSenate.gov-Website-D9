@@ -5,7 +5,7 @@ namespace Drupal\nys_senator_dashboard\Controller;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\nys_senator_dashboard\Service\SenatorDashboardService;
+use Drupal\nys_senator_dashboard\Service\SenatorDashboardManager;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -17,18 +17,18 @@ class SenatorDashboardController extends ControllerBase {
   /**
    * The senator dashboard service.
    *
-   * @var \Drupal\nys_senator_dashboard\Service\SenatorDashboardService
+   * @var \Drupal\nys_senator_dashboard\Service\SenatorDashboardManager
    */
-  protected $senatorDashboardService;
+  protected SenatorDashboardManager $senatorDashboardManager;
 
   /**
    * Constructs the SenatorDashboardController.
    *
-   * @param \Drupal\nys_senator_dashboard\Service\SenatorDashboardService $senatorDashboardService
+   * @param \Drupal\nys_senator_dashboard\Service\SenatorDashboardManager $senatorDashboardManager
    *   The senator dashboard service.
    */
-  public function __construct(SenatorDashboardService $senatorDashboardService) {
-    $this->senatorDashboardService = $senatorDashboardService;
+  public function __construct(SenatorDashboardManager $senatorDashboardManager) {
+    $this->senatorDashboardManager = $senatorDashboardManager;
   }
 
   /**
@@ -36,7 +36,7 @@ class SenatorDashboardController extends ControllerBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('nys_senator_dashboard.service')
+      $container->get('nys_senator_dashboard.manager')
     );
   }
 
@@ -54,7 +54,7 @@ class SenatorDashboardController extends ControllerBase {
   public function setActiveSenator(int $senator_id, Request $request) {
     // Set the current user's active senator.
     $user_id = $this->currentUser()->id();
-    $this->senatorDashboardService->setActiveSenatorForUserId($user_id, $senator_id);
+    $this->senatorDashboardManager->setActiveSenatorForUserId($user_id, $senator_id);
 
     // Redirect the user to the referring page if internal, home otherwise.
     $referer = $request->headers->get('referer');

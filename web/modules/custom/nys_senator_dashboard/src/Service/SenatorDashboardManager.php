@@ -9,9 +9,9 @@ use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
- * Provides Senator Dashboard services.
+ * Provides Senator Dashboard management service methods.
  */
-class SenatorDashboardService {
+class SenatorDashboardManager {
 
   use StringTranslationTrait;
 
@@ -37,7 +37,7 @@ class SenatorDashboardService {
   protected $entityTypeManager;
 
   /**
-   * Constructs the SenatorDashboardService.
+   * Constructs the SenatorDashboardManager service.
    *
    * @param \Drupal\Core\TempStore\PrivateTempStoreFactory $tempStoreFactory
    *   The private temp store factory.
@@ -100,7 +100,7 @@ class SenatorDashboardService {
         $tempstore->set('active_managed_senator', $senator_id);
         if ($include_message) {
           Cache::invalidateTags(['tempstore_user:' . $user_id]);
-          $this->messenger->addMessage($this->t('Your active managed senator has been updated successfully.'));
+          $this->messenger->addMessage($this->t('Your active managed senator has been updated.'));
         }
         return TRUE;
       }

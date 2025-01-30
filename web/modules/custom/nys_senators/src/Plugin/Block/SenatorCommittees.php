@@ -4,6 +4,7 @@ namespace Drupal\nys_senators\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\taxonomy\Entity\Term;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -77,7 +78,27 @@ class SenatorCommittees extends BlockBase implements ContainerFactoryPluginInter
         ->condition('field_senator', $senator_tid)
         ->sort('field_committee_member_role', 'DESC')
         ->execute();
-      foreach ($committee_membership_ids as $mpid) {
+
+      // Filter out orphaned members paragraphs.
+      $valid_committee_membership_ids = [];
+      $committee_members = $paragraph_storage->loadMultiple($committee_membership_ids);
+      foreach ($committee_members as $paragraph) {
+        $parent_term = $paragraph->getParentEntity();
+        if ($parent_term instanceof Term) {
+          if (
+            $parent_term->bundle() === 'committees'
+            && $parent_term->hasField('field_members')
+          ) {
+            $linked_paragraphs = $parent_term->get('field_members')->referencedEntities();
+            // Check if the paragraph still linked to the parent committee.
+            if (in_array($paragraph, $linked_paragraphs, TRUE)) {
+              $valid_committee_membership_ids[] = $paragraph->id();
+            }
+          }
+        }
+      }
+
+      foreach ($valid_committee_membership_ids as $mpid) {
         /**
          * @var \Drupal\paragraphs\Entity\Paragraph $committee_membership
          */

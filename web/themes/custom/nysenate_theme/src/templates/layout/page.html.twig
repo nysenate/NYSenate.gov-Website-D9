@@ -55,6 +55,8 @@
 %}
 
 <div class="layout-container page {{ theme }}">
+  {{ page.header_top }}
+
   {%
     embed "@nysenate_theme/nysenate-header/nysenate-header.twig" with {
       "is_logged": logged_in,

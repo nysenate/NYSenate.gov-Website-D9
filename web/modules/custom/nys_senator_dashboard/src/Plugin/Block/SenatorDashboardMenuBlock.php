@@ -9,7 +9,7 @@ use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
-use Drupal\nys_senator_dashboard\Service\SenatorDashboardManager;
+use Drupal\nys_senator_dashboard\Service\ActiveSenatorManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -38,9 +38,9 @@ class SenatorDashboardMenuBlock extends BlockBase implements ContainerFactoryPlu
   /**
    * The entity type manager service.
    *
-   * @var \Drupal\nys_senator_dashboard\Service\SenatorDashboardManager
+   * @var \Drupal\nys_senator_dashboard\Service\ActiveSenatorManager
    */
-  protected SenatorDashboardManager $senatorDashboardManager;
+  protected ActiveSenatorManager $senatorDashboardManager;
 
   /**
    * Constructs the SenatorDashboardMenuBlock object.
@@ -51,7 +51,7 @@ class SenatorDashboardMenuBlock extends BlockBase implements ContainerFactoryPlu
     $plugin_definition,
     AccountProxyInterface $current_user,
     EntityTypeManagerInterface $entity_type_manager,
-    SenatorDashboardManager $senator_dashboard_manager,
+    ActiveSenatorManager $senator_dashboard_manager,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->currentUser = $current_user;
@@ -69,7 +69,7 @@ class SenatorDashboardMenuBlock extends BlockBase implements ContainerFactoryPlu
       $plugin_definition,
       $container->get('current_user'),
       $container->get('entity_type.manager'),
-      $container->get('nys_senator_dashboard.manager')
+      $container->get('nys_senator_dashboard.active_senator_manager')
     );
   }
 
@@ -101,7 +101,7 @@ class SenatorDashboardMenuBlock extends BlockBase implements ContainerFactoryPlu
         $active_senator_links[] = [
           'label' => $senator->label(),
           'url' => Url::fromRoute(
-            'nys_senator_dashboard.set_managed_senator',
+            'nys_senator_dashboard.active_senator.set',
             ['senator_id' => $senator->id()]
           ),
           'is_active' => ($active_senator_id == $senator->id()),
@@ -119,7 +119,7 @@ class SenatorDashboardMenuBlock extends BlockBase implements ContainerFactoryPlu
       '#manage_senator_links' => $this->getManageSenatorLinks($active_senator_id),
       '#constituent_activity_links' => $this->getConstituentActivityLinks(),
       '#cache' => [
-        'contexts' => ['user'],
+        'contexts' => ['user', 'user.roles'],
         'tags' => [
           'user:' . $current_user_id,
           'tempstore_user:' . $current_user_id,
@@ -135,32 +135,83 @@ class SenatorDashboardMenuBlock extends BlockBase implements ContainerFactoryPlu
     return [
       'overview' => [
         'label' => $this->t('Manage Content'),
-        'link' => ['label' => $this->t('Overview'), 'url' => Url::fromRoute('<front>')->toString()],
+        'link' => [
+          'label' => $this->t('Overview'),
+          'url' => Url::fromRoute('<front>')->toString(),
+        ],
       ],
       'info' => [
         'label' => $this->t('Manage Senator Info'),
         'links' => [
-          ['label' => $this->t('General info'), 'url' => "/taxonomy/term/$active_senator_id/edit"],
-          ['label' => $this->t('Microsites'), 'url' => '/admin/senator/content/micropages'],
-          ['label' => $this->t('Committee chair admin'), 'url' => '/admin/senator/content/committee'],
+          [
+            'label' => $this->t('General info'),
+            'url' => "/taxonomy/term/$active_senator_id/edit",
+          ],
+          [
+            'label' => $this->t('Microsites'),
+            'url' => '/admin/senator/content/micropages',
+          ],
+          [
+            'label' => $this->t('Committee chair admin'),
+            'url' => '/admin/senator/content/committee',
+          ],
         ],
       ],
       'content' => [
         'label' => $this->t('Manage Content'),
         'links' => [
-          ['label' => $this->t('Articles'), 'url' => '/admin/senator/content/content?type=article&field_category_value=article'],
-          ['label' => $this->t('Press releases'), 'url' => '/admin/senator/content/content?type=article&field_category_value=press_release'],
-          ['label' => $this->t('Events'), 'url' => '/admin/senator/content/content?type=event'],
-          ['label' => $this->t('Honoree Profiles'), 'url' => '/admin/senator/content/content?type=honoree'],
-          ['label' => $this->t('In the News'), 'url' => '/admin/senator/content/content?type=in_the_news'],
-          ['label' => $this->t('Petitions'), 'url' => '/admin/senator/content/content?type=petition'],
-          ['label' => $this->t('Videos'), 'url' => '/admin/senator/content/content?type=video'],
-          ['label' => $this->t('Promotional Banners'), 'url' => '/admin/senator/content/promobanners'],
-          ['label' => $this->t('Add issues to bills'), 'url' => '/admin/senator/content/bills?type_1=bill'],
-          ['label' => $this->t('Add issues or images to resolutions'), 'url' => '/admin/senator/content/bills?type_1=resolution'],
-          ['label' => $this->t('Questionnaires'), 'url' => '/admin/senator/content/questionnaires'],
-          ['label' => $this->t('Questionnaire webform'), 'url' => '/admin/webform'],
-          ['label' => $this->t('Create a new webform'), 'url' => '/admin/webform/add'],
+          [
+            'label' => $this->t('Articles'),
+            'url' => '/admin/senator/content/content?type=article&field_category_value=article',
+          ],
+          [
+            'label' => $this->t('Press releases'),
+            'url' => '/admin/senator/content/content?type=article&field_category_value=press_release',
+          ],
+          [
+            'label' => $this->t('Events'),
+            'url' => '/admin/senator/content/content?type=event',
+          ],
+          [
+            'label' => $this->t('Honoree Profiles'),
+            'url' => '/admin/senator/content/content?type=honoree',
+          ],
+          [
+            'label' => $this->t('In the News'),
+            'url' => '/admin/senator/content/content?type=in_the_news',
+          ],
+          [
+            'label' => $this->t('Petitions'),
+            'url' => '/admin/senator/content/content?type=petition',
+          ],
+          [
+            'label' => $this->t('Videos'),
+            'url' => '/admin/senator/content/content?type=video',
+          ],
+          [
+            'label' => $this->t('Promotional Banners'),
+            'url' => '/admin/senator/content/promobanners',
+          ],
+          [
+            'label' => $this->t('Add issues to bills'),
+            'url' => '/admin/senator/content/bills?type_1=bill',
+          ],
+          [
+            'label' => $this->t('Add issues or images to resolutions'),
+            'url' => '/admin/senator/content/bills?type_1=resolution',
+          ],
+          [
+            'label' => $this->t('Questionnaires'),
+            'url' => '/admin/senator/content/questionnaires',
+          ],
+          [
+            'label' => $this->t('Questionnaire webform'),
+            'url' => '/admin/webform',
+          ],
+          [
+            'label' => $this->t('Create a new webform'),
+            'url' => '/admin/webform/add',
+          ],
         ],
       ],
     ];
@@ -171,12 +222,30 @@ class SenatorDashboardMenuBlock extends BlockBase implements ContainerFactoryPlu
    */
   private function getConstituentActivityLinks(): array {
     return [
-      ['label' => $this->t('Overview'), 'url' => Url::fromRoute('<front>')->toString()],
-      ['label' => $this->t('Constituents List'), 'url' => Url::fromRoute('<front>')->toString()],
-      ['label' => $this->t('Issues'), 'url' => Url::fromRoute('<front>')->toString()],
-      ['label' => $this->t('Sponsored Bills'), 'url' => Url::fromRoute('<front>')->toString()],
-      ['label' => $this->t('Responses to Petitions'), 'url' => Url::fromRoute('<front>')->toString()],
-      ['label' => $this->t('Responses to Questionnaires'), 'url' => Url::fromRoute('<front>')->toString()],
+      [
+        'label' => $this->t('Overview'),
+        'url' => Url::fromRoute('<front>')->toString(),
+      ],
+      [
+        'label' => $this->t('Constituents List'),
+        'url' => Url::fromRoute('<front>')->toString(),
+      ],
+      [
+        'label' => $this->t('Issues'),
+        'url' => Url::fromRoute('<front>')->toString(),
+      ],
+      [
+        'label' => $this->t('Sponsored Bills'),
+        'url' => Url::fromRoute('<front>')->toString(),
+      ],
+      [
+        'label' => $this->t('Responses to Petitions'),
+        'url' => Url::fromRoute('<front>')->toString(),
+      ],
+      [
+        'label' => $this->t('Responses to Questionnaires'),
+        'url' => Url::fromRoute('<front>')->toString(),
+      ],
     ];
   }
 

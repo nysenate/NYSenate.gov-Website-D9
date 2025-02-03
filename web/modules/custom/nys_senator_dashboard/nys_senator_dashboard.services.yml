@@ -1,6 +1,6 @@
 services:
-  nys_senator_dashboard.manager:
-    class: \Drupal\nys_senator_dashboard\Service\SenatorDashboardManager
+  nys_senator_dashboard.active_senator_manager:
+    class: \Drupal\nys_senator_dashboard\Service\ActiveSenatorManager
     arguments:
       - '@tempstore.private'
       - '@messenger'

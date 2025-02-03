@@ -9,9 +9,9 @@ use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
- * Provides Senator Dashboard management service methods.
+ * Provides service methods for managing an MCP's or LC's active senator(s).
  */
-class SenatorDashboardManager {
+class ActiveSenatorManager {
 
   use StringTranslationTrait;
 

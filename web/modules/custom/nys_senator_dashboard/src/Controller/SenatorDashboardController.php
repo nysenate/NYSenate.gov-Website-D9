@@ -2,75 +2,56 @@
 
 namespace Drupal\nys_senator_dashboard\Controller;
 
-use Drupal\Core\Url;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Component\Plugin\Exception\PluginException;
+use Drupal\Core\Block\BlockManagerInterface;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\nys_senator_dashboard\Service\SenatorDashboardManager;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Provides Senator Dashboard routing methods.
+ * Controller to render the Senator Dashboard Menu Block.
  */
 class SenatorDashboardController extends ControllerBase {
 
   /**
-   * The senator dashboard service.
+   * The block manager service.
    *
-   * @var \Drupal\nys_senator_dashboard\Service\SenatorDashboardManager
+   * @var \Drupal\Core\Block\BlockManagerInterface
    */
-  protected SenatorDashboardManager $senatorDashboardManager;
+  protected BlockManagerInterface $blockManager;
 
   /**
-   * Constructs the SenatorDashboardController.
+   * Constructs the controller.
    *
-   * @param \Drupal\nys_senator_dashboard\Service\SenatorDashboardManager $senatorDashboardManager
-   *   The senator dashboard service.
+   * @param \Drupal\Core\Block\BlockManagerInterface $block_manager
+   *   The block manager service.
    */
-  public function __construct(SenatorDashboardManager $senatorDashboardManager) {
-    $this->senatorDashboardManager = $senatorDashboardManager;
+  public function __construct(BlockManagerInterface $block_manager) {
+    $this->blockManager = $block_manager;
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container) {
+  public static function create(ContainerInterface $container): self {
     return new static(
-      $container->get('nys_senator_dashboard.manager')
+      $container->get('plugin.manager.block')
     );
   }
 
   /**
-   * Sets the current user's active managed senator and redirects to referrer.
+   * Renders the Senator Dashboard Menu Block.
    *
-   * @param int $senator_id
-   *   The senator ID.
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The current request.
-   *
-   * @return \Symfony\Component\HttpFoundation\RedirectResponse
-   *   Redirects the user.
+   * @return array
+   *   Render array, or empty array on error.
    */
-  public function setActiveSenator(int $senator_id, Request $request) {
-    // Set the current user's active senator.
-    $user_id = $this->currentUser()->id();
-    $this->senatorDashboardManager->setActiveSenatorForUserId($user_id, $senator_id);
-
-    // Redirect the user to the referring page if internal, home otherwise.
-    $referer = $request->headers->get('referer');
-    if ($referer) {
-      $parsed_url = parse_url($referer);
-      $path = $parsed_url['path'] ?? '/';
-      if (Url::fromUserInput($path)->isRouted()) {
-        return new RedirectResponse($path);
-      }
-      else {
-        return $this->redirect('<front>');
-      }
+  public function manageContentPage(): array {
+    try {
+      $block = $this->blockManager->createInstance('senator_dashboard_menu_block');
     }
-    else {
-      return $this->redirect('<front>');
+    catch (PluginException) {
+      return [];
     }
+    return $block->build();
   }
 
 }

@@ -1,4 +1,11 @@
-<div class="senator-dashboard-menu">
+{% set menu_class =
+  mode == 'header' ? 'header-menu'
+  : (mode == 'manage_content' ? 'manage-content-menu'
+  : (mode == 'constituent_activity' ? 'constituent-activity-menu' : ''
+  ))
+%}
+
+<div class="senator-dashboard-menu {{ menu_class }}">
   <div class="active-senator-menu">
     <ul>
       {% for link in active_senator_links %}
@@ -8,7 +15,8 @@
       {% endfor %}
     </ul>
   </div>
-  <div class="manage-senator-menu">
+  {% if mode == 'manage_content' or mode == 'header' %}
+    <div class="manage-senator-menu">
     <h3>{{ manage_senator_links.overview.label }}</h3>
     <ul>
       <li>
@@ -27,13 +35,16 @@
         <li><a href="{{ link.url }}">{{ link.label }}</a></li>
       {% endfor %}
     </ul>
-  </div>
-  <div class="constituent-activity-menu">
+    </div>
+  {% endif %}
+  {% if mode == 'constituent_activity' or mode == 'header' %}
+    <div class="constituent-activity-menu">
     <h3>{{ 'Constituent Activity'|t }}</h3>
     <ul>
       {% for link in constituent_activity_links %}
         <li><a href="{{ link.url }}">{{ link.label }}</a></li>
       {% endfor %}
     </ul>
-  </div>
+    </div>
+  {% endif %}
 </div>

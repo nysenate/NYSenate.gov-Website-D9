@@ -76,9 +76,18 @@ class SenatorDashboardMenuBlock extends BlockBase implements ContainerFactoryPlu
   /**
    * {@inheritdoc}
    */
-  public function build() {
-    $current_user_id = $this->currentUser->id();
+  public function defaultConfiguration() {
+    return [
+      'mode' => 'header',
+    ];
+  }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function build() {
+    // Get current user entity.
+    $current_user_id = $this->currentUser->id();
     try {
       $current_user = $this->entityTypeManager->getStorage('user')->load($current_user_id);
     }
@@ -86,38 +95,32 @@ class SenatorDashboardMenuBlock extends BlockBase implements ContainerFactoryPlu
       return [];
     }
 
+    // Get current user's managed senators and active senator.
     if (!empty($current_user) && $current_user->hasField('field_senator_multiref')) {
       $managed_senators = $current_user->field_senator_multiref->referencedEntities();
-
-      // Get or set active senator.
       $active_senator_id = $this->senatorDashboardManager->getActiveSenatorForCurrentUser();
+      // Set first managed senator to active, by default.
       if (!$active_senator_id && count($managed_senators) > 0) {
         $this->senatorDashboardManager->setActiveSenatorForUserId($current_user_id, $managed_senators[0]->id(), FALSE);
         $active_senator_id = $managed_senators[0]->id();
       }
-
-      // Prepare Active Senator menu data.
-      foreach ($managed_senators as $senator) {
-        $active_senator_links[] = [
-          'label' => $senator->label(),
-          'url' => Url::fromRoute(
-            'nys_senator_dashboard.active_senator.set',
-            ['senator_id' => $senator->id()]
-          ),
-          'is_active' => ($active_senator_id == $senator->id()),
-        ];
-      }
     }
-
-    if (empty($active_senator_id) || empty($active_senator_links)) {
+    if (empty($managed_senators) || empty($active_senator_id)) {
       return [];
     }
 
     return [
       '#theme' => 'senator_dashboard_menu_block',
-      '#active_senator_links' => $active_senator_links,
-      '#manage_senator_links' => $this->getManageSenatorLinks($active_senator_id),
-      '#constituent_activity_links' => $this->getConstituentActivityLinks(),
+      '#mode' => $this->configuration['mode'],
+      '#active_senator_links' => ($this->configuration['mode'] == 'header')
+        ? $this->getActiveSenatorLinks($managed_senators, $active_senator_id)
+        : [],
+      '#manage_senator_links' => (in_array($this->configuration['mode'], ['header', 'manage_content']))
+        ? $this->getManageSenatorLinks($active_senator_id)
+        : [],
+      '#constituent_activity_links' => (in_array($this->configuration['mode'], ['header', 'constituent_activity']))
+        ? $this->getConstituentActivityLinks()
+        : [],
       '#cache' => [
         'contexts' => ['user', 'user.roles'],
         'tags' => [
@@ -247,6 +250,24 @@ class SenatorDashboardMenuBlock extends BlockBase implements ContainerFactoryPlu
         'url' => Url::fromRoute('<front>')->toString(),
       ],
     ];
+  }
+
+  /**
+   * Prepares Active Senator menu data.
+   */
+  private function getActiveSenatorLinks(array $managed_senators, int $active_senator_id): array {
+    $active_senator_links = [];
+    foreach ($managed_senators as $senator) {
+      $active_senator_links[] = [
+        'label' => $senator->label(),
+        'url' => Url::fromRoute(
+          'nys_senator_dashboard.active_senator.set',
+          ['senator_id' => $senator->id()]
+        ),
+        'is_active' => ($active_senator_id == $senator->id()),
+      ];
+    }
+    return $active_senator_links;
   }
 
 }

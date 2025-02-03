@@ -45,8 +45,14 @@ class SenatorDashboardController extends ControllerBase {
    *   Render array, or empty array on error.
    */
   public function manageContentPage(): array {
+    $variables = [
+      'mode' => 'manage_content',
+    ];
     try {
-      $block = $this->blockManager->createInstance('senator_dashboard_menu_block');
+      $block = $this->blockManager->createInstance(
+        'senator_dashboard_menu_block',
+        $variables,
+      );
     }
     catch (PluginException) {
       return [];

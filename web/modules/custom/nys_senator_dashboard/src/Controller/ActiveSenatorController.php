@@ -5,7 +5,7 @@ namespace Drupal\nys_senator_dashboard\Controller;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\nys_senator_dashboard\Service\ActiveSenatorManager;
+use Drupal\nys_senator_dashboard\Service\ManagedSenatorsHandler;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -17,18 +17,18 @@ class ActiveSenatorController extends ControllerBase {
   /**
    * The senator dashboard service.
    *
-   * @var \Drupal\nys_senator_dashboard\Service\ActiveSenatorManager
+   * @var \Drupal\nys_senator_dashboard\Service\ManagedSenatorsHandler
    */
-  protected ActiveSenatorManager $activeSenatorManager;
+  protected ManagedSenatorsHandler $managedSenatorsHandler;
 
   /**
    * Constructs the SenatorDashboardController.
    *
-   * @param \Drupal\nys_senator_dashboard\Service\ActiveSenatorManager $activeSenatorManager
-   *   The senator dashboard service.
+   * @param \Drupal\nys_senator_dashboard\Service\ManagedSenatorsHandler $managed_senators_handler
+   *   The managed senators service.
    */
-  public function __construct(ActiveSenatorManager $activeSenatorManager) {
-    $this->activeSenatorManager = $activeSenatorManager;
+  public function __construct(ManagedSenatorsHandler $managed_senators_handler) {
+    $this->managedSenatorsHandler = $managed_senators_handler;
   }
 
   /**
@@ -36,25 +36,24 @@ class ActiveSenatorController extends ControllerBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('nys_senator_dashboard.active_senator_manager')
+      $container->get('nys_senator_dashboard.managed_senators_handler')
     );
   }
 
   /**
    * Sets the current user's active managed senator and redirects to referrer.
    *
-   * @param int $senator_id
-   *   The senator ID.
+   * @param int $senator_tid
+   *   The senator TID.
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The current request.
    *
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    *   Redirects the user.
    */
-  public function setActiveSenator(int $senator_id, Request $request) {
+  public function updateActiveSenator(int $senator_tid, Request $request) {
     // Set the current user's active senator.
-    $user_id = $this->currentUser()->id();
-    $this->activeSenatorManager->setActiveSenatorForUserId($user_id, $senator_id);
+    $this->managedSenatorsHandler->updateActiveSenator($this->currentUser()->id(), $senator_tid);
 
     // Redirect the user to the referring page if internal, home otherwise.
     $referer = $request->headers->get('referer');

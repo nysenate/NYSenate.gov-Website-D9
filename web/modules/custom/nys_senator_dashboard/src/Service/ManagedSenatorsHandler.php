@@ -7,11 +7,12 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\TempStore\TempStoreException;
 
 /**
- * Provides service methods for managing an MCP's or LC's active senator(s).
+ * Provides service methods for managing an MCP's or LC's senator(s).
  */
-class ActiveSenatorManager {
+class ManagedSenatorsHandler {
 
   use StringTranslationTrait;
 
@@ -37,7 +38,7 @@ class ActiveSenatorManager {
   protected $entityTypeManager;
 
   /**
-   * Constructs the SenatorDashboardManager service.
+   * Constructs the ManagedSenatorsHandler service.
    *
    * @param \Drupal\Core\TempStore\PrivateTempStoreFactory $tempStoreFactory
    *   The private temp store factory.
@@ -47,24 +48,68 @@ class ActiveSenatorManager {
    *   The entity type manager service.
    */
   public function __construct(PrivateTempStoreFactory $tempStoreFactory, MessengerInterface $messenger, EntityTypeManagerInterface $entityTypeManager) {
-    $this->tempStoreFactory = $tempStoreFactory;
+    $this->tempStoreFactory = $tempStoreFactory->get('nys_senator_dashboard');
     $this->messenger = $messenger;
     $this->entityTypeManager = $entityTypeManager;
   }
 
   /**
-   * Gets the current user's active senator ID.
+   * Gets a given user's managed senators.
    *
-   * @return int|null
-   *   The senator TID if set, NULL otherwise.
+   * @param int $user_id
+   *   The user's ID.
+   * @param bool $tids_only
+   *   Whether to return just the senator TIDs instead of the full entities.
+   *
+   * @return array
+   *   An array of senator term entities managed by the user.
    */
-  public function getActiveSenatorForCurrentUser(): ?int {
-    $tempstore = $this->tempStoreFactory->get('nys_senator_dashboard');
-    return $tempstore->get('active_managed_senator');
+  public function getManagedSenators(int $user_id, bool $tids_only = FALSE): array {
+    try {
+      $user = $this->entityTypeManager->getStorage('user')->load($user_id);
+    }
+    catch (\Throwable) {
+      return [];
+    }
+    if (!isset($user) && !$user->hasField('field_senator_multiref')) {
+      return [];
+    }
+    return $tids_only
+      ? array_column($user->field_senator_multiref->getValue(), 'target_id')
+      : $user->field_senator_multiref->referencedEntities();
   }
 
   /**
-   * Sets the active managed senator for the given user.
+   * Gets (and sets, if unset) the current user's active managed senator.
+   *
+   * @return int|null
+   *   The senator TID if successful, NULL otherwise.
+   */
+  public function getOrSetActiveSenator(int $user_id): ?int {
+    // Get active senator TID.
+    $active_senator_tid = $this->tempStoreFactory->get('active_managed_senator_tid');
+    if ($active_senator_tid) {
+      return $active_senator_tid;
+    }
+
+    // If unset, set first senator in reference field to active.
+    $managed_senators = $this->getManagedSenators($user_id);
+    if (count($managed_senators) > 0) {
+      try {
+        $this->tempStoreFactory->set('active_managed_senator_tid', $managed_senators[0]->id());
+      }
+      catch (TempStoreException) {
+        return NULL;
+      }
+      Cache::invalidateTags(['tempstore_user:' . $user_id]);
+      $active_senator_tid = $managed_senators[0]->id();
+    }
+
+    return $active_senator_tid;
+  }
+
+  /**
+   * Updates the active managed senator for a given user.
    *
    * @param int $user_id
    *   The user ID.
@@ -76,32 +121,16 @@ class ActiveSenatorManager {
    * @return bool
    *   Indicates if operation was a success.
    */
-  public function setActiveSenatorForUserId(int $user_id, int $senator_id, bool $include_message = TRUE): bool {
-    $tempstore = $this->tempStoreFactory->get('nys_senator_dashboard');
-
-    // Initialize allowed senator IDs.
-    $allowed_senator_ids = [];
-    try {
-      $current_user = $this->entityTypeManager
-        ->getStorage('user')
-        ->load($user_id);
-      $field_senator_multiref = $current_user->field_senator_multiref?->getValue();
-      if (is_array($field_senator_multiref)) {
-        $allowed_senator_ids = array_column($field_senator_multiref, 'target_id');
-      }
-    }
-    catch (\Throwable) {
-      return FALSE;
-    }
-
+  public function updateActiveSenator(int $user_id, int $senator_id, bool $include_message = TRUE): bool {
     // Update the active managed senator if allowed.
+    $allowed_senator_ids = $this->getManagedSenators($user_id, TRUE);
     if (in_array($senator_id, $allowed_senator_ids)) {
       try {
-        $tempstore->set('active_managed_senator', $senator_id);
+        $this->tempStoreFactory->set('active_managed_senator_tid', $senator_id);
         if ($include_message) {
-          Cache::invalidateTags(['tempstore_user:' . $user_id]);
           $this->messenger->addMessage($this->t('Your active managed senator has been updated.'));
         }
+        Cache::invalidateTags(['tempstore_user:' . $user_id]);
         return TRUE;
       }
       catch (\Exception) {

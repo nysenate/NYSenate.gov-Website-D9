@@ -1,0 +1,18 @@
+<?php
+
+use Drupal\system\Entity\Menu;
+
+/**
+ * Implements hook_install().
+ */
+function nys_senator_dashboard_install() {
+  // Create 'senator_dashboard' menu if it doesn't already exist.
+  if (!Menu::load('senator_dashboard')) {
+    $menu = Menu::create([
+      'id' => 'senator_dashboard',
+      'label' => t('Senator Dashboard'),
+      'description' => t('A menu for the Senator Dashboard links.'),
+    ]);
+    $menu->save();
+  }
+}

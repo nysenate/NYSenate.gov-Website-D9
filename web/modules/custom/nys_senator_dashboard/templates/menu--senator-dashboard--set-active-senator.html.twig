@@ -1,0 +1,11 @@
+{% if active_senator_links %}
+  <div class="active-senator-menu">
+    <ul>
+      {% for link in active_senator_links %}
+        <li class="{{ link.is_active ? 'is-active-senator' : '' }}">
+          <a href="{{ link.url }}">{{ link.label }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endif %}

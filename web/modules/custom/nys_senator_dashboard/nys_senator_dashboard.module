@@ -84,12 +84,15 @@ function nys_senator_dashboard_query_senators_constituents_only_alter(AlterableI
  */
 function nys_senator_dashboard_theme() {
   return [
-    'senator_dashboard_menu_block' => [
+    'menu__senator_dashboard__set_active_senator' => [
       'variables' => [
         'mode' => '',
         'active_senator_links' => [],
-        'manage_senator_links' => [],
-        'constituent_activity_links' => [],
+      ],
+    ],
+    'menu__senator_dashboard' => [
+      'variables' => [
+        'items' => [],
       ],
     ],
   ];

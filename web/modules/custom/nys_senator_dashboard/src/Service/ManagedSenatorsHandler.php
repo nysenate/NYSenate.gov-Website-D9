@@ -80,7 +80,10 @@ class ManagedSenatorsHandler {
   }
 
   /**
-   * Gets (and sets, if unset) the current user's active managed senator.
+   * Gets (and sets, if unset) the given user's active managed senator.
+   *
+   * @param int $user_id
+   *   The user ID.
    *
    * @return int|null
    *   The senator TID if successful, NULL otherwise.

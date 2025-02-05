@@ -46,7 +46,7 @@ class SenatorDashboardController extends ControllerBase {
    */
   public function manageContentPage(): array {
     $variables = [
-      'mode' => 'manage_content',
+      'mode' => 'manage_senator_menu',
     ];
     try {
       $block = $this->blockManager->createInstance(

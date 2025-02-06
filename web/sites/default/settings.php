@@ -787,23 +787,13 @@ if (isset($_SERVER['PANTHEON_ENVIRONMENT']) && php_sapi_name() != 'cli') {
 if (isset($_ENV['PANTHEON_ENVIRONMENT'])) {
 
   switch($_ENV['PANTHEON_ENVIRONMENT']) {
-     case 'develop':
-      // Enable the Develop environment's config split.
-      $config['config_split.config_split.develop']['status'] = TRUE;
-
-      // Configure the Develop environment indicator bar.
-      $config['environment_indicator.indicator']['name'] = 'Develop';
-      $config['environment_indicator.indicator']['bg_color'] = '#0e6655';
-      $config['environment_indicator.indicator']['fg_color'] = '#FFFFFF';
-      break;
-
     case 'dev':
       // Enable the Dev environment's config split.
       $config['config_split.config_split.dev']['status'] = TRUE;
 
       // Configure the Dev environment indicator bar.
       $config['environment_indicator.indicator']['name'] = 'Dev';
-      $config['environment_indicator.indicator']['bg_color'] = '#935116';
+      $config['environment_indicator.indicator']['bg_color'] = '#307b24';
       $config['environment_indicator.indicator']['fg_color'] = '#FFFFFF';
       break;
 
@@ -813,7 +803,7 @@ if (isset($_ENV['PANTHEON_ENVIRONMENT'])) {
 
       // Configure the Test environment indicator bar.
       $config['environment_indicator.indicator']['name'] = 'Test';
-      $config['environment_indicator.indicator']['bg_color'] = '#e91e63';
+      $config['environment_indicator.indicator']['bg_color'] = '#936d16';
       $config['environment_indicator.indicator']['fg_color'] = '#FFFFFF';
       break;
 
@@ -823,7 +813,7 @@ if (isset($_ENV['PANTHEON_ENVIRONMENT'])) {
 
       // Configure the Live/prod environment indicator bar.
       $config['environment_indicator.indicator']['name'] = 'Live';
-      $config['environment_indicator.indicator']['bg_color'] = '#000000';
+      $config['environment_indicator.indicator']['bg_color'] = '#e7131a';
       $config['environment_indicator.indicator']['fg_color'] = '#FFFFFF';
 
       // Temp fix for canonical URL on live.  See line 777, above.
@@ -837,7 +827,7 @@ if (isset($_ENV['PANTHEON_ENVIRONMENT'])) {
 
       // Configure a multidev environment's indicator bar.
       $config['environment_indicator.indicator']['name'] = 'Multidev';
-      $config['environment_indicator.indicator']['bg_color'] = '#3D004B';
+      $config['environment_indicator.indicator']['bg_color'] = '#3474eb';
       $config['environment_indicator.indicator']['fg_color'] = '#FFFFFF';
   }
 }
@@ -847,7 +837,7 @@ else {
 
   // Local Environment indicator.
   $config['environment_indicator.indicator']['name'] = 'Local';
-  $config['environment_indicator.indicator']['bg_color'] = '#00294F';
+  $config['environment_indicator.indicator']['bg_color'] = '#505050';
   $config['environment_indicator.indicator']['fg_color'] = '#FFFFFF';
 
   // By default, disable Pantheon server/core search index for local environments.

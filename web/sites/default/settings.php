@@ -803,7 +803,7 @@ if (isset($_ENV['PANTHEON_ENVIRONMENT'])) {
 
       // Configure the Test environment indicator bar.
       $config['environment_indicator.indicator']['name'] = 'Test';
-      $config['environment_indicator.indicator']['bg_color'] = '#936d16';
+      $config['environment_indicator.indicator']['bg_color'] = '#eb7734';
       $config['environment_indicator.indicator']['fg_color'] = '#FFFFFF';
       break;
 
@@ -813,7 +813,7 @@ if (isset($_ENV['PANTHEON_ENVIRONMENT'])) {
 
       // Configure the Live/prod environment indicator bar.
       $config['environment_indicator.indicator']['name'] = 'Live';
-      $config['environment_indicator.indicator']['bg_color'] = '#3474eb';
+      $config['environment_indicator.indicator']['bg_color'] = '#2b6990';
       $config['environment_indicator.indicator']['fg_color'] = '#FFFFFF';
 
       // Temp fix for canonical URL on live.  See line 777, above.

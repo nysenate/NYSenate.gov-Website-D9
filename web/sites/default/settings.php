@@ -813,7 +813,7 @@ if (isset($_ENV['PANTHEON_ENVIRONMENT'])) {
 
       // Configure the Live/prod environment indicator bar.
       $config['environment_indicator.indicator']['name'] = 'Live';
-      $config['environment_indicator.indicator']['bg_color'] = '#e7131a';
+      $config['environment_indicator.indicator']['bg_color'] = '#3474eb';
       $config['environment_indicator.indicator']['fg_color'] = '#FFFFFF';
 
       // Temp fix for canonical URL on live.  See line 777, above.
@@ -827,7 +827,7 @@ if (isset($_ENV['PANTHEON_ENVIRONMENT'])) {
 
       // Configure a multidev environment's indicator bar.
       $config['environment_indicator.indicator']['name'] = 'Multidev';
-      $config['environment_indicator.indicator']['bg_color'] = '#3474eb';
+      $config['environment_indicator.indicator']['bg_color'] = '#e7131a';
       $config['environment_indicator.indicator']['fg_color'] = '#FFFFFF';
   }
 }

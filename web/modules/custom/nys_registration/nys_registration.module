@@ -79,19 +79,17 @@ function nys_registration_form_user_login_form_alter(&$form, FormStateInterface 
   $footer = $nys_config->get('user_login_footer');
 
   $form['registration_teaser'] = [
-    '#markup' => '
-      <div class="c-login-left">
-        <h3 class="nys-title">' . $header . '</h3>
-        ' . $body . '
-        <a href="/user/register" class="c-block--btn c-login-create">Create Account</a>
-        ' . $footer . '
-      </div>',
+    '#markup' => '<div class="c-login-left"><h3 class="nys-title">' .
+      $header . '</h3>' . $body . '<a href="/user/register" ' .
+      'class="c-block--btn c-login-create">Create Account</a>' .
+      $footer . '</div>',
     '#weight' => 95,
   ];
 
   $form['login_right_top'] = [
     '#weight' => 96,
-    '#markup' => '<div class="c-login-right"><h3 class="nys-title">' . t('I already have an account...') . '</h3>',
+    '#markup' => '<div class="c-login-right"><h3 class="nys-title">' .
+      t('I already have an account...') . '</h3>',
   ];
 
   $form['name']['#weight'] = 97;
@@ -125,8 +123,6 @@ function nys_registration_form_user_login_form_alter(&$form, FormStateInterface 
     '#markup' => '</div>',
   ];
 
-  // Redirect form to referrer if from modal.
-  $form['#submit'][] = 'nys_registration_user_login_form_submit';
 }
 
 /**
@@ -138,26 +134,9 @@ function nys_registration_form_user_pass_reset_alter(&$form, FormStateInterface 
 }
 
 /**
- * Custom submit handler for the login form.
- */
-function nys_registration_user_login_form_submit($form, FormStateInterface $form_state): void {
-  $url = \Drupal::request()->headers->get('referer');
-  $referrer = explode('/', $url);
-
-  if ((isset($referrer[3]) && $referrer[3] == 'user') &&
-    (isset($referrer[4]) && $referrer[4] == 'login')) {
-    // Redirect to the /dashboard page.
-    $form_state->setRedirectUrl(Url::fromRoute('view.my_dashboard.main'));
-  }
-  else {
-    $form_state->setRedirectUrl(Url::fromUri($url));
-  }
-}
-
-/**
  * Implements hook_menu_local_tasks_alter().
  */
-function nys_registration_menu_local_tasks_alter(&$data, $route_name, &$cacheability) {
+function nys_registration_menu_local_tasks_alter(&$data, $route_name, &$cacheability): void {
   if ($route_name === 'user.login') {
     unset($data['tabs']);
   }

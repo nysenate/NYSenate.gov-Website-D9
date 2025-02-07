@@ -8,7 +8,7 @@ title: 'Default cron handler'
 id: login_history_cron
 weight: 0
 module: login_history
-callback: login_history_cron
+callback: 'login_history#cron'
 scheduler:
   id: simple
 launcher:

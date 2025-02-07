@@ -401,7 +401,20 @@ blockquote {
       font-size: 2.7em;
       content: "\71";
       font-family: $senate-icons;
-      color: $gen_blue_lgt;
+      //color: $gen_blue_lgt;
+      @extend .lgt-text;
+    }
+
+    &:after {
+      position: absolute;
+      bottom: 0;
+      right: -0.2em;
+      font-size: 2.7em;
+      content: "\71";
+      font-family: $senate-icons;
+      //color: $gen_blue_lgt;
+      transform: rotate(180deg);
+      @extend .lgt-text;
     }
 
     @include breakpoint($bp-md) {

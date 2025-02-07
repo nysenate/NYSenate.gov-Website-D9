@@ -8,7 +8,7 @@ title: 'Default cron handler'
 id: captcha_cron
 weight: 0
 module: captcha
-callback: captcha_cron
+callback: 'captcha#cron'
 scheduler:
   id: simple
   configuration:

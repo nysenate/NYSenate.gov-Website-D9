@@ -6,10 +6,19 @@ nys_senator_dashboard.active_senator.set:
   requirements:
     _role: 'microsite_content_producer+legislative_correspondent'
     senator_tid: '\d+'
-nys_senator_dashboard.manage_content:
-  path: '/senator-dashboard/manage-content'
+nys_senator_dashboard.manage_senator:
+  path: '/senator-dashboard/manage-senator'
   defaults:
     _controller: '\Drupal\nys_senator_dashboard\Controller\SenatorDashboardController::manageContentPage'
-    _title: 'Manage Content'
+    _title: 'Manage Senator'
+  requirements:
+    _role: 'microsite_content_producer+legislative_correspondent'
+
+# Placeholder route
+nys_senator_dashboard.placeholder:
+  path: '/senator-dashboard'
+  defaults:
+    _controller: '\Drupal\nys_senator_dashboard\Controller\SenatorDashboardController::manageContentPage'
+    _title: 'Placeholder'
   requirements:
     _role: 'microsite_content_producer+legislative_correspondent'

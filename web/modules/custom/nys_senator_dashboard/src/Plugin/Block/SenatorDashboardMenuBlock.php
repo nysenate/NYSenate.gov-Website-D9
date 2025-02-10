@@ -131,7 +131,7 @@ class SenatorDashboardMenuBlock extends BlockBase implements ContainerFactoryPlu
 
     return [
       'active_senator_menu' => [
-        '#theme' => 'menu__senator_dashboard__set_active_senator',
+        '#theme' => 'nys_senator_dashboard__set_active_senator_menu',
         '#mode' => $this->configuration['mode'],
         '#active_senator_links' => $active_senator_links,
         '#cache' => [

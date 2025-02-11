@@ -29,6 +29,24 @@
   }
 
   &.c-news-container {
+    .c-container--hidden-link {
+      position: relative;
+      display: inline-block;
+      &:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+      }
+      a {
+        position: relative;
+        z-index: 2;
+      }
+    }
+
     .c-news-block {
       .c-newsroom-name {
         a {

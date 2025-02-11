@@ -30,13 +30,14 @@
               <span class="date-display-single">{{ item.news_date }}</span>
             </span>
           </div>
+          <div class="c-container--hidden-link">
           {% if item.news_image_src %}
             <div class="c-newsroom-image">
-              <a href="{{ item.news_url }}"><img src="{{ item.news_image_src }}" width="360" height="200" alt=""></a>
+              <img src="{{ item.news_image_src }}" width="360" height="200" alt="">
             </div>
           {% elseif item.news_image %}
             <div class="c-newsroom-image">
-              <a href="{{ item.news_url }}">{{ item.news_image }}</a>
+              {{ item.news_image }}
             </div>
           {% elseif item.video_src %}
             <div class="c-newsroom-image">
@@ -51,6 +52,7 @@
           <h3 class="c-newsroom-name">
             <a href="{{ item.news_url }}">{{ item.news_name }}</a>
           </h3>
+          </div>
 
           {% if item.news_topic %}
             <div class="c-newsroom-link">

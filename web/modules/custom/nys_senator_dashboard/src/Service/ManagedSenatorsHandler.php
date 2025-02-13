@@ -3,6 +3,7 @@
 namespace Drupal\nys_senator_dashboard\Service;
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
@@ -64,7 +65,7 @@ class ManagedSenatorsHandler {
    * @return array
    *   An array of senator term entities managed by the user.
    */
-  public function getManagedSenators(int $user_id, bool $tids_only = FALSE): array {
+  public function getManagedSenators(int $user_id, bool $tids_only = TRUE): array {
     try {
       $user = $this->entityTypeManager->getStorage('user')->load($user_id);
     }
@@ -84,31 +85,48 @@ class ManagedSenatorsHandler {
    *
    * @param int $user_id
    *   The user ID.
+   * @param bool $tid_only
+   *   Whether to return TIDs or entities.
    *
-   * @return int|null
-   *   The senator TID if successful, NULL otherwise.
+   * @return \Drupal\Core\Entity\EntityInterface|int|null
+   *   The senator entity or TID if successful, NULL otherwise.
    */
-  public function getOrSetActiveSenator(int $user_id): ?int {
+  public function getActiveSenator(int $user_id, $tid_only = TRUE): EntityInterface|int|null {
     // Get active senator TID.
     $active_senator_tid = $this->tempStoreFactory->get('active_managed_senator_tid');
-    if ($active_senator_tid) {
-      return $active_senator_tid;
-    }
 
     // If unset, set first senator in reference field to active.
-    $managed_senators = $this->getManagedSenators($user_id);
-    if (count($managed_senators) > 0) {
-      try {
-        $this->tempStoreFactory->set('active_managed_senator_tid', $managed_senators[0]->id());
+    if (empty($active_senator_tid)) {
+      $managed_senators = $this->getManagedSenators($user_id, FALSE);
+      if (count($managed_senators) > 0) {
+        try {
+          $this->tempStoreFactory->set('active_managed_senator_tid', $managed_senators[0]->id());
+        }
+        catch (TempStoreException) {
+          return NULL;
+        }
+        Cache::invalidateTags(['tempstore_user:' . $user_id]);
+        $active_senator = $managed_senators[0];
+        $active_senator_tid = $active_senator->id();
       }
-      catch (TempStoreException) {
-        return NULL;
-      }
-      Cache::invalidateTags(['tempstore_user:' . $user_id]);
-      $active_senator_tid = $managed_senators[0]->id();
     }
 
-    return $active_senator_tid;
+    if ($tid_only) {
+      return $active_senator_tid;
+    }
+    elseif (!empty($active_senator)) {
+      return $active_senator;
+    }
+    else {
+      try {
+        $active_senator = $this->entityTypeManager->getStorage('taxonomy_term')
+          ->load($active_senator_tid);
+      }
+      catch (\Exception) {
+        return NULL;
+      }
+      return $active_senator;
+    }
   }
 
   /**
@@ -126,7 +144,7 @@ class ManagedSenatorsHandler {
    */
   public function updateActiveSenator(int $user_id, int $senator_id, bool $include_message = TRUE): bool {
     // Update the active managed senator if allowed.
-    $allowed_senator_ids = $this->getManagedSenators($user_id, TRUE);
+    $allowed_senator_ids = $this->getManagedSenators($user_id);
     if (in_array($senator_id, $allowed_senator_ids)) {
       try {
         $this->tempStoreFactory->set('active_managed_senator_tid', $senator_id);

@@ -233,7 +233,7 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
   private function getSenatorImageUrl(): string {
     $senator_image_url = '';
     if ($this->configuration['display_image']) {
-      $senator_tid = $this->managedSenatorsHandler->getOrSetActiveSenator($this->currentUser->id());
+      $senator_tid = $this->managedSenatorsHandler->getActiveSenator($this->currentUser->id());
       try {
         $senator = $this->entityTypeManager
           ->getStorage('taxonomy_term')
@@ -325,7 +325,7 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
   private function getHomepageUrl(): string {
     $homepage_url = '';
     if ($this->configuration['display_homepage_link']) {
-      $senator_tid = $this->managedSenatorsHandler->getOrSetActiveSenator($this->currentUser->id());
+      $senator_tid = $this->managedSenatorsHandler->getActiveSenator($this->currentUser->id());
       try {
         $senator = $this->entityTypeManager
           ->getStorage('taxonomy_term')

@@ -9,8 +9,17 @@ nys_senator_dashboard.active_senator.set:
 nys_senator_dashboard.manage_senator:
   path: '/senator-dashboard/manage-senator'
   defaults:
-    _controller: '\Drupal\nys_senator_dashboard\Controller\SenatorDashboardController::manageContentPage'
+    _controller: '\Drupal\nys_senator_dashboard\Controller\SenatorDashboardController::menuPage'
     _title: 'Manage Senator'
+    menu_mode: 'manage_senator_menu'
+  requirements:
+    _role: 'microsite_content_producer+legislative_correspondent'
+nys_senator_dashboard.constituent_activity:
+  path: '/senator-dashboard/constituent-activity'
+  defaults:
+    _controller: '\Drupal\nys_senator_dashboard\Controller\SenatorDashboardController::menuPage'
+    _title: 'Constituent Activity'
+    menu_mode: 'constituent_activity_menu'
   requirements:
     _role: 'microsite_content_producer+legislative_correspondent'
 
@@ -18,7 +27,8 @@ nys_senator_dashboard.manage_senator:
 nys_senator_dashboard.placeholder:
   path: '/senator-dashboard'
   defaults:
-    _controller: '\Drupal\nys_senator_dashboard\Controller\SenatorDashboardController::manageContentPage'
+    _controller: '\Drupal\nys_senator_dashboard\Controller\SenatorDashboardController::menuPage'
     _title: 'Placeholder'
+    menu_mode: 'manage_senator_menu'
   requirements:
     _role: 'microsite_content_producer+legislative_correspondent'

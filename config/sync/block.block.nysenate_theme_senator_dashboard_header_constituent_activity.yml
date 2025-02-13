@@ -1,0 +1,39 @@
+uuid: 4a234e8a-329b-4975-ac8a-9d7f63d12b37
+langcode: en
+status: true
+dependencies:
+  module:
+    - nys_senator_dashboard
+    - system
+    - user
+  theme:
+    - nysenate_theme
+id: nysenate_theme_senator_dashboard_header_constituent_activity
+theme: nysenate_theme
+region: above_content
+weight: 0
+provider: null
+plugin: senator_dashboard_header_block
+settings:
+  id: senator_dashboard_header_block
+  label: 'Senator Dashboard header block - constituent activity'
+  label_display: '0'
+  provider: nys_senator_dashboard
+  display_image: 1
+  display_breadcrumbs: 1
+  display_header_title: 1
+  display_homepage_link: 0
+  header_blurb: 'View Senator Smith’s constituent activity.'
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: /senator-dashboard/constituent-activity
+  user_role:
+    id: user_role
+    negate: false
+    context_mapping:
+      user: '@user.current_user_context:current_user'
+    roles:
+      microsite_content_producer: microsite_content_producer
+      legislative_correspondent: legislative_correspondent

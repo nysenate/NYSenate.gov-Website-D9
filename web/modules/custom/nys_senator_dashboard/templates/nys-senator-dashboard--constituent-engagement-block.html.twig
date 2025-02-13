@@ -1,0 +1,7 @@
+<h2>Year-to-date constituent engagement</h2>
+{% for item in constituent_engagement_data %}
+  <div class="{{ item.class }}">
+    <span class="data">{{ item.data }}</span>
+    <span class="label">{{ item.label }}</span>
+  </div>
+{% endfor %}

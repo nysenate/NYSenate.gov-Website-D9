@@ -155,8 +155,8 @@ class SenatorDashboardMenuBlock extends BlockBase implements ContainerFactoryPlu
    */
   private function getActiveSenatorLinks(): array {
     $user_id = $this->currentUser->id();
-    $managed_senators = $this->managedSenatorsHandler->getManagedSenators($user_id);
-    $active_senator_tid = $this->managedSenatorsHandler->getOrSetActiveSenator($user_id);
+    $managed_senators = $this->managedSenatorsHandler->getManagedSenators($user_id, FALSE);
+    $active_senator_tid = $this->managedSenatorsHandler->getActiveSenator($user_id);
     if (empty($managed_senators) || empty($active_senator_tid)) {
       return [];
     }

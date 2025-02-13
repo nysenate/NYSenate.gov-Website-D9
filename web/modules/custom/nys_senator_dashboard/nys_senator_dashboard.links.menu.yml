@@ -9,7 +9,7 @@ senator_dashboard.manage_senator_menu.manage_senator_information:
   description: 'Links for updating senator-specific information like general info and microsites.'
   parent: senator_dashboard.manage_senator_menu
   menu_name: senator_dashboard
-  route_name: nys_senator_dashboard.placeholder
+  route_name: nys_senator_dashboard.manage_senator
   weight: 1
 senator_dashboard.manage_senator_menu.manage_senator_information.general_info:
   class: Drupal\nys_senator_dashboard\Plugin\Menu\EditSenatorInformationMenuLink
@@ -37,7 +37,7 @@ senator_dashboard.manage_senator_menu.manage_senator_content:
   description: 'Links for managing content like articles, press releases, events, and videos.'
   parent: senator_dashboard.manage_senator_menu
   menu_name: senator_dashboard
-  route_name: nys_senator_dashboard.placeholder
+  route_name: nys_senator_dashboard.manage_senator
   weight: 2
 senator_dashboard.manage_senator_menu.manage_senator_content.articles:
   title: 'Articles'
@@ -135,7 +135,7 @@ senator_dashboard.constituent_activity_menu:
   title: 'Constituent Activity'
   description: 'Links for viewing constituent activity, responses, and more.'
   menu_name: senator_dashboard
-  route_name: nys_senator_dashboard.placeholder
+  route_name: nys_senator_dashboard.constituent_activity
   weight: 2
 senator_dashboard.constituent_activity_menu.list:
   title: 'Constituents List'

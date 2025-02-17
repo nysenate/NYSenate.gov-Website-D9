@@ -20,18 +20,20 @@
  */
 #}
 {% import _self as menus %}
-
-{#
-  We call a macro which calls itself to render the full tree.
-  @see https://twig.symfony.com/doc/1.x/tags/macro.html
-#}
-{{ menus.menu_links(items, attributes, 0) }}
-
+<nav  class="c-senator-dashboard-menu" aria-label="senator dashboard menu">
+  {#
+    We call a macro which calls itself to render the full tree.
+    @see https://twig.symfony.com/doc/1.x/tags/macro.html
+  #}
+  {{ menus.menu_links(items, attributes, 0) }}
+</nav>
 {% macro menu_links(items, attributes, menu_level) %}
   {% import _self as menus %}
   {% if items %}
     {% if menu_level == 0 %}
       <ul{{ attributes.addClass('menu') }}>
+    {% elseif menu_level == 1 %}
+      <ul class="menu is-collapsed" aria-expanded="false">
     {% else %}
       <ul class="menu">
     {% endif %}
@@ -44,15 +46,24 @@
           item.in_active_trail ? 'menu-item--active-trail',
         ]
       %}
-      <li{{ item.attributes.addClass(classes) }}>
-        {{ link(item.title, item.url) }}
-        {% if item.description %}
-          <span>{{ item.description }}</span>
-        {% endif %}
-        {% if item.below %}
-          {{ menus.menu_links(item.below, attributes, menu_level + 1) }}
-        {% endif %}
-      </li>
+      {% if menu_level == 1 and item.below %}
+        <h3 class="c-senator-dashboard-menu__sub-menu-heading">{{ item.title }}</h3>
+      {% else %}
+        <li{{ item.attributes.addClass(classes) }}>
+          {{ link(item.title, item.url) }}
+          {% if item.description %}
+            <span>{{ item.description }}</span>
+          {% endif %}
+          {% if menu_level == 0 %}
+            <button class="c-senator-dashboard-menu__toggle-open">
+              <span class="c-senator-dashboard-menu__toggle-open-icon"></span>
+            </button>
+          {% endif %}
+        </li>
+      {% endif %}
+      {% if item.below %}
+        {{ menus.menu_links(item.below, attributes, menu_level + 1) }}
+      {% endif %}
     {% endfor %}
     </ul>
   {% endif %}

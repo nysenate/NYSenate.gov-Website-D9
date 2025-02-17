@@ -170,6 +170,7 @@ class SenatorDashboardMenuBlock extends BlockBase implements ContainerFactoryPlu
           ['senator_tid' => $senator->id()]
         ),
         'is_active' => ($active_senator_tid == $senator->id()),
+        'homepage_url' => $this->managedSenatorsHandler->getActiveSenatorHomepageUrl($user_id),
       ];
     }
 
@@ -190,9 +191,13 @@ class SenatorDashboardMenuBlock extends BlockBase implements ContainerFactoryPlu
   private function getMenuRenderArray(string $sub_menu = '', bool $include_description = FALSE): array {
     $parameters = new MenuTreeParameters();
     $parameters->setRoot('senator_dashboard' . ($sub_menu ? ".$sub_menu" : ''));
-    $render_array = $this->menuLinkTree->build(
-      $this->menuLinkTree->load('senator_dashboard', $parameters)
-    );
+    $tree = $this->menuLinkTree->load('senator-dashboard', $parameters);
+    $manipulators = [
+      ['callable' => 'menu.default_tree_manipulators:checkAccess'],
+      ['callable' => 'menu.default_tree_manipulators:generateIndexAndSort'],
+    ];
+    $transformed_tree = $this->menuLinkTree->transform($tree, $manipulators);
+    $render_array = $this->menuLinkTree->build($transformed_tree);
 
     if ($include_description) {
       if (isset($render_array['#items']) && is_array($render_array['#items'])) {

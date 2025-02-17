@@ -7,11 +7,11 @@ use Drupal\system\Entity\Menu;
  */
 function nys_senator_dashboard_install() {
   // Create 'senator_dashboard' menu if it doesn't already exist.
-  if (!Menu::load('senator_dashboard')) {
+  if (!Menu::load('senator-dashboard')) {
     $menu = Menu::create([
-      'id' => 'senator_dashboard',
+      'id' => 'senator-dashboard',
       'label' => t('Senator Dashboard'),
-      'description' => t('A menu for the Senator Dashboard links.'),
+      'description' => t('The Senator Dashboard menu'),
     ]);
     $menu->save();
   }

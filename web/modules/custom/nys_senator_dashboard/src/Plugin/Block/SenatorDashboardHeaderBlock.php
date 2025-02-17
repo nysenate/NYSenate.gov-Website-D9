@@ -19,7 +19,6 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\file\Entity\File;
 use Drupal\nys_senator_dashboard\Service\ManagedSenatorsHandler;
-use Drupal\nys_senators\SenatorsHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -103,13 +102,6 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
   protected RouteProvider $routeProvider;
 
   /**
-   * The senators helper service.
-   *
-   * @var \Drupal\nys_senators\SenatorsHelper
-   */
-  protected SenatorsHelper $senatorsHelper;
-
-  /**
    * Constructs a SenatorDashboardHeaderBlock object.
    *
    * @param array $configuration
@@ -138,8 +130,6 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
    *   The request stack service.
    * @param \Drupal\Core\Routing\RouteProvider $route_provider
    *   The route provider service.
-   * @param \Drupal\nys_senators\SenatorsHelper $senators_helper
-   *   The senators helper service.
    */
   public function __construct(
     array $configuration,
@@ -155,7 +145,6 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
     MenuActiveTrailInterface $menu_active_trail,
     RequestStack $request_stack,
     RouteProvider $route_provider,
-    SenatorsHelper $senators_helper,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->currentUser = $current_user;
@@ -167,7 +156,6 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
     $this->menuLinkManager = $menu_link_manager;
     $this->menuActiveTrail = $menu_active_trail;
     $this->requestStack = $request_stack;
-    $this->senatorsHelper = $senators_helper;
     $this->routeProvider = $route_provider;
   }
 
@@ -201,7 +189,6 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
       $container->get('menu.active_trail'),
       $container->get('request_stack'),
       $container->get('router.route_provider'),
-      $container->get('nys_senators.senators_helper')
     );
   }
 
@@ -325,16 +312,7 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
   private function getHomepageUrl(): string {
     $homepage_url = '';
     if ($this->configuration['display_homepage_link']) {
-      $senator_tid = $this->managedSenatorsHandler->getActiveSenator($this->currentUser->id());
-      try {
-        $senator = $this->entityTypeManager
-          ->getStorage('taxonomy_term')
-          ->load($senator_tid);
-      }
-      catch (\Throwable) {
-        return $homepage_url;
-      }
-      $homepage_url = $this->senatorsHelper->getMicrositeUrl($senator);
+      $homepage_url = $this->managedSenatorsHandler->getActiveSenatorHomepageUrl($this->currentUser->id());
     }
     return $homepage_url;
   }

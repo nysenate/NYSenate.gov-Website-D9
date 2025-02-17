@@ -41,13 +41,13 @@ class SenatorDashboardController extends ControllerBase {
   /**
    * Renders the Senator Dashboard Menu Block.
    *
-   * @param bool $menu_mode
+   * @param string $menu_mode
    *   The flavor of menu to render.
    *
    * @return array
    *   Render array, or empty array on error.
    */
-  public function menuPage(bool $menu_mode): array {
+  public function menuPage(string $menu_mode): array {
     $variables = [
       'mode' => $menu_mode,
     ];

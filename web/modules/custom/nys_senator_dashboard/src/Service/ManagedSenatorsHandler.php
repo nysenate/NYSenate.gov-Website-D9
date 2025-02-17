@@ -9,6 +9,7 @@ use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\TempStore\TempStoreException;
+use Drupal\nys_senators\SenatorsHelper;
 
 /**
  * Provides service methods for managing an MCP's or LC's senator(s).
@@ -39,6 +40,13 @@ class ManagedSenatorsHandler {
   protected $entityTypeManager;
 
   /**
+   * The senators helper service.
+   *
+   * @var \Drupal\nys_senators\SenatorsHelper
+   */
+  protected SenatorsHelper $senatorsHelper;
+
+  /**
    * Constructs the ManagedSenatorsHandler service.
    *
    * @param \Drupal\Core\TempStore\PrivateTempStoreFactory $tempStoreFactory
@@ -47,11 +55,19 @@ class ManagedSenatorsHandler {
    *   The messenger service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager service.
+   * @param \Drupal\nys_senators\SenatorsHelper $senators_helper
+   *   The senators helper service.
    */
-  public function __construct(PrivateTempStoreFactory $tempStoreFactory, MessengerInterface $messenger, EntityTypeManagerInterface $entityTypeManager) {
+  public function __construct(
+    PrivateTempStoreFactory $tempStoreFactory,
+    MessengerInterface $messenger,
+    EntityTypeManagerInterface $entityTypeManager,
+    SenatorsHelper $senators_helper,
+  ) {
     $this->tempStoreFactory = $tempStoreFactory->get('nys_senator_dashboard');
     $this->messenger = $messenger;
     $this->entityTypeManager = $entityTypeManager;
+    $this->senatorsHelper = $senators_helper;
   }
 
   /**
@@ -167,6 +183,20 @@ class ManagedSenatorsHandler {
       }
       return FALSE;
     }
+  }
+
+  /**
+   * Gets the active senator's homepage URL for a given user.
+   *
+   * @param int $user_id
+   *   The user ID.
+   *
+   * @return string
+   *   The homepage URL.
+   */
+  public function getActiveSenatorHomepageUrl(int $user_id): string {
+    $senator = $this->getActiveSenator($user_id, FALSE);
+    return $this->senatorsHelper->getMicrositeUrl($senator);
   }
 
 }

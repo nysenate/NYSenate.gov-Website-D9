@@ -1,0 +1,80 @@
+<?php
+
+/**
+ * @file
+ * Install and update hooks for the "nys_school_forms" module.
+ */
+
+use Drupal\node\Entity\Node;
+
+/**
+ * Implements hook_update_N().
+ *
+ * Creates two "school_forms" nodes with predefined body values and path aliases.
+ */
+function nys_school_forms_update_8001() {
+  $entity_type_manager = \Drupal::entityTypeManager();
+  $nodes_data = [
+    [
+      'title' => 'Thanksgiving submission received',
+      'type' => 'school_forms',
+      'field_form_summary' => 'Thank you! Your submission to the Thanksgiving Day Showcase has been received.',
+      'path' => '/questionnaires/what-are-you-thankful/received',
+    ],
+    [
+      'title' => 'Earth Day submission received',
+      'type' => 'school_forms',
+      'field_form_summary' => 'Thank you! Your submission to the Earth Day Showcase has been received.',
+      'path' => '/earthday/received',
+    ],
+  ];
+  foreach ($nodes_data as $data) {
+    $node = $entity_type_manager->getStorage('node')->create([
+      'type' => $data['type'],
+      'title' => $data['title'],
+      'field_form_summary' => [
+        'value' => $data['field_form_summary'],
+        'format' => 'basic_html',
+      ],
+    ]);
+    $node->save();
+    $entity_type_manager->getStorage('path_alias')->create([
+      'path' => '/node/' . $node->id(),
+      'alias' => $data['path'],
+      'langcode' => 'en',
+    ])->save();
+    \Drupal::logger('nys_school_forms')->info('Created node %title with path %path.', [
+      '%title' => $data['title'],
+      '%path' => $data['path'],
+    ]);
+  }
+}
+
+/**
+ * Implements hook_update_N().
+ *
+ * Updates the "field_form_type" field for original school form nodes.
+ */
+function nys_school_forms_update_8003() {
+  $nid_to_field_value = [
+    12017207 => 'thanksgiving',
+    12007481 => 'earth_day',
+  ];
+  $entity_type_manager = \Drupal::entityTypeManager();
+  foreach ($nid_to_field_value as $nid => $field_value) {
+    $node = $entity_type_manager->getStorage('node')->load($nid);
+    if ($node instanceof Node) {
+      $node->set('field_form_type', $field_value);
+      $node->save();
+      \Drupal::logger('nys_school_forms')->info('Updated field_form_type for node %nid to %value.', [
+        '%nid' => $nid,
+        '%value' => $field_value,
+      ]);
+    }
+    else {
+      \Drupal::logger('nys_school_forms')->warning('Node %nid not found.', [
+        '%nid' => $nid,
+      ]);
+    }
+  }
+}

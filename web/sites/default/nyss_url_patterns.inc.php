@@ -17,6 +17,7 @@
  * Revised: 2023-01-06 - updated 14 entries for the 2023-2024 session
  * Revised: 2023-06-23 - updated microsite URL for Senator Harckham
  * Revised: 2024-01-02 - updated 5 entries for the 2025-2026 session
+ * Revised: 2025-01-23 - updated microsite URL for Senator Rolison
  *
  */
 
@@ -87,7 +88,7 @@ function get_nyss_senator_patterns()
     'jessica-ramos'           => '(jessica)?ramos',
     'steven-d-rhoads'         => '(steven)?rhoads',
     'gustavo-rivera'          => '(gustavo)?rivera',
-    'robert-rolison'          => '(robert)?rolison',
+    'rob-rolison'             => '(robert)?rolison',
     'christopher-j-ryan'      => '(chris(topher)?ryan|ryanc)',
     'sean-m-ryan'             => '(sean)?ryan',
     'julia-salazar'           => '(julia)?salazar',

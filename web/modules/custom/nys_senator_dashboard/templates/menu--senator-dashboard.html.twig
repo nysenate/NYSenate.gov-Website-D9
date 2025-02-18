@@ -4,7 +4,7 @@
  * Theme override to display a menu.
  *
  * Available variables:
- * - menu_name: The machine name of the menu.
+ * - mode: The menu mode.
  * - items: A nested list of menu items. Each menu item contains:
  *   - attributes: HTML attributes for the menu item.
  *   - below: The menu item child items.
@@ -25,9 +25,9 @@
     We call a macro which calls itself to render the full tree.
     @see https://twig.symfony.com/doc/1.x/tags/macro.html
   #}
-  {{ menus.menu_links(items, attributes, 0) }}
+  {{ menus.menu_links(items, attributes, 0, mode) }}
 </nav>
-{% macro menu_links(items, attributes, menu_level) %}
+{% macro menu_links(items, attributes, menu_level, mode) %}
   {% import _self as menus %}
   {% if items %}
     {% if menu_level == 0 %}
@@ -46,13 +46,17 @@
           item.in_active_trail ? 'menu-item--active-trail',
         ]
       %}
-      {% if menu_level == 1 and item.below %}
-        <h3 class="c-senator-dashboard-menu__sub-menu-heading">{{ item.title }}</h3>
-      {% else %}
+      {% if mode == 'header_menu' and menu_level == 1 and item.below  %}
+        <strong class="c-senator-dashboard-menu__sub-menu-heading">{{ item.title }}</strong>
+      {% elseif mode != 'header_menu' and menu_level == 1 and item.below%}
+        <h2 class="c-senator-dashboard-menu__sub-menu-heading">{{ item.title }}</h2>
+      {% elseif mode != 'header_menu' and menu_level == 1 and loop.index == 1 %}
+        {# Omit overview links when not in header_menu mode #}
+      {% elseif mode == 'header_menu' or menu_level != 0 %}
         <li{{ item.attributes.addClass(classes) }}>
           {{ link(item.title, item.url) }}
           {% if item.description %}
-            <span>{{ item.description }}</span>
+            <p>{{ item.description }}</p>
           {% endif %}
           {% if menu_level == 0 %}
             <button class="c-senator-dashboard-menu__toggle-open">
@@ -62,7 +66,7 @@
         </li>
       {% endif %}
       {% if item.below %}
-        {{ menus.menu_links(item.below, attributes, menu_level + 1) }}
+        {{ menus.menu_links(item.below, attributes, menu_level + 1, mode) }}
       {% endif %}
     {% endfor %}
     </ul>

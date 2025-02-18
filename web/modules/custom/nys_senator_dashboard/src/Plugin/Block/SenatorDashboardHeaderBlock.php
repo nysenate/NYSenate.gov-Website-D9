@@ -249,7 +249,11 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
    *   The breadcrumbs.
    */
   private function getBreadcrumbs(): array {
-    $breadcrumbs = [];
+    $active_senator = $this->managedSenatorsHandler->getActiveSenator($this->currentUser->id(), FALSE);
+    $breadcrumbs[] = [
+      'title' => $active_senator->label(),
+      'url' => $this->managedSenatorsHandler->getActiveSenatorHomepageUrl($this->currentUser->id()),
+    ];
     if ($this->configuration['display_breadcrumbs']) {
       $active_trail_ids = $this->menuActiveTrail->getActiveTrailIds('senator_dashboard');
       if (!empty($active_trail_ids)) {

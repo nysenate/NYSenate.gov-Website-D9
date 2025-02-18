@@ -129,10 +129,10 @@ class SenatorDashboardMenuBlock extends BlockBase implements ContainerFactoryPlu
       default => [],
     };
 
-    return [
+    // Build full render array, including block mode variable.
+    $return_data = [
       'active_senator_menu' => [
         '#theme' => 'nys_senator_dashboard__set_active_senator_menu',
-        '#mode' => $this->configuration['mode'],
         '#active_senator_links' => $active_senator_links,
         '#cache' => [
           'contexts' => ['user'],
@@ -145,6 +145,11 @@ class SenatorDashboardMenuBlock extends BlockBase implements ContainerFactoryPlu
       'manage_senator_menu' => $manage_senator_menu,
       'constituent_activity_menu' => $constituent_activity_menu,
     ];
+    foreach ($return_data as &$menu) {
+      $menu['#mode'] = $this->configuration['mode'];
+    }
+
+    return $return_data;
   }
 
   /**

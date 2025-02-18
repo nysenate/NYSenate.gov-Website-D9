@@ -6,7 +6,7 @@ use Drupal\system\Entity\Menu;
  * Implements hook_install().
  */
 function nys_senator_dashboard_install() {
-  // Create 'senator_dashboard' menu if it doesn't already exist.
+  // Create 'senator-dashboard' menu if it doesn't already exist.
   if (!Menu::load('senator-dashboard')) {
     $menu = Menu::create([
       'id' => 'senator-dashboard',

@@ -105,15 +105,19 @@ class FindMySenatorForm extends FormBase {
   }
 
   /**
-   * Forces the country code form control to be hidden.
+   * Modify the presentation of the address fields.
    *
    * The country code element does not exist until after the build process.  The
    * module requires it to be present and populated on submission; we want it to
    * be populated with 'US' (no user input), but not visible on the form.
    * Setting #access or #disabled will not work.  Is there a better way?
+   *
+   * The 'administrative_area' key ('state' field of the address) is disabled
+   * since we only allow NY addresses here.
    */
-  public function hideCountryField(array $element): array {
+  public function massageFormFields(array $element): array {
     $element['country_code']['#attributes']['style'] = 'display:none;';
+    $element['administrative_area']['#attributes']['disabled'] = TRUE;
     return $element;
   }
 
@@ -125,7 +129,7 @@ class FindMySenatorForm extends FormBase {
    */
   protected function getAddressDefinition(): array {
     return [
-      '#after_build' => ['::hideCountryField'],
+      '#after_build' => ['::massageFormFields'],
       '#type' => 'address',
       '#default_value' => [
         'country_code' => 'US',
@@ -135,7 +139,7 @@ class FindMySenatorForm extends FormBase {
         'addressLine1' => 'required',
         'addressLine2' => 'optional',
         'addressLine3' => 'hidden',
-        'administrativeArea' => 'required',
+        'administrativeArea' => 'optional',
         'locality' => 'required',
         'postalCode' => 'required',
         'familyName' => 'hidden',
@@ -176,7 +180,7 @@ class FindMySenatorForm extends FormBase {
       'intro' => [
         '#type' => 'html_tag',
         '#tag' => 'p',
-        '#value' => 'Please enter your street address and zip code to find out who your Senator is.',
+        '#value' => 'Please enter your street address and zip code to find out who your Senator is.  Note that this feature is limited to addresses within the state of New York.',
         '#weight' => 50,
       ],
       'field_address' => $this->getAddressDefinition(),
@@ -232,9 +236,11 @@ class FindMySenatorForm extends FormBase {
    * {@inheritDoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state): void {
-    $address = $form_state->getValue('field_address') ?? [];
+    // Overwrite the "state" field to enforce New York addresses only.
+    $form_state->setValue(['field_address', 'administrative_area'], 'NY');
 
     // Save input address to current session for later reuse.
+    $address = $form_state->getValue('field_address') ?? [];
     try {
       $this->tempStoreFactory->get('nys_registration')
         ->set('find_my_senator_address', $address);

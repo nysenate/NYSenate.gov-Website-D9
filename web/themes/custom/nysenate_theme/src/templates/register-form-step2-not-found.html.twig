@@ -12,15 +12,16 @@
 
 <div class="c-block c-login">
   <h3 class="nys-title">
-    {{ 'There was a problem finding your district.'|t }} 
+    {{ 'There was a problem finding your district.'|t }}
   </h3>
   <p class="body">
-    {{
-      'If you are from outside NY State, please continue by selecting "FINISH". 
-      If not, go back and ensure you entered your NY address correctly.'|t
-    }}
+    {% if attributes.variables.out_of_state %}
+      {{ 'Your address is outside the state of New York, and will not be assigned a Senate district.  Select "FINISH" to continue creating your account.'|t }}
+    {% else %}
+      {{ 'You can go back to ensure your NY address was entered correctly.  Note that if you are outside the state of New York, this result is correct and you should continue by selecting "FINISH".'|t }}
+    {% endif %}
   </p>
-   <div class="button-group">
+  <div class="button-group">
     {{ form }}
-   </div>
+  </div>
 </div>

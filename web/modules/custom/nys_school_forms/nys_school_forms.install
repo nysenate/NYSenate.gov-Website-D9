@@ -56,6 +56,10 @@ function nys_school_forms_update_8001() {
  * Updates the "field_form_type" field for original school form nodes.
  */
 function nys_school_forms_update_8003() {
+  // Ensures the dependent field configurations exist.
+  \Drupal::service('config.installer')->installDefaultConfig('module', 'nys_school_forms');
+
+  // Add value to the "field_form_type" field for the original school form nodes.
   $nid_to_field_value = [
     12017207 => 'thanksgiving',
     12007481 => 'earth_day',

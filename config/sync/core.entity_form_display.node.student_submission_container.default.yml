@@ -1,0 +1,83 @@
+uuid: 3d3eb0c9-3301-4643-b63c-166c9afd9b82
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.student_submission_container.field_form_type
+    - field.field.node.student_submission_container.field_grade
+    - field.field.node.student_submission_container.field_school
+    - field.field.node.student_submission_container.field_student_submissions
+    - field.field.node.student_submission_container.field_teacher_email
+    - field.field.node.student_submission_container.field_teacher_name
+    - node.type.student_submission_container
+  module:
+    - inline_entity_form
+id: node.student_submission_container.default
+targetEntityType: node
+bundle: student_submission_container
+mode: default
+content:
+  field_form_type:
+    type: options_select
+    weight: -1
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_grade:
+    type: options_select
+    weight: 3
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_school:
+    type: entity_reference_autocomplete
+    weight: 0
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_student_submissions:
+    type: inline_entity_form_simple
+    weight: 4
+    region: content
+    settings:
+      form_mode: default
+      override_labels: false
+      label_singular: ''
+      label_plural: ''
+      collapsible: false
+      collapsed: false
+      revision: false
+    third_party_settings: {  }
+  field_teacher_email:
+    type: email_default
+    weight: 2
+    region: content
+    settings:
+      placeholder: ''
+      size: 60
+    third_party_settings: {  }
+  field_teacher_name:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  langcode: true
+  path: true
+  promote: true
+  publish_on: true
+  simple_sitemap: true
+  status: true
+  sticky: true
+  title: true
+  uid: true
+  unpublish_on: true
+  url_redirects: true

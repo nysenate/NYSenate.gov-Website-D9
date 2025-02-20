@@ -3,6 +3,11 @@ langcode: en
 status: true
 dependencies:
   config:
+    - entityqueue.entity_queue.frontpage_news
+    - entityqueue.entity_queue.global_promo_banner
+    - entityqueue.entity_queue.happening_now
+    - entityqueue.entity_queue.homepage_featured_story
+    - entityqueue.entity_queue.homepage_hero
     - filter.format.basic_html
     - filter.format.full_html
     - media.type.file

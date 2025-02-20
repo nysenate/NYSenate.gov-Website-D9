@@ -1,0 +1,22 @@
+uuid: d2cfa0fd-ef8e-402d-a79e-2aa106e6e4a5
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.student_submission_container
+id: node.student_submission_container.promote
+field_name: promote
+entity_type: node
+bundle: student_submission_container
+label: 'Promoted to front page'
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

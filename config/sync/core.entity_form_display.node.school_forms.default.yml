@@ -4,21 +4,15 @@ status: true
 dependencies:
   config:
     - field.field.node.school_forms.field_form_banner_image
-    - field.field.node.school_forms.field_form_date
     - field.field.node.school_forms.field_form_summary
-    - field.field.node.school_forms.field_form_title
-    - field.field.node.school_forms.field_issues
-    - field.field.node.school_forms.field_school_form
-    - field.field.node.school_forms.field_school_form_type
+    - field.field.node.school_forms.field_form_type
     - field.field.node.school_forms.rabbit_hole__settings
     - node.type.school_forms
   module:
-    - datetime
     - media_library
     - path
     - rabbit_hole
     - text
-    - webform
 id: node.school_forms.default
 targetEntityType: node
 bundle: school_forms
@@ -37,12 +31,6 @@ content:
     settings:
       media_types: {  }
     third_party_settings: {  }
-  field_form_date:
-    type: datetime_default
-    weight: 16
-    region: content
-    settings: {  }
-    third_party_settings: {  }
   field_form_summary:
     type: text_textarea_with_summary
     weight: 14
@@ -53,36 +41,9 @@ content:
       placeholder: ''
       show_summary: false
     third_party_settings: {  }
-  field_form_title:
-    type: text_textfield
-    weight: 15
-    region: content
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-  field_issues:
-    type: entity_reference_autocomplete_tags
-    weight: 13
-    region: content
-    settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-  field_school_form:
-    type: webform_entity_reference_select
-    weight: 18
-    region: content
-    settings:
-      allow_status: true
-      default_data: true
-      webforms: {  }
-    third_party_settings: {  }
-  field_school_form_type:
+  field_form_type:
     type: options_select
-    weight: 17
+    weight: -1
     region: content
     settings: {  }
     third_party_settings: {  }

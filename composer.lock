@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "80f3de46b44844985d859dc6e4490bc2",
+    "content-hash": "45157c7af07e2b6d49222dc8300dbd3a",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -61,6 +61,42 @@
                 "source": "https://github.com/asm89/stack-cors/tree/v2.2.0"
             },
             "time": "2023-11-14T13:51:46+00:00"
+        },
+        {
+            "name": "bower-asset/colorbox",
+            "version": "1.6.4",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:jackmoore/colorbox.git",
+                "reference": "bac78120c6ca9e63370cc317ab6f400129cd6608"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jackmoore/colorbox/zipball/bac78120c6ca9e63370cc317ab6f400129cd6608",
+                "reference": "bac78120c6ca9e63370cc317ab6f400129cd6608"
+            },
+            "require": {
+                "bower-asset/jquery": ">=1.3.2"
+            },
+            "type": "bower-asset"
+        },
+        {
+            "name": "bower-asset/jquery",
+            "version": "3.7.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jquery/jquery-dist.git",
+                "reference": "fde1f76e2799dd877c176abde0ec836553246991"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jquery/jquery-dist/zipball/fde1f76e2799dd877c176abde0ec836553246991",
+                "reference": "fde1f76e2799dd877c176abde0ec836553246991"
+            },
+            "type": "bower-asset",
+            "license": [
+                "MIT"
+            ]
         },
         {
             "name": "caxy/php-htmldiff",
@@ -3023,6 +3059,70 @@
             }
         },
         {
+            "name": "drupal/colorbox",
+            "version": "2.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/colorbox.git",
+                "reference": "2.1.1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/colorbox-2.1.1.zip",
+                "reference": "2.1.1",
+                "shasum": "59f2fc48ba12ebc91293f7d33138ae6a7761b4b1"
+            },
+            "require": {
+                "drupal/core": "^9 || ^10 || ^11"
+            },
+            "suggest": {
+                "jackmoore/colorbox": "The Colorbox library is required to use the drupal/colorbox module."
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "2.1.1",
+                    "datestamp": "1723487172",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                },
+                "drush": {
+                    "services": {
+                        "drush.services.yml": "^9 || ^10 || ^11"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Paul McKibben",
+                    "homepage": "https://www.drupal.org/u/paulmckibben",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "Neslee Canil Pinto",
+                    "homepage": "https://www.drupal.org/u/neslee-canil-pinto",
+                    "role": "Former Maintainer"
+                },
+                {
+                    "name": "Fredrik Jonsson",
+                    "homepage": "https://www.drupal.org/u/frjo",
+                    "role": "Former Maintainer"
+                }
+            ],
+            "description": "A light-weight, customizable lightbox plugin for jQuery.",
+            "homepage": "https://www.drupal.org/project/colorbox",
+            "support": {
+                "source": "https://git.drupalcode.org/project/colorbox",
+                "issues": "https://www.drupal.org/project/issues/colorbox"
+            }
+        },
+        {
             "name": "drupal/comments_ban",
             "version": "1.0.3",
             "source": {
@@ -4871,6 +4971,60 @@
             }
         },
         {
+            "name": "drupal/exif_manipulate",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/exif_manipulate.git",
+                "reference": "1.0.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/exif_manipulate-1.0.0.zip",
+                "reference": "1.0.0",
+                "shasum": "040459ef9905c7659f7e707f31be974496a8f1a2"
+            },
+            "require": {
+                "drupal/core": "^10.0",
+                "fileeye/pel": "^0.10.0"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "1.0.0",
+                    "datestamp": "1712572368",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "ahmetburkan",
+                    "homepage": "https://www.drupal.org/user/3683654"
+                },
+                {
+                    "name": "eelkeblok",
+                    "homepage": "https://www.drupal.org/user/423078"
+                },
+                {
+                    "name": "jaapjan",
+                    "homepage": "https://www.drupal.org/user/555428"
+                }
+            ],
+            "description": " Clean EXIF data from uploaded images.",
+            "homepage": "https://www.drupal.org/project/exif_manipulate",
+            "support": {
+                "source": "https://www.drupal.org/project/exif_manipulate",
+                "issues": "https://www.drupal.org/project/exif_manipulate"
+            }
+        },
+        {
             "name": "drupal/facets",
             "version": "2.0.9",
             "source": {
@@ -5495,6 +5649,62 @@
             "support": {
                 "source": "https://git.drupalcode.org/project/fontawesome",
                 "issues": "https://drupal.org/project/issues/fontawesome"
+            }
+        },
+        {
+            "name": "drupal/formblock",
+            "version": "2.0.0-beta4",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/formblock.git",
+                "reference": "2.0.0-beta4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/formblock-2.0.0-beta4.zip",
+                "reference": "2.0.0-beta4",
+                "shasum": "b564b874b592711976ede6e45e0c0841592b7235"
+            },
+            "require": {
+                "drupal/core": "^10 || ^11"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "2.0.0-beta4",
+                    "datestamp": "1734113648",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Beta releases are not covered by Drupal security advisories."
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "andyd328",
+                    "homepage": "https://www.drupal.org/user/2261214"
+                },
+                {
+                    "name": "chx",
+                    "homepage": "https://www.drupal.org/user/9446"
+                },
+                {
+                    "name": "joseph.olstad",
+                    "homepage": "https://www.drupal.org/user/1321830"
+                },
+                {
+                    "name": "mikey_p",
+                    "homepage": "https://www.drupal.org/user/62496"
+                }
+            ],
+            "description": "Enables the presentation of node creation forms in blocks. This is particularly useful for including forms on Layout Builder & Panels.",
+            "homepage": "https://www.drupal.org/project/formblock",
+            "support": {
+                "source": "https://git.drupalcode.org/project/formblock"
             }
         },
         {
@@ -10768,6 +10978,58 @@
             }
         },
         {
+            "name": "drupal/simple_image_rotate",
+            "version": "2.3.0-alpha1",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/simple_image_rotate.git",
+                "reference": "2.3.0-alpha1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/simple_image_rotate-2.3.0-alpha1.zip",
+                "reference": "2.3.0-alpha1",
+                "shasum": "feef5a818d9aabe283d34ff6b352d3a26d992dc3"
+            },
+            "require": {
+                "drupal/core": "^8.8 || ^9.5 || ^10"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "2.3.0-alpha1",
+                    "datestamp": "1703368746",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Alpha releases are not covered by Drupal security advisories."
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "afagioli",
+                    "homepage": "https://www.drupal.org/user/50680"
+                },
+                {
+                    "name": "khoomy",
+                    "homepage": "https://www.drupal.org/user/135921"
+                },
+                {
+                    "name": "leevh",
+                    "homepage": "https://www.drupal.org/user/426580"
+                }
+            ],
+            "description": "Simple image rotation",
+            "homepage": "https://www.drupal.org/project/simple_image_rotate",
+            "support": {
+                "source": "https://git.drupalcode.org/project/simple_image_rotate"
+            }
+        },
+        {
             "name": "drupal/simple_sitemap",
             "version": "4.2.2",
             "source": {
@@ -15619,7 +15881,7 @@
             "version": "3.2.2",
             "source": {
                 "type": "git",
-                "url": "git@github.com:DataTables/Dist-DataTables-DataTables.git",
+                "url": "https://github.com/DataTables/Dist-DataTables-DataTables.git",
                 "reference": "6dc8eccf208cd4b5e5f450d9eb23674915c035e6"
             },
             "dist": {
@@ -26407,6 +26669,7 @@
         "drupal/field_validation": 10,
         "drupal/filefield_paths": 10,
         "drupal/flag": 10,
+        "drupal/formblock": 10,
         "drupal/guardr_core": 20,
         "drupal/htmlpurifier": 5,
         "drupal/inline_entity_form": 5,
@@ -26437,9 +26700,9 @@
         "ext-curl": "*",
         "ext-json": "*"
     },
-    "platform-dev": {},
+    "platform-dev": [],
     "platform-overrides": {
-        "php": "8.2"
+        "php": "8.1.31"
     },
     "plugin-api-version": "2.6.0"
 }

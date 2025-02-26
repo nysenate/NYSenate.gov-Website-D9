@@ -1,0 +1,77 @@
+uuid: c5c06985-ae8a-449d-8459-32e6686b9c31
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.student_submission_container.field_form_type
+    - field.field.node.student_submission_container.field_grade
+    - field.field.node.student_submission_container.field_school
+    - field.field.node.student_submission_container.field_student_submissions
+    - field.field.node.student_submission_container.field_teacher_email
+    - field.field.node.student_submission_container.field_teacher_name
+    - node.type.student_submission_container
+  module:
+    - options
+    - user
+id: node.student_submission_container.default
+targetEntityType: node
+bundle: student_submission_container
+mode: default
+content:
+  field_form_type:
+    type: list_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 106
+    region: content
+  field_grade:
+    type: list_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 104
+    region: content
+  field_school:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 101
+    region: content
+  field_student_submissions:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 105
+    region: content
+  field_teacher_email:
+    type: basic_string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 107
+    region: content
+  field_teacher_name:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 102
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  langcode: true
+  private_message_link: true
+  search_api_excerpt: true

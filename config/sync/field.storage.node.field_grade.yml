@@ -1,0 +1,63 @@
+uuid: a26615ba-6608-48e9-890b-7ee8e8d572ee
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - options
+id: node.field_grade
+field_name: field_grade
+entity_type: node
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: kindergarten
+      label: Kindergarten
+    -
+      value: 1st_grade
+      label: '1st Grade'
+    -
+      value: 2nd_grade
+      label: '2nd Grade'
+    -
+      value: 3rd_grade
+      label: '3rd Grade'
+    -
+      value: 4th_grade
+      label: '4th Grade'
+    -
+      value: 5th_grade
+      label: '5th Grade'
+    -
+      value: 6th_grade
+      label: '6th Grade'
+    -
+      value: 7th_grade
+      label: '7th Grade'
+    -
+      value: 8th_grade
+      label: '8th Grade'
+    -
+      value: 9th_grade
+      label: '9th Grade'
+    -
+      value: 10th_grade
+      label: '10th Grade'
+    -
+      value: 11th_grade
+      label: '11th Grade'
+    -
+      value: 12th_grade
+      label: '12th Grade'
+    -
+      value: homeschool
+      label: Homeschool
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

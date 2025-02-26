@@ -255,8 +255,9 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
       'url' => $this->managedSenatorsHandler->getActiveSenatorHomepageUrl($this->currentUser->id()),
     ];
     if ($this->configuration['display_breadcrumbs']) {
-      $active_trail_ids = $this->menuActiveTrail->getActiveTrailIds('senator_dashboard');
+      $active_trail_ids = $this->menuActiveTrail->getActiveTrailIds('senator-dashboard');
       if (!empty($active_trail_ids)) {
+        $active_trail_ids = array_reverse($active_trail_ids);
         foreach ($active_trail_ids as $item) {
           if (empty($item)) {
             continue;

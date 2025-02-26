@@ -151,12 +151,12 @@ senator_dashboard.constituent_activity_menu.overview:
   menu_name: senator-dashboard
   route_name: nys_senator_dashboard.constituent_activity
   weight: 1
-senator_dashboard.constituent_activity_menu.list:
+senator_dashboard.constituent_activity_menu.constituents:
   title: 'Constituents List'
-  description: 'View the Senator’s constituents who have a New York State Senate account.'
+  description: 'View constituent activity on bills.'
   parent: senator_dashboard.constituent_activity_menu
   menu_name: senator-dashboard
-  route_name: nys_senator_dashboard.placeholder
+  route_name: view.senator_dashboard_constituents.constituents_list
   weight: 2
 senator_dashboard.constituent_activity_menu.bills:
   title: 'Bills'

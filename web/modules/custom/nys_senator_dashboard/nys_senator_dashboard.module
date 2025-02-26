@@ -6,48 +6,39 @@
  */
 
 use Drupal\Core\Database\Query\AlterableInterface;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Implements hook_query_TAG_alter().
  *
  * Ensures views with the "senators_constituents_only" tag only display profiles
- * linked to one of the current user's managed senator's districts.
+ * linked to the current user's active managed senator's districts.
  */
 function nys_senator_dashboard_query_senators_constituents_only_alter(AlterableInterface $query) {
-  // Get the current user.
-  try {
-    $current_user = \Drupal::entityTypeManager()
-      ->getStorage('user')
-      ->load(\Drupal::currentUser()->id());
-  }
-  catch (\Throwable) {
-    $query->alwaysFalse();
-    return;
-  }
-  if (!$current_user || !$current_user->hasField('field_senator_multiref')) {
+  // Get active managed senator.
+  $senator_term = \Drupal::service('nys_senator_dashboard.managed_senators_handler')
+    ->getActiveSenator(\Drupal::currentUser()->id(), FALSE);
+  if (empty($senator_term)) {
     $query->alwaysFalse();
     return;
   }
 
-  // Get the current user's managed senators district IDs.
-  $managed_senator_terms = $current_user->field_senator_multiref->referencedEntities();
-  if (empty($managed_senator_terms)) {
+  // Get senator's districts.
+  $managed_district_ids = [];
+  try {
+    $senator_districts = \Drupal::entityTypeManager()
+      ->getStorage('taxonomy_term')
+      ->loadByProperties([
+        'vid' => 'districts',
+        'field_senator' => $senator_term->id(),
+      ]);
+  }
+  catch (\Throwable $e) {
     $query->alwaysFalse();
     return;
   }
-  $managed_district_ids = [];
-  foreach ($managed_senator_terms as $senator_term) {
-    try {
-      $senator_districts = \Drupal::entityTypeManager()
-        ->getStorage('taxonomy_term')
-        ->loadByProperties(['field_senator' => $senator_term->id()]);
-    }
-    catch (\Throwable) {
-      continue;
-    }
-    foreach ($senator_districts as $senator_district) {
-      $managed_district_ids[] = $senator_district->id();
-    }
+  foreach ($senator_districts as $senator_district) {
+    $managed_district_ids[] = $senator_district->id();
   }
   if (empty($managed_district_ids)) {
     $query->alwaysFalse();
@@ -69,7 +60,7 @@ function nys_senator_dashboard_query_senators_constituents_only_alter(AlterableI
     return;
   }
 
-  // Ensure the users being fetched are within one of the user's managed
+  // Ensure the users being fetched are within the user's active managed
   // senator's districts.
   $query->leftJoin(
     'user__field_district',
@@ -111,4 +102,14 @@ function nys_senator_dashboard_theme() {
       ],
     ],
   ];
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function nys_senator_dashboard_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if (str_starts_with($form_id, 'views_form_senator_dashboard_constituents_')) {
+    // Hide additional footer bulk operation button.
+    $form['actions']['#access'] = FALSE;
+  }
 }

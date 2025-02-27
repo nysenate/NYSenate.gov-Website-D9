@@ -1,0 +1,8 @@
+services:
+  nys_senator_dashboard.managed_senators_handler:
+    class: \Drupal\nys_senator_dashboard\Service\ManagedSenatorsHandler
+    arguments:
+      - '@tempstore.private'
+      - '@messenger'
+      - '@entity_type.manager'
+      - '@nys_senators.senators_helper'

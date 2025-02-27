@@ -1,0 +1,27 @@
+<div class="senator-dashboard-header-block">
+  {% if senator_image_url %}
+    <img class="senator-image" src="{{ senator_image_url }}" alt="{{ 'Picture of senator'|t }}">
+  {% endif %}
+  {% if breadcrumbs %}
+    <ul class="breadcrumbs">
+      {% for breadcrumb in breadcrumbs  %}
+        <li class="breadcrumb-item">
+          <a href="{{ breadcrumb.url }}">{{ breadcrumb.title }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+  {% if header_title %}
+    <h1 class="page-title">
+      {{ header_title }}
+    </h1>
+  {% endif %}
+  {% if header_blurb %}
+    <p class="blurb">
+      {{ header_blurb }}
+    </p>
+  {% endif %}
+  {% if homepage_url %}
+    <a class="homepage-link" href="{{ homepage_url }}">Visit senator's homepage</a>
+  {% endif %}
+</div>

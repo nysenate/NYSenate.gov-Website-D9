@@ -26,6 +26,7 @@
     "require": {
         "ext-curl": "*",
         "ext-json": "*",
+        "bower-asset/colorbox": "^1.6",
         "composer/installers": "^1.2",
         "cweagans/composer-patches": "^1.7.0",
         "dompdf/dompdf": "^2.0",
@@ -43,6 +44,7 @@
         "drupal/charts": "^5.0",
         "drupal/clamav": "^2.0",
         "drupal/classy": "^1.0",
+        "drupal/colorbox": "^2.1",
         "drupal/comments_ban": "^1.0",
         "drupal/components": "^3.1",
         "drupal/conditional_fields": "^4.0@alpha",
@@ -66,6 +68,7 @@
         "drupal/entityqueue": "^1.2",
         "drupal/environment_indicator": "^4.0",
         "drupal/eva": "^3.0",
+        "drupal/exif_manipulate": "^1.0",
         "drupal/facets": "^2.0",
         "drupal/fancy_file_delete": "^2.0",
         "drupal/field_group": "^3.6",
@@ -75,6 +78,7 @@
         "drupal/flag": "^4.0@beta",
         "drupal/flood_control": "^2.2",
         "drupal/fontawesome": "^2.26",
+        "drupal/formblock": "^2.0@beta",
         "drupal/fpa": "^4.0",
         "drupal/fullcalendar_view": "^5.1",
         "drupal/geocoder": "^3.25 || ^4.0",
@@ -135,6 +139,7 @@
         "drupal/seckit": "^2.0",
         "drupal/semanticviews": "^3.0",
         "drupal/seven": "^1.0",
+        "drupal/simple_image_rotate": "^2.0",
         "drupal/simple_sitemap": "^4.2",
         "drupal/site_verify": "^2.0@alpha",
         "drupal/stage_file_proxy": "^3.1",
@@ -209,7 +214,7 @@
         "discard-changes": true,
         "sort-packages": true,
         "platform": {
-            "php": "8.2"
+            "php": "8.1.31"
         },
         "allow-plugins": {
             "composer/installers": true,
@@ -324,6 +329,9 @@
             "drupal/clamav": {
                 "3383653 -Support image upload plugin for CKEditor5\n": "https://git.drupalcode.org/project/clamav/-/merge_requests/7.patch"
             },
+            "drupal/simple_image_rotate": {
+              "3374358 - Inverted picture returns to its original form after adding another picture": "https://www.drupal.org/files/issues/2024-02-09/3374358-inverted-picture-returns-4.patch"
+            },
             "drupal/stage_file_proxy": {
                 "3457368 - createProxyHeadersArray(): Argument #1 ($headers_string) must be of type string": "https://git.drupalcode.org/project/stage_file_proxy/-/merge_requests/74.patch"
             },
@@ -332,6 +340,9 @@
             },
             "drupal/name": {
                 "Literal \"_none\" value saved for select fields": "https://www.drupal.org/files/issues/2024-12-03/name_none_placeholder-3384140-10.patch"
+            },
+            "drupal/environment_indicator": {
+                "3487202 - Gin menu overlapping": "https://www.drupal.org/files/issues/2024-12-03/3487202-gin-vertical-toolbar-9.patch"
             }
         }
     }

@@ -1,0 +1,38 @@
+uuid: 9083bce5-92ff-429f-8fb6-4e062646da7d
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.student_submission_container.field_form_type
+    - field.field.node.student_submission_container.field_grade
+    - field.field.node.student_submission_container.field_school
+    - field.field.node.student_submission_container.field_student_submissions
+    - field.field.node.student_submission_container.field_teacher_email
+    - field.field.node.student_submission_container.field_teacher_name
+    - node.type.student_submission_container
+  module:
+    - user
+id: node.student_submission_container.teaser
+targetEntityType: node
+bundle: student_submission_container
+mode: teaser
+content:
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  field_form_type: true
+  field_grade: true
+  field_school: true
+  field_student_submissions: true
+  field_teacher_email: true
+  field_teacher_name: true
+  langcode: true
+  private_message_link: true
+  search_api_excerpt: true

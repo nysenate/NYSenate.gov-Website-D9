@@ -1,0 +1,49 @@
+uuid: 4349b4f1-ef13-4092-b801-168344456a43
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+    - node_revision_delete
+    - scheduler
+third_party_settings:
+  menu_ui:
+    available_menus: {  }
+    parent: ''
+  node_revision_delete:
+    amount:
+      status: false
+      settings:
+        amount: 0
+    created:
+      status: false
+      settings:
+        age: 1
+    drafts:
+      status: false
+      settings:
+        age: 1
+    only_drafts:
+      status: false
+      settings:
+        age: 0
+  scheduler:
+    expand_fieldset: when_required
+    fields_display_mode: vertical_tab
+    publish_enable: false
+    publish_past_date: error
+    publish_past_date_created: false
+    publish_required: false
+    publish_revision: false
+    publish_touch: false
+    show_message_after_update: true
+    unpublish_enable: false
+    unpublish_required: false
+    unpublish_revision: false
+name: 'Student submission'
+type: student_submission
+description: 'An individual student submission, created in batch by anonymous users through the "Student submission container" node type'
+help: null
+new_revision: false
+preview_mode: 0
+display_submitted: false

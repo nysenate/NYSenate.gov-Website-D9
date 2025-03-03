@@ -1,0 +1,21 @@
+uuid: ab30ba50-3d12-4f04-b86d-97ef4e146133
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_upload_type
+    - node.type.student_submission
+  module:
+    - options
+id: node.student_submission.field_upload_type
+field_name: field_upload_type
+entity_type: node
+bundle: student_submission
+label: 'Upload type'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

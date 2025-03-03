@@ -125,7 +125,33 @@ display:
         type: tag
         options: {  }
       empty: {  }
-      sorts: {  }
+      sorts:
+        field_senator_name_family:
+          id: field_senator_name_family
+          table: taxonomy_term__field_senator_name
+          field: field_senator_name_family
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: standard
+          order: ASC
+          expose:
+            label: ''
+            field_identifier: ''
+          exposed: false
+        field_senator_name_given:
+          id: field_senator_name_given
+          table: taxonomy_term__field_senator_name
+          field: field_senator_name_given
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: standard
+          order: ASC
+          expose:
+            label: ''
+            field_identifier: ''
+          exposed: false
       arguments: {  }
       filters:
         status:

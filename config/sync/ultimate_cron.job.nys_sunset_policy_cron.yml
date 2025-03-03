@@ -8,7 +8,7 @@ title: 'Default cron handler'
 id: nys_sunset_policy_cron
 weight: 0
 module: nys_sunset_policy
-callback: nys_sunset_policy_cron
+callback: 'nys_sunset_policy#cron'
 scheduler:
   id: simple
   configuration:

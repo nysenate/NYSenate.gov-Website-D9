@@ -28,7 +28,9 @@
 
             $(once('submitDefaultValues', 'html', context)).each(
                 function (i) {
-                    submitDateValues();
+                    setTimeout(function() {
+                        submitDateValues();
+                    }, 10);
                 }
             );
 

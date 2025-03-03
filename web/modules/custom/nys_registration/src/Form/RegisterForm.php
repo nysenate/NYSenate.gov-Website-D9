@@ -60,8 +60,8 @@ class RegisterForm extends UserRegisterForm {
     EntityRepositoryInterface $entity_repository,
     LanguageManagerInterface $language_manager,
     FileUrlGeneratorInterface $fileUrlGenerator,
-    EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL,
-    TimeInterface $time = NULL
+    ?EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL,
+    ?TimeInterface $time = NULL,
   ) {
     parent::__construct($entity_repository, $language_manager, $entity_type_bundle_info, $time);
     $this->helper = $helper;
@@ -306,20 +306,34 @@ class RegisterForm extends UserRegisterForm {
    * Process the district and ensure the entity gets updated.
    */
   public function formSubmitStep1(array &$form, FormStateInterface $form_state): void {
+    // Ensure previously submitted assignments are cleared.
+    $form_state->set('district', NULL)
+      ->set('senator', NULL)
+      ->setValue('field_district', [])
+      ->setValue('field_senator', []);
+
     // Process the district.
     $address = $form_state->getValue(['field_address', '0', 'address']) ?? [];
-    $district_term = $this->helper->getDistrictFromAddress($address);
-    $district_id = $district_term?->id();
-    $senator = $district_term ? $district_term->get('field_senator')->entity : 0;
 
-    // Record the district info in form state.
-    $form_state->setValue('field_district', [$district_id])
-      ->set('district', $district_term);
-    // Record the senator info in form state, and move to the next step.
-    $form_state->setValue('field_senator', [$senator])
-      ->set('senator', $senator)
-      ->set('step', 2)
-      ->setRebuild();
+    // Look up district assignment only if address is in New York.
+    if (($address['administrative_area'] ?? '') == 'NY') {
+      $form_state->set('is_out_of_state', FALSE);
+
+      $district_term = $this->helper->getDistrictFromAddress($address);
+      $district_id = $district_term?->id();
+      $senator = $district_term ? $district_term->get('field_senator')->entity : 0;
+
+      // Record the district info in form state.
+      $form_state->setValue('field_district', [$district_id])
+        ->set('district', $district_term);
+      // Record the senator info in form state, and move to the next step.
+      $form_state->setValue('field_senator', [$senator])
+        ->set('senator', $senator);
+    }
+    else {
+      $form_state->set('is_out_of_state', TRUE);
+    }
+    $form_state->set('step', 2)->setRebuild();
 
     // Update the entity with all the form values (incl. district)
     $this->submitForm($form, $form_state);
@@ -388,6 +402,7 @@ class RegisterForm extends UserRegisterForm {
         'user' => json_encode($user),
       ];
     }
+    $form['#attributes']['variables']['out_of_state'] = $form_state->get('is_out_of_state') ?? FALSE;
     return $form;
   }
 
@@ -430,9 +445,7 @@ class RegisterForm extends UserRegisterForm {
    */
   public function formSubmitBack(array &$form, FormStateInterface $form_state): void {
     // Reset the district information in form state.
-    $form_state->setValue('field_district', NULL)
-      ->set('senate_district', 0)
-      ->set('step', 1)
+    $form_state->set('step', 1)
       ->setRebuild();
 
     // Make sure values is set properly.

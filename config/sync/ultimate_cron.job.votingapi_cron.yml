@@ -8,7 +8,7 @@ title: 'Default cron handler'
 id: votingapi_cron
 weight: 0
 module: votingapi
-callback: votingapi_cron
+callback: 'votingapi#cron'
 scheduler:
   id: simple
   configuration:

@@ -18,7 +18,7 @@
     padding-left: 20px;
     line-height: 1;
     color: $color-white;
-
+    cursor: pointer;
     &::before {
       display: flex;
       align-items: center;
@@ -30,7 +30,7 @@
   }
 }
 
-.c-initiative--content {
+.c-initiative--inner {
   padding: 30px 20px 90px;
 
   .senator-name {
@@ -49,7 +49,6 @@
   font-size: 22px;
   line-height: 1.175em;
   margin: 0;
-
   a {
     text-decoration: none;
     color: $color-white;
@@ -87,7 +86,7 @@
   .c-block--initiative__has-img.c-block--initiative__landing:first-child {
     overflow: hidden;
     display: flex;
-    align-items: flex-end;
+    align-items: flex-start;
 
     img {
       display: block;
@@ -99,14 +98,24 @@
     .c-initiative--content {
       position: relative;
       display: flex;
-      align-items: center;
-      width: 58%;
+      flex-direction: column;
+      justify-content: center; /* Centers content vertically */
       height: 100%;
+      width: 58%;
+      //height: 100%;
       max-width: 475px;
       padding-top: 0;
-      padding-bottom: 80px;
-    }
+      //padding-bottom: 80px;
 
+    }
+    .c-initiative--inner {
+      position: relative;
+      display: flex;
+      align-items: center; /* Centers content horizontally */
+      width: 100%; /* Ensures it takes full width */
+      padding-bottom: 80px;
+      height: 280px;
+    }
     .c-block--btn {
       left: 280px;
     }
@@ -217,9 +226,9 @@
     gap: 40px;
   }
 }
-.c-container--hidden-link {
+.c-container--initiative-hidden-link {
   position: relative;
-  display: inline-block;
+  //display: inline-block;
   &:before {
     content: "";
     position: absolute;

@@ -6,20 +6,18 @@
       Featured Story
     </h2>
   </div>
-  <div class="story-container">
+  <div class="story-container c-container--story-hidden-link">
     <div class="l-left">
-      <a href="{{ title.url }}">
         {{ image }}
-      </a>
     </div>
     <div class="l-right">
         <div class="c-story--date med-text">
           {{ date }}
         </div>
       <h3 class="c-story-name">
-        <a href="{{ title.url }}">{{ title.text }}</a>
+        <a class="js-link" href="{{ title.url }}">{{ title.text }}</a>
       </h3>
-      {% if tags %}
+ {% if tags %}
       <div class="c-featured-story-issue-tag">
         <ul>
         {% for tag in tags %}

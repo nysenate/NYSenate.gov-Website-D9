@@ -83,24 +83,36 @@
   }
 
   @include breakpoint($bp-sm) {
-
-		.c-story-name {
-			font-size: 26px;
-		}
-
-		.l-left {
+	.c-story-name {
+		font-size: 26px;
+	}
+	.l-left {
 			width: 50%;
+	}
+	.l-right {
+	  width: 340px;
+	  float: right;
+	}
+	.story-container {
+		display: flex;
+		gap: 40px;
+	}
+	.c-container--story-hidden-link {
+	  position: relative;
+	  &:before {
+		  content: "";
+		  position: absolute;
+		  top: 0;
+		  left: 0;
+		  width: 100%;
+		  height: 100%;
+		  cursor: pointer;
 	  }
-
-	  .l-right {
-		  width: 340px;
-		  float: right;
+	  a {
+		  position: relative;
+		  z-index: 2;
 	  }
-
-		.story-container {
-			display: flex;
-			gap: 40px;
-		}
+	}
   }
 }
 

@@ -113,3 +113,20 @@ function nys_senator_dashboard_form_alter(&$form, FormStateInterface $form_state
     $form['actions']['#access'] = FALSE;
   }
 }
+
+/**
+ * Implements hook_views_data().
+ */
+function nys_senator_dashboard_views_data() {
+  $data['users']['votingapi_vote']['relationship'] = [
+    'title' => t('User votes'),
+    'label' => t('Vote entity'),
+    'group' => 'Users',
+    'help' => t('Reference to vote entities by a user.'),
+    'id' => 'standard',
+    'base' => 'votingapi_vote',
+    'base field' => 'user_id',
+    'field' => 'uid',
+  ];
+  return $data;
+}

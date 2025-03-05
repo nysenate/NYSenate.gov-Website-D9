@@ -2,15 +2,18 @@
 
 namespace Drupal\nys_senator_dashboard\Plugin\Block;
 
+use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Controller\TitleResolverInterface;
+use Drupal\Core\Entity\EntityMalformedException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Menu\MenuActiveTrailInterface;
 use Drupal\Core\Menu\MenuLinkManagerInterface;
+use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\RouteProvider;
@@ -200,13 +203,14 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
     $senator_image_url = $this->getSenatorImageUrl();
     $breadcrumbs = $this->getBreadcrumbs();
     $header_title = $this->getHeaderTitle();
+    $header_blurb = $this->getHeaderBlurb();
     $homepage_url = $this->getHomepageUrl();
     return [
       '#theme' => 'nys_senator_dashboard__senator_dashboard_header_block',
       '#senator_image_url' => $senator_image_url,
       '#breadcrumbs' => $breadcrumbs,
       '#header_title' => $header_title,
-      '#header_blurb' => $config['header_blurb'] ?? '',
+      '#header_blurb' => $header_blurb,
       '#homepage_url' => $homepage_url,
     ];
   }
@@ -255,35 +259,53 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
       'url' => $this->managedSenatorsHandler->getActiveSenatorHomepageUrl($this->currentUser->id()),
     ];
     if ($this->configuration['display_breadcrumbs']) {
-      $active_trail_ids = $this->menuActiveTrail->getActiveTrailIds('senator-dashboard');
-      if (!empty($active_trail_ids)) {
-        $active_trail_ids = array_reverse($active_trail_ids);
-        foreach ($active_trail_ids as $item) {
-          if (empty($item)) {
-            continue;
-          }
-          try {
-            $menu_link = $this->menuLinkManager->getDefinition($item);
-          }
-          catch (PluginNotFoundException) {
-          }
-          if (isset($menu_link)) {
-            $title = $menu_link['title'];
-            $url = '';
-            if (!empty($menu_link['url'])) {
-              $url = Url::fromUri($menu_link['url']);
+      // Since we're unable to get the active trail for dynamic routes, we build
+      // the breadcrumbs manually from the relevant menu definitions.
+      if ($this->routeMatch->getRouteName() === 'view.senator_dashboard_constituents.bill_responses') {
+        $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
+        $bill_responses_menu_trail = [
+          $menu_link_manager->createInstance('senator_dashboard.constituent_activity_menu'),
+          $menu_link_manager->createInstance('senator_dashboard.constituent_activity_menu.bills'),
+        ];
+        foreach ($bill_responses_menu_trail as $trail_item) {
+          $breadcrumbs[] = [
+            'title' => $trail_item->getTitle(),
+            'url' => $trail_item->getUrlObject()->toString(),
+          ];
+        }
+      }
+      // Otherwise, we build the breadcrumbs from the active trail.
+      else {
+        $active_trail_ids = $this->menuActiveTrail->getActiveTrailIds('senator-dashboard');
+        if (!empty($active_trail_ids)) {
+          $active_trail_ids = array_reverse($active_trail_ids);
+          foreach ($active_trail_ids as $key => $item) {
+            if (empty($item) or $key === array_key_last($active_trail_ids)) {
+              continue;
             }
-            elseif (!empty($menu_link['route_name'])) {
-              $route_parameters = $menu_link['route_parameters'] ?? [];
-              if ($this->routeProvider->getRouteByName($menu_link['route_name'])) {
-                $url = Url::fromRoute($menu_link['route_name'], $route_parameters);
+            try {
+              $menu_link = $this->menuLinkManager->getDefinition($item);
+            }
+            catch (PluginNotFoundException) {
+            }
+            if (isset($menu_link)) {
+              $title = $menu_link['title'];
+              $url = '';
+              if (!empty($menu_link['url'])) {
+                $url = Url::fromUri($menu_link['url']);
               }
-            }
-            if ($url) {
-              $breadcrumbs[] = [
-                'title' => $title,
-                'url' => $url->toString(),
-              ];
+              elseif (!empty($menu_link['route_name'])) {
+                $route_parameters = $menu_link['route_parameters'] ?? [];
+                if ($this->routeProvider->getRouteByName($menu_link['route_name'])) {
+                  $url = Url::fromRoute($menu_link['route_name'], $route_parameters);
+                }
+              }
+              if ($url) {
+                $breadcrumbs[] = [
+                  'title' => $title,
+                  'url' => $url->toString(),
+                ];
+              }
             }
           }
         }
@@ -300,12 +322,62 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
    */
   private function getHeaderTitle(): string {
     $header_title = 'Senator Dashboard';
-    if ($this->configuration['display_header_title']) {
-      $route = $this->routeMatch->getRouteObject();
-      $header_title = $this->titleResolver
-        ->getTitle($this->requestStack->getCurrentRequest(), $route) ?? $header_title;
+    $route = $this->routeMatch->getRouteObject();
+    $current_request = $this->requestStack->getCurrentRequest();
+    $header_title = $this->titleResolver
+      ->getTitle($current_request, $route) ?? $header_title;
+
+    if ($this->configuration['display_header_title_as_contextual_link']) {
+      $contextual_entity_id = $current_request->attributes->get('arg_0');
+      try {
+        $contextual_entity = $this->entityTypeManager->getStorage('node')
+          ->load($contextual_entity_id);
+      }
+      catch (\Exception) {
+      }
+      if (empty($contextual_entity)) {
+        return $header_title;
+      }
+      try {
+        $url = $contextual_entity->toUrl()->toString();
+      }
+      catch (EntityMalformedException) {
+        return $header_title;
+      }
+      $header_title = '<a href="' . $url . '">' . $header_title . '</a>';
     }
+
     return $header_title;
+  }
+
+  /**
+   * Helper method to get the header blurb.
+   *
+   * @return string
+   *   The header blurb.
+   */
+  private function getHeaderBlurb(): string {
+    $header_blurb = $this->configuration['header_blurb'] ?? '';
+    $current_request = $this->requestStack->getCurrentRequest();
+
+    if ($this->configuration['use_blurb_from_entity']) {
+      $contextual_entity_id = $current_request->attributes->get('arg_0');
+      try {
+        $contextual_entity = $this->entityTypeManager->getStorage('node')
+          ->load($contextual_entity_id);
+      }
+      catch (\Exception) {
+      }
+      if (empty($contextual_entity)) {
+        return $header_blurb;
+      }
+      if ($contextual_entity->bundle() === 'bill') {
+        $entity_blurb = $contextual_entity->field_ol_name?->value;
+        $header_blurb = $entity_blurb ?? $header_blurb;
+      }
+    }
+
+    return $header_blurb;
   }
 
   /**
@@ -337,19 +409,24 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
       '#title' => $this->t('Display breadcrumbs'),
       '#default_value' => $config['display_breadcrumbs'],
     ];
-    $form['display_header_title'] = [
+    $form['display_header_title_as_contextual_link'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Display header title'),
-      '#default_value' => $config['display_header_title'],
+      '#title' => $this->t('Display header title as link to contextual filter entity'),
+      '#default_value' => $config['display_header_title_as_contextual_link'],
     ];
     $form['display_homepage_link'] = [
       '#type' => 'checkbox',
       '#title' => $this->t("Display link to senator's homepage"),
       '#default_value' => $config['display_homepage_link'],
     ];
+    $form['use_blurb_from_entity'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t("Use short summary from entity as blurb text"),
+      '#default_value' => $config['use_blurb_from_entity'],
+    ];
     $form['header_blurb'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Header blurb'),
+      '#title' => $this->t('Header blurb (input will be ignored if using entity blurb)'),
       '#default_value' => $config['header_blurb'],
     ];
     return $form;
@@ -362,8 +439,9 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
     return [
       'display_image' => FALSE,
       'display_breadcrumbs' => FALSE,
-      'display_header_title' => FALSE,
+      'display_header_title_as_contextual_link' => FALSE,
       'display_homepage_link' => FALSE,
+      'use_blurb_from_entity' => FALSE,
       'header_blurb' => '',
     ];
   }
@@ -374,8 +452,9 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
   public function blockSubmit($form, FormStateInterface $form_state): void {
     $this->setConfigurationValue('display_image', $form_state->getValue('display_image'));
     $this->setConfigurationValue('display_breadcrumbs', $form_state->getValue('display_breadcrumbs'));
-    $this->setConfigurationValue('display_header_title', $form_state->getValue('display_header_title'));
+    $this->setConfigurationValue('display_header_title_as_contextual_link', $form_state->getValue('display_header_title_as_contextual_link'));
     $this->setConfigurationValue('display_homepage_link', $form_state->getValue('display_homepage_link'));
+    $this->setConfigurationValue('use_blurb_from_entity', $form_state->getValue('use_blurb_from_entity'));
     $this->setConfigurationValue('header_blurb', $form_state->getValue('header_blurb'));
   }
 
@@ -383,7 +462,7 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
    * {@inheritdoc}
    */
   public function getCacheContexts(): array {
-    return ['user'];
+    return ['user', 'url.path'];
   }
 
   /**

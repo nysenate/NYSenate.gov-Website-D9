@@ -1,5 +1,5 @@
-(function (Drupal) {
-  Drupal.behaviors.hiddenLink = {
+((Drupal) => {
+  Drupal.behaviors.accessibleHiddenLinkNews = {
     attach: function (context, settings) {
       document.querySelectorAll('.c-container--hidden-link').forEach(function (container) {
         container.addEventListener('click', function () {

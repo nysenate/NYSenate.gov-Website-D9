@@ -3,13 +3,7 @@
     <img class="senator-image" src="{{ senator_image_url }}" alt="{{ 'Picture of senator'|t }}">
   {% endif %}
   {% if breadcrumbs %}
-    <ul class="breadcrumbs">
-      {% for breadcrumb in breadcrumbs  %}
-        <li class="breadcrumb-item">
-          <a href="{{ breadcrumb.url }}">{{ breadcrumb.title }}</a>
-        </li>
-      {% endfor %}
-    </ul>
+    {{ breadcrumbs }}
   {% endif %}
   {% if header_title %}
     <h1 class="page-title">

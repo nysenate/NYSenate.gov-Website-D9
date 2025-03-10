@@ -2,18 +2,18 @@
 
 namespace Drupal\nys_senator_dashboard\Plugin\Block;
 
-use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
-use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
+use Drupal\Core\Breadcrumb\Breadcrumb;
+use Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface;
 use Drupal\Core\Controller\TitleResolverInterface;
 use Drupal\Core\Entity\EntityMalformedException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Menu\MenuActiveTrailInterface;
 use Drupal\Core\Menu\MenuLinkManagerInterface;
-use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\RouteProvider;
@@ -33,6 +33,13 @@ use Symfony\Component\HttpFoundation\RequestStack;
   admin_label: new TranslatableMarkup('Senator Dashboard header block')
 )]
 class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryPluginInterface {
+
+  /**
+   * The breadcrumb builder.
+   *
+   * @var \Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface
+   */
+  protected $breadcrumbBuilder;
 
   /**
    * The current user.
@@ -133,6 +140,8 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
    *   The request stack service.
    * @param \Drupal\Core\Routing\RouteProvider $route_provider
    *   The route provider service.
+   * @param \Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface $breadcrumbBuilder
+   *   The breadcrumb builder.
    */
   public function __construct(
     array $configuration,
@@ -148,6 +157,7 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
     MenuActiveTrailInterface $menu_active_trail,
     RequestStack $request_stack,
     RouteProvider $route_provider,
+    BreadcrumbBuilderInterface $breadcrumbBuilder,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->currentUser = $current_user;
@@ -160,6 +170,7 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
     $this->menuActiveTrail = $menu_active_trail;
     $this->requestStack = $request_stack;
     $this->routeProvider = $route_provider;
+    $this->breadcrumbBuilder = $breadcrumbBuilder;
   }
 
   /**
@@ -192,6 +203,7 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
       $container->get('menu.active_trail'),
       $container->get('request_stack'),
       $container->get('router.route_provider'),
+      $container->get('system.breadcrumb.default'),
     );
   }
 
@@ -199,7 +211,6 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
    * {@inheritdoc}
    */
   public function build() {
-    $config = $this->getConfiguration();
     $senator_image_url = $this->getSenatorImageUrl();
     $breadcrumbs = $this->getBreadcrumbs();
     $header_title = $this->getHeaderTitle();
@@ -253,65 +264,26 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
    *   The breadcrumbs.
    */
   private function getBreadcrumbs(): array {
-    $active_senator = $this->managedSenatorsHandler->getActiveSenator($this->currentUser->id(), FALSE);
-    $breadcrumbs[] = [
-      'title' => $active_senator->label(),
-      'url' => $this->managedSenatorsHandler->getActiveSenatorHomepageUrl($this->currentUser->id()),
-    ];
+    $ret = [];
     if ($this->configuration['display_breadcrumbs']) {
-      // Since we're unable to get the active trail for dynamic routes, we build
-      // the breadcrumbs manually from the relevant menu definitions.
-      if ($this->routeMatch->getRouteName() === 'view.senator_dashboard_constituents.bill_responses') {
-        $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
-        $bill_responses_menu_trail = [
-          $menu_link_manager->createInstance('senator_dashboard.constituent_activity_menu'),
-          $menu_link_manager->createInstance('senator_dashboard.constituent_activity_menu.bills'),
-        ];
-        foreach ($bill_responses_menu_trail as $trail_item) {
-          $breadcrumbs[] = [
-            'title' => $trail_item->getTitle(),
-            'url' => $trail_item->getUrlObject()->toString(),
-          ];
-        }
-      }
-      // Otherwise, we build the breadcrumbs from the active trail.
-      else {
-        $active_trail_ids = $this->menuActiveTrail->getActiveTrailIds('senator-dashboard');
-        if (!empty($active_trail_ids)) {
-          $active_trail_ids = array_reverse($active_trail_ids);
-          foreach ($active_trail_ids as $key => $item) {
-            if (empty($item) or $key === array_key_last($active_trail_ids)) {
-              continue;
-            }
-            try {
-              $menu_link = $this->menuLinkManager->getDefinition($item);
-            }
-            catch (PluginNotFoundException) {
-            }
-            if (isset($menu_link)) {
-              $title = $menu_link['title'];
-              $url = '';
-              if (!empty($menu_link['url'])) {
-                $url = Url::fromUri($menu_link['url']);
-              }
-              elseif (!empty($menu_link['route_name'])) {
-                $route_parameters = $menu_link['route_parameters'] ?? [];
-                if ($this->routeProvider->getRouteByName($menu_link['route_name'])) {
-                  $url = Url::fromRoute($menu_link['route_name'], $route_parameters);
-                }
-              }
-              if ($url) {
-                $breadcrumbs[] = [
-                  'title' => $title,
-                  'url' => $url->toString(),
-                ];
-              }
-            }
-          }
-        }
+      $breadcrumbs = $this->breadcrumbBuilder->build($this->routeMatch);
+      $links = $breadcrumbs->getLinks();
+      if (!empty($links)) {
+        // Replaces 'Home' link with link to active managed senator.
+        $active_senator = $this->managedSenatorsHandler->getActiveSenator($this->currentUser->id(), FALSE);
+        $links[0] = Link::fromTextAndUrl(
+          $active_senator->label(),
+          Url::fromUri(
+            $this->managedSenatorsHandler->getActiveSenatorHomepageUrl($this->currentUser->id()
+          ))
+        );
+        // Generate new Breadcrumb due to immutability in generation pipeline.
+        $new_breadcrumbs = new Breadcrumb();
+        $new_breadcrumbs->setLinks($links);
+        $ret = $new_breadcrumbs->toRenderable();
       }
     }
-    return $breadcrumbs;
+    return $ret;
   }
 
   /**
@@ -372,8 +344,7 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
         return $header_blurb;
       }
       if ($contextual_entity->bundle() === 'bill') {
-        $entity_blurb = $contextual_entity->field_ol_name?->value;
-        $header_blurb = $entity_blurb ?? $header_blurb;
+        $header_blurb = $contextual_entity->field_ol_name?->value ?? $header_blurb;
       }
     }
 

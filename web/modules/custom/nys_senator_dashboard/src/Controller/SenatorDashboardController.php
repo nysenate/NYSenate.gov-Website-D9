@@ -63,4 +63,8 @@ class SenatorDashboardController extends ControllerBase {
     return $block->build();
   }
 
+  public function tempPlaceholder() {
+    return [];
+  }
+
 }

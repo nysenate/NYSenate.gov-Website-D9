@@ -23,12 +23,35 @@ nys_senator_dashboard.constituent_activity:
   requirements:
     _role: 'microsite_content_producer+legislative_correspondent'
 
-# Placeholder route
-nys_senator_dashboard.placeholder:
-  path: '/senator-dashboard'
+# Temp bills placeholder route
+nys_senator_dashboard.temp_placeholder.bills:
+  path: '/senator-dashboard/constituent-activity/bills'
   defaults:
-    _controller: '\Drupal\nys_senator_dashboard\Controller\SenatorDashboardController::menuPage'
-    _title: 'Placeholder'
-    menu_mode: 'manage_senator_menu'
+    _controller: '\Drupal\nys_senator_dashboard\Controller\SenatorDashboardController::tempPlaceholder'
+    _title: 'Bills'
+  requirements:
+    _role: 'microsite_content_producer+legislative_correspondent'
+# Temp issues placeholder route
+nys_senator_dashboard.temp_placeholder.issues:
+  path: '/senator-dashboard/constituent-activity/issues'
+  defaults:
+    _controller: '\Drupal\nys_senator_dashboard\Controller\SenatorDashboardController::tempPlaceholder'
+    _title: 'Issues'
+  requirements:
+    _role: 'microsite_content_producer+legislative_correspondent'
+# Temp petitions placeholder route
+nys_senator_dashboard.temp_placeholder.petitions:
+  path: '/senator-dashboard/constituent-activity/petitions'
+  defaults:
+    _controller: '\Drupal\nys_senator_dashboard\Controller\SenatorDashboardController::tempPlaceholder'
+    _title: 'Petitions'
+  requirements:
+    _role: 'microsite_content_producer+legislative_correspondent'
+# Temp questionnaires placeholder route
+nys_senator_dashboard.temp_placeholder.questionnaires:
+  path: '/senator-dashboard/constituent-activity/questionnaires'
+  defaults:
+    _controller: '\Drupal\nys_senator_dashboard\Controller\SenatorDashboardController::tempPlaceholder'
+    _title: 'Questionnaires'
   requirements:
     _role: 'microsite_content_producer+legislative_correspondent'

@@ -9,7 +9,6 @@ use SendGrid\Response;
  * Defines the nys_sendgrid.after.send event.
  *
  * This event will be dispatched when sending mail, after mail() has finished.
- * The API response referenced at $message['params']['sendgrid_mail']->response.
  */
 class AfterSendEvent extends Event {
 

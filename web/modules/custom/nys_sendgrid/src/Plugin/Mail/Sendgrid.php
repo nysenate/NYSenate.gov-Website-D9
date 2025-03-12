@@ -151,11 +151,11 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
-          $container->get('nys_sendgrid_client'),
-          $container->get('module_handler'),
-          $container->get('config.factory'),
-          $container->get('event_dispatcher')
-      );
+      $container->get('nys_sendgrid_client'),
+      $container->get('module_handler'),
+      $container->get('config.factory'),
+      $container->get('event_dispatcher')
+    );
   }
 
   /**
@@ -185,14 +185,12 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
    * @see \Drupal\Core\Mail\MailManager::doMail()
    */
   public function format(array $message): array {
-
     // Save the local reference.
     $this->message = $message;
 
     // Every processing step can throw, but should handle catch locally.
     // If any exceptions bubble up, cancel sending.
     try {
-
       // Ensure a Mail object is available.
       $this->mailObj = $this->getMailObject($this->message['params']['sendgrid_mail'] ?? NULL);
 
@@ -207,7 +205,6 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
         ->injectCategories()
         ->injectHeaders()
         ->applyTemplate();
-
     }
     catch (\Throwable $e) {
       $this->failSending('Sendgrid Mail object failed to validate.', ['message' => $e->getMessage()]);
@@ -226,7 +223,7 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
   /**
    * Provides a valid Sendgrid\Mail object.
    */
-  protected function getMailObject(Mail $object = NULL): Mail {
+  protected function getMailObject(?Mail $object = NULL): Mail {
     return $object instanceof Mail ? $object : new Mail();
   }
 
@@ -246,7 +243,7 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
     // Check if template assignment is suppressed.  Suppression could be in
     // the message params (preferred), or the global setting.
     $suppressed = ($this->message['params']['suppress_template'] ?? FALSE)
-        || ($this->localConfig->get('suppress_template') ?? FALSE);
+      || ($this->localConfig->get('suppress_template') ?? FALSE);
 
     // Templates pre-assigned by the caller take precedence.  If no template,
     // and not suppressed, discover and assign a template.
@@ -282,11 +279,11 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
         }
         catch (\Throwable $e) {
           $this->failSending(
-                'Email failed while assigning template (id=%id, actual=%actual)', [
-                  'message' => $e->getMessage(),
-                  '%actual' => $actual,
-                ]
-            );
+            'Email failed while assigning template (id=%id, actual=%actual)', [
+              'message' => $e->getMessage(),
+              '%actual' => $actual,
+            ]
+          );
         }
       }
     }
@@ -353,24 +350,24 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
     if ($this->message['module'] ?? '') {
       // Check for suppression, which can be in config or message params.
       $suppressed = ($this->message['params']['suppress_categories'] ?? FALSE)
-            || $this->localConfig->get('suppress_categories');
+        || $this->localConfig->get('suppress_categories');
       if (!$suppressed) {
         // Get the list of current categories.
         $categories = array_map(
-              function ($v) {
-                  return $v->getCategory();
-              },
-              $this->mailObj->getCategories() ?? []
-          );
+          function ($v) {
+            return $v->getCategory();
+          },
+          $this->mailObj->getCategories() ?? []
+        );
 
         // Build which keys will be added.
         $add = array_filter(
-              [
-                $this->message['module'] ?? '',
-                $this->message['key'] ?? '',
-                $this->message['id'] ?? '',
-              ]
-          );
+          [
+            $this->message['module'] ?? '',
+            $this->message['key'] ?? '',
+            $this->message['id'] ?? '',
+          ]
+        );
 
         // Categories must be unique; ensure no duplicates are added.
         try {
@@ -378,12 +375,12 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
         }
         catch (\Throwable $e) {
           $this->failSending(
-          'Email failed while validating categories (id=%id)', [
-            'message' => $e->getMessage(),
-            'add' => $add,
-            'categories' => $categories,
-          ]
-            );
+            'Email failed while validating categories (id=%id)', [
+              'message' => $e->getMessage(),
+              'add' => $add,
+              'categories' => $categories,
+            ]
+          );
         }
       }
     }
@@ -402,20 +399,20 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
       // If the preferred body is not populated, fallback to the alternate
       // style from D7 legacy.
       $body = ($this->message['body'] ?? [])
-            ?: ($this->message['params']['body'] ?? []);
+        ?: ($this->message['params']['body'] ?? []);
 
       // Typecast each body part to string so addContent() doesn't cry.
       if (!is_array($body)) {
         $body = [$body];
       }
       $body = implode(
-            "\n\n",
-            array_map(
-                function ($i) {
-                    return (string) $i;
-                }, $body
-            )
-        );
+        "\n\n",
+        array_map(
+          function ($i) {
+            return (string) $i;
+          }, $body
+        )
+      );
 
       $content_type = $this->message['params']['Content-Type'] ?? '';
       if (!$content_type) {
@@ -437,7 +434,7 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
             '%body' => $body,
             '%ct' => $content_type,
           ]
-          );
+        );
       }
     }
 
@@ -458,11 +455,11 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
       }
       catch (\Throwable $e) {
         $this->failSending(
-              'Email failed while validating subject (id=%id, subj=%subj)', [
-                'message' => $e->getMessage(),
-                '%subj' => $subject,
-              ]
-          );
+          'Email failed while validating subject (id=%id, subj=%subj)', [
+            'message' => $e->getMessage(),
+            '%subj' => $subject,
+          ]
+        );
       }
     }
 
@@ -508,7 +505,7 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
               elseif (!$recipient->getName()) {
                 $original_email = $this->message['headers']['X-Rerouted-Original-to'] ?? '';
                 $new_name = 'reroute_email ' .
-                                ($original_email ? 'from ' . $original_email : '<unknown>');
+                  ($original_email ? 'from ' . $original_email : '<unknown>');
                 $recipient->setName($new_name);
               }
             }
@@ -516,11 +513,11 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
         }
         catch (\Throwable $e) {
           $this->failSending(
-                'Email failed during rerouting attempt. (id=%id, dest=%dest)', [
-                  'message' => $e->getMessage(),
-                  '%dest' => $dest,
-                ]
-            );
+            'Email failed during rerouting attempt. (id=%id, dest=%dest)', [
+              'message' => $e->getMessage(),
+              '%dest' => $dest,
+            ]
+          );
         }
       }
     }
@@ -538,7 +535,6 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
    * @return $this
    */
   protected function validateRecipients(): self {
-
     // Detect any existing recipients.
     $persons = $this->mailObj->getPersonalizations() ?? [];
     $found_to = FALSE;
@@ -557,11 +553,11 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
       }
       catch (\Throwable $e) {
         $this->failSending(
-              'Email failed due to poorly-formed "To" address (id=%id, addr=%addr)', [
-                'message' => $e->getMessage(),
-                '%addr' => $to_addr,
-              ]
-          );
+          'Email failed due to poorly-formed "To" address (id=%id, addr=%addr)', [
+            'message' => $e->getMessage(),
+            '%addr' => $to_addr,
+          ]
+        );
       }
     }
 
@@ -574,11 +570,10 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
    * @return $this
    */
   protected function validateFrom(): self {
-
     // If a "From" address is not found, make one.
     if (!(($this->mailObj->getFrom() instanceof From)
-          && $this->mailObj->getFrom()->getEmail())
-      ) {
+      && $this->mailObj->getFrom()->getEmail())
+    ) {
       // Parse the email address from the message.
       $full_from = $this->message['params']['from'] ?? $this->message['from'];
       $from_email = Helper::parseAddress($full_from);
@@ -589,11 +584,11 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
       }
       catch (\Throwable $e) {
         $this->failSending(
-              'Email failed due to poorly-formed "From" address (id=%id, addr=%addr)', [
-                'message' => $e->getMessage(),
-                '%addr' => $from_email,
-              ]
-          );
+          'Email failed due to poorly-formed "From" address (id=%id, addr=%addr)', [
+            'message' => $e->getMessage(),
+            '%addr' => $from_email,
+          ]
+        );
       }
     }
 
@@ -627,20 +622,15 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
         ->error('Sending mail generated an exception.', ['%message' => $e->getMessage()]);
     }
 
-    // Send the response back with the object.
-    $sgm->response = $response;
-
     // Check for success.  We consider a 200/202 response code successful.
     $success = in_array($response_code, ['200', '202']);
-    // If successful, dispatch the after.send event.
-    if ($success) {
-      // @phpstan-ignore-next-line
-      $this->dispatcher->dispatch(new AfterSendEvent($message), Events::AFTER_SEND);
-    }
-    // If not successful, but not an exception, log the reason.
-    elseif ($response) {
-      $this->localLogger
-        ->error('Sendgrid API rejected a mail attempt.', ['%response' => $response->body()]);
+
+    // Dispatch the after.send event.
+    $this->dispatcher->dispatch(new AfterSendEvent($message, $response), Events::AFTER_SEND);
+
+    // If not successful, log the reason.
+    if (!$success) {
+      $this->localLogger->error('Sendgrid API rejected a mail attempt.', ['%response' => $response?->body() ?? 'NULL response']);
     }
 
     // Return the success/failure.

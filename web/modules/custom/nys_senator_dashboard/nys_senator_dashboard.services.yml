@@ -6,3 +6,12 @@ services:
       - '@messenger'
       - '@entity_type.manager'
       - '@nys_senators.senators_helper'
+  nys_senator_dashboard.senator_dashboard_helper:
+    class: \Drupal\nys_senator_dashboard\Service\SenatorDashboardHelper
+    arguments:
+      - '@entity_type.manager'
+      - '@current_route_match'
+  nys_senator_dashboard.route_subscriber:
+    class: Drupal\nys_senator_dashboard\Routing\RouteSubscriber
+    tags:
+      - { name: event_subscriber }

@@ -128,5 +128,15 @@ function nys_senator_dashboard_views_data() {
     'base field' => 'user_id',
     'field' => 'uid',
   ];
+  $data['users']['flagging']['relationship'] = [
+    'title' => t('User flaggings'),
+    'label' => t('Flagging entity'),
+    'group' => 'Users',
+    'help' => t('Reference to flagging entities by a user.'),
+    'id' => 'standard',
+    'base' => 'flagging',
+    'base field' => 'uid',
+    'field' => 'uid',
+  ];
   return $data;
 }

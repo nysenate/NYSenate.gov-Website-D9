@@ -1,6 +1,15 @@
 {{ attach_library('nysenate_theme/article-page') }}
 
-<article id="node-{{ content.node_id }}" class="article-node {{ classes }}" {{ attributes }}>
+{%
+    set classes = [
+    'node',
+    'node--type-' ~ node.bundle|clean_class,
+    not node.isPublished() ? 'node--unpublished',
+    view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+]
+%}
+
+<article {{ attributes.addClass(classes) }}>
 
   {{ title_prefix }}
 

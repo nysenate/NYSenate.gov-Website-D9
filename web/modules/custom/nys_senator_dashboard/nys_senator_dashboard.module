@@ -128,5 +128,22 @@ function nys_senator_dashboard_views_data() {
     'base field' => 'user_id',
     'field' => 'uid',
   ];
+  $data['users']['flagging']['relationship'] = [
+    'title' => t('User flaggings'),
+    'label' => t('Flagging entity'),
+    'group' => 'Users',
+    'help' => t('Reference to flagging entities by a user.'),
+    'id' => 'flag_relationship',
+    'base' => 'flagging',
+    'base field' => 'uid',
+    'field' => 'uid',
+  ];
+  $data['users']['contextual_filter_flag_link'] = [
+    'title' => t('Flag link (issue ID contextual filter)'),
+    'help' => t('Displays a flag link based on an issue ID context filter value.'),
+    'field' => [
+      'id' => 'contextual_filter_flag_link',
+    ],
+  ];
   return $data;
 }

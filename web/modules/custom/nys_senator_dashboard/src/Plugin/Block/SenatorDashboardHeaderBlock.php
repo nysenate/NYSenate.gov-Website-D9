@@ -7,7 +7,6 @@ use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Breadcrumb\Breadcrumb;
 use Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface;
 use Drupal\Core\Controller\TitleResolverInterface;
-use Drupal\Core\Entity\EntityMalformedException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -22,6 +21,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\file\Entity\File;
 use Drupal\nys_senator_dashboard\Service\ManagedSenatorsHandler;
+use Drupal\nys_senator_dashboard\Service\SenatorDashboardHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -112,6 +112,13 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
   protected RouteProvider $routeProvider;
 
   /**
+   * The senator dashboard helper service.
+   *
+   * @var \Drupal\nys_senator_dashboard\Service\SenatorDashboardHelper
+   */
+  protected SenatorDashboardHelper $senatorDashboardHelper;
+
+  /**
    * Constructs a SenatorDashboardHeaderBlock object.
    *
    * @param array $configuration
@@ -142,6 +149,8 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
    *   The route provider service.
    * @param \Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface $breadcrumbBuilder
    *   The breadcrumb builder.
+   * @param \Drupal\nys_senator_dashboard\Service\SenatorDashboardHelper $senator_dashboard_helper
+   *   The senator dashboard helper service.
    */
   public function __construct(
     array $configuration,
@@ -158,6 +167,7 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
     RequestStack $request_stack,
     RouteProvider $route_provider,
     BreadcrumbBuilderInterface $breadcrumbBuilder,
+    SenatorDashboardHelper $senator_dashboard_helper,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->currentUser = $current_user;
@@ -171,6 +181,7 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
     $this->requestStack = $request_stack;
     $this->routeProvider = $route_provider;
     $this->breadcrumbBuilder = $breadcrumbBuilder;
+    $this->senatorDashboardHelper = $senator_dashboard_helper;
   }
 
   /**
@@ -204,6 +215,7 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
       $container->get('request_stack'),
       $container->get('router.route_provider'),
       $container->get('system.breadcrumb.default'),
+      $container->get('nys_senator_dashboard.senator_dashboard_helper'),
     );
   }
 
@@ -299,24 +311,18 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
     $header_title = $this->titleResolver
       ->getTitle($current_request, $route) ?? $header_title;
 
+    // If configured for use on a contextual view detail page.
     if ($this->configuration['display_header_title_as_contextual_link']) {
-      $contextual_entity_id = $current_request->attributes->get('arg_0');
+      $header_title = 'Detail page';
+      $entity = $this->senatorDashboardHelper->getContextualEntity();
       try {
-        $contextual_entity = $this->entityTypeManager->getStorage('node')
-          ->load($contextual_entity_id);
+        $title = $entity?->label();
+        $url = $entity?->toUrl()->toString();
       }
       catch (\Exception) {
-      }
-      if (empty($contextual_entity)) {
         return $header_title;
       }
-      try {
-        $url = $contextual_entity->toUrl()->toString();
-      }
-      catch (EntityMalformedException) {
-        return $header_title;
-      }
-      $header_title = '<a href="' . $url . '">' . $header_title . '</a>';
+      $header_title = '<a href="' . $url . '">' . $title . '</a>';
     }
 
     return $header_title;
@@ -330,21 +336,11 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
    */
   private function getHeaderBlurb(): string {
     $header_blurb = $this->configuration['header_blurb'] ?? '';
-    $current_request = $this->requestStack->getCurrentRequest();
 
     if ($this->configuration['use_blurb_from_entity']) {
-      $contextual_entity_id = $current_request->attributes->get('arg_0');
-      try {
-        $contextual_entity = $this->entityTypeManager->getStorage('node')
-          ->load($contextual_entity_id);
-      }
-      catch (\Exception) {
-      }
-      if (empty($contextual_entity)) {
-        return $header_blurb;
-      }
-      if ($contextual_entity->bundle() === 'bill') {
-        $header_blurb = $contextual_entity->field_ol_name?->value ?? $header_blurb;
+      $entity = $this->senatorDashboardHelper->getContextualEntity();
+      if ($entity->bundle() === 'bill') {
+        $header_blurb = $entity->field_ol_name?->value ?? $header_blurb;
       }
     }
 

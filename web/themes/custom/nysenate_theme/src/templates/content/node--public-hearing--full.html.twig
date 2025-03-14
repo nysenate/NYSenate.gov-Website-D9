@@ -2,6 +2,16 @@
 {{ attach_library('nysenate_theme/nysenate-issues') }}
 {{ attach_library('nysenate_theme/meeting-detail') }}
 
+{%
+  set classes = [
+  'node',
+  'node--type-' ~ node.bundle|clean_class,
+  not node.isPublished() ? 'node--unpublished',
+  view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+  'c-block',
+  'c-meeting-detail--header'
+]
+%}
 
 {% if video_status.key == 'streaming_live_now' %}
   <div class="c-meeting-detail--descript">
@@ -13,7 +23,7 @@
   </div>
 {% endif %}
 
-<article class="c-block c-meeting-detail--header">
+<article{{ attributes.addClass(classes) }}>
   <div class="c-meeting-detail--meta">
     {% if video_status.key == "streaming_live_now" or video_status.key == "streaming_redirect" %}
       <p class="c-meeting-detail--live-flag">

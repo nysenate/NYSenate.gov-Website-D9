@@ -4,7 +4,18 @@
 {{ attach_library('nysenate_theme/nysenate_sponsor_list') }}
 {{ attach_library('nysenate_theme/video-embed') }}
 
-<article class="c-block c-meeting-detail--header">
+{%
+  set classes = [
+  'node',
+  'node--type-' ~ node.bundle|clean_class,
+  not node.isPublished() ? 'node--unpublished',
+  view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+  'c-block',
+  'c-meeting-detail--header'
+]
+%}
+
+<article{{ attributes.addClass(classes) }}>
   <div class="c-meeting-detail--meta">
     {% if event_status.key == 'live_now' %}
       <p class="c-meeting-detail--live-flag">

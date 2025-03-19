@@ -2,8 +2,16 @@
 {{ attach_library('nysenate_theme/file-uploads') }}
 {{ attach_library('nysenate_theme/session') }}
 
+{%
+    set classes = [
+    'node',
+    'node--type-' ~ node.bundle|clean_class,
+    not node.isPublished() ? 'node--unpublished',
+    view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+]
+%}
 
-<article id="node-{{ content.node_id }}" class="article-node {{ classes }}" {{ attributes }}>
+<article {{ attributes.addClass(classes) }}>
   {{ title_prefix }}
 
   {% if page %}

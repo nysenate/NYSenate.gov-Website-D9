@@ -1,0 +1,40 @@
+uuid: 1b7dfbd4-738f-4f18-ad69-bbc8873b3f9f
+langcode: en
+status: true
+dependencies:
+  module:
+    - nys_senator_dashboard
+    - system
+    - user
+  theme:
+    - nysenate_theme
+id: nysenate_theme_senator_dashboard_header_block_petitions
+theme: nysenate_theme
+region: above_content
+weight: 0
+provider: null
+plugin: senator_dashboard_header_block
+settings:
+  id: senator_dashboard_header_block
+  label: 'Senator Dashboard header block - Petition signees'
+  label_display: '0'
+  provider: nys_senator_dashboard
+  display_image: 0
+  display_breadcrumbs: 1
+  display_header_title_as_contextual_link: 1
+  display_homepage_link: 0
+  use_blurb_from_entity: 0
+  header_blurb: 'View & connect with constituents who signed to this petition.'
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: '/senator-dashboard/constituent-activity/petitions/*'
+  user_role:
+    id: user_role
+    negate: false
+    context_mapping:
+      user: '@user.current_user_context:current_user'
+    roles:
+      microsite_content_producer: microsite_content_producer
+      legislative_correspondent: legislative_correspondent

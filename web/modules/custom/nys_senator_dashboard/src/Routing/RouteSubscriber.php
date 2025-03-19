@@ -14,7 +14,7 @@ class RouteSubscriber extends RouteSubscriberBase {
    * {@inheritdoc}
    */
   protected function alterRoutes(RouteCollection $collection) {
-    $target_view_displays = ['bill_responses', 'issue_followers'];
+    $target_view_displays = ['bill_responses', 'issue_followers', 'petition_signees', 'questionnaire_responders'];
     foreach ($target_view_displays as $view_display) {
       if ($route = $collection->get("view.senator_dashboard_constituents.$view_display")) {
         $route->setDefault('_title_callback', '\Drupal\nys_senator_dashboard\Controller\SenatorDashboardController::contextualDetailPageTitle');

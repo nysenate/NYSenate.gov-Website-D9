@@ -145,5 +145,12 @@ function nys_senator_dashboard_views_data() {
       'id' => 'contextual_filter_flag_link',
     ],
   ];
+  $data['users']['contextual_filter_webform_id'] = [
+    'title' => t('Webform ID (from entity ID contextual filter)'),
+    'help' => t('Displays the Webform ID based on the parent entity ID from the context filter value.'),
+    'field' => [
+      'id' => 'contextual_filter_webform_id',
+    ],
+  ];
   return $data;
 }

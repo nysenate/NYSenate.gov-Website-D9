@@ -17,7 +17,7 @@ use Drupal\Core\Form\FormStateInterface;
 function nys_senator_dashboard_query_senators_constituents_only_alter(AlterableInterface $query) {
   // Get active managed senator.
   $senator_term = \Drupal::service('nys_senator_dashboard.managed_senators_handler')
-    ->getActiveSenator(\Drupal::currentUser()->id(), FALSE);
+    ->getActiveSenator(FALSE);
   if (empty($senator_term)) {
     $query->alwaysFalse();
     return;
@@ -150,6 +150,13 @@ function nys_senator_dashboard_views_data() {
     'help' => t('Displays the Webform ID based on the parent entity ID from the context filter value.'),
     'field' => [
       'id' => 'contextual_filter_webform_id',
+    ],
+  ];
+  $data['node']['nys_senator_dashboard_active_senator_sponsor_filter'] = [
+    'title' => t('NYS Senator Dashboard: Active senator sponsor filter'),
+    'help' => t('Filter bills to those sponsored or co-sponsored by the active senator.'),
+    'filter' => [
+      'id' => 'nys_senator_dashboard_active_senator_sponsor_filter',
     ],
   ];
   return $data;

@@ -1708,6 +1708,7 @@ display:
         relationships: false
         fields: false
         arguments: false
+        header: false
         footer: false
       relationships:
         votingapi_vote:
@@ -1721,6 +1722,30 @@ display:
           plugin_id: standard
           required: true
       display_description: ''
+      header:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text
+          empty: true
+          content:
+            value: '<h2>In-District Constituents</h2>'
+            format: basic_html
+          tokenize: false
+        result:
+          id: result
+          table: views
+          field: result
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: result
+          empty: false
+          content: 'Showing @start - @end of @total constituents'
       footer:
         area:
           id: area

@@ -1,0 +1,40 @@
+name: Bill Vote Count
+props:
+  type: object
+  required:
+    - no_results
+  properties:
+    no_results:
+      type: boolean
+    detail_link_nid:
+      type: [integer, "null"]
+    total_count:
+      type: integer
+    yes_count:
+      type: integer
+    no_count:
+      type: integer
+    yes_percentage:
+      type: integer
+    no_percentage:
+      type: integer
+    in_district_total_count:
+      type: integer
+    in_district_yes_count:
+      type: integer
+    in_district_no_count:
+      type: integer
+    in_district_yes_percentage:
+      type: integer
+    in_district_no_percentage:
+      type: integer
+    out_district_total_count:
+      type: integer
+    out_district_yes_count:
+      type: integer
+    out_district_no_count:
+      type: integer
+    out_district_yes_percentage:
+      type: integer
+    out_district_no_percentage:
+      type: integer

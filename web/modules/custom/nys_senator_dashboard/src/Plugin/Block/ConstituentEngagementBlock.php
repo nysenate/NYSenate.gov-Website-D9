@@ -116,7 +116,7 @@ class ConstituentEngagementBlock extends BlockBase implements ContainerFactoryPl
    * {@inheritdoc}
    */
   public function build() {
-    $senator = $this->managedSenatorsHandler->getActiveSenator($this->currentUser->id(), FALSE);
+    $senator = $this->managedSenatorsHandler->getActiveSenator(FALSE);
     $district = $this->senatorsHelper->loadDistrict($senator);
     $start_of_year = mktime(0, 0, 0, 1, 1, date('Y'));
     return [

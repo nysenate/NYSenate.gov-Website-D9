@@ -159,9 +159,8 @@ class SenatorDashboardMenuBlock extends BlockBase implements ContainerFactoryPlu
    *   The data to render the links.
    */
   private function getActiveSenatorLinks(): array {
-    $user_id = $this->currentUser->id();
-    $managed_senators = $this->managedSenatorsHandler->getManagedSenators($user_id, FALSE);
-    $active_senator_tid = $this->managedSenatorsHandler->getActiveSenator($user_id);
+    $managed_senators = $this->managedSenatorsHandler->getManagedSenators(FALSE);
+    $active_senator_tid = $this->managedSenatorsHandler->getActiveSenator();
     if (empty($managed_senators) || empty($active_senator_tid)) {
       return [];
     }
@@ -175,7 +174,7 @@ class SenatorDashboardMenuBlock extends BlockBase implements ContainerFactoryPlu
           ['senator_tid' => $senator->id()]
         ),
         'is_active' => ($active_senator_tid == $senator->id()),
-        'homepage_url' => $this->managedSenatorsHandler->getActiveSenatorHomepageUrl($user_id),
+        'homepage_url' => $this->managedSenatorsHandler->getActiveSenatorHomepageUrl(),
       ];
     }
 

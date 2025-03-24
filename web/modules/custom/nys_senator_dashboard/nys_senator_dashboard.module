@@ -152,5 +152,19 @@ function nys_senator_dashboard_views_data() {
       'id' => 'contextual_filter_webform_id',
     ],
   ];
+  $data['node']['active_senator_sponsor_filter'] = [
+    'title' => t('Active senator sponsor filter'),
+    'help' => t('Filter bills to those sponsored by the active senator.'),
+    'filter' => [
+      'id' => 'active_senator_sponsor_filter',
+    ],
+  ];
+  $data['node']['nys_senator_dashboard_bill_responses_sort'] = [
+    'title' => t('NYS Senator Dashboard: Bill Responses Sort'),
+    'help' => t('Provides custom bill sorting options including vote response count, publish date, and print number.'),
+    'sort' => [
+      'id' => 'nys_senator_dashboard_bill_responses_sort',
+    ],
+  ];
   return $data;
 }

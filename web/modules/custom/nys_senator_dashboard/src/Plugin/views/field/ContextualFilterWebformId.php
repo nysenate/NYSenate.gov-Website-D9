@@ -23,7 +23,7 @@ class ContextualFilterWebformId extends FieldPluginBase implements ContainerFact
   protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
-   * Constructs a ContextualFilterFlagLink object.
+   * Constructs a ContextualFilterWebformId object.
    *
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.

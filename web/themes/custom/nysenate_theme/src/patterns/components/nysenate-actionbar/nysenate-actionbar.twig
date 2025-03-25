@@ -40,8 +40,8 @@
     </span>
   {% elseif actionbar.type == 'default' %}
     <div class="c-actionbar--info {{ is_logged ? 'content-logged' }}">
-      <p class="actionbar--cta">{{ is_logged ? "See activity on Issues, Bills and Committees you're following."|t :
-        "Find your Senator and share your views on important issues." }}</p>
+      <h2 class="actionbar--cta">{{ is_logged ? "See activity on Issues, Bills and Committees you're following."|t :
+        "Find your Senator and share your views on important issues." }}</h2>
     </div>
     <span class="c-block--btn {{ is_logged ? 'logged' }}">
       <a class="{{ is_logged ? 'icon-before__arrow' : 'icon-before__find-senator' }}"

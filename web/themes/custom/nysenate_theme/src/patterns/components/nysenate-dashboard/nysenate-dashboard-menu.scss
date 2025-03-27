@@ -31,11 +31,11 @@
   padding: 0;
   text-align: left;
 
-  @include breakpoint($bp-under-md) {
-    &[aria-expanded='true'] {
-      .icon--arrow {
-        rotate: 180deg;
-      }
+  &[aria-expanded='true'] {
+    color: #222;
+
+    .icon--arrow {
+      rotate: 180deg;
     }
   }
 }

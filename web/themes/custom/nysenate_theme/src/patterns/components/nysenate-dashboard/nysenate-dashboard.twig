@@ -1,4 +1,5 @@
 {% do attach_library('nysenate_theme/nysenate-dashboard') %}
+{% import '@nysenate_theme/icons/_icons-macro.twig' as icons %}
 
 <section class="nysenate-dashboard">
   <button
@@ -7,7 +8,8 @@
     aria-expanded="false"
     type="button"
   >
-    {{ 'Menu'|t }}
+    <span class="text">{{ 'Manage Senator'|t }}</span>
+    <span class="icon icon--arrow" aria-hidden="true">{{ icons.get('accordion__arrow') }}</span>
   </button>
 
   <div

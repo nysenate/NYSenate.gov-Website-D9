@@ -5625,8 +5625,8 @@ function nysenate_theme_preprocess_menu__senator_dashboard(&$variables) {
   foreach ($variables['items'] as $key => &$item) {
     // Set icons for primary level items.
     $item['icon'] = match ($key) {
-      'senator_dashboard.manage_senator_menu' => 'file-pen',
-      'senator_dashboard.constituent_activity_menu' => 'users',
+      'senator_dashboard.manage_senator' => 'file-pen',
+      'senator_dashboard.constituent_activity' => 'users',
       default => '',
     };
 

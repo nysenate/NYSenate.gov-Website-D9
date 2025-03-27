@@ -5601,3 +5601,65 @@ function nysenate_theme_preprocess_webform_confirmation(&$variables) {
 function nysenate_theme_preprocess_form__nys_search_legislation_form(&$variables) {
   // Preprocess for Advance Legistlation Search form.
 }
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function nysenate_theme_preprocess_nys_senator_dashboard__set_active_senator_menu(&$variables) {
+  // Massage senator data to align with general menu items as well. $active_link
+  // should serve as the top level menu item. Any additional items should be
+  // nested below. We also toggle out what is used for the URL if $active_link
+  // is the only item.
+  $variables['items'] = [];
+  $active_link = [];
+  $additional_links = [];
+
+  foreach ($variables['active_senator_links'] as $link) {
+    $link['title'] = $link['label'];
+
+    if ($link['is_active']) {
+      $active_link = $link;
+    }
+    else {
+      $additional_links[] = $link;
+    }
+  }
+
+  if (empty($additional_links)) {
+    $active_link['url'] = $active_link['homepage_url'];
+  }
+
+  $active_link['icon'] = 'briefcase';
+  $active_link['below'] = $additional_links;
+  $variables['items'][] = $active_link;
+}
+
+/**
+ * Implements hook_preprocess_menu().
+ */
+function nysenate_theme_preprocess_menu__senator_dashboard(&$variables) {
+  $find_overview = function (&$items) {
+    foreach ($items as $key => &$item) {
+      $item['is_overview'] = str_ends_with($key, '.overview');
+    }
+  };
+
+  foreach ($variables['items'] as $key => &$item) {
+    // Set icons for primary level items.
+    $item['icon'] = match ($key) {
+      'senator_dashboard.manage_senator_menu' => 'file-pen',
+      'senator_dashboard.constituent_activity_menu' => 'users',
+      default => '',
+    };
+
+    // Let mega menu items.
+    $item['mega_menu'] = match ($key) {
+      'senator_dashboard.manage_senator_menu' => TRUE,
+      default => FALSE,
+    };
+
+    if ($item['below']) {
+      $find_overview($item['below']);
+    }
+  }
+}

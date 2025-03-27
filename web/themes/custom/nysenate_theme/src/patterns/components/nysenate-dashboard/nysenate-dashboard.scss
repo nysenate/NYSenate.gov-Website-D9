@@ -1,0 +1,30 @@
+@import '../../global/utils/breakpoints';
+@import '../../global/colors/colors';
+@import '../../global/fonts/fonts';
+@import '../../global/fonts/phosphor';
+@import '../../global/utils/typography';
+
+.nysenate-dashboard {
+  background-color: $dash_grey_2;
+  margin: 0 auto;
+  padding: 20px;
+  max-width: 1500px;
+
+  @include breakpoint($bp-sm) {
+    padding: 20px 60px;
+  }
+}
+
+.senate-dashboard__trigger {
+  @include breakpoint($bp-md) {
+    display: none;
+  }
+}
+
+.senate-dashboard__content {
+  @include breakpoint($bp-under-md) {
+    &[aria-hidden='true'] {
+      display: none;
+    }
+  }
+}

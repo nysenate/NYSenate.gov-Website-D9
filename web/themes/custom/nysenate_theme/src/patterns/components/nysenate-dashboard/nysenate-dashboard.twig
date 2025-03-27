@@ -1,0 +1,20 @@
+{% do attach_library('nysenate_theme/nysenate-dashboard') %}
+
+<section class="nysenate-dashboard">
+  <button
+    class="senate-dashboard__trigger"
+    aria-controls="nysenate-senator-dashboard-menu"
+    aria-expanded="false"
+    type="button"
+  >
+    {{ 'Menu'|t }}
+  </button>
+
+  <div
+    id="nysenate-senator-dashboard-menu"
+    class="senate-dashboard__content"
+    aria-hidden="true"
+  >
+    {% block content %}{% endblock %}
+  </div>
+</section>

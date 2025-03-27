@@ -1,0 +1,40 @@
+uuid: 339287b7-4b11-418f-b4a8-075e2060ef14
+langcode: en
+status: true
+dependencies:
+  module:
+    - nys_senator_dashboard
+    - system
+    - user
+  theme:
+    - nysenate_theme
+id: nysenate_theme_senator_dashboard_header_block_questionnaires
+theme: nysenate_theme
+region: above_content
+weight: 0
+provider: null
+plugin: senator_dashboard_header_block
+settings:
+  id: senator_dashboard_header_block
+  label: 'Senator Dashboard header block - Questionnaire Responders'
+  label_display: '0'
+  provider: nys_senator_dashboard
+  display_image: 0
+  display_breadcrumbs: 1
+  display_header_title_as_contextual_link: 1
+  display_homepage_link: 0
+  use_blurb_from_entity: 0
+  header_blurb: 'View & connect with constituents who responded to this questionnaire.'
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: '/senator-dashboard/constituent-activity/questionnaires/*'
+  user_role:
+    id: user_role
+    negate: false
+    context_mapping:
+      user: '@user.current_user_context:current_user'
+    roles:
+      microsite_content_producer: microsite_content_producer
+      legislative_correspondent: legislative_correspondent

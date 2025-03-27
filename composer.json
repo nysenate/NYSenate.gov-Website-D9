@@ -26,6 +26,7 @@
     "require": {
         "ext-curl": "*",
         "ext-json": "*",
+        "bower-asset/colorbox": "^1.6",
         "composer/installers": "^1.2",
         "cweagans/composer-patches": "^1.7.0",
         "dompdf/dompdf": "^2.0",
@@ -43,6 +44,7 @@
         "drupal/charts": "^5.0",
         "drupal/clamav": "^2.0",
         "drupal/classy": "^1.0",
+        "drupal/colorbox": "^2.1",
         "drupal/comments_ban": "^1.0",
         "drupal/components": "^3.1",
         "drupal/conditional_fields": "^4.0@alpha",
@@ -66,6 +68,7 @@
         "drupal/entityqueue": "^1.2",
         "drupal/environment_indicator": "^4.0",
         "drupal/eva": "^3.0",
+        "drupal/exif_manipulate": "^1.0",
         "drupal/facets": "^2.0",
         "drupal/fancy_file_delete": "^2.0",
         "drupal/field_group": "^3.6",
@@ -75,6 +78,7 @@
         "drupal/flag": "^4.0@beta",
         "drupal/flood_control": "^2.2",
         "drupal/fontawesome": "^2.26",
+        "drupal/formblock": "^2.0@beta",
         "drupal/fpa": "^4.0",
         "drupal/fullcalendar_view": "^5.1",
         "drupal/geocoder": "^3.25 || ^4.0",
@@ -108,7 +112,7 @@
         "drupal/name": "^1.0@RC",
         "drupal/node_access_rebuild_progressive": "^2.0",
         "drupal/node_export": "^1.0@alpha",
-        "drupal/node_revision_delete": "^2.0@RC",
+        "drupal/node_revision_delete": "^2.0",
         "drupal/oembed_providers": "^2.2",
         "drupal/optional_end_date": "^1.3",
         "drupal/other_view_filter": "^1.3",
@@ -123,18 +127,19 @@
         "drupal/privatemsg": "^1.0@alpha",
         "drupal/queue_ui": "^3.1",
         "drupal/queue_unique": "^3.0",
-        "drupal/rabbit_hole": "^2.0@alpha",
+        "drupal/rabbit_hole": "^2.0@beta",
         "drupal/real_aes": "^2.6",
         "drupal/recaptcha": "^3.0",
         "drupal/redirect": "~1.0",
         "drupal/redis": "^1.5",
         "drupal/reroute_email": "^2.1",
         "drupal/scheduler": "^2.0",
-        "drupal/search_api_pantheon": "^8",
+        "drupal/search_api_pantheon": "^8.3",
         "drupal/search_api_solr": "^4.2 || ^4.3.2",
         "drupal/seckit": "^2.0",
         "drupal/semanticviews": "^3.0",
         "drupal/seven": "^1.0",
+        "drupal/simple_image_rotate": "^2.0",
         "drupal/simple_sitemap": "^4.2",
         "drupal/site_verify": "^2.0@alpha",
         "drupal/stage_file_proxy": "^3.1",
@@ -153,6 +158,7 @@
         "drupal/twitter_block": "^4.0",
         "drupal/ultimate_cron": "^2.0@alpha",
         "drupal/upgrade_status": "^4.3",
+        "drupal/vbo_export": "^4.1",
         "drupal/video_embed_field": "~2.0",
         "drupal/views_autocomplete_filters": "^1.3 || ^2.0",
         "drupal/views_bulk_edit": "^3.0",
@@ -177,7 +183,7 @@
         "drush/drush": "^12",
         "enlightn/security-checker": "^1.11",
         "geocoder-php/google-maps-provider": "^4.6",
-        "kint-php/kint": "^4.2",
+        "kint-php/kint": "^5.0",
         "npm-asset/datatables.net-dt": "^3.2",
         "oomphinc/composer-installers-extender": "^2.0",
         "pantheon-systems/drupal-integrations": "^9.0",
@@ -209,7 +215,7 @@
         "discard-changes": true,
         "sort-packages": true,
         "platform": {
-            "php": "8.2"
+            "php": "8.3"
         },
         "allow-plugins": {
             "composer/installers": true,
@@ -291,7 +297,8 @@
                 "2769407 - Views UI should offer a 'Treat NULL values as FALSE' on boolean field": "https://www.drupal.org/files/issues/2024-06-26/2769407_views_ui_null_option-10.3.x-90.patch",
                 "2741877 - Nested modals don't work - fixed focal point preview modal": "https://www.drupal.org/files/issues/2024-06-20/drupal-core--2024-06-20--2741877--mr-8105.patch",
                 "3049216 - ajax error": "https://www.drupal.org/files/issues/2023-01-31/3049216-21_0.patch",
-                "3315678 - strnatcasecmp(): Passing null to parameter #2 ($string2) of type string is deprecated": "https://www.drupal.org/files/issues/2023-01-30/categorizing_plugin_error-3315678-16.patch"
+                "3315678 - strnatcasecmp(): Passing null to parameter #2 ($string2) of type string is deprecated": "https://www.drupal.org/files/issues/2023-01-30/categorizing_plugin_error-3315678-16.patch",
+                "3359511 - [regression] missing menu active trail since Drupal 9.5.9": "https://www.drupal.org/files/issues/2025-01-14/3359511-103.patch"
             },
             "drupal/inline_entity_form": {
                 "3099844 - Required fields make an optional IEF (erroneously) required": "https://www.drupal.org/files/issues/2024-02-01/inline_entity_form-required_fields_optional_ief-3099844-35.patch"
@@ -323,6 +330,9 @@
             },
             "drupal/clamav": {
                 "3383653 -Support image upload plugin for CKEditor5\n": "https://git.drupalcode.org/project/clamav/-/merge_requests/7.patch"
+            },
+            "drupal/simple_image_rotate": {
+              "3374358 - Inverted picture returns to its original form after adding another picture": "https://www.drupal.org/files/issues/2024-02-09/3374358-inverted-picture-returns-4.patch"
             },
             "drupal/stage_file_proxy": {
                 "3457368 - createProxyHeadersArray(): Argument #1 ($headers_string) must be of type string": "https://git.drupalcode.org/project/stage_file_proxy/-/merge_requests/74.patch"

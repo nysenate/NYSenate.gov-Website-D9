@@ -119,13 +119,13 @@ class SenatorDashboardMenuBlock extends BlockBase implements ContainerFactoryPlu
       default => [],
     };
     $manage_senator_menu = match($this->configuration['mode']) {
-      'header_menu' => $this->getMenuRenderArray('manage_senator_menu'),
-      'manage_senator_menu' => $this->getMenuRenderArray('manage_senator_menu', TRUE),
+      'header_menu' => $this->getMenuRenderArray('manage_senator'),
+      'manage_senator_menu' => $this->getMenuRenderArray('manage_senator', TRUE),
       default => [],
     };
     $constituent_activity_menu = match($this->configuration['mode']) {
-      'header_menu' => $this->getMenuRenderArray('constituent_activity_menu'),
-      'constituent_activity_menu' => $this->getMenuRenderArray('constituent_activity_menu', TRUE),
+      'header_menu' => $this->getMenuRenderArray('constituent_activity'),
+      'constituent_activity_menu' => $this->getMenuRenderArray('constituent_activity', TRUE),
       default => [],
     };
 

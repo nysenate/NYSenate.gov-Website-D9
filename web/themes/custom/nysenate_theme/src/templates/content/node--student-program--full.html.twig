@@ -1,12 +1,21 @@
 {{ attach_library('nysenate_theme/nysenate-student-programs') }}
 
-<article id="node-{{ node_id }}" class="article-student-program page-student-programs" {{ attributes }}>
+{%
+  set classes = [
+  'node',
+  'node--type-' ~ node.bundle|clean_class,
+  not node.isPublished() ? 'node--unpublished',
+  view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+  'article-student-program',
+  'page-student-program'
+]
+%}
+
+<article{{ attributes.addClass(classes) }}>
   {{ title_prefix }}
   {% if page %}
     <header class="c-news--head">
-      <h1 class="nys-article-title">
-        {{ title }}
-      </h1>
+      <h1 class="nys-article-title">{{ title }}</h1>
       <div class="c-news--head-meta">
         <p class="c-news--pub-date">
           <span class="date-display-single">

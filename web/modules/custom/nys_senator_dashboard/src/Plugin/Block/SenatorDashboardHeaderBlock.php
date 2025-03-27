@@ -2,13 +2,15 @@
 
 namespace Drupal\nys_senator_dashboard\Plugin\Block;
 
-use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
+use Drupal\Core\Breadcrumb\Breadcrumb;
+use Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface;
 use Drupal\Core\Controller\TitleResolverInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Menu\MenuActiveTrailInterface;
 use Drupal\Core\Menu\MenuLinkManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -19,6 +21,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\file\Entity\File;
 use Drupal\nys_senator_dashboard\Service\ManagedSenatorsHandler;
+use Drupal\nys_senator_dashboard\Service\SenatorDashboardHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -30,6 +33,13 @@ use Symfony\Component\HttpFoundation\RequestStack;
   admin_label: new TranslatableMarkup('Senator Dashboard header block')
 )]
 class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryPluginInterface {
+
+  /**
+   * The breadcrumb builder.
+   *
+   * @var \Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface
+   */
+  protected $breadcrumbBuilder;
 
   /**
    * The current user.
@@ -102,6 +112,13 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
   protected RouteProvider $routeProvider;
 
   /**
+   * The senator dashboard helper service.
+   *
+   * @var \Drupal\nys_senator_dashboard\Service\SenatorDashboardHelper
+   */
+  protected SenatorDashboardHelper $senatorDashboardHelper;
+
+  /**
    * Constructs a SenatorDashboardHeaderBlock object.
    *
    * @param array $configuration
@@ -130,6 +147,10 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
    *   The request stack service.
    * @param \Drupal\Core\Routing\RouteProvider $route_provider
    *   The route provider service.
+   * @param \Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface $breadcrumbBuilder
+   *   The breadcrumb builder.
+   * @param \Drupal\nys_senator_dashboard\Service\SenatorDashboardHelper $senator_dashboard_helper
+   *   The senator dashboard helper service.
    */
   public function __construct(
     array $configuration,
@@ -145,6 +166,8 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
     MenuActiveTrailInterface $menu_active_trail,
     RequestStack $request_stack,
     RouteProvider $route_provider,
+    BreadcrumbBuilderInterface $breadcrumbBuilder,
+    SenatorDashboardHelper $senator_dashboard_helper,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->currentUser = $current_user;
@@ -157,6 +180,8 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
     $this->menuActiveTrail = $menu_active_trail;
     $this->requestStack = $request_stack;
     $this->routeProvider = $route_provider;
+    $this->breadcrumbBuilder = $breadcrumbBuilder;
+    $this->senatorDashboardHelper = $senator_dashboard_helper;
   }
 
   /**
@@ -189,6 +214,8 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
       $container->get('menu.active_trail'),
       $container->get('request_stack'),
       $container->get('router.route_provider'),
+      $container->get('system.breadcrumb.default'),
+      $container->get('nys_senator_dashboard.senator_dashboard_helper'),
     );
   }
 
@@ -196,17 +223,17 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
    * {@inheritdoc}
    */
   public function build() {
-    $config = $this->getConfiguration();
     $senator_image_url = $this->getSenatorImageUrl();
     $breadcrumbs = $this->getBreadcrumbs();
     $header_title = $this->getHeaderTitle();
+    $header_blurb = $this->getHeaderBlurb();
     $homepage_url = $this->getHomepageUrl();
     return [
       '#theme' => 'nys_senator_dashboard__senator_dashboard_header_block',
       '#senator_image_url' => $senator_image_url,
       '#breadcrumbs' => $breadcrumbs,
       '#header_title' => $header_title,
-      '#header_blurb' => $config['header_blurb'] ?? '',
+      '#header_blurb' => $header_blurb,
       '#homepage_url' => $homepage_url,
     ];
   }
@@ -249,46 +276,26 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
    *   The breadcrumbs.
    */
   private function getBreadcrumbs(): array {
-    $active_senator = $this->managedSenatorsHandler->getActiveSenator($this->currentUser->id(), FALSE);
-    $breadcrumbs[] = [
-      'title' => $active_senator->label(),
-      'url' => $this->managedSenatorsHandler->getActiveSenatorHomepageUrl($this->currentUser->id()),
-    ];
+    $ret = [];
     if ($this->configuration['display_breadcrumbs']) {
-      $active_trail_ids = $this->menuActiveTrail->getActiveTrailIds('senator_dashboard');
-      if (!empty($active_trail_ids)) {
-        foreach ($active_trail_ids as $item) {
-          if (empty($item)) {
-            continue;
-          }
-          try {
-            $menu_link = $this->menuLinkManager->getDefinition($item);
-          }
-          catch (PluginNotFoundException) {
-          }
-          if (isset($menu_link)) {
-            $title = $menu_link['title'];
-            $url = '';
-            if (!empty($menu_link['url'])) {
-              $url = Url::fromUri($menu_link['url']);
-            }
-            elseif (!empty($menu_link['route_name'])) {
-              $route_parameters = $menu_link['route_parameters'] ?? [];
-              if ($this->routeProvider->getRouteByName($menu_link['route_name'])) {
-                $url = Url::fromRoute($menu_link['route_name'], $route_parameters);
-              }
-            }
-            if ($url) {
-              $breadcrumbs[] = [
-                'title' => $title,
-                'url' => $url->toString(),
-              ];
-            }
-          }
-        }
+      $breadcrumbs = $this->breadcrumbBuilder->build($this->routeMatch);
+      $links = $breadcrumbs->getLinks();
+      if (!empty($links)) {
+        // Replaces 'Home' link with link to active managed senator.
+        $active_senator = $this->managedSenatorsHandler->getActiveSenator($this->currentUser->id(), FALSE);
+        $links[0] = Link::fromTextAndUrl(
+          $active_senator->label(),
+          Url::fromUri(
+            $this->managedSenatorsHandler->getActiveSenatorHomepageUrl($this->currentUser->id()
+          ))
+        );
+        // Generate new Breadcrumb due to immutability in generation pipeline.
+        $new_breadcrumbs = new Breadcrumb();
+        $new_breadcrumbs->setLinks($links);
+        $ret = $new_breadcrumbs->toRenderable();
       }
     }
-    return $breadcrumbs;
+    return $ret;
   }
 
   /**
@@ -299,12 +306,45 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
    */
   private function getHeaderTitle(): string {
     $header_title = 'Senator Dashboard';
-    if ($this->configuration['display_header_title']) {
-      $route = $this->routeMatch->getRouteObject();
-      $header_title = $this->titleResolver
-        ->getTitle($this->requestStack->getCurrentRequest(), $route) ?? $header_title;
+    $route = $this->routeMatch->getRouteObject();
+    $current_request = $this->requestStack->getCurrentRequest();
+    $header_title = $this->titleResolver
+      ->getTitle($current_request, $route) ?? $header_title;
+
+    // If configured for use on a contextual view detail page.
+    if ($this->configuration['display_header_title_as_contextual_link']) {
+      $header_title = 'Detail page';
+      $entity = $this->senatorDashboardHelper->getContextualEntity();
+      try {
+        $title = $entity?->label();
+        $url = $entity?->toUrl()->toString();
+      }
+      catch (\Exception) {
+        return $header_title;
+      }
+      $header_title = '<a href="' . $url . '">' . $title . '</a>';
     }
+
     return $header_title;
+  }
+
+  /**
+   * Helper method to get the header blurb.
+   *
+   * @return string
+   *   The header blurb.
+   */
+  private function getHeaderBlurb(): string {
+    $header_blurb = $this->configuration['header_blurb'] ?? '';
+
+    if ($this->configuration['use_blurb_from_entity']) {
+      $entity = $this->senatorDashboardHelper->getContextualEntity();
+      if ($entity->bundle() === 'bill') {
+        $header_blurb = $entity->field_ol_name?->value ?? $header_blurb;
+      }
+    }
+
+    return $header_blurb;
   }
 
   /**
@@ -336,19 +376,24 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
       '#title' => $this->t('Display breadcrumbs'),
       '#default_value' => $config['display_breadcrumbs'],
     ];
-    $form['display_header_title'] = [
+    $form['display_header_title_as_contextual_link'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Display header title'),
-      '#default_value' => $config['display_header_title'],
+      '#title' => $this->t('Display header title as link to contextual filter entity'),
+      '#default_value' => $config['display_header_title_as_contextual_link'],
     ];
     $form['display_homepage_link'] = [
       '#type' => 'checkbox',
       '#title' => $this->t("Display link to senator's homepage"),
       '#default_value' => $config['display_homepage_link'],
     ];
+    $form['use_blurb_from_entity'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t("Use short summary from entity as blurb text"),
+      '#default_value' => $config['use_blurb_from_entity'],
+    ];
     $form['header_blurb'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Header blurb'),
+      '#title' => $this->t('Header blurb (input will be ignored if using entity blurb)'),
       '#default_value' => $config['header_blurb'],
     ];
     return $form;
@@ -361,8 +406,9 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
     return [
       'display_image' => FALSE,
       'display_breadcrumbs' => FALSE,
-      'display_header_title' => FALSE,
+      'display_header_title_as_contextual_link' => FALSE,
       'display_homepage_link' => FALSE,
+      'use_blurb_from_entity' => FALSE,
       'header_blurb' => '',
     ];
   }
@@ -373,8 +419,9 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
   public function blockSubmit($form, FormStateInterface $form_state): void {
     $this->setConfigurationValue('display_image', $form_state->getValue('display_image'));
     $this->setConfigurationValue('display_breadcrumbs', $form_state->getValue('display_breadcrumbs'));
-    $this->setConfigurationValue('display_header_title', $form_state->getValue('display_header_title'));
+    $this->setConfigurationValue('display_header_title_as_contextual_link', $form_state->getValue('display_header_title_as_contextual_link'));
     $this->setConfigurationValue('display_homepage_link', $form_state->getValue('display_homepage_link'));
+    $this->setConfigurationValue('use_blurb_from_entity', $form_state->getValue('use_blurb_from_entity'));
     $this->setConfigurationValue('header_blurb', $form_state->getValue('header_blurb'));
   }
 
@@ -382,7 +429,7 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
    * {@inheritdoc}
    */
   public function getCacheContexts(): array {
-    return ['user'];
+    return ['user', 'url.path'];
   }
 
   /**

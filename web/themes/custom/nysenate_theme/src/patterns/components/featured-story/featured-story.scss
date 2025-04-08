@@ -61,40 +61,37 @@
 	}
 
   .c-featured-story-issue-tag a {
-    text-transform: uppercase;
-    font-family: $font-sans-bold;
-    font-size: 12px;
-    line-height: 1em;
-    letter-spacing: 0.05em;
-		text-decoration: none;
-    @extend .link-text;
-
+	text-transform: uppercase;
+	font-family: $font-sans-bold;
+	font-size: 12px;
+	line-height: 1em;
+	letter-spacing: 0.05em;
+	text-decoration: none;
+	@extend .link-text;
+	padding-right: 5px;
     &:hover {
       @extend .link-text;
       text-decoration: underline;
+		color: $orange01;
     }
   }
 
   @include breakpoint($bp-sm) {
-
 		.c-story-name {
 			font-size: 26px;
 		}
-
 		.l-left {
 			width: 50%;
-	  }
-
-	  .l-right {
+		}
+		.l-right {
 		  width: 340px;
 		  float: right;
-	  }
-
+		}
 		.story-container {
 			display: flex;
 			gap: 40px;
 		}
-  }
+	}
 }
 
 .c-block.c-event-featured-story,

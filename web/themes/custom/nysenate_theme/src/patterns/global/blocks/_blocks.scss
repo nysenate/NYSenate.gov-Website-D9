@@ -893,7 +893,9 @@ p.c-senate-works-step-description {
     position: relative;
     width: 100%;
     margin: 0 auto;
-
+    a.c-block--btn:hover {
+      text-decoration: underline;
+    }
     .c-want-to--cta {
       margin: 35px 0 20px;
       padding-right: 50px;
@@ -911,17 +913,15 @@ p.c-senate-works-step-description {
       background: $yellow01;
       height: 70px;
       line-height: 1;
-      text-align: center;
       font-size: 13px;
       letter-spacing: 2.6px;
       padding-left: 20px;
       text-align: left;
       transition: background-color 0.2s ease;
-      color: #fff;
+      color: $grey08;
       &:hover {
         background: $yellow03;
       }
-
       &::before {
         height: auto;
       }
@@ -962,7 +962,7 @@ p.c-senate-works-step-description {
     }
 
     &.c-want-to--item__explore {
-      .c-block--btn {
+      a.c-block--btn {
         @extend .icon-before__search;
       }
     }

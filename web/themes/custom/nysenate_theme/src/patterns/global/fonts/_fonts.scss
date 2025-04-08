@@ -170,7 +170,6 @@
 		font-family: 'senate_icons';
 		display: inline-block;
 		vertical-align: middle;
-
 		speak: none;
 		font-style: normal;
 		font-weight: normal;
@@ -362,6 +361,9 @@
 
 .icon-before__search::before {
 	content: '\6d';
+	&:hover {
+		text-decoration: none;
+	}
 }
 
 .icon-before__see-less::before {

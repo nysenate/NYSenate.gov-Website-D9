@@ -32,6 +32,10 @@
   letter-spacing: 0.1em;
   @extend .icon-after__arrow;
   @extend .link-text;
+  &:hover {
+    text-decoration: underline;
+    color: $yellow03;
+  }
   &.a-left {
     display: block;
     text-align: left;
@@ -68,7 +72,7 @@ a.nys-btn--gold {
   justify-content: center;
   padding: 20px 10px;
   background: $yellow01;
-  color: $color-white;
+  color: $grey08;
   text-align: center;
   text-transform: uppercase;
   font-family: $font-sans-bold;
@@ -79,8 +83,8 @@ a.nys-btn--gold {
   height: 100px;
 
   &:hover {
-    color: #fff;
     background: $yellow03;
+    text-decoration: underline;
   }
 }
 /*.ck-content a.nys-btn--blue,*/

@@ -4,7 +4,6 @@ namespace Drupal\nys_senator_dashboard\Plugin\Menu;
 
 use Drupal\Core\Menu\MenuLinkDefault;
 use Drupal\Core\Menu\StaticMenuLinkOverridesInterface;
-use Drupal\Core\Session\AccountProxyInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\nys_senator_dashboard\Service\ManagedSenatorsHandler;
 
@@ -12,13 +11,6 @@ use Drupal\nys_senator_dashboard\Service\ManagedSenatorsHandler;
  * Provides a menu link for editing the active senator's information.
  */
 class EditSenatorInformationMenuLink extends MenuLinkDefault {
-
-  /**
-   * The current user proxy.
-   *
-   * @var \Drupal\Core\Session\AccountProxyInterface
-   */
-  protected AccountProxyInterface $currentUser;
 
   /**
    * The Managed Senators Handler service.
@@ -38,8 +30,6 @@ class EditSenatorInformationMenuLink extends MenuLinkDefault {
    *   The plugin implementation definition.
    * @param \Drupal\Core\Menu\StaticMenuLinkOverridesInterface $static_override
    *   The static override storage.
-   * @param \Drupal\Core\Session\AccountProxyInterface $current_user
-   *   The current user's account proxy.
    * @param \Drupal\nys_senator_dashboard\Service\ManagedSenatorsHandler $managedSenatorsHandler
    *   The Managed Senators Handler service.
    */
@@ -48,11 +38,9 @@ class EditSenatorInformationMenuLink extends MenuLinkDefault {
     $plugin_id,
     array $plugin_definition,
     StaticMenuLinkOverridesInterface $static_override,
-    AccountProxyInterface $current_user,
     ManagedSenatorsHandler $managedSenatorsHandler,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $static_override);
-    $this->currentUser = $current_user;
     $this->managedSenatorsHandler = $managedSenatorsHandler;
   }
 
@@ -65,7 +53,6 @@ class EditSenatorInformationMenuLink extends MenuLinkDefault {
       $plugin_id,
       $plugin_definition,
       $container->get('menu_link.static.overrides'),
-      $container->get('current_user'),
       $container->get('nys_senator_dashboard.managed_senators_handler'),
     );
   }
@@ -74,8 +61,7 @@ class EditSenatorInformationMenuLink extends MenuLinkDefault {
    * {@inheritdoc}
    */
   public function getRouteParameters(): array {
-    $current_user_id = $this->currentUser->id();
-    $senator_tid = $this->managedSenatorsHandler->getActiveSenator($current_user_id);
+    $senator_tid = $this->managedSenatorsHandler->getActiveSenator();
     return [
       'taxonomy_term' => $senator_tid ?? 0,
     ];

@@ -6,6 +6,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\TempStore\TempStoreException;
@@ -17,6 +18,13 @@ use Drupal\nys_senators\SenatorsHelper;
 class ManagedSenatorsHandler {
 
   use StringTranslationTrait;
+
+  /**
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountProxyInterface
+   */
+  protected AccountProxyInterface $currentUser;
 
   /**
    * The private temp store factory.
@@ -49,6 +57,8 @@ class ManagedSenatorsHandler {
   /**
    * Constructs the ManagedSenatorsHandler service.
    *
+   * @param \Drupal\Core\Session\AccountProxyInterface $current_user
+   *   The current user.
    * @param \Drupal\Core\TempStore\PrivateTempStoreFactory $tempStoreFactory
    *   The private temp store factory.
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
@@ -59,11 +69,13 @@ class ManagedSenatorsHandler {
    *   The senators helper service.
    */
   public function __construct(
+    AccountProxyInterface $current_user,
     PrivateTempStoreFactory $tempStoreFactory,
     MessengerInterface $messenger,
     EntityTypeManagerInterface $entityTypeManager,
     SenatorsHelper $senators_helper,
   ) {
+    $this->currentUser = $current_user;
     $this->tempStoreFactory = $tempStoreFactory->get('nys_senator_dashboard');
     $this->messenger = $messenger;
     $this->entityTypeManager = $entityTypeManager;
@@ -71,19 +83,17 @@ class ManagedSenatorsHandler {
   }
 
   /**
-   * Gets a given user's managed senators.
+   * Gets the current user's managed senators.
    *
-   * @param int $user_id
-   *   The user's ID.
    * @param bool $tids_only
    *   Whether to return just the senator TIDs instead of the full entities.
    *
    * @return array
    *   An array of senator term entities managed by the user.
    */
-  public function getManagedSenators(int $user_id, bool $tids_only = TRUE): array {
+  public function getManagedSenators(bool $tids_only = TRUE): array {
     try {
-      $user = $this->entityTypeManager->getStorage('user')->load($user_id);
+      $user = $this->entityTypeManager->getStorage('user')->load($this->currentUser->id());
     }
     catch (\Throwable) {
       return [];
@@ -97,23 +107,21 @@ class ManagedSenatorsHandler {
   }
 
   /**
-   * Gets (and sets, if unset) the given user's active managed senator.
+   * Gets (and sets, if unset) the current user's active managed senator.
    *
-   * @param int $user_id
-   *   The user ID.
    * @param bool $tid_only
    *   Whether to return TIDs or entities.
    *
    * @return \Drupal\Core\Entity\EntityInterface|int|null
    *   The senator entity or TID if successful, NULL otherwise.
    */
-  public function getActiveSenator(int $user_id, $tid_only = TRUE): EntityInterface|int|null {
+  public function getActiveSenator(bool $tid_only = TRUE): EntityInterface|int|null {
     // Get active senator TID.
     $active_senator_tid = $this->tempStoreFactory->get('active_managed_senator_tid');
 
     // If unset, set first senator in reference field to active.
     if (empty($active_senator_tid)) {
-      $managed_senators = $this->getManagedSenators($user_id, FALSE);
+      $managed_senators = $this->getManagedSenators(FALSE);
       if (count($managed_senators) > 0) {
         try {
           $this->tempStoreFactory->set('active_managed_senator_tid', $managed_senators[0]->id());
@@ -121,7 +129,7 @@ class ManagedSenatorsHandler {
         catch (TempStoreException) {
           return NULL;
         }
-        Cache::invalidateTags(['tempstore_user:' . $user_id]);
+        Cache::invalidateTags(['tempstore_user:' . $this->currentUser->id()]);
         $active_senator = $managed_senators[0];
         $active_senator_tid = $active_senator->id();
       }
@@ -146,10 +154,8 @@ class ManagedSenatorsHandler {
   }
 
   /**
-   * Updates the active managed senator for a given user.
+   * Updates the current user's active managed senator.
    *
-   * @param int $user_id
-   *   The user ID.
    * @param int $senator_id
    *   The senator term ID.
    * @param bool $include_message
@@ -158,16 +164,16 @@ class ManagedSenatorsHandler {
    * @return bool
    *   Indicates if operation was a success.
    */
-  public function updateActiveSenator(int $user_id, int $senator_id, bool $include_message = TRUE): bool {
+  public function updateActiveSenator(int $senator_id, bool $include_message = TRUE): bool {
     // Update the active managed senator if allowed.
-    $allowed_senator_ids = $this->getManagedSenators($user_id);
+    $allowed_senator_ids = $this->getManagedSenators();
     if (in_array($senator_id, $allowed_senator_ids)) {
       try {
         $this->tempStoreFactory->set('active_managed_senator_tid', $senator_id);
         if ($include_message) {
           $this->messenger->addMessage($this->t('Your active managed senator has been updated.'));
         }
-        Cache::invalidateTags(['tempstore_user:' . $user_id]);
+        Cache::invalidateTags(['tempstore_user:' . $this->currentUser->id()]);
         return TRUE;
       }
       catch (\Exception) {
@@ -186,17 +192,25 @@ class ManagedSenatorsHandler {
   }
 
   /**
-   * Gets the active senator's homepage URL for a given user.
-   *
-   * @param int $user_id
-   *   The user ID.
+   * Gets the current user's active senator's homepage URL.
    *
    * @return string
-   *   The homepage URL.
+   *   The homepage URL, or an empty string on error.
    */
-  public function getActiveSenatorHomepageUrl(int $user_id): string {
-    $senator = $this->getActiveSenator($user_id, FALSE);
-    return $this->senatorsHelper->getMicrositeUrl($senator);
+  public function getActiveSenatorHomepageUrl(): string {
+    $senator = $this->getActiveSenator(FALSE);
+    return !empty($senator) ? $this->senatorsHelper->getMicrositeUrl($senator) : '';
+  }
+
+  /**
+   * Gets the current user's active senator's district ID.
+   *
+   * @return int|null
+   *   The district TID.
+   */
+  public function getActiveSenatorDistrictId(): int|null {
+    $senator = $this->getActiveSenator(FALSE);
+    return !empty($senator) ? $this->senatorsHelper->loadDistrict($senator)?->id() : NULL;
   }
 
 }

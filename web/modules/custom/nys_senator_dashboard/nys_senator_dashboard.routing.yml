@@ -23,14 +23,6 @@ nys_senator_dashboard.constituent_activity:
   requirements:
     _role: 'microsite_content_producer+legislative_correspondent'
 
-# Temp bills placeholder route
-nys_senator_dashboard.temp_placeholder.bills:
-  path: '/senator-dashboard/constituent-activity/bills'
-  defaults:
-    _controller: '\Drupal\nys_senator_dashboard\Controller\SenatorDashboardController::tempPlaceholder'
-    _title: 'Bills'
-  requirements:
-    _role: 'microsite_content_producer+legislative_correspondent'
 # Temp issues placeholder route
 nys_senator_dashboard.temp_placeholder.issues:
   path: '/senator-dashboard/constituent-activity/issues'

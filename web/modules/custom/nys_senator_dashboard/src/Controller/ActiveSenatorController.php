@@ -53,7 +53,7 @@ class ActiveSenatorController extends ControllerBase {
    */
   public function updateActiveSenator(int $senator_tid, Request $request) {
     // Set the current user's active senator.
-    $this->managedSenatorsHandler->updateActiveSenator($this->currentUser()->id(), $senator_tid);
+    $this->managedSenatorsHandler->updateActiveSenator($senator_tid);
 
     // Redirect the user to the referring page if internal, home otherwise.
     $referer = $request->headers->get('referer');

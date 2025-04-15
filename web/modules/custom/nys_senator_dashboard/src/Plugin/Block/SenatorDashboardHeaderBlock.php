@@ -247,7 +247,7 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
   private function getSenatorImageUrl(): string {
     $senator_image_url = '';
     if ($this->configuration['display_image']) {
-      $senator_tid = $this->managedSenatorsHandler->getActiveSenator($this->currentUser->id());
+      $senator_tid = $this->managedSenatorsHandler->getActiveSenator();
       try {
         $senator = $this->entityTypeManager
           ->getStorage('taxonomy_term')
@@ -282,12 +282,10 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
       $links = $breadcrumbs->getLinks();
       if (!empty($links)) {
         // Replaces 'Home' link with link to active managed senator.
-        $active_senator = $this->managedSenatorsHandler->getActiveSenator($this->currentUser->id(), FALSE);
+        $active_senator = $this->managedSenatorsHandler->getActiveSenator(FALSE);
         $links[0] = Link::fromTextAndUrl(
           $active_senator->label(),
-          Url::fromUri(
-            $this->managedSenatorsHandler->getActiveSenatorHomepageUrl($this->currentUser->id()
-          ))
+          Url::fromUri($this->managedSenatorsHandler->getActiveSenatorHomepageUrl())
         );
         // Generate new Breadcrumb due to immutability in generation pipeline.
         $new_breadcrumbs = new Breadcrumb();
@@ -356,7 +354,7 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
   private function getHomepageUrl(): string {
     $homepage_url = '';
     if ($this->configuration['display_homepage_link']) {
-      $homepage_url = $this->managedSenatorsHandler->getActiveSenatorHomepageUrl($this->currentUser->id());
+      $homepage_url = $this->managedSenatorsHandler->getActiveSenatorHomepageUrl();
     }
     return $homepage_url;
   }

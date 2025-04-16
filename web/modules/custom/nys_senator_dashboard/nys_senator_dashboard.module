@@ -1,0 +1,163 @@
+<?php
+
+/**
+ * @file
+ * Contains custom module logic for NYS Senator Dashboard.
+ */
+
+use Drupal\Core\Database\Query\AlterableInterface;
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_query_TAG_alter().
+ *
+ * Ensures views with the "senators_constituents_only" tag only display profiles
+ * linked to the current user's active managed senator's districts.
+ */
+function nys_senator_dashboard_query_senators_constituents_only_alter(AlterableInterface $query) {
+  // Get active managed senator.
+  $senator_term = \Drupal::service('nys_senator_dashboard.managed_senators_handler')
+    ->getActiveSenator(FALSE);
+  if (empty($senator_term)) {
+    $query->alwaysFalse();
+    return;
+  }
+
+  // Get senator's districts.
+  $managed_district_ids = [];
+  try {
+    $senator_districts = \Drupal::entityTypeManager()
+      ->getStorage('taxonomy_term')
+      ->loadByProperties([
+        'vid' => 'districts',
+        'field_senator' => $senator_term->id(),
+      ]);
+  }
+  catch (\Throwable $e) {
+    $query->alwaysFalse();
+    return;
+  }
+  foreach ($senator_districts as $senator_district) {
+    $managed_district_ids[] = $senator_district->id();
+  }
+  if (empty($managed_district_ids)) {
+    $query->alwaysFalse();
+    return;
+  }
+
+  // Get the views table alias corresponding to the users_field_data table
+  // (could be users_field_data_1, etc.).
+  $table_aliases = $query->getTables();
+  $user_table_alias = null;
+  foreach ($table_aliases as $alias => $table_info) {
+    if ($table_info['table'] === 'users_field_data') {
+      $user_table_alias = $alias;
+      break;
+    }
+  }
+  if (!$user_table_alias) {
+    $query->alwaysFalse();
+    return;
+  }
+
+  // Ensure the users being fetched are within the user's active managed
+  // senator's districts.
+  $query->leftJoin(
+    'user__field_district',
+    'ufd',
+    "{$user_table_alias}.uid = ufd.entity_id"
+  );
+  $query->condition('ufd.field_district_target_id', $managed_district_ids, 'IN');
+}
+
+/**
+ * Implements hook_theme().
+ */
+function nys_senator_dashboard_theme() {
+  return [
+    'nys_senator_dashboard__set_active_senator_menu' => [
+      'variables' => [
+        'mode' => '',
+        'active_senator_links' => [],
+      ],
+    ],
+    'menu__senator_dashboard' => [
+      'variables' => [
+        'mode' => '',
+        'items' => [],
+      ],
+    ],
+    'nys_senator_dashboard__senator_dashboard_header_block' => [
+      'variables' => [
+        'senator_image_url' => '',
+        'breadcrumbs' => [],
+        'homepage_url' => '',
+        'header_title' => '',
+        'header_blurb' => '',
+      ],
+    ],
+    'nys_senator_dashboard__constituent_engagement_block' => [
+      'variables' => [
+        'constituent_engagement_data' => [],
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function nys_senator_dashboard_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if (str_starts_with($form_id, 'views_form_senator_dashboard_constituents_')) {
+    // Hide additional footer bulk operation button.
+    $form['actions']['#access'] = FALSE;
+  }
+}
+
+/**
+ * Implements hook_views_data().
+ */
+function nys_senator_dashboard_views_data() {
+  $data['users']['votingapi_vote']['relationship'] = [
+    'title' => t('User votes'),
+    'label' => t('Vote entity'),
+    'group' => 'Users',
+    'help' => t('Reference to vote entities by a user.'),
+    'id' => 'standard',
+    'base' => 'votingapi_vote',
+    'base field' => 'user_id',
+    'field' => 'uid',
+  ];
+  $data['users']['flagging']['relationship'] = [
+    'title' => t('User flaggings'),
+    'label' => t('Flagging entity'),
+    'group' => 'Users',
+    'help' => t('Reference to flagging entities by a user.'),
+    'id' => 'flag_relationship',
+    'base' => 'flagging',
+    'base field' => 'uid',
+    'field' => 'uid',
+  ];
+  $data['users']['contextual_filter_flag_link'] = [
+    'title' => t('Flag link (issue ID contextual filter)'),
+    'help' => t('Displays a flag link based on an issue ID context filter value.'),
+    'field' => [
+      'id' => 'contextual_filter_flag_link',
+    ],
+  ];
+  $data['users']['contextual_filter_webform_id'] = [
+    'title' => t('Webform ID (from entity ID contextual filter)'),
+    'help' => t('Displays the Webform ID based on the parent entity ID from the context filter value.'),
+    'field' => [
+      'id' => 'contextual_filter_webform_id',
+    ],
+  ];
+  $data['node']['nys_senator_dashboard_active_senator_sponsor_filter'] = [
+    'title' => t('NYS Senator Dashboard: Active senator sponsor filter'),
+    'help' => t('Filter bills to those sponsored or co-sponsored by the active senator.'),
+    'filter' => [
+      'id' => 'nys_senator_dashboard_active_senator_sponsor_filter',
+    ],
+  ];
+  return $data;
+}

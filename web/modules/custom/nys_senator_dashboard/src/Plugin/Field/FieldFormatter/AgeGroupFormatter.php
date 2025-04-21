@@ -11,8 +11,8 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * Field formatter that returns a 10-year "age group" for a given datetime.
  */
 #[FieldFormatter(
-  id: 'datetime_age_group',
-  label: new TranslatableMarkup('Age Group'),
+  id: 'nys_senator_dashboard_datetime_age_group',
+  label: new TranslatableMarkup('NYS Senator Dashboard: Age Group'),
   field_types: ['datetime']
 )]
 class AgeGroupFormatter extends FormatterBase {

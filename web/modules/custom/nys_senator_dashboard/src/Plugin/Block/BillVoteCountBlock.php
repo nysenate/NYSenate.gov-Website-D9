@@ -17,8 +17,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Provides a Bill Vote Count Block.
  */
 #[Block(
-  id: 'senator_dashboard_bill_vote_count_block',
-  admin_label: new TranslatableMarkup('Bill Vote Count Block'),
+  id: 'nys_senator_dashboard_bill_vote_count_block',
+  admin_label: new TranslatableMarkup('NYS Senator Dashboard: Bill Vote Count Block'),
   context_definitions: [
     'node' => new EntityContextDefinition(
       'entity:node',
@@ -117,10 +117,9 @@ class BillVoteCountBlock extends BlockBase implements ContainerFactoryPluginInte
    * {@inheritdoc}
    */
   public function getCacheTags(): array {
-    $user_id = $this->currentUser->id();
     return [
-      'user:' . $user_id,
-      'tempstore_user:' . $user_id,
+      'user:' . $this->currentUser->id(),
+      'tempstore_user:' . $this->currentUser->id(),
     ];
   }
 
@@ -130,7 +129,7 @@ class BillVoteCountBlock extends BlockBase implements ContainerFactoryPluginInte
   public function build() {
     $ret = [
       '#type' => 'component',
-      '#component' => 'nysenate_theme:bill-vote-count',
+      '#component' => 'nysenate_theme:bill-vote-count-block',
       '#props' => ['no_results' => TRUE],
     ];
 
@@ -157,6 +156,7 @@ class BillVoteCountBlock extends BlockBase implements ContainerFactoryPluginInte
       ->countQuery()
       ->execute()
       ->fetchField();
+
     $no_count = (int) $this->database
       ->select('votingapi_vote', 'v')
       ->condition('v.entity_id', $nid)
@@ -164,6 +164,7 @@ class BillVoteCountBlock extends BlockBase implements ContainerFactoryPluginInte
       ->countQuery()
       ->execute()
       ->fetchField();
+
     $in_district_yes_count_query = $this->database
       ->select('votingapi_vote', 'v');
     $joined_table_yes_count_query = $in_district_yes_count_query
@@ -175,6 +176,7 @@ class BillVoteCountBlock extends BlockBase implements ContainerFactoryPluginInte
       ->countQuery()
       ->execute()
       ->fetchField();
+
     $in_district_no_count_query = $this->database
       ->select('votingapi_vote', 'v');
     $joined_table_no_count_query = $in_district_no_count_query

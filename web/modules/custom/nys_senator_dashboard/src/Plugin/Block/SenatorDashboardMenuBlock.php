@@ -18,8 +18,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Provides the Senator Dashboard dynamic menu block.
  */
 #[Block(
-  id: 'senator_dashboard_menu_block',
-  admin_label: new TranslatableMarkup('Senator Dashboard menu block')
+  id: 'nys_senator_dashboard_menu_block',
+  admin_label: new TranslatableMarkup('NYS Senator Dashboard: Senator Dashboard menu block')
 )]
 class SenatorDashboardMenuBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
@@ -112,6 +112,23 @@ class SenatorDashboardMenuBlock extends BlockBase implements ContainerFactoryPlu
   /**
    * {@inheritdoc}
    */
+  public function getCacheContexts(): array {
+    return ['user'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheTags(): array {
+    return [
+      'user:' . $this->currentUser->id(),
+      'tempstore_user:' . $this->currentUser->id(),
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function build() {
     // Prepare menu data, depending on plugin "mode".
     $active_senator_links = match($this->configuration['mode']) {
@@ -129,18 +146,11 @@ class SenatorDashboardMenuBlock extends BlockBase implements ContainerFactoryPlu
       default => [],
     };
 
-    // Build full render array, including block mode variable.
+    // Build full render array.
     $return_data = [
       'active_senator_menu' => [
         '#theme' => 'nys_senator_dashboard__set_active_senator_menu',
         '#active_senator_links' => $active_senator_links,
-        '#cache' => [
-          'contexts' => ['user'],
-          'tags' => [
-            'user:' . $this->currentUser->id(),
-            'tempstore_user:' . $this->currentUser->id(),
-          ],
-        ],
       ],
       'manage_senator_menu' => $manage_senator_menu,
       'constituent_activity_menu' => $constituent_activity_menu,

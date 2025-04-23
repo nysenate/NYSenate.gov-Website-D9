@@ -1,0 +1,23 @@
+uuid: 5f786714-3790-40a4-86a0-3347b7f2b97d
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - nys
+id: nys_sitebranding
+theme: nys
+region: sidebar_first
+weight: -10
+provider: null
+plugin: system_branding_block
+settings:
+  id: system_branding_block
+  label: 'Site branding'
+  label_display: '0'
+  provider: system
+  use_site_logo: true
+  use_site_name: true
+  use_site_slogan: false
+visibility: {  }

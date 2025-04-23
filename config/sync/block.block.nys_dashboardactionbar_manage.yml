@@ -1,0 +1,39 @@
+uuid: 07c95f66-af90-46ab-a081-ef6478b4ab82
+langcode: en
+status: true
+dependencies:
+  module:
+    - nys_dashboard
+    - system
+  theme:
+    - nys
+id: nys_dashboardactionbar_manage
+theme: nys
+region: sidebar_first
+weight: -12
+provider: null
+plugin: dashboard_action_bar
+settings:
+  id: dashboard_action_bar
+  label: 'Dashboard Actionbar - Manage'
+  label_display: '0'
+  provider: nys_dashboard
+  heading: 'Manage Dashboard'
+  subheading: "Update content you're following."
+  featured_link:
+    text: 'My Dashboard'
+    url: /dashboard
+    icon: gauge
+  featured_link_1:
+    text: 'My Dashboard'
+    url: /dashboard
+    icon: gauge
+  featured_link_2:
+    text: ''
+    url: ''
+    icon: ''
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: /dashboard/manage

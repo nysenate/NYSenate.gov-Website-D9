@@ -1,0 +1,30 @@
+uuid: d1f5a102-9dff-4d85-9880-14aa934414d5
+langcode: en
+status: true
+dependencies:
+  module:
+    - nys_senator_dashboard
+    - user
+  theme:
+    - nys
+id: nys_senatordashboardmenublock
+theme: nys
+region: sidebar_first
+weight: 0
+provider: null
+plugin: senator_dashboard_menu_block
+settings:
+  id: senator_dashboard_menu_block
+  label: 'Senator Dashboard menu block'
+  label_display: '0'
+  provider: nys_senator_dashboard
+  mode: header_menu
+visibility:
+  user_role:
+    id: user_role
+    negate: false
+    context_mapping:
+      user: '@user.current_user_context:current_user'
+    roles:
+      microsite_content_producer: microsite_content_producer
+      legislative_correspondent: legislative_correspondent

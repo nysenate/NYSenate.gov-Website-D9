@@ -1,0 +1,40 @@
+uuid: 96f8f57c-7452-4c58-8f7c-d566c80b6a84
+langcode: en
+status: true
+dependencies:
+  module:
+    - nys_senator_dashboard
+    - system
+    - user
+  theme:
+    - nys
+id: nys_senator_dashboard_header_block_list
+theme: nys
+region: sidebar_first
+weight: -8
+provider: null
+plugin: senator_dashboard_header_block
+settings:
+  id: senator_dashboard_header_block
+  label: 'Senator Dashboard header block - Constituents list'
+  label_display: '0'
+  provider: nys_senator_dashboard
+  display_image: 0
+  display_breadcrumbs: 1
+  display_header_title_as_contextual_link: 0
+  display_homepage_link: 0
+  use_blurb_from_entity: 0
+  header_blurb: 'View & connect with constituents who have a NYSenate.gov account.'
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: /senator-dashboard/constituent-activity/constituents
+  user_role:
+    id: user_role
+    negate: false
+    context_mapping:
+      user: '@user.current_user_context:current_user'
+    roles:
+      microsite_content_producer: microsite_content_producer
+      legislative_correspondent: legislative_correspondent

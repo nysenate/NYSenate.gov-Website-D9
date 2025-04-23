@@ -1,0 +1,28 @@
+name: NYSenate Theme
+type: theme
+description: Child theme for NYSenate. WIP cleaning up the NY STATE SENATE theme.
+package: NYSenate
+core_version_requirement: ^10 || ^11
+base theme: nysenate_theme
+
+# Inherits regions from parent. If needing to override, we need to redefine here
+# entirely for changes to work.
+# regions: [ ]
+
+# This section is used by the contrib module, Component Libraries. It allows you
+# to reference .twig files in your sass/ directory by using the Twig namespace:
+# @rain_theme and @nysenate_theme. As we move to SDC components, we can begin
+# to remove these dependencies.
+# See https://www.drupal.org/project/components for more information.
+components:
+  namespaces:
+    rain_theme:
+      - src/patterns/global
+      - src/patterns/components
+      - src/patterns/pages
+      - src/templates
+    nysenate_theme:
+      - src/patterns/global
+      - src/patterns/components
+      - src/patterns/pages
+      - src/templates

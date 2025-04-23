@@ -1,0 +1,34 @@
+uuid: f1573c68-630d-431a-bc0c-a71e7b27ddde
+langcode: en
+status: true
+dependencies:
+  module:
+    - nys_senator_dashboard
+    - system
+    - user
+  theme:
+    - nys
+id: nys_constituent_engagement_block
+theme: nys
+region: content
+weight: -7
+provider: null
+plugin: senator_dashboard_constituent_engagement_block
+settings:
+  id: senator_dashboard_constituent_engagement_block
+  label: 'Constituent Engagement block'
+  label_display: '0'
+  provider: nys_senator_dashboard
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: /senator-dashboard/constituent-activity
+  user_role:
+    id: user_role
+    negate: false
+    context_mapping:
+      user: '@user.current_user_context:current_user'
+    roles:
+      microsite_content_producer: microsite_content_producer
+      legislative_correspondent: legislative_correspondent

@@ -1,4 +1,4 @@
-uuid: 1b7dfbd4-738f-4f18-ad69-bbc8873b3f9f
+uuid: a14a827e-5f8e-4520-a2f3-f3e96c6dc91c
 langcode: en
 status: true
 dependencies:
@@ -8,15 +8,15 @@ dependencies:
     - user
   theme:
     - nysenate_theme
-id: nysenate_theme_nys_senator_dashboard_header_block_petitions
+id: nysenate_theme_nys_senator_dashboard_header_block_issues
 theme: nysenate_theme
 region: above_content
-weight: -5
+weight: -8
 provider: null
 plugin: nys_senator_dashboard_header_block
 settings:
   id: nys_senator_dashboard_header_block
-  label: 'Senator Dashboard header block - Petition signees'
+  label: 'Senator Dashboard header block - Issues followers'
   label_display: '0'
   provider: nys_senator_dashboard
   display_image: 0
@@ -24,12 +24,12 @@ settings:
   display_header_title_as_contextual_link: 1
   display_homepage_link: 0
   use_blurb_from_entity: 0
-  header_blurb: 'View & connect with constituents who signed to this petition.'
+  header_blurb: 'View & connect with constituents who are following this issue.'
 visibility:
   request_path:
     id: request_path
     negate: false
-    pages: '/senator-dashboard/constituent-activity/petitions/*'
+    pages: '/senator-dashboard/constituent-activity/issues/*'
   user_role:
     id: user_role
     negate: false

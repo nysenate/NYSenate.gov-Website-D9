@@ -1,4 +1,4 @@
-uuid: c9e6bc88-1153-46fc-8e2a-f503e0876c17
+uuid: 9552f657-bca9-47cc-9729-e1a5c2f3de95
 langcode: en
 status: true
 dependencies:
@@ -8,15 +8,15 @@ dependencies:
     - user
   theme:
     - nysenate_theme
-id: nysenate_theme_nys_senator_dashboard_header_block_bills
+id: nysenate_theme_nys_senator_dashboard_header_block_list
 theme: nysenate_theme
 region: above_content
-weight: 0
+weight: -9
 provider: null
 plugin: nys_senator_dashboard_header_block
 settings:
   id: nys_senator_dashboard_header_block
-  label: 'Senator Dashboard header block - Bill listing'
+  label: 'Senator Dashboard header block - Constituents list'
   label_display: '0'
   provider: nys_senator_dashboard
   display_image: 0
@@ -24,12 +24,12 @@ settings:
   display_header_title_as_contextual_link: 0
   display_homepage_link: 0
   use_blurb_from_entity: 0
-  header_blurb: 'View constituent responses to bills the Senator has sponsored.'
+  header_blurb: 'View & connect with constituents who have a NYSenate.gov account.'
 visibility:
   request_path:
     id: request_path
     negate: false
-    pages: /senator-dashboard/constituent-activity/bills
+    pages: /senator-dashboard/constituent-activity/constituents
   user_role:
     id: user_role
     negate: false

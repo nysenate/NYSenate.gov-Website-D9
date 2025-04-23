@@ -10,7 +10,7 @@ use Drupal\nys_senator_dashboard\Service\SenatorDashboardHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Controller to render the Senator Dashboard Menu Block.
+ * Controller to manage basic routes for Senator Dashboard.
  */
 class SenatorDashboardController extends ControllerBase {
 

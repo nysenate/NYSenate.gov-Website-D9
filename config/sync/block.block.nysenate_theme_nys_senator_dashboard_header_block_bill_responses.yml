@@ -1,4 +1,4 @@
-uuid: 00ff4f03-c248-44b9-ac9a-80e2ed4ac16c
+uuid: f21bea2c-16b1-4dc6-8943-c0097cdd702e
 langcode: en
 status: true
 dependencies:
@@ -8,28 +8,28 @@ dependencies:
     - user
   theme:
     - nysenate_theme
-id: nysenate_theme_nys_senator_dashboard_header_block_manage_senator
+id: nysenate_theme_nys_senator_dashboard_header_block_bill_responses
 theme: nysenate_theme
 region: above_content
-weight: -6
+weight: -11
 provider: null
 plugin: nys_senator_dashboard_header_block
 settings:
   id: nys_senator_dashboard_header_block
-  label: 'Senator Dashboard header block - Manage senator'
+  label: 'Senator Dashboard header block - Bill responses'
   label_display: '0'
   provider: nys_senator_dashboard
-  display_image: 1
-  display_breadcrumbs: 0
-  display_header_title_as_contextual_link: 0
-  display_homepage_link: 1
-  use_blurb_from_entity: 0
-  header_blurb: 'Manage Senator Jane Smith’s website content & view constituent engagement.'
+  display_image: 0
+  display_breadcrumbs: 1
+  display_header_title_as_contextual_link: 1
+  display_homepage_link: 0
+  use_blurb_from_entity: 1
+  header_blurb: ''
 visibility:
   request_path:
     id: request_path
     negate: false
-    pages: /senator-dashboard/manage-senator
+    pages: '/senator-dashboard/constituent-activity/bills/*'
   user_role:
     id: user_role
     negate: false

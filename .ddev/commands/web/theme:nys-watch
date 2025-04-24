@@ -1,0 +1,5 @@
+#!/bin/bash
+## Description: Build theme assets.
+## Usage: theme:nys-watch [flags] [args]
+## Example: "theme:nys-watch"
+cd "${DDEV_COMPOSER_ROOT}/${NYS_THEME_PATH}" && nvm install && npm run watch $@

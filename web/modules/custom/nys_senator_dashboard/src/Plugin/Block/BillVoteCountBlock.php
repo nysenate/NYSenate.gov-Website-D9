@@ -4,7 +4,7 @@ namespace Drupal\nys_senator_dashboard\Plugin\Block;
 
 use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\Context\EntityContextDefinition;
 use Drupal\Core\Session\AccountProxyInterface;
@@ -17,8 +17,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Provides a Bill Vote Count Block.
  */
 #[Block(
-  id: 'senator_dashboard_bill_vote_count_block',
-  admin_label: new TranslatableMarkup('Bill Vote Count Block'),
+  id: 'nys_senator_dashboard_bill_vote_count_block',
+  admin_label: new TranslatableMarkup('NYS Senator Dashboard: Bill Vote Count Block'),
   context_definitions: [
     'node' => new EntityContextDefinition(
       'entity:node',
@@ -30,11 +30,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class BillVoteCountBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
-   * The Entity Type Manager.
+   * The database connection.
    *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   * @var \Drupal\Core\Database\Connection
    */
-  protected $entityTypeManager;
+  protected $database;
 
   /**
    * The Route Match service.
@@ -66,8 +66,8 @@ class BillVoteCountBlock extends BlockBase implements ContainerFactoryPluginInte
    *   Plugin ID.
    * @param mixed $plugin_definition
    *   Plugin definition.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The Entity Type Manager.
+   * @param \Drupal\Core\Database\Connection $database
+   *   The database connection service.
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The Route Match service.
    * @param \Drupal\Core\Session\AccountProxyInterface $current_user
@@ -79,13 +79,13 @@ class BillVoteCountBlock extends BlockBase implements ContainerFactoryPluginInte
     array $configuration,
     $plugin_id,
     $plugin_definition,
-    EntityTypeManagerInterface $entity_type_manager,
+    Connection $database,
     RouteMatchInterface $route_match,
     AccountProxyInterface $current_user,
     ManagedSenatorsHandler $managed_senators_handler,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->entityTypeManager = $entity_type_manager;
+    $this->database = $database;
     $this->routeMatch = $route_match;
     $this->currentUser = $current_user;
     $this->managedSenatorsHandler = $managed_senators_handler;
@@ -99,7 +99,7 @@ class BillVoteCountBlock extends BlockBase implements ContainerFactoryPluginInte
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('entity_type.manager'),
+      $container->get('database'),
       $container->get('current_route_match'),
       $container->get('current_user'),
       $container->get('nys_senator_dashboard.managed_senators_handler'),
@@ -117,10 +117,9 @@ class BillVoteCountBlock extends BlockBase implements ContainerFactoryPluginInte
    * {@inheritdoc}
    */
   public function getCacheTags(): array {
-    $user_id = $this->currentUser->id();
     return [
-      'user:' . $user_id,
-      'tempstore_user:' . $user_id,
+      'user:' . $this->currentUser->id(),
+      'tempstore_user:' . $this->currentUser->id(),
     ];
   }
 
@@ -130,7 +129,7 @@ class BillVoteCountBlock extends BlockBase implements ContainerFactoryPluginInte
   public function build() {
     $ret = [
       '#type' => 'component',
-      '#component' => 'nysenate_theme:bill-vote-count',
+      '#component' => 'nysenate_theme:bill-vote-count-block',
       '#props' => ['no_results' => TRUE],
     ];
 
@@ -145,62 +144,52 @@ class BillVoteCountBlock extends BlockBase implements ContainerFactoryPluginInte
       return $ret;
     }
 
-    // Load all "vote" entities with vote type "nys_bill_vote" for bill NID.
-    try {
-      $vote_storage = $this->entityTypeManager->getStorage('vote');
-      $vote_ids = $vote_storage->getQuery()
-        ->condition('type', 'nys_bill_vote')
-        ->condition('entity_id', $nid)
-        ->accessCheck(FALSE)
-        ->execute();
-    }
-    catch (\Exception) {
-      return $ret;
-    }
-    if (empty($vote_ids)) {
-      return $ret;
-    }
-
-    // Get all and in-district vote counts.
-    try {
-      $user_storage = $this->entityTypeManager->getStorage('user');
-    }
-    catch (\Exception) {
-      return $ret;
-    }
-    $votes = $vote_storage->loadMultiple($vote_ids);
+    // Get active managed senator district ID.
     $active_senator_district_id = $this->managedSenatorsHandler
       ->getActiveSenatorDistrictId();
-    $yes_count = 0;
-    $no_count = 0;
-    $in_district_yes_count = 0;
-    $in_district_no_count = 0;
-    foreach ($votes as $vote) {
-      if ($vote->getValue() == 1) {
-        $yes_count++;
-      }
-      elseif ($vote->getValue() == 0) {
-        $no_count++;
-      }
 
-      // If the voter is in the same district as user's active managed senator,
-      // count as in-district vote.
-      $vote_owner_id = $vote->getOwnerId();
-      $user = $user_storage->load($vote_owner_id);
-      if ($user && $user->hasField('field_district') && !$user->get('field_district')->isEmpty()) {
-        $district_value = $user->field_district->target_id;
-        if ($district_value == $active_senator_district_id) {
-          if ($vote->getValue() == 1) {
-            $in_district_yes_count++;
-          }
-          elseif ($vote->getValue() == 0) {
-            $in_district_no_count++;
-          }
-        }
-      }
-    }
+    // Get in and out of district aye and nay vote counts.
+    $yes_count = (int) $this->database
+      ->select('votingapi_vote', 'v')
+      ->condition('v.entity_id', $nid)
+      ->condition('v.value', 1)
+      ->countQuery()
+      ->execute()
+      ->fetchField();
 
-    // Setup component props based on vote counts.
+    $no_count = (int) $this->database
+      ->select('votingapi_vote', 'v')
+      ->condition('v.entity_id', $nid)
+      ->condition('v.value', 0)
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+
+    $in_district_yes_count_query = $this->database
+      ->select('votingapi_vote', 'v');
+    $joined_table_yes_count_query = $in_district_yes_count_query
+      ->innerJoin('user__field_district', 'u', 'u.entity_id = v.user_id');
+    $in_district_yes_count = (int) $in_district_yes_count_query
+      ->condition('v.entity_id', $nid)
+      ->condition('v.value', 1)
+      ->condition($joined_table_yes_count_query . '.field_district_target_id', $active_senator_district_id)
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+
+    $in_district_no_count_query = $this->database
+      ->select('votingapi_vote', 'v');
+    $joined_table_no_count_query = $in_district_no_count_query
+      ->innerJoin('user__field_district', 'u', 'u.entity_id = v.user_id');
+    $in_district_no_count = (int) $in_district_no_count_query
+      ->condition('v.entity_id', $nid)
+      ->condition('v.value', 0)
+      ->condition($joined_table_no_count_query . '.field_district_target_id', $active_senator_district_id)
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+
+    // Setup and calculate component props.
     $props = [
       'no_results' => FALSE,
       'detail_link_nid' => $this->getContextValue('node') ? (int) $nid : 0,

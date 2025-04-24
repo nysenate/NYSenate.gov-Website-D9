@@ -81,7 +81,7 @@ class SenatorDashboardController extends ControllerBase {
     ];
     try {
       $block = $this->blockManager->createInstance(
-        'senator_dashboard_menu_block',
+        'nys_senator_dashboard_menu_block',
         $variables,
       );
     }

@@ -9,9 +9,9 @@ use Drupal\views\ResultRow;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Views field to generate flag link using contextual filter value.
+ * Views field to render contextual filter webform ID as field.
  *
- * @ViewsField("contextual_filter_webform_id")
+ * @ViewsField("nys_senator_dashboard_contextual_filter_webform_id")
  */
 class ContextualFilterWebformId extends FieldPluginBase implements ContainerFactoryPluginInterface {
 
@@ -78,8 +78,7 @@ class ContextualFilterWebformId extends FieldPluginBase implements ContainerFact
    * {@inheritdoc}
    */
   public function query() {
-    // Intentionally do nothing here since this field doesn't need to query for
-    // data.
+    // Intentionally do nothing here as field data comes from contextual filter.
   }
 
 }

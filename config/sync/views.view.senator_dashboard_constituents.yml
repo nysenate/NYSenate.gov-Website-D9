@@ -374,7 +374,7 @@ display:
           empty_zero: false
           hide_alter_empty: true
           click_sort_column: value
-          type: datetime_age_group
+          type: nys_senator_dashboard_datetime_age_group
           settings: {  }
           group_column: value
           group_columns: {  }
@@ -1373,7 +1373,7 @@ display:
           empty_zero: false
           hide_alter_empty: true
           click_sort_column: value
-          type: datetime_age_group
+          type: nys_senator_dashboard_datetime_age_group
           settings: {  }
           group_column: value
           group_columns: {  }
@@ -2145,7 +2145,7 @@ display:
           empty_zero: false
           hide_alter_empty: true
           click_sort_column: value
-          type: datetime_age_group
+          type: nys_senator_dashboard_datetime_age_group
           settings: {  }
           group_column: value
           group_columns: {  }
@@ -2367,15 +2367,15 @@ display:
           empty_zero: false
           hide_alter_empty: true
           display_name: true
-        contextual_filter_flag_link:
-          id: contextual_filter_flag_link
+        nys_senator_dashboard_contextual_filter_flag_link:
+          id: nys_senator_dashboard_contextual_filter_flag_link
           table: users
-          field: contextual_filter_flag_link
+          field: nys_senator_dashboard_contextual_filter_flag_link
           relationship: none
           group_type: group
           admin_label: ''
           entity_type: user
-          plugin_id: contextual_filter_flag_link
+          plugin_id: nys_senator_dashboard_contextual_filter_flag_link
           label: ''
           exclude: true
           alter:
@@ -2503,7 +2503,7 @@ display:
           admin_label: ''
           plugin_id: text_custom
           empty: true
-          content: '{{ contextual_filter_flag_link }}'
+          content: '{{ nys_senator_dashboard_contextual_filter_flag_link }}'
           tokenize: true
       footer:
         area:
@@ -2874,7 +2874,7 @@ display:
           empty_zero: false
           hide_alter_empty: true
           click_sort_column: value
-          type: datetime_age_group
+          type: nys_senator_dashboard_datetime_age_group
           settings: {  }
           group_column: value
           group_columns: {  }
@@ -3542,7 +3542,7 @@ display:
           empty_zero: false
           hide_alter_empty: true
           click_sort_column: value
-          type: datetime_age_group
+          type: nys_senator_dashboard_datetime_age_group
           settings: {  }
           group_column: value
           group_columns: {  }
@@ -3764,15 +3764,15 @@ display:
           empty_zero: false
           hide_alter_empty: true
           display_name: true
-        contextual_filter_webform_id:
-          id: contextual_filter_webform_id
+        nys_senator_dashboard_contextual_filter_webform_id:
+          id: nys_senator_dashboard_contextual_filter_webform_id
           table: users
-          field: contextual_filter_webform_id
+          field: nys_senator_dashboard_contextual_filter_webform_id
           relationship: none
           group_type: group
           admin_label: ''
           entity_type: user
-          plugin_id: contextual_filter_webform_id
+          plugin_id: nys_senator_dashboard_contextual_filter_webform_id
           label: ''
           exclude: true
           alter:
@@ -3898,7 +3898,7 @@ display:
           admin_label: ''
           plugin_id: text_custom
           empty: true
-          content: "<ul>\r\n  <li>\r\n    <a class=\"button\" href=\"/admin/webform/manage/{{ contextual_filter_webform_id|striptags|trim }}/results/submissions\">View all responses</a>\r\n  </li>\r\n  <li>\r\n    <a class=\"button\" href=\"/admin/webform/manage/{{ contextual_filter_webform_id|striptags|trim }}/results/analysis\">View analysis</a>\r\n  </li>\r\n  <li>\r\n    <a class=\"button\" href=\"/admin/webform/manage/{{ contextual_filter_webform_id|striptags|trim }}/results/download\">Download responses</a>\r\n  </li>\r\n</ul>"
+          content: "<ul>\r\n  <li>\r\n    <a class=\"button\" href=\"/admin/webform/manage/{{ nys_senator_dashboard_contextual_filter_webform_id|striptags|trim }}/results/submissions\">View all responses</a>\r\n  </li>\r\n  <li>\r\n    <a class=\"button\" href=\"/admin/webform/manage/{{ nys_senator_dashboard_contextual_filter_webform_id|striptags|trim }}/results/analysis\">View analysis</a>\r\n  </li>\r\n  <li>\r\n    <a class=\"button\" href=\"/admin/webform/manage/{{ nys_senator_dashboard_contextual_filter_webform_id|striptags|trim }}/results/download\">Download responses</a>\r\n  </li>\r\n</ul>"
           tokenize: true
       footer:
         area:

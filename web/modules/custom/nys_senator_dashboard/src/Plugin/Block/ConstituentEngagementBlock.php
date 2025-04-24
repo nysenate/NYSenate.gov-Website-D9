@@ -15,11 +15,11 @@ use Drupal\taxonomy\Entity\Term;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Provides the Senator Dashboard dynamic menu block.
+ * Provides the Senator Dashboard Constituent Engagement block.
  */
 #[Block(
-  id: 'senator_dashboard_constituent_engagement_block',
-  admin_label: new TranslatableMarkup('Constituent Engagement block')
+  id: 'nys_senator_dashboard_constituent_engagement_block',
+  admin_label: new TranslatableMarkup('NYS Senator Dashboard: Constituent Engagement Block')
 )]
 class ConstituentEngagementBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
@@ -115,47 +115,60 @@ class ConstituentEngagementBlock extends BlockBase implements ContainerFactoryPl
   /**
    * {@inheritdoc}
    */
+  public function getCacheContexts(): array {
+    return ['user'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheTags(): array {
+    return [
+      'user:' . $this->currentUser->id(),
+      'tempstore_user:' . $this->currentUser->id(),
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function build() {
     $senator = $this->managedSenatorsHandler->getActiveSenator(FALSE);
     $district = $this->senatorsHelper->loadDistrict($senator);
     $start_of_year = mktime(0, 0, 0, 1, 1, date('Y'));
     return [
-      '#theme' => 'nys_senator_dashboard__constituent_engagement_block',
-      '#constituent_engagement_data' => [
-        [
-          'data' => $this->getNewConstituentsCount($district, $start_of_year),
-          'label' => $this->t('New Constituents'),
-          'class' => 'c-constituent-engagement-block__new-constituents',
-          // @todo update link once route implemented.
-          'url' => '',
-        ],
-        [
-          'data' => $this->responsesToBillsCounts($senator, $district, $start_of_year),
-          'label' => $this->t('Responses to Bills'),
-          'class' => 'c-constituent-engagement-block__responses-to-bills',
-          // @todo update link once route implemented.
-          'url' => '',
-        ],
-        [
-          'data' => $this->getPetitionsSignedCount($senator, $start_of_year),
-          'label' => $this->t('Responses to Petitions'),
-          'class' => 'c-constituent-engagement-block__responses-to-petitions',
-          // @todo update link once route implemented.
-          'url' => '',
-        ],
-        [
-          'data' => $this->getQuestionnaireResponseCount($senator, $start_of_year),
-          'label' => $this->t('Responses to Questionnaires'),
-          'class' => 'c-constituent-engagement-block__responses-to-questionnaires',
-          // @todo update link once route implemented.
-          'url' => '',
-        ],
-      ],
-      '#cache' => [
-        'contexts' => ['user'],
-        'tags' => [
-          'user:' . $this->currentUser->id(),
-          'tempstore_user:' . $this->currentUser->id(),
+      '#type' => 'component',
+      '#component' => 'nysenate_theme:constituent-engagement-block',
+      '#props' => [
+        'constituent_engagement_data' => [
+          [
+            'data' => $this->getNewConstituentsCount($district, $start_of_year),
+            'label' => $this->t('New Constituents'),
+            'id' => 'new-constituents',
+            // @todo update link once route implemented.
+            'url' => '',
+          ],
+          [
+            'data' => $this->responsesToBillsCounts($senator, $district, $start_of_year),
+            'label' => $this->t('Responses to Bills'),
+            'id' => 'responses-to-bills',
+            // @todo update link once route implemented.
+            'url' => '',
+          ],
+          [
+            'data' => $this->getPetitionsSignedCount($senator, $start_of_year),
+            'label' => $this->t('Responses to Petitions'),
+            'id' => 'responses-to-petitions',
+            // @todo update link once route implemented.
+            'url' => '',
+          ],
+          [
+            'data' => $this->getQuestionnaireResponseCount($senator, $start_of_year),
+            'label' => $this->t('Responses to Questionnaires'),
+            'id' => 'responses-to-questionnaires',
+            // @todo update link once route implemented.
+            'url' => '',
+          ],
         ],
       ],
     ];

@@ -2,7 +2,7 @@
   <h2>Year-to-date constituent engagement</h2>
   <ul class="c-constituent-engagement-block__list">
     {% for item in constituent_engagement_data %}
-      <li class="{{ item.class }}">
+      <li class="c-constituent-engagement-block__{{ item.id }}">
         <a href="{{ item.url }}">
           <i class="c-constituent-engagement-block__icon" aria-hidden="true"></i>
           <span class="c-constituent-engagement-block__data">{{ item.data }}</span>

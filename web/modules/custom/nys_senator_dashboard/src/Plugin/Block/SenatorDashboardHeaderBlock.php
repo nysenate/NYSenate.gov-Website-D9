@@ -29,8 +29,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * Provides a header block for the Senator Dashboard.
  */
 #[Block(
-  id: 'senator_dashboard_header_block',
-  admin_label: new TranslatableMarkup('Senator Dashboard header block')
+  id: 'nys_senator_dashboard_header_block',
+  admin_label: new TranslatableMarkup('NYS Senator Dashboard: Senator Dashboard Header Block')
 )]
 class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
@@ -229,12 +229,15 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
     $header_blurb = $this->getHeaderBlurb();
     $homepage_url = $this->getHomepageUrl();
     return [
-      '#theme' => 'nys_senator_dashboard__senator_dashboard_header_block',
-      '#senator_image_url' => $senator_image_url,
-      '#breadcrumbs' => $breadcrumbs,
-      '#header_title' => $header_title,
-      '#header_blurb' => $header_blurb,
-      '#homepage_url' => $homepage_url,
+      '#type' => 'component',
+      '#component' => 'nysenate_theme:senator-dashboard-header-block',
+      '#props' => [
+        'senator_image_url' => $senator_image_url,
+        'breadcrumbs' => $breadcrumbs,
+        'header_title' => $header_title,
+        'header_blurb' => $header_blurb,
+        'homepage_url' => $homepage_url,
+      ],
     ];
   }
 

@@ -11,7 +11,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Views field to generate flag link using contextual filter value.
  *
- * @ViewsField("contextual_filter_flag_link")
+ * @ViewsField("nys_senator_dashboard_contextual_filter_flag_link")
  */
 class ContextualFilterFlagLink extends FieldPluginBase implements ContainerFactoryPluginInterface {
 
@@ -66,8 +66,7 @@ class ContextualFilterFlagLink extends FieldPluginBase implements ContainerFacto
    * {@inheritdoc}
    */
   public function query() {
-    // Intentionally do nothing here since we're only providing a link and not
-    // querying against a real table column.
+    // Intentionally do nothing here as field data comes from contextual filter.
   }
 
 }

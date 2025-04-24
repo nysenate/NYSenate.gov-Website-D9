@@ -3,14 +3,13 @@ langcode: en
 status: true
 dependencies:
   module:
-    - nys_senator_dashboard
     - system
     - user
   theme:
     - nys
 id: nys_senator_dashboard_header_block_issues
 theme: nys
-region: sidebar_first
+region: above_content
 weight: -7
 provider: null
 plugin: senator_dashboard_header_block

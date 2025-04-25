@@ -11,3 +11,6 @@ services:
       - '@flag'
       - '@plugin.manager.votingapi.resultfunction'
       - '@nys_bill.bills_helper'
+  nys_bill_vote.bill_vote_statistics:
+    class: Drupal\nys_bill_vote\Service\BillVoteStatistics
+    arguments: ['@database']

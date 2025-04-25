@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6386bf8dfdf3e0b5ebedd37196f9e17a",
+    "content-hash": "3cbe7ba48903d3c0dbdc4c6c99266f3b",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2977,17 +2977,17 @@
         },
         {
             "name": "drupal/charts",
-            "version": "5.1.3",
+            "version": "5.1.5",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/charts.git",
-                "reference": "5.1.3"
+                "reference": "5.1.5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/charts-5.1.3.zip",
-                "reference": "5.1.3",
-                "shasum": "2c1dfaf67512011583b8faad56ddf5ca69b610dc"
+                "url": "https://ftp.drupal.org/files/projects/charts-5.1.5.zip",
+                "reference": "5.1.5",
+                "shasum": "e0ef459623556ef3d9faa5656df9e35bfe4b2876"
             },
             "require": {
                 "drupal/core": "^10.3 || ^11"
@@ -2995,8 +2995,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "5.1.3",
-                    "datestamp": "1741367395",
+                    "version": "5.1.5",
+                    "datestamp": "1744408472",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -3009,22 +3009,105 @@
             ],
             "authors": [
                 {
-                    "name": "andileco",
-                    "homepage": "https://www.drupal.org/user/2054544"
+                    "name": "Daniel Cothran (andileco)",
+                    "homepage": "https://www.drupal.org/u/andileco",
+                    "role": "Maintainer"
                 },
                 {
-                    "name": "nikathone",
-                    "homepage": "https://www.drupal.org/user/2421800"
+                    "name": "Nia Kathoni (nikathone)",
+                    "homepage": "https://www.drupal.org/u/nikathone",
+                    "role": "Maintainer"
                 },
                 {
-                    "name": "quicksketch",
-                    "homepage": "https://www.drupal.org/user/35821"
+                    "name": "Nate Lampton (quicksketch)",
+                    "homepage": "https://www.drupal.org/u/quicksketch",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "brmassa",
+                    "homepage": "https://www.drupal.org/u/brmassa",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "Rafal W (kenorb)",
+                    "homepage": "https://www.drupal.org/u/kenorb",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "Pierre Vriens (pierrevriens)",
+                    "homepage": "https://www.drupal.org/u/pierrevriens",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "Majali (rashad612)",
+                    "homepage": "https://www.drupal.org/u/rashad612",
+                    "role": "Maintainer"
                 }
             ],
-            "description": "A charting API for Drupal that provides chart elements and integration with Views.",
-            "homepage": "https://www.drupal.org/project/charts",
+            "description": "A charting API for Drupal that provides chart elements and integration with Views",
+            "homepage": "https://drupal.org/project/charts",
             "support": {
-                "source": "https://git.drupalcode.org/project/charts"
+                "source": "https://git.drupalcode.org/project/charts",
+                "issues": "https://www.drupal.org/project/issues/charts?version=all_5.1.*",
+                "docs": "https://www.drupal.org/docs/contributed-modules/charts"
+            }
+        },
+        {
+            "name": "drupal/charts_apexcharts",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/charts_apexcharts.git",
+                "reference": "1.0.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/charts_apexcharts-1.0.0.zip",
+                "reference": "1.0.0",
+                "shasum": "187afa743a240ef5b81cb9c17a3c3c9374f73ca6"
+            },
+            "require": {
+                "drupal/charts": "^5.1.5",
+                "drupal/core": "^10.3 || ^11",
+                "npm-asset/apexcharts": "^4",
+                "oomphinc/composer-installers-extender": "^2"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "1.0.0",
+                    "datestamp": "1745337027",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                },
+                "installer-types": [
+                    "npm-asset"
+                ],
+                "installer-paths": {
+                    "web/libraries/apexcharts": [
+                        "type:drupal-library",
+                        "vendor:npm-asset",
+                        "vendor:bower-asset"
+                    ]
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "andileco",
+                    "homepage": "https://www.drupal.org/user/2054544"
+                }
+            ],
+            "description": "Charts module integration with Apexcharts.js.",
+            "homepage": "https://drupal.org/project/charts_apexcharts",
+            "support": {
+                "source": "https://git.drupalcode.org/project/charts_apexcharts",
+                "issues": "https://www.drupal.org/project/issues/charts_apexcharts"
             }
         },
         {
@@ -16063,6 +16146,26 @@
             "time": "2024-12-30T11:07:19+00:00"
         },
         {
+            "name": "npm-asset/apexcharts",
+            "version": "4.6.0",
+            "dist": {
+                "type": "tar",
+                "url": "https://registry.npmjs.org/apexcharts/-/apexcharts-4.6.0.tgz"
+            },
+            "require": {
+                "npm-asset/svgdotjs--svg.draggable.js": ">=3.0.4,<4.0.0",
+                "npm-asset/svgdotjs--svg.filter.js": ">=3.0.8,<4.0.0",
+                "npm-asset/svgdotjs--svg.js": ">=3.2.4,<4.0.0",
+                "npm-asset/svgdotjs--svg.resize.js": ">=2.0.2,<3.0.0",
+                "npm-asset/svgdotjs--svg.select.js": ">=4.0.1,<5.0.0",
+                "npm-asset/yr--monotone-cubic-spline": ">=1.0.3,<2.0.0"
+            },
+            "type": "npm-asset",
+            "license": [
+                "MIT"
+            ]
+        },
+        {
             "name": "npm-asset/datatables.net",
             "version": "2.1.8",
             "dist": {
@@ -16105,6 +16208,81 @@
             "dist": {
                 "type": "tar",
                 "url": "https://registry.npmjs.org/jquery/-/jquery-3.7.1.tgz"
+            },
+            "type": "npm-asset",
+            "license": [
+                "MIT"
+            ]
+        },
+        {
+            "name": "npm-asset/svgdotjs--svg.draggable.js",
+            "version": "3.0.4",
+            "dist": {
+                "type": "tar",
+                "url": "https://registry.npmjs.org/@svgdotjs/svg.draggable.js/-/svg.draggable.js-3.0.4.tgz"
+            },
+            "type": "npm-asset",
+            "license": [
+                "MIT"
+            ]
+        },
+        {
+            "name": "npm-asset/svgdotjs--svg.filter.js",
+            "version": "3.0.8",
+            "dist": {
+                "type": "tar",
+                "url": "https://registry.npmjs.org/@svgdotjs/svg.filter.js/-/svg.filter.js-3.0.8.tgz"
+            },
+            "require": {
+                "npm-asset/svgdotjs--svg.js": ">=3.1.1,<4.0.0"
+            },
+            "type": "npm-asset",
+            "license": [
+                "MIT"
+            ]
+        },
+        {
+            "name": "npm-asset/svgdotjs--svg.js",
+            "version": "3.2.4",
+            "dist": {
+                "type": "tar",
+                "url": "https://registry.npmjs.org/@svgdotjs/svg.js/-/svg.js-3.2.4.tgz"
+            },
+            "type": "npm-asset",
+            "license": [
+                "MIT"
+            ]
+        },
+        {
+            "name": "npm-asset/svgdotjs--svg.resize.js",
+            "version": "2.0.2",
+            "dist": {
+                "type": "tar",
+                "url": "https://registry.npmjs.org/@svgdotjs/svg.resize.js/-/svg.resize.js-2.0.2.tgz"
+            },
+            "type": "npm-asset",
+            "license": [
+                "MIT"
+            ]
+        },
+        {
+            "name": "npm-asset/svgdotjs--svg.select.js",
+            "version": "4.0.1",
+            "dist": {
+                "type": "tar",
+                "url": "https://registry.npmjs.org/@svgdotjs/svg.select.js/-/svg.select.js-4.0.1.tgz"
+            },
+            "type": "npm-asset",
+            "license": [
+                "MIT"
+            ]
+        },
+        {
+            "name": "npm-asset/yr--monotone-cubic-spline",
+            "version": "1.0.3",
+            "dist": {
+                "type": "tar",
+                "url": "https://registry.npmjs.org/@yr/monotone-cubic-spline/-/monotone-cubic-spline-1.0.3.tgz"
             },
             "type": "npm-asset",
             "license": [
@@ -26968,9 +27146,9 @@
         "ext-curl": "*",
         "ext-json": "*"
     },
-    "platform-dev": {},
+    "platform-dev": [],
     "platform-overrides": {
         "php": "8.3"
     },
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.3.0"
 }

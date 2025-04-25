@@ -83,27 +83,10 @@ class ManagedSenatorsHandler {
   }
 
   /**
-   * Gets the current user's managed senators.
-   *
-   * @param bool $tids_only
-   *   Whether to return just the senator TIDs instead of the full entities.
-   *
-   * @return array
-   *   An array of senator term entities managed by the user.
+   * Wrapped to SenatorsHelper method for convenience.
    */
   public function getManagedSenators(bool $tids_only = TRUE): array {
-    try {
-      $user = $this->entityTypeManager->getStorage('user')->load($this->currentUser->id());
-    }
-    catch (\Throwable) {
-      return [];
-    }
-    if (!isset($user) && !$user->hasField('field_senator_multiref')) {
-      return [];
-    }
-    return $tids_only
-      ? array_column($user->field_senator_multiref->getValue(), 'target_id')
-      : $user->field_senator_multiref->referencedEntities();
+    return $this->senatorsHelper->getManagedSenators($this->currentUser->id(), $tids_only);
   }
 
   /**
@@ -210,7 +193,8 @@ class ManagedSenatorsHandler {
    */
   public function getActiveSenatorDistrictId(): int|null {
     $senator = $this->getActiveSenator(FALSE);
-    return !empty($senator) ? $this->senatorsHelper->loadDistrict($senator)?->id() : NULL;
+    return !empty($senator) ? $this->senatorsHelper->loadDistrict($senator)
+      ?->id() : NULL;
   }
 
 }

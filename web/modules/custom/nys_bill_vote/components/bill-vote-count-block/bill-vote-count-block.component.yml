@@ -8,33 +8,37 @@ props:
       type: boolean
     detail_link_nid:
       type: [integer, "null"]
-    total_count:
+    total:
       type: integer
-    yes_count:
+    aye:
       type: integer
-    no_count:
+    nay:
       type: integer
-    yes_percentage:
+    aye_percent:
       type: integer
-    no_percentage:
+    nay_percent:
       type: integer
-    in_district_total_count:
+    total_in_district:
       type: integer
-    in_district_yes_count:
+    aye_in_district:
       type: integer
-    in_district_no_count:
+    nay_in_district:
       type: integer
-    in_district_yes_percentage:
+    aye_in_district_percent:
       type: integer
-    in_district_no_percentage:
+    nay_in_district_percent:
       type: integer
-    out_district_total_count:
+    total_out_district:
       type: integer
-    out_district_yes_count:
+    aye_out_district:
       type: integer
-    out_district_no_count:
+    nay_out_district:
       type: integer
-    out_district_yes_percentage:
+    aye_out_district_percent:
       type: integer
-    out_district_no_percentage:
+    nay_out_district_percent:
       type: integer
+  slots:
+    graph:
+      title: Bill Vote Count Graph
+      description: A graph of bill votes

@@ -413,4 +413,32 @@ class SenatorsHelper {
     }
   }
 
+  /**
+   * Gets the current user's managed senators.
+   *
+   * @param int|null $uid
+   *   A user ID.  If left NULL, defaults to that of the current user.
+   * @param bool $tids_only
+   *   Whether to return just the senator TIDs instead of the full entities.
+   *
+   * @return array
+   *   An array of senator term entities managed by the user.
+   */
+  public function getManagedSenators(?int $uid = NULL, $tids_only = TRUE): array {
+    try {
+      $uid = ((int) $uid) ?: $this->currentUser->id();
+      /** @var \Drupal\user\Entity\User $user */
+      $user = $this->entityTypeManager->getStorage('user')->load($uid);
+    }
+    catch (\Throwable) {
+      return [];
+    }
+    if (!(isset($user) && $user->hasField('field_senator_multiref'))) {
+      return [];
+    }
+    return $tids_only
+      ? array_column($user->field_senator_multiref->getValue(), 'target_id')
+      : $user->field_senator_multiref->referencedEntities();
+  }
+
 }

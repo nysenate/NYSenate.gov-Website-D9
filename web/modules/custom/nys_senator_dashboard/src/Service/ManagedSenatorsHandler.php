@@ -121,16 +121,15 @@ class ManagedSenatorsHandler {
     if ($tid_only) {
       return $active_senator_tid;
     }
-    elseif (!empty($active_senator)) {
-      return $active_senator;
-    }
     else {
-      try {
-        $active_senator = $this->entityTypeManager->getStorage('taxonomy_term')
-          ->load($active_senator_tid);
-      }
-      catch (\Exception) {
-        return NULL;
+      if (empty($active_senator)) {
+        try {
+          $active_senator = $this->entityTypeManager->getStorage('taxonomy_term')
+            ->load($active_senator_tid);
+        }
+        catch (\Exception) {
+          $active_senator = NULL;
+        }
       }
       return $active_senator;
     }

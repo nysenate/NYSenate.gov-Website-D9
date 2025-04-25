@@ -4,6 +4,7 @@ namespace Drupal\nys_senator_dashboard\Plugin\Block;
 
 use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\Context\EntityContextDefinition;
@@ -66,6 +67,13 @@ class BillVoteCountBlock extends BlockBase implements ContainerFactoryPluginInte
   protected BillVoteStatistics $voteStats;
 
   /**
+   * Drupal Config Factory service.
+   *
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  protected ConfigFactoryInterface $configFactory;
+
+  /**
    * Constructs a new VoteCountBlock instance.
    *
    * @param array $configuration
@@ -80,8 +88,12 @@ class BillVoteCountBlock extends BlockBase implements ContainerFactoryPluginInte
    *   The Route Match service.
    * @param \Drupal\Core\Session\AccountProxyInterface $current_user
    *   The current user service.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   A config factory service.
    * @param \Drupal\nys_senator_dashboard\Service\ManagedSenatorsHandler $managed_senators_handler
    *   The managed senators handler service.
+   * @param \Drupal\nys_bill_vote\Service\BillVoteStatistics $vote_stats
+   *   Bill voting statistics service.
    */
   public function __construct(
     array $configuration,
@@ -90,6 +102,7 @@ class BillVoteCountBlock extends BlockBase implements ContainerFactoryPluginInte
     Connection $database,
     RouteMatchInterface $route_match,
     AccountProxyInterface $current_user,
+    ConfigFactoryInterface $config_factory,
     ManagedSenatorsHandler $managed_senators_handler,
     BillVoteStatistics $vote_stats,
   ) {
@@ -99,6 +112,7 @@ class BillVoteCountBlock extends BlockBase implements ContainerFactoryPluginInte
     $this->currentUser = $current_user;
     $this->managedSenatorsHandler = $managed_senators_handler;
     $this->voteStats = $vote_stats;
+    $this->configFactory = $config_factory;
   }
 
   /**
@@ -112,6 +126,7 @@ class BillVoteCountBlock extends BlockBase implements ContainerFactoryPluginInte
       $container->get('database'),
       $container->get('current_route_match'),
       $container->get('current_user'),
+      $container->get('config.factory'),
       $container->get('nys_senator_dashboard.managed_senators_handler'),
       $container->get('nys_bill_vote.bill_vote_statistics'),
     );
@@ -144,8 +159,7 @@ class BillVoteCountBlock extends BlockBase implements ContainerFactoryPluginInte
    *   consider at the user level.
    */
   public function build(): array {
-    $chart_settings = \Drupal::config('charts.settings');
-    $library = $chart_settings->get('charts.default_settings.library');
+    $chart_settings = $this->configFactory->get('charts.settings');
 
     $style = 'block';
     $ret = [

@@ -2,6 +2,7 @@ services:
   nys_senators.senators_helper:
     class: Drupal\nys_senators\SenatorsHelper
     arguments:
+      - '@current_user'
       - '@entity_type.manager'
       - '@cache.default'
       - '@request_stack'

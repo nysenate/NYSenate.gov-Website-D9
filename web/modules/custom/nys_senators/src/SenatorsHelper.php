@@ -7,6 +7,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\nys_senators\Service\Microsites;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\TermInterface;
@@ -46,8 +47,17 @@ class SenatorsHelper {
   protected Microsites $microsites;
 
   /**
+   * Drupal's Current User object.
+   *
+   * @var \Drupal\Core\Session\AccountProxyInterface
+   */
+  protected AccountProxyInterface $currentUser;
+
+  /**
    * Constructor class for Bills Helper.
    *
+   * @param \Drupal\Core\Session\AccountProxyInterface $currentUser
+   *   Drupal's current user object.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager service.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
@@ -58,11 +68,13 @@ class SenatorsHelper {
    *   NYS Senators Microsites service.
    */
   public function __construct(
+    AccountProxyInterface $currentUser,
     EntityTypeManagerInterface $entity_type_manager,
     CacheBackendInterface $cache_backend,
     RequestStack $requestStack,
     Microsites $microsites,
   ) {
+    $this->currentUser = $currentUser;
     $this->entityTypeManager = $entity_type_manager;
     $this->cache = $cache_backend;
     $this->requestStack = $requestStack;

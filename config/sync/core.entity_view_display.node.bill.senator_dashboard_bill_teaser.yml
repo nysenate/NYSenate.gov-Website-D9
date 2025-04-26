@@ -62,34 +62,24 @@ third_party_settings:
       -
         layout_id: layout_onecol
         layout_settings:
-          label: ''
+          label: 'bill vote counts'
+          context_mapping: {  }
         components:
-          24d65357-b031-4f1d-9e37-48ff108db032:
-            uuid: 24d65357-b031-4f1d-9e37-48ff108db032
-            region: content
-            configuration:
-              id: 'field_block:node:bill:field_ol_name'
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
-              formatter:
-                type: basic_string
-                label: hidden
-                settings: {  }
-                third_party_settings: {  }
-            weight: 0
-            additional: {  }
-          ef9127b5-fe35-4f4a-b8e5-a7ce50f17184:
-            uuid: ef9127b5-fe35-4f4a-b8e5-a7ce50f17184
+          3107dea8-00f4-4894-b52f-3ca5bc7c942f:
+            uuid: 3107dea8-00f4-4894-b52f-3ca5bc7c942f
             region: content
             configuration:
               id: nys_senator_dashboard_bill_vote_count_block
-              label: 'Bill Vote Count Block'
-              label_display: '0'
+              label: 'Bill Vote Count Block TITLE'
+              label_display: visible
               provider: nys_senator_dashboard
               context_mapping:
                 node: layout_builder.entity
-            weight: 1
+              show_summary: 1
+              show_total: 1
+              show_in_district: 0
+              show_out_district: 0
+            weight: 0
             additional: {  }
         third_party_settings: {  }
 id: node.bill.senator_dashboard_bill_teaser

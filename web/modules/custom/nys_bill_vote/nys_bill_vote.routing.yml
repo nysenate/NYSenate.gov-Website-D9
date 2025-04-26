@@ -17,3 +17,13 @@ bill_vote.autosub:
     _controller: '\Drupal\nys_bill_vote\Controller\BillVoteController::autosubAjaxCallback'
   requirements:
     _permission: 'access content'
+
+nys_bill_vote.config:
+  path: /admin/settings/nysenate/nys_bill_vote
+  defaults:
+    _form: '\Drupal\nys_bill_vote\Form\ConfigForm'
+    _title: "Config points for Bill Voting Displays"
+  requirements:
+    _permission: 'administer site configuration'
+  options:
+    _admin_route: TRUE

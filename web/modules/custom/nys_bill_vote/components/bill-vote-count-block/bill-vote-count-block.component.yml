@@ -8,37 +8,16 @@ props:
       type: boolean
     detail_link_nid:
       type: [integer, "null"]
-    total:
-      type: integer
-    aye:
-      type: integer
-    nay:
-      type: integer
-    aye_percent:
-      type: integer
-    nay_percent:
-      type: integer
-    total_in_district:
-      type: integer
-    aye_in_district:
-      type: integer
-    nay_in_district:
-      type: integer
-    aye_in_district_percent:
-      type: integer
-    nay_in_district_percent:
-      type: integer
-    total_out_district:
-      type: integer
-    aye_out_district:
-      type: integer
-    nay_out_district:
-      type: integer
-    aye_out_district_percent:
-      type: integer
-    nay_out_district_percent:
-      type: integer
+    summary:
+      title: Bill Vote Summary
+      description: An array to support rendering a text-based summary of vote totals with district breakdown
   slots:
-    graph:
-      title: Bill Vote Count Graph
-      description: A graph of bill votes
+    total:
+      title: Bill Vote Count
+      description: A render array to create a pie chart of all bill votes, showing in- and out-of-district
+    in_district:
+      title: Bill Vote Count In District
+      description: A render array to create a pie chart of in-district votes
+    out_district:
+      title: Bill Vote Count Out District
+      description: A render array to create a pie chart of out-of-district votes

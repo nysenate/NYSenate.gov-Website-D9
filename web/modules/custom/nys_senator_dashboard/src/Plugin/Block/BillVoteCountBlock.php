@@ -4,8 +4,10 @@ namespace Drupal\nys_senator_dashboard\Plugin\Block;
 
 use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
+use Drupal\Core\Config\Config;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\Context\EntityContextDefinition;
 use Drupal\Core\Session\AccountProxyInterface;
@@ -36,28 +38,28 @@ class BillVoteCountBlock extends BlockBase implements ContainerFactoryPluginInte
    *
    * @var \Drupal\Core\Database\Connection
    */
-  protected $database;
+  protected Connection $database;
 
   /**
    * The Route Match service.
    *
    * @var \Drupal\Core\Routing\RouteMatchInterface
    */
-  protected $routeMatch;
+  protected RouteMatchInterface $routeMatch;
 
   /**
    * The current user service.
    *
    * @var \Drupal\Core\Session\AccountProxyInterface
    */
-  protected $currentUser;
+  protected AccountProxyInterface $currentUser;
 
   /**
    * The managed senators handler service.
    *
    * @var \Drupal\nys_senator_dashboard\Service\ManagedSenatorsHandler
    */
-  protected $managedSenatorsHandler;
+  protected ManagedSenatorsHandler $managedSenatorsHandler;
 
   /**
    * The Bill Voting Statistics service.
@@ -72,6 +74,13 @@ class BillVoteCountBlock extends BlockBase implements ContainerFactoryPluginInte
    * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
   protected ConfigFactoryInterface $configFactory;
+
+  /**
+   * NYS Bill Vote configuration.
+   *
+   * @var \Drupal\Core\Config\Config
+   */
+  protected Config $config;
 
   /**
    * Constructs a new VoteCountBlock instance.
@@ -113,12 +122,13 @@ class BillVoteCountBlock extends BlockBase implements ContainerFactoryPluginInte
     $this->managedSenatorsHandler = $managed_senators_handler;
     $this->voteStats = $vote_stats;
     $this->configFactory = $config_factory;
+    $this->config = $this->configFactory->get('nys_bill_vote.config');
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): static {
     return new static(
       $configuration,
       $plugin_id,
@@ -151,21 +161,15 @@ class BillVoteCountBlock extends BlockBase implements ContainerFactoryPluginInte
 
   /**
    * {@inheritdoc}
-   *
-   * @todo there could be a use for text summary.  do we need a separate block
-   *   for that, or can we switch with config?
-   *
-   * @todo Make graph colors configurable at least at the global level,
-   *   consider at the user level.
    */
   public function build(): array {
-    $chart_settings = $this->configFactory->get('charts.settings');
+    // Get all the necessary settings.
+    $settings = $this->getConfiguration();
 
-    $style = 'block';
     $ret = [
       '#type' => 'component',
-      '#component' => 'nys_bill_vote:bill-vote-count-' . $style,
-      '#props' => ['no_results' => TRUE, 'using_graph' => FALSE],
+      '#component' => 'nys_bill_vote:bill-vote-count-block',
+      '#props' => ['no_results' => TRUE],
     ];
 
     // Get bill NID from either node context or views arg_0.
@@ -188,65 +192,29 @@ class BillVoteCountBlock extends BlockBase implements ContainerFactoryPluginInte
     // Get stats array.
     $stats = $this->voteStats->getStats($nid, $active_senator_district_id);
 
-    // Setup and calculate component props.
-    $props = $stats +
-      [
-        'no_results' => FALSE,
-        'detail_link_nid' => (int) $nid,
-      ];
-    $props['aye_percent'] = $this->renderPercent($props['aye'] / max($props['total'], 1));
-    $props['nay_percent'] = $this->renderPercent($props['nay'] / max($props['total'], 1));
-    $props['aye_in_district_percent'] = $this->renderPercent($props['aye_in_district'] / max($props['total_in_district'], 1));
-    $props['nay_in_district_percent'] = $this->renderPercent($props['nay_in_district'] / max($props['total_in_district'], 1));
-    $props['aye_out_district_percent'] = $this->renderPercent($props['aye_out_district'] / max($props['total_out_district'], 1));
-    $props['nay_out_district_percent'] = $this->renderPercent($props['nay_out_district'] / max($props['total_out_district'], 1));
+    // Signal success up to this point.
+    $ret['#props'] = ['no_results' => FALSE, 'detail_link_nid' => (int) $nid];
 
-    $ret['#props'] = $props;
+    // Calculate the percentages.
+    $stats['aye_percent'] = $this->renderPercent($stats['aye'] / max($stats['total'], 1));
+    $stats['nay_percent'] = $this->renderPercent($stats['nay'] / max($stats['total'], 1));
+    $stats['aye_in_district_percent'] = $this->renderPercent($stats['aye_in_district'] / max($stats['total_in_district'], 1));
+    $stats['nay_in_district_percent'] = $this->renderPercent($stats['nay_in_district'] / max($stats['total_in_district'], 1));
+    $stats['aye_out_district_percent'] = $this->renderPercent($stats['aye_out_district'] / max($stats['total_out_district'], 1));
+    $stats['nay_out_district_percent'] = $this->renderPercent($stats['nay_out_district'] / max($stats['total_out_district'], 1));
 
-    $ret['#slots'] = [
-      'graph' => [
-        '#type' => 'chart',
-        '#tooltips' => $chart_settings->get('charts_default_settings.display.tooltips'),
-        '#title' => $this->t('Bill Vote Summary'),
-        '#chart_type' => 'donut',
-        '#colors' => [
-          '#1d84c3',
-          '#ff0000',
-          '#00ff00',
-          '#0000ff',
-        ],
-        'series' => [
-          '#type' => 'chart_data',
-          '#title' => $this->t('Vote Counts'),
-          '#data' => [
-            (int) $props['aye_in_district'],
-            (int) $props['nay_in_district'],
-            (int) $props['aye_out_district'],
-            (int) $props['nay_out_district'],
-          ],
-        ],
-        'x_axis' => [
-          '#type' => 'chart_xaxis',
-          '#title' => $this->t('Vote Location'),
-          '#labels' => [
-            $this->t('Aye In District'),
-            $this->t('Nay In District'),
-            $this->t('Aye Out District'),
-            $this->t('Nay Out District'),
-          ],
-        ],
-        'y_axis' => [
-          '#type' => 'chart_yaxis',
-          '#title' => $this->t('Number of Votes'),
-        ],
-        '#raw_options' => [
-          'chart' => [
-            'height' => '200px',
-            'width' => '300px',
-          ],
-        ],
-      ],
-    ];
+    $ret['#slots'] = [];
+    foreach ($this->defaultConfiguration() as $key => $value) {
+      $this_value = $settings[$key] ?? $value;
+      if ($this_value) {
+        $type = str_replace('show_', '', $key);
+        $callback = 'build' . ucfirst(str_replace('_', '', $type));
+        if (method_exists($this, $callback)) {
+          // "summary" must go in "#props".  All others in "#slots".
+          $ret[$type == 'summary' ? '#props' : '#slots'][$type] = $this->$callback($stats);
+        }
+      }
+    }
 
     return $ret;
   }
@@ -264,6 +232,205 @@ class BillVoteCountBlock extends BlockBase implements ContainerFactoryPluginInte
    */
   protected function renderPercent(mixed $value, int $len = 2): string {
     return sprintf('%.' . $len . 'f', $value * 100);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function defaultConfiguration(): array {
+    return [
+      'show_summary' => TRUE,
+      'show_total' => TRUE,
+      'show_in_district' => TRUE,
+      'show_out_district' => TRUE,
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function blockForm($form, FormStateInterface $form_state): array {
+    $form += [
+      'show_summary' => [
+        '#type' => 'checkbox',
+        '#title' => $this->t('Text Summary'),
+        '#description' => $this->t('Display the text version of voting statistics.'),
+        '#default_value' => $this->configuration['show_summary'],
+      ],
+      'show_total' => [
+        '#type' => 'checkbox',
+        '#title' => $this->t('Total Votes Graph'),
+        '#description' => $this->t('Display the total votes graph.'),
+        '#default_value' => $this->configuration['show_total'],
+      ],
+      'show_in_district' => [
+        '#type' => 'checkbox',
+        '#title' => $this->t('In-District Graph'),
+        '#description' => $this->t('Display the in-district voting graph.'),
+        '#default_value' => $this->configuration['show_in_district'],
+      ],
+      'show_out_district' => [
+        '#type' => 'checkbox',
+        '#title' => $this->t('Out-of-District Graph'),
+        '#description' => $this->t('Display the out-of-district voting graph.'),
+        '#default_value' => $this->configuration['show_out_district'],
+      ],
+    ];
+
+    return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function blockSubmit($form, FormStateInterface $form_state): void {
+    $values = $form_state->getValues();
+    foreach ([
+      'show_summary',
+      'show_total',
+      'show_in_district',
+      'show_out_district',
+    ] as $x) {
+      $this->configuration[$x] = $values[$x] ?? FALSE;
+    }
+  }
+
+  /**
+   * Callback to create the "summary" twig variable.
+   */
+  protected function buildSummary(array $props): array {
+    return $props;
+  }
+
+  /**
+   * Common template for all voting charts.
+   *
+   * Creates a donut chart, 300px by 200px.  Consumers must populate '#title',
+   * '#colors', 'series.#title', 'series.#data', and 'x_axis.#labels'.
+   */
+  protected function buildGraphTemplate(): array {
+    return [
+      '#type' => 'chart',
+      '#tooltips' => TRUE,
+      '#title' => '',
+      '#chart_type' => 'donut',
+      '#colors' => [],
+      'series' => [
+        '#type' => 'chart_data',
+        '#title' => '',
+        '#data' => [],
+      ],
+      'x_axis' => [
+        '#type' => 'chart_xaxis',
+        '#title' => $this->t('Vote Location'),
+        '#labels' => [],
+      ],
+      'y_axis' => [
+        '#type' => 'chart_yaxis',
+        '#title' => $this->t('Number of Votes'),
+      ],
+      '#raw_options' => [
+        'chart' => [
+          'height' => '200px',
+          'width' => '300px',
+        ],
+        'legend' => [
+          'position' => 'top',
+        ],
+        'noData' => [
+          'text' => 'No votes saved',
+          'align' => 'center',
+          'verticalAlign' => 'middle',
+        ],
+      ],
+    ];
+  }
+
+  /**
+   * Callback to create the "total" twig variable.
+   */
+  protected function buildTotal(array $props): array {
+    $template = $this->buildGraphTemplate();
+    $template['#title'] = 'Bill Vote Totals';
+    $template['#colors'] = [
+      $this->config->get('aye_in'),
+      $this->config->get('nay_in'),
+      $this->config->get('aye_out'),
+      $this->config->get('nay_out'),
+    ];
+    $template['series']['#title'] = $this->t('Total Votes');
+    $template['x_axis']['#labels'] = [
+      $this->t('Aye In District'),
+      $this->t('Nay In District'),
+      $this->t('Aye Out District'),
+      $this->t('Nay Out District'),
+    ];
+    $template['#raw_options']['legend']['show'] = TRUE;
+    if ($props['total'] > 0) {
+      $template['series']['#data'] = [
+        (int) $props['aye_in_district'],
+        (int) $props['nay_in_district'],
+        (int) $props['aye_out_district'],
+        (int) $props['nay_out_district'],
+      ];
+    }
+
+    return $template;
+  }
+
+  /**
+   * Callback to create the "in_district" twig variable.
+   */
+  protected function buildIndistrict(array $props): array {
+    $template = $this->buildGraphTemplate();
+
+    $template['#title'] = 'Voting In District';
+    $template['#colors'] = [
+      $this->config->get('aye_in'),
+      $this->config->get('nay_in'),
+    ];
+    $template['series']['#title'] = $this->t('In-District Votes');
+    $template['x_axis']['#labels'] = [
+      $this->t('Aye In District'),
+      $this->t('Nay In District'),
+    ];
+    $template['#raw_options']['legend']['show'] = FALSE;
+    if ($props['total_in_district'] > 0) {
+      $template['series']['#data'] = $props['total_in_district'] > 0
+        ? [
+          (int) $props['aye_in_district'],
+          (int) $props['nay_in_district'],
+        ]
+        : [];
+    }
+
+    return $template;
+  }
+
+  /**
+   * Callback to create the "out_district" twig variable.
+   */
+  protected function buildOutdistrict(array $props): array {
+    $template = $this->buildGraphTemplate();
+    $template['#title'] = 'Voting Outside District';
+    $template['#colors'] = [
+      $this->config->get('aye_out'),
+      $this->config->get('nay_out'),
+    ];
+    $template['series']['#title'] = $this->t('Out-of-District Votes');
+    $template['x_axis']['#labels'] = [
+      $this->t('Aye Out District'),
+      $this->t('Nay Out District'),
+    ];
+    $template['#raw_options']['legend']['show'] = FALSE;
+    if ($props['total_out_district'] > 0) {
+      $template['series']['#data'] = [
+        (int) $props['aye_out_district'],
+        (int) $props['nay_out_district'],
+      ];
+    }
+
+    return $template;
   }
 
 }

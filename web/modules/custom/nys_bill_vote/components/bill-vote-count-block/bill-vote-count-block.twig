@@ -1,33 +1,52 @@
 <div class="c-bill-vote-count">
   {% if no_results %}
-    <p>No votes found for this bill.</p>
+  <p>No votes found for this bill.</p>
   {% else %}
-    {% if graph %}{{ graph }}{% endif %}
-    <div class="c-bill-vote-count__vote_totals">
-      <h3>Total:</h3>
-      <ul>
-        <li>{{ total }}</li>
-        <li>Ayes: {{ aye }} ({{ aye_percent }}%)</li>
-        <li>Nays: {{ nay }} ({{ nay_percent }}%)</li>
-      </ul>
+  {% for key in ['total','in_district','out_district'] %}
+    <div class="bill-vote-count-graph bill-vote-count-graph-{{ key }}">
+      {% if _context[key] is defined %}{{ _context[key]|default }}{% endif %}
     </div>
-    <div class="c-bill-vote-count__district_vote_breakdown">
-      <h3>Breakdown by district:</h3>
-      <ul>
-        <li>{{ total_in_district }}</li>
-        <li>In-district Ayes: {{ aye_in_district }} ({{ aye_in_district_percent }}%)</li>
-        <li>In-district Nays: {{ nay_in_district }} ({{ nay_in_district_percent }}%)</li>
-      </ul>
-      <ul>
-        <li>{{ total_out_district }}</li>
-        <li>Out-of-district Ayes: {{ aye_out_district }} ({{ aye_out_district_percent }}%)</li>
-        <li>Out-of-district Nays: {{ nay_out_district }} ({{ nay_out_district_percent }}%)</li>
-      </ul>
-    </div>
-    {% if detail_link_nid %}
-      <div class="c-bill-vote-count__links">
-        <p><a href="/senator-dashboard/constituent-activity/bills/{{ detail_link_nid }}">View in-district constituents</a></p>
+  {% endfor %}
+
+  {% if summary is defined %}
+    <div class="bill-vote-count-summary">
+      <div class="c-bill-vote-count__totals">
+        <h3>Total:</h3>
+        <ul>
+          <li>{{ summary.total }} votes</li>
+          <li>Ayes: {{ summary.aye }} ({{ summary.aye_percent }}%)</li>
+          <li>Nays: {{ summary.nay }} ({{ summary.nay_percent }}%)</li>
+        </ul>
       </div>
-    {% endif %}
+      <div class="c-bill-vote-count__district_vote_breakdown">
+        <h3>Breakdown by district:</h3>
+        <ul>
+          <li>{{ summary.total_in_district }} votes</li>
+          <li>In-district Ayes: {{ summary.aye_in_district }}
+            ({{ summary.aye_in_district_percent }}%)
+          </li>
+          <li>In-district Nays: {{ summary.nay_in_district }}
+            ({{ summary.nay_in_district_percent }}%)
+          </li>
+        </ul>
+        <ul>
+          <li>{{ summary.total_out_district }} votes</li>
+          <li>Out-of-district Ayes: {{ summary.aye_out_district }}
+            ({{ summary.aye_out_district_percent }}%)
+          </li>
+          <li>Out-of-district Nays: {{ summary.nay_out_district }}
+            ({{ summary.nay_out_district_percent }}%)
+          </li>
+        </ul>
+      </div>
+      {% if detail_link_nid %}
+        <div class="c-bill-vote-count__links">
+          <p>
+            <a href="/senator-dashboard/constituent-activity/bills/{{ detail_link_nid }}">View
+              in-district constituents</a></p>
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
   {% endif %}
 </div>

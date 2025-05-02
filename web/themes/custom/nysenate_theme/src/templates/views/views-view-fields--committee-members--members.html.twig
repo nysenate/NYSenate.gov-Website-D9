@@ -46,7 +46,7 @@
   {% endif %}
 {% endif %}
 
-<a href="{{ fields.field_senator_name.content|lower|replace({'a. ':"",' ':"-",'.':"",'ú':"u",'\'':""})|striptags|trim }}">
+ <a href="{{ fields.field_senator_name.content|striptags|trim }}">
   <div class="c-senator-block c-senator-block--committee {{ co_chair_class }}">
     <div class="nys-senator--thumb">
       <img src="{{ fields.field_image.content|striptags|trim }}" width="160" height="160">

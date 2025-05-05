@@ -230,7 +230,7 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
     $homepage_url = $this->getHomepageUrl();
     return [
       '#type' => 'component',
-      '#component' => 'nysenate_theme:senator-dashboard-header-block',
+      '#component' => 'nys:senator-dashboard-header-block',
       '#props' => [
         'senator_image_url' => $senator_image_url,
         'breadcrumbs' => $breadcrumbs,

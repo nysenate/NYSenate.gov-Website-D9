@@ -6,6 +6,8 @@ dependencies:
     - core.entity_view_mode.node.senator_dashboard_bill_teaser
     - field.storage.node.field_ol_name
     - node.type.bill
+    - user.role.legislative_correspondent
+    - user.role.microsite_content_producer
   module:
     - better_exposed_filters
     - datetime
@@ -222,9 +224,11 @@ display:
                   collapsible_disable_automatic_open: false
                   is_secondary: false
       access:
-        type: perm
+        type: role
         options:
-          perm: 'access content'
+          role:
+            microsite_content_producer: microsite_content_producer
+            legislative_correspondent: legislative_correspondent
       cache:
         type: tag
         options: {  }
@@ -482,7 +486,7 @@ display:
         - 'url.query_args:sort_by'
         - 'url.query_args:sort_order'
         - 'user.node_grants:view'
-        - user.permissions
+        - user.roles
       tags:
         - 'config:field.storage.node.field_ol_name'
   list_page:
@@ -505,6 +509,6 @@ display:
         - 'url.query_args:sort_by'
         - 'url.query_args:sort_order'
         - 'user.node_grants:view'
-        - user.permissions
+        - user.roles
       tags:
         - 'config:field.storage.node.field_ol_name'

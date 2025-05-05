@@ -138,7 +138,7 @@ class ConstituentEngagementBlock extends BlockBase implements ContainerFactoryPl
     $start_of_year = mktime(0, 0, 0, 1, 1, date('Y'));
     return [
       '#type' => 'component',
-      '#component' => 'nysenate_theme:constituent-engagement-block',
+      '#component' => 'nys:constituent-engagement-block',
       '#props' => [
         'constituent_engagement_data' => [
           [

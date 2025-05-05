@@ -129,7 +129,7 @@ class BillVoteCountBlock extends BlockBase implements ContainerFactoryPluginInte
   public function build() {
     $ret = [
       '#type' => 'component',
-      '#component' => 'nysenate_theme:bill-vote-count-block',
+      '#component' => 'nys:bill-vote-count-block',
       '#props' => ['no_results' => TRUE],
     ];
 

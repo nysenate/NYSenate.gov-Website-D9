@@ -1,0 +1,39 @@
+uuid: 94441e3b-b562-49c2-9b84-b630d4b2146c
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+    - user
+  theme:
+    - nys
+id: nys_senator_dashboard_header_block_issues
+theme: nys
+region: above_content
+weight: -7
+provider: null
+plugin: senator_dashboard_header_block
+settings:
+  id: senator_dashboard_header_block
+  label: 'Senator Dashboard header block - Issues followers'
+  label_display: '0'
+  provider: nys_senator_dashboard
+  display_image: 0
+  display_breadcrumbs: 1
+  display_header_title_as_contextual_link: 1
+  display_homepage_link: 0
+  use_blurb_from_entity: 0
+  header_blurb: 'View & connect with constituents who are following this issue.'
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: '/senator-dashboard/constituent-activity/issues/*'
+  user_role:
+    id: user_role
+    negate: false
+    context_mapping:
+      user: '@user.current_user_context:current_user'
+    roles:
+      microsite_content_producer: microsite_content_producer
+      legislative_correspondent: legislative_correspondent

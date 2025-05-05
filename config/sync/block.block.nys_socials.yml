@@ -1,0 +1,25 @@
+uuid: 4e2ae6e0-f191-4abd-98cc-b6a7f60ffc82
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.socials
+  module:
+    - system
+  theme:
+    - nys
+id: nys_socials
+theme: nys
+region: footer_left
+weight: -15
+provider: null
+plugin: 'system_menu_block:socials'
+settings:
+  id: 'system_menu_block:socials'
+  label: Socials
+  label_display: '0'
+  provider: system
+  level: 1
+  depth: 0
+  expand_all_items: false
+visibility: {  }

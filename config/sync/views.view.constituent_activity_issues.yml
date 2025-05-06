@@ -160,7 +160,20 @@ display:
       cache:
         type: tag
         options: {  }
-      empty: {  }
+      empty:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text
+          empty: true
+          content:
+            value: '<p>No issues found.</p>'
+            format: basic_html
+          tokenize: false
       sorts:
         nys_senator_dashboard_issue_followers_count_sort:
           id: nys_senator_dashboard_issue_followers_count_sort

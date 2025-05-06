@@ -147,6 +147,15 @@ function nys_senator_dashboard_views_data() {
       'id' => 'nys_senator_dashboard_active_senator_sponsor_filter',
     ],
   ];
+  $data['node__field_senator_multiref']['nys_senator_dashboard_active_senator_petition_filter'] = [
+    'title' => t('NYS Senator Dashboard: Active senator petition filter'),
+    'help' => t('Filter petitions to those by the active senator.'),
+    'filter' => [
+      'id' => 'nys_senator_dashboard_active_senator_petition_filter',
+      'field' => 'field_senator_multiref_target_id',
+      'group' => t('Content'),
+    ],
+  ];
   $data['taxonomy_term_data']['nys_senator_dashboard_active_senator_used_issues'] = [
     'title' => t('NYS Senator Dashboard: Active senator used issues filter'),
     'help' => t('Filter issues to those used in content (Articles, Press Releases, etc.) by the active senator.'),
@@ -191,11 +200,32 @@ function nys_senator_dashboard_entity_extra_field_info() {
       $extra[$flag->getFlaggableEntityTypeId()][$bundle_name]['display']['nys_senator_dashboard_flag_count_' . $flag->id()] = [
         'label' => t('NYS Senator Dashboard: Flag count: %title', ['%title' => $flag->label()]),
         'description' => t('A custom field that displays the total flagging count on an entity.'),
-        'weight' => 10,
+        'weight' => 11,
+        'visible' => FALSE,
+      ];
+
+      $extra[$flag->getFlaggableEntityTypeId()][$bundle_name]['display']['nys_senator_dashboard_district_flag_count_' . $flag->id()] = [
+        'label' => t('NYS Senator Dashboard: In / out district flagging counts: %title', ['%title' => $flag->label()]),
+        'description' => t('A custom field that displays in / out district flagging counts.'),
+        'weight' => 12,
         'visible' => FALSE,
       ];
     }
   }
+
+  $extra['node']['petition']['display']['nys_senator_dashboard_link_to_constituents_list'] = [
+    'label' => t('NYS Senator Dashboard: Link to constituents list'),
+    'description' => t('Displays a link to the constituents list.'),
+    'weight' => 13,
+    'visible' => FALSE,
+  ];
+
+  $extra['node']['petition']['display']['nys_senator_dashboard_status'] = [
+    'label' => t('NYS Senator Dashboard: Petition status'),
+    'description' => t('Displays the petition status.'),
+    'weight' => 14,
+    'visible' => FALSE,
+  ];
 
   return $extra;
 }
@@ -243,15 +273,65 @@ function nys_senator_dashboard_entity_view(array &$build, \Drupal\Core\Entity\En
         $entity->getEntityTypeId(),
         $entity->id()
       );
+      $value = match($entity->bundle()) {
+        'issues' => t('@count followers', ['@count' => $flagging_count]),
+        'petition' => t('Signed by @count constituents', ['@count' => $flagging_count]),
+        default => $flagging_count,
+      };
       $build['nys_senator_dashboard_flag_count_' . $flag->id()] = [
         '#type' => 'html_tag',
         '#tag' => 'p',
-        '#value' => $flagging_count . t(' followers'),
+        '#value' => $value,
         '#attributes' => [
           'class' => ['flagging-count'],
         ],
       ];
     }
+
+    if ($display->getComponent('nys_senator_dashboard_district_flag_count_' . $flag->id())) {
+      $flagging_count = _nys_senator_dashboard_get_flagging_count(
+        $flag->id(),
+        $entity->getEntityTypeId(),
+        $entity->id()
+      );
+      $in_district_flagging_count = _nys_senator_dashboard_get_in_district_flagging_count(
+        $flag->id(),
+        $entity->getEntityTypeId(),
+        $entity->id()
+      );
+      $out_district_flagging_count = $flagging_count - $in_district_flagging_count;
+      $in_count = t('@in_count in-district', ['@in_count' => $in_district_flagging_count]);
+      $out_count = t('@out_count out-of-district', ['@out_count' => $out_district_flagging_count]);
+      $build['nys_senator_dashboard_district_flag_count_' . $flag->id()] = [
+        '#markup' => "<p class='district-flagging-count'><span>$in_count</span> <span>$out_count</span></p>",
+      ];
+    }
+  }
+
+  if ($display->getComponent('nys_senator_dashboard_link_to_constituents_list')) {
+    $url = "/senator-dashboard/constituent-activity/petitions/{$entity->id()}";
+    $build['nys_senator_dashboard_link_to_constituents_list'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'a',
+      '#value' => t('View in-district signatories'),
+      '#attributes' => [
+        'href' => $url,
+        'class' => ['link-to-constituents-list'],
+      ],
+    ];
+  }
+
+  if ($display->getComponent('nys_senator_dashboard_status')) {
+    $value = $entity->isPublished() ? t('Active') : t('Inactive');
+    $class = $entity->isPublished() ? 'active' : 'inactive';
+    $build['nys_senator_dashboard_status'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'p',
+      '#value' => $value,
+      '#attributes' => [
+        'class' => ["$class"],
+      ],
+    ];
   }
 }
 
@@ -278,6 +358,45 @@ function _nys_senator_dashboard_get_flagging_count($flag_id, $entity_type, $enti
     ->range(0, 1);
   try {
     $result = $query->execute()->fetchField();
+  }
+  catch (Exception) {
+    return 0;
+  }
+  return (int) ($result ?: 0);
+}
+
+/**
+ * Counts the number of in-district flaggings for a given entity and flag type.
+ *
+ * @param string $flag_id
+ *   The ID of the flag type.
+ * @param string $entity_type
+ *   The entity type (e.g., 'node', 'user', etc.).
+ * @param int $entity_id
+ *   The ID of the entity being flagged.
+ *
+ * @return int
+ *   The number of in-district flaggings for the given entity and flag type.
+ */
+function _nys_senator_dashboard_get_in_district_flagging_count($flag_id, $entity_type, $entity_id) {
+  // Get active managed senator district ID.
+  $active_senator_district_id = \Drupal::service('nys_senator_dashboard.managed_senators_handler')
+    ->getActiveSenatorDistrictId();
+
+  // Set up the query.
+  $connection = Database::getConnection();
+  $query = $connection->select('flagging', 'f');
+  $query->innerJoin(
+    'user__field_district',
+    'ufd',
+    'f.uid = ufd.entity_id'
+  );
+  $query->condition('f.flag_id', $flag_id)
+    ->condition('f.entity_id', $entity_id)
+    ->condition('ufd.field_district_target_id', $active_senator_district_id);
+
+  try {
+    $result = $query->countQuery()->execute()->fetchField();
   }
   catch (Exception) {
     return 0;

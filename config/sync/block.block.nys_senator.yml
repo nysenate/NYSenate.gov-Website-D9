@@ -1,0 +1,29 @@
+uuid: 3e25fca9-d6f9-42b2-a48e-ffb72ce7a47b
+langcode: en
+status: true
+dependencies:
+  config:
+    - facets.facet.senator
+  module:
+    - facets
+    - system
+  theme:
+    - nys
+id: nys_senator
+theme: nys
+region: content
+weight: -14
+provider: null
+plugin: 'facet_block:senator'
+settings:
+  id: 'facet_block:senator'
+  label: Senator
+  label_display: visible
+  provider: facets
+  context_mapping: {  }
+  block_id: senator
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: '/search/global/*'

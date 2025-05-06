@@ -1,0 +1,43 @@
+name: NYSenate Theme
+type: theme
+description: Child theme for NYSenate. WIP cleaning up the NY STATE SENATE theme.
+package: NYSenate
+core_version_requirement: ^10 || ^11
+base theme: nysenate_theme
+
+# This section lists the regions defined in the theme (our base theme) default
+# page.html.twig and maintenance-page.html.twig files. The name before
+# the semi-colon is the machine name of the region. The text after the
+# semi-colon is the region's description used on the admin/structure/block page.
+regions:
+  # The three header regions are stacked vertically.
+  header_top: Header Top
+  header_middle: Header Middle
+  header_bottom: Header Bottom
+  above_content: Above Content
+  content: Content
+  sidebar_right: Sidebar Right
+  # The three footer regions are stacked horizontally, so that each region can
+  # have multiple blocks; the addendum is displayed afterwards.
+  footer_left: Footer Left
+  footer_middle: Footer Middle
+  footer_right: Footer Right
+  addendum: Addendum
+
+# This section is used by the contrib module, Component Libraries. It allows you
+# to reference .twig files in your sass/ directory by using the Twig namespace:
+# @rain_theme and @nysenate_theme. As we move to SDC components, we can begin
+# to remove these dependencies.
+# See https://www.drupal.org/project/components for more information.
+components:
+  namespaces:
+    rain_theme:
+      - src/patterns/global
+      - src/patterns/components
+      - src/patterns/pages
+      - src/templates
+    nysenate_theme:
+      - src/patterns/global
+      - src/patterns/components
+      - src/patterns/pages
+      - src/templates

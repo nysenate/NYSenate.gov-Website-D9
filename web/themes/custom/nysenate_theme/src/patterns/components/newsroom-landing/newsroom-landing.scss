@@ -29,13 +29,51 @@
   }
 
   &.c-news-container {
+    .c-container--link:hover {
+      text-decoration: underline;
+    }
 
     .c-news-block {
 
       .c-newsroom-name {
+        font-family: $font-serif;
+        font-size: 24px;
+        margin: 0px;
+        line-height: 120%;
+        padding-top: 16px;
+        max-width: 440px;
+        margin-bottom: 25px;
+        color: $grey08;
+        font-weight: $font-weight-normal;
 
         a {
           color: $grey08;
+          text-decoration: none;
+          font-weight: $font-weight-normal;
+
+          &:hover {
+            text-decoration: underline;
+            color: $gen_blue_lgt;
+          }
+        }
+      }
+      .c-newsroom-link {
+        line-height: 1em;
+        a.c-press-release--topic {
+          text-transform: uppercase;
+          font-family: $font-sans-bold;
+          font-size: 12px;
+          line-height: 1em!important;
+          letter-spacing: 0.05em;
+          text-decoration: none;
+          padding-right: 5px;
+          @extend .link-text;
+
+          &:hover {
+            @extend .link-text;
+            text-decoration: underline;
+            color: $orange01;
+          }
         }
       }
     }

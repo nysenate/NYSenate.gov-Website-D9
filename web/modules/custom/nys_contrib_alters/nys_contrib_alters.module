@@ -88,3 +88,10 @@ function nys_contrib_alters_customize_address($element, $form_state): array {
 function nys_contrib_alters_page_attachments(array &$attachments) {
   $attachments['#attached']['library'][] = 'nys_contrib_alters/gin_overrides';
 }
+
+/**
+ * Implements hook_webform_analysis_component().
+ */
+function nys_contrib_alters_preprocess_webform_analysis_component(&$variables) {
+  $variables['data']['#attributes']['class'][] = 'field-multiple-table';
+}

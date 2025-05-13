@@ -1,0 +1,176 @@
+@use 'partials' as *;
+
+.c-menu__items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.c-menu__item {
+  margin: 0;
+}
+
+.c-menu__item-expanded {
+  position: relative;
+
+  > .c-menu__items {
+    &[aria-hidden='true'] {
+      display: none;
+    }
+
+    @include bp-min(md) {
+      left: 0;
+      position: absolute;
+      top: 100%;
+      z-index: 5;
+    }
+  }
+}
+
+.c-menu__link {
+  white-space: nowrap;
+}
+
+a.c-menu__link,
+button.c-menu__link {
+  color: #2B6A90;
+  font-size: 18px;
+  line-height: 1.25;
+  transition: color ease-in-out .25s;
+}
+
+button.c-menu__link {
+  appearance: none;
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  text-align: left;
+
+  &[aria-expanded='true'] {
+    color: #222;
+
+    .icon--arrow {
+      rotate: 180deg;
+    }
+  }
+}
+
+// Component styles above, dashboard menu styles below.
+
+.senate-dashboard__content {
+  display: grid;
+  gap: 10px 40px;
+  grid-template-columns: 1fr;
+
+  @include bp-min(md) {
+    display: flex
+  }
+}
+
+.nysenate-dashboard-menu__heading {
+  color: #222;
+  font-family: var(--nys-ff-sans-bold);
+  letter-spacing: 1px;
+  font-size: 18px;
+  line-height: 1.25;
+  margin: 0 0 8px;
+  text-transform: uppercase;
+}
+
+.nysenate-dashboard-menu--depth-0 {
+  > .nysenate-dashboard-menu__item {
+    > .nysenate-dashboard-menu__link,
+    > .nysenate-dashboard-menu__trigger {
+      padding: 6px 0;
+
+      @include bp-min(md) {
+        &:after {
+          background-color: transparent;
+          bottom: 0;
+          content: '';
+          display: block;
+          height: 2px;
+          left: 0;
+          position: absolute;
+          transition: background-color ease-in-out .25s;
+          width: 100%;
+        }
+
+        &:hover,
+        &:focus {
+          text-decoration: none;
+
+          &:after {
+            background-color: currentColor;
+          }
+        }
+      }
+    }
+  }
+
+  > .nysenate-dashboard-menu--item-expanded {
+    @include bp-max(md) {
+      display: grid;
+      gap: 20px;
+      grid-template-columns: 1fr;
+    }
+
+    @include bp-max(sm) {
+      gap: 10px;
+    }
+  }
+}
+
+.nysenate-dashboard-menu--depth-1 {
+  background-color: var(--nys-color-dash-grey-2);
+
+  .nysenate-dashboard-menu__link {
+    font-family: var(--nys-ff-sans);
+  }
+
+  &[aria-hidden='true'] {
+    display: none;
+  }
+
+  @include bp-min(md) {
+    border: 1px solid #A6A6A6;
+    left: 0;
+    padding: 24px;
+    position: absolute;
+    top: 100%;
+    z-index: 5;
+  }
+}
+
+.nysenate-dashboard-menu--depth-2 {
+  display: grid;
+  gap: 4px;
+  grid-template-columns: 1fr;
+}
+
+.nysenate-dashboard-menu--item-overview {
+  padding-bottom: 12px;
+
+  .nysenate-dashboard-menu__link {
+    font-family: var(--nys-ff-sans-bold);
+  }
+}
+
+.nysenate-dashboard-menu--items-grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 1fr;
+
+  .nysenate-dashboard-menu--item-overview {
+    border-bottom: 1px solid #A6A6A6;
+  }
+
+  @include bp-min(md) {
+    gap: 12px 24px;
+    grid-template-columns: repeat(2, 1fr);
+
+    .nysenate-dashboard-menu--item-overview {
+      grid-column: 1 / span 2;
+    }
+  }
+}

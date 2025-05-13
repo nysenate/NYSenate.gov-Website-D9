@@ -1,0 +1,11 @@
+:root {
+  --nys-ui-icon-label-gap: 8px;
+}
+
+.u-icon-label {
+  display: flex;
+  gap: var(--nys-ui-icon-label-gap);
+
+  .text { color: currentColor; }
+  .icon svg { fill: currentColor; }
+}

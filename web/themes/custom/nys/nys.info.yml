@@ -4,6 +4,11 @@ description: Child theme for NYSenate. WIP cleaning up the NY STATE SENATE theme
 package: NYSenate
 core_version_requirement: ^10 || ^11
 base theme: nysenate_theme
+enforce_sdc_schemas: true
+
+dependencies:
+  - twig_field_value:twig_field_value
+  - twig_tweak:twig_tweak
 
 # This section lists the regions defined in the theme (our base theme) default
 # page.html.twig and maintenance-page.html.twig files. The name before
@@ -23,6 +28,9 @@ regions:
   footer_middle: Footer Middle
   footer_right: Footer Right
   addendum: Addendum
+
+libraries:
+  - nys/global
 
 # This section is used by the contrib module, Component Libraries. It allows you
 # to reference .twig files in your sass/ directory by using the Twig namespace:

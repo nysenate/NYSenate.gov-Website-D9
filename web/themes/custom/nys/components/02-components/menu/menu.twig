@@ -1,0 +1,59 @@
+{% import _self as menu %}
+
+{% set attributes = create_attribute(attributes|default({})) %}
+{% set wrapper_attributes = create_attribute(wrapper_attributes|default({})) %}
+{% set wrapper_classes = [
+  'c-menu',
+  'c-menu--' ~ menu_name|clean_class,
+] %}
+
+{% macro links(items, attributes, menu_depth, menu_name, item_id = '') %}
+  {% set items_classes = [
+    'c-menu__items',
+    'c-menu--' ~ menu_name|clean_class,
+  ] %}
+
+  <ul
+    {% if item_id is not empty %}id="{{ item_id }}"{% endif %}
+    {% if item_id is not empty and menu_depth > 0 %}aria-hidden="true"{% endif %}
+    {{ attributes.addClass(items_classes) }}
+    data-menu-depth="{{ menu_depth }}"
+  >
+    {% for item in items %}
+      {% set item_classes = [
+        'c-menu__item',
+        'c-menu--' ~ menu_name|clean_class,
+        item.below ? 'c-menu--item-dropdown',
+      ] %}
+
+      <li {{ item.attributes }} data-menu-depth="{{ menu_depth }}">
+        {% set item_id = menu_name|clean_unique_id %}
+
+        {% if item.url %}
+          {% set link_title %}
+            {{ include('nys:icon-label', {
+              label: item.title,
+              icon_before: item.icon,
+              icon_after: item.is_expanded ? 'accordion-arrow',
+            }, with_context = false) }}
+          {% endset %}
+
+          {% if item.below %}
+            {{ link(link_title, item.url, { 'aria-controls': item_id }) }}
+          {% else %}
+            {{ link(link_title, item.url) }}
+          {% endif %}
+
+        {% endif %}
+
+        {% if item.below %}
+          {{ menu.links(item.below, attributes, menu_depth + 1, menu_name, item_id) }}
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+{% endmacro %}
+
+<nav {{ wrapper_attributes.addClass(wrapper_classes) }}>
+  {{ menu.links(items, attributes, depth|default(0), menu_name) }}
+</nav>

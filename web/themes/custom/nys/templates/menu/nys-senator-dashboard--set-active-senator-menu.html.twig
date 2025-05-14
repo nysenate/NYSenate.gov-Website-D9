@@ -1,0 +1,7 @@
+
+{% if active_senator_links %}
+  {{ include('nys:menu--senator-dashboard', {
+    items: items,
+    menu_name: 'senator_dashboard',
+  }, with_context = false) }}
+{% endif %}

@@ -1,0 +1,72 @@
+@use 'partials' as *;
+
+.c-nys-dashboard {
+  background-color: var(--nys-color-dash-grey-2);
+  margin: 0 auto;
+  padding: 20px;
+  max-width: 1500px;
+
+  @include bp-max(md) {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: 1fr;
+    justify-items: end;
+  }
+
+  @include bp-min(sm) {
+    padding: 20px 60px;
+  }
+}
+
+.c-nys-dashboard__trigger {
+  align-items: center;
+  appearance: none;
+  background-color: transparent;
+  border: none;
+  color: #2B6A90;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  line-height: 1.25;
+  padding: 8px 0;
+  position: relative;
+  text-align: left;
+  text-transform: uppercase;
+  transition: color ease-in-out .25s;
+
+
+  &:hover,
+  &:focus {
+    text-decoration: underline;
+  }
+
+  &[aria-expanded='true'] {
+    color: #222;
+
+    .icon-accordion-arrow {
+      rotate: 180deg;
+    }
+  }
+
+  @include bp-min(md) {
+    display: none;
+  }
+}
+
+.c-nys-dashboard__content {
+  display: grid;
+  gap: 10px 40px;
+  grid-template-columns: 1fr;
+
+  @include bp-max(md) {
+    width: 100%;
+
+    &[aria-hidden='true'] {
+      display: none;
+    }
+  }
+
+  @include bp-min(md) {
+    display: flex
+  }
+}

@@ -8,10 +8,7 @@
 ] %}
 
 {% macro links(items, attributes, menu_depth, menu_name, item_id = '') %}
-  {% set items_classes = [
-    'c-menu__items',
-    'c-menu--' ~ menu_name|clean_class,
-  ] %}
+  {% set items_classes = ['c-menu__items'] %}
 
   <ul
     {% if item_id is not empty %}id="{{ item_id }}"{% endif %}

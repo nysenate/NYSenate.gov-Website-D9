@@ -67,22 +67,36 @@ jobs:
           php_version: ${{ vars.PHP_VERSION }}
           php_extensions: gd sodium zip
 
-      - name: Setup Node with the version set in .nvmrc
+      - name: Update NodeJS to version in nysenate_theme theme via .nvmrc.
         uses: actions/setup-node@v3
         with:
           node-version-file: '${{ vars.THEME_PATH }}/.nvmrc'
           cache: 'npm'
           cache-dependency-path: '${{ vars.THEME_PATH }}/package-lock.json'
 
-      - name: Build Theme Assets
+      - name: Build nysenate_theme Theme Assets
         run: |
           cd ${{ vars.THEME_PATH }}
+          npm install
+          npm run build
+
+      - name: Update NodeJS to version in nys theme via .nvmrc.
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: 'web/theme/custom/nys/.nvmrc'
+          cache: 'npm'
+          cache-dependency-path: 'web/theme/custom/nys/package-lock.json'
+
+      - name: Build nys Theme Assets
+        run: |
+          cd web/theme/custom/nys
           npm install
           npm run build
 
       - name: Deploy to Pantheon Dev (master)
         run: |
           rm -rf ${{ vars.THEME_PATH }}/node_modules
+          rm -rf web/themes/custom/nys/node_modules
           git add -Af .
           git commit -q -m "${{ env.GIT_COMMIT_MESSAGE }} - ${{ env.NOW }}"
           git push --force pantheon HEAD:refs/heads/master

@@ -1,0 +1,35 @@
+uuid: 8c2adba2-fc71-46d2-920e-9e398a3f2e75
+langcode: en
+status: true
+dependencies:
+  module:
+    - nys_senator_dashboard
+    - system
+    - user
+  theme:
+    - nysenate_theme
+id: nysenate_theme_bill_vote_count_block
+theme: nysenate_theme
+region: content
+weight: -15
+provider: null
+plugin: nys_senator_dashboard_bill_vote_count_block
+settings:
+  id: nys_senator_dashboard_bill_vote_count_block
+  label: 'All Activity'
+  label_display: visible
+  provider: nys_senator_dashboard
+  context_mapping: {  }
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: '/senator-dashboard/constituent-activity/bills/*'
+  user_role:
+    id: user_role
+    negate: false
+    context_mapping:
+      user: '@user.current_user_context:current_user'
+    roles:
+      microsite_content_producer: microsite_content_producer
+      legislative_correspondent: legislative_correspondent

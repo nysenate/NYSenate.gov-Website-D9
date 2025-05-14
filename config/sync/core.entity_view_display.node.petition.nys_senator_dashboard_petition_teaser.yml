@@ -1,0 +1,139 @@
+uuid: d8ce7508-d532-4938-a20d-ab08f31c0c97
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.nys_senator_dashboard_petition_teaser
+    - field.field.node.petition.body
+    - field.field.node.petition.field_article_author
+    - field.field.node.petition.field_date
+    - field.field.node.petition.field_expiration_date
+    - field.field.node.petition.field_featured
+    - field.field.node.petition.field_image_main
+    - field.field.node.petition.field_issues
+    - field.field.node.petition.field_last_notified
+    - field.field.node.petition.field_senator_multiref
+    - field.field.node.petition.field_subhead
+    - field.field.node.petition.field_title_stub
+    - field.field.node.petition.rabbit_hole__settings
+    - node.type.petition
+  module:
+    - datetime
+    - field_label_override
+    - layout_builder
+    - sdc_display
+    - user
+third_party_settings:
+  layout_builder:
+    enabled: false
+    allow_custom: false
+  sdc_display:
+    enabled: true
+    component:
+      machine_name: 'nys:senator-dashboard-petition-teaser'
+      show_deprecated: null
+    mappings:
+      static:
+        props:
+          title: Petition
+          signings: ''
+          in_out_district_signings: ''
+          link_to_constituents_list: ''
+          byline: ''
+          status: ''
+          date: ''
+          expiration_date: ''
+      dynamic:
+        props:
+          title: title
+          signings: nys_senator_dashboard_flag_count_sign_petition
+          in_out_district_signings: nys_senator_dashboard_district_flag_count_sign_petition
+          link_to_constituents_list: nys_senator_dashboard_link_to_constituents_list
+          byline: field_senator_multiref
+          status: nys_senator_dashboard_status
+          date: field_date
+          expiration_date: field_expiration_date
+id: node.petition.nys_senator_dashboard_petition_teaser
+targetEntityType: node
+bundle: petition
+mode: nys_senator_dashboard_petition_teaser
+content:
+  field_date:
+    type: datetime_default
+    label: inline_overridden
+    settings:
+      timezone_override: ''
+      format_type: publish_date
+    third_party_settings:
+      sdc_display:
+        enabled: 0
+        component:
+          machine_name: null
+          show_deprecated: 0
+      field_label_override:
+        label_override: 'Posted:'
+        preserve_label: false
+    weight: 5
+    region: content
+  field_expiration_date:
+    type: datetime_default
+    label: inline_overridden
+    settings:
+      timezone_override: ''
+      format_type: publish_date
+    third_party_settings:
+      field_label_override:
+        label_override: 'Expired:'
+        preserve_label: false
+    weight: 6
+    region: content
+  field_senator_multiref:
+    type: entity_reference_label
+    label: inline_overridden
+    settings:
+      link: true
+    third_party_settings:
+      field_label_override:
+        label_override: 'By:'
+        preserve_label: false
+    weight: 3
+    region: content
+  nys_senator_dashboard_district_flag_count_sign_petition:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  nys_senator_dashboard_flag_count_sign_petition:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  nys_senator_dashboard_link_to_constituents_list:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  nys_senator_dashboard_status:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 4
+    region: content
+hidden:
+  body: true
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  field_article_author: true
+  field_featured: true
+  field_image_main: true
+  field_issues: true
+  field_last_notified: true
+  field_subhead: true
+  field_title_stub: true
+  flag_sign_petition: true
+  langcode: true
+  links: true
+  nys_senator_dashboard_flag_link_sign_petition: true
+  private_message_link: true
+  rabbit_hole__settings: true
+  search_api_excerpt: true

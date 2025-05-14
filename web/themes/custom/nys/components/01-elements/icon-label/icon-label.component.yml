@@ -1,0 +1,21 @@
+$schema: https://git.drupalcode.org/project/sdc/-/raw/1.x/src/metadata.schema.json
+name: Icon Label
+status: "experimental"
+description: A standard markup wrapper for pairing icons with labels.
+props:
+  type: object
+  required:
+    - label
+  properties:
+    label:
+      type: string
+      title: Label
+      description: The label text.
+    icon_before:
+      type: [string, 'null']
+      title: Icon Before
+      description: An icon to go before the label. Accepts the name of an SVG file.
+    icon_after:
+      type: [string, 'null']
+      title: Icon After
+      description: An icon to go after the label. Accepts the name of an SVG file.

@@ -1,0 +1,21 @@
+<section class="c-nys-dashboard">
+  <button
+    class="c-nys-dashboard__trigger"
+    aria-controls="c-nys-dashboard-id"
+    aria-expanded="false"
+    type="button"
+  >
+    {{ include('nys:icon-label', {
+      label: 'Manage Senator'|t,
+      icon_after: 'accordion-arrow',
+    }, with_context = false) }}
+  </button>
+
+  <div
+    id="c-nys-dashboard-id"
+    class="c-nys-dashboard__content"
+    aria-hidden="true"
+  >
+    {% block content %}{% endblock %}
+  </div>
+</section>

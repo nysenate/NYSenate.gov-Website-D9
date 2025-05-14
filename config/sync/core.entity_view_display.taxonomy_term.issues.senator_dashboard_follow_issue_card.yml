@@ -12,10 +12,25 @@ dependencies:
     - taxonomy.vocabulary.issues
   module:
     - layout_builder
+    - sdc_display
 third_party_settings:
   layout_builder:
     enabled: false
     allow_custom: false
+  sdc_display:
+    enabled: true
+    component:
+      machine_name: 'nys:senator-dashboard-follow-issue-card'
+      show_deprecated: null
+    mappings:
+      static:
+        props:
+          flag_link: 'Not found'
+          flag_count: '0'
+      dynamic:
+        props:
+          flag_link: nys_senator_dashboard_flag_link_follow_issue
+          flag_count: nys_senator_dashboard_flag_count_follow_issue
 id: taxonomy_term.issues.senator_dashboard_follow_issue_card
 targetEntityType: taxonomy_term
 bundle: issues
@@ -47,5 +62,6 @@ hidden:
   field_metatags: true
   flag_follow_issue: true
   langcode: true
+  nys_senator_dashboard_district_flag_count_follow_issue: true
   rabbit_hole__settings: true
   search_api_excerpt: true

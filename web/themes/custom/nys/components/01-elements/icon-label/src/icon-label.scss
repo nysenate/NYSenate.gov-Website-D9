@@ -1,10 +1,45 @@
 :root {
+  --nys-ui-icon-label-align: center;
   --nys-ui-icon-label-gap: 8px;
+  --nys-ui-icon-label-icon-size: 16px;
 }
 
 .u-icon-label {
+  align-items: var(--nys-ui-icon-label-align);
   display: flex;
   gap: var(--nys-ui-icon-label-gap);
+
+  .icon {
+    height: var(--nys-ui-icon-label-icon-height, --nys-ui-icon-label-icon-size);
+    width: var(--nys-ui-icon-label-icon-width, --nys-ui-icon-label-icon-size);
+
+    svg {
+      height: 100%;
+      width: 100%;
+    }
+  }
+
+  .icon-before {
+    height: var(
+      --nys-ui-icon-label-icon-before-height,
+      var(--nys-ui-icon-label-icon-before-size, --nys-ui-icon-label-icon-size)
+    );
+    width: var(
+      --nys-ui-icon-label-icon-before-width,
+      var(--nys-ui-icon-label-icon-before-size, --nys-ui-icon-label-icon-size)
+    );
+  }
+
+  .icon-after {
+    height: var(
+      --nys-ui-icon-label-icon-after-height,
+      var(--nys-ui-icon-label-icon-after-size, --nys-ui-icon-label-icon-size)
+    );
+    width: var(
+      --nys-ui-icon-label-icon-after-width,
+      var(--nys-ui-icon-label-icon-after-size, --nys-ui-icon-label-icon-size)
+    );
+  }
 
   .text { color: currentColor; }
   .icon svg { fill: currentColor; }

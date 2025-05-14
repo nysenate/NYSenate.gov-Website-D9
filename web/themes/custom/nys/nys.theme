@@ -16,7 +16,19 @@ function nys_preprocess_menu__senator_dashboard(&$variables) {
   // Find the items that are overview pages.
   $find_overview = function (&$items) {
     foreach ($items as $key => &$item) {
-      $item['is_overview'] = str_ends_with($key, '.overview');
+      if (str_ends_with($key, '.overview')) {
+        $item['attributes']->addClass('c-menu--item-overview');
+      }
+    }
+  };
+
+  // Strip out dropdown for nested management sections.
+  $setup_mega_menu = function (&$items) {
+    foreach ($items as &$item) {
+      if ($item['below']) {
+        $item['is_expanded'] = FALSE;
+        $item['url'] = Url::fromRoute('<nolink>');
+      }
     }
   };
 
@@ -31,6 +43,7 @@ function nys_preprocess_menu__senator_dashboard(&$variables) {
     // Set class for mega menu in dashboard.
     if ($key == 'senator_dashboard.manage_senator') {
       $item['attributes']->addClass('c-menu__item-mega');
+      $setup_mega_menu($item['below']);
     }
 
     if ($item['below']) {

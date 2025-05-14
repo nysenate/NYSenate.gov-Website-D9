@@ -1,9 +1,18 @@
 @use 'partials' as *;
 
 .c-menu--senator-dashboard {
+  a.c-menu__link {
+    font-family: var(--nys-ff-sans);
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
   span.c-menu__link {
     color: #222;
     font-family: var(--nys-ff-sans-bold);
+    display: block;
     letter-spacing: 1px;
     font-size: 18px;
     line-height: 1.25;
@@ -58,10 +67,6 @@
   .c-menu__items[data-menu-depth='1'] {
     background-color: var(--nys-color-dash-grey-2);
 
-    a.c-menu__link {
-      font-family: var(--nys-ff-sans);
-    }
-
     &[aria-hidden='true'] {
       display: none;
     }
@@ -90,21 +95,23 @@
     }
   }
 
-  .c-menu--items--grid {
-    display: grid;
-    gap: 10px;
-    grid-template-columns: 1fr;
-
-    .c-menu--item-overview {
-      border-bottom: 1px solid #A6A6A6;
-    }
-
-    @include bp-min(md) {
-      gap: 12px 24px;
-      grid-template-columns: repeat(2, 1fr);
+  .c-menu__item-mega {
+    > .c-menu__items {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: 1fr;
 
       .c-menu--item-overview {
-        grid-column: 1 / span 2;
+        border-bottom: 1px solid #A6A6A6;
+      }
+
+      @include bp-min(md) {
+        gap: 12px 24px;
+        grid-template-columns: repeat(2, 1fr);
+
+        .c-menu--item-overview {
+          grid-column: 1 / span 2;
+        }
       }
     }
   }

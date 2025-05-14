@@ -7,12 +7,12 @@
   'c-menu--' ~ menu_name|clean_class,
 ] %}
 
-{% macro links(items, attributes, menu_depth, menu_name, item_id = '') %}
+{% macro links(items, attributes, menu_depth, menu_name, item_id = '', is_expanded = false) %}
   {% set items_classes = ['c-menu__items'] %}
 
   <ul
     {% if item_id is not empty %}id="{{ item_id }}"{% endif %}
-    {% if item_id is not empty and menu_depth > 0 %}aria-hidden="true"{% endif %}
+    {% if item_id is not empty and is_expanded %}aria-hidden="true"{% endif %}
     {{ attributes.addClass(items_classes) }}
     data-menu-depth="{{ menu_depth }}"
   >
@@ -20,7 +20,6 @@
       {% set item_classes = [
         'c-menu__item',
         'c-menu--' ~ menu_name|clean_class,
-        item.below ? 'c-menu--item-dropdown',
       ] %}
 
       <li {{ item.attributes }} data-menu-depth="{{ menu_depth }}">
@@ -35,7 +34,7 @@
             }, with_context = false) }}
           {% endset %}
 
-          {% if item.below %}
+          {% if item.is_expanded %}
             {{ link(link_title, item.url, { 'aria-controls': item_id }) }}
           {% else %}
             {{ link(link_title, item.url) }}
@@ -44,7 +43,7 @@
         {% endif %}
 
         {% if item.below %}
-          {{ menu.links(item.below, attributes, menu_depth + 1, menu_name, item_id) }}
+          {{ menu.links(item.below, attributes, menu_depth + 1, menu_name, item_id, item.is_expanded) }}
         {% endif %}
       </li>
     {% endfor %}

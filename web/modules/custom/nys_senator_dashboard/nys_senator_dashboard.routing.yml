@@ -22,12 +22,3 @@ nys_senator_dashboard.constituent_activity:
     menu_mode: 'constituent_activity_menu'
   requirements:
     _role: 'microsite_content_producer+legislative_correspondent'
-
-# Temp questionnaires placeholder route
-nys_senator_dashboard.temp_placeholder.questionnaires:
-  path: '/senator-dashboard/constituent-activity/questionnaires'
-  defaults:
-    _controller: '\Drupal\nys_senator_dashboard\Controller\SenatorDashboardController::tempPlaceholder'
-    _title: 'Questionnaires'
-  requirements:
-    _role: 'microsite_content_producer+legislative_correspondent'

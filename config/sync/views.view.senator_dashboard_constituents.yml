@@ -3814,6 +3814,20 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
+      empty:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text
+          empty: true
+          content:
+            value: '<p>No in-district constituent responders found.</p>'
+            format: basic_html
+          tokenize: false
       arguments:
         entity_id:
           id: entity_id
@@ -3861,6 +3875,7 @@ display:
           transform_dash: false
           break_phrase: false
       defaults:
+        empty: false
         relationships: false
         fields: false
         arguments: false
@@ -3897,7 +3912,7 @@ display:
           group_type: group
           admin_label: ''
           plugin_id: text_custom
-          empty: true
+          empty: false
           content: "<ul>\r\n  <li>\r\n    <a class=\"button\" href=\"/admin/webform/manage/{{ nys_senator_dashboard_contextual_filter_webform_id|striptags|trim }}/results/submissions\">View all responses</a>\r\n  </li>\r\n  <li>\r\n    <a class=\"button\" href=\"/admin/webform/manage/{{ nys_senator_dashboard_contextual_filter_webform_id|striptags|trim }}/results/analysis\">View analysis</a>\r\n  </li>\r\n  <li>\r\n    <a class=\"button\" href=\"/admin/webform/manage/{{ nys_senator_dashboard_contextual_filter_webform_id|striptags|trim }}/results/download\">Download responses</a>\r\n  </li>\r\n</ul>"
           tokenize: true
       footer:

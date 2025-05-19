@@ -1550,24 +1550,18 @@ display:
             created: created
             field_senator: field_senator
             field_district: field_senator
-            webform_submission_value_1: webform_submission_value_1
-            webform_submission_value_11: webform_submission_value_11
-            webform_submission_value_12: webform_submission_value_12
-            webform_submission_value_13: webform_submission_value_13
-            webform_submission_value_14: webform_submission_value_14
-            webform_submission_value_17: webform_submission_value_17
-            webform_submission_value: webform_submission_value
-            webform_submission_value_15: webform_submission_value_15
-            webform_submission_value_5: webform_submission_value_5
-            webform_submission_value_4: webform_submission_value_4
-            webform_submission_value_16: webform_submission_value_16
-            webform_submission_value_7: webform_submission_value_7
-            webform_submission_value_9: webform_submission_value_9
-            webform_submission_value_6: webform_submission_value_6
-            webform_submission_value_8: webform_submission_value_8
             webform_submission_value_2: webform_submission_value_2
+            webform_submission_value_9: webform_submission_value_9
+            webform_submission_value_1: webform_submission_value_1
+            webform_submission_value_7: webform_submission_value_7
+            webform_submission_value_10: webform_submission_value_10
+            webform_submission_value_5: webform_submission_value_5
             webform_submission_value_3: webform_submission_value_3
+            webform_submission_value_8: webform_submission_value_8
+            webform_submission_value: webform_submission_value
+            webform_submission_value_4: webform_submission_value_4
             view_webform_submission: view_webform_submission
+            edit_webform_submission: view_webform_submission
           default: '-1'
           info:
             webform_submission_bulk_form:
@@ -1603,84 +1597,7 @@ display:
               separator: ''
               empty_column: false
               responsive: ''
-            webform_submission_value_1:
-              sortable: false
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            webform_submission_value_11:
-              sortable: false
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            webform_submission_value_12:
-              sortable: false
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            webform_submission_value_13:
-              sortable: false
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            webform_submission_value_14:
-              sortable: false
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            webform_submission_value_17:
-              sortable: false
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            webform_submission_value:
-              sortable: false
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            webform_submission_value_15:
-              sortable: false
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            webform_submission_value_5:
-              sortable: false
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            webform_submission_value_4:
-              sortable: false
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            webform_submission_value_16:
-              sortable: false
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            webform_submission_value_7:
+            webform_submission_value_2:
               sortable: false
               default_sort_order: asc
               align: ''
@@ -1694,21 +1611,28 @@ display:
               separator: ''
               empty_column: false
               responsive: ''
-            webform_submission_value_6:
+            webform_submission_value_1:
               sortable: false
               default_sort_order: asc
               align: ''
               separator: ''
               empty_column: false
               responsive: ''
-            webform_submission_value_8:
+            webform_submission_value_7:
               sortable: false
               default_sort_order: asc
               align: ''
               separator: ''
               empty_column: false
               responsive: ''
-            webform_submission_value_2:
+            webform_submission_value_10:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            webform_submission_value_5:
               sortable: false
               default_sort_order: asc
               align: ''
@@ -1722,7 +1646,35 @@ display:
               separator: ''
               empty_column: false
               responsive: ''
+            webform_submission_value_8:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            webform_submission_value:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            webform_submission_value_4:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
             view_webform_submission:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: '<br>'
+              empty_column: false
+              responsive: ''
+            edit_webform_submission:
               sortable: false
               default_sort_order: asc
               align: ''
@@ -3027,7 +2979,7 @@ display:
         - 'config:field.storage.taxonomy_term.field_senator'
   page_2:
     id: page_2
-    display_title: 'Educator Recognition'
+    display_title: 'Educator Recognition Program'
     display_plugin: page
     position: 3
     display_options:
@@ -3355,6 +3307,536 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
+        webform_submission_value_2:
+          id: webform_submission_value_2
+          table: webform_submission_field_teachers_certificate_program_nominees_full_name
+          field: webform_submission_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: webform_submission_field
+          label: 'Full Name of Educator'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          webform_element_format: value
+          webform_multiple_value: true
+          webform_multiple_delta: 0
+          webform_check_access: 1
+        webform_submission_value_9:
+          id: webform_submission_value_9
+          table: webform_submission_field_teachers_certificate_program_schoolname
+          field: webform_submission_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: webform_submission_field
+          label: 'School Name'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          webform_element_format: link
+          webform_multiple_value: true
+          webform_multiple_delta: 0
+          webform_check_access: 1
+        webform_submission_value_1:
+          id: webform_submission_value_1
+          table: webform_submission_field_teachers_certificate_program_department
+          field: webform_submission_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: webform_submission_field
+          label: Department
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          webform_element_format: value
+          webform_multiple_value: true
+          webform_multiple_delta: 0
+          webform_check_access: 1
+        webform_submission_value_7:
+          id: webform_submission_value_7
+          table: webform_submission_field_teachers_certificate_program_position
+          field: webform_submission_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: webform_submission_field
+          label: Position
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          webform_element_format: value
+          webform_multiple_value: true
+          webform_multiple_delta: 0
+          webform_check_access: 1
+        webform_submission_value_10:
+          id: webform_submission_value_10
+          table: webform_submission_field_teachers_certificate_program_years_in_education
+          field: webform_submission_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: webform_submission_field
+          label: 'Years in Education'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          webform_element_format: value
+          webform_multiple_value: true
+          webform_multiple_delta: 0
+          webform_check_access: 1
+        webform_submission_value_5:
+          id: webform_submission_value_5
+          table: webform_submission_field_teachers_certificate_program_nominators_information
+          field: webform_submission_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: webform_submission_field
+          label: 'Nominators Information'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          webform_element_format: ''
+          webform_multiple_value: true
+          webform_multiple_delta: 0
+          webform_check_access: 1
+        webform_submission_value_3:
+          id: webform_submission_value_3
+          table: webform_submission_field_teachers_certificate_program_nominators_full_name
+          field: webform_submission_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: webform_submission_field
+          label: 'Full Name of Nominator'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          webform_element_format: value
+          webform_multiple_value: true
+          webform_multiple_delta: 0
+          webform_check_access: 1
+        webform_submission_value_8:
+          id: webform_submission_value_8
+          table: webform_submission_field_teachers_certificate_program_relationship_to_nominee
+          field: webform_submission_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: webform_submission_field
+          label: 'Relationship to nominee'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          webform_element_format: value
+          webform_multiple_value: true
+          webform_multiple_delta: 0
+          webform_check_access: 1
+        webform_submission_value:
+          id: webform_submission_value
+          table: webform_submission_field_teachers_certificate_program_contact_information
+          field: webform_submission_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: webform_submission_field
+          label: 'Contact information'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          webform_element_format: value
+          webform_multiple_value: true
+          webform_multiple_delta: 0
+          webform_check_access: 1
+        webform_submission_value_4:
+          id: webform_submission_value_4
+          table: webform_submission_field_teachers_certificate_program_justification_for_recognition
+          field: webform_submission_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: webform_submission_field
+          label: 'Justification for Recognition'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          webform_element_format: file
+          webform_multiple_value: true
+          webform_multiple_delta: 0
+          webform_check_access: 1
         view_webform_submission:
           id: view_webform_submission
           table: webform_submission
@@ -3406,6 +3888,59 @@ display:
           empty_zero: false
           hide_alter_empty: true
           text: view
+          output_url_as_text: false
+          absolute: false
+        edit_webform_submission:
+          id: edit_webform_submission
+          table: webform_submission
+          field: edit_webform_submission
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: webform_submission
+          plugin_id: entity_link_edit
+          label: 'Link to edit Webform submission'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          text: edit
           output_url_as_text: false
           absolute: false
       filters:

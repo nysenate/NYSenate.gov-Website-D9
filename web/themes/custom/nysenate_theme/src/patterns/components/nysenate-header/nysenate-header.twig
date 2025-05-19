@@ -59,7 +59,7 @@
         </div>
       </section>
       <!--.c-header-bar -->
-      <button id="" class="js-mobile-nav--btn c-block--btn c-nav--toggle icon-replace button--menu"></button>
+      <button id="" class="js-mobile-nav--btn c-block--btn c-nav--toggle icon-replace button--menu" aria-label="Site Menu"></button>
       {% if actionbar.type != 'committee' %}
         {% block microsite_hero %}
           {% if microsite_hero %}
@@ -79,7 +79,7 @@
       {% else %}
         <div class="c-nav--wrap">
           <div class="c-nav l-row l-row--nav">
-            <nav>
+            <nav aria-label="main">
               {% block menu %}
                 {%
                   include '@nysenate_theme/main-menu/main-menu.twig' with
@@ -96,7 +96,7 @@
                   <a class="c-site-search--link icon-after__right u-tablet-plus" href="{{ search.link.href }}">{{ search.link.text }}</a>
                 </div>
               </div>
-              <button class="js-search--toggle u-tablet-plus c-site-search--btn GoogleAnalyticsET-processed icon-replace__search">search</button>
+              <button class="js-search--toggle u-tablet-plus c-site-search--btn GoogleAnalyticsET-processed icon-replace__search">open search</button>
               {% if socials %}
                 <ul class="c-nav--social u-mobile-only">
                   {% for social in socials %}

@@ -13,17 +13,23 @@
 
   .c-block--btn,
   .promotional-banner__button.med-bg {
-    display: flex;
-    align-items: center;
-    padding-left: 20px;
+    display: inline;
+    //align-items: center;
+    //padding-left: 20px;
     line-height: 1;
     color: $color-white;
-
-    &::before {
-      display: flex;
-      align-items: center;
+    &:hover {
+      text-decoration: underline;
     }
+    &:before {
+      height: 100%;
+      //margin-right: 0.1em !important;
+      //font-size: 32px;
+      line-height: 80px !important;
+    }
+
   }
+
 
   img {
     display: none;
@@ -53,6 +59,9 @@
   a {
     text-decoration: none;
     color: $color-white;
+    :hover {
+      text-decoration: underline;
+    }
   }
 }
 

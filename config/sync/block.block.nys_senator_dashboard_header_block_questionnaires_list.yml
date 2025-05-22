@@ -1,4 +1,4 @@
-uuid: 6c127b35-0fa7-4cda-b49a-94bdfe9bfb2a
+uuid: 64e15206-3651-47fc-8dc6-46eb55810882
 langcode: en
 status: true
 dependencies:
@@ -8,7 +8,7 @@ dependencies:
     - user
   theme:
     - nys
-id: nys_nyssenatordashboardsenatordashboardheaderblock
+id: nys_senator_dashboard_header_block_questionnaires_list
 theme: nys
 region: above_content
 weight: 0
@@ -16,7 +16,7 @@ provider: null
 plugin: nys_senator_dashboard_header_block
 settings:
   id: nys_senator_dashboard_header_block
-  label: 'NYS Senator Dashboard: Senator Dashboard Header Block'
+  label: 'Senator Dashboard Header Block - Questionnaires list'
   label_display: '0'
   provider: nys_senator_dashboard
   display_image: 0
@@ -24,12 +24,12 @@ settings:
   display_header_title_as_contextual_link: 0
   display_homepage_link: 0
   use_blurb_from_entity: 0
-  header_blurb: "View & connect with Senator's constituents who responded to petitions."
+  header_blurb: "View & connect with Senator's constituents who responded to questionnaires."
 visibility:
   request_path:
     id: request_path
     negate: false
-    pages: /senator-dashboard/constituent-activity/petitions
+    pages: /senator-dashboard/constituent-activity/questionnaires
   user_role:
     id: user_role
     negate: false

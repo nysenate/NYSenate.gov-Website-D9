@@ -9,11 +9,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\nys_senator_dashboard\Service\ManagedSenatorsHandler;
 
 /**
- * Provides an exposed filter for filtering petitions by active senator.
+ * Provides an exposed filter for filtering records linked to an active senator.
  *
- * @ViewsFilter("nys_senator_dashboard_active_senator_petition_filter")
+ * @ViewsFilter("nys_senator_dashboard_active_senator_filter")
  */
-class ActiveSenatorPetitionFilter extends FilterPluginBase implements ContainerFactoryPluginInterface {
+class ActiveSenatorFilter extends FilterPluginBase implements ContainerFactoryPluginInterface {
 
   /**
    * The Managed Senators Handler service.
@@ -23,7 +23,7 @@ class ActiveSenatorPetitionFilter extends FilterPluginBase implements ContainerF
   protected $managedSenatorsHandler;
 
   /**
-   * Constructs the ActiveSenatorSponsorFilter plugin.
+   * Constructs the ActiveSenatorFilter plugin.
    *
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.

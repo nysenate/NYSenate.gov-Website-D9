@@ -213,6 +213,7 @@ class SenatorDashboardMenuBlock extends BlockBase implements ContainerFactoryPlu
     $transformed_tree = $this->menuLinkTree->transform($tree, $manipulators);
     $render_array = $this->menuLinkTree->build($transformed_tree);
 
+    // @todo Re-implement as menu link tree manipulator.
     if ($include_description) {
       if (isset($render_array['#items']) && is_array($render_array['#items'])) {
         $this->attachDescriptionsRecursively($render_array['#items']);

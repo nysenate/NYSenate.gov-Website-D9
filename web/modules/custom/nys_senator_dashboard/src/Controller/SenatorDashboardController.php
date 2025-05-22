@@ -103,11 +103,4 @@ class SenatorDashboardController extends ControllerBase {
     return "{$entity?->label()} | Constituent Activity" ?? $title;
   }
 
-  /**
-   * Placeholder method to test menu and breadcrumbs.
-   */
-  public function tempPlaceholder() {
-    return [];
-  }
-
 }

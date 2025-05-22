@@ -5,10 +5,10 @@
  * Contains custom module logic for NYS Senator Dashboard.
  */
 
-use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\flag\Plugin\Flag\EntityFlagType;
+use Drupal\node\NodeInterface;
 
 /**
  * Implements hook_query_TAG_alter().
@@ -156,11 +156,11 @@ function nys_senator_dashboard_views_data() {
       'id' => 'nys_senator_dashboard_active_senator_sponsor_filter',
     ],
   ];
-  $data['node__field_senator_multiref']['nys_senator_dashboard_active_senator_petition_filter'] = [
-    'title' => t('NYS Senator Dashboard: Active senator petition filter'),
-    'help' => t('Filter petitions to those by the active senator.'),
+  $data['node__field_senator_multiref']['nys_senator_dashboard_active_senator_filter'] = [
+    'title' => t('NYS Senator Dashboard: Active managed senator filter'),
+    'help' => t("Filter nodes to those linked to the user's active managed senator."),
     'filter' => [
-      'id' => 'nys_senator_dashboard_active_senator_petition_filter',
+      'id' => 'nys_senator_dashboard_active_senator_filter',
       'field' => 'field_senator_multiref_target_id',
       'group' => t('Content'),
     ],
@@ -229,10 +229,26 @@ function nys_senator_dashboard_entity_extra_field_info() {
     'visible' => FALSE,
   ];
 
-  $extra['node']['petition']['display']['nys_senator_dashboard_status'] = [
-    'label' => t('NYS Senator Dashboard: Petition status'),
-    'description' => t('Displays the petition status.'),
+  $nys_senator_dashboard_status = [
+    'label' => t('NYS Senator Dashboard: Active status'),
+    'description' => t('Displays the nodes status as Active or Inactive.'),
     'weight' => 14,
+    'visible' => FALSE,
+  ];
+  $extra['node']['petition']['display']['nys_senator_dashboard_status'] = $nys_senator_dashboard_status;
+  $extra['node']['webform']['display']['nys_senator_dashboard_status'] = $nys_senator_dashboard_status;
+
+  $extra['node']['webform']['display']['nys_senator_dashboard_constituents_response_count'] = [
+    'label' => t('NYS Senator Dashboard: Questionnaire constituents response count'),
+    'description' => t('Displays the constituents response count as link to the constituents list.'),
+    'weight' => 15,
+    'visible' => FALSE,
+  ];
+
+  $extra['node']['webform']['display']['nys_senator_dashboard_webform_submissions_download'] = [
+    'label' => t('NYS Senator Dashboard: Link to webform submissions download form'),
+    'description' => t('Displays a link to the webform submissions download form.'),
+    'weight' => 16,
     'visible' => FALSE,
   ];
 
@@ -305,8 +321,7 @@ function nys_senator_dashboard_entity_view(array &$build, \Drupal\Core\Entity\En
       );
       $in_district_flagging_count = _nys_senator_dashboard_get_in_district_flagging_count(
         $flag->id(),
-        $entity->getEntityTypeId(),
-        $entity->id()
+        $entity->getEntityTypeId()
       );
       $out_district_flagging_count = $flagging_count - $in_district_flagging_count;
       $in_count = t('@in_count in-district', ['@in_count' => $in_district_flagging_count]);
@@ -342,6 +357,38 @@ function nys_senator_dashboard_entity_view(array &$build, \Drupal\Core\Entity\En
       ],
     ];
   }
+
+  if ($display->getComponent('nys_senator_dashboard_constituents_response_count')) {
+    $url = "/senator-dashboard/constituent-activity/questionnaires/{$entity->id()}";
+    $constituent_response_count = _nys_senator_dashboard_get_in_district_webform_submission_count($entity);
+    $build['nys_senator_dashboard_constituents_response_count'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'a',
+      '#value' => t(
+        '@constituent_response_count constituent(s) responded',
+        ['@constituent_response_count' => $constituent_response_count]
+      ),
+      '#attributes' => [
+        'href' => $url,
+        'class' => ['c-senator-dashboard-questionnaire-teaser--link-to-constituents-list'],
+      ]
+    ];
+  }
+
+  if ($display->getComponent('nys_senator_dashboard_webform_submissions_download')) {
+    $webform_id = $entity->webform?->entity?->id();
+    if ($webform_id) {
+      $build['nys_senator_dashboard_webform_submissions_download'] = [
+        '#type' => 'html_tag',
+        '#tag' => 'a',
+        '#value' => t('Download all responses (CSV)'),
+        '#attributes' => [
+          'href' => "/admin/webform/manage/$webform_id/results/download",
+          'class' => ['c-senator-dashboard-questionnaire-teaser--webform-submissions-download'],
+        ]
+      ];
+    }
+  }
 }
 
 /**
@@ -358,8 +405,8 @@ function nys_senator_dashboard_entity_view(array &$build, \Drupal\Core\Entity\En
  *   The number of flaggings for the given entity and flag type.
  */
 function _nys_senator_dashboard_get_flagging_count($flag_id, $entity_type, $entity_id) {
-  $connection = Database::getConnection();
-  $query = $connection->select('flag_counts', 'fc')
+  $query = \Drupal::database()
+    ->select('flag_counts', 'fc')
     ->fields('fc', ['count'])
     ->condition('fc.flag_id', $flag_id)
     ->condition('fc.entity_type', $entity_type)
@@ -368,7 +415,7 @@ function _nys_senator_dashboard_get_flagging_count($flag_id, $entity_type, $enti
   try {
     $result = $query->execute()->fetchField();
   }
-  catch (Exception) {
+  catch (\Exception) {
     return 0;
   }
   return (int) ($result ?: 0);
@@ -379,22 +426,20 @@ function _nys_senator_dashboard_get_flagging_count($flag_id, $entity_type, $enti
  *
  * @param string $flag_id
  *   The ID of the flag type.
- * @param string $entity_type
- *   The entity type (e.g., 'node', 'user', etc.).
  * @param int $entity_id
  *   The ID of the entity being flagged.
  *
  * @return int
- *   The number of in-district flaggings for the given entity and flag type.
+ *   The number of in-district flaggings for the given flag and entity IDs.
  */
-function _nys_senator_dashboard_get_in_district_flagging_count($flag_id, $entity_type, $entity_id) {
-  // Get active managed senator district ID.
+function _nys_senator_dashboard_get_in_district_flagging_count($flag_id, $entity_id) {
   $active_senator_district_id = \Drupal::service('nys_senator_dashboard.managed_senators_handler')
     ->getActiveSenatorDistrictId();
+  if (!$active_senator_district_id) {
+    return 0;
+  }
 
-  // Set up the query.
-  $connection = Database::getConnection();
-  $query = $connection->select('flagging', 'f');
+  $query = \Drupal::database()->select('flagging', 'f');
   $query->innerJoin(
     'user__field_district',
     'ufd',
@@ -403,12 +448,34 @@ function _nys_senator_dashboard_get_in_district_flagging_count($flag_id, $entity
   $query->condition('f.flag_id', $flag_id)
     ->condition('f.entity_id', $entity_id)
     ->condition('ufd.field_district_target_id', $active_senator_district_id);
+  $count = $query->countQuery()->execute()->fetchField();
 
-  try {
-    $result = $query->countQuery()->execute()->fetchField();
-  }
-  catch (Exception) {
+  return (int) ($count ?: 0);
+}
+
+/**
+ * Gets the count of in-district constituents who submitted to the webform.
+ *
+ * @param \Drupal\node\NodeInterface $node
+ *   The node entity, expected to be of type "webform".
+ *
+ * @return int
+ *   The count of in-district constituents who submitted to the webform.
+ */
+function _nys_senator_dashboard_get_in_district_webform_submission_count(NodeInterface $node) {
+  $active_senator_district_id = \Drupal::service('nys_senator_dashboard.managed_senators_handler')
+    ->getActiveSenatorDistrictId();
+  $webform_id = $node->webform?->target_id;
+  if (!$webform_id || !$active_senator_district_id) {
     return 0;
   }
-  return (int) ($result ?: 0);
+
+  $query = \Drupal::database()
+    ->select('webform_submission', 'ws');
+  $query->join('user__field_district', 'ufd', 'ws.uid = ufd.entity_id');
+  $query->condition('ws.webform_id', $webform_id);
+  $query->condition('ufd.field_district_target_id', $active_senator_district_id);
+  $count = $query->countQuery()->execute()->fetchField();
+
+  return (int) $count;
 }

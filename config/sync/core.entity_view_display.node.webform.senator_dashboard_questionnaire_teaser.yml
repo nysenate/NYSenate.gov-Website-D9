@@ -1,22 +1,24 @@
-uuid: d8ce7508-d532-4938-a20d-ab08f31c0c97
+uuid: 0de1000f-1a28-43a3-9744-81bf96ac3e6a
 langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_mode.node.nys_senator_dashboard_petition_teaser
-    - field.field.node.petition.body
-    - field.field.node.petition.field_article_author
-    - field.field.node.petition.field_date
-    - field.field.node.petition.field_expiration_date
-    - field.field.node.petition.field_featured
-    - field.field.node.petition.field_image_main
-    - field.field.node.petition.field_issues
-    - field.field.node.petition.field_last_notified
-    - field.field.node.petition.field_senator_multiref
-    - field.field.node.petition.field_subhead
-    - field.field.node.petition.field_title_stub
-    - field.field.node.petition.rabbit_hole__settings
-    - node.type.petition
+    - core.entity_view_mode.node.senator_dashboard_questionnaire_teaser
+    - field.field.node.webform.body
+    - field.field.node.webform.field_accessible_sitewide
+    - field.field.node.webform.field_article_author
+    - field.field.node.webform.field_byline
+    - field.field.node.webform.field_committee
+    - field.field.node.webform.field_date
+    - field.field.node.webform.field_expiration_date
+    - field.field.node.webform.field_image_main
+    - field.field.node.webform.field_issues
+    - field.field.node.webform.field_last_notified
+    - field.field.node.webform.field_senator_multiref
+    - field.field.node.webform.field_title_stub
+    - field.field.node.webform.rabbit_hole__settings
+    - field.field.node.webform.webform
+    - node.type.webform
   module:
     - datetime
     - field_label_override
@@ -30,15 +32,14 @@ third_party_settings:
   sdc_display:
     enabled: true
     component:
-      machine_name: 'nys:senator-dashboard-petition-teaser'
+      machine_name: 'nys:senator-dashboard-questionnaire-teaser'
       show_deprecated: null
     mappings:
       static:
         props:
-          title: Petition
-          signings: ''
-          in_out_district_signings: ''
-          link_to_constituents_list: ''
+          title: Questionnaire
+          constituents_response_count: ''
+          webform_submissions_download: ''
           byline: ''
           status: ''
           date: ''
@@ -46,17 +47,18 @@ third_party_settings:
       dynamic:
         props:
           title: title
-          signings: nys_senator_dashboard_flag_count_sign_petition
-          in_out_district_signings: nys_senator_dashboard_district_flag_count_sign_petition
-          link_to_constituents_list: nys_senator_dashboard_link_to_constituents_list
+          constituents_response_count: nys_senator_dashboard_constituents_response_count
+          webform_submissions_download: nys_senator_dashboard_webform_submissions_download
           byline: field_senator_multiref
           status: nys_senator_dashboard_status
           date: field_date
           expiration_date: field_expiration_date
-id: node.petition.nys_senator_dashboard_petition_teaser
+_core:
+  default_config_hash: 3r1i0UMUbeNHhvmiqHDYznoS4G9XR1jq6lQ49r80lDE
+id: node.webform.senator_dashboard_questionnaire_teaser
 targetEntityType: node
-bundle: petition
-mode: nys_senator_dashboard_petition_teaser
+bundle: webform
+mode: senator_dashboard_questionnaire_teaser
 content:
   field_date:
     type: datetime_default
@@ -73,7 +75,7 @@ content:
       field_label_override:
         label_override: 'Start:'
         preserve_label: false
-    weight: 5
+    weight: 4
     region: content
   field_expiration_date:
     type: datetime_default
@@ -82,10 +84,15 @@ content:
       timezone_override: ''
       format_type: publish_date
     third_party_settings:
+      sdc_display:
+        enabled: 0
+        component:
+          machine_name: null
+          show_deprecated: 0
       field_label_override:
         label_override: 'End:'
         preserve_label: false
-    weight: 6
+    weight: 5
     region: content
   field_senator_multiref:
     type: entity_reference_label
@@ -94,46 +101,41 @@ content:
       link: true
     third_party_settings:
       field_label_override:
-        label_override: 'By:'
+        label_override: 'By: '
         preserve_label: false
-    weight: 3
+    weight: 2
     region: content
-  nys_senator_dashboard_district_flag_count_sign_petition:
-    settings: {  }
-    third_party_settings: {  }
-    weight: 1
-    region: content
-  nys_senator_dashboard_flag_count_sign_petition:
+  nys_senator_dashboard_constituents_response_count:
     settings: {  }
     third_party_settings: {  }
     weight: 0
     region: content
-  nys_senator_dashboard_link_to_constituents_list:
-    settings: {  }
-    third_party_settings: {  }
-    weight: 2
-    region: content
   nys_senator_dashboard_status:
     settings: {  }
     third_party_settings: {  }
-    weight: 4
+    weight: 3
+    region: content
+  nys_senator_dashboard_webform_submissions_download:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
     region: content
 hidden:
   body: true
   entity_print_view_epub: true
   entity_print_view_pdf: true
   entity_print_view_word_docx: true
+  field_accessible_sitewide: true
   field_article_author: true
-  field_featured: true
+  field_byline: true
+  field_committee: true
   field_image_main: true
   field_issues: true
   field_last_notified: true
-  field_subhead: true
   field_title_stub: true
-  flag_sign_petition: true
   langcode: true
   links: true
-  nys_senator_dashboard_flag_link_sign_petition: true
   private_message_link: true
   rabbit_hole__settings: true
   search_api_excerpt: true
+  webform: true

@@ -1,0 +1,22 @@
+@use 'partials' as *;
+
+.u-button {
+  @include type-scale(body, button);
+  appearance: none;
+  background-color: #fff;
+  border: none;
+  border-radius: 0;
+  color: var(--nys-color-button-blue);
+  font-family: var(--nys-ff-sans);
+  display: inline-block;
+  letter-spacing: 1px;
+  padding: 12px 20px;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-transform: uppercase;
+  transition: text-decoration-color .35s ease-in-out;
+
+  &:hover {
+    text-decoration-color: currentColor;
+  }
+}

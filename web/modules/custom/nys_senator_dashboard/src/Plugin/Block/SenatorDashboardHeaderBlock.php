@@ -364,12 +364,12 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
    * @return string
    *   The homepage URL.
    */
-  private function getHomepageUrl(): string {
-    $homepage_url = '';
+  private function getHomepageUrl(): ?Url {
     if ($this->configuration['display_homepage_link']) {
       $homepage_url = $this->managedSenatorsHandler->getActiveSenatorHomepageUrl();
+      return Url::fromUri($homepage_url);
     }
-    return $homepage_url;
+    return NULL;
   }
 
   /**

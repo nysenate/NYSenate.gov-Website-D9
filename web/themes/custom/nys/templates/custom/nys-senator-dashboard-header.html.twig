@@ -1,7 +1,17 @@
+{% set actions = [] %}
+
+{% if homepage_url %}
+  {% set action = include('nys:button', {
+    label: "Visit senator's homepage"|t,
+    url: homepage_url,
+  }, with_context = false) %}
+  {% set actions = actions|merge([action]) %}
+{% endif %}
+
 {{ include('nys:senator-dashboard-header', {
   image_url: senator_image_url,
-  breadcrumbs: breadcrumbs,
+  eyebrow: breadcrumbs,
   title: header_title,
   intro: header_blurb,
-  homepage_url: homepage_url,
+  actions: actions,
 }, with_context = false) }}

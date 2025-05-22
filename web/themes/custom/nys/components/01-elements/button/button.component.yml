@@ -1,0 +1,21 @@
+$schema: https://git.drupalcode.org/project/sdc/-/raw/1.x/src/metadata.schema.json
+name: Button
+status: "experimental"
+description: A button standard component.
+props:
+  type: object
+  required:
+    - label
+  properties:
+    label:
+      type: string
+      title: Label
+      description: The label text.
+    url:
+      type: string
+      title: URL
+      description: The button link.
+    style:
+      type: string
+      title: Style
+      description: The style variation of the button.

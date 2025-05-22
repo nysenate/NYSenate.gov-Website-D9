@@ -1,3 +1,5 @@
+@use 'partials' as *;
+
 // ------------------------------------
 // Base site typography
 // ------------------------------------
@@ -17,3 +19,14 @@
   --nys-fw-normal: 400;
   --nys-fw-bold: 700;
 }
+
+$type-scale: (
+  heading: (
+    dashboard: (
+      sm: (32, 48),
+      md: (32, 48),
+      lg: (32, 48),
+    ),
+  ),
+);
+@include type-scale-custom-props($type-scale);

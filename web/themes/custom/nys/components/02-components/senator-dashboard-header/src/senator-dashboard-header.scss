@@ -1,0 +1,41 @@
+@use 'partials' as *;
+
+.c-senator-dashboard-header {
+  background-color: var(--nys-color-darker-blue);
+  display: flex;
+  gap: 60px;
+  padding: 40px 120px;
+}
+
+.c-senator-dashboard-header__image {
+  @include square(160px);
+  border-radius: 50%;
+  margin: 0;
+  overflow: hidden;
+
+  img {
+    @include square(100%);
+    object-fit: cover;
+  }
+}
+
+.c-senator-dashboard-header__content {
+  flex: 1;
+}
+
+.c-senator-dashboard-header__title,
+.c-senator-dashboard-header__intro {
+  color: #fff;
+}
+
+.c-senator-dashboard-header__title {
+  @include type-scale(heading, dashboard);
+  font-family: var(--nys-ff-serif-regular);
+  font-weight: 400;
+  margin: 0 0 8px;
+}
+
+.c-senator-dashboard-header__intro {
+  font-style: italic;
+  margin: 0;
+}

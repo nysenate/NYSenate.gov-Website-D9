@@ -39,9 +39,7 @@
     {% endif %}
     {{ title_suffix }}
 
-    {% embed "@nysenate_theme/nysenate-dashboard/nysenate-dashboard.twig" with {
-      content,
-    } %}
+    {% embed 'nys:senator-dashboard-menu-wrapper' with { content } only %}
       {% block content %}
         {{ content }}
       {% endblock %}

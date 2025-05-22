@@ -82,13 +82,15 @@ function nys_preprocess_nys_senator_dashboard__set_active_senator_menu(&$variabl
     }
   }
 
-  $active_link['url'] = !empty($active_link['url'])
-    ? Url::fromRoute('<button>')
-    : Url::fromUri($active_link['homepage_url']);
+  if (!empty($active_link)) {
+    $active_link['url'] = !empty($active_link['url'])
+      ? Url::fromRoute('<button>')
+      : Url::fromUri($active_link['homepage_url']);
 
-  $active_link['icon'] = 'briefcase';
-  $active_link['below'] = $additional_links;
-  $variables['items'][] = $active_link;
+    $active_link['icon'] = 'briefcase';
+    $active_link['below'] = $additional_links;
+    $variables['items'][] = $active_link;
+  }
 
   _nys_prepare_menu_items($variables['items']);
 }

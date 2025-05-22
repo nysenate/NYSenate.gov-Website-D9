@@ -77,6 +77,15 @@ function nys_senator_dashboard_query_senators_constituents_only_alter(AlterableI
  */
 function nys_senator_dashboard_theme() {
   return [
+    'nys_senator_dashboard_header' => [
+      'variables' => [
+        'senator_image_url' => '',
+        'breadcrumbs' => '',
+        'header_title' => '',
+        'header_blurb' => '',
+        'homepage_url' => '',
+      ],
+    ],
     'nys_senator_dashboard__set_active_senator_menu' => [
       'variables' => [
         'mode' => '',

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\nys_senator_dashboard\Plugin\Block;
 
 use Drupal\Core\Block\Attribute\Block;
@@ -228,16 +230,14 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
     $header_title = $this->getHeaderTitle();
     $header_blurb = $this->getHeaderBlurb();
     $homepage_url = $this->getHomepageUrl();
+
     return [
-      '#type' => 'component',
-      '#component' => 'nys:senator-dashboard-header-block',
-      '#props' => [
-        'senator_image_url' => $senator_image_url,
-        'breadcrumbs' => $breadcrumbs,
-        'header_title' => $header_title,
-        'header_blurb' => $header_blurb,
-        'homepage_url' => $homepage_url,
-      ],
+      '#theme' => 'nys_senator_dashboard_header',
+      '#senator_image_url' => $senator_image_url,
+      '#breadcrumbs' => $breadcrumbs,
+      '#header_title' => $header_title,
+      '#header_blurb' => $header_blurb,
+      '#homepage_url' => $homepage_url,
     ];
   }
 
@@ -264,7 +264,17 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
           $image_file = $headshot_media->field_image->entity;
           if ($image_file instanceof File) {
             $image_uri = $image_file->getFileUri();
-            $senator_image_url = $this->fileUrlGenerator->generateAbsoluteString($image_uri);
+            $image_style = $this->configuration['image_style'];
+
+            if (!empty($image_style)) {
+              $image_style_storage = $this->entityTypeManager->getStorage('image_style');
+              /** @var \Drupal\image\ImageStyleInterface */
+              $image_style = $image_style_storage->load($image_style);
+              $senator_image_url = $image_style->buildUrl($image_uri);
+            }
+            else {
+              $senator_image_url = $this->fileUrlGenerator->generateAbsoluteString($image_uri);
+            }
           }
         }
       }
@@ -305,8 +315,8 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
    * @return string
    *   The header title.
    */
-  private function getHeaderTitle(): string {
-    $header_title = 'Senator Dashboard';
+  private function getHeaderTitle(): string|TranslatableMarkup {
+    $header_title = $this->t('Senator Dashboard');
     $route = $this->routeMatch->getRouteObject();
     $current_request = $this->requestStack->getCurrentRequest();
     $header_title = $this->titleResolver
@@ -365,38 +375,62 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
   /**
    * {@inheritdoc}
    */
-  public function blockForm($form, FormStateInterface $form_state) {
+  public function blockForm($form, FormStateInterface $form_state): array {
     $config = $this->getConfiguration();
+
     $form['display_image'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Display Senator Image'),
       '#default_value' => $config['display_image'],
     ];
+
+    $form['image_style'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Image Style'),
+      '#default_value' => $config['image_style'],
+      '#options' => image_style_options(),
+      '#states' => [
+        'visible' => [
+          ':input[name*="settings[display_image]"]' => ['checked' => TRUE],
+        ],
+      ],
+    ];
+
     $form['display_breadcrumbs'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Display breadcrumbs'),
       '#default_value' => $config['display_breadcrumbs'],
     ];
+
     $form['display_header_title_as_contextual_link'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Display header title as link to contextual filter entity'),
       '#default_value' => $config['display_header_title_as_contextual_link'],
     ];
+
     $form['display_homepage_link'] = [
       '#type' => 'checkbox',
       '#title' => $this->t("Display link to senator's homepage"),
       '#default_value' => $config['display_homepage_link'],
     ];
+
     $form['use_blurb_from_entity'] = [
       '#type' => 'checkbox',
       '#title' => $this->t("Use short summary from entity as blurb text"),
       '#default_value' => $config['use_blurb_from_entity'],
     ];
+
     $form['header_blurb'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Header blurb (input will be ignored if using entity blurb)'),
       '#default_value' => $config['header_blurb'],
+      '#states' => [
+        'visible' => [
+          ':input[name*="settings[use_blurb_from_entity]"]' => ['checked' => FALSE],
+        ],
+      ],
     ];
+
     return $form;
   }
 
@@ -411,6 +445,7 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
       'display_homepage_link' => FALSE,
       'use_blurb_from_entity' => FALSE,
       'header_blurb' => '',
+      'image_style' => '',
     ];
   }
 
@@ -424,6 +459,7 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
     $this->setConfigurationValue('display_homepage_link', $form_state->getValue('display_homepage_link'));
     $this->setConfigurationValue('use_blurb_from_entity', $form_state->getValue('use_blurb_from_entity'));
     $this->setConfigurationValue('header_blurb', $form_state->getValue('header_blurb'));
+    $this->setConfigurationValue('image_style', $form_state->getValue('image_style'));
   }
 
   /**

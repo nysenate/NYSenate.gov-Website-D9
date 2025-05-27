@@ -27,31 +27,29 @@ use SendGrid\Client;
  * Note that the endpoint and API key are not validated.  Improper
  * values in either of these will likely return an HTTP 404, or an
  * ApiResponse\Error object.
- *
- * @todo decide how to handle non-200 responses
  */
 class Request {
 
   /**
    * The timestamp format expected by OL in most queries.
    */
-  const OPENLEG_TIME_FULL = 'Y-m-d\TH:i:s.u';
+  const string OPENLEG_TIME_FULL = 'Y-m-d\TH:i:s.u';
 
   /**
    * The OL time format, sans microseconds.
    */
-  const OPENLEG_TIME_SIMPLE = 'Y-m-d\TH:i:s';
+  const string OPENLEG_TIME_SIMPLE = 'Y-m-d\TH:i:s';
 
   /**
    * The date-only format expected by OL.
    */
-  const OPENLEG_DATE_FORMAT = 'Y-m-d';
+  const string OPENLEG_DATE_FORMAT = 'Y-m-d';
 
-  const DEFAULT_HOST = 'legislation.nysenate.gov';
+  const string DEFAULT_HOST = 'legislation.nysenate.gov';
 
-  const DEFAULT_VERSION = '3';
+  const string DEFAULT_VERSION = '3';
 
-  const DEFAULT_PATH_PREFIX = ['api'];
+  const array DEFAULT_PATH_PREFIX = ['api'];
 
   /**
    * An API key to be used by default. Used when a call does not include one.
@@ -130,7 +128,7 @@ class Request {
    *
    * @see self::buildPathArray()
    */
-  public function __construct(mixed $endpoint = '', array $options = [], ?LoggerInterface $logger = NULL) {
+  public function __construct(array|string $endpoint = '', array $options = [], ?LoggerInterface $logger = NULL) {
     // Initialize endpoint and options.
     $this->logger = $logger;
     $this->setEndpoint($endpoint)->setOptions($options);
@@ -140,7 +138,7 @@ class Request {
    * Sets the API key for the next call.
    *
    * @param string $api_key
-   *   The API key to use for future calls.
+   *   The API key to use for future calls.  Leave empty to use the default.
    *
    * @return $this
    */
@@ -180,7 +178,7 @@ class Request {
    *
    * Https://<host>/<path_prefix>/<version>/<endpoint>/<resource>?<params>
    *
-   * @param null $resource
+   * @param array|string|null $resource
    *   Resource to fetch; last part of the URL.
    * @param array $params
    *   Query parameters to add to the call.
@@ -188,7 +186,7 @@ class Request {
    * @return object|null
    *   JSON-decoded response (could be NULL)
    */
-  public function get($resource = NULL, array $params = []): ?object {
+  public function get(array|string|null $resource = NULL, array $params = []): ?object {
     // Build the primary URL.
     $url = $this->buildHost();
     $resource = implode('/', $this->buildPathArray($resource ?? '')) . '/';
@@ -204,11 +202,21 @@ class Request {
     ]);
     $this->client = new Client($url, NULL, $this->getVersion(), [$extra_path]);
 
+    // Log for debugging, and a warning for non-200 responses.
     $response = $this->client->get('', $params);
+    $response_code = $response->statusCode();
     $this->logger?->debug('Response code @code, length @len', [
-      '@code' => $response->statusCode(),
+      '@code' => $response_code,
       '@len' => strlen($response->body()),
     ]);
+    if ($response_code != 200) {
+      $this->logger?->warning('OL API call to @url (@extra_path) returned @code', [
+        '@url' => $url,
+        '@code' => $response_code,
+        '@extra_path' => $extra_path,
+        '@body' => $response->body(),
+      ]);
+    }
 
     return json_decode($response->body());
   }
@@ -243,14 +251,14 @@ class Request {
   /**
    * Returns the path prefix as either a string or array.
    */
-  public function getPathPrefix($as_array = FALSE): string|array {
+  public function getPathPrefix(bool $as_array = FALSE): string|array {
     return $as_array ? $this->pathPrefix : implode('/', $this->pathPrefix);
   }
 
   /**
    * Sets the path prefix.
    */
-  public function setPathPrefix(mixed $path_prefix = ''): Request {
+  public function setPathPrefix(array|string $path_prefix = ''): Request {
     $this->pathPrefix = $this->buildPathArray($path_prefix ?: static::DEFAULT_PATH_PREFIX);
     return $this;
   }
@@ -288,7 +296,7 @@ class Request {
    * @return string
    *   A built path string.
    */
-  protected function buildEndpoint(array|string $endpoint = NULL): string {
+  protected function buildEndpoint(array|string|null $endpoint = NULL): string {
     if (is_null($endpoint)) {
       $endpoint = $this->endpoint;
     }

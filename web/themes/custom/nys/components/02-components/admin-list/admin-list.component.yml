@@ -1,0 +1,24 @@
+$schema: https://git.drupalcode.org/project/sdc/-/raw/1.x/src/metadata.schema.json
+name: Admin List
+description: List of admin actions.
+props:
+  type: object
+  required:
+    - machine_name
+    - items
+  properties:
+    title:
+      type: string
+      title: Title
+      description: A title for the section.
+    machine_name:
+      type: string
+      title: Machine Name
+      description: A machine name for the list.
+      default: ''
+    items:
+      type: array
+      title: Admin Items
+      description: The admin items.
+      default: []
+

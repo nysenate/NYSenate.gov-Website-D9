@@ -205,6 +205,7 @@ class SenatorDashboardMenuBlock extends BlockBase implements ContainerFactoryPlu
   private function getMenuRenderArray(string $sub_menu = '', bool $include_description = FALSE): array {
     $parameters = new MenuTreeParameters();
     $parameters->setRoot('senator_dashboard' . ($sub_menu ? ".$sub_menu" : ''));
+    $mode = $this->configuration['mode'];
     $tree = $this->menuLinkTree->load('senator-dashboard', $parameters);
     $manipulators = [
       ['callable' => 'menu.default_tree_manipulators:checkAccess'],
@@ -212,6 +213,7 @@ class SenatorDashboardMenuBlock extends BlockBase implements ContainerFactoryPlu
     ];
     $transformed_tree = $this->menuLinkTree->transform($tree, $manipulators);
     $render_array = $this->menuLinkTree->build($transformed_tree);
+    $render_array['#theme'] = "{$render_array['#theme']}__{$mode}";
 
     // @todo Re-implement as menu link tree manipulator.
     if ($include_description) {

@@ -12,7 +12,7 @@ use Drupal\Core\Url;
 /**
  * Implements hook_preprocess_menu().
  */
-function nys_preprocess_menu__senator_dashboard(&$variables) {
+function nys_preprocess_menu__senator_dashboard__header_menu(&$variables) {
   // Find the items that are overview pages.
   $find_overview = function (&$items) {
     foreach ($items as $key => &$item) {
@@ -53,6 +53,23 @@ function nys_preprocess_menu__senator_dashboard(&$variables) {
   }
 
   _nys_prepare_menu_items($variables['items']);
+}
+
+/**
+ * Implements hook_preprocess_menu().
+ */
+function nys_preprocess_menu__senator_dashboard__manage_senator_menu(&$variables) {
+  // Manipulate the data to only show the manage senator links. This is making
+  // several assumptions. The top level is the container for the overall menu.
+  // This is because the menu would likely contain other sections. Below that
+  // there is an overview link we don't want. We'll only need the other items.
+  $variables['items'] = $variables['items']['senator_dashboard.manage_senator']['below'];
+
+  foreach ($variables['items'] as $key => $item) {
+    if (str_ends_with($key, '.overview')) {
+      unset($variables['items'][$key]);
+    }
+  }
 }
 
 /**

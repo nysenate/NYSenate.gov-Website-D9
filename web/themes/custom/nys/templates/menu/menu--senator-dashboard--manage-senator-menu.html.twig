@@ -1,0 +1,8 @@
+
+{% for key, item in items %}
+  {{ include('nys:admin-list', {
+    machine_name: key,
+    items: item.below,
+    title: item.title,
+  }, with_context = false) }}
+{% endfor %}

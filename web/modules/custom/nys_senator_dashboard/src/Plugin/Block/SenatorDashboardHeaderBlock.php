@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\nys_senator_dashboard\Plugin\Block;
 
+use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Breadcrumb\Breadcrumb;
@@ -315,7 +316,7 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
    * @return string
    *   The header title.
    */
-  private function getHeaderTitle(): string|TranslatableMarkup {
+  private function getHeaderTitle(): string|MarkupInterface {
     $header_title = $this->t('Senator Dashboard');
     $route = $this->routeMatch->getRouteObject();
     $current_request = $this->requestStack->getCurrentRequest();

@@ -72,6 +72,7 @@
 #}
 
 {{ attach_library('nysenate_theme/nysenate-senator-list') }}
+{{ attach_library('nysenate_theme/nysenate-senate-directory') }}
 
 <article id="node-{{ node.id }}" class="contextual-links-region {{ classes }}" {{ attributes }}>
 
@@ -82,37 +83,43 @@
           <h2 class="nys-title">{{ title }}</h2>
         </div>
       </div>
-      <div class="panel-pane pane-block pane-nys-blocks-active-senator-count">
+      <!--<div class="panel-pane pane-block pane-nys-blocks-active-senator-count">
         <div class="pane-content">
           {{ header_text }}
         </div>
       </div>
-      <a href="#committees-pre" class="c-container--link">See all Committees and legislative groups</a>
+      <a href="#committees-pre" class="c-container--link">See all Committees and legislative groups</a>-->
     </header>
 
     <div class="l-row">
+      <!--
       <div class="panel-pane pane-block pane-senators">
         <div class="pane-content">
-          {{ senators }}
+        {#
+          {{ senators }}#}
         </div>
       </div>
       <div class="panel-pane pane-block pane-nys-blocks-senate-directories">
         <div class="pane-content">
-          {% include '@nysenate_theme/nysenate-senate-directory/nysenate-senate-directory.twig' with {
+        {#   {% include '@nysenate_theme/nysenate-senate-directory/nysenate-senate-directory.twig' with {
             title: directories.title,
             content: directories.content,
             patternlab: false,
-          } only %}
+          } only %}#}
         </div>
       </div>
     </div>
     <div id="committees" class="l-row">
       <div class="panel-pane pane-block pane-nys-blocks-senate-directories">
         <div class="pane-content">
-          {{ committees }}
+        {#   {{ committees }} #}
         </div>
       </div>
     </div>
+    -->
+    {{ content|without('field_date', 'field_show_date', 'field_show_issues') }}
+    </div>
+
     <div class="l-row">
       <div class="panel-pane pane-views pane-promo-banner-senators-committees">
         {{ drupal_view('global_promo_banner', 'global_promo_banner') }}

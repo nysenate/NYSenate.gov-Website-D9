@@ -1,0 +1,16 @@
+
+{% set classes = [
+  'l-columns',
+  'l-columns--count-' ~ columns|length,
+  'l-columns--style-' ~ style|default('spaced'),
+] %}
+
+<div class="l-columns-container">
+  <div {{ attributes.addClass(classes) }}>
+    {% for column in columns %}
+      <div class="l-columns__column">
+        {{ column|raw }}
+      </div>
+    {% endfor %}
+  </div>
+</div>

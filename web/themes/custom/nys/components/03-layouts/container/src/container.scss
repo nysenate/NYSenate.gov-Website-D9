@@ -1,0 +1,33 @@
+@use 'partials' as *;
+
+:root {
+  --nys-container-width: none;
+}
+
+.l-container {
+  padding-block: 80px;
+}
+
+.l-container__content {
+  margin-inline: auto;
+  max-width: var(--nys-container-width);
+  padding-inline: 40px;
+}
+
+.l-container--full {
+  --nys-container-width: none;
+}
+
+// This is aligning with the width of the site header, which is set with
+// percentages. Probably should clean that up at some point.
+.l-container--max {
+  --nys-container-width: 1500px;
+
+  .l-container__content {
+    padding-inline: 9%;
+  }
+}
+
+.l-container--narrow {
+  --nys-container-width: 840px;
+}

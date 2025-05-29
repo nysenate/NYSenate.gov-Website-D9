@@ -1,0 +1,22 @@
+$schema: https://git.drupalcode.org/project/sdc/-/raw/1.x/src/metadata.schema.json
+name: Columns
+description: Lay out content into columns.
+props:
+  type: object
+  required:
+    - columns
+  properties:
+    columns:
+      type: array
+      title: Columns
+      description: The items for columns.
+      default: []
+    style:
+      type: string
+      title: Style
+      description: Style variations for the grid.
+      default: spaced
+      enum:
+        - spaced
+        - ruled
+

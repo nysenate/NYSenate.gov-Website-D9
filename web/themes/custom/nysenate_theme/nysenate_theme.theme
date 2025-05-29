@@ -5092,7 +5092,7 @@ function nysenate_theme_preprocess_node__landing(&$variables) {
  * Implements hook_preprocess_node__NODE_TYPE().
  */
 function nysenate_theme_preprocess_node__landing__senators_committees(&$variables) {
-  foreach ($variables['content']['field_landing_blocks'] as $key => $block) {
+  /*foreach ($variables['content']['field_landing_blocks'] as $key => $block) {
     if (!is_numeric($key)) {
       continue;
     }
@@ -5116,7 +5116,7 @@ function nysenate_theme_preprocess_node__landing__senators_committees(&$variable
         $variables['committees'] = $block['field_views_ref'][0] ?? NULL;
       }
     }
-  }
+  }*/
 
   $variables['how_a_bill_block'] = get_how_a_bill_becomes_law_block();
 }

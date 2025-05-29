@@ -74,7 +74,7 @@
 {{ attach_library('nysenate_theme/nysenate-senator-list') }}
 {{ attach_library('nysenate_theme/nysenate-senate-directory') }}
 
-<article id="node-{{ node.id }}" class="contextual-links-region {{ classes }}" {{ attributes }}>
+<article id="node-{{ node.id }}" class="contextual-links-region landing-page--senators {{ classes }}" {{ attributes }}>
 
   {% if page %}
     <header class="c-block c-senators-committees-header">
@@ -85,7 +85,7 @@
       </div>
       <!--<div class="panel-pane pane-block pane-nys-blocks-active-senator-count">
         <div class="pane-content">
-          {{ header_text }}
+        {#   {{ header_text }}#}
         </div>
       </div>
       <a href="#committees-pre" class="c-container--link">See all Committees and legislative groups</a>-->

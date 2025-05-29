@@ -1,20 +1,22 @@
 @use 'partials' as *;
 
-:root {
-  --nys-columns-gap: 60px;
-  --nys-columns-count: 1;
-}
-
 .l-columns-container {
   container: columns-container / inline-size;
 }
 
 .l-columns {
+  --nys-columns-gap: 40px;
+  --nys-columns-count: 1;
+
   display: grid;
   grid-template-columns: repeat(
     var(--nys-columns-count),
     minmax(0, 1fr)
   );
+
+  @container columns-container (width > 960px) {
+    --nys-columns-gap: 60px;
+  }
 }
 
 .l-columns--count-2 {

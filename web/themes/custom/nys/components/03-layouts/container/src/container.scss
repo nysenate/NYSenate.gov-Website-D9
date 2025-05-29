@@ -3,6 +3,10 @@
 :root {
   --nys-container-spacer: 40px;
   --nys-container-width: none;
+
+  @include bp-min(sm) {
+    --nys-container-spacer: 80px;
+  }
 }
 
 .l-container {
@@ -17,10 +21,6 @@
 
 .l-container--spacer-none {
   --nys-container-spacer: 0;
-}
-
-.l-container--spacer-normal {
-  --nys-container-spacer: 40px;
 }
 
 .l-container--width-full {

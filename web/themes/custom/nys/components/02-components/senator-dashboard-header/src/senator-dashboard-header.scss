@@ -1,14 +1,31 @@
 @use 'partials' as *;
 
+.c-senator-dashboard-header-container {
+  container: senator-dashboard-container / inline-size;
+}
+
 .c-senator-dashboard-header {
   background-color: var(--nys-color-darker-blue);
-  display: flex;
-  gap: 60px;
-  padding: 40px 120px;
+  padding: 40px;
+
+  @container senator-dashboard-container (width > 680px) {
+    display: flex;
+    gap: 20px;
+  }
+
+  @container senator-dashboard-container (width > 800px) {
+    gap: 40px;
+    padding-inline: 80px;
+  }
+
+  @container senator-dashboard-container (width > 1024px) {
+    gap: 60px;
+    padding-inline: 120px;
+  }
 }
 
 .c-senator-dashboard-header__image {
-  @include square(160px);
+  @include square(120px);
   border-radius: 50%;
   margin: 0;
   overflow: hidden;
@@ -16,6 +33,14 @@
   img {
     @include square(100%);
     object-fit: cover;
+  }
+
+  @container senator-dashboard-container (width <= 680px) {
+    margin-block-end: 20px;
+  }
+
+  @container senator-dashboard-container (width > 800px) {
+    @include square(160px);
   }
 }
 

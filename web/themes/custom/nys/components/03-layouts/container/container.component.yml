@@ -6,6 +6,14 @@ props:
   required:
     - width
   properties:
+    spacer:
+      type: string
+      title: Spacer
+      description: The vertical spacing around the container.
+      default: normal
+      enum:
+        - none
+        - normal
     width:
       type: string
       title: Width

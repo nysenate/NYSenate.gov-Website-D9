@@ -1,7 +1,8 @@
 
 {% set classes = [
   'l-container',
-  'l-container--' ~ width|default('max'),
+  'l-container--width-' ~ width|default('max'),
+  'l-container--spacer-' ~ spacer|default('normal'),
 ] %}
 
 <section {{ attributes.addClass(classes) }}>

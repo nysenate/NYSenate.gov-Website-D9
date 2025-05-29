@@ -1,11 +1,12 @@
 @use 'partials' as *;
 
 :root {
+  --nys-container-spacer: 40px;
   --nys-container-width: none;
 }
 
 .l-container {
-  padding-block: 80px;
+  padding-block: var(--nys-container-spacer);
 }
 
 .l-container__content {
@@ -14,13 +15,21 @@
   padding-inline: 40px;
 }
 
-.l-container--full {
+.l-container--spacer-none {
+  --nys-container-spacer: 0;
+}
+
+.l-container--spacer-normal {
+  --nys-container-spacer: 40px;
+}
+
+.l-container--width-full {
   --nys-container-width: none;
 }
 
 // This is aligning with the width of the site header, which is set with
 // percentages. Probably should clean that up at some point.
-.l-container--max {
+.l-container--width-max {
   --nys-container-width: 1500px;
 
   .l-container__content {
@@ -28,6 +37,6 @@
   }
 }
 
-.l-container--narrow {
+.l-container--width-narrow {
   --nys-container-width: 840px;
 }

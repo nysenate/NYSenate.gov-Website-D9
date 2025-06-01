@@ -1,6 +1,5 @@
 
 {% set classes = ['c-admin-list'] %}
-{% do attributes.setAttribute('id', machine_name|clean_unique_id) %}
 
 <nav {{ attributes.addClass(classes) }}>
   {% if title %}

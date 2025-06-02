@@ -1,0 +1,10 @@
+
+{% for item in items %}
+  {{ include('nys:post-it', {
+    title: item.label,
+    data: item.data,
+    id: item.id,
+    url: item.url,
+    icon: item.icon,
+  }, with_context = false) }}
+{% endfor %}

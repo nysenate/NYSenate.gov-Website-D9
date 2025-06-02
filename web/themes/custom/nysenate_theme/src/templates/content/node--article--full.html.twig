@@ -65,7 +65,7 @@
           #}
 
           {% include '@nysenate_theme/issues/issues.twig' with {
-              majority_issue: content.field_majority_issue_tag,
+              majority_issue: content.field_majority_issue_tag.0,
               issues: content.field_issues,
           } only %}
 

@@ -1,10 +1,14 @@
 
-{% for item in items %}
-  {{ include('nys:post-it', {
-    title: item.label,
-    data: item.data,
-    id: item.id,
-    url: item.url,
-    icon: item.icon,
-  }, with_context = false) }}
-{% endfor %}
+{% set grid_items = items|map(item => include('nys:post-it', {
+  title: item.label,
+  data: item.data,
+  id: item.id,
+  url: item.url,
+  icon: item.icon,
+}, with_context = false)) %}
+
+{{ include('nys:grid', {
+  items: grid_items,
+  grid_max: '2',
+  title: 'Year-to-date constituent engagement'|t,
+}, with_context = false) }}

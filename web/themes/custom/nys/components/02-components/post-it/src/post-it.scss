@@ -18,6 +18,7 @@
 }
 
 .c-post-it__title {
+  color: #222;
   flex: 1;
   font-family: var(--nys-ff-serif);
 }
@@ -28,12 +29,20 @@
 }
 
 .c-post-it__data {
-  font-size: rem(48px);
+  font-size: rem(32px);
   line-height: 1.25;
+
+  @include bp-min(md) {
+    font-size: rem(48px);
+  }
 }
 
 .c-post-it__label {
-  font-size: rem(22px);
+  font-size: rem(18px);
+
+  @include bp-min(md) {
+    font-size: rem(22px);
+  }
 }
 
 .c-post-it__link {

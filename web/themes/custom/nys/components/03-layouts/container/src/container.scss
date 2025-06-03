@@ -33,7 +33,11 @@
   --nys-container-width: 1500px;
 
   .l-container__content {
-    padding-inline: 9%;
+    padding-inline: 20px;
+
+    @include bp-min(sm) {
+      padding-inline: 9%;
+    }
   }
 }
 

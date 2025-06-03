@@ -95,19 +95,21 @@
 
   {{ page.above_content }}
 
-  <main role="main" class="container l-row l-row--main l-main">
-    <a id="main-content" tabindex="-1"></a>{# link is in html.html.twig #}
-    <div {{ attributes.addClass(layout_classes) }}>
+  {% block main %}
+    <main role="main" class="container l-row l-row--main l-main">
+      <a id="main-content" tabindex="-1"></a>{# link is in html.html.twig #}
+      <div {{ attributes.addClass(layout_classes) }}>
 
-      {{ page.content }}
+        {{ page.content }}
 
-      {% if page.sidebar_right %}
-        <aside class="layout-sidebar-right" role="complementary">
-          {{ page.sidebar_right }}
-        </aside>
-      {% endif %}
-    </div>{# /.layout-content #}
-  </main>
+        {% if page.sidebar_right %}
+          <aside class="layout-sidebar-right" role="complementary">
+            {{ page.sidebar_right }}
+          </aside>
+        {% endif %}
+      </div>{# /.layout-content #}
+    </main>
+  {% endblock %}
 
   <footer class="l-footer" role="contentinfo">
     <div id="footer-first">

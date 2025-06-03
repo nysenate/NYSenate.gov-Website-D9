@@ -1,0 +1,48 @@
+@use 'partials' as *;
+
+.c-admin-list {
+  @include grid(1, 20px);
+}
+
+.c-admin-list__title {
+  @include type-scale(heading, dashboard);
+  font-family: var(--nys-ff-serif);
+  font-weight: 300;
+  margin: 0;
+}
+
+.c-admin-list__items {
+  @include grid(1, 20px);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.c-admin-list__item {
+  @include grid(1, 8px);
+}
+
+.c-admin-list__action,
+.c-admin-list__description {
+  margin: 0;
+}
+
+.c-admin-list__action {
+  @include type-scale(heading, action-list);
+  color: var(--nys-color-button-blue);
+}
+
+.c-admin-list__description {
+  @include type-scale(body, small);
+  font-family: var(--nys-ff-sans);
+}
+
+.c-admin-list__link {
+  color: currentColor;
+  text-decoration: underline;
+  transition: text-decoration-color .35s ease-in-out;
+
+  &:hover {
+    text-decoration-color: transparent;
+  }
+}

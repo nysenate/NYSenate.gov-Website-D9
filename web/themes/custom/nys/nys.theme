@@ -5,14 +5,31 @@
  * Functions to support theming in the NY Senate theme.
  */
 
+declare(strict_types=1);
+
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
 
 /**
+ * Implements hook_preprocess_nys_senator_dashboard_constituent_engagement().
+ */
+function nys_preprocess_nys_senator_dashboard_constituent_engagement(&$variables) {
+  foreach ($variables['items'] as &$item) {
+    $item['icon'] = match ($item['id']) {
+      'new-constituents' => 'group',
+      'responses-to-bills' => 'gavel',
+      'responses-to-petitions' => 'question',
+      'responses-to-questionnaires' => 'clipboard',
+      default => '',
+    };
+  }
+}
+
+/**
  * Implements hook_preprocess_menu().
  */
-function nys_preprocess_menu__senator_dashboard(&$variables) {
+function nys_preprocess_menu__senator_dashboard__header_menu(&$variables) {
   // Find the items that are overview pages.
   $find_overview = function (&$items) {
     foreach ($items as $key => &$item) {
@@ -53,6 +70,26 @@ function nys_preprocess_menu__senator_dashboard(&$variables) {
   }
 
   _nys_prepare_menu_items($variables['items']);
+}
+
+/**
+ * Implements hook_preprocess_menu().
+ */
+function nys_preprocess_menu__senator_dashboard__manage_senator_menu(&$variables) {
+  $variables['items'] = _nys_prepare_activity_menu_items(
+    $variables['items'],
+    'senator_dashboard.manage_senator'
+  );
+}
+
+/**
+ * Implements hook_preprocess_menu().
+ */
+function nys_preprocess_menu__senator_dashboard__constituent_activity_menu(&$variables) {
+  $variables['items'] = _nys_prepare_activity_menu_items(
+    $variables['items'],
+    'senator_dashboard.constituent_activity'
+  );
 }
 
 /**
@@ -141,4 +178,31 @@ function _nys_prepare_menu_items(array &$items) {
       _nys_prepare_menu_items($item['below']);
     }
   }
+}
+
+/**
+ * Remove extra items from passed items for a senator dashboard overview page.
+ *
+ * @param array $items
+ *   The menu items.
+ * @param string $parent
+ *   The menu route items to clean up.
+ *
+ * @return array
+ *   The cleaned up menu items.
+ */
+function _nys_prepare_activity_menu_items(array $items = [], string $parent = ''): array {
+  // Manipulate the data to only show the manage senator links. This is making
+  // several assumptions. The top level is the container for the overall menu.
+  // This is because the menu would likely contain other sections. Below that
+  // there is an overview link we don't want. We'll only need the other items.
+  $items = $items[$parent]['below'];
+
+  foreach ($items as $key => $item) {
+    if (str_ends_with($key, '.overview')) {
+      unset($items[$key]);
+    }
+  }
+
+  return $items;
 }

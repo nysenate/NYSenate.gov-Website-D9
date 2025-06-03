@@ -20,7 +20,8 @@
  */
 #}
 
-{{ include('@nysenate_theme/nysenate-dashboard/nysenate-dashboard-menu.twig', {
+{{ include('nys:menu--senator-dashboard', {
   items: items,
-  label: 'Senator Dashboard'|t
+  menu_name: 'senator_dashboard',
+  attributes: attributes,
 }, with_context = false) }}

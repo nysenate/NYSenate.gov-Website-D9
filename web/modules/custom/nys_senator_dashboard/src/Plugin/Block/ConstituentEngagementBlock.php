@@ -137,38 +137,35 @@ class ConstituentEngagementBlock extends BlockBase implements ContainerFactoryPl
     $district = $this->senatorsHelper->loadDistrict($senator);
     $start_of_year = mktime(0, 0, 0, 1, 1, date('Y'));
     return [
-      '#type' => 'component',
-      '#component' => 'nys:constituent-engagement-block',
-      '#props' => [
-        'constituent_engagement_data' => [
-          [
-            'data' => $this->getNewConstituentsCount($district, $start_of_year),
-            'label' => $this->t('New Constituents'),
-            'id' => 'new-constituents',
-            // @todo update link once route implemented.
-            'url' => '',
-          ],
-          [
-            'data' => $this->responsesToBillsCounts($senator, $district, $start_of_year),
-            'label' => $this->t('Responses to Bills'),
-            'id' => 'responses-to-bills',
-            // @todo update link once route implemented.
-            'url' => '',
-          ],
-          [
-            'data' => $this->getPetitionsSignedCount($senator, $start_of_year),
-            'label' => $this->t('Responses to Petitions'),
-            'id' => 'responses-to-petitions',
-            // @todo update link once route implemented.
-            'url' => '',
-          ],
-          [
-            'data' => $this->getQuestionnaireResponseCount($senator, $start_of_year),
-            'label' => $this->t('Responses to Questionnaires'),
-            'id' => 'responses-to-questionnaires',
-            // @todo update link once route implemented.
-            'url' => '',
-          ],
+      '#theme' => 'nys_senator_dashboard_constituent_engagement',
+      '#items' => [
+        [
+          'data' => $this->getNewConstituentsCount($district, $start_of_year),
+          'label' => $this->t('New Constituents'),
+          'id' => 'new-constituents',
+          // @todo update link once route implemented.
+          'url' => '',
+        ],
+        [
+          'data' => $this->responsesToBillsCounts($senator, $district, $start_of_year),
+          'label' => $this->t('Responses to Bills'),
+          'id' => 'responses-to-bills',
+          // @todo update link once route implemented.
+          'url' => '',
+        ],
+        [
+          'data' => $this->getPetitionsSignedCount($senator, $start_of_year),
+          'label' => $this->t('Responses to Petitions'),
+          'id' => 'responses-to-petitions',
+          // @todo update link once route implemented.
+          'url' => '',
+        ],
+        [
+          'data' => $this->getQuestionnaireResponseCount($senator, $start_of_year),
+          'label' => $this->t('Responses to Questionnaires'),
+          'id' => 'responses-to-questionnaires',
+          // @todo update link once route implemented.
+          'url' => '',
         ],
       ],
     ];

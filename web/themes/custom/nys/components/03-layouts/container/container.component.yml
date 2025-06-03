@@ -1,0 +1,29 @@
+$schema: https://git.drupalcode.org/project/sdc/-/raw/1.x/src/metadata.schema.json
+name: Container
+description: A section container that controls width.
+props:
+  type: object
+  required:
+    - width
+  properties:
+    spacer:
+      type: string
+      title: Spacer
+      description: The vertical spacing around the container.
+      default: normal
+      enum:
+        - none
+        - normal
+    width:
+      type: string
+      title: Width
+      description: The container size width.
+      default: max
+      enum:
+        - narrow
+        - max
+        - full
+slots:
+  content:
+    title: Content
+    description: The container content.

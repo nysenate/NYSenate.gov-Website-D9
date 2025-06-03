@@ -1,0 +1,24 @@
+
+{% import 'nys:icons' as icons %}
+{% set classes = ['c-post-it'] %}
+
+<div class="c-post-it-container">
+  <article {{ attributes.addClass(classes) }}>
+    {% if icon is not empty %}
+      <div class="c-post-it__icon" aria-hidden="true">
+        {{ icons.inline(icon) }}
+      </div>
+    {% endif %}
+
+    <h3 class="c-post-it__title">
+      {% if url %}
+        <a href="{{ url }}" class="c-post-it__link">
+      {% endif %}
+      <span class="c-post-it__data">{{ data }}</span>
+      <span class="c-post-it__label">{{ title }}</span>
+      {% if url %}
+        </a>
+      {% endif %}
+    </h3>
+  </article>
+</div>

@@ -1,0 +1,56 @@
+@use 'partials' as *;
+
+.c-post-it-container {
+  container: post-it-container / inline-size;
+}
+
+.c-post-it {
+  align-items: start;
+  background-color: var(--nys-color-gold);
+  display: flex;
+  gap: 12px;
+  padding: 32px;
+}
+
+.c-post-it__icon {
+  margin-block-start: 8px;
+  width: 32px;
+}
+
+.c-post-it__title {
+  color: #222;
+  flex: 1;
+  font-family: var(--nys-ff-serif);
+}
+
+.c-post-it__data,
+.c-post-it__label {
+  display: block;
+}
+
+.c-post-it__data {
+  font-size: rem(32px);
+  line-height: 1.25;
+
+  @include bp-min(md) {
+    font-size: rem(48px);
+  }
+}
+
+.c-post-it__label {
+  font-size: rem(18px);
+
+  @include bp-min(md) {
+    font-size: rem(22px);
+  }
+}
+
+.c-post-it__link {
+  color: currentColor;
+  text-decoration: underline;
+  transition: text-decoration-color .35s ease-in-out;
+
+  &:hover {
+    text-decoration-color: transparent;
+  }
+}

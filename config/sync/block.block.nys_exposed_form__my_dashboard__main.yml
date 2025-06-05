@@ -1,0 +1,36 @@
+uuid: 52f78078-2bc8-4d52-a668-929b8f205e3c
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.my_dashboard
+  module:
+    - system
+    - user
+    - views
+  theme:
+    - nys
+id: nys_exposed_form__my_dashboard__main
+theme: nys
+region: sidebar_right
+weight: -16
+provider: null
+plugin: 'views_exposed_filter_block:my_dashboard-main'
+settings:
+  id: 'views_exposed_filter_block:my_dashboard-main'
+  label: ''
+  label_display: visible
+  provider: views
+  views_label: "Filter content you're following"
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: /dashboard
+  user_role:
+    id: user_role
+    negate: false
+    context_mapping:
+      user: '@user.current_user_context:current_user'
+    roles:
+      authenticated: authenticated

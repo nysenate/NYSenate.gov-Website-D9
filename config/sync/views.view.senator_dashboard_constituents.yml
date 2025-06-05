@@ -142,8 +142,8 @@ display:
           group_type: group
           admin_label: ''
           plugin_id: field
-          label: ''
-          exclude: true
+          label: 'First name'
+          exclude: false
           alter:
             alter_text: false
             text: ''
@@ -205,10 +205,10 @@ display:
           group_type: group
           admin_label: ''
           plugin_id: field
-          label: Name
+          label: 'Last name'
           exclude: false
           alter:
-            alter_text: true
+            alter_text: false
             text: '{{ field_first_name }} {{ field_last_name }}'
             make_link: false
             path: ''
@@ -596,6 +596,105 @@ display:
           empty_zero: false
           hide_alter_empty: true
           display_name: true
+        field_address_administrative_area:
+          id: field_address_administrative_area
+          table: user__field_address
+          field: field_address_administrative_area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: subdivision
+          label: State
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: hidden
+          element_label_type: ''
+          element_label_class: hidden
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          display_name: false
+        field_address_postal_code:
+          id: field_address_postal_code
+          table: user__field_address
+          field: field_address_postal_code
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: standard
+          label: Zip
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: hidden
+          element_label_type: ''
+          element_label_class: hidden
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
       pager:
         type: full
         options:
@@ -605,10 +704,10 @@ display:
           total_pages: null
           id: 0
           tags:
-            next: ›
-            previous: ‹
-            first: «
-            last: »
+            next: 'Next page'
+            previous: 'Previous page'
+            first: 'First page'
+            last: 'Last page'
           expose:
             items_per_page: false
             items_per_page_label: 'Items per page'
@@ -617,7 +716,7 @@ display:
             items_per_page_options_all_label: '- All -'
             offset: false
             offset_label: Offset
-          quantity: 9
+          quantity: 5
       exposed_form:
         type: bef
         options:
@@ -672,20 +771,7 @@ display:
             value: '<p>No constituents found.</p>'
             format: basic_html
           tokenize: false
-      sorts:
-        field_last_name_value:
-          id: field_last_name_value
-          table: user__field_last_name
-          field: field_last_name_value
-          relationship: none
-          group_type: group
-          admin_label: ''
-          plugin_id: standard
-          order: ASC
-          expose:
-            label: ''
-            field_identifier: ''
-          exposed: false
+      sorts: {  }
       arguments: {  }
       filters:
         status:
@@ -858,7 +944,7 @@ display:
             operator: combine_op
             operator_limit_selection: false
             operator_list: {  }
-            identifier: combine
+            identifier: search
             required: false
             remember: false
             multiple: false
@@ -902,6 +988,8 @@ display:
             field_address_address_line2: field_address_address_line2
             field_address_address_line1: field_address_address_line1
             field_address_locality: field_address_locality
+            field_address_postal_code: field_address_postal_code
+            field_address_administrative_area: field_address_administrative_area
       style:
         type: table
         options:
@@ -918,8 +1006,9 @@ display:
             field_address_address_line2: field_address_address_line2
             field_address_address_line1: field_address_address_line1
             field_address_locality: field_address_locality
-            value: value
-          default: '-1'
+            field_address_postal_code: field_address_postal_code
+            field_address_administrative_area: field_address_administrative_area
+          default: field_last_name
           info:
             views_bulk_operations_bulk_form:
               align: ''
@@ -927,7 +1016,7 @@ display:
               empty_column: false
               responsive: ''
             field_first_name:
-              sortable: false
+              sortable: true
               default_sort_order: asc
               align: ''
               separator: ''
@@ -982,7 +1071,14 @@ display:
               separator: ''
               empty_column: false
               responsive: ''
-            value:
+            field_address_postal_code:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            field_address_administrative_area:
               sortable: true
               default_sort_order: asc
               align: ''
@@ -1008,6 +1104,7 @@ display:
           query_tags:
             - senators_constituents_only
       relationships: {  }
+      css_class: simple-pager
       header:
         result:
           id: result
@@ -1141,8 +1238,8 @@ display:
           group_type: group
           admin_label: ''
           plugin_id: field
-          label: ''
-          exclude: true
+          label: 'First name'
+          exclude: false
           alter:
             alter_text: false
             text: ''
@@ -1204,10 +1301,10 @@ display:
           group_type: group
           admin_label: ''
           plugin_id: field
-          label: Name
+          label: 'Last name'
           exclude: false
           alter:
-            alter_text: true
+            alter_text: false
             text: '{{ field_first_name }} {{ field_last_name }}'
             make_link: false
             path: ''
@@ -1237,7 +1334,7 @@ display:
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: true
+          element_label_colon: false
           element_wrapper_type: ''
           element_wrapper_class: ''
           element_default_classes: true
@@ -1595,6 +1692,105 @@ display:
           empty_zero: false
           hide_alter_empty: true
           display_name: true
+        field_address_administrative_area:
+          id: field_address_administrative_area
+          table: user__field_address
+          field: field_address_administrative_area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: subdivision
+          label: State
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: hidden
+          element_label_type: ''
+          element_label_class: hidden
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          display_name: false
+        field_address_postal_code:
+          id: field_address_postal_code
+          table: user__field_address
+          field: field_address_postal_code
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: standard
+          label: Zip
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: hidden
+          element_label_type: ''
+          element_label_class: hidden
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
         value:
           id: value
           table: votingapi_vote
@@ -1913,8 +2109,8 @@ display:
           group_type: group
           admin_label: ''
           plugin_id: field
-          label: ''
-          exclude: true
+          label: 'First name'
+          exclude: false
           alter:
             alter_text: false
             text: ''
@@ -1976,10 +2172,10 @@ display:
           group_type: group
           admin_label: ''
           plugin_id: field
-          label: Name
+          label: 'Last name'
           exclude: false
           alter:
-            alter_text: true
+            alter_text: false
             text: '{{ field_first_name }} {{ field_last_name }}'
             make_link: false
             path: ''
@@ -2009,7 +2205,7 @@ display:
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: true
+          element_label_colon: false
           element_wrapper_type: ''
           element_wrapper_class: ''
           element_default_classes: true
@@ -2367,6 +2563,105 @@ display:
           empty_zero: false
           hide_alter_empty: true
           display_name: true
+        field_address_administrative_area:
+          id: field_address_administrative_area
+          table: user__field_address
+          field: field_address_administrative_area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: subdivision
+          label: State
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: hidden
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          display_name: false
+        field_address_postal_code:
+          id: field_address_postal_code
+          table: user__field_address
+          field: field_address_postal_code
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: standard
+          label: Zip
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: hidden
+          element_label_type: ''
+          element_label_class: hidden
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
         nys_senator_dashboard_contextual_filter_flag_link:
           id: nys_senator_dashboard_contextual_filter_flag_link
           table: users
@@ -2642,8 +2937,8 @@ display:
           group_type: group
           admin_label: ''
           plugin_id: field
-          label: ''
-          exclude: true
+          label: 'First name'
+          exclude: false
           alter:
             alter_text: false
             text: ''
@@ -2705,10 +3000,10 @@ display:
           group_type: group
           admin_label: ''
           plugin_id: field
-          label: Name
+          label: 'Last name'
           exclude: false
           alter:
-            alter_text: true
+            alter_text: false
             text: '{{ field_first_name }} {{ field_last_name }}'
             make_link: false
             path: ''
@@ -2738,7 +3033,7 @@ display:
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: true
+          element_label_colon: false
           element_wrapper_type: ''
           element_wrapper_class: ''
           element_default_classes: true
@@ -3084,6 +3379,106 @@ display:
             preserve_tags: ''
             html: false
           element_type: ''
+          element_class: hidden
+          element_label_type: ''
+          element_label_class: hidden
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          display_name: true
+        field_address_administrative_area:
+          id: field_address_administrative_area
+          table: user__field_address
+          field: field_address_administrative_area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: subdivision
+          label: State
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: hidden
+          element_label_type: ''
+          element_label_class: hidden
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          display_name: false
+        field_address_postal_code:
+          id: field_address_postal_code
+          table: user__field_address
+          field: field_address_postal_code
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: standard
+          label: Zip
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
           element_class: ''
           element_label_type: ''
           element_label_class: ''
@@ -3095,7 +3490,6 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          display_name: true
       arguments:
         entity_id:
           id: entity_id
@@ -3310,8 +3704,8 @@ display:
           group_type: group
           admin_label: ''
           plugin_id: field
-          label: ''
-          exclude: true
+          label: 'First name'
+          exclude: false
           alter:
             alter_text: false
             text: ''
@@ -3373,10 +3767,10 @@ display:
           group_type: group
           admin_label: ''
           plugin_id: field
-          label: Name
+          label: 'Last name'
           exclude: false
           alter:
-            alter_text: true
+            alter_text: false
             text: '{{ field_first_name }} {{ field_last_name }}'
             make_link: false
             path: ''
@@ -3406,7 +3800,7 @@ display:
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: true
+          element_label_colon: false
           element_wrapper_type: ''
           element_wrapper_class: ''
           element_default_classes: true
@@ -3764,6 +4158,105 @@ display:
           empty_zero: false
           hide_alter_empty: true
           display_name: true
+        field_address_administrative_area:
+          id: field_address_administrative_area
+          table: user__field_address
+          field: field_address_administrative_area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: subdivision
+          label: State
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: hidden
+          element_label_type: ''
+          element_label_class: hidden
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          display_name: false
+        field_address_postal_code:
+          id: field_address_postal_code
+          table: user__field_address
+          field: field_address_postal_code
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: standard
+          label: Zip
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: hidden
+          element_label_type: ''
+          element_label_class: hidden
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
         nys_senator_dashboard_contextual_filter_webform_id:
           id: nys_senator_dashboard_contextual_filter_webform_id
           table: users

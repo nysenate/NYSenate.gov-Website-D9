@@ -14,7 +14,6 @@ dependencies:
     - field.storage.node.field_upload_type
     - image.style.thumbnail
     - node.type.student_submission
-    - system.menu.admin
   module:
     - better_exposed_filters
     - colorbox
@@ -2500,6 +2499,7 @@ display:
     display_plugin: page
     position: 1
     display_options:
+      title: 'Earth Day / Thanksgiving'
       exposed_form:
         type: bef
         options:
@@ -2580,18 +2580,24 @@ display:
                   collapsible_disable_automatic_open: false
                   is_secondary: false
       defaults:
+        title: false
         exposed_form: false
       display_extenders: {  }
-      path: admin/content/student-submissions
+      path: admin/content/school-submissions
       menu:
-        type: normal
-        title: 'Manage student submissions'
+        type: 'default tab'
+        title: 'Earth Day / Thanksgiving'
         description: ''
-        weight: 20
+        weight: -20
         expanded: false
         menu_name: admin
         parent: system.admin_content
         context: '0'
+      tab_options:
+        type: none
+        title: ''
+        description: ''
+        weight: 0
       use_admin_theme: true
     cache_metadata:
       max-age: 0

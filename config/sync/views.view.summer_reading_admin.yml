@@ -12,7 +12,6 @@ dependencies:
     - field.storage.paragraph.field_student_books
     - field.storage.paragraph.field_student_name
     - field.storage.taxonomy_term.field_senator
-    - system.menu.admin
     - taxonomy.vocabulary.senator
   module:
     - address
@@ -2885,12 +2884,12 @@ display:
           empty: false
           content: 'Displaying @start - @end of @total'
       display_extenders: {  }
-      path: admin/nyread-submissions
+      path: admin/content/school-submissions/nyread
       menu:
-        type: normal
+        type: tab
         title: 'Summer Reading'
         description: 'Summer Reading Submissions'
-        weight: 0
+        weight: -10
         expanded: false
         menu_name: admin
         parent: entity.webform.collection

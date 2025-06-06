@@ -5,7 +5,6 @@ dependencies:
   config:
     - field.storage.node.field_district
     - field.storage.taxonomy_term.field_senator
-    - system.menu.admin
     - taxonomy.vocabulary.senator
     - user.role.administrator
     - webform.webform.graduation_certificate_program_
@@ -5120,16 +5119,21 @@ display:
     display_options:
       display_description: ''
       display_extenders: {  }
-      path: admin/school-leadership
+      path: admin/content/school-submissions/leadership
       menu:
-        type: normal
-        title: 'Youth Leadership Submissions'
+        type: tab
+        title: 'Youth Leadership'
         description: ''
         weight: 0
         expanded: false
         menu_name: admin
         parent: entity.webform.collection
         context: '0'
+      tab_options:
+        type: tab
+        title: 'School Submissions'
+        description: ''
+        weight: 0
     cache_metadata:
       max-age: 0
       contexts:
@@ -6240,7 +6244,16 @@ display:
           required: false
       display_description: ''
       display_extenders: {  }
-      path: admin/teacher-certificate
+      path: admin/content/school-submissions/teacher-certificate
+      menu:
+        type: tab
+        title: Educators
+        description: ''
+        weight: 0
+        expanded: false
+        menu_name: main
+        parent: ''
+        context: '0'
     cache_metadata:
       max-age: 0
       contexts:
@@ -7457,7 +7470,16 @@ display:
           required: false
       display_description: ''
       display_extenders: {  }
-      path: admin/graduation-certificates
+      path: admin/content/school-submissions/graduation-certificates
+      menu:
+        type: tab
+        title: 'Graduation Certificates'
+        description: ''
+        weight: 0
+        expanded: false
+        menu_name: main
+        parent: ''
+        context: '0'
     cache_metadata:
       max-age: 0
       contexts:

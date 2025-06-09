@@ -38,6 +38,31 @@
     margin: 0;
   }
 
+  .button {
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    background-color: var(--nys-color-white);
+    display: block;
+    padding: 12px 20px;
+    color: var(--nys-color-white);
+    background: var(--nys-color-button-blue);
+    border: 1px solid var(--nys-color-button-blue);
+    height: auto;
+    float: left;
+    margin-right: 0;
+    margin-left: 20px;
+
+    &:hover {
+      background: var(--nys-color-white);
+      color: var(--nys-color-button-blue);
+      border: 1px solid var(--nys-color-button-blue);
+    }
+  }
+
   th.views-field-views-bulk-operations-bulk-form {
     input[type="checkbox"] {
       border-color: #fff;
@@ -120,6 +145,113 @@
       }
     }
   }
+}
+
+.view-header {
+  margin-bottom: 32px;
+}
+
+.view-content {
+  h3 {
+    font-size: 16px;
+  }
+
+  li {
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+  }
+
+  details {
+    margin-bottom: 32px;
+    border: 1px solid #A6A6A6;
+    max-width: 280px;
+  }
+
+  .vbo-multipage-selector {
+    summary {
+      cursor: default;
+    }
+
+    // @todo Remove at template level
+    .details-wrapper {
+      display: none;
+    }
+  }
+
+  .form-item-select-all {
+    position: relative;
+    margin: 16px 12px;
+
+    label {
+      color: var(--nys-color-button-blue);
+      font-weight: 600;
+      font-size: 14px;
+      line-height: normal;
+      text-decoration-line: underline;
+      text-decoration-style: solid;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 2px;
+      margin-left: 20px;
+      text-transform: none;
+
+      &:hover {
+        text-decoration-line: none;
+      }
+    }
+  }
+
+  .vbo-view-form .form-actions {
+    float: right;
+    margin-right: 12px;
+    position: relative;
+
+    &:before {
+      content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20' fill='none'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M11 2.54883C11 1.99654 10.5523 1.54883 10 1.54883C9.44772 1.54883 9 1.99654 9 2.54883V11.0373L5.70711 7.74442C5.31658 7.35389 4.68342 7.35389 4.29289 7.74442C3.90237 8.13494 3.90237 8.76811 4.29289 9.15863L10 14.8657L15.7071 9.15863C16.0976 8.76811 16.0976 8.13494 15.7071 7.74442C15.3166 7.35389 14.6834 7.35389 14.2929 7.74442L11 11.0373V2.54883ZM15 18.4512C15.5523 18.4512 16 18.0035 16 17.4512C16 16.8989 15.5523 16.4512 15 16.4512H5C4.44772 16.4512 4 16.8989 4 17.4512C4 18.0035 4.44772 18.4512 5 18.4512H15Z' fill='%232B6A90'/%3E%3C/svg%3E");
+      color: var(--nys-color-button-blue);
+      position: absolute;
+      top: 0;
+    }
+  }
+
+  input[data-vbo='vbo-action'],
+  .details-wrapper input {
+    background: none;
+    border: none;
+    padding: 0 0 0 22px;
+    text-transform: none;
+    color: var(--nys-color-button-blue);
+    font-weight: 600;
+    font-size: 14px;
+    line-height: normal;
+    text-decoration-line: underline;
+    text-decoration-style: solid;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+    z-index: 1;
+    position: relative;
+    letter-spacing: normal;
+    display: inline;
+    float: none;
+
+    &:hover {
+      text-decoration-line: none;
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
+
+    &#edit-clear {
+      padding: 0;
+      margin: 10px 0 0;
+    }
+  }
+}
+
+.view-footer {
+  margin-top: 60px;
+  margin-bottom: 120px;
+  clear: both;
 }
 
 .view-filters {
@@ -252,103 +384,6 @@
         background: var(--nys-color-white);
         border: 1px solid var(--nys-color-button-blue);
       }
-    }
-  }
-}
-
-.view-header {
-  margin-bottom: 32px;
-}
-
-.view-content {
-  h3 {
-    font-size: 16px;
-  }
-
-  li {
-    font-family: inherit;
-    font-size: inherit;
-    font-weight: inherit;
-  }
-
-  details {
-    margin-bottom: 32px;
-    border: 1px solid #A6A6A6;
-    max-width: 280px;
-  }
-
-  .vbo-multipage-selector {
-    summary {
-      cursor: default;
-    }
-
-    // @todo Remove at template level
-    .details-wrapper {
-      display: none;
-    }
-  }
-
-  .form-item-select-all {
-    position: relative;
-    margin: 16px 12px;
-
-    label {
-      color: var(--nys-color-button-blue);
-      font-weight: 600;
-      font-size: 14px;
-      line-height: normal;
-      text-decoration-line: underline;
-      text-decoration-style: solid;
-      text-decoration-thickness: 1px;
-      text-underline-offset: 2px;
-      margin-left: 20px;
-      text-transform: none;
-
-      &:hover {
-        text-decoration-line: none;
-      }
-    }
-  }
-
-  .vbo-view-form .form-actions {
-    float: right;
-    margin-right: 12px;
-    position: relative;
-
-    &:before {
-      content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20' fill='none'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M11 2.54883C11 1.99654 10.5523 1.54883 10 1.54883C9.44772 1.54883 9 1.99654 9 2.54883V11.0373L5.70711 7.74442C5.31658 7.35389 4.68342 7.35389 4.29289 7.74442C3.90237 8.13494 3.90237 8.76811 4.29289 9.15863L10 14.8657L15.7071 9.15863C16.0976 8.76811 16.0976 8.13494 15.7071 7.74442C15.3166 7.35389 14.6834 7.35389 14.2929 7.74442L11 11.0373V2.54883ZM15 18.4512C15.5523 18.4512 16 18.0035 16 17.4512C16 16.8989 15.5523 16.4512 15 16.4512H5C4.44772 16.4512 4 16.8989 4 17.4512C4 18.0035 4.44772 18.4512 5 18.4512H15Z' fill='%232B6A90'/%3E%3C/svg%3E");
-      color: var(--nys-color-button-blue);
-      position: absolute;
-      top: 0;
-    }
-  }
-
-  input[data-vbo='vbo-action'],
-  .details-wrapper input {
-    background: none;
-    border: none;
-    padding: 0 0 0 22px;
-    text-transform: none;
-    color: var(--nys-color-button-blue);
-    font-weight: 600;
-    font-size: 14px;
-    line-height: normal;
-    text-decoration-line: underline;
-    text-decoration-style: solid;
-    text-decoration-thickness: 1px;
-    text-underline-offset: 2px;
-    z-index: 1;
-    position: relative;
-
-    &:hover {
-      text-decoration-line: none;
-      cursor: pointer;
-      background: none;
-    }
-
-    &#edit-clear {
-      padding: 0;
-      margin: 10px 0 0;
     }
   }
 }

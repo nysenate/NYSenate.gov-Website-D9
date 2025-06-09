@@ -2603,7 +2603,7 @@ display:
           element_type: ''
           element_class: hidden
           element_label_type: ''
-          element_label_class: ''
+          element_label_class: hidden
           element_label_colon: true
           element_wrapper_type: ''
           element_wrapper_class: ''
@@ -4406,7 +4406,7 @@ display:
           admin_label: ''
           plugin_id: text_custom
           empty: false
-          content: "<ul>\r\n  <li>\r\n    <a class=\"button\" href=\"/admin/webform/manage/{{ nys_senator_dashboard_contextual_filter_webform_id|striptags|trim }}/results/submissions\">View all responses</a>\r\n  </li>\r\n  <li>\r\n    <a class=\"button\" href=\"/admin/webform/manage/{{ nys_senator_dashboard_contextual_filter_webform_id|striptags|trim }}/results/analysis\">View analysis</a>\r\n  </li>\r\n  <li>\r\n    <a class=\"button\" href=\"/admin/webform/manage/{{ nys_senator_dashboard_contextual_filter_webform_id|striptags|trim }}/results/download\">Download responses</a>\r\n  </li>\r\n</ul>"
+          content: "<div class=\"questionnaire-responders-links\">\r\n  <a class=\"button\" href=\"/admin/webform/manage/{{ nys_senator_dashboard_contextual_filter_webform_id|striptags|trim }}/results/submissions\">View all responses</a>\r\n  <a class=\"button\" href=\"/admin/webform/manage/{{ nys_senator_dashboard_contextual_filter_webform_id|striptags|trim }}/results/analysis\">View analysis</a>\r\n  <a class=\"button\" href=\"/admin/webform/manage/{{ nys_senator_dashboard_contextual_filter_webform_id|striptags|trim }}/results/download\">Download responses</a>\r\n</div>"
           tokenize: true
       footer:
         area:

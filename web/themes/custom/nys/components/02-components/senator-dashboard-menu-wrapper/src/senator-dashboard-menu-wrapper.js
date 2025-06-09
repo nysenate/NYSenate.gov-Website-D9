@@ -1,8 +1,8 @@
 /* eslint-disable */
 ((Drupal) => {
   Drupal.behaviors.nysDashboard = {
-    dashboardSelector: '.c-nys-dashboard',
-    triggerSelector: '.c-nys-dashboard__trigger',
+    dashboardSelector: '.c-senator-dashboard-menu-wrapper',
+    triggerSelector: '.c-senator-dashboard-menu-wrapper__trigger',
 
     getTarget: function (trigger) {
       const triggerId = trigger.getAttribute('aria-controls');

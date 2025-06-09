@@ -6,7 +6,11 @@
 
 .c-senator-dashboard-header {
   background-color: var(--nys-color-darker-blue);
-  padding: 40px;
+  padding: 20px;
+
+  @container senator-dashboard-container (width > 560px) {
+    padding: 40px;
+  }
 
   @container senator-dashboard-container (width > 680px) {
     display: flex;
@@ -25,7 +29,7 @@
 }
 
 .c-senator-dashboard-header__image {
-  @include square(120px);
+  @include square(100px);
   border-radius: 50%;
   margin: 0;
   overflow: hidden;
@@ -33,6 +37,10 @@
   img {
     @include square(100%);
     object-fit: cover;
+  }
+
+  @container senator-dashboard-container (width > 560px) {
+    @include square(120px);
   }
 
   @container senator-dashboard-container (width <= 680px) {
@@ -55,15 +63,33 @@
 }
 
 .c-senator-dashboard-header__title {
-  @include type-scale(heading, dashboard);
   font-family: var(--nys-ff-serif-regular);
+  font-size: rem(24px);
   font-weight: 400;
+  line-height: 1.25;
   margin: 0 0 8px;
+
+  @container senator-dashboard-container (width > 560px) {
+    font-size: rem(28px);
+  }
+
+  @container senator-dashboard-container (width > 1024px) {
+    font-size: rem(32px);
+  }
 }
 
 .c-senator-dashboard-header__intro {
   font-style: italic;
   margin: 0;
+
+  @container senator-dashboard-container (width <= 1024px) {
+    font-size: rem(18px);
+    line-height: 1.66666667;
+  }
+
+  @container senator-dashboard-container (width <= 560px) {
+    font-size: rem(16px);
+  }
 }
 
 .c-senator-dashboard-header__actions {

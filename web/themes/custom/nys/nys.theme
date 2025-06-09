@@ -217,3 +217,13 @@ function _nys_prepare_activity_menu_items(array $items = [], string $parent = ''
 
   return $items;
 }
+
+/**
+ * Implements hook_page_attachments_alter().
+ */
+function nys_page_attachments_alter(array &$attachments) {
+  $current_path = \Drupal::service('path.current')->getPath();
+  if (str_starts_with($current_path, '/senator-dashboard/')) {
+    $attachments['#attached']['library'][] = 'nys/senator-dashboard-global';
+  }
+}

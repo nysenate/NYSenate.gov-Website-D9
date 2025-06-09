@@ -57,7 +57,7 @@ class ContextualFilterFlagLink extends FieldPluginBase implements ContainerFacto
   public function render(ResultRow $values) {
     $issue_id = $this->view?->argument['entity_id']?->argument;
     if (!empty($issue_id)) {
-      $link = $this->linkBuilder->build('taxonomy_term', $issue_id, 'follow_issue');
+      $link = $this->linkBuilder->build('taxonomy_term', $issue_id, 'follow_issue', 'default');
     }
     return $link ?? ['#markup' => ''];
   }

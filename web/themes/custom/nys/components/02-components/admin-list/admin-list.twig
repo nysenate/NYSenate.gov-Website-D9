@@ -1,26 +1,29 @@
 
 {% set classes = ['c-admin-list'] %}
 
-<nav {{ attributes.addClass(classes) }}>
-  {% if title %}
-    <h3 class="c-admin-list__title">{{ title }}</h3>
-  {% endif %}
+<div class="c-admin-list-container">
 
-  {% if items is not empty %}
-    <ul class="c-admin-list__items">
-      {% for key, item in items %}
-        <li id="{{ key|clean_unique_id }}" class="c-admin-list__item">
-          <h4 class="c-admin-list__action">
-            <a class="c-admin-list__link" href="{{ item.url }}">
-              {{ item.title }}
-            </a>
-          </h4>
+  <nav {{ attributes.addClass(classes) }}>
+    {% if title %}
+      <h3 class="c-admin-list__title">{{ title }}</h3>
+    {% endif %}
 
-          {% if item.description %}
-            <p class="c-admin-list__description">{{ item.description }}</p>
-          {% endif %}
-        </li>
-      {% endfor %}
-    </ul>
-  {% endif %}
-</nav>
+    {% if items is not empty %}
+      <ul class="c-admin-list__items">
+        {% for key, item in items %}
+          <li id="{{ key|clean_unique_id }}" class="c-admin-list__item">
+            <h4 class="c-admin-list__action">
+              <a class="c-admin-list__link" href="{{ item.url }}">
+                {{ item.title }}
+              </a>
+            </h4>
+
+            {% if item.description %}
+              <p class="c-admin-list__description">{{ item.description }}</p>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </nav>
+</div>

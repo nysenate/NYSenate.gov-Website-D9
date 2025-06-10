@@ -1,0 +1,62 @@
+
+{% import _self as votes %}
+{% set classes = ['c-bill-vote-count'] %}
+
+{% macro charts(title = '', id = '', charts = []) %}
+  <div class="c-bill-vote-count__charts-{{ id }}">
+    <h4 class="c-bill-vote-count__data-title">{{ title }}</h4>
+
+    <ul class="c-bill-vote-count__charts">
+      {% for chart in charts %}
+        <li class="c-bill-vote-count__chart">
+          {# @todo, get chart data here #}
+          {{ total }}
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endmacro %}
+
+<div class="c-bill-vote-count-container">
+  <article {{ attributes.addClass(classes) }}>
+    <header class="c-bill-vote-count__header">
+      <h3 class="c-bill-vote-count__title">
+        {% if url %}
+          <a class="c-bill-vote-count__link" href="{{ url }}">{{ title }}</a>
+        {% else %}
+          {{ title }}
+        {% endif %}
+      </h3>
+
+      {% if description %}
+        <div class="c-bill-vote-count__description">{{ description }}</div>
+      {% endif %}
+    </header>
+
+    <div class="c-bill-vote-count__content">
+      {% if no_results %}
+        <p class="c-bill-vote-count__no-results">{{ 'No votes found for this bill.'|t }}</p>
+      {% endif %}
+
+      {{ votes.charts('Totals:'|t, 'totals', totals) }}
+      {{ votes.charts('Breakdown by district:'|t, 'districts', breakdowns) }}
+
+      {% if actions %}
+        <div class="c-bill-vote-count__actions-wrapper">
+          <h4 class="element-invisible">{{ 'Bill actions'|t }}</h4>
+
+          <ul class="c-bill-vote-count__actions">
+            {% for action in actions %}
+              <li class="c-bill-vote-count__action">
+                <a class="c-bill-vote-count__action-link" href="{{ action.url }}">
+                  {{ action.text }}
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+    </div>
+  </article>
+</div>
+

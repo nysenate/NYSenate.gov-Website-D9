@@ -1,0 +1,84 @@
+@use 'partials' as *;
+
+.c-bill-vote-count-container {
+  container: bill-vote-count / inline-size;
+}
+
+.c-bill-vote-count {
+  border: 1px solid var(--nys-color-dash-grey-1);
+
+  // @todo, there's a big padding getting added in a senator dashboard specifc stylesheet.
+}
+
+.c-bill-vote-count__header,
+.c-bill-vote-count__content {
+  padding-inline: 32px;
+}
+
+.c-bill-vote-count__header {
+  padding-block: 40px;
+}
+
+.c-bill-vote-count__content {
+  align-items: end;
+  background-color: #f7f7f7;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  padding-block: 24px;
+}
+
+.c-bill-vote-count__title {
+  color: #222;
+  // @todo, styles in views.scss are too specific and overriding this.
+  font-family: var(--nys-ff-serif);
+  font-size: rem(22px);
+  margin: 0;
+}
+
+.c-bill-vote-count__description {
+  font-size: 16px;
+  margin: 8px 0 0;
+}
+
+.c-bill-vote-count__charts-districts {
+  flex: 1;
+}
+
+.c-bill-vote-count__link {
+  color: currentColor;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  transition: text-decoration-color .35s ease-in-out;
+
+  &:hover {
+    text-decoration-color: currentColor;
+  }
+}
+
+.c-bill-vote-count__actions {
+  display: grid;
+  gap: 4px;
+  grid-template-columns: minmax(0, 1fr);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.c-bill-vote-count__action {
+  // Overriding some default margin in the base theme.
+  margin: 0 !important;
+}
+
+.c-bill-vote-count__action-link {
+  color: #2B6A90;
+  font-size: rem(14px);
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-color: currentColor;
+  transition: text-decoration-color .35s ease-in-out;
+
+  &:hover {
+    text-decoration-color: transparent;
+  }
+}

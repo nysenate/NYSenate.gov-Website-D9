@@ -70,7 +70,7 @@ abstract class RequestPluginBase implements RequestPluginInterface {
     return new static(
       $plugin_definition,
       $configuration,
-      $container->get('openleg_api.logger')
+      $container->get('openleg_api.logger'),
     );
   }
 
@@ -171,14 +171,14 @@ abstract class RequestPluginBase implements RequestPluginInterface {
   }
 
   /**
-   * Coalesces possible timestamp formats into a DateTimeImmutable object.
+   * Coalesces possible timestamp formats into a DateTime object.
    *
    * @param string $timestamp
    *   A timestamp in any format parsable by strtotime().  If this is in the
    *   standard OpenLeg format, or is an epoch timestamp with a decimal portion,
    *   microseconds will be preserved.
    *
-   * @return \DateTimeImmutable|false
+   * @return \DateTime|false
    *   Returns FALSE if unable to parse timestamp or create object.
    */
   protected function normalizeTimestamp(string $timestamp = ''): \DateTime|false {

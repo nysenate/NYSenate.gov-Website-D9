@@ -70,9 +70,9 @@ class ConfigForm extends ConfigFormBase {
     $saved_apikey = $this->localConfig->get('api_key');
     $apikey_text = $saved_apikey
       ? "<div>An API key is already saved.  Leave the box blank to keep it, or input a new one to change it.</div>"
-      : "<h2><b>No API key has been configured.  The API key is required before making calls to OpenLeg API.</b></h2>";
+      : "<h2><b>No API key has been configured.</b><br />OpenLeg API calls require an API key.</h2>";
     if ($apikey && ($apikey != $saved_apikey)) {
-      $apikey_text .= '<h3 class="nys-openleg-config-warning">An override is configured to replace this setting.</h3>';
+      $apikey_text .= '<h3 class="nys-openleg-config-warning">A private override exists for this setting.</h3>';
     }
     $apikey_required = !($apikey);
 
@@ -87,7 +87,7 @@ class ConfigForm extends ConfigFormBase {
     $form['log_level'] = [
       '#type' => 'select',
       '#title' => 'Log Level',
-      '#description' => 'Determines the level of logging for API activity.',
+      '#description' => $this->t('Determines the level of logging for API activity.'),
       '#options' => RfcLogLevel::getLevels(),
       '#default_value' => $this->localConfig->get('log_level') ?? RfcLogLevel::NOTICE,
     ];

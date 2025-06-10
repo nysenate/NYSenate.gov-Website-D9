@@ -1,6 +1,22 @@
 .page--senator_dashboard {
   margin-top: 155px;
 
+  h2 {
+    color: #000;
+    font-family: var(--nys-ff-serif-regular);
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 350;
+    line-height: normal;
+    margin-bottom: 28px;
+  }
+
+  .block-views {
+    margin-bottom: 32px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--nys-color-dash-grey-1);
+  }
+
   .view-header {
     .flag {
       float: right;
@@ -45,16 +61,6 @@
   }
 
   &.page--senator_dashboard-constituent_activity-bills {
-    h2 {
-      color: #000;
-      font-family: var(--nys-ff-serif-regular);
-      font-size: 32px;
-      font-style: normal;
-      font-weight: 350;
-      line-height: normal;
-      margin-bottom: 28px;
-    }
-
     .c-bill-vote-count {
       padding-bottom: 60px;
       margin-bottom: 60px;

@@ -1,10 +1,13 @@
 @use 'partials' as *;
 
 .c-senator-dashboard-menu-wrapper {
-  background-color: var(--nys-color-dash-grey-2);
   margin: 0 auto;
-  padding: 20px;
   max-width: 1500px;
+  padding-inline: 8%;
+}
+
+.c-senator-dashboard-menu-wrapper__content-wrapper {
+  background-color: var(--nys-color-dash-grey-2);
 
   @include bp-max(md) {
     display: grid;

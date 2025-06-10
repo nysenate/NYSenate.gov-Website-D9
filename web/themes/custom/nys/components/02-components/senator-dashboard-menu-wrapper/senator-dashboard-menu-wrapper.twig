@@ -1,21 +1,23 @@
 <section class="c-senator-dashboard-menu-wrapper">
-  <button
-    class="c-senator-dashboard-menu-wrapper__trigger"
-    aria-controls="c-senator-dashboard-menu-wrapper-id"
-    aria-expanded="false"
-    type="button"
-  >
-    {{ include('nys:icon-label', {
-      label: 'Manage Senator'|t,
-      icon_after: 'accordion-arrow',
-    }, with_context = false) }}
-  </button>
+  <div class="c-senator-dashboard-menu-wrapper__content-wrapper">
+    <button
+      class="c-senator-dashboard-menu-wrapper__trigger"
+      aria-controls="c-senator-dashboard-menu-wrapper-id"
+      aria-expanded="false"
+      type="button"
+    >
+      {{ include('nys:icon-label', {
+        label: 'Manage Senator'|t,
+        icon_after: 'accordion-arrow',
+      }, with_context = false) }}
+    </button>
 
-  <div
-    id="c-senator-dashboard-menu-wrapper-id"
-    class="c-senator-dashboard-menu-wrapper__content"
-    aria-hidden="true"
-  >
-    {% block content %}{% endblock %}
+    <div
+      id="c-senator-dashboard-menu-wrapper-id"
+      class="c-senator-dashboard-menu-wrapper__content"
+      aria-hidden="true"
+    >
+      {% block content %}{% endblock %}
+    </div>
   </div>
 </section>

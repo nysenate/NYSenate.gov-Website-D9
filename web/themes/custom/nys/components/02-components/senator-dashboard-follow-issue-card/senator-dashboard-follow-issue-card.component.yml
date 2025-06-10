@@ -1,9 +1,11 @@
 name: Senator Dashboard follow issue card
 props:
   type: object
-  required: [flag_link, flag_count]
+  required: [flag_link, flag_count, followers_link]
   properties:
     flag_link:
+      type: string
+    followers_link:
       type: string
     flag_count:
       type: string

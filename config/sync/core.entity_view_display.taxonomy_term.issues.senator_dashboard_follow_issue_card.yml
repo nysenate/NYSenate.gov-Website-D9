@@ -26,16 +26,23 @@ third_party_settings:
       static:
         props:
           flag_link: 'Not found'
+          followers_link: /
           flag_count: '0'
       dynamic:
         props:
-          flag_link: nys_senator_dashboard_flag_link_follow_issue
+          flag_link: flag_follow_issue
+          followers_link: nys_senator_dashboard_followers_link
           flag_count: nys_senator_dashboard_flag_count_follow_issue
 id: taxonomy_term.issues.senator_dashboard_follow_issue_card
 targetEntityType: taxonomy_term
 bundle: issues
 mode: senator_dashboard_follow_issue_card
 content:
+  flag_follow_issue:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
   flag_link_follow_issue:
     settings: {  }
     third_party_settings: {  }
@@ -44,12 +51,17 @@ content:
   nys_senator_dashboard_flag_count_follow_issue:
     settings: {  }
     third_party_settings: {  }
-    weight: 1
+    weight: 2
     region: content
   nys_senator_dashboard_flag_link_follow_issue:
     settings: {  }
     third_party_settings: {  }
-    weight: 0
+    weight: 1
+    region: content
+  nys_senator_dashboard_followers_link:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
     region: content
 hidden:
   description: true
@@ -60,7 +72,6 @@ hidden:
   field_keywords: true
   field_majority_issue: true
   field_metatags: true
-  flag_follow_issue: true
   langcode: true
   nys_senator_dashboard_district_flag_count_follow_issue: true
   rabbit_hole__settings: true

@@ -1,64 +1,15 @@
+h2 {
+  color: #000;
+  font-family: var(--nys-ff-serif);
+  font-size: 32px;
+  font-style: normal;
+  font-weight: 350;
+  line-height: normal;
+  margin-bottom: 28px;
+}
+
 .page--senator_dashboard {
   margin-top: 155px;
-
-  h2 {
-    color: #000;
-    font-family: var(--nys-ff-serif-regular);
-    font-size: 32px;
-    font-style: normal;
-    font-weight: 350;
-    line-height: normal;
-    margin-bottom: 28px;
-  }
-
-  .block-views {
-    margin-bottom: 32px;
-    padding-bottom: 32px;
-    border-bottom: 1px solid var(--nys-color-dash-grey-1);
-  }
-
-  .view-header {
-    .flag {
-      float: right;
-
-      &.action-unflag a:before {
-        content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M5 4.5V18.2406C5 18.6594 5.34062 19 5.75937 19C5.91562 19 6.06875 18.9531 6.19687 18.8625L11 15.5L15.8031 18.8625C15.9313 18.9531 16.0844 19 16.2406 19C16.6594 19 17 18.6594 17 18.2406V4.5C17 3.67188 16.3281 3 15.5 3H6.5C5.67188 3 5 3.67188 5 4.5Z' fill='%232B6A90'/%3E%3C/svg%3E");
-      }
-
-      a {
-        color: var(--nys-color-button-blue);
-        font-family: var(--nys-ff-sans);
-        font-size: 16px;
-        font-style: normal;
-        font-weight: 700;
-        line-height: 22px;
-        text-decoration-line: underline;
-        text-decoration-style: solid;
-        text-decoration-skip-ink: none;
-        text-decoration-thickness: auto;
-        text-underline-offset: auto;
-        text-underline-position: from-font;
-
-        &:before {
-          padding-right: 8px;
-          content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M5 4.50015C5 3.67194 5.67194 3 6.50015 3V16.7951L10.5662 13.8917C10.8256 13.7042 11.1787 13.7042 11.4381 13.8917L15.501 16.7951V4.50015H6.50015V3H15.501C16.3292 3 17.0012 3.67194 17.0012 4.50015V18.2515C17.0012 18.5328 16.8449 18.789 16.5949 18.9172C16.3448 19.0453 16.0448 19.0234 15.8167 18.8609L11.0006 15.4231L6.18449 18.8609C5.95634 19.0234 5.65631 19.0453 5.40629 18.9172C5.15627 18.789 5 18.5328 5 18.2515V4.50015Z' fill='%232B6A90'/%3E%3C/svg%3E");
-        }
-
-        &:hover {
-          text-decoration-line: none;
-
-          &:before {
-            content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Cpath opacity='0.25' d='M5 4.5V18.2406C5 18.6594 5.34062 19 5.75937 19C5.91562 19 6.06875 18.9531 6.19687 18.8625L11 15.5L15.8031 18.8625C15.9313 18.9531 16.0844 19 16.2406 19C16.6594 19 17 18.6594 17 18.2406V4.5C17 3.67188 16.3281 3 15.5 3H6.5C5.67188 3 5 3.67188 5 4.5Z' fill='%232B6A90'/%3E%3Cpath d='M5 4.50015C5 3.67194 5.67194 3 6.50015 3V16.7951L10.5662 13.8917C10.8256 13.7042 11.1787 13.7042 11.4381 13.8917L15.501 16.7951V4.50015H6.50015V3H15.501C16.3292 3 17.0012 3.67194 17.0012 4.50015V18.2515C17.0012 18.5328 16.8449 18.789 16.5949 18.9172C16.3448 19.0453 16.0448 19.0234 15.8167 18.8609L11.0006 15.4231L6.18449 18.8609C5.95634 19.0234 5.65631 19.0453 5.40629 18.9172C5.15627 18.789 5 18.5328 5 18.2515V4.50015Z' fill='%232B6A90'/%3E%3C/svg%3E");
-          }
-        }
-      }
-
-      p {
-        // @todo Remove at template level.
-        display: none;
-      }
-    }
-  }
 
   &.page--senator_dashboard-constituent_activity-bills {
     .c-bill-vote-count {
@@ -74,5 +25,70 @@
         float: right;
       }
     }
+  }
+
+  &.page--senator_dashboard-constituent_activity {
+    // VBO throws access denied error during export for access that's not
+    // needed, so we're suppressing the warning to avoid confusion.
+    // @todo Suppress warning using hook/service, if not resolved by VBO.
+    .message--warning {
+      display: none;
+    }
+  }
+}
+
+.block-views {
+  margin-bottom: 32px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid var(--nys-color-dash-grey-1);
+}
+
+.view-header {
+  .flag {
+    float: right;
+
+    &.action-unflag a:before {
+      content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M5 4.5V18.2406C5 18.6594 5.34062 19 5.75937 19C5.91562 19 6.06875 18.9531 6.19687 18.8625L11 15.5L15.8031 18.8625C15.9313 18.9531 16.0844 19 16.2406 19C16.6594 19 17 18.6594 17 18.2406V4.5C17 3.67188 16.3281 3 15.5 3H6.5C5.67188 3 5 3.67188 5 4.5Z' fill='%232B6A90'/%3E%3C/svg%3E");
+    }
+
+    a {
+      color: var(--nys-color-button-blue);
+      font-family: var(--nys-ff-sans);
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: 22px;
+      text-decoration-line: underline;
+      text-decoration-style: solid;
+      text-decoration-skip-ink: none;
+      text-decoration-thickness: auto;
+      text-underline-offset: auto;
+      text-underline-position: from-font;
+
+      &:before {
+        padding-right: 8px;
+        content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M5 4.50015C5 3.67194 5.67194 3 6.50015 3V16.7951L10.5662 13.8917C10.8256 13.7042 11.1787 13.7042 11.4381 13.8917L15.501 16.7951V4.50015H6.50015V3H15.501C16.3292 3 17.0012 3.67194 17.0012 4.50015V18.2515C17.0012 18.5328 16.8449 18.789 16.5949 18.9172C16.3448 19.0453 16.0448 19.0234 15.8167 18.8609L11.0006 15.4231L6.18449 18.8609C5.95634 19.0234 5.65631 19.0453 5.40629 18.9172C5.15627 18.789 5 18.5328 5 18.2515V4.50015Z' fill='%232B6A90'/%3E%3C/svg%3E");
+      }
+
+      &:hover {
+        text-decoration-line: none;
+
+        &:before {
+          content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Cpath opacity='0.25' d='M5 4.5V18.2406C5 18.6594 5.34062 19 5.75937 19C5.91562 19 6.06875 18.9531 6.19687 18.8625L11 15.5L15.8031 18.8625C15.9313 18.9531 16.0844 19 16.2406 19C16.6594 19 17 18.6594 17 18.2406V4.5C17 3.67188 16.3281 3 15.5 3H6.5C5.67188 3 5 3.67188 5 4.5Z' fill='%232B6A90'/%3E%3Cpath d='M5 4.50015C5 3.67194 5.67194 3 6.50015 3V16.7951L10.5662 13.8917C10.8256 13.7042 11.1787 13.7042 11.4381 13.8917L15.501 16.7951V4.50015H6.50015V3H15.501C16.3292 3 17.0012 3.67194 17.0012 4.50015V18.2515C17.0012 18.5328 16.8449 18.789 16.5949 18.9172C16.3448 19.0453 16.0448 19.0234 15.8167 18.8609L11.0006 15.4231L6.18449 18.8609C5.95634 19.0234 5.65631 19.0453 5.40629 18.9172C5.15627 18.789 5 18.5328 5 18.2515V4.50015Z' fill='%232B6A90'/%3E%3C/svg%3E");
+        }
+      }
+    }
+
+    p {
+      // @todo Remove at template level.
+      display: none;
+    }
+  }
+}
+
+.view-content {
+  p {
+    font-size: 16px;
+    line-height: 16px;
   }
 }

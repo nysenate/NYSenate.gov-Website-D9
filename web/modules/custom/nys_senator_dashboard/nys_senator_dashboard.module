@@ -7,6 +7,7 @@
 
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Drupal\flag\Plugin\Flag\EntityFlagType;
 use Drupal\node\NodeInterface;
 
@@ -205,13 +206,6 @@ function nys_senator_dashboard_entity_extra_field_info() {
 
     $flaggable_bundles = $flag->getApplicableBundles();
     foreach ($flaggable_bundles as $bundle_name) {
-      $extra[$flag->getFlaggableEntityTypeId()][$bundle_name]['display']['nys_senator_dashboard_flag_link_' . $flag->id()] = [
-        'label' => t('NYS Senator Dashboard: Entity label Flag link: %title', ['%title' => $flag->label()]),
-        'description' => t('A custom flag link that uses the entity label as the link text.'),
-        'weight' => 10,
-        'visible' => FALSE,
-      ];
-
       $extra[$flag->getFlaggableEntityTypeId()][$bundle_name]['display']['nys_senator_dashboard_flag_count_' . $flag->id()] = [
         'label' => t('NYS Senator Dashboard: Flag count: %title', ['%title' => $flag->label()]),
         'description' => t('A custom field that displays the total flagging count on an entity.'),
@@ -258,6 +252,13 @@ function nys_senator_dashboard_entity_extra_field_info() {
     'visible' => FALSE,
   ];
 
+  $extra['taxonomy_term']['issues']['display']['nys_senator_dashboard_followers_link'] = [
+    'label' => t('NYS Senator Dashboard: Followers link'),
+    'description' => t('A link to the constituent followers list.'),
+    'weight' => 10,
+    'visible' => FALSE,
+  ];
+
   return $extra;
 }
 
@@ -272,30 +273,6 @@ function nys_senator_dashboard_entity_view(array &$build, \Drupal\Core\Entity\En
   foreach ($flags as $flag) {
     if (!$flag->status()) {
       continue;
-    }
-
-    if ($display->getComponent('nys_senator_dashboard_flag_link_' . $flag->id())) {
-      $flag->setFlagLongText($entity->label());
-      $flag->setUnflagLongText($entity->label());
-      $link_type_plugin = $flag->getLinkTypePlugin();
-      $flag_action_url = $link_type_plugin->getAsLink($flag, $entity, 'default')->getUrl();
-
-      $is_flagged = $flag_service->getFlagging($flag, $entity);
-      $action_class = $is_flagged ? 'action-unflag' : 'action-flag';
-      $classes = [
-        'flag-link',
-        'flag-link-' . $flag->id(),
-        $action_class,
-      ];
-
-      $build['nys_senator_dashboard_flag_link_' . $flag->id()] = [
-        '#type' => 'link',
-        '#title' => $entity->label(),
-        '#url' => $flag_action_url,
-        '#attributes' => [
-          'class' => $classes,
-        ],
-      ];
     }
 
     if ($display->getComponent('nys_senator_dashboard_flag_count_' . $flag->id())) {
@@ -314,7 +291,7 @@ function nys_senator_dashboard_entity_view(array &$build, \Drupal\Core\Entity\En
         '#tag' => 'p',
         '#value' => $value,
         '#attributes' => [
-          'class' => ['flagging-count'],
+          'class' => ['senator-dashboard-flagging-count'],
         ],
       ];
     }
@@ -394,6 +371,17 @@ function nys_senator_dashboard_entity_view(array &$build, \Drupal\Core\Entity\En
         ]
       ];
     }
+  }
+
+  if ($display->getComponent('nys_senator_dashboard_followers_link')) {
+    $build['nys_senator_dashboard_followers_link'] = [
+      '#type' => 'link',
+      '#title' => $entity->label(),
+      '#url' => Url::fromUri("internal:/senator-dashboard/constituent-activity/issues/{$entity->id()}"),
+      '#attributes' => [
+        'class' => 'senator-dashboard-followers-link',
+      ],
+    ];
   }
 }
 

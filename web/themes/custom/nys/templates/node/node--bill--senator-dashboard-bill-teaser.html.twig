@@ -81,6 +81,13 @@
   { text: '15 comments'|t, url: 'https://www.google.com' },
 ] %}
 
+{% set totals = [
+  [
+    { label: 'Ayes'|t, value: '800'|t, percent: '67%'|t, icon: 'thumbs-up', id: 'total_ayes' },
+    { label: 'Nays'|t, value: '400'|t, percent: '33%'|t, icon: 'thumbs-down', id: 'total_nays' },
+  ]
+] %}
+
 <div {{ attributes.addClass(classes) }}>
   {{ title_prefix }}
   {{ title_suffix }}
@@ -90,6 +97,7 @@
     description: 'test'|t,
     url: url,
     no_results: false,
+    totals: totals,
     actions: actions,
   }, with_context = false) }}
 </div>

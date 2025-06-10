@@ -9,12 +9,36 @@
     <ul class="c-bill-vote-count__charts">
       {% for chart in charts %}
         <li class="c-bill-vote-count__chart">
-          {# @todo, get chart data here #}
-          {{ total }}
+          {{ votes.chart(chart) }}
         </li>
       {% endfor %}
     </ul>
   </div>
+{% endmacro %}
+
+{% macro chart(dataset = []) %}
+  <figure class="c-bill-vote-count__data">
+    {# @todo, chart goes here #}
+
+    <figcaption class="c-bill-vote-count__datacaption">
+      <ul class="c-bill-vote-count__data-items">
+        {% for data in dataset %}
+          <li class="c-bill-vote-count__data-item">
+            {% set label = '@label: @value (@percentage)'|t({
+              '@label': data.label,
+              '@value': data.value,
+              '@percentage': data.percent,
+            }) %}
+
+            {{ include('nys:icon-label', {
+              label: label,
+              icon_before: data.icon,
+            }, with_context = false) }}
+          </li>
+        {% endfor %}
+      </ul>
+    </figcaption>
+  </figure>
 {% endmacro %}
 
 <div class="c-bill-vote-count-container">
@@ -38,8 +62,13 @@
         <p class="c-bill-vote-count__no-results">{{ 'No votes found for this bill.'|t }}</p>
       {% endif %}
 
-      {{ votes.charts('Totals:'|t, 'totals', totals) }}
-      {{ votes.charts('Breakdown by district:'|t, 'districts', breakdowns) }}
+      {% if totals is not empty %}
+        {{ votes.charts('Totals:'|t, 'totals', totals) }}
+      {% endif %}
+
+      {% if breakdowns is not empty %}
+        {{ votes.charts('Breakdown by district:'|t, 'districts', breakdowns) }}
+      {% endif %}
 
       {% if actions %}
         <div class="c-bill-vote-count__actions-wrapper">

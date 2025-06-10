@@ -65,7 +65,9 @@
   padding: 0;
 }
 
-.c-bill-vote-count__action {
+.c-bill-vote-count__action,
+.c-bill-vote-count__chart,
+.c-bill-vote-count__data-item {
   // Overriding some default margin in the base theme.
   margin: 0 !important;
 }
@@ -81,4 +83,15 @@
   &:hover {
     text-decoration-color: transparent;
   }
+}
+
+.c-bill-vote-count__data {
+  margin: 0;
+}
+
+.c-bill-vote-count__charts,
+.c-bill-vote-count__data-items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }

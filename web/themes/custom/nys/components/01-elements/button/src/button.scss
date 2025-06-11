@@ -1,0 +1,23 @@
+@use 'partials' as *;
+
+.u-button {
+  appearance: none;
+  background-color: #fff;
+  border: none;
+  border-radius: 0;
+  color: var(--nys-color-button-blue);
+  display: inline-block;
+  font-family: var(--nys-ff-sans);
+  font-size: rem(12px);
+  letter-spacing: 1px;
+  line-height: 1.5;
+  padding: 12px 20px;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-transform: uppercase;
+  transition: text-decoration-color .35s ease-in-out;
+
+  &:hover {
+    text-decoration-color: currentColor;
+  }
+}

@@ -1,0 +1,29 @@
+uuid: 153a69fd-4f15-4225-84a7-36d5c4001f8f
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.menu-issue-explorer
+  module:
+    - system
+  theme:
+    - nys
+id: nys_issueexplorermenu
+theme: nys
+region: content
+weight: -10
+provider: null
+plugin: 'system_menu_block:menu-issue-explorer'
+settings:
+  id: 'system_menu_block:menu-issue-explorer'
+  label: 'Issue Explorer Menu'
+  label_display: '0'
+  provider: system
+  level: 1
+  depth: 0
+  expand_all_items: false
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: '/explore-issues/*'

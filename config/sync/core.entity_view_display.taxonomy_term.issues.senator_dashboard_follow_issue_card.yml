@@ -1,0 +1,78 @@
+uuid: 13316d2d-8d70-4fc3-89cc-27e834dfc304
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.taxonomy_term.senator_dashboard_follow_issue_card
+    - field.field.taxonomy_term.issues.field_drupal_6_tid
+    - field.field.taxonomy_term.issues.field_keywords
+    - field.field.taxonomy_term.issues.field_majority_issue
+    - field.field.taxonomy_term.issues.field_metatags
+    - field.field.taxonomy_term.issues.rabbit_hole__settings
+    - taxonomy.vocabulary.issues
+  module:
+    - layout_builder
+    - sdc_display
+third_party_settings:
+  layout_builder:
+    enabled: false
+    allow_custom: false
+  sdc_display:
+    enabled: true
+    component:
+      machine_name: 'nys:senator-dashboard-follow-issue-card'
+      show_deprecated: null
+    mappings:
+      static:
+        props:
+          flag_link: 'Not found'
+          followers_link: /
+          flag_count: '0'
+      dynamic:
+        props:
+          flag_link: flag_follow_issue
+          followers_link: nys_senator_dashboard_followers_link
+          flag_count: nys_senator_dashboard_flag_count_follow_issue
+id: taxonomy_term.issues.senator_dashboard_follow_issue_card
+targetEntityType: taxonomy_term
+bundle: issues
+mode: senator_dashboard_follow_issue_card
+content:
+  flag_follow_issue:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  flag_link_follow_issue:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  nys_senator_dashboard_flag_count_follow_issue:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  nys_senator_dashboard_flag_link_follow_issue:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  nys_senator_dashboard_followers_link:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  description: true
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  field_drupal_6_tid: true
+  field_keywords: true
+  field_majority_issue: true
+  field_metatags: true
+  langcode: true
+  nys_senator_dashboard_district_flag_count_follow_issue: true
+  rabbit_hole__settings: true
+  search_api_excerpt: true

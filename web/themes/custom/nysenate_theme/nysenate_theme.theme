@@ -4971,9 +4971,11 @@ function nysenate_theme_preprocess_node__petition(&$variables) {
   }
   $variables['logged_in'] = \Drupal::currentUser()->isAuthenticated();
 
-  /** @var \Drupal\node\NodeInterface $node */
   $node = \Drupal::routeMatch()->getParameter('node');
-  if (!$node->get('field_senator_multiref')->isEmpty()) {
+  if (
+    $node instanceof NodeInterface
+    && !$node->get('field_senator_multiref')->isEmpty()
+  ) {
     $tid = $node->get('field_senator_multiref')->first()->getString() ?? '';
     if (!empty($tid)) {
       $senatorName = Term::load($tid)->get('name')->value;

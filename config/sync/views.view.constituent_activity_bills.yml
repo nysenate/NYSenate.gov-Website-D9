@@ -145,14 +145,14 @@ display:
         options:
           offset: 0
           pagination_heading_level: h4
-          items_per_page: 10
+          items_per_page: 14
           total_pages: null
           id: 0
           tags:
-            next: ››
-            previous: ‹‹
-            first: '« First'
-            last: 'Last »'
+            next: 'Next page'
+            previous: 'Previous page'
+            first: 'First page'
+            last: 'Last page'
           expose:
             items_per_page: false
             items_per_page_label: 'Items per page'
@@ -161,7 +161,7 @@ display:
             items_per_page_options_all_label: '- All -'
             offset: false
             offset_label: Offset
-          quantity: 9
+          quantity: 5
       exposed_form:
         type: bef
         options:
@@ -230,7 +230,7 @@ display:
             microsite_content_producer: microsite_content_producer
             legislative_correspondent: legislative_correspondent
       cache:
-        type: tag
+        type: none
         options: {  }
       empty:
         area:
@@ -289,6 +289,21 @@ display:
             label: 'Print number'
             field_identifier: field_ol_print_no_value
           exposed: true
+        nid:
+          id: nid
+          table: node_field_data
+          field: nid
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          entity_field: nid
+          plugin_id: standard
+          order: DESC
+          expose:
+            label: ''
+            field_identifier: ''
+          exposed: false
       arguments: {  }
       filters:
         status:
@@ -450,6 +465,7 @@ display:
           entity_type: node
           plugin_id: standard
           required: false
+      css_class: simple-pager
       header:
         result:
           id: result

@@ -31,9 +31,12 @@
  */
 #}
 {%
-  if 'pager__my_dashboard__main' not in pager['#theme']
+  if (pager['#theme'] is iterable and 'pager__my_dashboard__main' not in pager['#theme']
   and not pager['#theme']|filter(theme => theme starts with 'pager__senator_dashboard')
-  and not pager['#theme']|filter(theme => theme starts with 'pager__constituent_activity')
+  and not pager['#theme']|filter(theme => theme starts with 'pager__constituent_activity'))
+  or (pager['#theme'] is not iterable and pager['#theme'] != 'pager__my_dashboard__main'
+  and not pager['#theme'] starts with 'pager__senator_dashboard'
+  and not pager['#theme'] starts with 'pager__constituent_activity')
 %}
 {%
   include '@nysenate_theme/pager/pager.twig' with {

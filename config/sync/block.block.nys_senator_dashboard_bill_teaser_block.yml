@@ -1,4 +1,4 @@
-uuid: 49a4e848-0722-4f16-9cb3-f685b7e64319
+uuid: 3412daaf-3f7b-4966-841d-c7d9d742ff18
 langcode: en
 status: true
 dependencies:
@@ -8,18 +8,19 @@ dependencies:
     - user
   theme:
     - nys
-id: nys_bill_vote_count_block
+id: nys_senator_dashboard_bill_teaser_block
 theme: nys
 region: content
-weight: -15
+weight: -17
 provider: null
-plugin: nys_senator_dashboard_bill_vote_count_block
+plugin: nys_senator_dashboard_bill_teaser
 settings:
-  id: nys_senator_dashboard_bill_vote_count_block
+  id: nys_senator_dashboard_bill_teaser
   label: 'All Activity'
   label_display: visible
   provider: nys_senator_dashboard
-  context_mapping: {  }
+  context_mapping:
+    node: '@node.node_route_context:node'
 visibility:
   request_path:
     id: request_path

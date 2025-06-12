@@ -50,48 +50,48 @@ dependencies:
     - field.field.node.bill.rabbit_hole__settings
     - node.type.bill
   module:
+    - field_group
     - layout_builder
-    - layout_discovery
-    - nys_senator_dashboard
+    - sdc_display
     - user
 third_party_settings:
   layout_builder:
-    enabled: true
+    enabled: false
     allow_custom: false
-    sections:
-      -
-        layout_id: layout_onecol
-        layout_settings:
-          label: ''
-        components:
-          24d65357-b031-4f1d-9e37-48ff108db032:
-            uuid: 24d65357-b031-4f1d-9e37-48ff108db032
-            region: content
-            configuration:
-              id: 'field_block:node:bill:field_ol_name'
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
-              formatter:
-                type: basic_string
-                label: hidden
-                settings: {  }
-                third_party_settings: {  }
-            weight: 0
-            additional: {  }
-          ef9127b5-fe35-4f4a-b8e5-a7ce50f17184:
-            uuid: ef9127b5-fe35-4f4a-b8e5-a7ce50f17184
-            region: content
-            configuration:
-              id: nys_senator_dashboard_bill_vote_count_block
-              label: 'Bill Vote Count Block'
-              label_display: '0'
-              provider: nys_senator_dashboard
-              context_mapping:
-                node: layout_builder.entity
-            weight: 1
-            additional: {  }
-        third_party_settings: {  }
+  field_group:
+    group_vote_stats:
+      children:
+        - nys_senator_dashboard_vote_totals
+        - nys_senator_dashboard_vote_totals_district_breakdown
+        - nys_senator_dashboard_bill_action_links
+      label: 'Vote stats'
+      parent_name: ''
+      region: content
+      weight: 2
+      format_type: html_element
+      format_settings:
+        classes: senator-dashboard-vote-stats
+        show_empty_fields: true
+        id: ''
+        label_as_html: false
+        element: div
+        show_label: false
+        label_element: h3
+        label_element_classes: ''
+        attributes: ''
+        effect: none
+        speed: fast
+  sdc_display:
+    enabled: false
+    component:
+      machine_name: ''
+    mappings:
+      static:
+        props: {  }
+        slots: {  }
+      dynamic:
+        props: {  }
+        slots: {  }
 id: node.bill.senator_dashboard_bill_teaser
 targetEntityType: node
 bundle: bill
@@ -102,7 +102,22 @@ content:
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 5
+    weight: 0
+    region: content
+  nys_senator_dashboard_bill_action_links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  nys_senator_dashboard_vote_totals:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  nys_senator_dashboard_vote_totals_district_breakdown:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
     region: content
 hidden:
   entity_print_view_epub: true
@@ -152,6 +167,7 @@ hidden:
   field_ol_votes: true
   langcode: true
   links: true
+  nys_senator_dashboard_district_flag_count_follow_this_bill: true
   nys_senator_dashboard_flag_count_follow_this_bill: true
   nys_senator_dashboard_flag_link_follow_this_bill: true
   private_message_link: true

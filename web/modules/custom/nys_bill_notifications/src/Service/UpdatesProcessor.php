@@ -6,6 +6,7 @@ use Drupal\Core\Config\Config;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Logger\LoggerChannel;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\node\Entity\Node;
 use Drupal\nys_openleg_api\ResponsePluginInterface;
 use Drupal\nys_openleg_api\Service\Api;
@@ -19,6 +20,8 @@ use Drupal\taxonomy\Entity\Term;
  * Service used to generate subscription queue items based on OL bill updates.
  */
 class UpdatesProcessor {
+
+  use StringTranslationTrait;
 
   /**
    * Preconfigured logging channel for Openleg API.
@@ -216,18 +219,19 @@ class UpdatesProcessor {
 
     // Sort the events by priority (descending) and timestamp (descending).
     usort(
-          $events, function (array $a, array $b) {
-            if ($a['priority'] != $b['priority']) {
-                return $a['priority'] < $b['priority'] ? 1 : -1;
-            }
-            elseif ($a['timestamp'] != $b['timestamp']) {
-                return $a['timestamp'] < $b['timestamp'] ? 1 : -1;
-            }
-            else {
-                return 0;
-            }
-          }
-      );
+      $events,
+      function (array $a, array $b) {
+        if ($a['priority'] != $b['priority']) {
+          return $a['priority'] < $b['priority'] ? 1 : -1;
+        }
+        elseif ($a['timestamp'] != $b['timestamp']) {
+          return $a['timestamp'] < $b['timestamp'] ? 1 : -1;
+        }
+        else {
+          return 0;
+        }
+      }
+    );
 
     return $events;
   }
@@ -245,8 +249,6 @@ class UpdatesProcessor {
    *   The bill receiving the updates.
    * @param \Drupal\taxonomy\Entity\Term $term
    *   The term representing the lineage root of the bill.
-   *
-   * @throws \Exception
    */
   public function queueEvents(array $results, Node $bill, Term $term): void {
     // Ensure the primary_event is populated.
@@ -275,7 +277,30 @@ class UpdatesProcessor {
     foreach ($subs as $user_chunk) {
       if (count($user_chunk)) {
         $queue_template['recipients'] = $user_chunk;
-        $this->queue->createItem($queue_template);
+        try {
+          $this->queue->createItem($queue_template);
+          $msg = $this->t(
+            "Created queue item for @bill_nid: @print_num (@num recipients)",
+            [
+              '@bill_nid' => $bill_nid,
+              '@print_num' => $print_num,
+              '@num' => count($user_chunk),
+            ]
+          );
+          $this->logger->info($msg);
+        }
+        catch (\Exception $e) {
+          $msg = $this->t(
+            "Failed to create subscription queue: @msg\n  - recipients: @num\n  - bill: @bill_id\n  - lineage: @lineage",
+            [
+              '@num' => count($user_chunk),
+              '@bill_id' => $bill_nid,
+              '@lineage' => $root_tid,
+              '@msg' => $e->getMessage(),
+            ]
+          );
+          $this->logger->error($msg);
+        }
       }
     }
   }
@@ -296,8 +321,6 @@ class UpdatesProcessor {
    *
    * @return array
    *   An array of all match results, keyed by bill print number.
-   *
-   * @throws \Exception
    */
   public function process(mixed $time_from = 0, mixed $time_to = 0, array $params = []): array {
     // Get the updates based on the requested time range.
@@ -319,19 +342,18 @@ class UpdatesProcessor {
    *   An array, keyed by bill print number, with each element being an array
    *   of MatchResults (one results per update block).  Each MatchResult may
    *   have multiple matching tests.
-   *
-   * @throws \Exception
    */
   public function processResults(array $matches): void {
     // For each bill, there could be multiple updates, each with their own test
     // results.  Each result is a collection of tests which matched the update.
     foreach ($matches as $print_num => $results) {
       // If a bill cannot be loaded, report and skip this update.
-      if (!$bill = \Drupal::service('nys_bill.bills_helper')->loadBillByTitle($print_num)) {
+      if (!$bill = \Drupal::service('nys_bill.bills_helper')
+        ->loadBillByTitle($print_num)) {
         $this->logger->error(
-              'Could not load bill @print_num while processing updates',
-              ['@print_num' => $print_num]
-          );
+          'Could not load bill @print_num while processing updates',
+          ['@print_num' => $print_num]
+        );
         continue;
       }
 
@@ -339,15 +361,14 @@ class UpdatesProcessor {
       $root_tid = $bill->field_bill_multi_session_root->target_id ?? 0;
       if (!($term = $this->loadTerm($root_tid))) {
         $this->logger->error(
-              'Could not load term @tax_id for @print_num while processing updates',
-              ['@print_num' => $print_num, '@tax_id' => $root_tid]
-          );
+          'Could not load term @tax_id for @print_num while processing updates',
+          ['@print_num' => $print_num, '@tax_id' => $root_tid]
+        );
         continue;
       }
 
       $this->queueEvents($results, $bill, $term);
     }
-
   }
 
 }

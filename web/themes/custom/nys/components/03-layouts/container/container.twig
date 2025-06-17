@@ -1,0 +1,12 @@
+
+{% set classes = [
+  'l-container',
+  'l-container--width-' ~ width|default('max'),
+  'l-container--spacer-' ~ spacer|default('normal'),
+] %}
+
+<section {{ attributes.addClass(classes) }}>
+  <div class="l-container__content">
+    {% block content %}{% endblock %}
+  </div>
+</section>

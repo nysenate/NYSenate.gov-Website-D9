@@ -1,0 +1,19 @@
+{% extends "@nysenate_theme/src/templates/layout/page.html.twig" %}
+
+{% block main %}
+  <a id="main-content" tabindex="-1"></a>
+
+  {% embed "nys:container" with {
+    width: 'max',
+    page,
+  } only %}
+    {% block content %}
+      {{ include('nys:columns', {
+        columns: [
+          page.content|without('nys_constituent_engagement_block'),
+          page.content.nys_constituent_engagement_block,
+        ]
+      }, with_context = false) }}
+    {% endblock %}
+  {% endembed %}
+{% endblock %}

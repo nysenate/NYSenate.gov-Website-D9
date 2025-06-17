@@ -1,0 +1,196 @@
+
+//------------------------------------
+// Breakpoint viewport sizes and media queries. Breakpoints are defined as a map
+// of (name: minimum width), order from xsmall to xlarge:
+// (xs: 0, sm: 576px, md: 768px, lg: 992px, xl: 1200px). The map defined in the
+// `$grid-breakpoints` global variable is used as the `$breakpoints` argument by
+// default.
+//------------------------------------
+
+@use "sass:list";
+@use 'sass:map';
+
+//------------------------------------
+// Default mapping of grid breakpoints, which is used in the function and mixin
+// breakpoint files. An example of using breakpoints in a file is by using the
+// mixin with the name of a breakpoint: `@include bp-min(tablet) {}`.
+//
+// These breakpoints may be altered depending on the theme needs.
+//
+// Note: The breakpoints listed here correspond with breakpoints defined in the
+// $typographic-scale. When removing or renaming breakpoints here, be sure to
+// update the corresponding breakpoints in `typography.scss` as needed.
+//------------------------------------
+
+$grid-breakpoints: (
+  xsm: 544px,
+  tablet: 760px,
+  sm: 768px,
+  desktop: 960px,
+  md: 1024px,
+  lg: 1200px,
+  xl: 1280px,
+  max: 1440px,
+  nav-sm: 900px,
+  nav: 1100px,
+);
+
+//------------------------------------
+// Name of the next breakpoint, or null for the last breakpoint.
+// - @param $name: Selected breakpoint name as defined in mappings above.
+// - @param $breakpoints: Breakpoints mapping values as defined in mappings above.
+// - @param $breakpoint-names: Breakpoints mapping names as defined in mappings above.
+//------------------------------------
+
+@function breakpoint-next(
+  $name,
+  $breakpoints: $grid-breakpoints,
+  $breakpoint-names: map.keys($breakpoints)
+) {
+  $n: list.index($breakpoint-names, $name);
+  @if not $n {
+    @error "breakpoint `#{$name}` not found in `#{$breakpoints}`";
+  }
+  @return if(
+    $n < list.length($breakpoint-names),
+    list.nth($breakpoint-names, $n + 1),
+    null
+  );
+}
+
+//------------------------------------
+// Breakpoint Minimum
+// Minimum breakpoint width. Null for the smallest (first) breakpoint.
+// - @param $name: Selected breakpoint name as defined in mappings above.
+// - @param $breakpoints: Breakpoints mapping values as defined in mappings above.
+//------------------------------------
+
+@function breakpoint-min($name, $breakpoints: $grid-breakpoints) {
+  $min: map.get($breakpoints, $name);
+  @return if($min != 0, $min, null);
+}
+
+//------------------------------------
+// Breakpoint Maximum
+// The maximum value is reduced by 0.02px to work around the limitations of
+// `min-` and `max-` prefixes and viewports with fractional widths. See
+// https://www.w3.org/TR/mediaqueries-4/#mq-min-max. Uses 0.02px rather than
+// 0.01px to work around a current rounding bug in Safari. See
+// https://bugs.webkit.org/show_bug.cgi?id=178261
+// - @param $name: Selected breakpoint name as defined in mappings above.
+// - @param $breakpoints: Breakpoints mapping values as defined in mappings above.
+//------------------------------------
+
+@function breakpoint-max($name, $breakpoints: $grid-breakpoints) {
+  $max: map.get($breakpoints, $name);
+  @return if($max and $max > 0, $max - 0.02, null);
+}
+
+//------------------------------------
+// Breakpoint Infix
+// Returns a blank string if smallest breakpoint, otherwise returns the name
+// with a dash in front. Useful for making responsive utilities.
+// - @param $name: Selected breakpoint name as defined in mappings above.
+// - @param $breakpoints: Breakpoints mapping values as defined in mappings above.
+//------------------------------------
+
+@function breakpoint-infix($name, $breakpoints: $grid-breakpoints) {
+  @return if(breakpoint-min($name, $breakpoints) == null, '', '-#{$name}');
+}
+
+//------------------------------------
+// Minimum Breakpoint
+// Media/screen-size of at least the minimum breakpoint width -- apply to
+// screen-sizes above the breakpoint specified.
+// - @param $name: Selected breakpoint name as defined in partials/settings/_breakpoints.scss
+// - @param $breakpoints: Breakpoints mapping values as defined in partials/settings/_breakpoints.scss
+// - @example = @include bp-min(lg-tablet) {}
+//------------------------------------
+
+@mixin bp-min($name, $breakpoints: $grid-breakpoints) {
+  $min: breakpoint-min($name, $breakpoints);
+  @if $min {
+    @media (min-width: $min) {
+      @content;
+    }
+  } @else {
+    @error '[ #{$name} ] is not defined in $breakpoints. Found: [ #{map.keys($breakpoints)} ]. Make sure the breakpoint you are trying to use is defined.';
+  }
+}
+
+//------------------------------------
+// Maximum Breakpoint
+// Media/screen-size of at most the maximum breakpoint width -- apply to
+// screen-sizes below the breakpoint specified.
+// - @param $name: Selected breakpoint name as defined in partials/settings/_breakpoints.scss
+// - @param $breakpoints: Breakpoints mapping values as defined in partials/settings/_breakpoints.scss
+// - @example = @include bp-max(lg-tablet) {}
+//------------------------------------
+
+@mixin bp-max($name, $breakpoints: $grid-breakpoints) {
+  $max: breakpoint-max($name, $breakpoints);
+  @if $max {
+    @media (max-width: $max) {
+      @content;
+    }
+  } @else {
+    @error '[ #{$name} ] is not defined in $breakpoints. Found: [ #{map.keys($breakpoints)} ]. Make sure the breakpoint you are trying to use is defined.';
+  }
+}
+
+//------------------------------------
+// Between Breakpoint
+// Media/screen-size that spans multiple breakpoint widths -- apply to
+// screen-sizes between the breakpoints specified.
+// - @param $lower: Selected minimum breakpoint name as defined in partials/settings/_breakpoints.scss
+// - @param $upper: Selected maximum breakpoint name as defined in partials/settings/_breakpoints.scss
+// - @param $breakpoints: Breakpoints mapping values as defined in partials/settings/_breakpoints.scss
+// - @example = @include bp-between(xsmall, large) {}
+//------------------------------------
+
+@mixin bp-between($lower, $upper, $breakpoints: $grid-breakpoints) {
+  $min: breakpoint-min($lower, $breakpoints);
+  $max: breakpoint-max($upper, $breakpoints);
+
+  @if $min != null and $max != null {
+    @media (min-width: $min) and (max-width: $max) {
+      @content;
+    }
+  } @else if $max == null {
+    @include bp-min($lower, $breakpoints) {
+      @content;
+    }
+  } @else if $min == null {
+    @include bp-max($upper, $breakpoints) {
+      @content;
+    }
+  }
+}
+
+//------------------------------------
+// Only Breakpoint
+// Media/screen-size between the breakpoint's minimum and maximum widths -- No
+// minimum for the smallest breakpoint, and no maximum for the largest one.
+// - @param $name: Selected breakpoint name as defined in partials/settings/_breakpoints.scss
+// - @param $breakpoints: Breakpoints mapping values as defined in partials/settings/_breakpoints.scss
+// - @example = @include bp-only(large) {}
+//------------------------------------
+
+@mixin bp-only($name, $breakpoints: $grid-breakpoints) {
+  $min: breakpoint-min($name, $breakpoints);
+  $max: breakpoint-max($name, $breakpoints);
+
+  @if $min != null and $max != null {
+    @media (min-width: $min) and (max-width: $max) {
+      @content;
+    }
+  } @else if $max == null {
+    @include bp-min($name, $breakpoints) {
+      @content;
+    }
+  } @else if $min == null {
+    @include bp-max($name, $breakpoints) {
+      @content;
+    }
+  }
+}

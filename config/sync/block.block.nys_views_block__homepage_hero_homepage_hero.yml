@@ -1,0 +1,29 @@
+uuid: 425e2655-c4e7-4301-b778-8f4456cf414c
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.homepage_hero
+  module:
+    - system
+    - views
+  theme:
+    - nys
+id: nys_views_block__homepage_hero_homepage_hero
+theme: nys
+region: above_content
+weight: -16
+provider: null
+plugin: 'views_block:homepage_hero-homepage_hero'
+settings:
+  id: 'views_block:homepage_hero-homepage_hero'
+  label: ''
+  label_display: visible
+  provider: views
+  views_label: ''
+  items_per_page: none
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: '<front>'

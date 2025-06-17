@@ -1,0 +1,46 @@
+@use 'partials' as *;
+
+:root {
+  --nys-container-spacer: 40px;
+  --nys-container-width: none;
+
+  @include bp-min(sm) {
+    --nys-container-spacer: 60px;
+  }
+}
+
+.l-container {
+  padding-block: var(--nys-container-spacer);
+}
+
+.l-container__content {
+  margin-inline: auto;
+  max-width: var(--nys-container-width);
+  padding-inline: 40px;
+}
+
+.l-container--spacer-none {
+  --nys-container-spacer: 0;
+}
+
+.l-container--width-full {
+  --nys-container-width: none;
+}
+
+// This is aligning with the width of the site header, which is set with
+// percentages. Probably should clean that up at some point.
+.l-container--width-max {
+  --nys-container-width: 1500px;
+
+  .l-container__content {
+    padding-inline: 20px;
+
+    @include bp-min(sm) {
+      padding-inline: 8%;
+    }
+  }
+}
+
+.l-container--width-narrow {
+  --nys-container-width: 840px;
+}

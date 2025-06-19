@@ -32,14 +32,18 @@ third_party_settings:
   sdc_display:
     enabled: true
     component:
-      machine_name: 'nys:senator-dashboard-questionnaire-teaser'
+      machine_name: 'nys:senator-dashboard-node-teaser'
       show_deprecated: null
     mappings:
       static:
         props:
           title: Questionnaire
+          url: ''
           constituents_response_count: ''
           webform_submissions_download: ''
+          signings: ''
+          in_out_district_signings: ''
+          link_to_constituents_list: ''
           byline: ''
           status: ''
           date: ''
@@ -47,8 +51,12 @@ third_party_settings:
       dynamic:
         props:
           title: title
+          url: nys_senator_dashboard_path_alias
           constituents_response_count: nys_senator_dashboard_constituents_response_count
           webform_submissions_download: nys_senator_dashboard_webform_submissions_download
+          signings: ''
+          in_out_district_signings: ''
+          link_to_constituents_list: ''
           byline: field_senator_multiref
           status: nys_senator_dashboard_status
           date: field_date
@@ -65,7 +73,7 @@ content:
     label: inline_overridden
     settings:
       timezone_override: ''
-      format_type: publish_date
+      format_type: date_only
     third_party_settings:
       sdc_display:
         enabled: 0
@@ -73,16 +81,16 @@ content:
           machine_name: null
           show_deprecated: 0
       field_label_override:
-        label_override: 'Start:'
+        label_override: Posted
         preserve_label: false
-    weight: 4
+    weight: 5
     region: content
   field_expiration_date:
     type: datetime_default
     label: inline_overridden
     settings:
       timezone_override: ''
-      format_type: publish_date
+      format_type: date_only
     third_party_settings:
       sdc_display:
         enabled: 0
@@ -90,9 +98,9 @@ content:
           machine_name: null
           show_deprecated: 0
       field_label_override:
-        label_override: 'End:'
+        label_override: Expires
         preserve_label: false
-    weight: 5
+    weight: 6
     region: content
   field_senator_multiref:
     type: entity_reference_label
@@ -101,11 +109,16 @@ content:
       link: true
     third_party_settings:
       field_label_override:
-        label_override: 'By: '
+        label_override: By
         preserve_label: false
-    weight: 2
+    weight: 3
     region: content
   nys_senator_dashboard_constituents_response_count:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  nys_senator_dashboard_path_alias:
     settings: {  }
     third_party_settings: {  }
     weight: 0
@@ -113,12 +126,12 @@ content:
   nys_senator_dashboard_status:
     settings: {  }
     third_party_settings: {  }
-    weight: 3
+    weight: 4
     region: content
   nys_senator_dashboard_webform_submissions_download:
     settings: {  }
     third_party_settings: {  }
-    weight: 1
+    weight: 2
     region: content
 hidden:
   body: true

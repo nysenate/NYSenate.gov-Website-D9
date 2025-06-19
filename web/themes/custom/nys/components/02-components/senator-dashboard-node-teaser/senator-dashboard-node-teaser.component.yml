@@ -1,13 +1,22 @@
-name: Senator Dashboard questionnaire teaser
+$schema: https://git.drupalcode.org/project/sdc/-/raw/1.x/src/metadata.schema.json
+name: Senator Dashboard node teaser
 props:
   type: object
   required: [title]
   properties:
     title:
       type: string
+    url:
+      type: string
     constituents_response_count:
       type: string
     webform_submissions_download:
+      type: string
+    signings:
+      type: string
+    in_out_district_signings:
+      type: string
+    link_to_constituents_list:
       type: string
     byline:
       type: string

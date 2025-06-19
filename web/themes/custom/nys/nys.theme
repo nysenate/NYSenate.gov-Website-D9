@@ -242,7 +242,6 @@ function nys_preprocess_page(&$variables) {
  * Implements hook_preprocess_node().
  */
 function nys_preprocess_node(&$variables) {
-  // Attach the senator-dashboard-bill-teaser library to bill nodes with the senator_dashboard_bill_teaser view mode.
   if ($variables['node']->getType() == 'bill' && $variables['view_mode'] == 'senator_dashboard_bill_teaser') {
     $variables['#attached']['library'][] = 'nys/senator-dashboard-bill-teaser';
   }

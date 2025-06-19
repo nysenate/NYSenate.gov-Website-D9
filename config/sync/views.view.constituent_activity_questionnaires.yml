@@ -84,10 +84,10 @@ display:
           total_pages: null
           id: 0
           tags:
-            next: ››
-            previous: ‹‹
-            first: '« First'
-            last: 'Last »'
+            next: 'Next page'
+            previous: 'Previous page'
+            first: 'First page'
+            last: 'Last page'
           expose:
             items_per_page: false
             items_per_page_label: 'Items per page'
@@ -155,7 +155,7 @@ display:
             microsite_content_producer: microsite_content_producer
             legislative_correspondent: legislative_correspondent
       cache:
-        type: tag
+        type: none
         options: {  }
       empty:
         area:
@@ -359,6 +359,7 @@ display:
           replica: false
           query_tags: {  }
       relationships: {  }
+      css_class: simple-pager
       header:
         result:
           id: result

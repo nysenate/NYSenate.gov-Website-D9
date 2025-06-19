@@ -195,9 +195,20 @@ function nys_senator_dashboard_views_data() {
  */
 function nys_senator_dashboard_entity_extra_field_info() {
   $extra = [];
+
+  $entity_type_manager = \Drupal::entityTypeManager();
+  $node_types = $entity_type_manager->getStorage('node_type')->loadMultiple();
+  foreach ($node_types as $bundle => $type) {
+    $extra['node'][$bundle]['display']['nys_senator_dashboard_path_alias'] = [
+      'label' => t('NYS Senator Dashboard: Path alias'),
+      'description' => t('Displays the node\'s path alias as a basic string.'),
+      'weight' => 10,
+      'visible' => FALSE,
+    ];
+  }
+
   $flag_service = \Drupal::service('flag');
   $flags = $flag_service->getAllFlags();
-
   /** @var \Drupal\flag\FlagInterface $flag */
   foreach ($flags as $flag) {
     $flag_type_plugin = $flag->getFlagTypePlugin();
@@ -332,7 +343,7 @@ function nys_senator_dashboard_entity_view(array &$build, \Drupal\Core\Entity\En
       $in_count = t('@in_count in-district', ['@in_count' => $in_district_flagging_count]);
       $out_count = t('@out_count out-of-district', ['@out_count' => $out_district_flagging_count]);
       $build['nys_senator_dashboard_district_flag_count_' . $flag->id()] = [
-        '#markup' => "<p class='district-flagging-count'><span>$in_count</span> <span>$out_count</span></p>",
+        '#markup' => "<p><strong>$in_count</strong></p><p><strong>$out_count</strong></p>",
       ];
     }
   }
@@ -389,7 +400,7 @@ function nys_senator_dashboard_entity_view(array &$build, \Drupal\Core\Entity\En
         '#value' => t('Download all responses (CSV)'),
         '#attributes' => [
           'href' => "/admin/webform/manage/$webform_id/results/download",
-          'class' => ['c-senator-dashboard-questionnaire-teaser--webform-submissions-download'],
+          'class' => ['c-senator-dashboard--webform-submissions-download'],
         ]
       ];
     }
@@ -578,6 +589,13 @@ function nys_senator_dashboard_entity_view(array &$build, \Drupal\Core\Entity\En
       '#attributes' => [
         'class' => 'senator-dashboard-followers-link',
       ],
+    ];
+  }
+
+  if ($display->getComponent('nys_senator_dashboard_path_alias') && $entity->getEntityTypeId() === 'node') {
+    $path_alias = \Drupal::service('path_alias.manager')->getAliasByPath('/node/' . $entity->id());
+    $build['nys_senator_dashboard_path_alias'] = [
+      '#markup' => $path_alias,
     ];
   }
 }

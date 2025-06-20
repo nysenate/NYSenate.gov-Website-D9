@@ -61,7 +61,7 @@
             <div class="c-newsroom-link">
               {% for topic in item.news_topics %}
                 <a class="c-press-release--topic" href="{{ topic.url }}">{{ topic.text }}</a>
-                {{ loop.first and item.news_topics <= 1 or loop.last ? '' : ', ' }}
+                {{ loop.first and item.news_topics <= 1 }}
               {% endfor %}
             </div>
           {% endif %}

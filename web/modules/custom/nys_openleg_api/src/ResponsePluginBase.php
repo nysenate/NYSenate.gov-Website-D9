@@ -26,7 +26,7 @@ abstract class ResponsePluginBase implements ResponsePluginInterface {
   /**
    * Constructor.
    */
-  public function __construct(object $response = NULL) {
+  public function __construct(?object $response = NULL) {
     if ($response) {
       $this->init($response);
     }

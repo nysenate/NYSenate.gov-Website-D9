@@ -8,7 +8,7 @@ namespace Drupal\nys_openleg_api;
 trait AllowHyphensInIds {
 
   /**
-   * Changes '-' to '/'
+   * Changes '-' to '/'.
    */
   protected function normalizeName(string $name): string {
     return str_replace('-', '/', $name);

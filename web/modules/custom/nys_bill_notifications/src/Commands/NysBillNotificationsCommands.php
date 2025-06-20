@@ -94,7 +94,7 @@ class NysBillNotificationsCommands extends DrushCommands {
 
     // Check for a lock, and set the lock.
     if ($has_lock = $this->getLock()) {
-      $this->logger()->warning("Process lock detected ...");
+      $this->logger()->warning("Process lock detected while processing bill notifications ...");
       if (!$this->options['force']) {
         $message = "Process lock in place since " .
           date(Request::OPENLEG_TIME_SIMPLE, $has_lock) .
@@ -110,7 +110,6 @@ class NysBillNotificationsCommands extends DrushCommands {
     $this->releaseLock();
 
     $this->setState('last_run', $ts);
-    /* @phpstan-ignore-next-line */
     $this->logger()->success(dt('Update processing complete.'));
     return 0;
   }
@@ -126,7 +125,7 @@ class NysBillNotificationsCommands extends DrushCommands {
   /**
    * Sets a state value.
    */
-  protected function setState(string $name, $value) {
+  protected function setState(string $name, $value): void {
     $full_name = 'nys_bill_notifications.' . $name;
     $this->state->set($full_name, $value);
   }
@@ -134,8 +133,8 @@ class NysBillNotificationsCommands extends DrushCommands {
   /**
    * Gets the time the process lock was set (zero, if not locked).
    */
-  protected function getLock() {
-    return $this->getState('locked', 0);
+  protected function getLock(): int {
+    return (int) $this->getState('locked', 0);
   }
 
   /**
@@ -156,14 +155,14 @@ class NysBillNotificationsCommands extends DrushCommands {
   /**
    * Releases the process lock.
    */
-  protected function releaseLock() {
+  protected function releaseLock(): void {
     $this->setState('locked', 0);
   }
 
   /**
    * Sets sane defaults for 'from' and 'to' options.
    */
-  protected function populateDefaults() {
+  protected function populateDefaults(): void {
     $this->defaultOptions['from'] = $this->getState('last_run', 0);
     $this->defaultOptions['to'] = time();
   }

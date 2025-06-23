@@ -71,8 +71,8 @@ a.nys-btn--gold {
   align-items: center;
   justify-content: center;
   padding: 20px 10px;
-  background: $orange-text;
-  color: #fff;
+  background: $background-yellow;
+  color: $background-text;
   text-align: center;
   text-transform: uppercase;
   font-family: $font-sans-bold;
@@ -83,7 +83,8 @@ a.nys-btn--gold {
   height: 100px;
 
   &:hover {
-    background: $yellow03;
+    background: $gen_link_hover;
+    color: #fff;
     text-decoration: underline;
   }
 }
@@ -215,11 +216,11 @@ ul.c-block--about-seal {
       left: 0;
       height: 27px;
       width: 28px;
-      background: $orange-text!important;
+      background: $background-yellow;
       text-align: center;
       font-size: 18px;
       line-height: 28px;
-      color: #fff;
+      color: $background-text!important;
       font-family: $font-sans-bold;
       content: counter(seal-counter);
       counter-increment: seal-counter;

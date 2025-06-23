@@ -374,11 +374,11 @@ body {
   width: 120px;
   height: 120px;
   margin: 0 auto;
-  background: $yellow01;
+  background: $background-yellow;
   border-radius: 50%;
   text-align: center;
   font-family: $font-serif-regular;
-  color: #000;
+  color: $background-text;
   font-size: 16px;
   line-height: 1.3em;
 
@@ -930,14 +930,14 @@ p.c-senate-works-step-description {
     .c-block--btn {
       display: inline-block; // changed from flex
       position: relative;
-      background: $orange-text;
+      background: $background-yellow;
       height: 70px;
       line-height: 70px;
       font-size: 13px;
       letter-spacing: 2.6px;
       padding: 0 20px 0 40px; // space for icon on the left
       text-align: left;
-      color: #fff;
+      color: $background-text;
       text-decoration: none;
       vertical-align: middle;
       white-space: nowrap;
@@ -946,6 +946,7 @@ p.c-senate-works-step-description {
       // remove underline from whole link on hover
       &:hover {
         background: $gen_link_hover; //test
+        color: #fff;
         text-decoration: none;
 
         .btn-text {

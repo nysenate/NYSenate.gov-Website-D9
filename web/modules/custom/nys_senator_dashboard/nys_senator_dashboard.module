@@ -337,7 +337,7 @@ function nys_senator_dashboard_entity_view(array &$build, \Drupal\Core\Entity\En
       );
       $in_district_flagging_count = _nys_senator_dashboard_get_in_district_flagging_count(
         $flag->id(),
-        $entity->getEntityTypeId()
+        $entity->id()
       );
       $out_district_flagging_count = $flagging_count - $in_district_flagging_count;
       $in_count = t('@in_count in-district', ['@in_count' => $in_district_flagging_count]);
@@ -640,10 +640,12 @@ function _nys_senator_dashboard_get_flagging_count($flag_id, $entity_type, $enti
  *
  * @return int
  *   The number of in-district flaggings for the given flag and entity IDs.
+ *   Returns 0 if the query fails or no flaggings are found.
  */
-function _nys_senator_dashboard_get_in_district_flagging_count($flag_id, $entity_id): int {
-  $active_senator_district_id = \Drupal::service('nys_senator_dashboard.managed_senators_handler')
-    ->getActiveSenatorDistrictId();
+function _nys_senator_dashboard_get_in_district_flagging_count(string $flag_id, int $entity_id): int {
+  $managed_senators_handler = \Drupal::service('nys_senator_dashboard.managed_senators_handler');
+  $active_senator_district_id = $managed_senators_handler->getActiveSenatorDistrictId();
+
   if (!$active_senator_district_id) {
     return 0;
   }
@@ -657,9 +659,15 @@ function _nys_senator_dashboard_get_in_district_flagging_count($flag_id, $entity
   $query->condition('f.flag_id', $flag_id)
     ->condition('f.entity_id', $entity_id)
     ->condition('ufd.field_district_target_id', $active_senator_district_id);
-  $count = $query->countQuery()->execute()->fetchField();
 
-  return (int) ($count ?: 0);
+  try {
+    $count = $query->countQuery()->execute()->fetchField();
+    return (int) ($count ?: 0);
+  }
+  catch(\Exception $e) {
+    \Drupal::logger('nys_senator_dashboard')->error('Error retrieving in-district flaggings: @message', ['@message' => $e->getMessage()]);
+    return 0;
+  }
 }
 
 /**
@@ -672,10 +680,19 @@ function _nys_senator_dashboard_get_in_district_flagging_count($flag_id, $entity
  *   The count of in-district constituents who submitted to the webform.
  */
 function _nys_senator_dashboard_get_in_district_webform_submission_count(NodeInterface $node): int {
+  if ($node->getType() !== 'webform' || !$node->hasField('webform')) {
+    \Drupal::logger('nys_senator_dashboard')
+      ->warning('Invalid node type or missing "webform" field.');
+    return 0;
+  }
+
+  $webform_id = $node->webform?->target_id;
   $active_senator_district_id = \Drupal::service('nys_senator_dashboard.managed_senators_handler')
     ->getActiveSenatorDistrictId();
-  $webform_id = $node->webform?->target_id;
+
   if (!$webform_id || !$active_senator_district_id) {
+    \Drupal::logger('nys_senator_dashboard')
+      ->warning('Missing webform ID or Active Senator District ID.');
     return 0;
   }
 
@@ -686,8 +703,37 @@ function _nys_senator_dashboard_get_in_district_webform_submission_count(NodeInt
   $query->condition('ufd.field_district_target_id', $active_senator_district_id);
   $count = $query->countQuery()->execute()->fetchField();
 
-  return (int) $count;
+  $count = $count !== FALSE ? (int) $count : 0;
+  return $count;
 }
+
+
+///**
+// * Gets the count of in-district constituents who submitted to the webform.
+// *
+// * @param \Drupal\node\NodeInterface $node
+// *   The node entity, expected to be of type "webform".
+// *
+// * @return int
+// *   The count of in-district constituents who submitted to the webform.
+// */
+//function _nys_senator_dashboard_get_in_district_webform_submission_count(NodeInterface $node): int {
+//  $active_senator_district_id = \Drupal::service('nys_senator_dashboard.managed_senators_handler')
+//    ->getActiveSenatorDistrictId();
+//  $webform_id = $node->webform?->target_id;
+//  if (!$webform_id || !$active_senator_district_id) {
+//    return 0;
+//  }
+//
+//  $query = \Drupal::database()
+//    ->select('webform_submission', 'ws');
+//  $query->join('user__field_district', 'ufd', 'ws.uid = ufd.entity_id');
+//  $query->condition('ws.webform_id', $webform_id);
+//  $query->condition('ufd.field_district_target_id', $active_senator_district_id);
+//  $count = $query->countQuery()->execute()->fetchField();
+//
+//  return (int) $count;
+//}
 
 /**
  * Gets vote counts for a bill.

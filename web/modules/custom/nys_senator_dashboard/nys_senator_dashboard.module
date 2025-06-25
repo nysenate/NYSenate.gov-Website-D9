@@ -1,0 +1,816 @@
+<?php
+
+/**
+ * @file
+ * Contains custom module logic for NYS Senator Dashboard.
+ */
+
+use Drupal\Core\Database\Query\AlterableInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
+use Drupal\flag\Plugin\Flag\EntityFlagType;
+use Drupal\node\NodeInterface;
+
+/**
+ * Implements hook_query_TAG_alter().
+ *
+ * Ensures views with the "senators_constituents_only" tag only display profiles
+ * linked to the current user's active managed senator's districts.
+ */
+function nys_senator_dashboard_query_senators_constituents_only_alter(AlterableInterface $query) {
+  // Get active managed senator.
+  $senator_term = \Drupal::service('nys_senator_dashboard.managed_senators_handler')
+    ->getActiveSenator(FALSE);
+  if (empty($senator_term)) {
+    $query->alwaysFalse();
+    return;
+  }
+
+  // Get senator's districts.
+  $managed_district_ids = [];
+  try {
+    $senator_districts = \Drupal::entityTypeManager()
+      ->getStorage('taxonomy_term')
+      ->loadByProperties([
+        'vid' => 'districts',
+        'field_senator' => $senator_term->id(),
+      ]);
+  }
+  catch (\Throwable $e) {
+    $query->alwaysFalse();
+    return;
+  }
+  foreach ($senator_districts as $senator_district) {
+    $managed_district_ids[] = $senator_district->id();
+  }
+  if (empty($managed_district_ids)) {
+    $query->alwaysFalse();
+    return;
+  }
+
+  // Get the views table alias corresponding to the users_field_data table
+  // (could be users_field_data_1, etc.).
+  $table_aliases = $query->getTables();
+  $user_table_alias = null;
+  foreach ($table_aliases as $alias => $table_info) {
+    if ($table_info['table'] === 'users_field_data') {
+      $user_table_alias = $alias;
+      break;
+    }
+  }
+  if (!$user_table_alias) {
+    $query->alwaysFalse();
+    return;
+  }
+
+  // Ensure the users being fetched are within the user's active managed
+  // senator's districts.
+  $query->leftJoin(
+    'user__field_district',
+    'ufd',
+    "{$user_table_alias}.uid = ufd.entity_id"
+  );
+  $query->condition('ufd.field_district_target_id', $managed_district_ids, 'IN');
+}
+
+/**
+ * Implements hook_theme().
+ */
+function nys_senator_dashboard_theme() {
+  return [
+    'nys_senator_dashboard_header' => [
+      'variables' => [
+        'senator_image_url' => '',
+        'breadcrumbs' => '',
+        'header_title' => '',
+        'header_blurb' => '',
+        'homepage_url' => '',
+      ],
+    ],
+    'nys_senator_dashboard_constituent_engagement' => [
+      'variables' => [
+        'items' => [],
+        'title' => '',
+      ],
+    ],
+    'nys_senator_dashboard__set_active_senator_menu' => [
+      'variables' => [
+        'mode' => '',
+        'active_senator_links' => [],
+      ],
+    ],
+    'menu__senator_dashboard' => [
+      'variables' => [
+        'mode' => '',
+        'items' => [],
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function nys_senator_dashboard_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if (str_starts_with($form_id, 'views_form_senator_dashboard_constituents_')) {
+    // Hide additional footer bulk operation button.
+    $form['actions']['#access'] = FALSE;
+  }
+}
+
+/**
+ * Implements hook_views_data().
+ */
+function nys_senator_dashboard_views_data() {
+  $data['users']['votingapi_vote']['relationship'] = [
+    'title' => t('User votes'),
+    'label' => t('Vote entity'),
+    'group' => 'Users',
+    'help' => t('Reference to vote entities by a user.'),
+    'id' => 'standard',
+    'base' => 'votingapi_vote',
+    'base field' => 'user_id',
+    'field' => 'uid',
+  ];
+  $data['users']['flagging']['relationship'] = [
+    'title' => t('User flaggings'),
+    'label' => t('Flagging entity'),
+    'group' => 'Users',
+    'help' => t('Reference to flagging entities by a user.'),
+    'id' => 'flag_relationship',
+    'base' => 'flagging',
+    'base field' => 'uid',
+    'field' => 'uid',
+  ];
+  $data['users']['nys_senator_dashboard_contextual_filter_flag_link'] = [
+    'title' => t('NYS Senator Dashboard: Flag link (from issue ID contextual filter)'),
+    'help' => t('Displays a flag link based on an issue ID context filter value.'),
+    'field' => [
+      'id' => 'nys_senator_dashboard_contextual_filter_flag_link',
+    ],
+  ];
+  $data['users']['nys_senator_dashboard_contextual_filter_webform_id'] = [
+    'title' => t('NYS Senator Dashboard: Webform ID (from entity ID contextual filter)'),
+    'help' => t('Displays the Webform ID based on the parent entity ID from the context filter value.'),
+    'field' => [
+      'id' => 'nys_senator_dashboard_contextual_filter_webform_id',
+    ],
+  ];
+  $data['node']['nys_senator_dashboard_active_senator_sponsor_filter'] = [
+    'title' => t('NYS Senator Dashboard: Active senator sponsor filter'),
+    'help' => t('Filter bills to those sponsored or co-sponsored by the active senator.'),
+    'filter' => [
+      'id' => 'nys_senator_dashboard_active_senator_sponsor_filter',
+    ],
+  ];
+  $data['node__field_senator_multiref']['nys_senator_dashboard_active_senator_filter'] = [
+    'title' => t('NYS Senator Dashboard: Active managed senator filter'),
+    'help' => t("Filter nodes to those linked to the user's active managed senator."),
+    'filter' => [
+      'id' => 'nys_senator_dashboard_active_senator_filter',
+      'field' => 'field_senator_multiref_target_id',
+      'group' => t('Content'),
+    ],
+  ];
+  $data['taxonomy_term_data']['nys_senator_dashboard_active_senator_used_issues'] = [
+    'title' => t('NYS Senator Dashboard: Active senator used issues filter'),
+    'help' => t('Filter issues to those used in content (Articles, Press Releases, etc.) by the active senator.'),
+    'filter' => [
+      'id' => 'nys_senator_dashboard_active_senator_used_issues',
+    ],
+  ];
+  $data['taxonomy_term_data']['nys_senator_dashboard_issue_followers_count_sort'] = [
+    'title' => t('NYS Senator Dashboard: Issue followers'),
+    'help' => t('Sort taxonomy terms by the number of follow_issue flaggings.'),
+    'sort' => [
+      'id' => 'nys_senator_dashboard_issue_followers_count_sort',
+    ],
+  ];
+  return $data;
+}
+
+/**
+ * Implements hook_entity_extra_field_info().
+ */
+function nys_senator_dashboard_entity_extra_field_info() {
+  $extra = [];
+
+  $entity_type_manager = \Drupal::entityTypeManager();
+  $node_types = $entity_type_manager->getStorage('node_type')->loadMultiple();
+  foreach ($node_types as $bundle => $type) {
+    $extra['node'][$bundle]['display']['nys_senator_dashboard_path_alias'] = [
+      'label' => t('NYS Senator Dashboard: Path alias'),
+      'description' => t('Displays the node\'s path alias as a basic string.'),
+      'weight' => 10,
+      'visible' => FALSE,
+    ];
+  }
+
+  $flag_service = \Drupal::service('flag');
+  $flags = $flag_service->getAllFlags();
+  /** @var \Drupal\flag\FlagInterface $flag */
+  foreach ($flags as $flag) {
+    $flag_type_plugin = $flag->getFlagTypePlugin();
+    if (!($flag_type_plugin instanceof EntityFlagType)) {
+      continue;
+    }
+
+    $flaggable_bundles = $flag->getApplicableBundles();
+    foreach ($flaggable_bundles as $bundle_name) {
+      $extra[$flag->getFlaggableEntityTypeId()][$bundle_name]['display']['nys_senator_dashboard_flag_count_' . $flag->id()] = [
+        'label' => t('NYS Senator Dashboard: Flag count: %title', ['%title' => $flag->label()]),
+        'description' => t('A custom field that displays the total flagging count on an entity.'),
+        'weight' => 10,
+        'visible' => FALSE,
+      ];
+
+      $extra[$flag->getFlaggableEntityTypeId()][$bundle_name]['display']['nys_senator_dashboard_district_flag_count_' . $flag->id()] = [
+        'label' => t('NYS Senator Dashboard: In / out district flagging counts: %title', ['%title' => $flag->label()]),
+        'description' => t('A custom field that displays in / out district flagging counts.'),
+        'weight' => 10,
+        'visible' => FALSE,
+      ];
+    }
+  }
+
+  $extra['node']['petition']['display']['nys_senator_dashboard_link_to_constituents_list'] = [
+    'label' => t('NYS Senator Dashboard: Link to constituents list'),
+    'description' => t('Displays a link to the constituents list.'),
+    'weight' => 10,
+    'visible' => FALSE,
+  ];
+
+  $nys_senator_dashboard_status = [
+    'label' => t('NYS Senator Dashboard: Active status'),
+    'description' => t('Displays the nodes status as Active or Inactive.'),
+    'weight' => 10,
+    'visible' => FALSE,
+  ];
+  $extra['node']['petition']['display']['nys_senator_dashboard_status'] = $nys_senator_dashboard_status;
+  $extra['node']['webform']['display']['nys_senator_dashboard_status'] = $nys_senator_dashboard_status;
+
+  $extra['node']['webform']['display']['nys_senator_dashboard_constituents_response_count'] = [
+    'label' => t('NYS Senator Dashboard: Questionnaire constituents response count'),
+    'description' => t('Displays the constituents response count as link to the constituents list.'),
+    'weight' => 10,
+    'visible' => FALSE,
+  ];
+
+  $extra['node']['webform']['display']['nys_senator_dashboard_webform_submissions_download'] = [
+    'label' => t('NYS Senator Dashboard: Link to webform submissions download form'),
+    'description' => t('Displays a link to the webform submissions download form.'),
+    'weight' => 10,
+    'visible' => FALSE,
+  ];
+
+  $extra['node']['bill']['display']['nys_senator_dashboard_vote_totals'] = [
+    'label' => t('NYS Senator Dashboard: Chart of vote totals'),
+    'description' => t('Displays a chart of vote totals using the Charts module.'),
+    'weight' => 10,
+    'visible' => FALSE,
+  ];
+
+  $extra['node']['bill']['display']['nys_senator_dashboard_vote_totals_district_breakdown'] = [
+    'label' => t('NYS Senator Dashboard: Chart of vote totals broken down by district'),
+    'description' => t('Displays two charts of vote totals broken down by district using the Charts module.'),
+    'weight' => 10,
+    'visible' => FALSE,
+  ];
+
+  $extra['node']['bill']['display']['nys_senator_dashboard_bill_action_links'] = [
+    'label' => t('NYS Senator Dashboard: Bill action links'),
+    'description' => t('Displays links to view in-district constituents and comments.'),
+    'weight' => 10,
+    'visible' => FALSE,
+  ];
+
+  $extra['taxonomy_term']['issues']['display']['nys_senator_dashboard_followers_link'] = [
+    'label' => t('NYS Senator Dashboard: Followers link'),
+    'description' => t('A link to the constituent followers list.'),
+    'weight' => 10,
+    'visible' => FALSE,
+  ];
+
+  return $extra;
+}
+
+/**
+ * Implements hook_entity_view().
+ */
+function nys_senator_dashboard_entity_view(array &$build, \Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display) {
+  /** @var Drupal\flag\FlagService $flag_service */
+  $flag_service = \Drupal::service('flag');
+
+  $flags = $flag_service->getAllFlags($entity->getEntityTypeId(), $entity->bundle());
+  foreach ($flags as $flag) {
+    if (!$flag->status()) {
+      continue;
+    }
+
+    if ($display->getComponent('nys_senator_dashboard_flag_count_' . $flag->id())) {
+      $flagging_count = _nys_senator_dashboard_get_flagging_count(
+        $flag->id(),
+        $entity->getEntityTypeId(),
+        $entity->id()
+      );
+      $value = match($entity->bundle()) {
+        'issues' => t('@count followers', ['@count' => $flagging_count]),
+        'petition' => t('Signed by @count constituents', ['@count' => $flagging_count]),
+        default => $flagging_count,
+      };
+      $build['nys_senator_dashboard_flag_count_' . $flag->id()] = [
+        '#type' => 'html_tag',
+        '#tag' => 'p',
+        '#value' => $value,
+        '#attributes' => [
+          'class' => ['senator-dashboard-flagging-count'],
+        ],
+      ];
+    }
+
+    if ($display->getComponent('nys_senator_dashboard_district_flag_count_' . $flag->id())) {
+      $flagging_count = _nys_senator_dashboard_get_flagging_count(
+        $flag->id(),
+        $entity->getEntityTypeId(),
+        $entity->id()
+      );
+      $in_district_flagging_count = _nys_senator_dashboard_get_in_district_flagging_count(
+        $flag->id(),
+        $entity->id()
+      );
+      $out_district_flagging_count = $flagging_count - $in_district_flagging_count;
+      $in_count = t('@in_count in-district', ['@in_count' => $in_district_flagging_count]);
+      $out_count = t('@out_count out-of-district', ['@out_count' => $out_district_flagging_count]);
+      $build['nys_senator_dashboard_district_flag_count_' . $flag->id()] = [
+        '#markup' => "<p><strong>$in_count</strong></p><p><strong>$out_count</strong></p>",
+      ];
+    }
+  }
+
+  if ($display->getComponent('nys_senator_dashboard_link_to_constituents_list')) {
+    $url = "/senator-dashboard/constituent-activity/petitions/{$entity->id()}";
+    $build['nys_senator_dashboard_link_to_constituents_list'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'a',
+      '#value' => t('View in-district signatories'),
+      '#attributes' => [
+        'href' => $url,
+        'class' => ['link-to-constituents-list'],
+      ],
+    ];
+  }
+
+  if ($display->getComponent('nys_senator_dashboard_status')) {
+    $value = $entity->isPublished() ? t('Active') : t('Inactive');
+    $class = $entity->isPublished() ? 'active' : 'inactive';
+    $build['nys_senator_dashboard_status'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'p',
+      '#value' => $value,
+      '#attributes' => [
+        'class' => ["$class"],
+      ],
+    ];
+  }
+
+  if ($display->getComponent('nys_senator_dashboard_constituents_response_count')) {
+    $url = "/senator-dashboard/constituent-activity/questionnaires/{$entity->id()}";
+    $constituent_response_count = _nys_senator_dashboard_get_in_district_webform_submission_count($entity);
+    $build['nys_senator_dashboard_constituents_response_count'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'a',
+      '#value' => t(
+        '@constituent_response_count constituent(s) responded',
+        ['@constituent_response_count' => $constituent_response_count]
+      ),
+      '#attributes' => [
+        'href' => $url,
+        'class' => ['c-senator-dashboard-questionnaire-teaser--link-to-constituents-list'],
+      ]
+    ];
+  }
+
+  if ($display->getComponent('nys_senator_dashboard_webform_submissions_download')) {
+    $webform_id = $entity->webform?->entity?->id();
+    if ($webform_id) {
+      $build['nys_senator_dashboard_webform_submissions_download'] = [
+        '#type' => 'html_tag',
+        '#tag' => 'a',
+        '#value' => t('Download all responses (CSV)'),
+        '#attributes' => [
+          'href' => "/admin/webform/manage/$webform_id/results/download",
+          'class' => ['c-senator-dashboard--webform-submissions-download'],
+        ]
+      ];
+    }
+  }
+
+  if ($display->getComponent('nys_senator_dashboard_vote_totals')) {
+    $data = _nys_senator_dashboard_get_bill_vote_counts($entity, 'total_votes');
+    $total = array_sum($data);
+    $ayes_percentage = ($total > 0) ? round(($data[0] / $total) * 100) : 0;
+    $nays_percentage = ($total > 0) ? round(($data[1] / $total) * 100) : 0;
+    $labels = [
+      t('Ayes: @count (@percentage%)', ['@count' => $data[0], '@percentage' => $ayes_percentage]),
+      t('Nays: @count (@percentage%)', ['@count' => $data[1], '@percentage' => $nays_percentage]),
+    ];
+    $build['nys_senator_dashboard_vote_totals'] = [
+      '#type' => 'container',
+      '#attributes' => ['class' => ['chart-container']],
+      'total_label' => [
+        '#type' => 'html_tag',
+        '#tag' => 'div',
+        '#value' => t('Total:'),
+        '#attributes' => ['class' => 'total-label'],
+      ],
+      'chart' => [
+        '#type' => 'chart',
+        '#chart_type' => 'donut',
+        '#colors' => ['#D48011', '#444444'],
+        '#tooltips' => FALSE,
+        'series' => [
+          '#type' => 'chart_data',
+          '#data' => $total ? $data : [0, 1],
+        ],
+        'x_axis' => [
+          '#type' => 'chart_xaxis',
+          '#labels' => $labels,
+        ],
+        '#raw_options' => [
+          'chart' => [
+            'height' => 150,
+            'width' => 250,
+          ],
+        ],
+      ],
+      'total_value' => [
+        '#type' => 'html_tag',
+        '#tag' => 'div',
+        '#value' => "($total)",
+        '#attributes' => ['class' => 'total-value'],
+      ],
+    ];
+  }
+
+  if ($display->getComponent('nys_senator_dashboard_vote_totals_district_breakdown')) {
+    $in_district_votes = _nys_senator_dashboard_get_bill_vote_counts($entity, 'in_district_votes');
+    $in_district_total = array_sum($in_district_votes);
+    $in_district_ayes_percentage = ($in_district_total > 0) ? round(($in_district_votes[0] / $in_district_total) * 100) : 0;
+    $in_district_nays_percentage = ($in_district_total > 0) ? round(($in_district_votes[1] / $in_district_total) * 100) : 0;
+    $in_district_labels = [
+      t('In-district Ayes: @count (@percentage%)', ['@count' => $in_district_votes[0], '@percentage' => $in_district_ayes_percentage]),
+      t('In-district Nays: @count (@percentage%)', ['@count' => $in_district_votes[1], '@percentage' => $in_district_nays_percentage]),
+    ];
+
+    $out_of_district_data = _nys_senator_dashboard_get_bill_vote_counts($entity, 'out_of_district_votes');
+    $out_of_district_total = array_sum($out_of_district_data);
+    $out_of_district_ayes_percentage = ($out_of_district_total > 0) ? round(($out_of_district_data[0] / $out_of_district_total) * 100) : 0;
+    $out_of_district_nays_percentage = ($out_of_district_total > 0) ? round(($out_of_district_data[1] / $out_of_district_total) * 100) : 0;
+    $out_of_district_labels = [
+      t('Out-of-district Ayes: @count (@percentage%)', ['@count' => $out_of_district_data[0], '@percentage' => $out_of_district_ayes_percentage]),
+      t('Out-of-district Nays: @count (@percentage%)', ['@count' => $out_of_district_data[1], '@percentage' => $out_of_district_nays_percentage]),
+    ];
+
+    $build['nys_senator_dashboard_vote_totals_district_breakdown'] = [
+      '#type' => 'container',
+      '#attributes' => ['class' => ['district-breakdown-charts']],
+    ];
+
+    if ($in_district_total > 0) {
+      $build['nys_senator_dashboard_vote_totals_district_breakdown']['in_district_container'] = [
+        '#type' => 'container',
+        '#attributes' => ['class' => ['chart-container']],
+        'in_district_label' => [
+          '#type' => 'html_tag',
+          '#tag' => 'div',
+          '#value' => t('Breakdown by district:'),
+          '#attributes' => ['class' => 'total-label'],
+        ],
+        'in_district_chart' => [
+          '#type' => 'chart',
+          '#chart_type' => 'donut',
+          '#colors' => ['#367866', '#222'],
+          '#tooltips' => FALSE,
+          'series' => [
+            '#type' => 'chart_data',
+            '#data' => $in_district_votes,
+          ],
+          'x_axis' => [
+            '#type' => 'chart_xaxis',
+            '#labels' => $in_district_labels,
+          ],
+          '#raw_options' => [
+            'chart' => [
+              'height' => 70,
+              'width' => 276,
+            ],
+          ],
+        ],
+        'in_district_total' => [
+          '#type' => 'html_tag',
+          '#tag' => 'div',
+          '#value' => "($in_district_total)",
+          '#attributes' => ['class' => 'total-value'],
+        ],
+      ];
+    }
+
+    if ($out_of_district_total > 0) {
+      $build['nys_senator_dashboard_vote_totals_district_breakdown']['out_of_district_container'] = [
+        '#type' => 'container',
+        '#attributes' => ['class' => ['chart-container']],
+        'out_of_district_label' => [
+          '#type' => 'html_tag',
+          '#tag' => 'div',
+          '#attributes' => ['class' => 'total-label'],
+        ],
+        'out_of_district_chart' => [
+          '#type' => 'chart',
+          '#chart_type' => 'donut',
+          '#colors' => ['#367866', '#222'],
+          '#tooltips' => FALSE,
+          'series' => [
+            '#type' => 'chart_data',
+            '#data' => $out_of_district_data,
+          ],
+          'x_axis' => [
+            '#type' => 'chart_xaxis',
+            '#labels' => $out_of_district_labels,
+          ],
+          '#raw_options' => [
+            'chart' => [
+              'height' => 70,
+              'width' => 300,
+            ],
+          ],
+        ],
+        'out_of_district_total' => [
+          '#type' => 'html_tag',
+          '#tag' => 'div',
+          '#value' => "($out_of_district_total)",
+          '#attributes' => ['class' => 'total-value'],
+        ],
+      ];
+    }
+  }
+
+  if ($display->getComponent('nys_senator_dashboard_bill_action_links')) {
+    $comments = _nys_senator_dashboard_get_comment_count($entity);
+    $build['nys_senator_dashboard_bill_action_links'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'class' => ['senator-dashboard-bill-action-links'],
+      ],
+      'constituents_link' => [
+        '#type' => 'link',
+        '#title' => t('View in-district constituents'),
+        '#url' => Url::fromUri("internal:/senator-dashboard/constituent-activity/bills/{$entity->id()}"),
+        '#attributes' => [
+          'class' => ['senator-dashboard-bill-constituents-link'],
+        ],
+      ],
+      'comments_link' => [
+        '#type' => 'link',
+        '#title' => t('@count comment(s)', ['@count' => $comments]),
+        '#url' => Url::fromUri("internal:/node/{$entity->id()}#node-bill-field-comments"),
+        '#attributes' => [
+          'class' => ['senator-dashboard-bill-comments-link'],
+        ],
+      ],
+    ];
+  }
+
+  if ($display->getComponent('nys_senator_dashboard_followers_link')) {
+    $build['nys_senator_dashboard_followers_link'] = [
+      '#type' => 'link',
+      '#title' => $entity->label(),
+      '#url' => Url::fromUri("internal:/senator-dashboard/constituent-activity/issues/{$entity->id()}"),
+      '#attributes' => [
+        'class' => 'senator-dashboard-followers-link',
+      ],
+    ];
+  }
+
+  if ($display->getComponent('nys_senator_dashboard_path_alias') && $entity->getEntityTypeId() === 'node') {
+    $path_alias = \Drupal::service('path_alias.manager')->getAliasByPath('/node/' . $entity->id());
+    $build['nys_senator_dashboard_path_alias'] = [
+      '#markup' => $path_alias,
+    ];
+  }
+}
+
+/**
+ * Counts the number of flaggings for a given entity and flag type.
+ *
+ * @param string $flag_id
+ *   The ID of the flag type.
+ * @param string $entity_type
+ *   The entity type (e.g., 'node', 'user', etc.).
+ * @param int $entity_id
+ *   The ID of the entity being flagged.
+ *
+ * @return int
+ *   The number of flaggings for the given entity and flag type.
+ */
+function _nys_senator_dashboard_get_flagging_count($flag_id, $entity_type, $entity_id): int {
+  $query = \Drupal::database()
+    ->select('flag_counts', 'fc')
+    ->fields('fc', ['count'])
+    ->condition('fc.flag_id', $flag_id)
+    ->condition('fc.entity_type', $entity_type)
+    ->condition('fc.entity_id', $entity_id)
+    ->range(0, 1);
+  try {
+    $result = $query->execute()->fetchField();
+  }
+  catch (\Exception) {
+    return 0;
+  }
+  return (int) ($result ?: 0);
+}
+
+/**
+ * Counts the number of in-district flaggings for a given entity and flag type.
+ *
+ * @param string $flag_id
+ *   The ID of the flag type.
+ * @param int $entity_id
+ *   The ID of the entity being flagged.
+ *
+ * @return int
+ *   The number of in-district flaggings for the given flag and entity IDs.
+ *   Returns 0 if the query fails or no flaggings are found.
+ */
+function _nys_senator_dashboard_get_in_district_flagging_count(string $flag_id, int $entity_id): int {
+  $managed_senators_handler = \Drupal::service('nys_senator_dashboard.managed_senators_handler');
+  $active_senator_district_id = $managed_senators_handler->getActiveSenatorDistrictId();
+
+  if (!$active_senator_district_id) {
+    return 0;
+  }
+
+  $query = \Drupal::database()->select('flagging', 'f');
+  $query->innerJoin(
+    'user__field_district',
+    'ufd',
+    'f.uid = ufd.entity_id'
+  );
+  $query->condition('f.flag_id', $flag_id)
+    ->condition('f.entity_id', $entity_id)
+    ->condition('ufd.field_district_target_id', $active_senator_district_id);
+
+  try {
+    $count = $query->countQuery()->execute()->fetchField();
+    return (int) ($count ?: 0);
+  }
+  catch(\Exception $e) {
+    \Drupal::logger('nys_senator_dashboard')->error('Error retrieving in-district flaggings: @message', ['@message' => $e->getMessage()]);
+    return 0;
+  }
+}
+
+/**
+ * Gets count of unique in-district constituents who submitted to the webform.
+ *
+ * @param \Drupal\node\NodeInterface $node
+ *   The node entity, expected to be of type "webform".
+ *
+ * @return int
+ *   Count of unique in-district constituents who submitted to the webform.
+ */
+function _nys_senator_dashboard_get_in_district_webform_submission_count(NodeInterface $node): int {
+  if ($node->getType() !== 'webform' || !$node->hasField('webform')) {
+    \Drupal::logger('nys_senator_dashboard')
+      ->warning('Invalid node type or missing "webform" field.');
+    return 0;
+  }
+
+  $webform_id = $node->webform?->target_id;
+  $active_senator_district_id = \Drupal::service('nys_senator_dashboard.managed_senators_handler')
+    ->getActiveSenatorDistrictId();
+
+  if (!$webform_id || !$active_senator_district_id) {
+    \Drupal::logger('nys_senator_dashboard')
+      ->warning('Missing webform ID or Active Senator District ID.');
+    return 0;
+  }
+
+  $query = \Drupal::database()
+    ->select('webform_submission', 'ws');
+  $query->join('user__field_district', 'ufd', 'ws.uid = ufd.entity_id');
+  $query->condition('ws.webform_id', $webform_id);
+  $query->condition('ufd.field_district_target_id', $active_senator_district_id);
+  $query->fields('ws', ['uid']);
+  $query->distinct();
+  $count = $query->countQuery()->execute()->fetchField();
+
+  $count = $count !== FALSE ? (int) $count : 0;
+  return $count;
+}
+
+/**
+ * Gets vote counts for a bill.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $node
+ *   The node entity.
+ * @param string $vote_type
+ *   The type of votes to return. Possible values:
+ *   - 'all': Return all vote types (default)
+ *   - 'total_votes': Return only total votes
+ *   - 'in_district_votes': Return only in-district votes
+ *   - 'out_of_district_votes': Return only out-of-district votes
+ *
+ * @return array
+ *   An array of vote counts, structure depends on $vote_type parameter.
+ */
+function _nys_senator_dashboard_get_bill_vote_counts(EntityInterface $node, string $vote_type = 'all'): array {
+  $nid = $node->id();
+  $active_senator_district_id = \Drupal::service('nys_senator_dashboard.managed_senators_handler')
+    ->getActiveSenatorDistrictId();
+
+  $yes_count = 0;
+  $no_count = 0;
+  $in_district_yes_count = 0;
+  $in_district_no_count = 0;
+
+  if ($vote_type === 'all' || $vote_type === 'total_votes' || $vote_type === 'out_of_district_votes') {
+    $yes_count = (int) \Drupal::database()
+      ->select('votingapi_vote', 'v')
+      ->condition('v.entity_id', $nid)
+      ->condition('v.value', 1)
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+
+    $no_count = (int) \Drupal::database()
+      ->select('votingapi_vote', 'v')
+      ->condition('v.entity_id', $nid)
+      ->condition('v.value', 0)
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+
+    if ($vote_type === 'total_votes') {
+      return [$yes_count, $no_count];
+    }
+  }
+
+  if ($vote_type === 'all' || $vote_type === 'in_district_votes' || $vote_type === 'out_of_district_votes') {
+    $in_district_yes_count_query = \Drupal::database()
+      ->select('votingapi_vote', 'v');
+    $joined_table_yes_count_query = $in_district_yes_count_query
+      ->innerJoin('user__field_district', 'u', 'u.entity_id = v.user_id');
+    $in_district_yes_count = (int) $in_district_yes_count_query
+      ->condition('v.entity_id', $nid)
+      ->condition('v.value', 1)
+      ->condition($joined_table_yes_count_query . '.field_district_target_id', $active_senator_district_id)
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+
+    $in_district_no_count_query = \Drupal::database()
+      ->select('votingapi_vote', 'v');
+    $joined_table_no_count_query = $in_district_no_count_query
+      ->innerJoin('user__field_district', 'u', 'u.entity_id = v.user_id');
+    $in_district_no_count = (int) $in_district_no_count_query
+      ->condition('v.entity_id', $nid)
+      ->condition('v.value', 0)
+      ->condition($joined_table_no_count_query . '.field_district_target_id', $active_senator_district_id)
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+
+    if ($vote_type === 'in_district_votes') {
+      return [$in_district_yes_count, $in_district_no_count];
+    }
+  }
+
+  if ($vote_type === 'out_of_district_votes') {
+    return [$yes_count - $in_district_yes_count, $no_count - $in_district_no_count];
+  }
+
+  return [
+    'total_votes' => [$yes_count, $no_count],
+    'in_district_votes' => [$in_district_yes_count, $in_district_no_count],
+    'out_of_district_votes' => [$yes_count - $in_district_yes_count, $no_count - $in_district_no_count]
+  ];
+}
+
+/**
+ * Gets the comment count for an entity.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The entity to get comment count for.
+ *
+ * @return int
+ *   The number of comments on the entity.
+ */
+function _nys_senator_dashboard_get_comment_count($entity): int {
+  $statistics = \Drupal::service('comment.statistics')->read([$entity->id() => $entity], 'node');
+  $count = 0;
+  if (!empty($statistics)) {
+    $count = $statistics[0]->comment_count;
+  }
+  return $count;
+}

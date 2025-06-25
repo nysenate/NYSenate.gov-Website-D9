@@ -431,7 +431,7 @@ function nys_senator_dashboard_entity_view(array &$build, \Drupal\Core\Entity\En
         '#tooltips' => FALSE,
         'series' => [
           '#type' => 'chart_data',
-          '#data' => $data,
+          '#data' => $total ? $data : [0, 1],
         ],
         'x_axis' => [
           '#type' => 'chart_xaxis',
@@ -671,13 +671,13 @@ function _nys_senator_dashboard_get_in_district_flagging_count(string $flag_id, 
 }
 
 /**
- * Gets the count of in-district constituents who submitted to the webform.
+ * Gets count of unique in-district constituents who submitted to the webform.
  *
  * @param \Drupal\node\NodeInterface $node
  *   The node entity, expected to be of type "webform".
  *
  * @return int
- *   The count of in-district constituents who submitted to the webform.
+ *   Count of unique in-district constituents who submitted to the webform.
  */
 function _nys_senator_dashboard_get_in_district_webform_submission_count(NodeInterface $node): int {
   if ($node->getType() !== 'webform' || !$node->hasField('webform')) {
@@ -701,6 +701,8 @@ function _nys_senator_dashboard_get_in_district_webform_submission_count(NodeInt
   $query->join('user__field_district', 'ufd', 'ws.uid = ufd.entity_id');
   $query->condition('ws.webform_id', $webform_id);
   $query->condition('ufd.field_district_target_id', $active_senator_district_id);
+  $query->fields('ws', ['uid']);
+  $query->distinct();
   $count = $query->countQuery()->execute()->fetchField();
 
   $count = $count !== FALSE ? (int) $count : 0;

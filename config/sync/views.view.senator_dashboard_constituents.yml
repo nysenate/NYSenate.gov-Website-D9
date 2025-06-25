@@ -4369,6 +4369,7 @@ display:
           break_phrase: false
       defaults:
         empty: false
+        group_by: false
         relationships: false
         fields: false
         arguments: false
@@ -4385,6 +4386,7 @@ display:
           entity_type: user
           plugin_id: standard
           required: true
+      group_by: true
       display_description: ''
       header:
         result:
@@ -4419,7 +4421,7 @@ display:
           plugin_id: text
           empty: true
           content:
-            value: '<a href="/senator-dashboard/constituent-activity/petitions" class="button">Back To All Questionnaires</a>'
+            value: '<a href="/senator-dashboard/constituent-activity/questionnaires" class="button">Back To All Questionnaires</a>'
             format: full_html
           tokenize: false
       display_extenders: {  }

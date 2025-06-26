@@ -26,36 +26,38 @@
         {% endif %}
       </p>
     {% endif %}
-    {% for topic in article.topics %}
-      {% if loop.last %}
-        {% if topic.url %}
-          <a href="{{ topic.url }}" class="c-press-release--topic {% if article.is_dynamic_color %} c-press-release--topic--dynamic-color {% endif %}">{{ topic.name }}</a>
-        {% else %}
-          <span class="c-press-release--topic {% if article.is_dynamic_color %} c-press-release--topic--dynamic-color {% endif %}">{{ topic.name }}</span>
-        {% endif %}
-      {% else %}
-        {% if topic.url %}
-          <a href="{{ topic.url }}" class="c-press-release--topic {% if article.is_dynamic_color %} c-press-release--topic--dynamic-color {% endif %}">{{ topic.name }}</a>,
-        {% else %}
-          <span class="c-press-release--topic {% if article.is_dynamic_color %} c-press-release--topic--dynamic-color {% endif %}">{{ topic.name }}</span>,
-        {% endif %}
-      {% endif %}
-    {% endfor %}
+  {% if article.topics %}
+      <ul>
+        {% for topic in article.topics %}
+          {% if loop.last %}
+            {% if topic.url %}
+                <li><a href="{{ topic.url }}" class="c-press-release--topic {% if article.is_dynamic_color %} c-press-release--topic--dynamic-color {% endif %}">{{ topic.name }}</a></li>
+            {% else %}
+                <li><span class="c-press-release--topic {% if article.is_dynamic_color %} c-press-release--topic--dynamic-color {% endif %}">{{ topic.name }}</span></li>
+            {% endif %}
+          {% else %}
+            {% if topic.url %}
+                <li><a href="{{ topic.url }}" class="c-press-release--topic {% if article.is_dynamic_color %} c-press-release--topic--dynamic-color {% endif %}">{{ topic.name|trim }}</a>,</li>
+            {% else %}
+                <li><span class="c-press-release--topic {% if article.is_dynamic_color %} c-press-release--topic--dynamic-color {% endif %}">{{ topic.name|trim }},</span></li>
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+      </ul>
+  {% endif %}
   </div>
   {% if article.is_full_width == false %}
     <div class="c-press-release--body">
       <div class="c-press-release--descript-wrapper">
         {% if not article.bill and article.title != "Resolution" %}
           <h3 class="c-press-release--descript">
-            <a href="{{ article.description.url }}">{{ article.description.text }}</a>
+            {{ article.description.text }}
           </h3>
         {% endif %}
         {% if article.bill_description %}
           {% if article.bill_url %}
           <p class="c-bill-descript">
-            <a class="c-bill-descript" href={{ article.bill_url }}>
               {{ article.bill_description }}
-            </a>
           </p>
           {% else %}
             <p class="c-bill-descript">

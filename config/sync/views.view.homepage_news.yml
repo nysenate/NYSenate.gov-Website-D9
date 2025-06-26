@@ -844,7 +844,7 @@ display:
           admin_label: ''
           plugin_id: text_custom
           empty: false
-          content: '<h3 class="c-container--title">Featured Story</h3>'
+          content: '<h2 class="c-container--title">Featured Story</h2>'
           tokenize: false
       display_extenders: {  }
       block_description: 'Homepage Featured Story'
@@ -859,8 +859,6 @@ display:
         - 'config:entityqueue.entity_queue.homepage_featured_story'
         - 'config:field.storage.node.field_image_main'
         - 'config:field.storage.node.field_issues'
-        - entity_field_info
-        - views_data
   hp_live:
     id: hp_live
     display_title: 'Happening Now'
@@ -1268,7 +1266,7 @@ display:
           admin_label: ''
           plugin_id: text_custom
           empty: false
-          content: '<h3 class="c-title">Happening Now Live</h3>'
+          content: '<h2 class="c-title">Happening Now Live</h2>'
           tokenize: false
       display_extenders: {  }
       block_description: 'Happening Now'
@@ -1283,8 +1281,6 @@ display:
         - 'config:entityqueue.entity_queue.happening_now'
         - 'config:field.storage.node.field_image_main'
         - 'config:field.storage.node.field_issues'
-        - entity_field_info
-        - views_data
   hp_news_updates:
     id: hp_news_updates
     display_title: 'News and Updates'
@@ -1851,5 +1847,3 @@ display:
         - 'config:field.storage.node.field_issues'
         - 'config:field.storage.node.field_senator_multiref'
         - 'config:field.storage.node.field_yt'
-        - entity_field_info
-        - views_data

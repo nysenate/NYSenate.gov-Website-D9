@@ -1243,11 +1243,15 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     position: absolute;
     right: 9%;
     bottom: 35px;
-    color: $orange01;
+    color: $orange-text;
     text-transform: uppercase;
     font-size: 14px;
     letter-spacing: 0.1em;
     z-index: 1;
+    &:hover {
+      text-decoration: underline;
+      color: $gen_link_hover;
+    }
   }
 
   .c-site-search {

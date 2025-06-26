@@ -1,12 +1,12 @@
 {{ attach_library('nysenate_theme/nysenate-promotional-banner') }}
 
 <article class="c-block c-block--initiative
-    {% if is_landing %} c-block--initiative__landing{% endif %}
-    {% if image %} c-block--initiative__has-img {% else %} c-block--initiative__no-img{% endif %}">
+    {% if is_landing %} c-block--initiative__landing{% endif %}">
   {% if image %}
-    <a href="{{ cta.url }}" class="c-initiative--img">{{ image }}</a>
+  <div class="c-block--initiative__has-img c-container--initiative-hidden-link">
+    {{ image }}
+    {% else %}<div class="c-block--initiative__no-img c-container--initiative-hidden-link">
   {% endif %}
-  <div class="c-initiative--content">
     <div class="c-initiative--inner">
       {% if cta.value == 'petition' %}
         {% if senator_name %}
@@ -15,15 +15,11 @@
           </h4>
         {% endif %}
       {% endif %}
-      <h4 class="c-initiative--title">
+      <h2 class="c-initiative--title">
         <a href="{{ cta.url }}">{{ title }}</a>
-      </h4>
+      </h2>
     </div>
+  <div aria-hidden=true tabindex=-1 href="{{ cta.url }}" class="c-block--btn promotional-banner__button icon-before__awards icon-before__{{cta.value}} med-bg"
+  ><span class="button-text">{{ cta.text }}</span></div>
   </div>
-  <a
-    href="{{ cta.url }}"
-    class="c-block--btn promotional-banner__button icon-before__awards icon-before__{{cta.value}} med-bg"
-  >
-    {{ cta.text }}
-  </a>
 </article>

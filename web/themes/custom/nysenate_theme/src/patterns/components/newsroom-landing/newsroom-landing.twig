@@ -30,17 +30,18 @@
               <span class="date-display-single">{{ item.news_date }}</span>
             </span>
           </div>
+          <div class="c-container--hidden-link">
           {% if item.news_image_src %}
             <div class="c-newsroom-image">
-              <a href="{{ item.news_url }}"><img src="{{ item.news_image_src }}" width="360" height="200" alt=""></a>
+              <img src="{{ item.news_image_src }}" width="360" height="200" alt="">
             </div>
           {% elseif item.news_image %}
             <div class="c-newsroom-image">
-              <a href="{{ item.news_url }}">{{ item.news_image }}</a>
+              {{ item.news_image }}
             </div>
           {% elseif item.video_src %}
             <div class="c-newsroom-image">
-              <a href="{{ item.news_url }}">{{ item.video_src }}</a>
+              {{ item.video_src }}
             </div>
           {% endif %}
           {% if item.date %}
@@ -49,20 +50,28 @@
             </div>
           {% endif %}
           <h3 class="c-newsroom-name">
-            <a href="{{ item.news_url }}">{{ item.news_name }}</a>
+            <a class="js-link" href="{{ item.news_url }}">{{ item.news_name }}</a>
           </h3>
+          </div>
+
           {% if item.news_topic %}
             <div class="c-newsroom-link">
-              <a class="c-press-release--topic" href="{{ item.news_topic.url }}">{{ item.news_topic.text }}</a>
+              <ul>
+                <li><a class="c-press-release--topic" href="{{ item.news_topic.url }}">{{ item.news_topic.text }}</a></li>
+              </ul>
             </div>
           {% endif %}
 
-          {% if item.news_topics|length %}
+          {% if item.news_topics %}
             <div class="c-newsroom-link">
+              <ul>
               {% for topic in item.news_topics %}
-                <a class="c-press-release--topic" href="{{ topic.url }}">{{ topic.text }}</a>
-                {{ loop.first and item.news_topics <= 1 }}
+
+                <li><a class="c-press-release--topic" href="{{ topic.url }}">{{ topic.text }}</a>{% if not loop.last %}, {% endif %}</li>
+                {# loop.first and item.news_topics <= 1 or loop.last ? '' : ', ' #}
+
               {% endfor %}
+              </ul>
             </div>
           {% endif %}
           {% if item.news_senator_count is not empty %}

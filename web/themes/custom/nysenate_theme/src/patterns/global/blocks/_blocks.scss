@@ -883,7 +883,7 @@ p.c-senate-works-step-description {
 
   .c-container--title {
     font-family: $font-serif-semibold;
-    color: #fff;
+    color: $grey08;
     text-transform: none;
     font-size: 32px;
     letter-spacing: normal;
@@ -894,19 +894,16 @@ p.c-senate-works-step-description {
     position: relative;
     width: 100%;
     margin: 0 auto;
-    a.c-block--btn:hover {
-      text-decoration: underline;
-    }
+
     .c-want-to--cta {
       margin: 35px 0 20px;
       padding-right: 50px;
       font-family: $font-serif;
       font-size: 16px;
       width: 100%;
-      color: $grey08;
     }
 
-    /*.c-block--btn.loggedin {
+    .c-block--btn {
       display: flex;
       align-items: center;
       justify-content: center;
@@ -915,74 +912,31 @@ p.c-senate-works-step-description {
       background: $yellow01;
       height: 70px;
       line-height: 1;
+      text-align: center;
       font-size: 13px;
       letter-spacing: 2.6px;
       padding-left: 20px;
-      text-align: left;
-      transition: background-color 0.2s ease;
-      color: $grey08;
-      &:hover {
-        background: $yellow03;
-        text-decoration: underline;
-      }
-      &::before {
-        height: auto;
-      }
-    }*/
-
-
-    .c-block--btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      width: 100%;
-      background: $background-yellow;
-      height: 70px;
-      line-height: 1;
-      font-size: 13px;
-      letter-spacing: 2.6px;
-      padding-left: 21px;
-      text-align: left;
       transition: background-color 0.2s ease;
       color: $background-text;
-      &:hover {
-        background: $background-hover;
+      span.btn-text {
+        width: unset;
       }
-
-      &::before {
-        height: auto;
-      }
-
-      // remove underline from whole link on hover
       &:hover {
         background: $background-hover;
         color: #fff;
         text-decoration: none;
 
-        .btn-text {
+        .btn-text,
+        span.c-senator--cta {
           text-decoration: underline;
         }
       }
 
-      // Optional: avoid icon inheriting text styles
       &::before {
-        position: absolute;
-        left: 15px;
-        top: 50%;
-        transform: translateY(-50%);
-        text-decoration: none !important;
+        height: auto;
       }
 
-      .btn-text {
-        text-decoration: none;
-        padding-left: 34px;
-        &.explore {
-          padding-left: 18px;
-        }
-      }
     }
-
 
     .nys-senator--thumb {
       height: 45px;
@@ -992,12 +946,9 @@ p.c-senate-works-step-description {
 
     &.c-want-to--item__senator {
       .c-block--btn.loggedin {
-        display: flex;
-        align-items: center;
-        justify-content: center;
         line-height: 1;
         text-align: left;
-        padding: 0;
+        padding-left: 0;
 
         &::before {
           content: '';
@@ -1022,7 +973,7 @@ p.c-senate-works-step-description {
     }
 
     &.c-want-to--item__explore {
-      a.c-block--btn {
+      .c-block--btn {
         @extend .icon-before__search;
       }
     }
@@ -1059,7 +1010,6 @@ p.c-senate-works-step-description {
         vertical-align: middle;
         font-size: 17px;
         text-align: center;
-        line-height: 1.8;
       }
 
       .c-block--btn {

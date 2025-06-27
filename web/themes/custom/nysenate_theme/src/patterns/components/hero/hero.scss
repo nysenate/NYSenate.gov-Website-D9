@@ -516,7 +516,7 @@ p.c-hero--welcome {
       }
 
       .livestream-date {
-        color: $grey04;
+        color: $color-white;
         font-size: 10px;
       }
     }
@@ -531,8 +531,11 @@ p.c-hero--welcome {
     }
 
     a {
-      text-decoration: none;
-      color: $blue03;
+      color: $color-white;
+      text-decoration: underline;
+      &:hover {
+        text-decoration: none;
+      }
     }
 
     ul {
@@ -559,7 +562,7 @@ p.c-hero--welcome {
       }
 
       a {
-        @extend .link-text;
+        color: $color-white;
         display: inline-block;
         width: 89%;
         vertical-align: top;
@@ -587,7 +590,7 @@ p.c-hero--welcome {
         li {
           list-style: none;
           font-family: $font-sans;
-          color: $grey04;
+          color: $color-white;
           font-size: 95.5%;
           line-height: 26px;
           text-transform: uppercase;
@@ -602,8 +605,9 @@ p.c-hero--welcome {
 
           a {
             font-family: $font-serif-semibold;
-            color: $yellow03;
+            color: $color-white;
             font-size: 111%;
+            text-decoration: underline;
           }
 
           &:last-child {
@@ -655,7 +659,7 @@ p.c-hero--welcome {
       .c-hero-livestream-meta {
         label {
           margin-bottom: 0;
-          color: $grey04;
+          color: $color-white;
           font-size: 0.8rem;
           text-transform: uppercase;
         }
@@ -1295,7 +1299,7 @@ p.c-hero--welcome {
       display: inline;
       margin: 0 10px 20px 0;
       font-family: $font-sans;
-      color: #888888;
+      color: $color-white;
       font-size: 12px;
     }
 

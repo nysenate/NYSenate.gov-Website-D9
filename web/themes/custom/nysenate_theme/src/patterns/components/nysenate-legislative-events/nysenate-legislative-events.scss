@@ -28,8 +28,12 @@
         font-family: $font-sans-bold;
         font-size: 15px;
         line-height: 18px;
-        color: $orange01;
+        color: $gen_link;
         text-transform: uppercase;
+        &:hover {
+          color: $gen_link_hover;
+          text-decoration: underline;
+        }
       }
     }
 
@@ -136,8 +140,11 @@
           font-family: $font-serif;
           font-size: 18px;
           line-height: 26px;
-          color: $grey08;
+          color: $gen_blue_lgt;
           display: block;
+          &:hover {
+            text-decoration: underline;
+          }
         }
       }
     }

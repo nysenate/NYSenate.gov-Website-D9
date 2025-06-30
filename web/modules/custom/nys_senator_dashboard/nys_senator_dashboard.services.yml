@@ -16,6 +16,14 @@ services:
       - '@nys_senator_dashboard.managed_senators_handler'
       - '@comment.statistics'
       - '@logger.factory'
+  nys_senator_dashboard.extra_field_builder:
+    class: \Drupal\nys_senator_dashboard\Service\ExtraFieldBuilder
+    arguments:
+      - '@entity_type.manager'
+      - '@flag'
+      - '@flag.count'
+      - '@path_alias.manager'
+      - '@nys_senator_dashboard.senator_dashboard_helper'
   nys_senator_dashboard.route_subscriber:
     class: Drupal\nys_senator_dashboard\Routing\RouteSubscriber
     tags:

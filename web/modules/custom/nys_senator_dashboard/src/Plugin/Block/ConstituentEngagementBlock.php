@@ -143,29 +143,29 @@ class ConstituentEngagementBlock extends BlockBase implements ContainerFactoryPl
           'data' => $this->getNewConstituentsCount($district, $start_of_year),
           'label' => $this->t('New Constituents'),
           'id' => 'new-constituents',
-          // @todo update link once route implemented.
-          'url' => '',
+          'icon' => 'group',
+          'url' => '/senator-dashboard/constituent-activity/constituents',
         ],
         [
           'data' => $this->responsesToBillsCounts($senator, $district, $start_of_year),
           'label' => $this->t('Responses to Bills'),
           'id' => 'responses-to-bills',
-          // @todo update link once route implemented.
-          'url' => '',
+          'icon' => 'gavel',
+          'url' => '/senator-dashboard/constituent-activity/bills',
         ],
         [
           'data' => $this->getPetitionsSignedCount($senator, $start_of_year),
           'label' => $this->t('Responses to Petitions'),
           'id' => 'responses-to-petitions',
-          // @todo update link once route implemented.
-          'url' => '',
+          'icon' => 'question',
+          'url' => '/senator-dashboard/constituent-activity/petitions',
         ],
         [
           'data' => $this->getQuestionnaireResponseCount($senator, $start_of_year),
           'label' => $this->t('Responses to Questionnaires'),
           'id' => 'responses-to-questionnaires',
-          // @todo update link once route implemented.
-          'url' => '',
+          'icon' => 'clipboard',
+          'url' => '/senator-dashboard/constituent-activity/questionnaires',
         ],
       ],
     ];

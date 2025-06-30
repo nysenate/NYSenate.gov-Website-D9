@@ -309,11 +309,7 @@ function nys_senator_dashboard_entity_view(array &$build, \Drupal\Core\Entity\En
     }
 
     if ($display->getComponent('nys_senator_dashboard_flag_count_' . $flag->id())) {
-      $flagging_count = _nys_senator_dashboard_get_flagging_count(
-        $flag->id(),
-        $entity->getEntityTypeId(),
-        $entity->id()
-      );
+      $flagging_count = \Drupal::service('flag.count')->getEntityFlagCounts($entity)[$flag->id()] ?? 0;
       $value = match($entity->bundle()) {
         'issues' => t('@count followers', ['@count' => $flagging_count]),
         'petition' => t('Signed by @count constituents', ['@count' => $flagging_count]),
@@ -330,12 +326,8 @@ function nys_senator_dashboard_entity_view(array &$build, \Drupal\Core\Entity\En
     }
 
     if ($display->getComponent('nys_senator_dashboard_district_flag_count_' . $flag->id())) {
-      $flagging_count = _nys_senator_dashboard_get_flagging_count(
-        $flag->id(),
-        $entity->getEntityTypeId(),
-        $entity->id()
-      );
-      $in_district_flagging_count = _nys_senator_dashboard_get_in_district_flagging_count(
+      $flagging_count = \Drupal::service('flag.count')->getEntityFlagCounts($entity)[$flag->id()] ?? 0;
+      $in_district_flagging_count = \Drupal::service('nys_senator_dashboard.senator_dashboard_helper')->getInDistrictFlaggingCount(
         $flag->id(),
         $entity->id()
       );
@@ -376,7 +368,7 @@ function nys_senator_dashboard_entity_view(array &$build, \Drupal\Core\Entity\En
 
   if ($display->getComponent('nys_senator_dashboard_constituents_response_count')) {
     $url = "/senator-dashboard/constituent-activity/questionnaires/{$entity->id()}";
-    $constituent_response_count = _nys_senator_dashboard_get_in_district_webform_submission_count($entity);
+    $constituent_response_count = \Drupal::service('nys_senator_dashboard.senator_dashboard_helper')->getInDistrictWebformSubmissionCount($entity);
     $build['nys_senator_dashboard_constituents_response_count'] = [
       '#type' => 'html_tag',
       '#tag' => 'a',
@@ -407,7 +399,7 @@ function nys_senator_dashboard_entity_view(array &$build, \Drupal\Core\Entity\En
   }
 
   if ($display->getComponent('nys_senator_dashboard_vote_totals')) {
-    $data = _nys_senator_dashboard_get_bill_vote_counts($entity, 'total_votes');
+    $data = \Drupal::service('nys_senator_dashboard.senator_dashboard_helper')->getBillVoteCounts($entity, 'total_votes');
     $total = array_sum($data);
     $ayes_percentage = ($total > 0) ? round(($data[0] / $total) * 100) : 0;
     $nays_percentage = ($total > 0) ? round(($data[1] / $total) * 100) : 0;
@@ -454,7 +446,7 @@ function nys_senator_dashboard_entity_view(array &$build, \Drupal\Core\Entity\En
   }
 
   if ($display->getComponent('nys_senator_dashboard_vote_totals_district_breakdown')) {
-    $in_district_votes = _nys_senator_dashboard_get_bill_vote_counts($entity, 'in_district_votes');
+    $in_district_votes = \Drupal::service('nys_senator_dashboard.senator_dashboard_helper')->getBillVoteCounts($entity, 'in_district_votes');
     $in_district_total = array_sum($in_district_votes);
     $in_district_ayes_percentage = ($in_district_total > 0) ? round(($in_district_votes[0] / $in_district_total) * 100) : 0;
     $in_district_nays_percentage = ($in_district_total > 0) ? round(($in_district_votes[1] / $in_district_total) * 100) : 0;
@@ -463,7 +455,7 @@ function nys_senator_dashboard_entity_view(array &$build, \Drupal\Core\Entity\En
       t('In-district Nays: @count (@percentage%)', ['@count' => $in_district_votes[1], '@percentage' => $in_district_nays_percentage]),
     ];
 
-    $out_of_district_data = _nys_senator_dashboard_get_bill_vote_counts($entity, 'out_of_district_votes');
+    $out_of_district_data = \Drupal::service('nys_senator_dashboard.senator_dashboard_helper')->getBillVoteCounts($entity, 'out_of_district_votes');
     $out_of_district_total = array_sum($out_of_district_data);
     $out_of_district_ayes_percentage = ($out_of_district_total > 0) ? round(($out_of_district_data[0] / $out_of_district_total) * 100) : 0;
     $out_of_district_nays_percentage = ($out_of_district_total > 0) ? round(($out_of_district_data[1] / $out_of_district_total) * 100) : 0;
@@ -556,7 +548,7 @@ function nys_senator_dashboard_entity_view(array &$build, \Drupal\Core\Entity\En
   }
 
   if ($display->getComponent('nys_senator_dashboard_bill_action_links')) {
-    $comments = _nys_senator_dashboard_get_comment_count($entity);
+    $comments = \Drupal::service('nys_senator_dashboard.senator_dashboard_helper')->getCommentCount($entity);
     $build['nys_senator_dashboard_bill_action_links'] = [
       '#type' => 'container',
       '#attributes' => [
@@ -598,219 +590,4 @@ function nys_senator_dashboard_entity_view(array &$build, \Drupal\Core\Entity\En
       '#markup' => $path_alias,
     ];
   }
-}
-
-/**
- * Counts the number of flaggings for a given entity and flag type.
- *
- * @param string $flag_id
- *   The ID of the flag type.
- * @param string $entity_type
- *   The entity type (e.g., 'node', 'user', etc.).
- * @param int $entity_id
- *   The ID of the entity being flagged.
- *
- * @return int
- *   The number of flaggings for the given entity and flag type.
- */
-function _nys_senator_dashboard_get_flagging_count($flag_id, $entity_type, $entity_id): int {
-  $query = \Drupal::database()
-    ->select('flag_counts', 'fc')
-    ->fields('fc', ['count'])
-    ->condition('fc.flag_id', $flag_id)
-    ->condition('fc.entity_type', $entity_type)
-    ->condition('fc.entity_id', $entity_id)
-    ->range(0, 1);
-  try {
-    $result = $query->execute()->fetchField();
-  }
-  catch (\Exception) {
-    return 0;
-  }
-  return (int) ($result ?: 0);
-}
-
-/**
- * Counts the number of in-district flaggings for a given entity and flag type.
- *
- * @param string $flag_id
- *   The ID of the flag type.
- * @param int $entity_id
- *   The ID of the entity being flagged.
- *
- * @return int
- *   The number of in-district flaggings for the given flag and entity IDs.
- *   Returns 0 if the query fails or no flaggings are found.
- */
-function _nys_senator_dashboard_get_in_district_flagging_count(string $flag_id, int $entity_id): int {
-  $managed_senators_handler = \Drupal::service('nys_senator_dashboard.managed_senators_handler');
-  $active_senator_district_id = $managed_senators_handler->getActiveSenatorDistrictId();
-
-  if (!$active_senator_district_id) {
-    return 0;
-  }
-
-  $query = \Drupal::database()->select('flagging', 'f');
-  $query->innerJoin(
-    'user__field_district',
-    'ufd',
-    'f.uid = ufd.entity_id'
-  );
-  $query->condition('f.flag_id', $flag_id)
-    ->condition('f.entity_id', $entity_id)
-    ->condition('ufd.field_district_target_id', $active_senator_district_id);
-
-  try {
-    $count = $query->countQuery()->execute()->fetchField();
-    return (int) ($count ?: 0);
-  }
-  catch(\Exception $e) {
-    \Drupal::logger('nys_senator_dashboard')->error('Error retrieving in-district flaggings: @message', ['@message' => $e->getMessage()]);
-    return 0;
-  }
-}
-
-/**
- * Gets count of unique in-district constituents who submitted to the webform.
- *
- * @param \Drupal\node\NodeInterface $node
- *   The node entity, expected to be of type "webform".
- *
- * @return int
- *   Count of unique in-district constituents who submitted to the webform.
- */
-function _nys_senator_dashboard_get_in_district_webform_submission_count(NodeInterface $node): int {
-  if ($node->getType() !== 'webform' || !$node->hasField('webform')) {
-    \Drupal::logger('nys_senator_dashboard')
-      ->warning('Invalid node type or missing "webform" field.');
-    return 0;
-  }
-
-  $webform_id = $node->webform?->target_id;
-  $active_senator_district_id = \Drupal::service('nys_senator_dashboard.managed_senators_handler')
-    ->getActiveSenatorDistrictId();
-
-  if (!$webform_id || !$active_senator_district_id) {
-    \Drupal::logger('nys_senator_dashboard')
-      ->warning('Missing webform ID or Active Senator District ID.');
-    return 0;
-  }
-
-  $query = \Drupal::database()
-    ->select('webform_submission', 'ws');
-  $query->join('user__field_district', 'ufd', 'ws.uid = ufd.entity_id');
-  $query->condition('ws.webform_id', $webform_id);
-  $query->condition('ufd.field_district_target_id', $active_senator_district_id);
-  $query->fields('ws', ['uid']);
-  $query->distinct();
-  $count = $query->countQuery()->execute()->fetchField();
-
-  $count = $count !== FALSE ? (int) $count : 0;
-  return $count;
-}
-
-/**
- * Gets vote counts for a bill.
- *
- * @param \Drupal\Core\Entity\EntityInterface $node
- *   The node entity.
- * @param string $vote_type
- *   The type of votes to return. Possible values:
- *   - 'all': Return all vote types (default)
- *   - 'total_votes': Return only total votes
- *   - 'in_district_votes': Return only in-district votes
- *   - 'out_of_district_votes': Return only out-of-district votes
- *
- * @return array
- *   An array of vote counts, structure depends on $vote_type parameter.
- */
-function _nys_senator_dashboard_get_bill_vote_counts(EntityInterface $node, string $vote_type = 'all'): array {
-  $nid = $node->id();
-  $active_senator_district_id = \Drupal::service('nys_senator_dashboard.managed_senators_handler')
-    ->getActiveSenatorDistrictId();
-
-  $yes_count = 0;
-  $no_count = 0;
-  $in_district_yes_count = 0;
-  $in_district_no_count = 0;
-
-  if ($vote_type === 'all' || $vote_type === 'total_votes' || $vote_type === 'out_of_district_votes') {
-    $yes_count = (int) \Drupal::database()
-      ->select('votingapi_vote', 'v')
-      ->condition('v.entity_id', $nid)
-      ->condition('v.value', 1)
-      ->countQuery()
-      ->execute()
-      ->fetchField();
-
-    $no_count = (int) \Drupal::database()
-      ->select('votingapi_vote', 'v')
-      ->condition('v.entity_id', $nid)
-      ->condition('v.value', 0)
-      ->countQuery()
-      ->execute()
-      ->fetchField();
-
-    if ($vote_type === 'total_votes') {
-      return [$yes_count, $no_count];
-    }
-  }
-
-  if ($vote_type === 'all' || $vote_type === 'in_district_votes' || $vote_type === 'out_of_district_votes') {
-    $in_district_yes_count_query = \Drupal::database()
-      ->select('votingapi_vote', 'v');
-    $joined_table_yes_count_query = $in_district_yes_count_query
-      ->innerJoin('user__field_district', 'u', 'u.entity_id = v.user_id');
-    $in_district_yes_count = (int) $in_district_yes_count_query
-      ->condition('v.entity_id', $nid)
-      ->condition('v.value', 1)
-      ->condition($joined_table_yes_count_query . '.field_district_target_id', $active_senator_district_id)
-      ->countQuery()
-      ->execute()
-      ->fetchField();
-
-    $in_district_no_count_query = \Drupal::database()
-      ->select('votingapi_vote', 'v');
-    $joined_table_no_count_query = $in_district_no_count_query
-      ->innerJoin('user__field_district', 'u', 'u.entity_id = v.user_id');
-    $in_district_no_count = (int) $in_district_no_count_query
-      ->condition('v.entity_id', $nid)
-      ->condition('v.value', 0)
-      ->condition($joined_table_no_count_query . '.field_district_target_id', $active_senator_district_id)
-      ->countQuery()
-      ->execute()
-      ->fetchField();
-
-    if ($vote_type === 'in_district_votes') {
-      return [$in_district_yes_count, $in_district_no_count];
-    }
-  }
-
-  if ($vote_type === 'out_of_district_votes') {
-    return [$yes_count - $in_district_yes_count, $no_count - $in_district_no_count];
-  }
-
-  return [
-    'total_votes' => [$yes_count, $no_count],
-    'in_district_votes' => [$in_district_yes_count, $in_district_no_count],
-    'out_of_district_votes' => [$yes_count - $in_district_yes_count, $no_count - $in_district_no_count]
-  ];
-}
-
-/**
- * Gets the comment count for an entity.
- *
- * @param \Drupal\Core\Entity\EntityInterface $entity
- *   The entity to get comment count for.
- *
- * @return int
- *   The number of comments on the entity.
- */
-function _nys_senator_dashboard_get_comment_count($entity): int {
-  $statistics = \Drupal::service('comment.statistics')->read([$entity->id() => $entity], 'node');
-  $count = 0;
-  if (!empty($statistics)) {
-    $count = $statistics[0]->comment_count;
-  }
-  return $count;
 }

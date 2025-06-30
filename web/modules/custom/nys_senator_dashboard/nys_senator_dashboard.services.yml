@@ -12,6 +12,10 @@ services:
     arguments:
       - '@entity_type.manager'
       - '@current_route_match'
+      - '@database'
+      - '@nys_senator_dashboard.managed_senators_handler'
+      - '@comment.statistics'
+      - '@logger.factory'
   nys_senator_dashboard.route_subscriber:
     class: Drupal\nys_senator_dashboard\Routing\RouteSubscriber
     tags:

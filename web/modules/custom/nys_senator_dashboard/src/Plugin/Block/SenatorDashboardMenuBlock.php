@@ -2,8 +2,10 @@
 
 namespace Drupal\nys_senator_dashboard\Plugin\Block;
 
+use Drupal\Core\Template\Attribute;
 use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Menu\MenuLinkTreeInterface;
 use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -146,15 +148,17 @@ class SenatorDashboardMenuBlock extends BlockBase implements ContainerFactoryPlu
       default => [],
     };
 
-    // Build full render array.
+    // Build the full render array of menus.
     $return_data = [
       'active_senator_menu' => [
         '#theme' => 'nys_senator_dashboard__set_active_senator_menu',
-        '#active_senator_links' => $active_senator_links,
+        '#items' => $active_senator_links,
       ],
       'manage_senator_menu' => $manage_senator_menu,
       'constituent_activity_menu' => $constituent_activity_menu,
     ];
+
+    // Set the mode for each menu.
     foreach ($return_data as &$menu) {
       $menu['#mode'] = $this->configuration['mode'];
     }
@@ -163,7 +167,7 @@ class SenatorDashboardMenuBlock extends BlockBase implements ContainerFactoryPlu
   }
 
   /**
-   * Prepares Active Senator menu link.
+   * Prepares active managed senator menu links.
    *
    * @return array
    *   The data to render the links.
@@ -179,16 +183,47 @@ class SenatorDashboardMenuBlock extends BlockBase implements ContainerFactoryPlu
     foreach ($managed_senators as $senator) {
       $active_senator_links[] = [
         'label' => $senator->label(),
+        'title' => $senator->label(),
         'url' => Url::fromRoute(
           'nys_senator_dashboard.active_senator.set',
           ['senator_tid' => $senator->id()]
         ),
         'is_active' => ($active_senator_tid == $senator->id()),
         'homepage_url' => $this->managedSenatorsHandler->getActiveSenatorHomepageUrl(),
+        'attributes' => new Attribute(),
       ];
     }
 
-    return $active_senator_links;
+    // Process the links to create a proper menu structure.
+    $items = [];
+    $active_link = [];
+    $additional_links = [];
+
+    foreach ($active_senator_links as $link) {
+      if ($link['is_active']) {
+        $active_link = $link;
+        $active_link['is_expanded'] = TRUE;
+        $active_link['is_collapsed'] = FALSE;
+        $active_link['in_active_trail'] = FALSE;
+      }
+      else {
+        $additional_links[] = $link;
+      }
+    }
+
+    if (!empty($active_link)) {
+      $active_link['url'] = !empty($active_link['url'])
+        ? Url::fromRoute('<button>')
+        : Url::fromUri($active_link['homepage_url']);
+
+      $active_link['icon'] = 'briefcase';
+      $active_link['below'] = $additional_links;
+      $items[] = $active_link;
+    }
+
+    $this->prepareMenuItems($items);
+
+    return $items;
   }
 
   /**
@@ -215,14 +250,69 @@ class SenatorDashboardMenuBlock extends BlockBase implements ContainerFactoryPlu
     $render_array = $this->menuLinkTree->build($transformed_tree);
     $render_array['#theme'] = "{$render_array['#theme']}__{$mode}";
 
-    // @todo Re-implement as menu link tree manipulator.
-    if ($include_description) {
-      if (isset($render_array['#items']) && is_array($render_array['#items'])) {
-        $this->attachDescriptionsRecursively($render_array['#items']);
+    // @todo Re-implement as menu link tree manipulators?
+    if (isset($render_array['#items'])) {
+      if ($mode === 'header_menu') {
+        $this->processHeaderMenu($render_array['#items']);
       }
+      elseif (
+        ($mode === 'manage_senator_menu' && $sub_menu === 'manage_senator')
+        || ($mode === 'constituent_activity_menu' && $sub_menu === 'constituent_activity')
+      ) {
+        $render_array['#items'] = $this->prepareActivityMenuItems($render_array['#items'], 'senator_dashboard.' . $sub_menu);
+      }
+      $this->prepareMenuItems($render_array['#items']);
+      $this->attachDescriptionsRecursively($render_array['#items']);
     }
 
     return $render_array;
+  }
+
+  /**
+   * Process the header menu items.
+   *
+   * @param array $items
+   *   The menu items to process.
+   */
+  private function processHeaderMenu(array &$items): void {
+    // Find the items that are overview pages.
+    $find_overview = function (&$items) {
+      foreach ($items as $key => &$item) {
+        if (str_ends_with($key, '.overview')) {
+          $item['attributes']->addClass('c-menu--item-overview');
+        }
+      }
+    };
+
+    // Strip out dropdown for nested management sections.
+    $setup_mega_menu = function (&$items) {
+      foreach ($items as &$item) {
+        if ($item['below']) {
+          $item['is_expanded'] = FALSE;
+          $item['url'] = Url::fromRoute('<nolink>');
+        }
+      }
+    };
+
+    foreach ($items as $key => &$item) {
+      // Set icons for primary level items.
+      $item['icon'] = match ($key) {
+        'senator_dashboard.manage_senator' => 'file-pen',
+        'senator_dashboard.constituent_activity' => 'users',
+        default => '',
+      };
+
+      // Set class for mega menu in dashboard.
+      if ($key == 'senator_dashboard.manage_senator') {
+        $item['attributes']->addClass('c-menu__item-mega');
+        $setup_mega_menu($item['below']);
+      }
+
+      if ($item['below']) {
+        $item['url'] = Url::fromRoute('<button>');
+        $find_overview($item['below']);
+      }
+    }
   }
 
   /**
@@ -243,6 +333,80 @@ class SenatorDashboardMenuBlock extends BlockBase implements ContainerFactoryPlu
         $this->attachDescriptionsRecursively($item);
       }
     }
+  }
+
+  /**
+   * Process menu items to add attributes and classes needed for menu SDC.
+   *
+   * @param array $items
+   *   An array of menu items.
+   */
+  private function prepareMenuItems(array &$items): void {
+    foreach ($items as &$item) {
+      $link_attributes = $item['url']->getOption('attributes') ?? [];
+
+      if (isset($link_attributes['class']) && is_string($link_attributes['class'])) {
+        $link_attributes['class'] = explode(' ', $link_attributes['class']);
+      }
+
+      $link_attributes['class'][] = 'c-menu__link';
+
+      // Add the data-plugin-id attribute based on the menu link's plugin ID.
+      // This is utilized in the menu components.
+      if (isset($item['original_link'])) {
+        $plugin_id = $item['original_link']->getPluginId();
+        $link_attributes['data-plugin-id'] = Html::getUniqueId($plugin_id);
+      }
+
+      $item['url']->setOption('attributes', $link_attributes);
+
+      // Set classes for the link wrapper.
+      $item_classes = ['c-menu__item'];
+
+      if ($item['is_expanded'] ?? FALSE) {
+        $item_classes[] = 'c-menu__item-expanded';
+      }
+
+      if ($item['is_collapsed'] ?? FALSE) {
+        $item_classes[] = 'c-menu__item-collapsed';
+      }
+
+      if ($item['in_active_trail'] ?? FALSE) {
+        $item_classes[] = 'c-menu__item-active-trail';
+      }
+
+      $item['attributes']->addClass($item_classes);
+
+      if (!empty($item['below'])) {
+        $this->prepareMenuItems($item['below']);
+      }
+    }
+  }
+
+  /**
+   * Manipulate the data to only show the manage senator links.
+   *
+   * Manipulate the data to only show the manage senator links. This is making
+   * several assumptions. The top level is the container for the overall menu.
+   * This is because the menu would likely contain other sections. Below that
+   * there is an overview link we don't want. We'll only need the other items.
+   *
+   * @param array $items
+   *   The menu items.
+   * @param string $parent
+   *   The menu route items to clean up.
+   *
+   * @return array
+   *   The cleaned up menu items.
+   */
+  private function prepareActivityMenuItems(array $items = [], string $parent = ''): array {
+    $items = $items[$parent]['below'];
+    foreach ($items as $key => $item) {
+      if (str_ends_with($key, '.overview')) {
+        unset($items[$key]);
+      }
+    }
+    return $items;
   }
 
 }

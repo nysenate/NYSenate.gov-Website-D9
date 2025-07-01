@@ -8,7 +8,6 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\flag\FlagServiceInterface;
 use Drupal\flag\FlagCountManagerInterface;
-use Drupal\node\NodeInterface;
 
 /**
  * Service for building extra field render arrays for the Senator Dashboard.
@@ -180,13 +179,13 @@ class ExtraFieldBuilder {
   /**
    * Builds the constituents response count render array.
    *
-   * @param \Drupal\node\NodeInterface $entity
+   * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity.
    *
    * @return array
    *   The render array.
    */
-  public function buildConstituentsResponseCount(NodeInterface $entity) {
+  public function buildConstituentsResponseCount(EntityInterface $entity) {
     $url = "/senator-dashboard/constituent-activity/questionnaires/{$entity->id()}";
     $constituent_response_count = $this->senatorDashboardHelper->getInDistrictWebformSubmissionCount($entity);
     return [
@@ -206,13 +205,13 @@ class ExtraFieldBuilder {
   /**
    * Builds the webform submissions download render array.
    *
-   * @param \Drupal\node\NodeInterface $entity
+   * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity.
    *
    * @return array
    *   The render array.
    */
-  public function buildWebformSubmissionsDownload(NodeInterface $entity) {
+  public function buildWebformSubmissionsDownload(EntityInterface $entity) {
     $webform_id = $entity->webform?->entity?->id();
     if ($webform_id) {
       return [

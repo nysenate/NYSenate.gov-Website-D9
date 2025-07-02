@@ -82,7 +82,9 @@
       text-transform: uppercase;
       letter-spacing: 0.2em;
       @extend .med-bg;
-
+      &:hover {
+        color: #fff!important;
+      }
       @include breakpoint($bp-sm) {
         position: absolute;
         left: auto;
@@ -180,4 +182,9 @@
         max-width: 465px;
       }
     }
+}
+
+h2.actionbar--cta {
+  font-family: "Adelle Light", serif;;
+  font-weight: 400;
 }

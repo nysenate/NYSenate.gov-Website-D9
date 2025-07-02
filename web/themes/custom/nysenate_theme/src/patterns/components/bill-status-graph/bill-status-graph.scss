@@ -21,7 +21,7 @@
       li {
 
         &.nys-bill-status-passed {
-          background: $grey05;
+          background: $grey02;
         }
       }
     }
@@ -165,6 +165,7 @@
 
     &.nys-bill-status-passed {
       background: $blue01;
+      @extend .med-bg;
     }
 
     &.nys-bill-status-grouped {
@@ -202,7 +203,7 @@
   }
 
   li {
-    background: $grey07;
+    background: $grey04;
 
     &.nys-bill-status-passed {
       background: $blue01;
@@ -217,19 +218,20 @@
 // colored colors
 .nys-bill-status.nys-bill-status__drk {
   hr {
-    @extend .drk-bg;
+    //@extend .bill-graph-hr;
+    background-color: rgba(255, 255, 255, 0.4);
   }
 
   li {
-    @extend .med-bg;
+    @extend .bill-graph-dot;
+    background-color: $grey08;
 
     &.nys-bill-status-passed {
       background: $grey05;
     }
 
     &.nys-bill-status-grouped {
-      border: 2px solid;
-      color: $gen_blue_drk;
+      border: 2px solid rgba(255, 255, 255, 0.4);
       @extend .lgt-bg;
     }
   }

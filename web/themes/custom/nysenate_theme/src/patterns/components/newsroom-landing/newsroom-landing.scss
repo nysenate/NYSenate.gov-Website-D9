@@ -25,6 +25,9 @@
     .c-newsroom--date {
       margin-bottom: 6px;
       text-transform: uppercase;
+      &.med-text {
+        color: $grey08;
+      }
     }
   }
 
@@ -57,6 +60,7 @@
           &:hover {
             text-decoration: underline;
             color: $gen_blue_lgt;
+            @extend .link-text;
           }
         }
       }
@@ -134,4 +138,10 @@
 
 .c-container--header.c-events--landing {
   border-bottom: none;
+}
+
+.page--senators {
+  .newsroom-landing {
+
+  }
 }

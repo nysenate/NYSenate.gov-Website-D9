@@ -45,6 +45,9 @@
 		color: $color-blue;
 		margin-bottom: 3px;
 		text-transform: uppercase;
+		&.med-text {
+			color: $grey08;
+		}
 	}
 
 	.c-story-link {
@@ -81,9 +84,9 @@
 	text-decoration: none;
     @extend .link-text;
     &:hover {
-      @extend .link-text;
-      text-decoration: underline;
-		color: $gen_link_hover;
+		//color: $gen_link_hover;
+		@extend .link-text;
+		text-decoration: underline;
     }
   }
 

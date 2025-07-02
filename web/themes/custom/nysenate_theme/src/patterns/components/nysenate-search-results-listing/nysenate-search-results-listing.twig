@@ -51,7 +51,7 @@
       <div class="c-press-release--descript-wrapper">
         {% if not article.bill and article.title != "Resolution" %}
           <h3 class="c-press-release--descript">
-            {{ article.description.text }}
+              <a href="{{ article.description.url }}">{{ article.description.text }}</a>
           </h3>
         {% endif %}
         {% if article.bill_description %}

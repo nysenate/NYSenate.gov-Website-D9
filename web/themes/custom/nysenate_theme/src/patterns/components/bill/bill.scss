@@ -106,7 +106,9 @@ h4.c-bill-topic {
       border-top-width: 1px;
       border-bottom-width: 1px;
     }
-
+    &:hover {
+      text-decoration: underline;
+    }
     &::before {
       position: relative;
     }
@@ -317,6 +319,9 @@ h4.c-bill-topic {
 .c-bill--amendment-details dd a.c-detail--download {
   color: $color-cg-blue;
   text-transform: uppercase;
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 .c-bill--amendment-details .l-tab-bar {
@@ -708,6 +713,9 @@ th.c-bill--actions-table-header strong {
   .nys-senator--district {
     margin: 0;
     line-height: 1.2em;
+    a:hover {
+      text-decoration: underline;
+    }
   }
 
   .nys-senator--district {

@@ -871,7 +871,10 @@ p.c-hero--welcome {
     font-size: 26px;
     margin: 0 0 15px 0;
     text-transform: capitalize;
-
+    &:hover {
+      text-decoration: underline;
+      color: $color-white;
+    }
     a {
       color: $color-white;
     }
@@ -901,6 +904,9 @@ p.c-hero--welcome {
     a {
       @extend .contrast_text;
       text-decoration: none;
+      &:hover {
+        text-decoration: underline;
+      }
     }
   }
 
@@ -922,6 +928,12 @@ p.c-hero--welcome {
       height: 30px;
       width: 30px;
       filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(104deg) brightness(103%) contrast(103%);
+      svg path {
+        fill: #000;
+      }
+      &:hover svg path {
+        fill: #fff;
+      }
 
       &::after {
         line-height: 1em;
@@ -944,6 +956,13 @@ p.c-hero--welcome {
     height: 60px;
     padding-left: 20px;
     color: $color-white;
+
+    span.contact-btn--message:hover {
+      text-decoration: underline;
+    }
+    &:hover {
+      color: $color-white;
+    }
 
     &::before {
       display: flex;
@@ -1257,6 +1276,7 @@ p.c-hero--welcome {
       &::before {
         line-height: 100px;
       }
+
     }
   }
 }

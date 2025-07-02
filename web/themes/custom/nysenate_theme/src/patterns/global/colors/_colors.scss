@@ -84,6 +84,7 @@ $grey07: #ababab;
 $grey08: #444444;
 $grey09: #d8d8d8;
 $grey10: #222222;
+$grey-dot-ms: #AAAAAA; //used for bill graph dot on darker backgrounds on microsites
 
 // Senate Site
 $orange01: #cb8d37; // rgb(203, 141, 55)cb8d37
@@ -207,6 +208,12 @@ $ns_accent: #1b5187;
 .drk-text {
   color: $gen_blue_drk;
 }
+a.drk-text {
+  color: $gen_blue_drk;
+  &:hover {
+    color: $gen_blue_med;
+  }
+}
 .drk-bg {
   background-color: $gen_blue_drk;
 }
@@ -257,11 +264,23 @@ $ns_accent: #1b5187;
   .drk-text {
     color: $trad_blue_drk;
   }
+  a.drk-text {
+    color: $trad_blue_drk;
+    &:hover {
+      color: $trad_blue_med;
+    }
+  }
   .drk-bg {
     background-color: $trad_blue_drk;
   }
   .link-text {
     color: $trad_blue_lgt;
+    &:hover {
+      color: $trad_blue_lgt;
+    }
+  }
+  .bill-graph-dot {
+    background-color: $grey-dot-ms;
   }
 
   @media #{$tablet} {
@@ -297,13 +316,21 @@ $ns_accent: #1b5187;
   .drk-text {
     color: $cont_blue_drk;
   }
+  a.drk-text {
+    color: $cont_blue_drk;
+    &:hover {
+      color: $cont_blue_med;
+    }
+  }
   .drk-bg {
     background-color: $cont_blue_drk;
   }
   .link-text {
     color: $cont_blue_lgt;
   }
-
+  .bill-graph-dot {
+    background-color: #000;
+  }
   @media #{$tablet} {
     .nav-text {
       color: $grey08;
@@ -337,11 +364,20 @@ $ns_accent: #1b5187;
   .drk-text {
     color: $purple_drk;
   }
+  a.drk-text {
+    color: $purple_drk;
+    &:hover {
+      color: $purple_med;
+    }
+  }
   .drk-bg {
     background-color: $purple_drk;
   }
   .link-text {
     color: $purple_lgt;
+  }
+  .bill-graph-dot {
+    background-color: #000;
   }
 
   .nav-text {
@@ -380,11 +416,21 @@ $ns_accent: #1b5187;
   .drk-text {
     color: $trad_red_drk;
   }
+  a.drk-text {
+    color: $trad_red_drk;
+    &:hover {
+      color: $trad_red_med;
+    }
+  }
+
   .drk-bg {
     background-color: $trad_red_drk;
   }
   .link-text {
     color: $trad_red_lgt;
+  }
+  .bill-graph-dot {
+    background-color: $grey-dot-ms;
   }
 
   .nav-text {
@@ -423,11 +469,20 @@ $ns_accent: #1b5187;
   .drk-text {
     color: $cont_red_drk;
   }
+  a.drk-text {
+    color: $cont_red_drk;
+    &:hover {
+      color: $cont_red_med;
+    }
+  }
   .drk-bg {
     background-color: $cont_red_drk;
   }
   .link-text {
     color: $cont_red_lgt;
+  }
+  .bill-graph-dot {
+    background-color: #000;
   }
 
   .nav-text {
@@ -466,11 +521,20 @@ $ns_accent: #1b5187;
   .drk-text {
     color: $orange_drk;
   }
+  a.drk-text {
+    color: $orange_drk;
+    &:hover {
+      color: $orange_med;
+    }
+  }
   .drk-bg {
     background-color: $orange_drk;
   }
   .link-text {
     color: $orange_lgt;
+  }
+  .bill-graph-dot {
+    background-color: #000;
   }
 
   .nav-text {
@@ -509,13 +573,21 @@ $ns_accent: #1b5187;
   .drk-text {
     color: $trad_green_drk;
   }
+  a.drk-text {
+    color: $trad_green_drk;
+    &:hover {
+      color: $trad_green_med;
+    }
+  }
   .drk-bg {
     background-color: $trad_green_drk;
   }
   .link-text {
     color: $trad_green_lgt;
   }
-
+  .bill-graph-dot {
+    background-color: #000;
+  }
   .nav-text {
     color: $color-white;
   }
@@ -552,11 +624,20 @@ $ns_accent: #1b5187;
   .drk-text {
     color: $cont_green_drk;
   }
+  a.drk-text {
+    color: $cont_green_drk;
+    &:hover {
+      color: $cont_green_med;
+    }
+  }
   .drk-bg {
     background-color: $cont_green_drk;
   }
   .link-text {
     color: $cont_green_lgt;
+  }
+  .bill-graph-dot {
+    background-color: #000;
   }
 
   .nav-text {
@@ -604,6 +685,9 @@ $ns_accent: #1b5187;
 
   .nav-text {
     color: $color-white;
+  }
+  .bill-graph-dot {
+    background-color: #000;
   }
   @media #{$tablet} {
     .nav-text {

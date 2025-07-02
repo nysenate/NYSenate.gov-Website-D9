@@ -62,7 +62,7 @@
         </div>
       </div>
       {% if is_active %}
-        <a class="icon-before__contact c-block--btn c-senator-hero--contact-btn med-bg" href="{{ message_senator_link }}">message senator</a>
+        <a class="icon-before__contact c-block--btn c-senator-hero--contact-btn med-bg" href="{{ message_senator_link }}"><span class="contact-btn--message">message senator</span></a>
       {% else %}
         <a class="{{ is_logged ? 'icon-before__contact' : 'icon-before__find-senator' }} c-block--btn c-senator-hero--contact-btn med-bg" href="{{ is_logged ? your_dashboard_link : '/find-my-senator' }}">
           {{ is_logged ? "your dashboard"|t : "find your senator"|t }}</a>

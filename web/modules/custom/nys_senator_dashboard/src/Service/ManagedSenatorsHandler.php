@@ -99,12 +99,26 @@ class ManagedSenatorsHandler {
     catch (\Throwable) {
       return [];
     }
-    if (!isset($user) && !$user->hasField('field_senator_multiref')) {
-      return [];
+
+    if (in_array('microsite_content_producer', $user->getRoles())) {
+      if (!$user->hasField('field_senator_multiref')) {
+        return [];
+      }
+      return $tids_only
+        ? array_column($user->field_senator_multiref->getValue(), 'target_id')
+        : $user->field_senator_multiref->referencedEntities();
     }
-    return $tids_only
-      ? array_column($user->field_senator_multiref->getValue(), 'target_id')
-      : $user->field_senator_multiref->referencedEntities();
+
+    if (in_array('legislative_correspondent', $user->getRoles())) {
+      if (!$user->hasField('field_senator_inbox_access')) {
+        return [];
+      }
+      return $tids_only
+        ? array_column($user->field_senator_inbox_access->getValue(), 'target_id')
+        : $user->field_senator_inbox_access->referencedEntities();
+    }
+
+    return [];
   }
 
   /**
@@ -145,7 +159,7 @@ class ManagedSenatorsHandler {
     if ($tid_only) {
       return $active_senator_tid;
     }
-    elseif (!empty($active_senator)) {
+    elseif (isset($active_senator)) {
       return $active_senator;
     }
     else {

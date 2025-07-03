@@ -1,0 +1,115 @@
+@use 'sass:list';
+@use 'sass:map';
+@use 'sass:math';
+@use './breakpoints';
+@use './base';
+@use './calculations';
+
+@mixin type-scale($category, $size, $prefix: base.$property-prefix) {
+  @if $prefix != '' {
+    $prefix: $prefix + '-';
+  }
+
+  font-size: var(--#{$prefix}fs-#{$category}-#{$size});
+  line-height: var(--#{$prefix}lh-#{$category}-#{$size});
+}
+
+@function convert-type-scale-map($input-map) {
+  $output-map: ();
+
+  @each $category, $sizes in $input-map {
+    @each $size, $breakpoints in $sizes {
+      @each $breakpoint, $values in $breakpoints {
+        $font-size: math.div(list.nth($values, 1), 16);
+        $line-height: math.div(list.nth($values, 2), list.nth($values, 1));
+        $output-map: map.deep-merge(
+          $output-map,
+          (
+            $breakpoint: (
+              fs: (
+                $category: (
+                  $size: (
+                    $font-size,
+                    list.nth($values, 1),
+                  ),
+                ),
+              ),
+              lh: (
+                $category: (
+                  $size: (
+                    $line-height,
+                    list.nth($values, 2),
+                  ),
+                ),
+              ),
+            ),
+          )
+        );
+      }
+    }
+  }
+
+  @return $output-map;
+}
+
+@mixin type-scale-custom-props($scale, $prefix: base.$property-prefix) {
+  $map: convert-type-scale-map($scale);
+
+  @if $prefix != '' {
+    $prefix: $prefix + '-';
+  }
+
+  $new-prefix: $prefix $prefix + '-';
+
+  :root {
+    @each $breakpoint, $min-width in breakpoints.$grid-breakpoints {
+      $props: map.get($map, $breakpoint);
+
+      @if $props {
+        @if $min-width == 0 {
+          @each $category, $sizes in map.get($props, 'fs') {
+            /* font-sizes: #{$category} */
+            @each $size, $value in $sizes {
+              --#{$prefix}fs-#{$category}-#{$size}: #{list.nth(
+                  $value,
+                  1
+                )}rem; /* #{list.nth($value, 2)}px */
+            }
+          }
+
+          @each $category, $sizes in map.get($props, 'lh') {
+            /* line-heights: #{$category} */
+            @each $size, $value in $sizes {
+              --#{$prefix}lh-#{$category}-#{$size}: #{list.nth(
+                  $value,
+                  1
+                )}; /* #{list.nth($value, 2)}px */
+            }
+          }
+        } @else {
+          @include breakpoints.bp-min($breakpoint) {
+            @each $category, $sizes in map.get($props, 'fs') {
+              /* font-sizes: #{$category} */
+              @each $size, $value in $sizes {
+                --#{$prefix}fs-#{$category}-#{$size}: #{list.nth(
+                    $value,
+                    1
+                  )}rem; /* #{list.nth($value, 2)}px */
+              }
+            }
+
+            @each $category, $sizes in map.get($props, 'lh') {
+              /* line-heights: #{$category} */
+              @each $size, $value in $sizes {
+                --#{$prefix}lh-#{$category}-#{$size}: #{list.nth(
+                    $value,
+                    1
+                  )};
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

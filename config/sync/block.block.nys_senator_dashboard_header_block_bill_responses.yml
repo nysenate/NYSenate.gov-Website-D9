@@ -1,0 +1,41 @@
+uuid: 089bb742-4c27-423b-964b-0f6187ceed7f
+langcode: en
+status: true
+dependencies:
+  module:
+    - nys_senator_dashboard
+    - system
+    - user
+  theme:
+    - nys
+id: nys_senator_dashboard_header_block_bill_responses
+theme: nys
+region: above_content
+weight: -10
+provider: null
+plugin: nys_senator_dashboard_header_block
+settings:
+  id: nys_senator_dashboard_header_block
+  label: 'Senator Dashboard header block - Bill responses'
+  label_display: '0'
+  provider: nys_senator_dashboard
+  display_image: 0
+  display_breadcrumbs: 1
+  display_header_title_as_contextual_link: 1
+  display_homepage_link: 0
+  use_blurb_from_entity: 1
+  header_blurb: ''
+  image_style: ''
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: '/senator-dashboard/constituent-activity/bills/*'
+  user_role:
+    id: user_role
+    negate: false
+    context_mapping:
+      user: '@user.current_user_context:current_user'
+    roles:
+      microsite_content_producer: microsite_content_producer
+      legislative_correspondent: legislative_correspondent

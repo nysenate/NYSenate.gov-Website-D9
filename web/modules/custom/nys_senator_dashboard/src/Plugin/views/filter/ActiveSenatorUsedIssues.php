@@ -16,10 +16,7 @@ class ActiveSenatorUsedIssues extends FilterPluginBase {
    * {@inheritdoc}
    */
   public function buildExposedForm(&$form, FormStateInterface $form_state) {
-    $active_senator = \Drupal::service('nys_senator_dashboard.managed_senators_handler')->getActiveSenator(FALSE);
-    if (!$active_senator) {
-      return;
-    }
+    $active_senator = \Drupal::service('nys_senator_dashboard.managed_senators_handler')->ensureAndGetActiveSenator(FALSE);
     $form[$this->options['expose']['identifier']] = [
       '#type' => 'select',
       '#title' => $this->t('Filter By'),
@@ -37,7 +34,7 @@ class ActiveSenatorUsedIssues extends FilterPluginBase {
   public function query() {
     if (!empty($this->value)) {
       $value = reset($this->value);
-      $active_senator_id = \Drupal::service('nys_senator_dashboard.managed_senators_handler')->getActiveSenator();
+      $active_senator_id = \Drupal::service('nys_senator_dashboard.managed_senators_handler')->ensureAndGetActiveSenator();
       // These should always match.
       if ($value == $active_senator_id) {
         $this->query->addWhereExpression(

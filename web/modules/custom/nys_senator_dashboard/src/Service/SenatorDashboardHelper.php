@@ -166,15 +166,15 @@ class SenatorDashboardHelper {
    *   Count of unique in-district constituents who submitted to the webform.
    */
   public function getInDistrictWebformSubmissionCount(NodeInterface $node): int {
+    $active_senator_district_id = $this->managedSenatorsHandler->getActiveSenatorDistrictId();
+
     if ($node->getType() !== 'webform' || !$node->hasField('webform')) {
       $this->logger->warning('Invalid node type or missing "webform" field.');
       return 0;
     }
 
     $webform_id = $node->webform?->target_id;
-    $active_senator_district_id = $this->managedSenatorsHandler->getActiveSenatorDistrictId();
-
-    if (!$webform_id || !$active_senator_district_id) {
+    if (!$webform_id) {
       $this->logger->warning('Missing webform ID or Active Senator District ID.');
       return 0;
     }

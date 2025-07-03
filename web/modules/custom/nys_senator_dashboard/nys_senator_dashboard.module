@@ -8,6 +8,7 @@
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\flag\Plugin\Flag\EntityFlagType;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
  * Implements hook_query_TAG_alter().
@@ -17,9 +18,11 @@ use Drupal\flag\Plugin\Flag\EntityFlagType;
  */
 function nys_senator_dashboard_query_senators_constituents_only_alter(AlterableInterface $query) {
   // Get active managed senator.
-  $senator_term = \Drupal::service('nys_senator_dashboard.managed_senators_handler')
-    ->getActiveSenator(FALSE);
-  if (empty($senator_term)) {
+  try {
+    $senator_term = \Drupal::service('nys_senator_dashboard.managed_senators_handler')
+      ->ensureAndGetActiveSenator(FALSE);
+  }
+  catch (AccessDeniedHttpException) {
     $query->alwaysFalse();
     return;
   }

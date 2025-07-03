@@ -11,6 +11,7 @@ use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\TempStore\TempStoreException;
 use Drupal\nys_senators\SenatorsHelper;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
  * Provides service methods for managing an MCP's or LC's senator(s).
@@ -107,17 +108,20 @@ class ManagedSenatorsHandler {
   }
 
   /**
-   * Gets (and sets, if unset) the current user's active managed senator.
+   * Ensures and gets the current user's active managed senator.
    *
    * @param bool $tid_only
    *   Whether to return TIDs or entities.
    *
-   * @return \Drupal\Core\Entity\EntityInterface|int|null
-   *   The senator entity or TID if successful, NULL otherwise.
+   * @return \Drupal\Core\Entity\EntityInterface|int
+   *   The senator entity or TID.
+   *
+   * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+   *   Thrown when the active senator cannot be established.
    */
-  public function getActiveSenator(bool $tid_only = TRUE): EntityInterface|int|null {
-    // Get active senator TID.
+  public function ensureAndGetActiveSenator(bool $tid_only = TRUE): EntityInterface|int {
     $active_senator_tid = $this->tempStoreFactory->get('active_managed_senator_tid');
+    $error_message = 'Error establishing active senator required for this request.';
 
     // If unset, set first senator in reference field to active.
     if (empty($active_senator_tid)) {
@@ -127,11 +131,14 @@ class ManagedSenatorsHandler {
           $this->tempStoreFactory->set('active_managed_senator_tid', $managed_senators[0]->id());
         }
         catch (TempStoreException) {
-          return NULL;
+          throw new AccessDeniedHttpException($error_message);
         }
         Cache::invalidateTags(['tempstore_user:' . $this->currentUser->id()]);
         $active_senator = $managed_senators[0];
         $active_senator_tid = $active_senator->id();
+      }
+      else {
+        throw new AccessDeniedHttpException($error_message);
       }
     }
 
@@ -145,9 +152,12 @@ class ManagedSenatorsHandler {
       try {
         $active_senator = $this->entityTypeManager->getStorage('taxonomy_term')
           ->load($active_senator_tid);
+        if (empty($active_senator)) {
+          throw new AccessDeniedHttpException($error_message);
+        }
       }
-      catch (\Exception) {
-        return NULL;
+      catch (\Exception $e) {
+        throw new AccessDeniedHttpException($error_message);
       }
       return $active_senator;
     }
@@ -198,8 +208,9 @@ class ManagedSenatorsHandler {
    *   The homepage URL, or an empty string on error.
    */
   public function getActiveSenatorHomepageUrl(): string {
-    $senator = $this->getActiveSenator(FALSE);
-    return !empty($senator) ? $this->senatorsHelper->getMicrositeUrl($senator) : '';
+    /** @var \Drupal\taxonomy\Entity\Term $senator */
+    $senator = $this->ensureAndGetActiveSenator(FALSE);
+    return $this->senatorsHelper->getMicrositeUrl($senator);
   }
 
   /**
@@ -209,8 +220,9 @@ class ManagedSenatorsHandler {
    *   The district TID.
    */
   public function getActiveSenatorDistrictId(): int|null {
-    $senator = $this->getActiveSenator(FALSE);
-    return !empty($senator) ? $this->senatorsHelper->loadDistrict($senator)?->id() : NULL;
+    /** @var \Drupal\taxonomy\Entity\Term $senator */
+    $senator = $this->ensureAndGetActiveSenator(FALSE);
+    return $this->senatorsHelper->loadDistrict($senator)?->id();
   }
 
 }

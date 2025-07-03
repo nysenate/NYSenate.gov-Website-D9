@@ -56,7 +56,7 @@ class ActiveSenatorSponsorFilter extends FilterPluginBase implements ContainerFa
    * {@inheritdoc}
    */
   public function buildExposedForm(&$form, FormStateInterface $form_state) {
-    $senator = $this->managedSenatorsHandler->getActiveSenator(FALSE);
+    $senator = $this->managedSenatorsHandler->ensureAndGetActiveSenator(FALSE);
     if (empty($senator)) {
       return;
     }

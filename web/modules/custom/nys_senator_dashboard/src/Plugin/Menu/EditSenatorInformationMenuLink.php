@@ -6,6 +6,7 @@ use Drupal\Core\Menu\MenuLinkDefault;
 use Drupal\Core\Menu\StaticMenuLinkOverridesInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\nys_senator_dashboard\Service\ManagedSenatorsHandler;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
  * Provides a menu link for editing the active senator's information.
@@ -61,10 +62,17 @@ class EditSenatorInformationMenuLink extends MenuLinkDefault {
    * {@inheritdoc}
    */
   public function getRouteParameters(): array {
-    $senator_tid = $this->managedSenatorsHandler->getActiveSenator();
-    return [
-      'taxonomy_term' => $senator_tid ?? 0,
-    ];
+    try {
+      $senator_tid = $this->managedSenatorsHandler->ensureAndGetActiveSenator();
+      return [
+        'taxonomy_term' => $senator_tid,
+      ];
+    }
+    catch (AccessDeniedHttpException) {
+      return [
+        'taxonomy_term' => 0,
+      ];
+    }
   }
 
 }

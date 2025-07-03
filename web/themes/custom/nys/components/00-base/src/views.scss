@@ -373,8 +373,13 @@
     background-position: 95% center;
   }
 
+  #edit-actions {
+    display: flex;
+    align-items: flex-end;
+    gap: 20px;
+  }
+
   input[type='submit'] {
-    margin: 33px 0 0 0;
     padding: 12px 20px;
     font-size: 12px;
     color: var(--nys-color-white);
@@ -390,7 +395,6 @@
     }
 
     &[name='reset'] {
-      margin-left: 20px;
       background: var(--nys-color-dash-grey-2);
       border: 1px solid var(--nys-color-dash-grey-2);
       color: var(--nys-color-button-blue);

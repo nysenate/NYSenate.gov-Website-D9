@@ -2,7 +2,7 @@
 
 .c-menu--senator-dashboard {
   button.c-menu__link {
-    --nys-ui-icon-label-icon-after-size: 14px;
+    font-family: var(--nys-ff-serif-regular);
   }
 
   a.c-menu__link {
@@ -24,6 +24,16 @@
     text-transform: uppercase;
   }
 
+  span.icon-after svg {
+    transition: transform ease-in-out .15s;
+  }
+
+  button.c-menu__link[aria-expanded="true"] {
+    span.icon-after svg {
+      transform: scaleY(-1);
+    }
+  }
+
   .c-menu__items[data-menu-depth='0'] {
     > .c-menu__item {
       > button.c-menu__link,
@@ -36,7 +46,7 @@
             bottom: 0;
             content: '';
             display: block;
-            height: 2px;
+            height: 1px;
             left: 0;
             position: absolute;
             transition: background-color ease-in-out .25s;
@@ -78,6 +88,7 @@
     @include bp-min(md) {
       border: 1px solid #A6A6A6;
       left: 0;
+      margin-top: 8px;
       padding: 24px;
       position: absolute;
       top: 100%;

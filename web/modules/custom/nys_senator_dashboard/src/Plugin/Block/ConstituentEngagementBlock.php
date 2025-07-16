@@ -144,7 +144,7 @@ class ConstituentEngagementBlock extends BlockBase implements ContainerFactoryPl
           'data' => $this->getNewConstituentsCount($district, $start_of_year),
           'label' => $this->t('New Constituents'),
           'id' => 'new-constituents',
-          'icon' => 'group',
+          'icon' => 'group-large',
           'url' => '/senator-dashboard/constituent-activity/constituents',
         ],
         [
@@ -165,7 +165,7 @@ class ConstituentEngagementBlock extends BlockBase implements ContainerFactoryPl
           'data' => $this->getQuestionnaireResponseCount($senator, $start_of_year),
           'label' => $this->t('Responses to Questionnaires'),
           'id' => 'responses-to-questionnaires',
-          'icon' => 'clipboard',
+          'icon' => 'clipboard-large',
           'url' => '/senator-dashboard/constituent-activity/questionnaires',
         ],
       ],

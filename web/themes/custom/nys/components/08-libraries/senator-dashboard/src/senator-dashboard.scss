@@ -1,10 +1,30 @@
-h2 {
+h1, h2, h3, h4, h5, h6 {
   font-family: var(--nys-ff-serif);
-  font-size: 32px;
-  font-style: normal;
   font-weight: 350;
   line-height: normal;
+  font-style: normal;
+}
+
+h1 {
+  font-size: 32px;
+}
+
+h2 {
+  font-size: 32px;
   margin-bottom: 28px;
+
+  &.l-grid__title {
+    font-weight: 600;
+    letter-spacing: 1.5px;
+  }
+}
+
+p {
+  color: var(--nys-color-black-2);
+}
+
+a.u-button {
+  font-weight: 600;
 }
 
 .page--senator_dashboard {

@@ -7,6 +7,7 @@
 .c-senator-dashboard-header {
   background-color: var(--nys-color-darker-blue);
   padding: 20px;
+  align-items: center;
 
   @container senator-dashboard-container (width > 560px) {
     padding: 40px;
@@ -19,12 +20,11 @@
 
   @container senator-dashboard-container (width > 800px) {
     gap: 40px;
-    padding-inline: 80px;
+    padding-inline: 60px;
   }
 
   @container senator-dashboard-container (width > 1024px) {
     gap: 60px;
-    padding-inline: 120px;
   }
 }
 
@@ -63,7 +63,6 @@
 }
 
 .c-senator-dashboard-header__title {
-  font-family: var(--nys-ff-serif-regular);
   font-size: rem(24px);
   font-weight: 400;
   line-height: 1.25;

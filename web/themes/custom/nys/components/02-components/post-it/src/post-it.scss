@@ -10,7 +10,7 @@
   background-color: var(--nys-color-gold);
   display: flex;
   gap: 12px;
-  padding: 32px;
+  padding: 28px;
   height: 100%;
 }
 
@@ -33,6 +33,7 @@
 .c-post-it__data {
   font-size: rem(32px);
   line-height: 1.25;
+  text-decoration: none;
 
   @include bp-min(md) {
     font-size: rem(48px);
@@ -41,6 +42,9 @@
 
 .c-post-it__label {
   font-size: rem(18px);
+  font-family: var(--nys-ff-serif-regular);
+  text-decoration: underline;
+  transition: text-decoration-color .35s ease-in-out;
 
   @include bp-min(md) {
     font-size: rem(22px);
@@ -49,10 +53,10 @@
 
 .c-post-it__link {
   color: currentColor;
-  text-decoration: underline;
-  transition: text-decoration-color .35s ease-in-out;
 
   &:hover {
-    text-decoration-color: transparent;
+    .c-post-it__label {
+      text-decoration-color: transparent;
+    }
   }
 }

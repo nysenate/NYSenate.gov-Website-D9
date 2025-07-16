@@ -5,13 +5,15 @@
  * Custom functionality for the nys_school_forms module.
  */
 
+use Drupal\Component\Utility\DiffArray;
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\File\FileExists;
-use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\file\Entity\File;
 use Drupal\node\Entity\Node;
+use Drupal\node\NodeInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\webform\WebformSubmissionInterface;
 
@@ -23,7 +25,7 @@ use Drupal\webform\WebformSubmissionInterface;
 /**
  * Implements hook_theme().
  */
-function nys_school_forms_theme() {
+function nys_school_forms_theme(): array {
   return [
     'school_forms' => [
       'variables' => [
@@ -45,7 +47,7 @@ function nys_school_forms_theme() {
  *
  * Provides access control for the webform submission entity.
  */
-function nys_school_forms_webform_submission_access(WebformSubmissionInterface $webform_submission, $op, $account) {
+function nys_school_forms_webform_submission_access(WebformSubmissionInterface $webform_submission, $op, $account): AccessResult {
   // Check if the user is anonymous.
   if ($account->isAnonymous()) {
     return AccessResult::forbidden();
@@ -58,7 +60,7 @@ function nys_school_forms_webform_submission_access(WebformSubmissionInterface $
 /**
  * Implements hook_form_FORM_ID_alter.
  */
-function nys_school_forms_form_node_student_submission_container_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+function nys_school_forms_form_node_student_submission_container_form_alter(&$form, FormStateInterface $form_state, $form_id): void {
   // Custom validation to make only one upload field required.
   $form['#validate'][] = '_nys_school_forms_validate_ss_container_form';
 
@@ -75,7 +77,8 @@ function nys_school_forms_form_node_student_submission_container_form_alter(&$fo
 
   // Disable form if not in submission period.
   $form['#cache'] = ['max-age' => 0];
-  $submission_periods = \Drupal::state()->get('nys_school_forms.submission_periods');
+  $submission_periods = \Drupal::state()
+    ->get('nys_school_forms.submission_periods');
   $now = time();
   $form_open = strtotime($submission_periods[$form_type]['begin'] ?? 0);
   $form_close = strtotime($submission_periods[$form_type]['end'] ?? 0);
@@ -125,13 +128,12 @@ function nys_school_forms_form_node_student_submission_container_form_alter(&$fo
       ],
     ],
   ];
-
 }
 
 /**
  * Implements hook_form_FORM_ID_alter.
  */
-function nys_school_forms_form_node_student_submission_container_edit_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+function nys_school_forms_form_node_student_submission_container_edit_form_alter(&$form, FormStateInterface $form_state, $form_id): void {
   // Custom validation to make only one upload field required.
   $form['#validate'][] = '_nys_school_forms_validate_ss_container_form';
 }
@@ -139,7 +141,7 @@ function nys_school_forms_form_node_student_submission_container_edit_form_alter
 /**
  * Implements hook_inline_entity_form_entity_form_alter.
  */
-function nys_school_forms_inline_entity_form_entity_form_alter(&$form, FormStateInterface $form_state) {
+function nys_school_forms_inline_entity_form_entity_form_alter(&$form, FormStateInterface $form_state): void {
   if ($form['#bundle'] == 'student_submission') {
     // Display image / file upload field based on prior selection.
     $upload_types = ['image', 'file'];
@@ -162,7 +164,7 @@ function nys_school_forms_inline_entity_form_entity_form_alter(&$form, FormState
 /**
  * Implements hook_form_FORM_ID_alter().
  */
-function nys_school_forms_form_views_exposed_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+function nys_school_forms_form_views_exposed_form_alter(&$form, FormStateInterface $form_state, $form_id): void {
   switch ($form['#id']) {
     case 'views-exposed-form-display-student-submissions-block-1':
       // Set submission year filter to current year, if no user input.
@@ -176,7 +178,13 @@ function nys_school_forms_form_views_exposed_form_alter(&$form, FormStateInterfa
     case 'views-exposed-form-manage-student-submissions-page-1':
       // Set date filters to current year, if no user input.
       $user_input = $form_state->getUserInput();
-      $default_empty_fields = ['name', 'title', 'field_teacher_name_value', 'created', 'created_1'];
+      $default_empty_fields = [
+        'name',
+        'title',
+        'field_teacher_name_value',
+        'created',
+        'created_1',
+      ];
       $default_empty_fields_empty = empty(array_filter(array_intersect_key($user_input, array_flip($default_empty_fields))));
       if ($default_empty_fields_empty && $user_input['status'] === 'All') {
         $form_state->setUserInput([
@@ -191,10 +199,11 @@ function nys_school_forms_form_views_exposed_form_alter(&$form, FormStateInterfa
 /**
  * Implements hook_views_pre_view().
  */
-function nys_school_forms_views_pre_view(ViewExecutable $view, $display_id, &$args) {
+function nys_school_forms_views_pre_view(ViewExecutable $view, $display_id, &$args): void {
   if ($view->id() === 'display_student_submissions' && $display_id === 'block_1') {
     $aliased_path = \Drupal::requestStack()->getCurrentRequest()->getPathInfo();
-    $source_path = \Drupal::service('path_alias.manager')->getPathByAlias($aliased_path);
+    $source_path = \Drupal::service('path_alias.manager')
+      ->getPathByAlias($aliased_path);
 
     // Contextual filter to limit results to proper form type.
     $form_type = substr($aliased_path, strrpos($aliased_path, '/') + 1);
@@ -212,7 +221,7 @@ function nys_school_forms_views_pre_view(ViewExecutable $view, $display_id, &$ar
       $node_id = $matches[1] ?? 0;
       $microsite_node = Node::load($node_id);
       if (
-        $microsite_node instanceof \Drupal\node\NodeInterface
+        $microsite_node instanceof NodeInterface
         && !empty($microsite_node->field_senator_multiref->target_id)
       ) {
         $args[1] = $microsite_node->field_senator_multiref->target_id;
@@ -224,7 +233,7 @@ function nys_school_forms_views_pre_view(ViewExecutable $view, $display_id, &$ar
 /**
  * Custom validation to make only one upload field required.
  */
-function _nys_school_forms_validate_ss_container_form(array &$form, FormStateInterface $form_state) {
+function _nys_school_forms_validate_ss_container_form(array &$form, FormStateInterface $form_state): void {
   $student_submissions = $form_state->getValue('field_student_submissions');
   $errors = $form_state->getErrors();
   unset($errors['submit']);
@@ -256,10 +265,43 @@ function _nys_school_forms_validate_ss_container_form(array &$form, FormStateInt
 /**
  * Implements hook_entity_presave().
  *
- * Rename the file in the field_file_submission field of a student_submission node
- * during node creation or update.
+ * If a school's address is changed, send it back through SAGE.
+ *
+ * Rename the file in the field_file_submission field of a student_submission
+ * node during node creation or update.
  */
-function nys_school_forms_entity_presave(Drupal\Core\Entity\EntityInterface $entity) {
+function nys_school_forms_entity_presave(EntityInterface $entity): void {
+  $entity_type = $entity->getEntityTypeId() . ':' . $entity->bundle();
+  if ($entity_type == 'node:school') {
+    /** @var Node $entity */
+    // Check if the address has been changed.
+    $updated = array_keys(DiffArray::diffAssocRecursive(
+      $entity->toArray(),
+      $entity->original->toArray()
+    ));
+
+    // If the address changed, get a new district from SAGE and report.
+    if (in_array('field_school_address', $updated)) {
+      /** @var \Drupal\nys_school_forms\SchoolFormsService $service */
+      $service = \Drupal::service('nys_school_forms.school_forms');
+      $result = $service->reassignDistrict($entity, FALSE);
+      $msg_type = match ($result) {
+        1 => 'info',
+        default => 'error'
+      };
+      $reason = $service::ASSIGN_DISTRICT_MESSAGES[$result];
+      $msg = 'School @id (@name): district ' .
+        ($result == $service::ASSIGN_DISTRICT_SUCCESS ? '' : 'could not be ') .
+        'assigned';
+      \Drupal::logger('nys_school')
+        ->log($msg_type, $msg, [
+          '@id' => $entity->id(),
+          '@name' => $entity->getTitle(),
+          '@reason' => $reason,
+        ]);
+    }
+  }
+
   if ($entity->bundle() === 'student_submission') {
     $student_name = $entity->field_student_name->value ?? 'Student';
     $current_year = date('Y');
@@ -284,7 +326,8 @@ function nys_school_forms_entity_presave(Drupal\Core\Entity\EntityInterface $ent
             $file->save();
           }
           catch (\Exception $e) {
-            \Drupal::logger('nys_school_forms')->error('Failed to save file: @message', ['@message' => $e->getMessage()]);
+            \Drupal::logger('nys_school_forms')
+              ->error('Failed to save file: @message', ['@message' => $e->getMessage()]);
           }
         }
       }
@@ -295,9 +338,9 @@ function nys_school_forms_entity_presave(Drupal\Core\Entity\EntityInterface $ent
 /**
  * Custom submit handler for custom redirect.
  */
-function _nys_school_forms_ss_container_submit_handler(array &$form, \Drupal\Core\Form\FormStateInterface $form_state) {
+function _nys_school_forms_ss_container_submit_handler(array &$form, \Drupal\Core\Form\FormStateInterface $form_state): void {
   $form_type = $form_state->getValue('field_form_type')[0]['value'] ?? NULL;
-  $redirect_uri = match($form_type) {
+  $redirect_uri = match ($form_type) {
     'thanksgiving' => 'internal:/questionnaires/what-are-you-thankful/received',
     'earth_day' => 'internal:/earthday/received',
     default => 'internal:/',
@@ -315,7 +358,7 @@ function _nys_school_forms_ss_container_submit_handler(array &$form, \Drupal\Cor
  *
  * @return mixed|null
  */
-function _nys_school_forms_get_form_type($string_type = 'machine_name') {
+function _nys_school_forms_get_form_type(string $string_type = 'machine_name'): mixed {
   $form_type_value = NULL;
   $request = \Drupal::requestStack()->getCurrentRequest();
   if ($request->attributes->has('node')) {
@@ -332,4 +375,23 @@ function _nys_school_forms_get_form_type($string_type = 'machine_name') {
     }
   }
   return $form_type_label ?? $form_type_value;
+}
+
+/**
+ * Implements hook_entity_operation().
+ *
+ * Add the "redistrict" operation to schools.
+ */
+function nys_school_forms_entity_operation(EntityInterface $entity): array {
+  $operations = [];
+  if ($entity->getEntityTypeId() == 'node') {
+    /** @var $entity Node */
+    if ($entity->getType() == 'school') {
+      $operations['redistrict'] = [
+        'title' => t('Reassign District'),
+        'url' => Url::fromRoute('nys_school_forms.reassign_district', ['node' => $entity->id()]),
+      ];
+    }
+  }
+  return $operations;
 }

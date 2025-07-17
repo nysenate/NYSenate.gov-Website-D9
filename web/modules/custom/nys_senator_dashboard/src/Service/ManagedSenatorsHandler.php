@@ -134,8 +134,14 @@ class ManagedSenatorsHandler {
    *   Thrown when the active senator cannot be established.
    */
   public function ensureAndGetActiveSenator(bool $tid_only = TRUE): EntityInterface|int {
-    $active_senator_tid = $this->tempStoreFactory->get('active_managed_senator_tid');
     $error_message = 'Error establishing active senator required for this request.';
+    $stored_active_senator_tid = $this->tempStoreFactory->get('active_managed_senator_tid');
+    if (
+      isset($stored_active_senator_tid)
+      && in_array($stored_active_senator_tid, $this->getManagedSenators())
+    ) {
+      $active_senator_tid = $stored_active_senator_tid;
+    }
 
     // If unset, set first senator in reference field to active.
     if (empty($active_senator_tid)) {
@@ -170,7 +176,7 @@ class ManagedSenatorsHandler {
           throw new AccessDeniedHttpException($error_message);
         }
       }
-      catch (\Exception $e) {
+      catch (\Exception) {
         throw new AccessDeniedHttpException($error_message);
       }
       return $active_senator;

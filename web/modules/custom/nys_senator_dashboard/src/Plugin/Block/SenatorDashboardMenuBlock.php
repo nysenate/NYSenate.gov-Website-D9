@@ -178,6 +178,7 @@ class SenatorDashboardMenuBlock extends BlockBase implements ContainerFactoryPlu
       return [];
     }
 
+    // Build active managed senator switcher links.
     $active_senator_tid = $this->managedSenatorsHandler->ensureAndGetActiveSenator();
     $active_senator_links = [];
     foreach ($managed_senators as $senator) {
@@ -198,11 +199,10 @@ class SenatorDashboardMenuBlock extends BlockBase implements ContainerFactoryPlu
     $items = [];
     $active_link = [];
     $additional_links = [];
-
     foreach ($active_senator_links as $link) {
       if ($link['is_active']) {
         $active_link = $link;
-        $active_link['is_expanded'] = TRUE;
+        $active_link['is_expanded'] = FALSE;
         $active_link['is_collapsed'] = FALSE;
         $active_link['in_active_trail'] = FALSE;
       }
@@ -210,17 +210,19 @@ class SenatorDashboardMenuBlock extends BlockBase implements ContainerFactoryPlu
         $additional_links[] = $link;
       }
     }
-
+    if (!empty($additional_links)) {
+      $active_link['is_expanded'] = TRUE;
+    }
     if (!empty($active_link)) {
       $active_link['url'] = !empty($active_link['url'])
         ? Url::fromRoute('<button>')
         : Url::fromUri($active_link['homepage_url']);
-
       $active_link['icon'] = 'briefcase';
       $active_link['below'] = $additional_links;
       $items[] = $active_link;
     }
 
+    // Additional processing on the menu items to meet SDC requirements.
     $this->prepareMenuItems($items);
 
     return $items;

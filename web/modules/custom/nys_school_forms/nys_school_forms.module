@@ -9,6 +9,7 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\File\FileExists;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Drupal\file\Entity\File;
 use Drupal\node\Entity\Node;
@@ -295,7 +296,7 @@ function nys_school_forms_entity_presave(Drupal\Core\Entity\EntityInterface $ent
 /**
  * Custom submit handler for custom redirect.
  */
-function _nys_school_forms_ss_container_submit_handler(array &$form, \Drupal\Core\Form\FormStateInterface $form_state) {
+function _nys_school_forms_ss_container_submit_handler(array &$form, FormStateInterface $form_state) {
   $form_type = $form_state->getValue('field_form_type')[0]['value'] ?? NULL;
   $redirect_uri = match($form_type) {
     'thanksgiving' => 'internal:/questionnaires/what-are-you-thankful/received',

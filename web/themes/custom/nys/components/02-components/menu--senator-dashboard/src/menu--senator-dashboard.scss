@@ -1,10 +1,6 @@
 @use 'partials' as *;
 
 .c-menu--senator-dashboard {
-  button.c-menu__link {
-    font-family: var(--nys-ff-serif-regular);
-  }
-
   a.c-menu__link {
     font-family: var(--nys-ff-sans);
 
@@ -36,9 +32,15 @@
 
   .c-menu__items[data-menu-depth='0'] {
     > .c-menu__item {
+      > a.c-menu__link {
+        line-height: 34px;
+        position: relative;
+      }
+
       > button.c-menu__link,
       > a.c-menu__link {
         padding: 6px 0;
+        font-family: var(--nys-ff-serif-regular);
 
         @include bp-min(md) {
           &:after {

@@ -205,6 +205,7 @@ class SenatorDashboardMenuBlock extends BlockBase implements ContainerFactoryPlu
         $active_link['is_expanded'] = FALSE;
         $active_link['is_collapsed'] = FALSE;
         $active_link['in_active_trail'] = FALSE;
+        $active_link['icon'] = 'briefcase';
       }
       else {
         $additional_links[] = $link;
@@ -212,17 +213,15 @@ class SenatorDashboardMenuBlock extends BlockBase implements ContainerFactoryPlu
     }
     if (!empty($additional_links)) {
       $active_link['is_expanded'] = TRUE;
-    }
-    if (!empty($active_link)) {
-      $active_link['url'] = !empty($active_link['url'])
-        ? Url::fromRoute('<button>')
-        : Url::fromUri($active_link['homepage_url']);
-      $active_link['icon'] = 'briefcase';
       $active_link['below'] = $additional_links;
-      $items[] = $active_link;
+      $active_link['url'] = Url::fromRoute('<button>');
     }
+    else {
+      $active_link['url'] = Url::fromUri($active_link['homepage_url']);
+    }
+    $items[] = $active_link;
 
-    // Additional processing on the menu items to meet SDC requirements.
+    // Process the menu items to meet nys:menu requirements.
     $this->prepareMenuItems($items);
 
     return $items;

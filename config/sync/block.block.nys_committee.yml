@@ -1,0 +1,29 @@
+uuid: 3dad4b38-b7c8-4473-a164-e2392e996852
+langcode: en
+status: true
+dependencies:
+  config:
+    - facets.facet.committee
+  module:
+    - facets
+    - system
+  theme:
+    - nys
+id: nys_committee
+theme: nys
+region: content
+weight: -14
+provider: null
+plugin: 'facet_block:committee'
+settings:
+  id: 'facet_block:committee'
+  label: Committee
+  label_display: '0'
+  provider: facets
+  context_mapping: {  }
+  block_id: committee
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: '/search/global/*'

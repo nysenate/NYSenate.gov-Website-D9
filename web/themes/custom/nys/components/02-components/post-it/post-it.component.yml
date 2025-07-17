@@ -1,0 +1,32 @@
+$schema: https://git.drupalcode.org/project/sdc/-/raw/1.x/src/metadata.schema.json
+name: Post It
+description: Styles a bit of info.
+props:
+  type: object
+  required:
+    - title
+    - data
+  properties:
+    title:
+      type: string
+      title: Title
+      description: The title of the card.
+    data:
+      type:
+        - string
+        - integer
+      title: Data
+      description: The data for the card.
+    icon:
+      type: string
+      title: Icon
+      description: The name of the icon to display.
+      default: ''
+    id:
+      type: string
+      title: ID
+      description: ID of the post it.
+    url:
+      type: string
+      title: URL
+      description: A link for the post it.

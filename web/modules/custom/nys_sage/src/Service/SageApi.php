@@ -2,12 +2,15 @@
 
 namespace Drupal\nys_sage\Service;
 
+use Drupal\address\Plugin\Field\FieldType\AddressItem;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Logger\LoggerChannelTrait;
 use Drupal\nys_sage\Logger\SageLogger;
 use Drupal\nys_sage\Sage\Request;
 use Drupal\nys_sage\Sage\Response;
+use Drupal\taxonomy\Entity\Term;
 
 /**
  * Service class for calling NYS SAGE API.
@@ -45,11 +48,19 @@ class SageApi {
   protected SageLogger $sageLogger;
 
   /**
+   * Drupal's Entity Type Manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected EntityTypeManagerInterface $entityTypeManager;
+
+  /**
    * Constructor.
    */
-  public function __construct(ConfigFactory $config, SageLogger $sage_log) {
+  public function __construct(ConfigFactory $config, SageLogger $sage_log, EntityTypeManagerInterface $entityTypeManager) {
     $this->localConfig = $config->get('nys_sage.settings');
     $this->sageLogger = $sage_log;
+    $this->entityTypeManager = $entityTypeManager;
   }
 
   /**
@@ -143,6 +154,67 @@ class SageApi {
     // @todo Validate params, verify requirements, etc.
     $response = $this->call('district', 'assign', $params);
     return $response->districts->senate->district ?? NULL;
+  }
+
+  /**
+   * Parses an Address into an array of parameters suitable for SAGE.
+   *
+   * @param \Drupal\address\Plugin\Field\FieldType\AddressItem|array $address
+   *   A field of type Address, or its corresponding array.  Transcribes to
+   *   SAGE parameters as:
+   *     - 'address_line1' => 'addr1'
+   *     - 'address_line2' => 'addr2'
+   *     - 'locality' => 'city'
+   *     - 'administrative_area' => 'state'
+   *     - 'postal_code' is split into 'zip5' and 'zip4'.
+   *   All other keys are dropped.
+   *
+   * @see http://sage.nysenate.gov:8080/docs/html/index.html#common-query-parameters
+   * @see \Drupal\address\Plugin\Field\FieldType\AddressItem
+   */
+  public function parseAddressField(AddressItem|array $address): array {
+    $addr = ($address instanceof AddressItem) ? $address->getValue() : $address;
+    $zip = explode('-', $addr['postal_code'] ?? '');
+    return array_filter(
+      [
+        'addr1' => $addr['address_line1'] ?? '',
+        'addr2' => $addr['address_line2'] ?? '',
+        'city' => $addr['locality'] ?? '',
+        'state' => $addr['administrative_area'] ?? '',
+        'zip5' => $zip[0] ?? '',
+        'zip4' => $zip[1] ?? '',
+      ]
+    );
+  }
+
+  /**
+   * Attempts to load the senate district taxonomy term for an address.
+   *
+   * @param \Drupal\address\Plugin\Field\FieldType\AddressItem|array $address_parts
+   *   An Address field item, or its corresponding array.
+   *
+   * @return \Drupal\taxonomy\Entity\Term|null
+   *   Returns NULL if no district assignment was made, or the term could not
+   *   be loaded.  Otherwise, the taxonomy term for the district.
+   */
+  public function getDistrictFromAddress(AddressItem|array $address_parts): ?Term {
+    // Get the SAGE district number.
+    $district = $this->districtAssign($this->parseAddressField($address_parts));
+
+    // Try to load the district entity.
+    try {
+      /** @var \Drupal\taxonomy\Entity\Term $district_term */
+      $district_term = current(
+        $this->entityTypeManager
+          ->getStorage('taxonomy_term')
+          ->loadByProperties(['field_district_number' => $district])
+      ) ?: NULL;
+    }
+    catch (\Throwable) {
+      $district_term = NULL;
+    }
+
+    return $district_term;
   }
 
   /**

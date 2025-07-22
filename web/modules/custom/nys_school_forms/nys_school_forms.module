@@ -334,3 +334,15 @@ function _nys_school_forms_get_form_type($string_type = 'machine_name') {
   }
   return $form_type_label ?? $form_type_value;
 }
+
+/**
+ * Implements hook_page_attachments().
+ *
+ * Adds CSS to hide schools forms content types from the node/add page.
+ */
+function nys_school_forms_page_attachments(array &$attachments) {
+  $current_path = \Drupal::service('path.current')->getPath();
+  if ($current_path === '/node/add') {
+    $attachments['#attached']['library'][] = 'nys_school_forms/hide_from_admin_ui';
+  }
+}

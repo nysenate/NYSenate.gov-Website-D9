@@ -8,10 +8,11 @@ use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Pager\PagerManagerInterface;
 use Drupal\Core\Pager\PagerParametersInterface;
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
-use Drupal\file\Entity\File;
+use Drupal\node\NodeInterface;
 use Drupal\nys_school_forms\SchoolFormsService;
 use Drupal\path_alias\AliasManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -19,6 +20,13 @@ use Symfony\Component\HttpFoundation\Response;
  * Route controller for School Form submissions.
  */
 class SchoolFormsController extends ControllerBase {
+
+  /**
+   * The default redirect destination for operations (e.g., assign district)
+   *
+   * @var string
+   */
+  protected static string $defaultRedirectDestination = '/admin/content/schools';
 
   /**
    * Request stack.
@@ -192,7 +200,8 @@ class SchoolFormsController extends ControllerBase {
     );
 
     foreach ($results as $result) {
-      $file = File::load($result['student']['student_submission']);
+      $file = $this->entityTypeManager->getStorage('file')
+        ->load($result['student']['student_submission']);
       $uri = $file->getFileUri();
       $file_string = $this->fileUrlGenerator->generateAbsoluteString($uri);
       $school_address = $result['school_node']->get('field_school_address')
@@ -285,6 +294,52 @@ class SchoolFormsController extends ControllerBase {
       '#type' => 'markup',
       '#markup' => $markup,
     ];
+  }
+
+  /**
+   * Reassign a school's district, e.g., after an address change.
+   *
+   * @param \Drupal\node\NodeInterface $node
+   *   A node in the 'school' bundle.
+   *
+   * @return \Symfony\Component\HttpFoundation\RedirectResponse
+   *   Always returns a redirection response back to the caller.
+   */
+  public function reassignDistrict(NodeInterface $node): RedirectResponse {
+    // Call the district reassignment.
+    $success = $this->schoolFormsService->reassignDistrict($node);
+
+    // Set up the result notification.
+    $messenger = $this->messenger();
+    $msg_type = match ($success) {
+      1 => $messenger::TYPE_STATUS,
+      default => $messenger::TYPE_ERROR
+    };
+    $messenger->addMessage(
+      $this->schoolFormsService::ASSIGN_DISTRICT_MESSAGES[$success] ?? 'Unknown Error',
+      $msg_type
+    );
+
+    // KThxBye.
+    return $this->getRedirect();
+  }
+
+  /**
+   * Generates a RedirectResponse for operations.
+   *
+   * @param string $dest
+   *   A relative path to the destination.  Should be internal.  If not passed,
+   *   will default to the referer, or the constant default.
+   * @param int $response_code
+   *   An optional HTTP response code (defaults to 307)
+   */
+  protected function getRedirect(string $dest = '', int $response_code = 307): RedirectResponse {
+    if (!$dest) {
+      // If a destination was not passed, get the referer, or the default.
+      $dest = $this->request->getCurrentRequest()->headers->get('referer')
+        ?: static::$defaultRedirectDestination;
+    }
+    return new RedirectResponse($dest, $response_code);
   }
 
 }

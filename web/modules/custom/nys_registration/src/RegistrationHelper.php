@@ -44,50 +44,10 @@ class RegistrationHelper {
   }
 
   /**
-   * Attempts to find the senate district for an address.
-   *
-   * @param array $address_parts
-   *   An array representing an address, as expressed in the address module.
-   *   This method recognizes 'address_line1', 'address_line2', 'locality',
-   *   'administrative_area', and 'postal_code'.  Generally, all parts are
-   *   required for SAGE to geocode an address.
-   *
-   * @return \Drupal\taxonomy\Entity\Term|null
-   *   Returns NULL if no district assignment was made, or the term could not
-   *   be loaded.  Otherwise, the taxonomy term for the district.
-   *
-   * @see http://sage.nysenate.gov:8080/docs/html/index.html#common-query-parameters
+   * Wrapper function around SageApi->getDistrictFromAddress().
    */
   public function getDistrictFromAddress(array $address_parts): ?Term {
-    $zip = explode('-', $address_parts['postal_code'] ?? '');
-    $params = array_filter(
-      [
-        'addr1' => $address_parts['address_line1'] ?? '',
-        'addr2' => $address_parts['address_line2'] ?? '',
-        'city' => $address_parts['locality'] ?? '',
-        'state' => $address_parts['administrative_area'] ?? '',
-        'zip5' => $zip[0] ?? '',
-        'zip4' => $zip[1] ?? '',
-      ]
-    );
-
-    // SAGE returns a district number.  Try to load the district entity.
-    $district = $this->sageApi->districtAssign($params);
-    try {
-      /**
-       * @var \Drupal\taxonomy\Entity\Term|null $district_term
-       */
-      $district_term = current(
-        $this->entityTypeManager
-          ->getStorage('taxonomy_term')
-          ->loadByProperties(['field_district_number' => $district])
-      ) ?: NULL;
-    }
-    catch (\Throwable) {
-      $district_term = NULL;
-    }
-
-    return $district_term;
+    return $this->sageApi->getDistrictFromAddress($address_parts);
   }
 
   /**

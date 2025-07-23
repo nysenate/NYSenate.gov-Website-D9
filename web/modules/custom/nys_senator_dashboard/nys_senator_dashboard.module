@@ -5,9 +5,14 @@
  * Contains custom module logic for NYS Senator Dashboard.
  */
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Database\Query\AlterableInterface;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\flag\Plugin\Flag\EntityFlagType;
+use Drupal\webform\WebformInterface;
+use Drupal\webform\WebformSubmissionInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
@@ -296,8 +301,83 @@ function nys_senator_dashboard_entity_extra_field_info() {
 }
 
 /**
- * Implements hook_entity_view().
+ * Implements hook_ENTITY_TYPE_access() for webform entity.
+ *
+ * Restricts access to webforms based on the user's managed districts.
+ * Only allows access if the user's managed district IDs match a district
+ * linked to a senator that is referenced in the webform.
  */
+function nys_senator_dashboard_webform_access(WebformInterface $webform, $operation, AccountInterface $account) {
+  // Skip access check for users with administrative permissions.
+  if ($account->hasPermission('administer webform') || $account->hasPermission('administer webforms')) {
+    return AccessResult::neutral();
+  }
+
+  // Get the user's active managed senator.
+  try {
+    $active_managed_senator = \Drupal::service('nys_senator_dashboard.managed_senators_handler')
+      ->ensureAndGetActiveSenator(FALSE);
+  }
+  catch (\Throwable) {
+    return AccessResult::neutral();
+  }
+
+  // Get the webform node (used to get linked senators).
+  $node_storage = \Drupal::entityTypeManager()->getStorage('node');
+  $query = $node_storage->getQuery()
+    ->condition('type', 'webform')
+    ->condition('webform', $webform->id())
+    ->accessCheck(FALSE);
+  $nids = $query->execute();
+  if (empty($nids)) {
+    return AccessResult::neutral();
+  }
+  $webform_node = $node_storage->load(reset($nids));
+
+  // Get the senator IDs referenced in the webform node.
+  $webform_senator_ids = [];
+  if ($webform_node->hasField('field_senator_multiref')) {
+    $field_senator_multiref = $webform_node->get('field_senator_multiref');
+    if ($field_senator_multiref) {
+      foreach ($field_senator_multiref as $item) {
+        $webform_senator_ids[] = $item->target_id;
+      }
+    }
+  }
+  if (empty($webform_senator_ids)) {
+    return AccessResult::neutral();
+  }
+
+  // Check if the webform references the user's active managed senator.
+  if (in_array($active_managed_senator->id(), $webform_senator_ids)) {
+    return AccessResult::allowed();
+  }
+
+  // Otherwise, return neutral.
+  return AccessResult::neutral();
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_access() for webform_submission entity.
+ *
+ * Restricts access to webform submissions based on the user's managed districts.
+ * Only allows access if the user's managed district IDs match a district
+ * linked to a senator that is referenced in the webform.
+ */
+function nys_senator_dashboard_webform_submission_access(WebformSubmissionInterface $webform_submission, $operation, AccountInterface $account) {
+  if ($account->hasPermission('administer webform') || $account->hasPermission('administer webform submission')) {
+    return AccessResult::neutral();
+  }
+
+  $webform = $webform_submission->getWebform();
+  if (!$webform) {
+    return AccessResult::neutral();
+  }
+
+  // Delegate to the webform access check.
+  return nys_senator_dashboard_webform_access($webform, $operation, $account);
+}
+
 function nys_senator_dashboard_entity_view(array &$build, \Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display) {
   /** @var Drupal\flag\FlagService $flag_service */
   $flag_service = \Drupal::service('flag');

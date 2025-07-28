@@ -10,9 +10,12 @@ use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Url;
 use Drupal\flag\Plugin\Flag\EntityFlagType;
+use Drupal\user\UserInterface;
 use Drupal\webform\WebformInterface;
 use Drupal\webform\WebformSubmissionInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
@@ -433,5 +436,36 @@ function nys_senator_dashboard_entity_view(array &$build, \Drupal\Core\Entity\En
 
   if ($display->getComponent('nys_senator_dashboard_path_alias') && $entity->getEntityTypeId() === 'node') {
     $build['nys_senator_dashboard_path_alias'] = $extra_field_builder->buildPathAlias($entity);
+  }
+}
+
+/**
+ * Implements hook_user_login().
+ *
+ * Redirects MCPs and LCs to their respective dashboard pages on login.
+ */
+function nys_senator_dashboard_user_login(UserInterface $account) {
+  $request = \Drupal::request();
+  $path = $request->getPathInfo();
+
+  // Make sure destination is not set, and this is not a password reset.
+  if ($request->query->get('destination') || str_starts_with($path, '/user/reset/')) {
+    return;
+  }
+
+  if ($account->hasRole('microsite_content_producer')) {
+    $url = Url::fromRoute('nys_senator_dashboard.manage_senator')->toString();
+    $response = new RedirectResponse($url);
+    $request->getSession()->save();
+    $response->send();
+    exit;
+  }
+
+  if ($account->hasRole('legislative_correspondent')) {
+    $url = Url::fromRoute('nys_senator_dashboard.constituent_activity')->toString();
+    $response = new RedirectResponse($url);
+    $request->getSession()->save();
+    $response->send();
+    exit;
   }
 }

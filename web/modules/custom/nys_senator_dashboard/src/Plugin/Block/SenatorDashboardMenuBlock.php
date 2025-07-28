@@ -132,16 +132,19 @@ class SenatorDashboardMenuBlock extends BlockBase implements ContainerFactoryPlu
    * {@inheritdoc}
    */
   public function build() {
-    // Prepare menu data, depending on plugin "mode".
+    // Prepare menu data, depending on plugin "mode" and user role.
     $active_senator_links = match($this->configuration['mode']) {
       'header_menu' => $this->getActiveSenatorLinks(),
       default => [],
     };
-    $manage_senator_menu = match($this->configuration['mode']) {
-      'header_menu' => $this->getMenuRenderArray('manage_senator'),
-      'manage_senator_menu' => $this->getMenuRenderArray('manage_senator', TRUE),
-      default => [],
-    };
+    $manage_senator_menu = [];
+    if (!$this->currentUser->hasRole('legislative_correspondent')) {
+      $manage_senator_menu = match($this->configuration['mode']) {
+        'header_menu' => $this->getMenuRenderArray('manage_senator'),
+        'manage_senator_menu' => $this->getMenuRenderArray('manage_senator', TRUE),
+        default => [],
+      };
+    }
     $constituent_activity_menu = match($this->configuration['mode']) {
       'header_menu' => $this->getMenuRenderArray('constituent_activity'),
       'constituent_activity_menu' => $this->getMenuRenderArray('constituent_activity', TRUE),

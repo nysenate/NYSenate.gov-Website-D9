@@ -2925,17 +2925,6 @@ function nysenate_theme_preprocess_taxonomy_term__districts(&$variables) {
 /**
  * Implements hook_preprocess_taxonomy_term__TAXONOMY().
  */
-function nysenate_theme_preprocess_taxonomy_term__senator__full(&$variables) {
-  $term = $variables['term'];
-  $variables['district'] = get_senator_district($term->id());
-  $senator_link = \Drupal::service('nys_senators.microsites')
-    ->getMicrosite($term);
-  $variables['senator_link'] = $senator_link;
-}
-
-/**
- * Implements hook_preprocess_taxonomy_term__TAXONOMY().
- */
 function nysenate_theme_preprocess_taxonomy_term__senator__agenda_senator_sponsors(&$variables) {
   $term = $variables['term'];
   $variables['district'] = get_senator_district($term->id());

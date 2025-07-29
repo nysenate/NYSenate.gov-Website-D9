@@ -304,11 +304,10 @@ function nys_senator_dashboard_entity_extra_field_info() {
 }
 
 /**
- * Implements hook_ENTITY_TYPE_access() for webform entity.
+ * Implements hook_ENTITY_TYPE_access().
  *
- * Restricts access to webforms based on the user's managed districts.
- * Only allows access if the user's managed district IDs match a district
- * linked to a senator that is referenced in the webform.
+ * Allows access to webforms where the user's managed senators match the
+ * senator linked to the webform.
  */
 function nys_senator_dashboard_webform_access(WebformInterface $webform, $operation, AccountInterface $account) {
   // Skip access check for users with administrative permissions.
@@ -361,11 +360,10 @@ function nys_senator_dashboard_webform_access(WebformInterface $webform, $operat
 }
 
 /**
- * Implements hook_ENTITY_TYPE_access() for webform_submission entity.
+ * Implements hook_ENTITY_TYPE_access().
  *
- * Restricts access to webform submissions based on the user's managed districts.
- * Only allows access if the user's managed district IDs match a district
- * linked to a senator that is referenced in the webform.
+ * Delegates 'webform_submission' access to
+ * nys_senator_dashboard_webform_access().
  */
 function nys_senator_dashboard_webform_submission_access(WebformSubmissionInterface $webform_submission, $operation, AccountInterface $account) {
   if ($account->hasPermission('administer webform') || $account->hasPermission('administer webform submission')) {

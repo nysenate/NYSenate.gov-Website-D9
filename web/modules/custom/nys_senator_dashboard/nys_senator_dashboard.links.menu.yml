@@ -1,5 +1,5 @@
 senator_dashboard.manage_senator:
-  title: 'Manage Senator'
+  title: 'Manage senator'
   description: 'Access links to manage senator-specific information and content.'
   menu_name: senator-dashboard
   route_name: nys_senator_dashboard.manage_senator
@@ -12,15 +12,22 @@ senator_dashboard.manage_senator.overview:
   route_name: nys_senator_dashboard.manage_senator
   weight: 1
 senator_dashboard.manage_senator.manage_senator_information:
-  title: 'Manage Senator’s Information'
+  title: 'Manage senator’s information'
   description: 'Links for updating senator-specific information like general info and microsites.'
   parent: senator_dashboard.manage_senator
   menu_name: senator-dashboard
   route_name: nys_senator_dashboard.manage_senator
   weight: 2
+senator_dashboard.manage_senator.manage_senator_content.create_new_content:
+  title: 'Create new content'
+  description: 'Create new content.'
+  parent: senator_dashboard.manage_senator.manage_senator_content
+  menu_name: senator-dashboard
+  url: internal:/node/add
+  weight: 0
 senator_dashboard.manage_senator.manage_senator_information.general_info:
   class: Drupal\nys_senator_dashboard\Plugin\Menu\EditSenatorInformationMenuLink
-  title: 'Edit Senator Information'
+  title: 'Edit senator information'
   description: 'Edit the general information of the active senator.'
   route_name: entity.taxonomy_term.edit_form
   parent: senator_dashboard.manage_senator.manage_senator_information
@@ -33,14 +40,14 @@ senator_dashboard.manage_senator.manage_senator_information.microsites:
   url: internal:/admin/senator/content/micropages
   weight: 2
 senator_dashboard.manage_senator.manage_senator_information.committee:
-  title: 'Committee Chair Admin'
+  title: 'Committee chair admin'
   description: 'Committee chairs can manage committee descriptions, featured legislation & header images.'
   parent: senator_dashboard.manage_senator.manage_senator_information
   menu_name: senator-dashboard
   url: internal:/admin/senator/content/committee
   weight: 3
 senator_dashboard.manage_senator.manage_senator_content:
-  title: 'Manage Senator’s Content'
+  title: 'Manage senator’s content'
   description: 'Links for managing content like articles, press releases, events, and videos.'
   parent: senator_dashboard.manage_senator
   menu_name: senator-dashboard
@@ -54,7 +61,7 @@ senator_dashboard.manage_senator.manage_senator_content.articles:
   url: internal:/admin/senator/content/content?type=article&field_category_value=article
   weight: 1
 senator_dashboard.manage_senator.manage_senator_content.press_releases:
-  title: 'Press Releases'
+  title: 'Press releases'
   description: 'View & edit the senator’s press releases.'
   parent: senator_dashboard.manage_senator.manage_senator_content
   menu_name: senator-dashboard
@@ -68,14 +75,14 @@ senator_dashboard.manage_senator.manage_senator_content.events:
   url: internal:/admin/senator/content/content?type=event
   weight: 3
 senator_dashboard.manage_senator.manage_senator_content.honoree_profiles:
-  title: 'Honoree Profiles'
+  title: 'Honoree profiles'
   description: 'View & edit the senator’s honoree profiles.'
   parent: senator_dashboard.manage_senator.manage_senator_content
   menu_name: senator-dashboard
   url: internal:/admin/senator/content/content?type=honoree
   weight: 4
 senator_dashboard.manage_senator.manage_senator_content.in_the_news:
-  title: 'In the News'
+  title: 'In the news'
   description: 'View & edit the senator’s news posts.'
   parent: senator_dashboard.manage_senator.manage_senator_content
   menu_name: senator-dashboard
@@ -96,14 +103,14 @@ senator_dashboard.manage_senator.manage_senator_content.videos:
   url: internal:/admin/senator/content/content?type=video
   weight: 7
 senator_dashboard.manage_senator.manage_senator_content.promotional_banners:
-  title: 'Promotional Banners'
+  title: 'Promotional banners'
   description: 'View & edit the senator’s promotional banners.'
   parent: senator_dashboard.manage_senator.manage_senator_content
   menu_name: senator-dashboard
   url: internal:/admin/senator/content/promobanners
   weight: 8
 senator_dashboard.manage_senator.manage_senator_content.connect_issues_to_bills:
-  title: 'Connect Issues to Bills'
+  title: 'Connect issues to bills'
   description: 'Assign issues to bills the Senator has introduced or sponsored. Issue tags help constituents discover bills & build exposure on NYSenate.gov.'
   parent: senator_dashboard.manage_senator.manage_senator_content
   menu_name: senator-dashboard
@@ -117,21 +124,21 @@ senator_dashboard.manage_senator.manage_senator_content.add_issues_to_resolution
   url: internal:/admin/senator/content/bills?type_1=resolution
   weight: 10
 senator_dashboard.manage_senator.manage_senator_content.questionnaires:
-  title: 'Add & view Questionnaires'
+  title: 'Add & view questionnaires'
   description: 'Create a new questionnaire or view all questionnaires.'
   parent: senator_dashboard.manage_senator.manage_senator_content
   menu_name: senator-dashboard
   url: internal:/admin/senator/content/questionnaires
   weight: 11
 senator_dashboard.manage_senator.manage_senator_content.manage_webforms:
-  title: 'Manage webforms attached to Questionnaires'
+  title: 'Manage webforms attached to questionnaires'
   description: 'Manage webforms that have been attached to questionnaires.'
   parent: senator_dashboard.manage_senator.manage_senator_content
   menu_name: senator-dashboard
   url: internal:/admin/webform
   weight: 12
 senator_dashboard.manage_senator.manage_senator_content.create_new_webform:
-  title: 'Create a new Webform'
+  title: 'Create new webform'
   description: 'Create a new webform.'
   parent: senator_dashboard.manage_senator.manage_senator_content
   menu_name: senator-dashboard

@@ -81,10 +81,14 @@ jobs:
           npm install
           npm run build
 
-      - name: Deploy to Pantheon Multi-Dev
+      - name: Prepare and deploy build artifact to Pantheon
         run: |
+          mkdir build
+          rsync -az --exclude=node_modules --exclude=.git --exclude=build ./ build/
+          cd build
+          git init
+          git remote add pantheon ${{ vars.PANTHEON_GIT_REMOTE }}
           git checkout -b $PANTHEON_MULTIDEV
-          rm -rf ${{ vars.THEME_PATH }}/node_modules
           git add -Af .
           git commit -q -m "${{ env.GIT_COMMIT_MESSAGE }} - ${{ env.NOW }}"
           git push --force pantheon HEAD:refs/heads/$PANTHEON_MULTIDEV

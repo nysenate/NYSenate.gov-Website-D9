@@ -28,6 +28,7 @@ jobs:
       - name: Set some variables to use in the workflow
         run: |
           echo "NOW=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
+          echo "NOW_GIT_SAFE=$(date +'%Y-%m-%dT%H-%M-%S')" >> $GITHUB_ENV
           echo "GRUMPHP_GIT_WORKING_DIR=$(git rev-parse --show-toplevel)" >> $GITHUB_ENV
 
       - name: Setup PHP
@@ -80,9 +81,14 @@ jobs:
           npm install
           npm run build
 
-      - name: Deploy to Pantheon Dev (master)
+      - name: Prepare and deploy build artifact to Pantheon
         run: |
-          rm -rf ${{ vars.THEME_PATH }}/node_modules
+          mkdir build
+          rsync -az --exclude=node_modules --exclude=.git --exclude=build ./ build/
+          cd build
+          git init
+          git remote add pantheon ${{ vars.PANTHEON_GIT_REMOTE }}
+          git checkout -b "nys-build-artifact-${{ env.NOW_GIT_SAFE }}"
           git add -Af .
           git commit -q -m "${{ env.GIT_COMMIT_MESSAGE }} - ${{ env.NOW }}"
           git push --force pantheon HEAD:refs/heads/master

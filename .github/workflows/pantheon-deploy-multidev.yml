@@ -84,7 +84,7 @@ jobs:
       - name: Prepare and deploy build artifact to Pantheon
         run: |
           mkdir build
-          rsync -az --exclude=node_modules --exclude=.git --exclude=build ./ build/
+          rsync -az --exclude=node_modules --exclude=.git --exclude=/build ./ build/
           cd build
           git init
           git remote add pantheon ${{ vars.PANTHEON_GIT_REMOTE }}

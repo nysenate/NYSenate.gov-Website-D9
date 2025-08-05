@@ -278,7 +278,7 @@ function nys_school_forms_entity_presave(EntityInterface $entity): void {
     // Check if the address has been changed.
     $updated = array_keys(DiffArray::diffAssocRecursive(
       $entity->toArray(),
-      $entity->original->toArray()
+      ($entity->original?->toArray() ?? [])
     ));
 
     // If the address changed, get a new district from SAGE and report.

@@ -1,5 +1,10 @@
 @use 'partials' as *;
 
+.c-senator-dashboard-menu-wrapper__trigger {
+  --nys-ui-icon-label-icon-after-height: 14px;
+  --nys-ui-icon-label-icon-after-width: 14px;
+}
+
 .c-menu--senator-dashboard {
   a.c-menu__link {
     font-family: var(--nys-ff-sans);
@@ -117,6 +122,15 @@
       display: grid;
       gap: 10px;
       grid-template-columns: 1fr;
+      min-width: 0;
+
+      * {
+        min-width: 0;
+      }
+
+      span {
+        white-space: normal;
+      }
 
       .c-menu--item-overview {
         border-bottom: 1px solid #A6A6A6;

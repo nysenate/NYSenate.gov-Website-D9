@@ -1,3 +1,5 @@
+@use 'partials' as *;
+
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--nys-ff-serif);
   font-weight: 350;
@@ -29,6 +31,12 @@ a.u-button {
 
 .page--senator_dashboard {
   margin-top: 155px;
+
+  @include bp-max(sm) {
+    margin-top: 55px;
+  }
+
+
 
   &.page--senator_dashboard-constituent_activity-questionnaires {
     .view-header {

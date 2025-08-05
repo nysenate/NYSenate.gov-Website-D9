@@ -1,8 +1,10 @@
+@use 'partials' as *;
+
 .view {
   font-family: var(--nys-ff-sans);
   font-size: 14px;
   font-weight: 400;
-  overflow: hidden;
+  overflow-x: auto;
 
   .form-type-checkbox, th.views-field-views-bulk-operations-bulk-form {
     position: relative;
@@ -261,6 +263,10 @@
     gap: 20px;
     margin-bottom: 32px;
 
+    @include bp-max(xsm) {
+      flex-direction: column;
+    }
+
     .form-item,
     .form-actions,
     .form--inline .form-item,
@@ -269,6 +275,10 @@
       width: auto;
       clear: none;
       float: left;
+
+      @include bp-max(xsm) {
+        width: 100%;
+      }
     }
   }
 

@@ -4,7 +4,7 @@
   font-family: var(--nys-ff-sans);
   font-size: 14px;
   font-weight: 400;
-  overflow-x: auto;
+  overflow: hidden;
 
   .form-type-checkbox, th.views-field-views-bulk-operations-bulk-form {
     position: relative;
@@ -154,6 +154,7 @@
 
 .view-header {
   margin-bottom: 32px;
+  overflow: hidden;
 }
 
 .view-content {
@@ -417,8 +418,25 @@
   }
 }
 
+.views-table-wrapper {
+  position: relative;
+  width: 100%;
+  overflow-x: auto;
+  background-image: 
+    linear-gradient(to right, var(--nys-color-white), var(--nys-color-white)),
+    linear-gradient(to right, var(--nys-color-white), var(--nys-color-white)),
+    linear-gradient(to right, rgba(0, 0, 0, 0.125), rgba(255, 255, 255, 0)),
+    linear-gradient(to left, rgba(0, 0, 0, 0.125), rgba(255, 255, 255, 0));
+  background-position: left center, right center, left center, right center;
+  background-repeat: no-repeat;
+  background-color: var(--nys-color-white);
+  background-size: 20px 100%, 20px 100%, 10px 100%, 10px 100%;
+  background-attachment: local, local, scroll, scroll;
+}
+
 .views-table {
   border: none;
+  width: 100%;
 
   thead {
     border: none;
@@ -487,5 +505,4 @@
       }
     }
   }
-
 }

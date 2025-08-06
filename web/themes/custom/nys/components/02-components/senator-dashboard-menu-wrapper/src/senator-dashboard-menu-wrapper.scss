@@ -4,6 +4,10 @@
   margin: 0 auto;
   max-width: 1500px;
   padding-inline: 8%;
+
+  @include bp-max(sm) {
+    padding-inline: 20px;
+  }
 }
 
 .c-senator-dashboard-menu-wrapper__content-wrapper {
@@ -32,7 +36,7 @@
   font-weight: 600;
   letter-spacing: 1px;
   line-height: 1.25;
-  padding: 8px 0;
+  padding: 6px 0;
   position: relative;
   text-align: left;
   text-transform: uppercase;

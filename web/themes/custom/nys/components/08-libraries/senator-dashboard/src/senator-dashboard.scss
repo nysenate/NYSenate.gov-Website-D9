@@ -33,15 +33,22 @@ a.u-button {
   margin-top: 155px;
 
   @include bp-max(sm) {
-    margin-top: 55px;
+    margin-top: 60px;
   }
-
-
 
   &.page--senator_dashboard-constituent_activity-questionnaires {
     .view-header {
       .questionnaire-responders-links {
         float: right;
+
+        @include bp-max(sm) {
+          clear: both;
+
+          .button {
+            width: 100%;
+            margin: 0 0 10px;
+          }
+        }
       }
     }
   }
@@ -65,6 +72,10 @@ a.u-button {
 .view-header {
   .flag {
     float: right;
+
+    @include bp-max(sm) {
+      margin-top: 15px;
+    }
 
     &.action-unflag a:before {
       content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M5 4.5V18.2406C5 18.6594 5.34062 19 5.75937 19C5.91562 19 6.06875 18.9531 6.19687 18.8625L11 15.5L15.8031 18.8625C15.9313 18.9531 16.0844 19 16.2406 19C16.6594 19 17 18.6594 17 18.2406V4.5C17 3.67188 16.3281 3 15.5 3H6.5C5.67188 3 5 3.67188 5 4.5Z' fill='%232B6A90'/%3E%3C/svg%3E");

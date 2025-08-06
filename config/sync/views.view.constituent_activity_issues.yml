@@ -334,16 +334,13 @@ display:
             default_group_multiple: {  }
             group_items: {  }
       style:
-        type: grid
+        type: grid_responsive
         options:
           uses_fields: false
           columns: 5
-          automatic_width: true
+          cell_min_width: 150
+          grid_gutter: 8
           alignment: horizontal
-          row_class_custom: ''
-          row_class_default: true
-          col_class_custom: ''
-          col_class_default: true
       row:
         type: 'entity:taxonomy_term'
         options:

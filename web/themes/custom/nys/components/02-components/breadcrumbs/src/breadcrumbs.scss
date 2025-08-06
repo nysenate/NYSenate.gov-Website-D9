@@ -10,6 +10,11 @@
   display: flex;
   gap: var(--nys-breadcrumbs-gap);
   margin-top: 0;
+
+  @include bp-max(sm) {
+    font-size: 14px;
+    gap: 6px;
+  }
 }
 
 .c-breadcrumbs__items {

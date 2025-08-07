@@ -1,0 +1,7 @@
+
+{{ include('nys:menu', {
+  depth: depth|default(0),
+  items: items|default([]),
+  menu_name,
+  wrapper_attributes: wrapper_attributes|default(create_attribute()),
+}, with_context = false) }}

@@ -1,0 +1,9 @@
+body.path-node div.admin-item a[href*="student_submission"],
+body.path-node div.admin-item a[href*="student_submission_container"] {
+  display: none;
+}
+
+body.path-node div.admin-item:has(a[href*="student_submission"]),
+body.path-node div.admin-item:has(a[href*="student_submission_container"]) {
+  display: none;
+}

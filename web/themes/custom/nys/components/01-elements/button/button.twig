@@ -1,0 +1,30 @@
+{% import _self as buttons %}
+{% set classes = [
+  'u-button',
+
+] %}
+
+{% macro button(label, attributes) %}
+  <button
+    {{ attributes|without('type') }}
+    type="button"
+  >
+    {{ label }}
+  </button>
+{% endmacro %}
+
+{% macro link(label, url, attributes) %}
+  <a
+    {{ attributes|without('href') }}
+    href="{{ url }}"
+  >
+    {{ label }}
+  </a>
+{% endmacro %}
+
+{% if url is not empty %}
+  {{ buttons.link(label, url, attributes.addClass(classes)) }}
+{% else %}
+  {{ buttons.button(label, attributes.addClass(classes)) }}
+{% endif %}
+

@@ -1,0 +1,17 @@
+
+@use 'sass:math';
+@use './base';
+
+@function percent($target, $container) {
+  @return calc((#{$target} / #{$container}) * 100%);
+}
+
+@function rem($size, $base: base.$base-font-size) {
+  $rem-size: math.div($size, $base);
+  @return #{$rem-size}rem;
+}
+
+@mixin square($dimension) {
+  height: $dimension;
+  width: $dimension;
+}

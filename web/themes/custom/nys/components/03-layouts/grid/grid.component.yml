@@ -1,0 +1,26 @@
+$schema: https://git.drupalcode.org/project/sdc/-/raw/1.x/src/metadata.schema.json
+name: Columns
+description: Lay out content into columns.
+props:
+  type: object
+  required:
+    - items
+    - grid_max
+  properties:
+    items:
+      type: array
+      title: Items
+      description: The items to be laid in a grid.
+      default: []
+    grid_max:
+      type:
+        - integer
+        - string
+      title: Grid Max
+      description: The max columns for the grid.
+      default: '2'
+    title:
+      type: string
+      title: Title
+      description: An optional title for the grid.
+      default: ''

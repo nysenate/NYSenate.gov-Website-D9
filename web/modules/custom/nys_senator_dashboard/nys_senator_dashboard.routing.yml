@@ -1,0 +1,24 @@
+nys_senator_dashboard.active_senator.set:
+  path: '/senator-dashboard/active-senator/set/{senator_tid}'
+  defaults:
+    _controller: '\Drupal\nys_senator_dashboard\Controller\ActiveSenatorController::updateActiveSenator'
+    _title: 'Set Active Managed Senator'
+  requirements:
+    _role: 'microsite_content_producer+legislative_correspondent'
+    senator_tid: '\d+'
+nys_senator_dashboard.manage_senator:
+  path: '/senator-dashboard/manage-senator'
+  defaults:
+    _controller: '\Drupal\nys_senator_dashboard\Controller\SenatorDashboardController::menuPage'
+    _title: 'Manage Senator'
+    menu_mode: 'manage_senator_menu'
+  requirements:
+    _role: 'microsite_content_producer'
+nys_senator_dashboard.constituent_activity:
+  path: '/senator-dashboard/constituent-activity'
+  defaults:
+    _controller: '\Drupal\nys_senator_dashboard\Controller\SenatorDashboardController::menuPage'
+    _title: 'Constituent Activity'
+    menu_mode: 'constituent_activity_menu'
+  requirements:
+    _role: 'microsite_content_producer+legislative_correspondent'

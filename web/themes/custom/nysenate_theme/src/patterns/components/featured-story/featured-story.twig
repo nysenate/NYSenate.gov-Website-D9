@@ -2,29 +2,28 @@
 
 <div class="c-block c-event-featured-story">
   <div class="c-container--header__top-border">
-    <h3 class="c-container--title">
+    <h2 class="c-container--title">
       Featured Story
-    </h3>
+    </h2>
   </div>
-
-  <div class="story-container">
+  <div class="story-container c-container--story-hidden-link">
     <div class="l-left">
-      <a href="{{ title.url }}">
         {{ image }}
-      </a>
     </div>
     <div class="l-right">
         <div class="c-story--date med-text">
           {{ date }}
         </div>
-      <h3 class="c-story-name">
-        <a href="{{ title.url }}">{{ title.text }}</a>
+      <h3 class="c-story-name drk-text">
+        <a class="js-link drk-text" href="{{ title.url }}">{{ title.text }}</a>
       </h3>
-      {% if tags %}
+ {% if tags %}
       <div class="c-featured-story-issue-tag">
+        <ul>
         {% for tag in tags %}
-          <a class="c-story-link" href="{{ tag.url }}">{{ tag.text }}</a>{% if not loop.last %}, {% endif %}
+          <li><a class="c-story-link" href="{{ tag.url }}">{{ tag.text }}</a></li>{% if not loop.last %}, {% endif %}
         {% endfor %}
+        </ul>
       </div>
       {% endif %}
     </div>

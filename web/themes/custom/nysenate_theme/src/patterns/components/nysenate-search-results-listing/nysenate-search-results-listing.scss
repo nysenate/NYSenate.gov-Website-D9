@@ -29,6 +29,21 @@
         display: none;
       }
     }
+    ul {
+      list-style: none;
+      padding-left: 0;
+      margin-top: 6px
+    }
+
+    li {
+      display: inline;
+      margin-right: 1px;
+      line-height: 1em;
+    }
+
+    .nys-bill-status li {
+      display: inline-block;
+    }
   }
 
   .first:first-child {
@@ -47,6 +62,7 @@
 
     &:hover {
       text-decoration: underline;
+      @extend .lgt-text;
     }
   }
 
@@ -89,6 +105,11 @@
     &--descript {
       a {
         color: $grey08;
+        &:hover {
+          text-decoration: underline;
+          color: $gen_blue_lgt;
+          @extend .lgt-text;
+        }
       }
     }
   }
@@ -137,6 +158,9 @@
         font-size: 14px;
         line-height: 32px;
         color: $grey03;
+        &:hover {
+          text-decoration: underline;
+        }
       }
     }
 
@@ -174,18 +198,18 @@
   .c-press-release--date {
     @include font-stack-secondary;
     margin: 0;
-    color: $grey04;
+    color: $grey05;
     font-size: 12px;
     line-height: 1em;
 
     .date-display-single {
       @include font-stack-secondary;
-      color: $grey04;
+      color: $grey05;
       line-height: 20px;
     }
 
     .issue-type {
-      color: $grey04;
+      color: $grey05;
 
       a {
         color: $yellow03;
@@ -252,7 +276,7 @@
   }
 
   .c-bill-descript {
-    color: $grey04;
+    color: $grey08;
     margin-bottom: 15px;
   }
 }
@@ -291,7 +315,7 @@
         .c-press-release--topic {
           text-transform: uppercase;
           font-family: $font-sans-bold;
-          font-size: 10px;
+          font-size: 14px;
           line-height: 1em;
           letter-spacing: 0.05em;
           color: $gen_blue_lgt;
@@ -315,7 +339,7 @@
 
     .ds-search-extra {
       text-transform: uppercase;
-      color: $grey04;
+      color: $grey05;
       font-size: 12px;
       margin-bottom: 30px;
       font-weight: bold;

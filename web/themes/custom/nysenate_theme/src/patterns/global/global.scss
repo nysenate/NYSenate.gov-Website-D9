@@ -337,6 +337,9 @@ ol {
 
     a {
       @extend .link-text;
+      &:hover {
+        text-decoration: underline;
+      }
     }
   }
 
@@ -361,6 +364,9 @@ ol {
 
 a {
   @extend .link-text;
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 // Headings are always 'just a bit bigger' than body copy.
@@ -882,4 +888,11 @@ section.print.hero--senator {
       fill: #1b5187;
     }
   }
+}
+
+.webform-button--submit:hover,
+.search__submit-text:hover,
+.js-form-submit:hover,
+a.c-msg-senator:hover {
+  text-decoration: underline;
 }

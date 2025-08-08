@@ -104,9 +104,6 @@
   font-size: 20px;
   font-family: "Adelle Light", serif;
   vertical-align: middle;
-  &:hover {
-    text-decoration: underline;
-  }
 }
 
 .nys-openleg-result-text {
@@ -150,6 +147,13 @@
 .nys-openleg-result-breadcrumb-link {
   display: inline-block;
   margin: 0 7px 0 20px;
+}
+
+.nys-openleg-result-breadcrumb-link:hover,
+.search-title:hover,
+.nys-openleg-result-item-name:hover,
+.nys-openleg-result-item-description:hover {
+  text-decoration: underline;
 }
 
 .nys-openleg-result-breadcrumb-name {
@@ -210,6 +214,10 @@
 
 .nys-openleg-history-container .form-item-history {
   margin: 0;
+}
+
+.nys-openleg-history-container .form-item-history label:hover {
+  text-decoration: underline;
 }
 
 .nys-openleg-history-container .form-item-history label {
@@ -358,6 +366,10 @@
 
 #nys-openleg-search-form button .search__submit-text {
   font-family: "Helvetica Nueue", sans-serif;
+}
+
+#nys-openleg-search-form button .search__submit-text:hover {
+  text-decoration: underline;
 }
 
 .nys-openleg-search-results-container .search-results-item-container {

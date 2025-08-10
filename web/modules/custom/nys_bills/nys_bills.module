@@ -187,3 +187,19 @@ function nys_bills_views_query_alter(ViewExecutable $view, QueryPluginBase $quer
     }
   }
 }
+
+/**
+ * Implements hook_views_data().
+ */
+function nys_bills_views_data() {
+  $data = [];
+  $data['node_field_data']['bill_amendments_filter'] = [
+    'title' => t('Bill Amendments Filter'),
+    'help' => t('Filter Bills by their amendment versions.'),
+    'filter' => [
+      'id' => 'bill_amendments_filter',
+      'field' => 'nid',
+    ],
+  ];
+  return $data;
+}

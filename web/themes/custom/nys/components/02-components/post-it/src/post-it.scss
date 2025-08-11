@@ -8,15 +8,21 @@
 .c-post-it {
   align-items: start;
   background-color: var(--nys-color-gold);
-  display: flex;
-  gap: 12px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0 12px;
   padding: 28px;
   height: 100%;
+
+  @container post-it-container (width > 230px) {
+    grid-template-columns: 32px 1fr;
+  }
 }
 
 .c-post-it__icon {
-  margin-block-start: 8px;
-  width: 32px;
+  @container post-it-container (width > 230px) {
+    margin-block-start: 8px;
+  }
 }
 
 .c-post-it__title {
@@ -35,7 +41,7 @@
   line-height: 1.25;
   text-decoration: none;
 
-  @include bp-min(md) {
+  @container post-it-container (width > 260px) {
     font-size: rem(48px);
   }
 }
@@ -46,7 +52,7 @@
   text-decoration: underline;
   transition: text-decoration-color .35s ease-in-out;
 
-  @include bp-min(md) {
+  @container post-it-container (width > 260px) {
     font-size: rem(22px);
   }
 }

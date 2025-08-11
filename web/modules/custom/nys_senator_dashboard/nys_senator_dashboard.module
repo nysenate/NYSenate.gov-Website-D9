@@ -7,6 +7,7 @@
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Database\Query\AlterableInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -60,7 +61,7 @@ function nys_senator_dashboard_query_senators_constituents_only_alter(AlterableI
   // Get the views table alias corresponding to the users_field_data table
   // (could be users_field_data_1, etc.).
   $table_aliases = $query->getTables();
-  $user_table_alias = null;
+  $user_table_alias = NULL;
   foreach ($table_aliases as $alias => $table_info) {
     if ($table_info['table'] === 'users_field_data') {
       $user_table_alias = $alias;
@@ -209,7 +210,7 @@ function nys_senator_dashboard_entity_extra_field_info() {
   foreach ($node_types as $bundle => $type) {
     $extra['node'][$bundle]['display']['nys_senator_dashboard_path_alias'] = [
       'label' => t('NYS Senator Dashboard: Path alias'),
-      'description' => t('Displays the node\'s path alias as a basic string.'),
+      'description' => t("Displays the node's path alias as a basic string."),
       'weight' => 10,
       'visible' => FALSE,
     ];
@@ -379,7 +380,10 @@ function nys_senator_dashboard_webform_submission_access(WebformSubmissionInterf
   return nys_senator_dashboard_webform_access($webform, $operation, $account);
 }
 
-function nys_senator_dashboard_entity_view(array &$build, \Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display) {
+/**
+ * Implements hook__entity_view().
+ */
+function nys_senator_dashboard_entity_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
   /** @var Drupal\flag\FlagService $flag_service */
   $flag_service = \Drupal::service('flag');
   /** @var \Drupal\nys_senator_dashboard\Service\ExtraFieldBuilder $extra_field_builder */

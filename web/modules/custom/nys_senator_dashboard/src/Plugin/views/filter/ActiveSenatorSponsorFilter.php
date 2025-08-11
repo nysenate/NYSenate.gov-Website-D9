@@ -6,6 +6,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\views\Plugin\views\filter\FilterPluginBase;
 use Drupal\views\Plugin\views\join\Standard;
+use Drupal\views\Plugin\views\query\Sql;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\nys_senator_dashboard\Service\ManagedSenatorsHandler;
 
@@ -81,11 +82,12 @@ class ActiveSenatorSponsorFilter extends FilterPluginBase implements ContainerFa
    * {@inheritdoc}
    */
   public function query() {
+    if (empty($this->value) || !isset($this->value[0])) {
+      return;
+    }
+
     $value_parts = explode('__', $this->value[0]);
-    if (
-      empty($value_parts)
-    || count($value_parts) < 2
-    ) {
+    if (count($value_parts) < 2) {
       return;
     }
 
@@ -104,9 +106,11 @@ class ActiveSenatorSponsorFilter extends FilterPluginBase implements ContainerFa
       $this->getPluginDefinition(),
     );
 
-    $relationship_alias = $this->query->addRelationship($sponsor_field, $join, 'node');
-    if ($relationship_alias) {
-      $this->query->addWhere(0, "$relationship_alias.$sponsor_field" . '_target_id', $senator_tid, '=');
+    if ($this->query instanceof Sql) {
+      $relationship_alias = $this->query->addRelationship($sponsor_field, $join, 'node');
+      if ($relationship_alias) {
+        $this->query->addWhere(0, "$relationship_alias.$sponsor_field" . '_target_id', $senator_tid, '=');
+      }
     }
   }
 

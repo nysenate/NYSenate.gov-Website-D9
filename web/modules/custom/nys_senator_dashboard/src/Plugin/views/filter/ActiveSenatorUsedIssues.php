@@ -6,6 +6,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\nys_senator_dashboard\Service\ManagedSenatorsHandler;
 use Drupal\views\Plugin\views\filter\FilterPluginBase;
+use Drupal\views\Plugin\views\query\Sql;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -75,7 +76,7 @@ class ActiveSenatorUsedIssues extends FilterPluginBase implements ContainerFacto
       $value = reset($this->value);
       $active_senator_id = $this->managedSenatorsHandler->ensureAndGetActiveSenator();
       // These should always match.
-      if ($value == $active_senator_id) {
+      if ($value == $active_senator_id && $this->query instanceof Sql) {
         $this->query->addWhereExpression(
           $this->options['group'],
           "EXISTS (

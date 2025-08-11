@@ -4,6 +4,7 @@ namespace Drupal\nys_senator_dashboard\Service;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\node\NodeInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\flag\FlagServiceInterface;
@@ -164,8 +165,16 @@ class ExtraFieldBuilder {
    *   The render array.
    */
   public function buildStatus(EntityInterface $entity) {
-    $value = $entity->isPublished() ? $this->t('Active') : $this->t('Inactive');
-    $class = $entity->isPublished() ? 'active' : 'inactive';
+    $is_published = FALSE;
+    if ($entity instanceof NodeInterface) {
+      $is_published = $entity->isPublished();
+    }
+    elseif (method_exists($entity, 'isPublished')) {
+      $is_published = $entity->isPublished();
+    }
+
+    $value = $is_published ? $this->t('Active') : $this->t('Inactive');
+    $class = $is_published ? 'active' : 'inactive';
     return [
       '#type' => 'html_tag',
       '#tag' => 'p',
@@ -212,7 +221,10 @@ class ExtraFieldBuilder {
    *   The render array.
    */
   public function buildWebformSubmissionsDownload(EntityInterface $entity) {
-    $webform_id = $entity->webform?->entity?->id();
+    $webform_id = NULL;
+    if ($entity instanceof NodeInterface && $entity->hasField('webform') && !$entity->get('webform')->isEmpty()) {
+      $webform_id = $entity->get('webform')->entity->id();
+    }
     if ($webform_id) {
       return [
         '#type' => 'html_tag',

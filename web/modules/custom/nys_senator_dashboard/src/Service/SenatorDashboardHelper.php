@@ -173,7 +173,7 @@ class SenatorDashboardHelper {
       return 0;
     }
 
-    $webform_id = $node->webform?->target_id;
+    $webform_id = $node->hasField('webform') && !$node->get('webform')->isEmpty() ? $node->get('webform')->getValue()[0]['target_id'] : NULL;
     if (!$webform_id) {
       $this->logger->warning('Missing webform ID or Active Senator District ID.');
       return 0;

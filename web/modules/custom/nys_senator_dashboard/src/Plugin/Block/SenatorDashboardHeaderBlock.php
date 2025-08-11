@@ -12,6 +12,7 @@ use Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface;
 use Drupal\Core\Controller\TitleResolverInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\File\FileUrlGeneratorInterface;
+use Drupal\media\MediaInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Menu\MenuActiveTrailInterface;
@@ -261,8 +262,8 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
       }
       if (isset($senator) && $senator->hasField('field_member_headshot') && !$senator->field_member_headshot->isEmpty()) {
         $headshot_media = $senator->field_member_headshot->entity;
-        if ($headshot_media && $headshot_media->hasField('field_image') && !$headshot_media->field_image->isEmpty()) {
-          $image_file = $headshot_media->field_image->entity;
+        if ($headshot_media instanceof MediaInterface && $headshot_media->hasField('field_image') && !$headshot_media->get('field_image')->isEmpty()) {
+          $image_file = $headshot_media->get('field_image')->entity;
           if ($image_file instanceof File) {
             $image_uri = $image_file->getFileUri();
             $image_style = $this->configuration['image_style'];
@@ -362,8 +363,8 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
   /**
    * Helper method to get the homepage URL.
    *
-   * @return string
-   *   The homepage URL.
+   * @return \Drupal\Core\Url|null
+   *   The homepage URL, or NULL if not displayed.
    */
   private function getHomepageUrl(): ?Url {
     if ($this->configuration['display_homepage_link']) {

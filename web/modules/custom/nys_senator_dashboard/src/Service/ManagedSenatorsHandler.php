@@ -28,11 +28,11 @@ class ManagedSenatorsHandler {
   protected AccountProxyInterface $currentUser;
 
   /**
-   * The private temp store factory.
+   * The private temp store.
    *
-   * @var \Drupal\Core\TempStore\PrivateTempStoreFactory
+   * @var \Drupal\Core\TempStore\PrivateTempStore
    */
-  protected $tempStoreFactory;
+  protected $tempStore;
 
   /**
    * The messenger service.
@@ -77,7 +77,7 @@ class ManagedSenatorsHandler {
     SenatorsHelper $senators_helper,
   ) {
     $this->currentUser = $current_user;
-    $this->tempStoreFactory = $tempStoreFactory->get('nys_senator_dashboard');
+    $this->tempStore = $tempStoreFactory->get('nys_senator_dashboard');
     $this->messenger = $messenger;
     $this->entityTypeManager = $entityTypeManager;
     $this->senatorsHelper = $senators_helper;
@@ -135,9 +135,9 @@ class ManagedSenatorsHandler {
    */
   public function ensureAndGetActiveSenator(bool $tid_only = TRUE): EntityInterface|int {
     $error_message = 'Error establishing active senator required for this request.';
-    $stored_active_senator_tid = $this->tempStoreFactory->get('active_managed_senator_tid');
+    $stored_active_senator_tid = $this->tempStore->get('active_managed_senator_tid');
     if (
-      isset($stored_active_senator_tid)
+      $stored_active_senator_tid !== NULL
       && in_array($stored_active_senator_tid, $this->getManagedSenators())
     ) {
       $active_senator_tid = $stored_active_senator_tid;
@@ -148,7 +148,7 @@ class ManagedSenatorsHandler {
       $managed_senators = $this->getManagedSenators(FALSE);
       if (count($managed_senators) > 0) {
         try {
-          $this->tempStoreFactory->set('active_managed_senator_tid', $managed_senators[0]->id());
+          $this->tempStore->set('active_managed_senator_tid', $managed_senators[0]->id());
         }
         catch (TempStoreException) {
           throw new AccessDeniedHttpException($error_message);
@@ -199,7 +199,7 @@ class ManagedSenatorsHandler {
     $allowed_senator_ids = $this->getManagedSenators();
     if (in_array($senator_id, $allowed_senator_ids)) {
       try {
-        $this->tempStoreFactory->set('active_managed_senator_tid', $senator_id);
+        $this->tempStore->set('active_managed_senator_tid', $senator_id);
         if ($include_message) {
           $this->messenger->addMessage($this->t('Your active managed senator has been updated.'));
         }

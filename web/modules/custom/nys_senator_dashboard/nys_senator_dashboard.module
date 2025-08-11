@@ -6,7 +6,7 @@
  */
 
 use Drupal\Core\Access\AccessResult;
-use Drupal\Core\Database\Query\AlterableInterface;
+use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -25,7 +25,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
  * Ensures views with the "senators_constituents_only" tag only display profiles
  * linked to the current user's active managed senator's districts.
  */
-function nys_senator_dashboard_query_senators_constituents_only_alter(AlterableInterface $query) {
+function nys_senator_dashboard_query_senators_constituents_only_alter(SelectInterface $query) {
   // Get active managed senator.
   try {
     $senator_term = \Drupal::service('nys_senator_dashboard.managed_senators_handler')
@@ -343,7 +343,7 @@ function nys_senator_dashboard_webform_access(WebformInterface $webform, $operat
     $field_senator_multiref = $webform_node->get('field_senator_multiref');
     if ($field_senator_multiref) {
       foreach ($field_senator_multiref as $item) {
-        $webform_senator_ids[] = $item->target_id;
+        $webform_senator_ids[] = $item->getValue()['target_id'];
       }
     }
   }

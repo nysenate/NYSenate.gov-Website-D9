@@ -4,6 +4,7 @@ namespace Drupal\nys_senator_dashboard\Plugin\views\sort;
 
 use Drupal\Core\Database\Connection;
 use Drupal\views\Plugin\views\join\Standard;
+use Drupal\views\Plugin\views\query\Sql;
 use Drupal\views\Plugin\views\sort\SortPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -54,6 +55,10 @@ class IssueFollowersCountSort extends SortPluginBase {
    * {@inheritdoc}
    */
   public function setRelationship() {
+    if (!$this->query instanceof Sql) {
+      return;
+    }
+
     if (array_key_exists('flag_counts', $this->query->query()->getTables())) {
       return;
     }
@@ -78,7 +83,11 @@ class IssueFollowersCountSort extends SortPluginBase {
    * {@inheritdoc}
    */
   public function query() {
-    // Optimizes performance by ensuring 1 to 1 relationship with term table.
+    if (!$this->query instanceof Sql) {
+      return;
+    }
+
+    // Optimizes performance by ensuring a 1 to 1 relationship with term table.
     $this->query->addWhere(0, 'flag_counts.flag_id', 'follow_issue');
 
     $this->query->addOrderBy('flag_counts', 'count', $this->options['order']);

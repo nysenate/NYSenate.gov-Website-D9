@@ -3,6 +3,7 @@
 namespace Drupal\nys_senator_dashboard\Plugin\views\field;
 
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\flag\FlagLinkBuilder;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
@@ -23,6 +24,13 @@ class ContextualFilterFlagLink extends FieldPluginBase implements ContainerFacto
   protected $linkBuilder;
 
   /**
+   * The renderer service.
+   *
+   * @var \Drupal\Core\Render\RendererInterface
+   */
+  protected $renderer;
+
+  /**
    * Constructs a ContextualFilterFlagLink object.
    *
    * @param array $configuration
@@ -33,10 +41,13 @@ class ContextualFilterFlagLink extends FieldPluginBase implements ContainerFacto
    *   The plugin implementation definition.
    * @param \Drupal\flag\FlagLinkBuilder $link_builder
    *   The flag.link_builder service.
+   * @param \Drupal\Core\Render\RendererInterface $renderer
+   *   The renderer service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, FlagLinkBuilder $link_builder) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, FlagLinkBuilder $link_builder, RendererInterface $renderer) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->linkBuilder = $link_builder;
+    $this->renderer = $renderer;
   }
 
   /**
@@ -47,7 +58,8 @@ class ContextualFilterFlagLink extends FieldPluginBase implements ContainerFacto
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('flag.link_builder')
+      $container->get('flag.link_builder'),
+      $container->get('renderer')
     );
   }
 
@@ -58,8 +70,9 @@ class ContextualFilterFlagLink extends FieldPluginBase implements ContainerFacto
     $issue_id = $this->view?->argument['entity_id']?->argument;
     if (!empty($issue_id)) {
       $link = $this->linkBuilder->build('taxonomy_term', $issue_id, 'follow_issue', 'default');
+      return $this->renderer->render($link);
     }
-    return $link ?? ['#markup' => ''];
+    return '';
   }
 
   /**

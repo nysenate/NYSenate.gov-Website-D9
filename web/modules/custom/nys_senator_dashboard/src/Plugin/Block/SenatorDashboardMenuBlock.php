@@ -138,7 +138,7 @@ class SenatorDashboardMenuBlock extends BlockBase implements ContainerFactoryPlu
       default => [],
     };
     $manage_senator_menu = [];
-    if (!$this->currentUser->hasRole('legislative_correspondent')) {
+    if (!in_array('legislative_correspondent', $this->currentUser->getRoles())) {
       $manage_senator_menu = match($this->configuration['mode']) {
         'header_menu' => $this->getMenuRenderArray('manage_senator'),
         'manage_senator_menu' => $this->getMenuRenderArray('manage_senator', TRUE),

@@ -203,7 +203,10 @@ class ManagedSenatorsHandler {
         if ($include_message) {
           $this->messenger->addMessage($this->t('Your active managed senator has been updated.'));
         }
-        Cache::invalidateTags(['tempstore_user:' . $this->currentUser->id()]);
+        Cache::invalidateTags([
+          'tempstore_user:' . $this->currentUser->id(),
+          'user:' . $this->currentUser->id(),
+        ]);
         return TRUE;
       }
       catch (\Exception) {

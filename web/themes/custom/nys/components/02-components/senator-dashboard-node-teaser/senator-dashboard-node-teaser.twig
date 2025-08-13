@@ -1,0 +1,36 @@
+<div class="c-senator-dashboard-node-teaser">
+  <h2>
+    <a href="{{ url }}">{{ title }}</a>
+  </h2>
+  {# Webform fields #}
+  {% if constituents_response_count %}
+  <div class="c-senator-dashboard__fieldset c-senator-dashboard__webform-fieldset">
+    {{ constituents_response_count }}
+    {{ webform_submissions_download }}
+  </div>
+  {% endif %}
+  {# Petition fields #}
+  {% if signings %}
+  <div class="c-senator-dashboard__fieldset c-senator-dashboard__petitions-fieldset">
+    {{ signings }} {{ in_out_district_signings }}
+  </div>
+  {% endif %}
+  {% if link_to_constituents_list %}
+  <div class="c-senator-dashboard__fieldset">
+    {{ link_to_constituents_list }}
+  </div>
+  {% endif %}
+  {# Shared fields #}
+  {% if byline %}
+  <div class="c-senator-dashboard__fieldset">
+    {{ byline }}
+  </div>
+  {% endif %}
+  {% if status %}
+  <div class="c-senator-dashboard__fieldset c-senator-dashboard__status-fieldset">
+    {{ status }}
+    {{ date }}
+    {{ expiration_date }}
+  </div>
+  {% endif %}
+</div>

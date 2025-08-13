@@ -45,7 +45,7 @@
       .getBoundingClientRect()
       .height;
     let stickyFilterElem = document
-      .getElementById('block-exposed-form-my-dashboard-main');
+      .querySelector('.block-views-exposed-filter-blockmy-dashboard-main');
     let stickyFilterHeight = stickyFilterElem
       .getBoundingClientRect()
       .height;

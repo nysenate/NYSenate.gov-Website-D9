@@ -1,0 +1,130 @@
+.c-senator-dashboard-node-teaser {
+  display: flex;
+  padding: 40px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  align-self: stretch;
+  border: 1px solid var(--nys-color-dash-grey-1);
+  font-family: var(--nys-ff-sans);
+  font-size: 16px;
+  line-height: 22px;
+
+  p {
+    color: var(--nys-color-black-2);
+    font-family: var(--nys-ff-sans);
+    font-size: 16px;
+    line-height: 22px;
+  }
+
+  a {
+    color: var(--nys-color-button-blue);
+    text-decoration-line: underline;
+    text-underline-position: from-font;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  h2 {
+    color: var(--nys-color-black-2);
+    font-family: var(--nys-ff-serif-semibold);
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    margin: 0;
+
+    a {
+      color: var(--nys-color-black-2);
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .c-senator-dashboard__fieldset {
+    display: flex;
+    align-items: center;
+    clear: both;
+
+    &.c-senator-dashboard__webform-fieldset {
+      gap: 28px;
+    }
+
+    &.c-senator-dashboard__petitions-fieldset {
+      gap: 12px;
+    }
+
+    &.c-senator-dashboard__status-fieldset {
+      gap: 20px;
+
+      > * {
+        position: relative;
+
+        &:not(:last-child)::after {
+          content: "|";
+          font-weight: 300;
+          position: absolute;
+          right: -12px;
+          top: 50%;
+          transform: translateY(-50%);
+          color: var(--nys-color-black-2);
+        }
+      }
+
+      p {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--nys-color-black-2);
+
+        &.active {
+          font-size: 16px;
+          color: #4B824A;
+        }
+      }
+
+    }
+
+    p {
+      line-height: 22px;
+      margin: 0;
+      display: inline-block;
+    }
+  }
+
+  .c-senator-dashboard--webform-submissions-download {
+    position: relative;
+    padding-left: 20px;
+
+    &:before {
+      content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14' fill='none'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M7.70005 1.78398C7.70005 1.39739 7.38665 1.08398 7.00005 1.08398C6.61345 1.08398 6.30005 1.39739 6.30005 1.78398V7.72592L3.99502 5.4209C3.72166 5.14753 3.27844 5.14753 3.00507 5.4209C2.73171 5.69426 2.73171 6.13748 3.00507 6.41085L7.00005 10.4058L10.995 6.41085C11.2684 6.13748 11.2684 5.69426 10.995 5.4209C10.7217 5.14753 10.2784 5.14753 10.0051 5.4209L7.70005 7.72592V1.78398ZM3.50005 11.5156C3.11345 11.5156 2.80005 11.829 2.80005 12.2156C2.80005 12.6022 3.11345 12.9156 3.50005 12.9156H10.5C10.8866 12.9156 11.2 12.6022 11.2 12.2156C11.2 11.829 10.8866 11.5156 10.5 11.5156H3.50005Z' fill='%232B6A90'/%3E%3C/svg%3E");
+      position: absolute;
+      top: 3px;
+      left: 0;
+    }
+  }
+
+  .field__label, .field__items, .field__item {
+    display: inline;
+  }
+
+  .field__label {
+    font-weight: 300;
+  }
+}
+
+.views-row {
+  .c-senator-dashboard-node-teaser {
+    border-width: 1px 1px 0;
+  }
+
+  &:last-child {
+    .c-senator-dashboard-node-teaser {
+      border-width: 1px;
+    }
+  }
+}

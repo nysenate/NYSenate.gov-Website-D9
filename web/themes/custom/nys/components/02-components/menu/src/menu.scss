@@ -1,0 +1,56 @@
+@use 'partials' as *;
+
+.c-menu__items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.c-menu__item {
+  margin: 0;
+}
+
+.c-menu__item-expanded {
+  position: relative;
+
+  > .c-menu__items {
+    &[aria-hidden='true'] {
+      display: none;
+    }
+
+    @include bp-min(md) {
+      left: 0;
+      position: absolute;
+      top: 100%;
+      z-index: 5;
+    }
+  }
+}
+
+.c-menu__link {
+  white-space: nowrap;
+}
+
+a.c-menu__link,
+button.c-menu__link {
+  color: #2B6A90;
+  font-size: 18px;
+  line-height: 1.25;
+  transition: color ease-in-out .25s;
+}
+
+button.c-menu__link {
+  appearance: none;
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  text-align: left;
+
+  &[aria-expanded='true'] {
+    color: #222;
+
+    .icon--arrow {
+      rotate: 180deg;
+    }
+  }
+}

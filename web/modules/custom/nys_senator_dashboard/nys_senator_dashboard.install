@@ -9,6 +9,8 @@ use Drupal\system\Entity\Menu;
 
 /**
  * Implements hook_install().
+ *
+ * @throws \Drupal\Core\Entity\EntityStorageException
  */
 function nys_senator_dashboard_install() {
   // Create 'senator-dashboard' menu if it doesn't already exist.

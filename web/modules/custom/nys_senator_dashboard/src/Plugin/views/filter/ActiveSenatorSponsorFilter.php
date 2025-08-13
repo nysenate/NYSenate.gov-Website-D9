@@ -22,7 +22,7 @@ class ActiveSenatorSponsorFilter extends FilterPluginBase implements ContainerFa
    *
    * @var \Drupal\nys_senator_dashboard\Service\ManagedSenatorsHandler
    */
-  protected $managedSenatorsHandler;
+  protected ManagedSenatorsHandler $managedSenatorsHandler;
 
   /**
    * Constructs the ActiveSenatorSponsorFilter plugin.
@@ -44,7 +44,7 @@ class ActiveSenatorSponsorFilter extends FilterPluginBase implements ContainerFa
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): ActiveSenatorSponsorFilter {
     return new static(
       $configuration,
       $plugin_id,
@@ -56,7 +56,7 @@ class ActiveSenatorSponsorFilter extends FilterPluginBase implements ContainerFa
   /**
    * {@inheritdoc}
    */
-  public function buildExposedForm(&$form, FormStateInterface $form_state) {
+  public function buildExposedForm(&$form, FormStateInterface $form_state): void {
     $senator = $this->managedSenatorsHandler->ensureAndGetActiveSenator(FALSE);
     if (empty($senator)) {
       return;
@@ -81,7 +81,7 @@ class ActiveSenatorSponsorFilter extends FilterPluginBase implements ContainerFa
   /**
    * {@inheritdoc}
    */
-  public function query() {
+  public function query(): void {
     if (empty($this->value) || !isset($this->value[0])) {
       return;
     }

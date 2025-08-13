@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\nys_senator_dashboard\Plugin\Block;
 
-use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Breadcrumb\Breadcrumb;
@@ -43,7 +42,7 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
    *
    * @var \Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface
    */
-  protected $breadcrumbBuilder;
+  protected BreadcrumbBuilderInterface $breadcrumbBuilder;
 
   /**
    * The current user.
@@ -200,10 +199,10 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
    *
-   * @return static
+   * @return SenatorDashboardHeaderBlock
    *   An instance of this plugin.
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): SenatorDashboardHeaderBlock {
     return new static(
       $configuration,
       $plugin_id,
@@ -226,7 +225,7 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
   /**
    * {@inheritdoc}
    */
-  public function build() {
+  public function build(): array {
     $senator_image_url = $this->getSenatorImageUrl();
     $breadcrumbs = $this->getBreadcrumbs();
     $header_title = $this->getHeaderTitle();
@@ -254,6 +253,7 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
     if ($this->configuration['display_image']) {
       $senator_tid = $this->managedSenatorsHandler->ensureAndGetActiveSenator();
       try {
+        /** @var \Drupal\taxonomy\Entity\Term $senator */
         $senator = $this->entityTypeManager
           ->getStorage('taxonomy_term')
           ->load($senator_tid);
@@ -269,13 +269,23 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
             $image_style = $this->configuration['image_style'];
 
             if (!empty($image_style)) {
-              $image_style_storage = $this->entityTypeManager->getStorage('image_style');
-              /** @var \Drupal\image\ImageStyleInterface */
-              $image_style = $image_style_storage->load($image_style);
-              $senator_image_url = $image_style->buildUrl($image_uri);
+              try {
+                $image_style_storage = $this->entityTypeManager->getStorage('image_style');
+              }
+              catch (\Exception) {
+              }
+              if (isset($image_style_storage)) {
+                /** @var \Drupal\image\ImageStyleInterface $image_style */
+                $image_style = $image_style_storage->load($image_style);
+                $senator_image_url = $image_style->buildUrl($image_uri);
+              }
             }
-            else {
-              $senator_image_url = $this->fileUrlGenerator->generateAbsoluteString($image_uri);
+            if (!$senator_image_url) {
+              try {
+                $senator_image_url = $this->fileUrlGenerator->generateAbsoluteString($image_uri);
+              }
+              catch (\Exception) {
+              }
             }
           }
         }
@@ -314,28 +324,32 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
   /**
    * Helper method to get the header title.
    *
-   * @return string
+   * @return array|string|\Stringable|TranslatableMarkup
    *   The header title.
    */
-  private function getHeaderTitle(): string|MarkupInterface {
-    $header_title = $this->t('Senator Dashboard');
-    $route = $this->routeMatch->getRouteObject();
-    $current_request = $this->requestStack->getCurrentRequest();
-    $header_title = $this->titleResolver
-      ->getTitle($current_request, $route) ?? $header_title;
+  private function getHeaderTitle(): array|string|\Stringable|TranslatableMarkup {
+    // Use route title resolver by default.
+    if (!$this->configuration['display_header_title_as_contextual_link']) {
+      $route = $this->routeMatch->getRouteObject();
+      $current_request = $this->requestStack->getCurrentRequest();
+      $header_title = $this->titleResolver
+        ->getTitle($current_request, $route)
+        ?? $this->t('Senator Dashboard');
+    }
 
-    // If configured for use on a contextual view detail page.
-    if ($this->configuration['display_header_title_as_contextual_link']) {
-      $header_title = 'Detail page';
+    // Use contextual detail page title, if configured to do so.
+    else {
       $entity = $this->senatorDashboardHelper->getContextualEntity();
-      try {
-        $title = $entity?->label();
-        $url = $entity?->toUrl()->toString();
+      if ($entity) {
+        try {
+          $title = $entity->label();
+          $url = $entity->toUrl()->toString();
+          $header_title = '<a href="' . $url . '">' . $title . '</a>';
+        }
+        catch (\Exception) {
+          $header_title = $this->t('Detail page');
+        }
       }
-      catch (\Exception) {
-        return $header_title;
-      }
-      $header_title = '<a href="' . $url . '">' . $title . '</a>';
     }
 
     return $header_title;
@@ -364,12 +378,16 @@ class SenatorDashboardHeaderBlock extends BlockBase implements ContainerFactoryP
    * Helper method to get the homepage URL.
    *
    * @return \Drupal\Core\Url|null
-   *   The homepage URL, or NULL if not displayed.
+   *   The homepage URL object, or NULL if not available.
    */
   private function getHomepageUrl(): ?Url {
     if ($this->configuration['display_homepage_link']) {
-      $homepage_url = $this->managedSenatorsHandler->getActiveSenatorHomepageUrl();
-      return Url::fromUri($homepage_url);
+      $homepage_uri = $this->managedSenatorsHandler->getActiveSenatorHomepageUrl();
+      try {
+        return Url::fromUri($homepage_uri);
+      }
+      catch (\Exception) {
+      }
     }
     return NULL;
   }

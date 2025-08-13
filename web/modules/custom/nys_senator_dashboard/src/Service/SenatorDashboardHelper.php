@@ -7,6 +7,7 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
+use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\node\NodeInterface;
 
@@ -55,7 +56,7 @@ class SenatorDashboardHelper {
    *
    * @var \Drupal\Core\Logger\LoggerChannelInterface
    */
-  protected $logger;
+  protected LoggerChannelInterface $logger;
 
   /**
    * Constructs the SenatorDashboardHelper service.
@@ -95,7 +96,7 @@ class SenatorDashboardHelper {
    * @return \Drupal\Core\Entity\EntityInterface|null
    *   The entity object, or NULL on failure.
    */
-  public function getContextualEntity() {
+  public function getContextualEntity(): ?EntityInterface {
     $entity_id = $this->routeMatch->getParameter('arg_0');
     if (!$entity_id) {
       return NULL;
@@ -131,8 +132,7 @@ class SenatorDashboardHelper {
    */
   public function getInDistrictFlaggingCount(string $flag_id, int $entity_id): int {
     $active_senator_district_id = $this->managedSenatorsHandler->getActiveSenatorDistrictId();
-
-    if (!$active_senator_district_id) {
+    if ($active_senator_district_id === 0) {
       return 0;
     }
 
@@ -148,7 +148,7 @@ class SenatorDashboardHelper {
 
     try {
       $count = $query->countQuery()->execute()->fetchField();
-      return (int) ($count ?: 0);
+      return (int) $count;
     }
     catch (\Exception $e) {
       $this->logger->error('Error retrieving in-district flaggings: @message', ['@message' => $e->getMessage()]);
@@ -167,6 +167,9 @@ class SenatorDashboardHelper {
    */
   public function getInDistrictWebformSubmissionCount(NodeInterface $node): int {
     $active_senator_district_id = $this->managedSenatorsHandler->getActiveSenatorDistrictId();
+    if ($active_senator_district_id === 0) {
+      return 0;
+    }
 
     if ($node->getType() !== 'webform' || !$node->hasField('webform')) {
       $this->logger->warning('Invalid node type or missing "webform" field.');
@@ -188,8 +191,7 @@ class SenatorDashboardHelper {
     $query->distinct();
     $count = $query->countQuery()->execute()->fetchField();
 
-    $count = $count !== FALSE ? (int) $count : 0;
-    return $count;
+    return (int) $count;
   }
 
   /**
@@ -210,6 +212,9 @@ class SenatorDashboardHelper {
   public function getBillVoteCounts(EntityInterface $node, string $vote_type = 'all'): array {
     $nid = $node->id();
     $active_senator_district_id = $this->managedSenatorsHandler->getActiveSenatorDistrictId();
+    if ($active_senator_district_id === 0) {
+      return [];
+    }
 
     $yes_count = 0;
     $no_count = 0;

@@ -47,7 +47,7 @@ class ContextualFilterWebformId extends FieldPluginBase implements ContainerFact
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): ContextualFilterWebformId {
     return new static(
       $configuration,
       $plugin_id,
@@ -59,7 +59,7 @@ class ContextualFilterWebformId extends FieldPluginBase implements ContainerFact
   /**
    * {@inheritdoc}
    */
-  public function render(ResultRow $values) {
+  public function render(ResultRow $values): string {
     $issue_id = $this->view?->argument['entity_id']?->argument;
     if (!empty($issue_id)) {
       try {
@@ -77,7 +77,7 @@ class ContextualFilterWebformId extends FieldPluginBase implements ContainerFact
   /**
    * {@inheritdoc}
    */
-  public function query() {
+  public function query(): void {
     // Intentionally do nothing here as field data comes from contextual filter.
   }
 

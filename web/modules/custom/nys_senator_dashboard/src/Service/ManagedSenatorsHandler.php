@@ -7,6 +7,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Session\AccountProxyInterface;
+use Drupal\Core\TempStore\PrivateTempStore;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\TempStore\TempStoreException;
@@ -32,21 +33,21 @@ class ManagedSenatorsHandler {
    *
    * @var \Drupal\Core\TempStore\PrivateTempStore
    */
-  protected $tempStore;
+  protected PrivateTempStore $tempStore;
 
   /**
    * The messenger service.
    *
    * @var \Drupal\Core\Messenger\MessengerInterface
    */
-  protected $messenger;
+  protected MessengerInterface $messenger;
 
   /**
    * The entity type manager service.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityTypeManager;
+  protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
    * The senators helper service.
@@ -93,32 +94,34 @@ class ManagedSenatorsHandler {
    *   An array of senator term entities managed by the user.
    */
   public function getManagedSenators(bool $tids_only = TRUE): array {
+    $managed_senators = [];
+
     try {
       $user = $this->entityTypeManager->getStorage('user')->load($this->currentUser->id());
     }
     catch (\Throwable) {
-      return [];
+      return $managed_senators;
     }
 
     if (in_array('microsite_content_producer', $user->getRoles())) {
-      if (!$user->hasField('field_senator_multiref')) {
-        return [];
+      if ($user->hasField('field_senator_multiref')) {
+        $mcp_managed_senators = $tids_only
+          ? array_column($user->field_senator_multiref->getValue(), 'target_id')
+          : $user->field_senator_multiref->referencedEntities();
+        $managed_senators = array_merge($managed_senators, $mcp_managed_senators);
       }
-      return $tids_only
-        ? array_column($user->field_senator_multiref->getValue(), 'target_id')
-        : $user->field_senator_multiref->referencedEntities();
     }
 
     if (in_array('legislative_correspondent', $user->getRoles())) {
-      if (!$user->hasField('field_senator_inbox_access')) {
-        return [];
+      if ($user->hasField('field_senator_inbox_access')) {
+        $lc_managed_senators = $tids_only
+          ? array_column($user->field_senator_inbox_access->getValue(), 'target_id')
+          : $user->field_senator_inbox_access->referencedEntities();
+        $managed_senators = array_merge($managed_senators, $lc_managed_senators);
       }
-      return $tids_only
-        ? array_column($user->field_senator_inbox_access->getValue(), 'target_id')
-        : $user->field_senator_inbox_access->referencedEntities();
     }
 
-    return [];
+    return $managed_senators;
   }
 
   /**
@@ -135,6 +138,8 @@ class ManagedSenatorsHandler {
    */
   public function ensureAndGetActiveSenator(bool $tid_only = TRUE): EntityInterface|int {
     $error_message = 'Error establishing active senator required for this request.';
+
+    // Get the active senator from the temp store.
     $stored_active_senator_tid = $this->tempStore->get('active_managed_senator_tid');
     if (
       $stored_active_senator_tid !== NULL
@@ -197,6 +202,7 @@ class ManagedSenatorsHandler {
   public function updateActiveSenator(int $senator_id, bool $include_message = TRUE): bool {
     // Update the active managed senator if allowed.
     $allowed_senator_ids = $this->getManagedSenators();
+    $error_message = $this->t('There was an error updating your active managed senator.');
     if (in_array($senator_id, $allowed_senator_ids)) {
       try {
         $this->tempStore->set('active_managed_senator_tid', $senator_id);
@@ -211,14 +217,14 @@ class ManagedSenatorsHandler {
       }
       catch (\Exception) {
         if ($include_message) {
-          $this->messenger->addError($this->t('There was an error updating your active managed senator.'));
+          $this->messenger->addError($error_message);
         }
         return FALSE;
       }
     }
     else {
       if ($include_message) {
-        $this->messenger->addError($this->t('The specified senator ID is invalid or you do not have access to manage this senator.'));
+        $this->messenger->addError($error_message);
       }
       return FALSE;
     }
@@ -239,13 +245,13 @@ class ManagedSenatorsHandler {
   /**
    * Gets the current user's active senator's district ID.
    *
-   * @return int|null
-   *   The district TID.
+   * @return int
+   *   The district TID, or 0 if not found.
    */
-  public function getActiveSenatorDistrictId(): int|null {
+  public function getActiveSenatorDistrictId(): int {
     /** @var \Drupal\taxonomy\Entity\Term $senator */
     $senator = $this->ensureAndGetActiveSenator(FALSE);
-    return $this->senatorsHelper->loadDistrict($senator)?->id();
+    return $this->senatorsHelper->loadDistrict($senator)?->id() ?? 0;
   }
 
 }

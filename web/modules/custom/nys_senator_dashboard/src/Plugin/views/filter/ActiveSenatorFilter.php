@@ -20,7 +20,7 @@ class ActiveSenatorFilter extends FilterPluginBase implements ContainerFactoryPl
    *
    * @var \Drupal\nys_senator_dashboard\Service\ManagedSenatorsHandler
    */
-  protected $managedSenatorsHandler;
+  protected ManagedSenatorsHandler $managedSenatorsHandler;
 
   /**
    * Constructs the ActiveSenatorFilter plugin.
@@ -42,7 +42,7 @@ class ActiveSenatorFilter extends FilterPluginBase implements ContainerFactoryPl
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): ActiveSenatorFilter {
     return new static(
       $configuration,
       $plugin_id,
@@ -54,7 +54,7 @@ class ActiveSenatorFilter extends FilterPluginBase implements ContainerFactoryPl
   /**
    * {@inheritdoc}
    */
-  public function buildExposedForm(&$form, FormStateInterface $form_state) {
+  public function buildExposedForm(&$form, FormStateInterface $form_state): void {
     $senator = $this->managedSenatorsHandler->ensureAndGetActiveSenator(FALSE);
     if (empty($senator)) {
       return;

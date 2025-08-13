@@ -32,9 +32,9 @@ class ActiveSenatorController extends ControllerBase {
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container) {
+  public static function create(ContainerInterface $container): ActiveSenatorController {
     return new static(
       $container->get('nys_senator_dashboard.managed_senators_handler')
     );
@@ -51,7 +51,7 @@ class ActiveSenatorController extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    *   Redirects the user.
    */
-  public function updateActiveSenator(int $senator_tid, Request $request) {
+  public function updateActiveSenator(int $senator_tid, Request $request): RedirectResponse {
     // Set the current user's active senator.
     $this->managedSenatorsHandler->updateActiveSenator($senator_tid);
 

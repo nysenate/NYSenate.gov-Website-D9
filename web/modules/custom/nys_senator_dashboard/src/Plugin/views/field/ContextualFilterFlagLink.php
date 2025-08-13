@@ -2,10 +2,12 @@
 
 namespace Drupal\nys_senator_dashboard\Plugin\views\field;
 
+use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\flag\FlagLinkBuilder;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
+use Drupal\views\Render\ViewsRenderPipelineMarkup;
 use Drupal\views\ResultRow;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -21,7 +23,7 @@ class ContextualFilterFlagLink extends FieldPluginBase implements ContainerFacto
    *
    * @var \Drupal\flag\FlagLinkBuilder
    */
-  protected $linkBuilder;
+  protected FlagLinkBuilder $linkBuilder;
 
   /**
    * The renderer service.
@@ -53,7 +55,7 @@ class ContextualFilterFlagLink extends FieldPluginBase implements ContainerFacto
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): ContextualFilterFlagLink {
     return new static(
       $configuration,
       $plugin_id,
@@ -66,11 +68,15 @@ class ContextualFilterFlagLink extends FieldPluginBase implements ContainerFacto
   /**
    * {@inheritdoc}
    */
-  public function render(ResultRow $values) {
+  public function render(ResultRow $values): MarkupInterface|string|ViewsRenderPipelineMarkup {
     $issue_id = $this->view?->argument['entity_id']?->argument;
     if (!empty($issue_id)) {
       $link = $this->linkBuilder->build('taxonomy_term', $issue_id, 'follow_issue', 'default');
-      return $this->renderer->render($link);
+      try {
+        return $this->renderer->render($link);
+      }
+      catch (\Exception) {
+      }
     }
     return '';
   }
@@ -78,7 +84,7 @@ class ContextualFilterFlagLink extends FieldPluginBase implements ContainerFacto
   /**
    * {@inheritdoc}
    */
-  public function query() {
+  public function query(): void {
     // Intentionally do nothing here as field data comes from contextual filter.
   }
 

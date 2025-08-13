@@ -132,7 +132,7 @@ class ConstituentEngagementBlock extends BlockBase implements ContainerFactoryPl
   /**
    * {@inheritdoc}
    */
-  public function build() {
+  public function build(): array {
     /** @var \Drupal\taxonomy\Entity\Term $senator */
     $senator = $this->managedSenatorsHandler->ensureAndGetActiveSenator(FALSE);
     $district = $this->senatorsHelper->loadDistrict($senator);
@@ -180,12 +180,12 @@ class ConstituentEngagementBlock extends BlockBase implements ContainerFactoryPl
    * @param int $start_of_year
    *   A unix timestamp.
    *
-   * @return int|null
+   * @return int
    *   A count of user accounts for whom:
    *     - the creation date is after the beginning of the year
    *     - the assigned district is the passed senator's district
    */
-  protected function getNewConstituentsCount(Term $district, int $start_of_year): ?int {
+  protected function getNewConstituentsCount(Term $district, int $start_of_year): int {
     try {
       $count = $this->entityTypeManager->getStorage('user')
         ->getQuery()
@@ -199,7 +199,7 @@ class ConstituentEngagementBlock extends BlockBase implements ContainerFactoryPl
     catch (\Throwable) {
       $count = 0;
     }
-    return $count;
+    return (int) $count;
   }
 
   /**
@@ -212,14 +212,14 @@ class ConstituentEngagementBlock extends BlockBase implements ContainerFactoryPl
    * @param int $start_of_year
    *   A unix timestamp.
    *
-   * @return int|null
+   * @return int
    *   A count of voting entries, for which:
    *     - the vote type is 'nys_bill_vote'
    *     - the bill voted upon is sponsored by the passed senator
    *     - the voting user is assigned to the passed senator's district
    *     - the vote was submitted after the beginning of the year
    */
-  protected function responsesToBillsCounts(Term $senator, Term $district, int $start_of_year): ?int {
+  protected function responsesToBillsCounts(Term $senator, Term $district, int $start_of_year): int {
     try {
       $query = $this->database->select('votingapi_vote', 'v');
       $query->join('node__field_ol_sponsor', 'ols', 'v.entity_id=ols.entity_id');
@@ -237,7 +237,7 @@ class ConstituentEngagementBlock extends BlockBase implements ContainerFactoryPl
     catch (\Throwable) {
       $count = 0;
     }
-    return $count;
+    return (int) $count;
   }
 
   /**
@@ -248,13 +248,13 @@ class ConstituentEngagementBlock extends BlockBase implements ContainerFactoryPl
    * @param int $start_of_year
    *   A unix timestamp.
    *
-   * @return int|null
+   * @return int
    *   A count of flagging entries, for which:
    *     - the flag type is 'sign_petition'
    *     - the creation date is after the beginning of the year
    *     - the flagged entity is owned by the passed senator
    */
-  protected function getPetitionsSignedCount(Term $senator, int $start_of_year): ?int {
+  protected function getPetitionsSignedCount(Term $senator, int $start_of_year): int {
     try {
       $query = $this->database->select('flagging', 'f');
       $query->join('node__field_senator_multiref', 'sm', 'f.entity_id=sm.entity_id');
@@ -270,7 +270,7 @@ class ConstituentEngagementBlock extends BlockBase implements ContainerFactoryPl
     catch (\Throwable) {
       $count = 0;
     }
-    return $count;
+    return (int) $count;
   }
 
   /**
@@ -281,13 +281,13 @@ class ConstituentEngagementBlock extends BlockBase implements ContainerFactoryPl
    * @param int $start_of_year
    *   A unix timestamp.
    *
-   * @return int|null
+   * @return int
    *   A count of all webform submissions which:
    *     - are owned by a node of type "webform"
    *     - are owned by a node assigned to the passed senator
    *     - were submitted since the start of the calendar year
    */
-  protected function getQuestionnaireResponseCount(Term $senator, int $start_of_year): ?int {
+  protected function getQuestionnaireResponseCount(Term $senator, int $start_of_year): int {
     try {
       $query = $this->database->select('node_field_data', 'n');
       $query->join('node__field_senator_multiref', 'smr', 'smr.entity_id=n.nid AND smr.bundle=n.type');
@@ -305,7 +305,7 @@ class ConstituentEngagementBlock extends BlockBase implements ContainerFactoryPl
     catch (\Throwable) {
       $count = 0;
     }
-    return $count;
+    return (int) $count;
   }
 
 }

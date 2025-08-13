@@ -97,10 +97,9 @@ class SenatorDashboardController extends ControllerBase {
    * @return string
    *   The title string
    */
-  public function contextualDetailPageTitle() {
-    $title = 'Detail page | Constituent Activity';
+  public function contextualDetailPageTitle(): string {
     $entity = $this->senatorDashboardHelper->getContextualEntity();
-    return "{$entity?->label()} | Constituent Activity" ?? $title;
+    return ($entity?->label() ?? 'Detail page') . ' | Constituent Activity';
   }
 
 }

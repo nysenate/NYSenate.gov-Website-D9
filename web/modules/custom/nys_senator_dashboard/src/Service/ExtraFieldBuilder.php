@@ -9,6 +9,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\flag\FlagServiceInterface;
 use Drupal\flag\FlagCountManagerInterface;
+use Drupal\path_alias\AliasManagerInterface;
 
 /**
  * Service for building extra field render arrays for the Senator Dashboard.
@@ -22,35 +23,35 @@ class ExtraFieldBuilder {
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityTypeManager;
+  protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
    * The flag service.
    *
    * @var \Drupal\flag\FlagServiceInterface
    */
-  protected $flagService;
+  protected FlagServiceInterface $flagService;
 
   /**
    * The flag count manager.
    *
    * @var \Drupal\flag\FlagCountManagerInterface
    */
-  protected $flagCount;
+  protected FlagCountManagerInterface $flagCount;
 
   /**
    * The path alias manager.
    *
    * @var \Drupal\path_alias\AliasManagerInterface
    */
-  protected $pathAliasManager;
+  protected AliasManagerInterface $pathAliasManager;
 
   /**
    * The senator dashboard helper service.
    *
    * @var \Drupal\nys_senator_dashboard\Service\SenatorDashboardHelper
    */
-  protected $senatorDashboardHelper;
+  protected SenatorDashboardHelper $senatorDashboardHelper;
 
   /**
    * Constructs a new ExtraFieldBuilder object.
@@ -91,7 +92,7 @@ class ExtraFieldBuilder {
    * @return array
    *   The render array.
    */
-  public function buildFlagCount(EntityInterface $entity, string $flag_id) {
+  public function buildFlagCount(EntityInterface $entity, string $flag_id): array {
     $flagging_count = $this->flagCount->getEntityFlagCounts($entity)[$flag_id] ?? 0;
     $value = match($entity->bundle()) {
       'issues' => $this->t('@count followers', ['@count' => $flagging_count]),
@@ -119,7 +120,7 @@ class ExtraFieldBuilder {
    * @return array
    *   The render array.
    */
-  public function buildDistrictFlagCount(EntityInterface $entity, string $flag_id) {
+  public function buildDistrictFlagCount(EntityInterface $entity, string $flag_id): array {
     $flagging_count = $this->flagCount->getEntityFlagCounts($entity)[$flag_id] ?? 0;
     $in_district_flagging_count = $this->senatorDashboardHelper->getInDistrictFlaggingCount(
       $flag_id,
@@ -142,7 +143,7 @@ class ExtraFieldBuilder {
    * @return array
    *   The render array.
    */
-  public function buildLinkToConstituentsList(EntityInterface $entity) {
+  public function buildLinkToConstituentsList(EntityInterface $entity): array {
     $url = "/senator-dashboard/constituent-activity/petitions/{$entity->id()}";
     return [
       '#type' => 'html_tag',
@@ -164,7 +165,7 @@ class ExtraFieldBuilder {
    * @return array
    *   The render array.
    */
-  public function buildStatus(EntityInterface $entity) {
+  public function buildStatus(EntityInterface $entity): array {
     $is_published = FALSE;
     if ($entity instanceof NodeInterface) {
       $is_published = $entity->isPublished();
@@ -188,13 +189,13 @@ class ExtraFieldBuilder {
   /**
    * Builds the constituents response count render array.
    *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
+   * @param \Drupal\node\NodeInterface $entity
    *   The entity.
    *
    * @return array
    *   The render array.
    */
-  public function buildConstituentsResponseCount(EntityInterface $entity) {
+  public function buildConstituentsResponseCount(NodeInterface $entity): array {
     $url = "/senator-dashboard/constituent-activity/questionnaires/{$entity->id()}";
     $constituent_response_count = $this->senatorDashboardHelper->getInDistrictWebformSubmissionCount($entity);
     return [
@@ -220,7 +221,7 @@ class ExtraFieldBuilder {
    * @return array
    *   The render array.
    */
-  public function buildWebformSubmissionsDownload(EntityInterface $entity) {
+  public function buildWebformSubmissionsDownload(EntityInterface $entity): array {
     $webform_id = NULL;
     if ($entity instanceof NodeInterface && $entity->hasField('webform') && !$entity->get('webform')->isEmpty()) {
       $webform_id = $entity->get('webform')->entity->id();
@@ -248,7 +249,7 @@ class ExtraFieldBuilder {
    * @return array
    *   The render array.
    */
-  public function buildVoteTotals(EntityInterface $entity) {
+  public function buildVoteTotals(EntityInterface $entity): array {
     $data = $this->senatorDashboardHelper->getBillVoteCounts($entity, 'total_votes');
     $total = array_sum($data);
     $ayes_percentage = ($total > 0) ? round(($data[0] / $total) * 100) : 0;
@@ -304,7 +305,7 @@ class ExtraFieldBuilder {
    * @return array
    *   The render array.
    */
-  public function buildVoteTotalsDistrictBreakdown(EntityInterface $entity) {
+  public function buildVoteTotalsDistrictBreakdown(EntityInterface $entity): array {
     $in_district_votes = $this->senatorDashboardHelper->getBillVoteCounts($entity, 'in_district_votes');
     $in_district_total = array_sum($in_district_votes);
     $in_district_ayes_percentage = ($in_district_total > 0)
@@ -437,8 +438,20 @@ class ExtraFieldBuilder {
    * @return array
    *   The render array.
    */
-  public function buildBillActionLinks(EntityInterface $entity) {
+  public function buildBillActionLinks(EntityInterface $entity): array {
     $comments = $this->senatorDashboardHelper->getCommentCount($entity);
+    try {
+      $constituents_link_url = Url::fromUri("internal:/senator-dashboard/constituent-activity/bills/{$entity->id()}");
+    }
+    catch (\Exception) {
+      $constituents_link_url = '';
+    }
+    try {
+      $comments_link_url = Url::fromUri("internal:/node/{$entity->id()}#node-bill-field-comments");
+    }
+    catch (\Exception) {
+      $comments_link_url = '';
+    }
     return [
       '#type' => 'container',
       '#attributes' => [
@@ -447,7 +460,7 @@ class ExtraFieldBuilder {
       'constituents_link' => [
         '#type' => 'link',
         '#title' => $this->t('View in-district constituents'),
-        '#url' => Url::fromUri("internal:/senator-dashboard/constituent-activity/bills/{$entity->id()}"),
+        '#url' => $constituents_link_url,
         '#attributes' => [
           'class' => ['senator-dashboard-bill-constituents-link'],
         ],
@@ -455,7 +468,7 @@ class ExtraFieldBuilder {
       'comments_link' => [
         '#type' => 'link',
         '#title' => $this->t('@count comment(s)', ['@count' => $comments]),
-        '#url' => Url::fromUri("internal:/node/{$entity->id()}#node-bill-field-comments"),
+        '#url' => $comments_link_url,
         '#attributes' => [
           'class' => ['senator-dashboard-bill-comments-link'],
         ],
@@ -472,7 +485,7 @@ class ExtraFieldBuilder {
    * @return array
    *   The render array.
    */
-  public function buildFollowersLink(EntityInterface $entity) {
+  public function buildFollowersLink(EntityInterface $entity): array {
     return [
       '#type' => 'link',
       '#title' => $entity->label(),
@@ -492,11 +505,15 @@ class ExtraFieldBuilder {
    * @return array
    *   The render array.
    */
-  public function buildPathAlias(EntityInterface $entity) {
-    $path_alias = $this->pathAliasManager->getAliasByPath('/node/' . $entity->id());
-    return [
-      '#markup' => $path_alias,
-    ];
+  public function buildPathAlias(EntityInterface $entity): array {
+    // Only process if the entity is a node.
+    if ($entity->getEntityTypeId() === 'node') {
+      $path_alias = $this->pathAliasManager->getAliasByPath('/node/' . $entity->id());
+      return [
+        '#markup' => $path_alias,
+      ];
+    }
+    return [];
   }
 
 }

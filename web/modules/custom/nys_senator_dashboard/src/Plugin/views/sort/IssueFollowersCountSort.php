@@ -20,7 +20,7 @@ class IssueFollowersCountSort extends SortPluginBase {
    *
    * @var \Drupal\Core\Database\Connection
    */
-  protected $database;
+  protected Connection $database;
 
   /**
    * Constructs a TermFlaggingCountSort object.
@@ -42,7 +42,7 @@ class IssueFollowersCountSort extends SortPluginBase {
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): IssueFollowersCountSort {
     return new static(
       $configuration,
       $plugin_id,
@@ -54,7 +54,7 @@ class IssueFollowersCountSort extends SortPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function setRelationship() {
+  public function setRelationship(): void {
     if (!$this->query instanceof Sql) {
       return;
     }
@@ -82,7 +82,7 @@ class IssueFollowersCountSort extends SortPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function query() {
+  public function query(): void {
     if (!$this->query instanceof Sql) {
       return;
     }

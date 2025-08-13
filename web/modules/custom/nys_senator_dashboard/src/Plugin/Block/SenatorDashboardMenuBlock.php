@@ -138,7 +138,7 @@ class SenatorDashboardMenuBlock extends BlockBase implements ContainerFactoryPlu
       default => [],
     };
     $manage_senator_menu = [];
-    if (!in_array('legislative_correspondent', $this->currentUser->getRoles())) {
+    if (in_array('microsite_content_producer', $this->currentUser->getRoles())) {
       $manage_senator_menu = match($this->configuration['mode']) {
         'header_menu' => $this->getMenuRenderArray('manage_senator'),
         'manage_senator_menu' => $this->getMenuRenderArray('manage_senator', TRUE),
@@ -220,7 +220,11 @@ class SenatorDashboardMenuBlock extends BlockBase implements ContainerFactoryPlu
       $active_link['url'] = Url::fromRoute('<button>');
     }
     else {
-      $active_link['url'] = Url::fromUri($active_link['homepage_url']);
+      try {
+        $active_link['url'] = Url::fromUri($active_link['homepage_url']);
+      }
+      catch (\Exception) {
+      }
     }
     $items[] = $active_link;
 

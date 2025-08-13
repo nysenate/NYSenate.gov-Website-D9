@@ -32,14 +32,14 @@ class SenatorDashboardBillTeaserBlock extends BlockBase implements ContainerFact
    *
    * @var \Drupal\Core\Routing\RouteMatchInterface
    */
-  protected $routeMatch;
+  protected RouteMatchInterface $routeMatch;
 
   /**
    * The entity type manager.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityTypeManager;
+  protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
    * Constructs a new SenatorDashboardBillTeaserBlock instance.
@@ -70,7 +70,7 @@ class SenatorDashboardBillTeaserBlock extends BlockBase implements ContainerFact
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): SenatorDashboardBillTeaserBlock {
     return new static(
       $configuration,
       $plugin_id,
@@ -90,7 +90,7 @@ class SenatorDashboardBillTeaserBlock extends BlockBase implements ContainerFact
   /**
    * {@inheritdoc}
    */
-  public function build() {
+  public function build(): array {
     $build = [];
 
     try {

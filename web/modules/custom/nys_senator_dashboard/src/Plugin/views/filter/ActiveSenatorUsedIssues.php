@@ -21,7 +21,7 @@ class ActiveSenatorUsedIssues extends FilterPluginBase implements ContainerFacto
    *
    * @var \Drupal\nys_senator_dashboard\Service\ManagedSenatorsHandler
    */
-  protected $managedSenatorsHandler;
+  protected ManagedSenatorsHandler $managedSenatorsHandler;
 
   /**
    * Constructs the ActiveSenatorUsedIssues plugin.
@@ -43,7 +43,7 @@ class ActiveSenatorUsedIssues extends FilterPluginBase implements ContainerFacto
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): ActiveSenatorUsedIssues {
     return new static(
       $configuration,
       $plugin_id,
@@ -55,7 +55,7 @@ class ActiveSenatorUsedIssues extends FilterPluginBase implements ContainerFacto
   /**
    * {@inheritdoc}
    */
-  public function buildExposedForm(&$form, FormStateInterface $form_state) {
+  public function buildExposedForm(&$form, FormStateInterface $form_state): void {
     $active_senator = $this->managedSenatorsHandler->ensureAndGetActiveSenator(FALSE);
     $form[$this->options['expose']['identifier']] = [
       '#type' => 'select',
@@ -71,7 +71,7 @@ class ActiveSenatorUsedIssues extends FilterPluginBase implements ContainerFacto
   /**
    * {@inheritdoc}
    */
-  public function query() {
+  public function query(): void {
     if (!empty($this->value)) {
       $value = reset($this->value);
       $active_senator_id = $this->managedSenatorsHandler->ensureAndGetActiveSenator();

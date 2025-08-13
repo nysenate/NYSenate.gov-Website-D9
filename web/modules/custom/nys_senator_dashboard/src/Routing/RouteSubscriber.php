@@ -13,7 +13,7 @@ class RouteSubscriber extends RouteSubscriberBase {
   /**
    * {@inheritdoc}
    */
-  protected function alterRoutes(RouteCollection $collection) {
+  protected function alterRoutes(RouteCollection $collection): void {
     $target_view_displays = ['bill_responses', 'issue_followers', 'petition_signees', 'questionnaires'];
     foreach ($target_view_displays as $view_display) {
       if ($route = $collection->get("view.senator_dashboard_constituents.$view_display")) {

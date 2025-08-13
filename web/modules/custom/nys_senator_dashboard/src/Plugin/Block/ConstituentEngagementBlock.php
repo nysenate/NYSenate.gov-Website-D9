@@ -134,7 +134,7 @@ class ConstituentEngagementBlock extends BlockBase implements ContainerFactoryPl
    */
   public function build(): array {
     /** @var \Drupal\taxonomy\Entity\Term $senator */
-    $senator = $this->managedSenatorsHandler->ensureAndGetActiveSenator(FALSE);
+    $senator = $this->managedSenatorsHandler->getActiveSenator(FALSE);
     $district = $this->senatorsHelper->loadDistrict($senator);
     $start_of_year = mktime(0, 0, 0, 1, 1, date('Y'));
     return [

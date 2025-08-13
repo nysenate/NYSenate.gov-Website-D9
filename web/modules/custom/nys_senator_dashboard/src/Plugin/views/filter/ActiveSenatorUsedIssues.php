@@ -56,7 +56,7 @@ class ActiveSenatorUsedIssues extends FilterPluginBase implements ContainerFacto
    * {@inheritdoc}
    */
   public function buildExposedForm(&$form, FormStateInterface $form_state): void {
-    $active_senator = $this->managedSenatorsHandler->ensureAndGetActiveSenator(FALSE);
+    $active_senator = $this->managedSenatorsHandler->getActiveSenator(FALSE);
     $form[$this->options['expose']['identifier']] = [
       '#type' => 'select',
       '#title' => $this->t('Filter By'),
@@ -74,7 +74,7 @@ class ActiveSenatorUsedIssues extends FilterPluginBase implements ContainerFacto
   public function query(): void {
     if (!empty($this->value)) {
       $value = reset($this->value);
-      $active_senator_id = $this->managedSenatorsHandler->ensureAndGetActiveSenator();
+      $active_senator_id = $this->managedSenatorsHandler->getActiveSenator();
       // These should always match.
       if ($value == $active_senator_id && $this->query instanceof Sql) {
         $this->query->addWhereExpression(

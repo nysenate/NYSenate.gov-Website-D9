@@ -55,7 +55,7 @@ class ActiveSenatorFilter extends FilterPluginBase implements ContainerFactoryPl
    * {@inheritdoc}
    */
   public function buildExposedForm(&$form, FormStateInterface $form_state): void {
-    $senator = $this->managedSenatorsHandler->ensureAndGetActiveSenator(FALSE);
+    $senator = $this->managedSenatorsHandler->getActiveSenator(FALSE);
     if (empty($senator)) {
       return;
     }

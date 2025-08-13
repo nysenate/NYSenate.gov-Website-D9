@@ -182,7 +182,7 @@ class SenatorDashboardMenuBlock extends BlockBase implements ContainerFactoryPlu
     }
 
     // Build active managed senator switcher links.
-    $active_senator_tid = $this->managedSenatorsHandler->ensureAndGetActiveSenator();
+    $active_senator_tid = $this->managedSenatorsHandler->getActiveSenator();
     $active_senator_links = [];
     foreach ($managed_senators as $senator) {
       $active_senator_links[] = [

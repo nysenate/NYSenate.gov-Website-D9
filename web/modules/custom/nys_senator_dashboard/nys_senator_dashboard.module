@@ -33,7 +33,7 @@ function nys_senator_dashboard_query_senators_constituents_only_alter(SelectInte
   // Get active managed senator.
   try {
     $senator_term = \Drupal::service('nys_senator_dashboard.managed_senators_handler')
-      ->ensureAndGetActiveSenator(FALSE);
+      ->getActiveSenator(FALSE);
   }
   catch (AccessDeniedHttpException) {
     $query->alwaysFalse();
@@ -346,7 +346,7 @@ function nys_senator_dashboard_webform_access(WebformInterface $webform, $operat
   // Get the user's active managed senator.
   try {
     $active_managed_senator = \Drupal::service('nys_senator_dashboard.managed_senators_handler')
-      ->ensureAndGetActiveSenator();
+      ->getActiveSenator();
   }
   catch (\Throwable) {
     return AccessResult::neutral();

@@ -63,7 +63,7 @@ class EditSenatorInformationMenuLink extends MenuLinkDefault {
    */
   public function getRouteParameters(): array {
     try {
-      $senator_tid = $this->managedSenatorsHandler->ensureAndGetActiveSenator();
+      $senator_tid = $this->managedSenatorsHandler->getActiveSenator();
       return [
         'taxonomy_term' => $senator_tid,
       ];

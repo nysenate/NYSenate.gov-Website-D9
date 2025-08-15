@@ -45,6 +45,9 @@
     height: 45px;
     box-sizing: border-box;
     text-transform: uppercase;
+    &:hover {
+      text-decoration: underline;
+    }
 
     .c-tab-link {
       width: 100%;
@@ -77,6 +80,9 @@
     position: absolute;
     top: 0;
     left: 0;
+    &:hover {
+      text-decoration: none;
+    }
   }
 }
 
@@ -279,6 +285,9 @@
 				line-height: 25px;
 				@extend .icon-after__see-more;
 				@extend .lgt-text;
+              &:hover {
+                text-decoration: underline;
+              }
 
 				&::after {
 					height: 24px;

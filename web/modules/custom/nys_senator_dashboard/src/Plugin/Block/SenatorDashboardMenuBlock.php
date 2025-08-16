@@ -176,7 +176,7 @@ class SenatorDashboardMenuBlock extends BlockBase implements ContainerFactoryPlu
    *   The data to render the links.
    */
   private function getActiveSenatorLinks(): array {
-    $managed_senators = $this->managedSenatorsHandler->getManagedSenators(FALSE);
+    $managed_senators = $this->managedSenatorsHandler->getManagedSenators();
     if (empty($managed_senators)) {
       return [];
     }

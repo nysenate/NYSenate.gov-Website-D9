@@ -12,6 +12,8 @@ use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\TempStore\TempStoreException;
 use Drupal\nys_senators\SenatorsHelper;
+use Drupal\nys_users\UsersHelper;
+use Drupal\taxonomy\Entity\Term;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
@@ -85,43 +87,48 @@ class ManagedSenatorsHandler {
   }
 
   /**
-   * Gets the current user's managed senators.
-   *
-   * @param bool $tids_only
-   *   Whether to return just the senator TIDs instead of the full entities.
+   * Loads all terms for senators managed by the current user.
    *
    * @return array
-   *   An array of senator term entities managed by the user.
+   *   An array of senator Term entities managed by the user, or an empty
+   *   array and a messenger alert on error.
    */
-  public function getManagedSenators(bool $tids_only = TRUE): array {
-    $managed_senators = [];
-
+  public function getManagedSenators(): array {
     try {
-      $user = $this->entityTypeManager->getStorage('user')->load($this->currentUser->id());
+      $senators = $this->entityTypeManager->getStorage('taxonomy_term')
+        ->loadMultiple(UsersHelper::getAllManagedSenators());
     }
     catch (\Throwable) {
-      return $managed_senators;
+      $senators = [];
+      $this->messenger->addError($this->t('Failed to load managed senators.'));
     }
 
-    if (in_array('microsite_content_producer', $user->getRoles())) {
-      if ($user->hasField('field_senator_multiref')) {
-        $mcp_managed_senators = $tids_only
-          ? array_column($user->field_senator_multiref->getValue(), 'target_id')
-          : $user->field_senator_multiref->referencedEntities();
-        $managed_senators = array_merge($managed_senators, $mcp_managed_senators);
-      }
-    }
+    return $senators;
+  }
 
-    if (in_array('legislative_correspondent', $user->getRoles())) {
-      if ($user->hasField('field_senator_inbox_access')) {
-        $lc_managed_senators = $tids_only
-          ? array_column($user->field_senator_inbox_access->getValue(), 'target_id')
-          : $user->field_senator_inbox_access->referencedEntities();
-        $managed_senators = array_merge($managed_senators, $lc_managed_senators);
-      }
+  /**
+   * Sets the active managed senator for the current user.
+   *
+   * @param \Drupal\taxonomy\Entity\Term|int $id
+   *   A loaded senator Term, or the tid of a senator Term.
+   *
+   * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+   *   If the temp store has any error.
+   */
+  public function setActiveSenator(Term|int $id): void {
+    if ($id instanceof Term) {
+      $id = $id->id();
     }
-
-    return $managed_senators;
+    try {
+      $this->tempStore->set('active_managed_senator_tid', $id);
+    }
+    catch (TempStoreException) {
+      throw new AccessDeniedHttpException("Could not set active managed senator.");
+    }
+    Cache::invalidateTags([
+      'tempstore_user:' . $this->currentUser->id(),
+      'user:' . $this->currentUser->id(),
+    ]);
   }
 
   /**
@@ -130,44 +137,36 @@ class ManagedSenatorsHandler {
    * @param bool $tid_only
    *   Whether to return TIDs or entities.
    *
-   * @return \Drupal\Core\Entity\EntityInterface|int
+   * @return \Drupal\taxonomy\Entity\Term|int|null
    *   The senator entity or TID.
-   *
-   * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
-   *   Thrown when the active senator cannot be established.
    */
-  public function getActiveSenator(bool $tid_only = TRUE): EntityInterface|int {
+  public function getActiveSenator(bool $tid_only = TRUE): Term|int|null {
     // Get the active senator from the temp store.
-    $stored_active_senator_tid = $this->tempStore->get('active_managed_senator_tid');
-    if (
-      $stored_active_senator_tid !== NULL
-      && in_array($stored_active_senator_tid, $this->getManagedSenators())
-    ) {
-      $active_senator_tid = $stored_active_senator_tid;
-    }
+    $stored_tid = $this->tempStore->get('active_managed_senator_tid');
 
-    // If not available, verify and set default active senator.
-    if (empty($active_senator_tid)) {
-      return $this->verifyAndSetDefaultActiveSenator($tid_only);
-    }
-
-    if ($tid_only) {
-      return $active_senator_tid;
+    // If the user does not have access to the stored senator (or if there is
+    // no active set), try to set a default active.  Note that will silently
+    // replace the active senator if permissions change mid-session.
+    if (!in_array($stored_tid, UsersHelper::getAllManagedSenators())) {
+      $senator = $this->setDefaultActiveSenator(FALSE);
+      $stored_tid = $senator->id();
     }
     else {
       try {
-        $active_senator = $this->entityTypeManager->getStorage('taxonomy_term')
-          ->load($active_senator_tid);
+        $senator = $this->entityTypeManager->getStorage('taxonomy_term')
+          ->load($stored_tid);
       }
-      catch (\Exception) {
-        return $this->verifyAndSetDefaultActiveSenator(FALSE);
+      catch (\Throwable) {
+        $senator = NULL;
+        $stored_tid = 0;
       }
-      return $active_senator;
     }
+
+    return $tid_only ? $stored_tid : $senator;
   }
 
   /**
-   * Verifies and sets a default active senator.
+   * Sets the default active senator for the current user.
    *
    * Throws access denied exception in all failure scenarios, so that Drupal can
    * handle as a normal access denied scenario (i.e. redirect to login page).
@@ -181,34 +180,13 @@ class ManagedSenatorsHandler {
    * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
    *   Thrown when the active senator cannot be established.
    */
-  private function verifyAndSetDefaultActiveSenator(bool $tid_only = TRUE): EntityInterface|int {
-    $error_message = 'Error establishing active senator required for this request.';
-
-    $managed_senators = $this->getManagedSenators(FALSE);
-    if (count($managed_senators) > 0) {
-      try {
-        $this->tempStore->set('active_managed_senator_tid', $managed_senators[0]->id());
-      }
-      catch (TempStoreException) {
-        throw new AccessDeniedHttpException($error_message);
-      }
-      Cache::invalidateTags([
-        'tempstore_user:' . $this->currentUser->id(),
-        'user:' . $this->currentUser->id(),
-      ]);
-      $active_senator = $managed_senators[0];
-      $active_senator_tid = $active_senator->id();
-
-      if ($tid_only) {
-        return $active_senator_tid;
-      }
-      else {
-        return $active_senator;
-      }
+  protected function setDefaultActiveSenator(bool $tid_only = TRUE): EntityInterface|int {
+    $senator = current($this->getManagedSenators());
+    if (!$senator) {
+      throw new AccessDeniedHttpException("Could not establish default active senator.");
     }
-    else {
-      throw new AccessDeniedHttpException($error_message);
-    }
+    $this->setActiveSenator($senator);
+    return $tid_only ? $senator->id() : $senator;
   }
 
   /**
@@ -223,34 +201,32 @@ class ManagedSenatorsHandler {
    *   Indicates if operation was a success.
    */
   public function updateActiveSenator(int $senator_id, bool $include_message = TRUE): bool {
-    // Update the active managed senator if allowed.
-    $allowed_senator_ids = $this->getManagedSenators();
-    $error_message = $this->t('There was an error updating your active managed senator.');
+    $ret = FALSE;
+    $allowed_senator_ids = UsersHelper::getAllManagedSenators();
+
+    // If the user is allowed to manage this senator, try to set the store.
     if (in_array($senator_id, $allowed_senator_ids)) {
       try {
-        $this->tempStore->set('active_managed_senator_tid', $senator_id);
-        if ($include_message) {
-          $this->messenger->addMessage($this->t('Your active managed senator has been updated.'));
-        }
-        Cache::invalidateTags([
-          'tempstore_user:' . $this->currentUser->id(),
-          'user:' . $this->currentUser->id(),
-        ]);
-        return TRUE;
+        $this->setActiveSenator($senator_id);
+        $msg = $this->t('Your active managed senator has been updated.');
+        $ret = TRUE;
       }
-      catch (\Exception) {
-        if ($include_message) {
-          $this->messenger->addError($error_message);
-        }
-        return FALSE;
+      catch (\Throwable) {
+        $msg = $this->t("Failed to set active managed senator.");
       }
     }
+    // Canary for "access denied".
     else {
-      if ($include_message) {
-        $this->messenger->addError($error_message);
-      }
-      return FALSE;
+      $msg = $this->t('Could not update active managed senator.');
     }
+
+    // If a message was desired, send it.
+    if ($include_message) {
+      $func = $ret ? 'addMessage' : 'addError';
+      $this->messenger->$func($msg);
+    }
+
+    return $ret;
   }
 
   /**

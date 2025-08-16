@@ -6,6 +6,7 @@
  */
 
 use Drupal\block_content\Entity\BlockContent;
+use Drupal\nys_users\UsersHelper;
 use Drupal\user\Entity\User;
 use Drupal\views\Plugin\views\query\QueryPluginBase;
 use Drupal\views\Plugin\views\query\Sql;
@@ -27,11 +28,10 @@ function nys_senators_views_query_alter(ViewExecutable $view, QueryPluginBase $q
   if ($view->id() == 'my_senator_termlist') {
     if ($query instanceof Sql) {
 
-      $user = User::load(\Drupal::currentUser()->id());
-      $senator_helper = \Drupal::service('nys_senators.senators_helper');
+      $user = UsersHelper::resolveUser();
 
       // Check for MCP.
-      if (!$senator_helper->senatorUserIsAdmin($user)
+      if (!UsersHelper::isAdmin($user)
             && $user->hasField('field_senator_multiref')
             && !empty($senators = $user->field_senator_multiref->getValue())
         ) {

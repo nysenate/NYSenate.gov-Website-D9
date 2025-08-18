@@ -89,9 +89,8 @@ function nys_senators_node_grants(AccountInterface $account, $op) {
   // Second check if they are a role we want to give Microsite edit access to.
   if ($account->isAuthenticated() && !empty(array_intersect($granted_member_roles, $user_roles))) {
 
-    $senator_helper = \Drupal::service('nys_senators.senators_helper');
     // If user is an admin we need to give full access to the content.
-    if ($senator_helper->senatorUserIsAdmin($account)) {
+    if (UsersHelper::isAdmin($account)) {
 
       // User is an Admin. Grant access to all microsite content.
       // Group 2 will be a representation of our admins.
@@ -219,12 +218,8 @@ function nys_senators_node_access_records(NodeInterface $node) {
  */
 function nys_senators_entity_access(EntityInterface $entity, $operation, AccountInterface $account) {
 
-  // Fetch the User's roles.
-  $user_roles = $account->getRoles();
-  $senator_helper = \Drupal::service('nys_senators.senators_helper');
-
   // Don't need to waste any performance if user is not MCP.
-  if (!$senator_helper->senatorUserIsAdmin($account) && in_array('microsite_content_producer', $user_roles, FALSE)) {
+  if (!UsersHelper::isAdmin($account) && UsersHelper::isMcp($account)) {
 
     // Find out all of the User's senators. To do so, load full user entity.
     $user = User::load($account->id());
@@ -1235,11 +1230,10 @@ function nys_senators_query_nys_senators_access_alter(AlterableInterface $query)
 
   if ($query instanceof SelectInterface) {
     // Add op metadata so node_access is used.
-    $user = User::load(\Drupal::currentUser()->id());
-    $senator_helper = \Drupal::service('nys_senators.senators_helper');
+    $user = UsersHelper::resolveUser();
 
     // Check for MCP.
-    if (!$senator_helper->senatorUserIsAdmin($user) &&
+    if (!UsersHelper::isAdmin($user) &&
       $user->hasField('field_senator_multiref') &&
       !empty($senators = $user->field_senator_multiref->getValue()) &&
       (count($senators) > 1 || $senators[0]['target_id'] != 0)) {

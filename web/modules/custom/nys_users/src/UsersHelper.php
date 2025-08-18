@@ -119,7 +119,7 @@ class UsersHelper {
   public static function hasRoles(mixed $user, array|string $check_roles, int $test = self::NYS_USERS_OWNS_ALL): bool {
     $loaded_user = static::resolveUser($user);
     $is_root = ($loaded_user->id() == 1);
-    $user_roles = static::resolveUser($user)->getRoles();
+    $user_roles = $loaded_user->getRoles();
     if (!is_array($check_roles)) {
       $check_roles = [$check_roles];
     }

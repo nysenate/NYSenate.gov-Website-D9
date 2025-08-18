@@ -114,6 +114,9 @@ class ManagedSenatorsHandler {
    *
    * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
    *   If the temp store has any error.
+   *
+   * @todo move access handling to consumer layer (e.g. controller or plugin
+   *    access checks), and return NULL instead of throwing an exception.
    */
   public function setActiveSenator(Term|int $id): void {
     if ($id instanceof Term) {
@@ -179,6 +182,9 @@ class ManagedSenatorsHandler {
    *
    * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
    *   Thrown when the active senator cannot be established.
+   *
+   * @todo move access handling to consumer layer (e.g. controller or plugin
+   *   access checks), and return NULL instead of throwing an exception.
    */
   protected function setDefaultActiveSenator(bool $tid_only = TRUE): EntityInterface|int {
     $senator = current($this->getManagedSenators());

@@ -50,7 +50,6 @@ dependencies:
     - field.field.node.bill.rabbit_hole__settings
     - node.type.bill
   module:
-    - field_group
     - layout_builder
     - sdc_display
     - user
@@ -58,40 +57,28 @@ third_party_settings:
   layout_builder:
     enabled: false
     allow_custom: false
-  field_group:
-    group_vote_stats:
-      children:
-        - nys_senator_dashboard_vote_totals
-        - nys_senator_dashboard_vote_totals_district_breakdown
-        - nys_senator_dashboard_bill_action_links
-      label: 'Vote stats'
-      parent_name: ''
-      region: content
-      weight: 2
-      format_type: html_element
-      format_settings:
-        classes: senator-dashboard-vote-stats
-        show_empty_fields: true
-        id: ''
-        label_as_html: false
-        element: div
-        show_label: false
-        label_element: h3
-        label_element_classes: ''
-        attributes: ''
-        effect: none
-        speed: fast
   sdc_display:
-    enabled: false
+    enabled: true
     component:
-      machine_name: ''
+      machine_name: 'nys:senator-dashboard-bill-teaser'
+      show_deprecated: null
     mappings:
       static:
-        props: {  }
-        slots: {  }
+        props:
+          title: 'Error getting bill title'
+          url: /
+          description: 'Error getting bill description'
+          vote_totals_chart: 'Error getting bill vote totals'
+          district_breakdown_chart: 'Error getting bill vote totals'
+          action_links: 'Error getting bill action links'
       dynamic:
-        props: {  }
-        slots: {  }
+        props:
+          title: title
+          url: nys_senator_dashboard_path_alias
+          description: field_ol_name
+          vote_totals_chart: nys_senator_dashboard_vote_totals
+          district_breakdown_chart: nys_senator_dashboard_vote_totals_district_breakdown
+          action_links: nys_senator_dashboard_bill_action_links
 id: node.bill.senator_dashboard_bill_teaser
 targetEntityType: node
 bundle: bill
@@ -102,22 +89,27 @@ content:
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 0
+    weight: 1
     region: content
   nys_senator_dashboard_bill_action_links:
     settings: {  }
     third_party_settings: {  }
-    weight: 3
+    weight: 4
+    region: content
+  nys_senator_dashboard_path_alias:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
     region: content
   nys_senator_dashboard_vote_totals:
     settings: {  }
     third_party_settings: {  }
-    weight: 1
+    weight: 2
     region: content
   nys_senator_dashboard_vote_totals_district_breakdown:
     settings: {  }
     third_party_settings: {  }
-    weight: 2
+    weight: 3
     region: content
 hidden:
   entity_print_view_epub: true

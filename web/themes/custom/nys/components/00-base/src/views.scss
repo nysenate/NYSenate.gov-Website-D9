@@ -456,16 +456,13 @@
       a {
         color: var(--nys-color-white);
         position: relative;
-        padding-left: 8px;
 
         &:hover {
           text-decoration: underline;
         }
 
         .tablesort {
-          position: absolute;
-          top: 0;
-          left: -10px;
+          margin: 0 0 -3px -3px;
         }
 
         .tablesort--asc {
@@ -504,5 +501,9 @@
         left: -3px;
       }
     }
+  }
+
+  tr.selected td {
+    background: #FCF6ED;
   }
 }

@@ -8,6 +8,7 @@
 .c-menu--senator-dashboard {
   a.c-menu__link {
     font-family: var(--nys-ff-sans);
+    font-size: 16px;
 
     &:hover {
       text-decoration: underline;
@@ -19,7 +20,7 @@
     font-family: var(--nys-ff-sans-bold);
     display: block;
     letter-spacing: 1px;
-    font-size: 18px;
+    font-size: 14px;
     line-height: 1.25;
     margin: 0 0 8px;
     text-transform: uppercase;
@@ -86,6 +87,9 @@
   }
 
   .c-menu__items[data-menu-depth='1'] {
+    display: grid;
+    gap: 4px;
+    grid-template-columns: 1fr;
     background-color: var(--nys-color-dash-grey-2);
 
     &[aria-hidden='true'] {

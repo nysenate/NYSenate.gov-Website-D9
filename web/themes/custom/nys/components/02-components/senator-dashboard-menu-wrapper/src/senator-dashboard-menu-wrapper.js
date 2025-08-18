@@ -35,6 +35,16 @@
       triggers.forEach(trigger => trigger.addEventListener('click', this.handleTriggerClick.bind(this)));
       document.body.classList.add('nysenate-dashboard-init');
       document.body.addEventListener('click', this.bodyClose.bind(this));
+
+      // Check if a div with class c-actionbar or hero--senator exists on the page and doesn't have the hidden class
+      const actionbar = document.querySelector('.c-actionbar');
+      const heroSenator = document.querySelector('.hero--senator');
+
+      // Apply padding-inline: 0 if either element exists and is not hidden
+      if ((actionbar && !actionbar.classList.contains('hidden')) || 
+          (heroSenator && !heroSenator.classList.contains('hidden'))) {
+        dashboard.style.paddingInline = '0';
+      }
     },
     attach: function (context) {
       const dashboards = once('senateDashboard', this.dashboardSelector, context);

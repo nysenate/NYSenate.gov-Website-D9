@@ -260,7 +260,8 @@ class ExtraFieldBuilder {
     ];
     return [
       '#type' => 'container',
-      '#attributes' => ['class' => ['chart-container']],
+      '#cache' => ['max-age' => 0],
+      '#attributes' => ['class' => ['chart-container chart-container--total-votes']],
       'total_label' => [
         '#type' => 'html_tag',
         '#tag' => 'div',
@@ -282,16 +283,40 @@ class ExtraFieldBuilder {
         ],
         '#raw_options' => [
           'chart' => [
-            'height' => 150,
-            'width' => 250,
+            'height' => 72,
+            'width' => 72,
+          ],
+          'states' => [
+            'hover' => [
+              'filter' => [
+                'type' => 'none',
+              ],
+            ],
+          ],
+          'legend' => [
+            'position' => 'top',
+            'horizontalAlign' => 'left',
+            'floating' => TRUE,
+            'fontSize' => '16px',
+            'fontWeight' => '700',
+            'offsetY' => 25,
+            'offsetX' => 50,
+            'width' => 200,
+            'height' => 50,
+            'onItemHover' => [
+              'highlightDataSeries' => FALSE,
+            ],
+            'onItemClick' => [
+              'toggleDataSeries' => FALSE,
+            ],
           ],
         ],
       ],
       'total_value' => [
         '#type' => 'html_tag',
         '#tag' => 'div',
-        '#value' => "($total)",
-        '#attributes' => ['class' => 'total-value'],
+        '#value' => $total,
+        '#attributes' => ['class' => 'total-value total-value--overall'],
       ],
     ];
   }
@@ -346,17 +371,17 @@ class ExtraFieldBuilder {
 
     $build = [
       '#type' => 'container',
+      '#cache' => ['max-age' => 0],
       '#attributes' => ['class' => ['district-breakdown-charts']],
     ];
 
     if ($in_district_total > 0) {
       $build['in_district_container'] = [
         '#type' => 'container',
-        '#attributes' => ['class' => ['chart-container']],
-        'in_district_label' => [
+        '#attributes' => ['class' => ['chart-container chart-container--in-district-votes']],
+        'breakdown_label' => [
           '#type' => 'html_tag',
           '#tag' => 'div',
-          '#value' => $this->t('Breakdown by district:'),
           '#attributes' => ['class' => 'total-label'],
         ],
         'in_district_chart' => [
@@ -374,16 +399,40 @@ class ExtraFieldBuilder {
           ],
           '#raw_options' => [
             'chart' => [
-              'height' => 70,
-              'width' => 276,
+              'height' => 60,
+              'width' => 60,
+            ],
+            'states' => [
+              'hover' => [
+                'filter' => [
+                  'type' => 'none',
+                ],
+              ],
+            ],
+            'legend' => [
+              'position' => 'top',
+              'horizontalAlign' => 'left',
+              'floating' => TRUE,
+              'fontSize' => '14px',
+              'fontWeight' => '300',
+              'offsetY' => 22,
+              'offsetX' => 38,
+              'width' => 250,
+              'height' => 50,
+              'onItemHover' => [
+                'highlightDataSeries' => FALSE,
+              ],
+              'onItemClick' => [
+                'toggleDataSeries' => FALSE,
+              ],
             ],
           ],
         ],
         'in_district_total' => [
           '#type' => 'html_tag',
           '#tag' => 'div',
-          '#value' => "($in_district_total)",
-          '#attributes' => ['class' => 'total-value'],
+          '#value' => $in_district_total,
+          '#attributes' => ['class' => 'total-value total-value--in-district'],
         ],
       ];
     }
@@ -391,8 +440,8 @@ class ExtraFieldBuilder {
     if ($out_of_district_total > 0) {
       $build['out_of_district_container'] = [
         '#type' => 'container',
-        '#attributes' => ['class' => ['chart-container']],
-        'out_of_district_label' => [
+        '#attributes' => ['class' => ['chart-container chart-container--out-of-district-votes']],
+        'breakdown_label' => [
           '#type' => 'html_tag',
           '#tag' => 'div',
           '#attributes' => ['class' => 'total-label'],
@@ -412,18 +461,49 @@ class ExtraFieldBuilder {
           ],
           '#raw_options' => [
             'chart' => [
-              'height' => 70,
-              'width' => 300,
+              'height' => 60,
+              'width' => 60,
+            ],
+            'states' => [
+              'hover' => [
+                'filter' => [
+                  'type' => 'none',
+                ],
+              ],
+            ],
+            'legend' => [
+              'position' => 'top',
+              'horizontalAlign' => 'left',
+              'floating' => TRUE,
+              'fontSize' => '14px',
+              'fontWeight' => '300',
+              'offsetY' => 22,
+              'offsetX' => 38,
+              'width' => 260,
+              'height' => 50,
+              'onItemHover' => [
+                'highlightDataSeries' => FALSE,
+              ],
+              'onItemClick' => [
+                'toggleDataSeries' => FALSE,
+              ],
             ],
           ],
         ],
         'out_of_district_total' => [
           '#type' => 'html_tag',
           '#tag' => 'div',
-          '#value' => "($out_of_district_total)",
-          '#attributes' => ['class' => 'total-value'],
+          '#value' => $out_of_district_total,
+          '#attributes' => ['class' => 'total-value total-value--out-district'],
         ],
       ];
+    }
+
+    if (isset($build['in_district_container'])) {
+      $build['in_district_container']['breakdown_label']['#value'] = $this->t('Breakdown by district:');
+    }
+    elseif (isset($build['out_of_district_container'])) {
+      $build['out_of_district_container']['breakdown_label']['#value'] = $this->t('Breakdown by district:');
     }
 
     return $build;

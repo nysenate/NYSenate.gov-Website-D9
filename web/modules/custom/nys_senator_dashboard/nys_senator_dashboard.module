@@ -442,7 +442,7 @@ function nys_senator_dashboard_entity_view(array &$build, EntityInterface $entit
     }
   }
 
-  // Optimize repetitive field building
+  // Optimize repetitive field building.
   $fields = [
     'status', 
     'constituents_response_count', 
@@ -496,5 +496,33 @@ function nys_senator_dashboard_user_login(UserInterface $account): void {
     $request->getSession()->save();
     $response->send();
     exit;
+  }
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ *
+ * Adds our custom implementation to override the VBO Export message.
+ */
+function nys_senator_dashboard_module_implements_alter(&$implementations, $hook) {
+  if ($hook == 'locale_translation_alter') {
+    // Add our implementation of hook_locale_translation_alter().
+    $implementations['nys_senator_dashboard'] = FALSE;
+    // Make sure our implementation runs last.
+    $group = $implementations['nys_senator_dashboard'];
+    unset($implementations['nys_senator_dashboard']);
+    $implementations['nys_senator_dashboard'] = $group;
+  }
+}
+
+/**
+ * Implements hook_locale_translation_alter().
+ *
+ * Overrides the "Click here" text in the VBO Export message.
+ */
+function nys_senator_dashboard_locale_translation_alter(&$translation, $string, $context, $langcode) {
+  // Check if this is the string we want to override.
+  if ($string == 'Export file created, <a href=":url" target="_blank">Click here</a> to download.') {
+    $translation = 'Export file created, <a href=":url" target="_blank">Download the CSV file</a>.';
   }
 }

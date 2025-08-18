@@ -105,7 +105,7 @@ display:
         options:
           submit_button: 'Filter Issues'
           reset_button: true
-          reset_button_label: 'Clear Results'
+          reset_button_label: 'Clear filters'
           exposed_sorts_label: 'Sort by'
           expose_sort_order: true
           sort_asc_label: (Ascending)
@@ -400,6 +400,10 @@ display:
     display_plugin: block
     position: 2
     display_options:
+      pager:
+        type: none
+        options:
+          offset: 0
       sorts:
         name:
           id: name
@@ -443,6 +447,7 @@ display:
         groups:
           1: AND
       defaults:
+        pager: false
         relationships: false
         sorts: false
         filters: false
@@ -482,7 +487,6 @@ display:
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
-        - url.query_args
         - user
         - user.roles
       tags:

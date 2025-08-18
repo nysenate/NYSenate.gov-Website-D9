@@ -1,6 +1,6 @@
 @use 'partials' as *;
 
-.node--view-mode-senator-dashboard-bill-teaser {
+.c-senator-dashboard-bill-teaser {
   border: 1px solid var(--nys-color-dash-grey-1);
   margin-bottom: 60px;
 
@@ -23,6 +23,12 @@
     }
   }
 
+  .c-senator-dashboard-bill-teaser--no-activity {
+    font-family: var(--nys-ff-sans);
+    font-size: 14px;
+    font-style: italic;
+  }
+
   .field--name-field-ol-name {
     padding: 0 32px 40px;
     font-family: var(--nys-ff-sans-bold);
@@ -32,7 +38,7 @@
     line-height: 22px;
   }
 
-  .senator-dashboard-vote-stats {
+  .c-senator-dashboard-bill-teaser--vote-stats {
     overflow: hidden;
     background: #F7F7F7;
     padding: 24px 32px;
@@ -41,8 +47,6 @@
   .chart-container {
     float: left;
     position: relative;
-    padding-bottom: 20px;
-    margin: 0 20px 10px 0;
     color: var(--nys-color-black-2);
     font-family: var(--nys-ff-sans);
     font-size: 14px;
@@ -50,9 +54,20 @@
     line-height: normal;
 
     .apexcharts-legend-text {
-      font-family: var(--nys-ff-sans-bold);
-      font-weight: 600;
+      font-family: var(--nys-ff-sans-bold) !important;
       padding-left: 22px;
+    }
+
+    &.chart-container--total-votes {
+      width: 271px;
+    }
+
+    &.chart-container--in-district-votes {
+      width: 276px;
+    }
+
+    &.chart-container--out-of-district-votes {
+      width: 313px;
     }
 
     .apexcharts-legend-marker[rel="1"] {
@@ -61,6 +76,11 @@
 
     .apexcharts-legend-marker[rel="2"] {
       content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M12.2422 18.7148C13.2578 18.5117 13.918 17.5234 13.7148 16.5078L13.625 16.0625C13.418 15.0195 13.0352 14.0273 12.5 13.125H18.125C19.1602 13.125 20 12.2852 20 11.25C20 10.5273 19.5898 9.89844 18.9883 9.58594C19.4141 9.24219 19.6875 8.71484 19.6875 8.125C19.6875 7.21094 19.0312 6.44922 18.168 6.28516C18.3398 6 18.4375 5.66797 18.4375 5.3125C18.4375 4.48047 17.8945 3.77344 17.1445 3.53125C17.1719 3.40234 17.1875 3.26562 17.1875 3.125C17.1875 2.08984 16.3477 1.25 15.3125 1.25H11.5039C10.7617 1.25 10.0391 1.46875 9.42188 1.87891L7.91797 2.88281C6.875 3.57812 6.25 4.75 6.25 6.00391V10.3477C6.25 11.4883 6.76953 12.5625 7.65625 13.2773L7.94531 13.5078C8.98047 14.3359 9.6875 15.5 9.94531 16.7969L10.0352 17.2422C10.2383 18.2578 11.2266 18.918 12.2422 18.7148ZM1.25 15H3.75C4.44141 15 5 14.4414 5 13.75V5C5 4.30859 4.44141 3.75 3.75 3.75H1.25C0.558594 3.75 0 4.30859 0 5V13.75C0 14.4414 0.558594 15 1.25 15Z' fill='%23444444'/%3E%3C/svg%3E");
+    }
+
+    @include bp-max(sm) {
+      width: 100%;
+      padding-bottom: 20px;
     }
   }
 
@@ -82,14 +102,18 @@
   }
 
   .total-value {
-    position: absolute;
-    bottom: 10px;
-    left: 20px;
+    text-align: center;
+    width: 60px;
+  }
+
+  .total-value--overall {
+    font-weight: 700;
+    width: 72px;
   }
 
   .senator-dashboard-bill-action-links {
     float: left;
-    margin-top: 50px;
+    margin-top: 52px;
 
     a {
       display: inline-block;
@@ -116,22 +140,22 @@
   }
 }
 
-// @todo Consider implementing alt view mode and template to handle these alterations.
-.block-nys-senator-dashboard-bill-teaser .node--view-mode-senator-dashboard-bill-teaser {
+// @todo Update component to handle alt display context.
+.block-nys-senator-dashboard-bill-teaser .c-senator-dashboard-bill-teaser {
   border: none;
 
-  h2, .field--name-field-ol-name {
+  h2, .field--name-field-ol-name, .senator-dashboard-bill-constituents-link {
     display: none;
   }
 
-  .senator-dashboard-vote-stats {
+  .c-senator-dashboard-bill-teaser--vote-stats {
     padding: 0;
     background: transparent;
   }
 }
 
 .views-row:last-child {
-  .node--view-mode-senator-dashboard-bill-teaser {
+  .c-senator-dashboard-bill-teaser {
     margin-bottom: 0;
   }
 }

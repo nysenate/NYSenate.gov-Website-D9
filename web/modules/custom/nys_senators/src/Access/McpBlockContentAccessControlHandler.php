@@ -61,7 +61,7 @@ class McpBlockContentAccessControlHandler extends BlockContentAccessControlHandl
     // Grant MCPs access to edit content blocks tied to their senator.
     $current_user = UsersHelper::resolveUser();
     if (UsersHelper::isMcp($current_user)) {
-      $managed_senator_tids = UsersHelper::getManagedSenators($current_user);
+      $managed_senator_tids = UsersHelper::getMcpSenators($current_user);
       try {
         $node_storage = $this->entityTypeManager
           ->getStorage('node');

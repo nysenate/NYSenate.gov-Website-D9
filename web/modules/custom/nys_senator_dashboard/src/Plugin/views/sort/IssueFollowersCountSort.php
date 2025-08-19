@@ -34,7 +34,7 @@ class IssueFollowersCountSort extends SortPluginBase {
    * @param \Drupal\Core\Database\Connection $database
    *   The database connection object.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, Connection $database) {
+  public function __construct(array $configuration, string $plugin_id, mixed $plugin_definition, Connection $database) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->database = $database;
   }

@@ -21,7 +21,7 @@ class SenatorDashboardHelper {
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityTypeManager;
+  protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
    * The route match service.

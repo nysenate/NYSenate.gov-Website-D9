@@ -50,7 +50,7 @@ function nys_senator_dashboard_query_senators_constituents_only_alter(SelectInte
         'field_senator' => $senator_term->id(),
       ]);
   }
-  catch (\Throwable $e) {
+  catch (\Throwable) {
     $query->alwaysFalse();
     return;
   }
@@ -128,15 +128,10 @@ function nys_senator_dashboard_theme(): array {
 /**
  * Implements hook_form_alter().
  *
- * @param $form
- * @param \Drupal\Core\Form\FormStateInterface $form_state
- * @param $form_id
- *
- * @return void
+ * Hides the footer bulk operation in senator dashboard view.
  */
 function nys_senator_dashboard_form_alter(&$form, FormStateInterface $form_state, $form_id): void {
   if (str_starts_with($form_id, 'views_form_senator_dashboard_constituents_')) {
-    // Hide additional footer bulk operation button.
     $form['actions']['#access'] = FALSE;
   }
 }
@@ -228,7 +223,7 @@ function nys_senator_dashboard_entity_extra_field_info(): array {
   try {
     $node_types = $entity_type_manager->getStorage('node_type')->loadMultiple();
   }
-  catch (\Exception) {
+  catch (\Throwable) {
     $node_types = [];
   }
   foreach ($node_types as $bundle => $type) {
@@ -353,15 +348,22 @@ function nys_senator_dashboard_webform_access(WebformInterface $webform, $operat
   }
 
   // Get the webform node (used to get linked senators).
-  $node_storage = \Drupal::entityTypeManager()->getStorage('node');
-  $query = $node_storage->getQuery()
-    ->condition('type', 'webform')
-    ->condition('webform', $webform->id())
-    ->accessCheck(FALSE);
-  $nids = $query->execute();
+  try {
+    /** @var \Drupal\Core\Entity\EntityStorageBase $node_storage */
+    $node_storage = \Drupal::entityTypeManager()->getStorage('node');
+    $query = $node_storage->getQuery()
+      ->condition('type', 'webform')
+      ->condition('webform', $webform->id())
+      ->accessCheck(FALSE);
+    $nids = $query->execute();
+  }
+  catch (\Throwable) {
+    $nids = NULL;
+  }
   if (empty($nids)) {
     return AccessResult::neutral();
   }
+  /** @var \Drupal\node\Entity\Node $webform_node */
   $webform_node = $node_storage->load(reset($nids));
 
   // Get the senator IDs referenced in the webform node.
@@ -444,9 +446,9 @@ function nys_senator_dashboard_entity_view(array &$build, EntityInterface $entit
 
   // Optimize repetitive field building.
   $fields = [
-    'status', 
-    'constituents_response_count', 
-    'webform_submissions_download', 
+    'status',
+    'constituents_response_count',
+    'webform_submissions_download',
     'vote_totals',
     'vote_totals_district_breakdown',
     'bill_action_links',
@@ -496,33 +498,5 @@ function nys_senator_dashboard_user_login(UserInterface $account): void {
     $request->getSession()->save();
     $response->send();
     exit;
-  }
-}
-
-/**
- * Implements hook_module_implements_alter().
- *
- * Adds our custom implementation to override the VBO Export message.
- */
-function nys_senator_dashboard_module_implements_alter(&$implementations, $hook) {
-  if ($hook == 'locale_translation_alter') {
-    // Add our implementation of hook_locale_translation_alter().
-    $implementations['nys_senator_dashboard'] = FALSE;
-    // Make sure our implementation runs last.
-    $group = $implementations['nys_senator_dashboard'];
-    unset($implementations['nys_senator_dashboard']);
-    $implementations['nys_senator_dashboard'] = $group;
-  }
-}
-
-/**
- * Implements hook_locale_translation_alter().
- *
- * Overrides the "Click here" text in the VBO Export message.
- */
-function nys_senator_dashboard_locale_translation_alter(&$translation, $string, $context, $langcode) {
-  // Check if this is the string we want to override.
-  if ($string == 'Export file created, <a href=":url" target="_blank">Click here</a> to download.') {
-    $translation = 'Export file created, <a href=":url" target="_blank">Download the CSV file</a>.';
   }
 }

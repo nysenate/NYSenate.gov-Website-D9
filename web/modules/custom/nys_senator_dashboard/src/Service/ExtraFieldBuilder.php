@@ -71,7 +71,7 @@ class ExtraFieldBuilder {
     EntityTypeManagerInterface $entity_type_manager,
     FlagServiceInterface $flag_service,
     FlagCountManagerInterface $flag_count,
-    $path_alias_manager,
+    AliasManagerInterface $path_alias_manager,
     SenatorDashboardHelper $senator_dashboard_helper,
   ) {
     $this->entityTypeManager = $entity_type_manager;

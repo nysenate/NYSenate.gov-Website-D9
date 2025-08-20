@@ -36,7 +36,7 @@ class ActiveSenatorSponsorFilter extends FilterPluginBase implements ContainerFa
    * @param \Drupal\nys_senator_dashboard\Service\ManagedSenatorsHandler $managedSenatorsHandler
    *   The managed senators handler service.
    */
-  public function __construct($configuration, $plugin_id, $plugin_definition, ManagedSenatorsHandler $managedSenatorsHandler) {
+  public function __construct(array $configuration, string $plugin_id, mixed $plugin_definition, ManagedSenatorsHandler $managedSenatorsHandler) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->managedSenatorsHandler = $managedSenatorsHandler;
   }

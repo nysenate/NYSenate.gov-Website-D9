@@ -1,3 +1,13 @@
+@use 'partials' as *;
+
 .message {
   margin-bottom: 32px;
+
+  a {
+    color: var(--nys-color-button-blue);
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }

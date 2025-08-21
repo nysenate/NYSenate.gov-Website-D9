@@ -104,6 +104,7 @@ display:
               action_id: vbo_export_generate_csv_action
               preconfiguration:
                 add_confirmation: false
+                confirm_help_text: ''
                 label_override: 'Download selection as CSV'
                 message_override: ''
                 strip_tags: true
@@ -133,7 +134,13 @@ display:
                   field_address_locality:
                     active: false
                     label: ''
-                separator: ;
+                  field_address_administrative_area:
+                    active: false
+                    label: ''
+                  field_address_postal_code:
+                    active: false
+                    label: ''
+                separator: ','
         field_first_name:
           id: field_first_name
           table: user__field_first_name
@@ -1200,6 +1207,7 @@ display:
               action_id: vbo_export_generate_csv_action
               preconfiguration:
                 add_confirmation: false
+                confirm_help_text: ''
                 label_override: 'Download selection as CSV'
                 message_override: ''
                 strip_tags: true
@@ -1229,7 +1237,16 @@ display:
                   field_address_locality:
                     active: false
                     label: ''
-                separator: ;
+                  field_address_administrative_area:
+                    active: false
+                    label: ''
+                  field_address_postal_code:
+                    active: false
+                    label: ''
+                  value:
+                    active: false
+                    label: ''
+                separator: ','
         field_first_name:
           id: field_first_name
           table: user__field_first_name
@@ -2071,6 +2088,7 @@ display:
               action_id: vbo_export_generate_csv_action
               preconfiguration:
                 add_confirmation: false
+                confirm_help_text: ''
                 label_override: 'Download selection as CSV'
                 message_override: ''
                 strip_tags: true
@@ -2100,7 +2118,16 @@ display:
                   field_address_locality:
                     active: false
                     label: ''
-                separator: ;
+                  field_address_administrative_area:
+                    active: false
+                    label: ''
+                  field_address_postal_code:
+                    active: false
+                    label: ''
+                  nys_senator_dashboard_contextual_filter_flag_link:
+                    active: false
+                    label: ''
+                separator: ','
         field_first_name:
           id: field_first_name
           table: user__field_first_name
@@ -2899,6 +2926,7 @@ display:
               action_id: vbo_export_generate_csv_action
               preconfiguration:
                 add_confirmation: false
+                confirm_help_text: ''
                 label_override: 'Download selection as CSV'
                 message_override: ''
                 strip_tags: true
@@ -2928,7 +2956,13 @@ display:
                   field_address_locality:
                     active: false
                     label: ''
-                separator: ;
+                  field_address_administrative_area:
+                    active: false
+                    label: ''
+                  field_address_postal_code:
+                    active: false
+                    label: ''
+                separator: ','
         field_first_name:
           id: field_first_name
           table: user__field_first_name
@@ -3666,6 +3700,7 @@ display:
               action_id: vbo_export_generate_csv_action
               preconfiguration:
                 add_confirmation: false
+                confirm_help_text: ''
                 label_override: 'Download selection as CSV'
                 message_override: ''
                 strip_tags: true
@@ -3695,7 +3730,16 @@ display:
                   field_address_locality:
                     active: false
                     label: ''
-                separator: ;
+                  field_address_administrative_area:
+                    active: false
+                    label: ''
+                  field_address_postal_code:
+                    active: false
+                    label: ''
+                  nys_senator_dashboard_contextual_filter_webform_id:
+                    active: false
+                    label: ''
+                separator: ','
         field_first_name:
           id: field_first_name
           table: user__field_first_name

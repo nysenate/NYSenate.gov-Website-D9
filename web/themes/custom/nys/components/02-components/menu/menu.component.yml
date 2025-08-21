@@ -1,0 +1,32 @@
+$schema: https://git.drupalcode.org/project/sdc/-/raw/1.x/src/metadata.schema.json
+name: Menu
+description: This is a keyboard supported accessible menu component.
+libraryOverrides:
+  dependencies:
+    - core/drupal
+    - core/once
+props:
+  type: object
+  required:
+    - menu_name
+    - items
+  properties:
+    menu_name:
+      type: string
+      title: Menu Name
+      description: A machine readable name for the menu.
+    items:
+      type: array
+      title: Menu Items
+      description: The menu link items.
+      default: []
+    depth:
+      type: number
+      title: Depth
+      description: The initial depth of the menu.
+      default: 0
+    wrapper_attributes:
+      type: '\Drupal\Core\Template\Attribute'
+      title: Wrapper Attributes
+      description: Attributes for the wrapper around the entire menu.
+

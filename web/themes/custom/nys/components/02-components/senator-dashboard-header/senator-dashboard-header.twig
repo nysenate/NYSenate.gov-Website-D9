@@ -1,0 +1,44 @@
+
+{% set classes = [
+  'c-senator-dashboard-header',
+] %}
+
+<div class="c-senator-dashboard-header-container">
+  <header {{ attributes.addClass(classes) }}>
+    {% if image_url %}
+      <figure class="c-senator-dashboard-header__image">
+        <img class="senator-image" src="{{ image_url }}" alt="{{ 'Picture of senator'|t }}">
+      </figure>
+    {% endif %}
+
+    <div class="c-senator-dashboard-header__content">
+      {% if eyebrow %}
+        <div class="c-senator-dashboard-header__eyebrow">
+          {{ eyebrow }}
+        </div>
+      {% endif %}
+
+      {% if title %}
+        <h1 class="c-senator-dashboard-header__title">
+          {{ title|raw }}
+        </h1>
+      {% endif %}
+
+      {% if intro %}
+        <p class="c-senator-dashboard-header__intro">
+          {{ intro }}
+        </p>
+      {% endif %}
+
+      {% if actions %}
+        <ul class="c-senator-dashboard-header__actions">
+          {% for action in actions %}
+            <li class="c-senator-dashboard-header__action">
+              {{ action|raw }}
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+  </header>
+</div>

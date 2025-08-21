@@ -1,0 +1,22 @@
+{% do attach_library('nysenate_theme/nysenate-dashboard') %}
+{% import '@nysenate_theme/icons/_icons-macro.twig' as icons %}
+
+<section class="nysenate-dashboard">
+  <button
+    class="senate-dashboard__trigger"
+    aria-controls="nysenate-senator-dashboard-menu"
+    aria-expanded="false"
+    type="button"
+  >
+    <span class="text">{{ 'Manage Senator'|t }}</span>
+    <span class="icon icon--arrow" aria-hidden="true">{{ icons.get('accordion__arrow') }}</span>
+  </button>
+
+  <div
+    id="nysenate-senator-dashboard-menu"
+    class="senate-dashboard__content"
+    aria-hidden="true"
+  >
+    {% block content %}{% endblock %}
+  </div>
+</section>

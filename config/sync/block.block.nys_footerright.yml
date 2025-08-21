@@ -1,0 +1,25 @@
+uuid: 685da8bb-f98f-4bf2-ac4d-2dfe15ee059d
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.footer-right
+  module:
+    - system
+  theme:
+    - nys
+id: nys_footerright
+theme: nys
+region: footer_right
+weight: -16
+provider: null
+plugin: 'system_menu_block:footer-right'
+settings:
+  id: 'system_menu_block:footer-right'
+  label: 'Footer Right'
+  label_display: '0'
+  provider: system
+  level: 1
+  depth: 0
+  expand_all_items: false
+visibility: {  }

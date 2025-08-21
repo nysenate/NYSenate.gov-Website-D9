@@ -1,0 +1,23 @@
+$schema: https://git.drupalcode.org/project/sdc/-/raw/1.x/src/metadata.schema.json
+name: Breadcrumbs
+status: "experimental"
+description: Component for styling breadcrumbs.
+props:
+  type: object
+  required:
+    - items
+    - divider
+  properties:
+    label:
+      type: string
+      title: Label
+      description: The title of the breadcrumb section
+    divider:
+      type: string
+      title: Divider
+      description: The separator between items.
+      default: '/'
+    items:
+      type: array
+      title: Items
+      default: []

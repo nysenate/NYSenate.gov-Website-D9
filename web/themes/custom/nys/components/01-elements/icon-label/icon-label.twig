@@ -1,0 +1,19 @@
+{% import 'nys:icons' as icons %}
+
+<span class="u-icon-label">
+  {% if icon_before %}
+    <span
+      class="icon icon-before icon-{{ icon_before|clean_class }}"
+      aria-hidden="true"
+    >{{ icons.inline(icon_before) }}</span>
+  {% endif %}
+
+  <span class="text">{{ label }}</span>
+
+  {% if icon_after %}
+    <span
+      class="icon icon-after icon-{{ icon_after|clean_class }}"
+      aria-hidden="true"
+    >{{ icons.inline(icon_after) }}</span>
+  {% endif %}
+</span>

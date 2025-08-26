@@ -302,7 +302,7 @@ class ExtraFieldBuilder {
             'offsetY' => 25,
             'offsetX' => 50,
             'width' => 200,
-            'height' => 50,
+            'height' => 52,
             'onItemHover' => [
               'highlightDataSeries' => FALSE,
             ],
@@ -418,7 +418,7 @@ class ExtraFieldBuilder {
               'offsetY' => 22,
               'offsetX' => 38,
               'width' => 250,
-              'height' => 50,
+              'height' => 52,
               'onItemHover' => [
                 'highlightDataSeries' => FALSE,
               ],
@@ -480,7 +480,7 @@ class ExtraFieldBuilder {
               'offsetY' => 22,
               'offsetX' => 38,
               'width' => 260,
-              'height' => 50,
+              'height' => 52,
               'onItemHover' => [
                 'highlightDataSeries' => FALSE,
               ],

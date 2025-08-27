@@ -17,6 +17,7 @@ class SubmissionPeriodForm extends ConfigFormBase {
   const SCHOOL_FORM_TYPES = [
     'thanksgiving' => 'Thanksgiving',
     'earth_day' => 'Earth Day',
+    'peace' => 'Peace',
   ];
 
   /**

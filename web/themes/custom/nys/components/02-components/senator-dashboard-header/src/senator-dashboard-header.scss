@@ -1,0 +1,106 @@
+@use 'partials' as *;
+
+.c-senator-dashboard-header-container {
+  container: senator-dashboard-container / inline-size;
+}
+
+.c-senator-dashboard-header {
+  background-color: var(--nys-color-darker-blue);
+  padding: 20px;
+  align-items: center;
+
+  @container senator-dashboard-container (width > 560px) {
+    padding: 40px;
+  }
+
+  @container senator-dashboard-container (width > 680px) {
+    display: flex;
+    gap: 20px;
+  }
+
+  @container senator-dashboard-container (width > 800px) {
+    gap: 40px;
+    padding-inline: 60px;
+  }
+
+  @container senator-dashboard-container (width > 1024px) {
+    gap: 60px;
+  }
+}
+
+.c-senator-dashboard-header__image {
+  @include square(100px);
+  border-radius: 50%;
+  margin: 0;
+  overflow: hidden;
+
+  img {
+    @include square(100%);
+    object-fit: cover;
+  }
+
+  @container senator-dashboard-container (width > 560px) {
+    @include square(120px);
+  }
+
+  @container senator-dashboard-container (width <= 680px) {
+    margin-block-end: 20px;
+  }
+
+  @container senator-dashboard-container (width > 800px) {
+    @include square(160px);
+  }
+}
+
+.c-senator-dashboard-header__content {
+  flex: 1;
+}
+
+.c-senator-dashboard-header__title,
+.c-senator-dashboard-header__title a,
+.c-senator-dashboard-header__intro {
+  color: #fff;
+}
+
+.c-senator-dashboard-header__title {
+  font-size: rem(24px);
+  font-weight: 400;
+  line-height: 1.25;
+  margin: 0 0 8px;
+
+  @container senator-dashboard-container (width > 560px) {
+    font-size: rem(28px);
+  }
+
+  @container senator-dashboard-container (width > 1024px) {
+    font-size: rem(32px);
+  }
+}
+
+.c-senator-dashboard-header__intro {
+  font-style: italic;
+  margin: 0;
+
+  @container senator-dashboard-container (width <= 1024px) {
+    font-size: rem(18px);
+    line-height: 1.66666667;
+  }
+
+  @container senator-dashboard-container (width <= 560px) {
+    font-size: rem(16px);
+  }
+}
+
+.c-senator-dashboard-header__actions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  list-style: none;
+  margin: 20px 0 0;
+  padding: 0;
+}
+
+.c-senator-dashboard-header__eyebrow {
+  margin-block-end: 8px;
+}

@@ -968,3 +968,8 @@ if (file_exists($app_root . '/' . $site_path . '/settings.local.php')) {
 if ((file_exists(__DIR__ . '/settings.ddev.redis.php') && getenv('IS_DDEV_PROJECT') == 'true')) {
   include __DIR__ . '/settings.ddev.redis.php';
 }
+
+// Override the VBO Export message for better A11y.
+$settings['locale_custom_strings_en'][''] = [
+  'Export file created, <a href=":url" target="_blank">Click here</a> to download.' => 'Export file created. <a href=":url" target="_blank">Download the CSV file</a>.',
+];

@@ -1,0 +1,88 @@
+{% do attach_library('nysenate_theme/nysenate-dashboard-menu') %}
+{% import '@nysenate_theme/icons/_icons-macro.twig' as icons %}
+{% import _self as dashboard %}
+
+{% macro icon_text(title, icon = '') %}
+  {% if icon %}
+    <span class="icon" aria-hidden="true">{{ icons.get(icon) }}</span>
+  {% endif %}
+  <span class="text">{{ title }}</span>
+{% endmacro %}
+
+{% macro trigger(title, target, icon = '', depth = 0) %}
+  <button
+    class="nysenate-dashboard-menu__trigger"
+    aria-controls="{{ target }}"
+    aria-expanded="false"
+    data-dashboard-depth="{{ depth }}"
+    type="button"
+  >
+    {{ dashboard.icon_text(title, icon) }}
+    <span class="icon icon--arrow" aria-hidden="true">{{ icons.get('accordion__arrow') }}</span>
+  </button>
+{% endmacro %}
+
+{% macro link(title, url, icon = '', depth = 0) %}
+  <a
+    class="nysenate-dashboard-menu__link"
+    href="{{ url }}"
+    data-dashboard-depth="{{ depth }}"
+  >
+    {{ dashboard.icon_text(title, icon) }}
+  </a>
+{% endmacro %}
+
+{% macro heading(title, icon = '', depth = 0) %}
+  <p class="nysenate-dashboard-menu__heading" data-dashboard-depth="{{ depth }}">
+    {{ dashboard.icon_text(title, icon) }}
+  </p>
+{% endmacro %}
+
+{% macro menu(items, attributes, depth = 0) %}
+  {% set classes = [
+    'nysenate-dashboard-menu__items',
+    depth < 2 ? 'nysenate-dashboard-menu__dropdown',
+    'nysenate-dashboard-menu--depth-' ~ depth,
+  ] %}
+
+  <ul
+    {{ attributes.addClass(classes) }}
+    {% if depth == 1 %}aria-hidden="true"{% endif %}
+    data-dashboard-depth="{{ depth }}"
+  >
+    {% for item in items %}
+      {% set menu_item_id = 'nysenate-dashboard-menu__dropdown-' ~ loop.index|clean_unique_id %}
+      {% set item_classes = [
+        'nysenate-dashboard-menu__item',
+        item.below ? 'nysenate-dashboard-menu--item-expanded',
+        item.is_overview ? 'nysenate-dashboard-menu--item-overview',
+      ] %}
+
+      <li class="{{ item_classes|join(' ') }}">
+        {% if item.below and depth is same as(0) %}
+          {{ dashboard.trigger(item.title, menu_item_id, item.icon, depth) }}
+        {% elseif item.below %}
+          {{ dashboard.heading(item.title, '', depth) }}
+        {% else %}
+          {{ dashboard.link(item.title, item.url, item.icon, depth) }}
+        {% endif %}
+
+        {% if item.below %}
+          {{ dashboard.menu(item.below, create_attribute({
+            'id': menu_item_id,
+            'class': [
+              item.mega_menu ? 'nysenate-dashboard-menu--items-grid',
+            ],
+          }), depth + 1) }}
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+{% endmacro %}
+
+<nav
+  class="nysenate-dashboard-menu"
+  {% if label and label_hidden|default(true) %}aria-label="{{ label }}"{% endif %}
+>
+  {{ dashboard.menu(items, create_attribute(), 0) }}
+</nav>

@@ -68,3 +68,15 @@ nys_school_forms.submission_period:
     _permission: 'administer site configuration'
   options:
     _admin_route: TRUE
+nys_school_forms.reassign_district:
+  path: /admin/nys_school_forms/redistrict/{node}
+  defaults:
+    _controller: '\Drupal\nys_school_forms\Controller\SchoolFormsController::reassignDistrict'
+  requirements:
+    _permission: 'edit any school content'
+  options:
+    _admin_route: TRUE
+    parameters:
+      node:
+        type: entity:node
+        bundle: ['school']

@@ -18,6 +18,7 @@
  * Revised: 2023-06-23 - updated microsite URL for Senator Harckham
  * Revised: 2024-01-02 - updated 5 entries for the 2025-2026 session
  * Revised: 2025-01-23 - updated microsite URL for Senator Rolison
+ * Revised: 2025-05-27 - added pattern for Senator Sutton; removed Felder
  *
  */
 
@@ -56,7 +57,6 @@ function get_nyss_senator_patterns()
     'leroy-comrie'            => '(leroy)?comrie',
     'jeremy-cooney'           => '(jeremy)?cooney',
     'patricia-fahy'           => '(pat(ricia)?)?fahy',
-    'simcha-felder'           => '(simcha)?felder',
     'nathalia-fernandez'      => '(nathalia)?fernandez',
     'patrick-m-gallivan'      => '(pat(rick)?)?gallivan',
     'michael-gianaris'        => '(michael)?gianaris',
@@ -100,6 +100,7 @@ function get_nyss_senator_patterns()
     'toby-ann-stavisky'       => '(toby(ann)?)?stavisky',
     'daniel-g-stec'           => '(dan(iel)?)?stec',
     'andrea-stewart-cousins'  => '(andrea)?stewart\-?cousins',
+    'sam-sutton'              => '(sam)?sutton',
     'james-tedisco'           => '(james|jim)?tedisco',
     'kevin-thomas'            => '(kevin)?thomas',
     'mark-walczyk'            => '(mark)?walczyk',

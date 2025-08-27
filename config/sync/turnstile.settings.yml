@@ -1,13 +1,16 @@
 _core:
   default_config_hash: XmhZJ3pA2yY3vK2rXn6bd-CVDReyX8F_oxLX4zIc6tw
-site_key: ''
-secret_key: ''
+keys: turnstile
+testing_site_key: ''
+testing_secret_key: ''
 turnstile_src: 'https://challenges.cloudflare.com/turnstile/v0/api.js'
 widget:
   theme: auto
+  size: normal
   tabindex: 0
   language: auto
-  size: normal
   retry: auto
   retry_interval: 8000
-  appearance: auto
+  appearance: always
+site_key: ''
+secret_key: ''

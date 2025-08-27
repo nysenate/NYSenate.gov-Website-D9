@@ -5,7 +5,7 @@ namespace Drupal\nys_senators\EventSubscriber;
 use Drupal\Core\Routing\CurrentRouteMatch;
 use Drupal\Core\Routing\TrustedRedirectResponse;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\user\Entity\User;
+use Drupal\nys_users\UsersHelper;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -77,12 +77,10 @@ class McpEventSubscriber implements EventSubscriberInterface {
           && ($term = $this->currentRouteMatch->getParameter('taxonomy_term'))->bundle() === 'senator'
       ) {
 
-      $senator_helper = \Drupal::service('nys_senators.senators_helper');
-
-      if (!$senator_helper->senatorUserIsAdmin($this->currentUser)) {
+      $user = UsersHelper::resolveUser();
+      if (!UsersHelper::isAdmin($user)) {
 
         // Load current user in full.
-        $user = User::load($this->currentUser->id());
         $has_mcp_access = FALSE;
 
         // Check if user has access to term.

@@ -713,17 +713,6 @@ display:
         header: false
       display_description: ''
       header:
-        area_text_custom_1:
-          id: area_text_custom_1
-          table: views
-          field: area_text_custom
-          relationship: none
-          group_type: group
-          admin_label: ''
-          plugin_id: text_custom
-          empty: false
-          content: '<h2>{{ field_senator_multiref }}</h2'
-          tokenize: true
         result:
           id: result
           table: views
@@ -1631,17 +1620,6 @@ display:
         header: false
       display_description: ''
       header:
-        area_text_custom_1:
-          id: area_text_custom_1
-          table: views
-          field: area_text_custom
-          relationship: none
-          group_type: group
-          admin_label: 'Senator Name'
-          plugin_id: text_custom
-          empty: true
-          content: '<h2>{{ field_senator_multiref }}</h2'
-          tokenize: true
         area_text_custom:
           id: area_text_custom
           table: views
@@ -2288,17 +2266,6 @@ display:
         header: false
       display_description: ''
       header:
-        area_text_custom:
-          id: area_text_custom
-          table: views
-          field: area_text_custom
-          relationship: none
-          group_type: group
-          admin_label: ''
-          plugin_id: text_custom
-          empty: true
-          content: '<h2>{{ field_senator_multiref }}</h2>'
-          tokenize: true
         area_text_custom_1:
           id: area_text_custom_1
           table: views
@@ -3386,7 +3353,7 @@ display:
           admin_label: ''
           plugin_id: text_custom
           empty: true
-          content: "<h2>{{ field_ol_sponsor }}</h2>\r\n<strong>NOTE:</strong> Please consider adding issue tags to bills and resolutions. Issue tags help constituents discover bills and build exposure on NYSenate.gov.<br><br>"
+          content: '<strong>NOTE:</strong> Please consider adding issue tags to bills and resolutions. Issue tags help constituents discover bills and build exposure on NYSenate.gov.<br><br>'
           tokenize: true
       display_extenders: {  }
       path: admin/senator/content/bills
@@ -4084,17 +4051,6 @@ display:
         header: false
       display_description: ''
       header:
-        area_text_custom_1:
-          id: area_text_custom_1
-          table: views
-          field: area_text_custom
-          relationship: none
-          group_type: group
-          admin_label: ''
-          plugin_id: text_custom
-          empty: true
-          content: '<h2>{{ field_senator_multiref }}</h2'
-          tokenize: true
         area_text_custom:
           id: area_text_custom
           table: views

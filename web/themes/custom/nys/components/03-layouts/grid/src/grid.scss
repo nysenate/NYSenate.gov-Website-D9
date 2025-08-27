@@ -1,0 +1,26 @@
+@use 'partials' as *;
+
+.l-grid__title {
+  font-size: rem(14px);
+  font-weight: 400;
+  letter-spacing: 1px;
+  margin: 0 0 20px;
+  text-transform: uppercase;
+}
+
+.l-grid__items {
+  display: grid;
+  gap: 4px;
+  grid-template-columns: minmax(0, 1fr);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  @include bp-min(xsm) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.l-grid__item {
+  margin: 0;
+}

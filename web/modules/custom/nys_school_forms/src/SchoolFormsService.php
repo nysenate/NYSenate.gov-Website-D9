@@ -5,16 +5,41 @@ namespace Drupal\nys_school_forms;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Config\ImmutableConfig;
 use Drupal\Core\Entity\EntityTypeManager;
+use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Pager\PagerManagerInterface;
 use Drupal\Core\Pager\PagerParametersInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
+use Drupal\node\NodeInterface;
+use Drupal\nys_sage\Service\SageApi;
+use Drupal\taxonomy\Entity\Term;
 
 /**
  * Elastic Search API Integration.
  */
 class SchoolFormsService {
+
+  /**
+   * Return codes for district assignment attempts.
+   */
+  public const int ASSIGN_DISTRICT_SUCCESS = 1;
+
+  public const int ASSIGN_DISTRICT_INVALID_NODE = 2;
+
+  public const int ASSIGN_DISTRICT_INVALID_ADDRESS = 3;
+
+  public const int ASSIGN_DISTRICT_NO_DISTRICT = 4;
+
+  public const int ASSIGN_DISTRICT_SAVE_FAILED = 5;
+
+  public const array ASSIGN_DISTRICT_MESSAGES = [
+    1 => 'District assigned successfully',
+    2 => 'Invalid node',
+    3 => 'Invalid address',
+    4 => 'Could not resolve district',
+    5 => 'Failed to save entity',
+  ];
 
   /**
    * Drupal pager parameters interface.
@@ -66,6 +91,13 @@ class SchoolFormsService {
   public ImmutableConfig $config;
 
   /**
+   * NYS Sage API service.
+   *
+   * @var \Drupal\nys_sage\Service\SageApi
+   */
+  protected SageApi $sageApi;
+
+  /**
    * Class constructor.
    *
    * @param \Drupal\Core\Pager\PagerParametersInterface $pager_param
@@ -82,6 +114,8 @@ class SchoolFormsService {
    *   The file URL generator.
    * @param \Drupal\Core\Config\ConfigFactory $configFactory
    *   Drupal's ConfigFactory service.
+   * @param \Drupal\nys_sage\Service\SageApi $sage_api
+   *   NYS Sage API service.
    */
   public function __construct(
     PagerParametersInterface $pager_param,
@@ -91,6 +125,7 @@ class SchoolFormsService {
     StreamWrapperManager $streamWrapperManager,
     FileUrlGeneratorInterface $file_url_generator,
     ConfigFactory $configFactory,
+    SageApi $sage_api,
   ) {
     $this->pagerParam = $pager_param;
     $this->pagerManager = $pager_manager;
@@ -99,6 +134,7 @@ class SchoolFormsService {
     $this->streamWrapperManager = $streamWrapperManager;
     $this->fileUrlGenerator = $file_url_generator;
     $this->config = $configFactory->get('nys_school_forms.config');
+    $this->sageApi = $sage_api;
   }
 
   /**
@@ -107,9 +143,10 @@ class SchoolFormsService {
    * @return array
    *   The search form and search results build array.
    */
-  public function getResults($params, $admin_view = TRUE) {
+  public function getResults($params, $admin_view = TRUE): array {
     $results = [];
-    $query = $this->entityTypeManager->getStorage('webform_submission')->getQuery();
+    $query = $this->entityTypeManager->getStorage('webform_submission')
+      ->getQuery();
     $webform_id = '';
     if (!empty($params['form_type'])) {
       switch ($params['form_type']) {
@@ -125,11 +162,12 @@ class SchoolFormsService {
           break;
 
         default:
-          $terms = $this->entityTypeManager->getStorage('taxonomy_term')->loadByProperties(
-                [
-                  'vid' => 'school_form_type',
-                  'name' => $params['form_type'],
-                ]
+          $terms = $this->entityTypeManager->getStorage('taxonomy_term')
+            ->loadByProperties(
+              [
+                'vid' => 'school_form_type',
+                'name' => $params['form_type'],
+              ]
             );
           if ($terms !== NULL) {
             $term = reset($terms);
@@ -168,7 +206,8 @@ class SchoolFormsService {
     $filter_senator = $params['senator'] ?? NULL;
     $filter_teacher = $params['teacher_name'] ?? NULL;
     foreach ($query_results as $query_result) {
-      $submission = $this->entityTypeManager->getStorage('webform_submission')->load($query_result);
+      $submission = $this->entityTypeManager->getStorage('webform_submission')
+        ->load($query_result);
       /**
        * @var \Drupal\node\NodeInterface $parent_node
        */
@@ -177,7 +216,8 @@ class SchoolFormsService {
       /**
        * @var \Drupal\node\NodeInterface $school_node
        */
-      $school_node = $this->entityTypeManager->getStorage('node')->load($submission_data['school_name']);
+      $school_node = $this->entityTypeManager->getStorage('node')
+        ->load($submission_data['school_name']);
       if ($params['school'] && $params['school'] != $school_node->label()) {
         continue;
       }
@@ -193,7 +233,8 @@ class SchoolFormsService {
         continue;
       }
       foreach ($submission_data['attach_your_submission'] as $student) {
-        $file = $this->entityTypeManager->getStorage('file')->load($student['student_submission']);
+        $file = $this->entityTypeManager->getStorage('file')
+          ->load($student['student_submission']);
         if (empty($file)) {
           continue;
         }
@@ -300,6 +341,53 @@ class SchoolFormsService {
       }
     }
     return $year_schools;
+  }
+
+  /**
+   * Reassign a school's district, e.g., after an address change.
+   *
+   * @param \Drupal\node\NodeInterface $node
+   *   A node in the 'school' bundle.
+   * @param bool $save
+   *   Indicates if the entity should be saved.
+   *
+   * @return int
+   *   An integer, as described in the class constants.
+   */
+  public function reassignDistrict(NodeInterface $node, bool $save = TRUE): int {
+    // Validate the bundle and field.
+    $bundle = $node->getType();
+    $address = $node->get('field_school_address');
+    if (!($bundle == 'school' && ($address instanceof FieldItemListInterface))) {
+      return static::ASSIGN_DISTRICT_INVALID_NODE;
+    }
+
+    // Get the school's address and call SAGE.
+    /** @var \Drupal\address\Plugin\Field\FieldType\AddressItem $address */
+    try {
+      $address = $address->get(0);
+    }
+    catch (\Throwable) {
+      return static::ASSIGN_DISTRICT_INVALID_ADDRESS;
+    }
+    $district = $address ? $this->sageApi->getDistrictFromAddress($address) : NULL;
+
+    // Reconcile and report.
+    if ($district instanceof Term) {
+      try {
+        $node->set('field_district', $district);
+        if ($save) {
+          $node->save();
+        }
+        return static::ASSIGN_DISTRICT_SUCCESS;
+      }
+      catch (\Throwable) {
+        return static::ASSIGN_DISTRICT_SAVE_FAILED;
+      }
+    }
+    else {
+      return static::ASSIGN_DISTRICT_NO_DISTRICT;
+    }
   }
 
 }

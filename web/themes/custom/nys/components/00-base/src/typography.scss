@@ -1,0 +1,54 @@
+@use 'partials' as *;
+
+// ------------------------------------
+// Base site typography
+// ------------------------------------
+
+:root {
+  // Font families.
+  --nys-ff-serif: 'Adelle Light', serif;
+  --nys-ff-serif-regular: 'Adelle Regular', serif;
+  --nys-ff-serif-semibold: 'Adelle SemiBold', serif;
+  --nys-ff-serif-bold: 'Adelle Bold', serif;
+  --nys-ff-sans: 'Proxima Nova Regular', 'Arial', sans-serif;
+  --nys-ff-sans-bold: 'Proxima Nova SemiBold', 'Arial', sans-serif;
+  --nys-ff-senate-icons: 'senate_icons';
+
+  // Font weights.
+  --nys-fw-light: 200;
+  --nys-fw-normal: 400;
+  --nys-fw-bold: 700;
+}
+
+$type-scale: (
+  heading: (
+    dashboard: (
+      sm: (32, 40),
+      md: (32, 40),
+      lg: (32, 40),
+    ),
+    action-list: (
+      sm: (22, 28),
+      md: (22, 28),
+      lg: (22, 28),
+    ),
+  ),
+  body: (
+    breadcrumbs: (
+      sm: (14, 18),
+      md: (14, 18),
+      lg: (14, 18),
+    ),
+    small: (
+      sm: (16, 24),
+      md: (16, 24),
+      lg: (16, 24),
+    ),
+    button: (
+      sm: (12, 18),
+      md: (12, 18),
+      lg: (12, 18),
+    )
+  )
+);
+@include type-scale-custom-props($type-scale);

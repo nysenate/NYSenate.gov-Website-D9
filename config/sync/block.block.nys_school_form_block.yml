@@ -11,12 +11,12 @@ dependencies:
 id: nys_school_form_block
 theme: nys
 region: content
-weight: -7
+weight: 19
 provider: null
 plugin: formblock_node
 settings:
   id: formblock_node
-  label: 'Content form'
+  label: 'School Submission form'
   label_display: '0'
   provider: formblock
   type: student_submission_container
@@ -26,7 +26,7 @@ visibility:
   request_path:
     id: request_path
     negate: false
-    pages: "/earthday\r\n/questionnaires/what-are-you-thankful"
+    pages: "/earthday\r\n/questionnaires/what-are-you-thankful\r\n/pinwheels"
   'entity_bundle:node':
     id: 'entity_bundle:node'
     negate: false

@@ -157,6 +157,7 @@ function nys_school_forms_inline_entity_form_entity_form_alter(&$form, FormState
     match (_nys_school_forms_get_form_type()) {
       'thanksgiving' => $form['field_submission_type']['widget']['#required'] = TRUE,
       'earth_day' => $form['field_submission_type']['#access'] = FALSE,
+      'peace' => $form['field_submission_type']['#access'] = FALSE,
       default => NULL,
     };
   }
@@ -344,6 +345,7 @@ function _nys_school_forms_ss_container_submit_handler(array &$form, FormStateIn
   $redirect_uri = match ($form_type) {
     'thanksgiving' => 'internal:/questionnaires/what-are-you-thankful/received',
     'earth_day' => 'internal:/earthday/received',
+    'peace' => 'internal:/pinwheels/received',
     default => 'internal:/',
   };
   $redirect_url = Url::fromUri($redirect_uri);

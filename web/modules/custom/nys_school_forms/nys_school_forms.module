@@ -345,7 +345,7 @@ function _nys_school_forms_ss_container_submit_handler(array &$form, FormStateIn
   $redirect_uri = match ($form_type) {
     'thanksgiving' => 'internal:/questionnaires/what-are-you-thankful/received',
     'earth_day' => 'internal:/earthday/received',
-    'peace' => 'internal:/peace/received',
+    'peace' => 'internal:/pinwheels/received',
     default => 'internal:/',
   };
   $redirect_url = Url::fromUri($redirect_uri);

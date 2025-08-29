@@ -35,9 +35,9 @@
 
 {% if issue %}
   <div class="c-block--issue content__item">
-    <h4 class="c-issue-block--title">
+    <h3 class="c-issue-block--title">
     <a href="{{ issue.issue_link.url }}">{{ issue.issue_link.text }}</a>
-    </h4>
+    </h3>
     <div class="c-block--btn">
     {% if issue.flag_follow_issue %}
       {{ issue.flag_follow_issue }}

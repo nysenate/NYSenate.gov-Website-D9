@@ -24,7 +24,7 @@
             <ul class="c-nav--social u-tablet-plus">
               {% for social in socials %}
                 <li class="{% if loop.first %}first {% endif %}leaf">
-                  <a href="{{ social.url }}" target="_blank">{{ icons.get(social.icon) }}</a>
+                  <a href="{{ social.url }}" target="_blank" aria-label="Go to {{ social.icon }}">{{ icons.get(social.icon) }}</a>
                 </li>
               {% endfor %}
             </ul>

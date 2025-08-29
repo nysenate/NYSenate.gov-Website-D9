@@ -32,6 +32,9 @@
       font-size: 21px;
       line-height: 12px;
     }
+    &:hover {
+      text-decoration: underline;
+    }
   }
   .c-meeting-detail--streaming {
     margin-top: 36px;
@@ -75,6 +78,9 @@
 
   a {
     color: $grey08;
+    &:hover {
+      text-decoration: underline;
+    }
   }
 }
 
@@ -125,7 +131,6 @@
     clear: left;
     color: $grey10;
     text-decoration: none;
-
     span {
       margin-right: 0;
       font-size: 18px;
@@ -306,16 +311,23 @@
       @extend .lgt-text;
       font-family: $font-sans-bold;
       font-size: 20px;
+      &:hover {
+        text-decoration: underline;
+      }
     }
 
     .c-senator {
-      color: $yellow01;
+      color: $orange-text;
       font-size: 18px;
       font-family: $font-sans-bold;
       text-transform: uppercase;
 
       a {
-        color: $yellow01;
+        color: $orange-text;
+        &:hover {
+          text-decoration: underline;
+          color: $gen_link_hover;
+        }
       }
     }
 
@@ -405,6 +417,9 @@
     margin: 0 0 10px 0;
     color: $grey04;
     font-family: $font-sans;
+    &:hover {
+      text-decoration: underline;
+    }
   }
 }
 
@@ -633,7 +648,9 @@
       }
 
     .c-event-location {
-
+      a:hover {
+        text-decoration: underline;
+      }
       .icon-before__circle-pin:before {
         vertical-align: top;
       }

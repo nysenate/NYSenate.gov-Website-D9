@@ -41,7 +41,7 @@
 		<div class="c-listing--related-issues">{{ fields.field_issues.content }}</div>
   </div>
   <div class="l-panel-col l-panel-col--ctr">
-      <h4 class="c-press-release--descript"><a href="{{ fields.view_node_1.content|render|striptags|trim }}">{{ fields.field_ol_name.content }}</a></h4>
+      <h4 class="c-press-release--descript">{{ fields.field_ol_name.content }}</h4>
     {% if fields.field_ol_sponsor.content %}
       {{ fields.field_ol_sponsor.content }}
     {% else %}

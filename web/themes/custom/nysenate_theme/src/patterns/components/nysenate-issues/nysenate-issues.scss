@@ -38,12 +38,15 @@
 	text-transform: uppercase;
 
 	a {
-		color: $orange01;
+		color: $orange-text;
 		@extend .icon-after__right;
 
 		&::after {
 			margin-top: -3px;
 			font-size: 18px;
+		}
+		&:hover {
+			color: $gen_link_hover;
 		}
 	}
 }
@@ -76,12 +79,13 @@
 			height: 100%;
 			width: 100%;
 			padding: 20px 20px 35px 20px;
-			color: $color-white;
-			background: $yellow01;
+			color: $background-text;
+			background: $background-yellow;
 			transition: background-color 0.2s ease;
 
 			&:hover {
-				background: $yellow02;
+				background: $background-hover;
+				color: #fff;
 			}
 		}
 	}
@@ -128,6 +132,7 @@
 		.flag-action {
 			background-color: $yellow02;
 			@extend .icon-before__plus;
+			color: #1C1C1C;
 
 			&:hover {
 				background-color: $yellow03;

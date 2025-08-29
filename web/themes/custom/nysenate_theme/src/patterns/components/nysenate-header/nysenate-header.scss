@@ -270,6 +270,9 @@ body {
     font-family: $font-sans-bold;
     font-size: 12px;
     margin: 0;
+    &:hover {
+      text-decoration: underline;
+    }
   }
 
   .nys-senator--name {
@@ -606,6 +609,9 @@ body {
         padding: 0;
         text-align: center;
         line-height: 14px;
+        &:hover {
+          text-decoration: underline;
+        }
       }
 
       &.leaf--active-trail {
@@ -1223,6 +1229,10 @@ a:hover.c-header--btn.c-header--btn__taking_action {
         padding: 0 40px;
         font-size: 16px;
         line-height: 100px;
+        &:hover {
+          color: $yellow03;
+          text-decoration: underline;
+        }
 
         &::before {
           height: 100%;
@@ -1249,11 +1259,15 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     position: absolute;
     right: 9%;
     bottom: 35px;
-    color: $orange01;
+    color: $orange-text;
     text-transform: uppercase;
     font-size: 14px;
     letter-spacing: 0.1em;
     z-index: 1;
+    &:hover {
+      text-decoration: underline;
+      color: $gen_link_hover;
+    }
   }
 
   .c-site-search {

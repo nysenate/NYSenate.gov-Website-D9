@@ -95,6 +95,7 @@
 
     &:hover {
       @extend .lgt-bg;
+      color: $color-white;
     }
 
     &.selected {
@@ -245,7 +246,7 @@
     width: 49.5%;
     height: 45px;
     padding: 0;
-    color: $grey05;
+    color: $color-white;
     text-align: center;
     text-transform: uppercase;
     font-size: 12px;
@@ -265,6 +266,9 @@
       padding-right: 3px;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
+      &:hover {
+        color: #fff;
+      }
     }
 
     &.nys-subscribe-button {

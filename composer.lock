@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "608ce37ce0453ba785dbd03e61e4910b",
+    "content-hash": "b2bce14702cf7712f2f0d6efd2a2ab02",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -704,6 +704,85 @@
                 }
             ],
             "time": "2021-09-13T08:19:44+00:00"
+        },
+        {
+            "name": "composer/pcre",
+            "version": "3.3.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/composer/pcre.git",
+                "reference": "b2bed4734f0cc156ee1fe9c0da2550420d99a21e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/composer/pcre/zipball/b2bed4734f0cc156ee1fe9c0da2550420d99a21e",
+                "reference": "b2bed4734f0cc156ee1fe9c0da2550420d99a21e",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.4 || ^8.0"
+            },
+            "conflict": {
+                "phpstan/phpstan": "<1.11.10"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^1.12 || ^2",
+                "phpstan/phpstan-strict-rules": "^1 || ^2",
+                "phpunit/phpunit": "^8 || ^9"
+            },
+            "type": "library",
+            "extra": {
+                "phpstan": {
+                    "includes": [
+                        "extension.neon"
+                    ]
+                },
+                "branch-alias": {
+                    "dev-main": "3.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Composer\\Pcre\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jordi Boggiano",
+                    "email": "j.boggiano@seld.be",
+                    "homepage": "http://seld.be"
+                }
+            ],
+            "description": "PCRE wrapping library that offers type-safe preg_* replacements.",
+            "keywords": [
+                "PCRE",
+                "preg",
+                "regex",
+                "regular expression"
+            ],
+            "support": {
+                "issues": "https://github.com/composer/pcre/issues",
+                "source": "https://github.com/composer/pcre/tree/3.3.2"
+            },
+            "funding": [
+                {
+                    "url": "https://packagist.com",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/composer",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/composer/composer",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2024-11-12T16:29:46+00:00"
         },
         {
             "name": "composer/semver",
@@ -3026,6 +3105,112 @@
             }
         },
         {
+            "name": "drupal/charts_apexcharts",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/charts_apexcharts.git",
+                "reference": "1.0.2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/charts_apexcharts-1.0.2.zip",
+                "reference": "1.0.2",
+                "shasum": "7d21f6f611ff30a4547113efa55cfab859828073"
+            },
+            "require": {
+                "drupal/charts": "^5.1.6",
+                "drupal/core": "^10.3 || ^11",
+                "npm-asset/apexcharts": "^4",
+                "oomphinc/composer-installers-extender": "^2"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "1.0.2",
+                    "datestamp": "1755696665",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                },
+                "installer-types": [
+                    "npm-asset"
+                ],
+                "installer-paths": {
+                    "web/libraries/apexcharts": [
+                        "type:drupal-library",
+                        "vendor:npm-asset",
+                        "vendor:bower-asset"
+                    ]
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "andileco",
+                    "homepage": "https://www.drupal.org/user/2054544"
+                }
+            ],
+            "description": "Charts module integration with ApexCharts.",
+            "homepage": "https://drupal.org/project/charts_apexcharts",
+            "support": {
+                "source": "https://git.drupalcode.org/project/charts_apexcharts",
+                "issues": "https://www.drupal.org/project/issues/charts_apexcharts"
+            }
+        },
+        {
+            "name": "drupal/cl_editorial",
+            "version": "3.0.0-rc2",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/cl_editorial.git",
+                "reference": "3.0.0-rc2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/cl_editorial-3.0.0-rc2.zip",
+                "reference": "3.0.0-rc2",
+                "shasum": "a16bb93b160dfd4881e4f2e05006e23828575fc3"
+            },
+            "require": {
+                "drupal/core": "^10.3 || ^11"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "3.0.0-rc2",
+                    "datestamp": "1732559261",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "RC releases are not covered by Drupal security advisories."
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "e0ipso",
+                    "homepage": "https://www.drupal.org/user/550110"
+                },
+                {
+                    "name": "pcambra",
+                    "homepage": "https://www.drupal.org/user/122101"
+                }
+            ],
+            "description": "Provides shared features to aid low-code approaches using Single Directory Components.",
+            "homepage": "https://www.drupal.org/project/cl_editorial",
+            "support": {
+                "source": "https://git.drupalcode.org/project/cl_editorial"
+            }
+        },
+        {
             "name": "drupal/clamav",
             "version": "2.1.0",
             "source": {
@@ -5335,6 +5520,55 @@
             "support": {
                 "source": "https://git.drupalcode.org/project/field_group",
                 "issues": "https://www.drupal.org/project/issues/field_group"
+            }
+        },
+        {
+            "name": "drupal/field_label_override",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/field_label_override.git",
+                "reference": "1.1.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/field_label_override-1.1.0.zip",
+                "reference": "1.1.0",
+                "shasum": "8bfb4e7ae68c0aa0c94d54b69005d60269b143d4"
+            },
+            "require": {
+                "drupal/core": "^10 || ^11"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "1.1.0",
+                    "datestamp": "1713318649",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Mauricio Silveira (maursilveira)",
+                    "homepage": "https://www.drupal.org/u/maursilveira",
+                    "role": "Maintainer"
+                }
+            ],
+            "description": "Allows setting custom labels to entity fields per view mode",
+            "homepage": "https://www.drupal.org/project/field_label_override",
+            "keywords": [
+                "Drupal"
+            ],
+            "support": {
+                "source": "https://git.drupalcode.org/project/field_label_override",
+                "issues": "https://www.drupal.org/project/issues/field_label_override"
             }
         },
         {
@@ -10485,6 +10719,94 @@
             }
         },
         {
+            "name": "drupal/sdc_display",
+            "version": "dev-2.x",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/sdc_display.git",
+                "reference": "47b102afd8a5c398247207664fdc5f2cb822fbda"
+            },
+            "require": {
+                "drupal/cl_editorial": "^2.0@rc || ^3.0@rc",
+                "drupal/core": "^10.3 || ^11",
+                "drupal/sdc_tags": "*",
+                "e0ipso/schema-forms": "^v2.5.1",
+                "php": ">=8.1"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "branch-alias": {
+                    "dev-2.x": "2.x-dev"
+                },
+                "drupal": {
+                    "version": "2.0.0-beta1+1-dev",
+                    "datestamp": "1738841896",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Dev releases are not covered by Drupal security advisories."
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Mateu Aguiló Bosch",
+                    "homepage": "https://www.drupal.org/user/550110",
+                    "email": "mateu@mateuaguilo.com"
+                },
+                {
+                    "name": "pcambra",
+                    "homepage": "https://www.drupal.org/user/122101"
+                }
+            ],
+            "description": "Integrates fields with single directory components.",
+            "homepage": "https://www.drupal.org/project/sdc_display",
+            "support": {
+                "source": "https://git.drupalcode.org/project/sdc_display"
+            }
+        },
+        {
+            "name": "drupal/sdc_tags",
+            "version": "3.0.0-rc2",
+            "require": {
+                "drupal/cl_editorial": "^3",
+                "drupal/core": "^10.3 || ^11"
+            },
+            "type": "metapackage",
+            "extra": {
+                "drupal": {
+                    "version": "3.0.0-rc2",
+                    "datestamp": "1732559261",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "RC releases are not covered by Drupal security advisories."
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "e0ipso",
+                    "homepage": "https://www.drupal.org/user/550110"
+                },
+                {
+                    "name": "pcambra",
+                    "homepage": "https://www.drupal.org/user/122101"
+                }
+            ],
+            "description": "Allows tagging components so other modules can understand components better.",
+            "homepage": "https://www.drupal.org/project/cl_editorial",
+            "support": {
+                "source": "https://git.drupalcode.org/project/cl_editorial"
+            }
+        },
+        {
             "name": "drupal/search_api",
             "version": "1.38.0",
             "source": {
@@ -12589,6 +12911,53 @@
             }
         },
         {
+            "name": "drupal/vbo_export",
+            "version": "4.1.5",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/vbo_export.git",
+                "reference": "4.1.5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/vbo_export-4.1.5.zip",
+                "reference": "4.1.5",
+                "shasum": "ac0eaf2798610af22ebcc39ab39833fd340d04b5"
+            },
+            "require": {
+                "dompdf/dompdf": "^1.0 | ^2.0",
+                "drupal/core": "^9.3 || ^10 || ^11",
+                "drupal/views_bulk_operations": "^3.5 || ^4.1 || ^4.2 || ^4.3",
+                "phpoffice/phpspreadsheet": "^2.2"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "4.1.5",
+                    "datestamp": "1732190105",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "graber",
+                    "homepage": "https://www.drupal.org/user/1599440"
+                }
+            ],
+            "description": "Views bulk export operations.",
+            "homepage": "https://www.drupal.org/project/vbo_export",
+            "support": {
+                "source": "https://git.drupalcode.org/project/vbo_export"
+            }
+        },
+        {
             "name": "drupal/video_embed_field",
             "version": "2.5.0",
             "source": {
@@ -14120,6 +14489,111 @@
             "time": "2024-08-02T11:57:29+00:00"
         },
         {
+            "name": "e0ipso/schema-forms",
+            "version": "v2.5.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/e0ipso/schema-forms-php.git",
+                "reference": "0e9936bbdb02174c3301455fca52891cf1ef32ce"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/e0ipso/schema-forms-php/zipball/0e9936bbdb02174c3301455fca52891cf1ef32ce",
+                "reference": "0e9936bbdb02174c3301455fca52891cf1ef32ce",
+                "shasum": ""
+            },
+            "require": {
+                "e0ipso/shaper": "^1.2",
+                "ext-json": "*",
+                "justinrainbow/json-schema": "^5.2",
+                "php": ">=7.4",
+                "symfony/polyfill-php81": "^1.26"
+            },
+            "require-dev": {
+                "drupal/coder": "^8.3",
+                "drupal/core-dev": "^9.4",
+                "drupal/core-recommended": "^9.4",
+                "enlightn/security-checker": "^1.7",
+                "ergebnis/composer-normalize": "^2.28",
+                "nikic/php-parser": "^4.10",
+                "php-parallel-lint/php-parallel-lint": "^1.3",
+                "phpro/grumphp-shim": "^1.13",
+                "phpunit/phpunit": "^9.5",
+                "povils/phpmnd": "^2.4",
+                "sebastian/phpcpd": "^6.0",
+                "squizlabs/php_codesniffer": "^3.6"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "SchemaForms\\": "src",
+                    "SchemaForms\\Tests\\": "tests/src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Mateu Aguiló Bosch",
+                    "email": "mateu@mateuaguilo.com"
+                }
+            ],
+            "description": "Creates form definitions from JSON Schema property definitions and display configuration.",
+            "support": {
+                "issues": "https://github.com/e0ipso/schema-forms-php/issues",
+                "source": "https://github.com/e0ipso/schema-forms-php/tree/v2.5.1"
+            },
+            "time": "2022-09-16T15:32:18+00:00"
+        },
+        {
+            "name": "e0ipso/shaper",
+            "version": "1.2.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/e0ipso/shaper.git",
+                "reference": "1d9e726c98d3168d30c1180cd836d13267744fb7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/e0ipso/shaper/zipball/1d9e726c98d3168d30c1180cd836d13267744fb7",
+                "reference": "1d9e726c98d3168d30c1180cd836d13267744fb7",
+                "shasum": ""
+            },
+            "require": {
+                "justinrainbow/json-schema": "^5.2 || ^6.3"
+            },
+            "require-dev": {
+                "php-coveralls/php-coveralls": "^2.4",
+                "phpunit/phpcov": "^8.2",
+                "phpunit/phpunit": "^9.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Shaper\\": "src",
+                    "Shaper\\Tests\\": "tests/src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Mateu Aguiló Bosch",
+                    "email": "mateu.aguilo.bosch@gmail.com"
+                }
+            ],
+            "description": "Lightweight library to handle in and out transformations in PHP.",
+            "support": {
+                "issues": "https://github.com/e0ipso/shaper/issues",
+                "source": "https://github.com/e0ipso/shaper/tree/1.2.7"
+            },
+            "time": "2025-04-04T08:14:01+00:00"
+        },
+        {
             "name": "egulias/email-validator",
             "version": "4.0.4",
             "source": {
@@ -15241,6 +15715,71 @@
             "time": "2024-08-20T02:43:29+00:00"
         },
         {
+            "name": "justinrainbow/json-schema",
+            "version": "5.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jsonrainbow/json-schema.git",
+                "reference": "feb2ca6dd1cebdaf1ed60a4c8de2e53ce11c4fd8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jsonrainbow/json-schema/zipball/feb2ca6dd1cebdaf1ed60a4c8de2e53ce11c4fd8",
+                "reference": "feb2ca6dd1cebdaf1ed60a4c8de2e53ce11c4fd8",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "~2.2.20||~2.15.1",
+                "json-schema/json-schema-test-suite": "1.2.0",
+                "phpunit/phpunit": "^4.8.35"
+            },
+            "bin": [
+                "bin/validate-json"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "JsonSchema\\": "src/JsonSchema/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Bruno Prieto Reis",
+                    "email": "bruno.p.reis@gmail.com"
+                },
+                {
+                    "name": "Justin Rainbow",
+                    "email": "justin.rainbow@gmail.com"
+                },
+                {
+                    "name": "Igor Wiedler",
+                    "email": "igor@wiedler.ch"
+                },
+                {
+                    "name": "Robert Schönthal",
+                    "email": "seroscho@googlemail.com"
+                }
+            ],
+            "description": "A library to validate a json schema.",
+            "homepage": "https://github.com/justinrainbow/json-schema",
+            "keywords": [
+                "json",
+                "schema"
+            ],
+            "support": {
+                "issues": "https://github.com/jsonrainbow/json-schema/issues",
+                "source": "https://github.com/jsonrainbow/json-schema/tree/5.3.0"
+            },
+            "time": "2024-07-06T21:00:26+00:00"
+        },
+        {
             "name": "kint-php/kint",
             "version": "5.1.1",
             "source": {
@@ -15612,6 +16151,113 @@
             "time": "2025-01-27T12:07:53+00:00"
         },
         {
+            "name": "markbaker/complex",
+            "version": "3.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/MarkBaker/PHPComplex.git",
+                "reference": "95c56caa1cf5c766ad6d65b6344b807c1e8405b9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/MarkBaker/PHPComplex/zipball/95c56caa1cf5c766ad6d65b6344b807c1e8405b9",
+                "reference": "95c56caa1cf5c766ad6d65b6344b807c1e8405b9",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.2 || ^8.0"
+            },
+            "require-dev": {
+                "dealerdirect/phpcodesniffer-composer-installer": "dev-master",
+                "phpcompatibility/php-compatibility": "^9.3",
+                "phpunit/phpunit": "^7.0 || ^8.0 || ^9.0",
+                "squizlabs/php_codesniffer": "^3.7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Complex\\": "classes/src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mark Baker",
+                    "email": "mark@lange.demon.co.uk"
+                }
+            ],
+            "description": "PHP Class for working with complex numbers",
+            "homepage": "https://github.com/MarkBaker/PHPComplex",
+            "keywords": [
+                "complex",
+                "mathematics"
+            ],
+            "support": {
+                "issues": "https://github.com/MarkBaker/PHPComplex/issues",
+                "source": "https://github.com/MarkBaker/PHPComplex/tree/3.0.2"
+            },
+            "time": "2022-12-06T16:21:08+00:00"
+        },
+        {
+            "name": "markbaker/matrix",
+            "version": "3.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/MarkBaker/PHPMatrix.git",
+                "reference": "728434227fe21be27ff6d86621a1b13107a2562c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/MarkBaker/PHPMatrix/zipball/728434227fe21be27ff6d86621a1b13107a2562c",
+                "reference": "728434227fe21be27ff6d86621a1b13107a2562c",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1 || ^8.0"
+            },
+            "require-dev": {
+                "dealerdirect/phpcodesniffer-composer-installer": "dev-master",
+                "phpcompatibility/php-compatibility": "^9.3",
+                "phpdocumentor/phpdocumentor": "2.*",
+                "phploc/phploc": "^4.0",
+                "phpmd/phpmd": "2.*",
+                "phpunit/phpunit": "^7.0 || ^8.0 || ^9.0",
+                "sebastian/phpcpd": "^4.0",
+                "squizlabs/php_codesniffer": "^3.7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Matrix\\": "classes/src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mark Baker",
+                    "email": "mark@demon-angel.eu"
+                }
+            ],
+            "description": "PHP Class for working with matrices",
+            "homepage": "https://github.com/MarkBaker/PHPMatrix",
+            "keywords": [
+                "mathematics",
+                "matrix",
+                "vector"
+            ],
+            "support": {
+                "issues": "https://github.com/MarkBaker/PHPMatrix/issues",
+                "source": "https://github.com/MarkBaker/PHPMatrix/tree/3.0.1"
+            },
+            "time": "2022-12-02T22:17:43+00:00"
+        },
+        {
             "name": "masterminds/html5",
             "version": "2.9.0",
             "source": {
@@ -15931,6 +16577,26 @@
             "time": "2025-07-27T20:03:57+00:00"
         },
         {
+            "name": "npm-asset/apexcharts",
+            "version": "4.7.0",
+            "dist": {
+                "type": "tar",
+                "url": "https://registry.npmjs.org/apexcharts/-/apexcharts-4.7.0.tgz"
+            },
+            "require": {
+                "npm-asset/svgdotjs--svg.draggable.js": ">=3.0.4,<4.0.0",
+                "npm-asset/svgdotjs--svg.filter.js": ">=3.0.8,<4.0.0",
+                "npm-asset/svgdotjs--svg.js": ">=3.2.4,<4.0.0",
+                "npm-asset/svgdotjs--svg.resize.js": ">=2.0.2,<3.0.0",
+                "npm-asset/svgdotjs--svg.select.js": ">=4.0.1,<5.0.0",
+                "npm-asset/yr--monotone-cubic-spline": ">=1.0.3,<2.0.0"
+            },
+            "type": "npm-asset",
+            "license": [
+                "MIT"
+            ]
+        },
+        {
             "name": "npm-asset/datatables.net",
             "version": "2.1.8",
             "dist": {
@@ -15973,6 +16639,81 @@
             "dist": {
                 "type": "tar",
                 "url": "https://registry.npmjs.org/jquery/-/jquery-3.7.1.tgz"
+            },
+            "type": "npm-asset",
+            "license": [
+                "MIT"
+            ]
+        },
+        {
+            "name": "npm-asset/svgdotjs--svg.draggable.js",
+            "version": "3.0.4",
+            "dist": {
+                "type": "tar",
+                "url": "https://registry.npmjs.org/@svgdotjs/svg.draggable.js/-/svg.draggable.js-3.0.4.tgz"
+            },
+            "type": "npm-asset",
+            "license": [
+                "MIT"
+            ]
+        },
+        {
+            "name": "npm-asset/svgdotjs--svg.filter.js",
+            "version": "3.0.8",
+            "dist": {
+                "type": "tar",
+                "url": "https://registry.npmjs.org/@svgdotjs/svg.filter.js/-/svg.filter.js-3.0.8.tgz"
+            },
+            "require": {
+                "npm-asset/svgdotjs--svg.js": ">=3.1.1,<4.0.0"
+            },
+            "type": "npm-asset",
+            "license": [
+                "MIT"
+            ]
+        },
+        {
+            "name": "npm-asset/svgdotjs--svg.js",
+            "version": "3.2.4",
+            "dist": {
+                "type": "tar",
+                "url": "https://registry.npmjs.org/@svgdotjs/svg.js/-/svg.js-3.2.4.tgz"
+            },
+            "type": "npm-asset",
+            "license": [
+                "MIT"
+            ]
+        },
+        {
+            "name": "npm-asset/svgdotjs--svg.resize.js",
+            "version": "2.0.2",
+            "dist": {
+                "type": "tar",
+                "url": "https://registry.npmjs.org/@svgdotjs/svg.resize.js/-/svg.resize.js-2.0.2.tgz"
+            },
+            "type": "npm-asset",
+            "license": [
+                "MIT"
+            ]
+        },
+        {
+            "name": "npm-asset/svgdotjs--svg.select.js",
+            "version": "4.0.1",
+            "dist": {
+                "type": "tar",
+                "url": "https://registry.npmjs.org/@svgdotjs/svg.select.js/-/svg.select.js-4.0.1.tgz"
+            },
+            "type": "npm-asset",
+            "license": [
+                "MIT"
+            ]
+        },
+        {
+            "name": "npm-asset/yr--monotone-cubic-spline",
+            "version": "1.0.3",
+            "dist": {
+                "type": "tar",
+                "url": "https://registry.npmjs.org/@yr/monotone-cubic-spline/-/monotone-cubic-spline-1.0.3.tgz"
             },
             "type": "npm-asset",
             "license": [
@@ -16936,6 +17677,111 @@
             "time": "2024-03-15T13:55:21+00:00"
         },
         {
+            "name": "phpoffice/phpspreadsheet",
+            "version": "2.3.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PHPOffice/PhpSpreadsheet.git",
+                "reference": "7a700683743bf1c4a21837c84b266916f1aa7d25"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PHPOffice/PhpSpreadsheet/zipball/7a700683743bf1c4a21837c84b266916f1aa7d25",
+                "reference": "7a700683743bf1c4a21837c84b266916f1aa7d25",
+                "shasum": ""
+            },
+            "require": {
+                "composer/pcre": "^1 || ^2 || ^3",
+                "ext-ctype": "*",
+                "ext-dom": "*",
+                "ext-fileinfo": "*",
+                "ext-gd": "*",
+                "ext-iconv": "*",
+                "ext-libxml": "*",
+                "ext-mbstring": "*",
+                "ext-simplexml": "*",
+                "ext-xml": "*",
+                "ext-xmlreader": "*",
+                "ext-xmlwriter": "*",
+                "ext-zip": "*",
+                "ext-zlib": "*",
+                "maennchen/zipstream-php": "^2.1 || ^3.0",
+                "markbaker/complex": "^3.0",
+                "markbaker/matrix": "^3.0",
+                "php": "^8.1",
+                "psr/http-client": "^1.0",
+                "psr/http-factory": "^1.0",
+                "psr/simple-cache": "^1.0 || ^2.0 || ^3.0"
+            },
+            "require-dev": {
+                "dealerdirect/phpcodesniffer-composer-installer": "dev-main",
+                "dompdf/dompdf": "^2.0 || ^3.0",
+                "friendsofphp/php-cs-fixer": "^3.2",
+                "mitoteam/jpgraph": "^10.3",
+                "mpdf/mpdf": "^8.1.1",
+                "phpcompatibility/php-compatibility": "^9.3",
+                "phpstan/phpstan": "^1.1",
+                "phpstan/phpstan-phpunit": "^1.0",
+                "phpunit/phpunit": "^9.6 || ^10.5",
+                "squizlabs/php_codesniffer": "^3.7",
+                "tecnickcom/tcpdf": "^6.5"
+            },
+            "suggest": {
+                "dompdf/dompdf": "Option for rendering PDF with PDF Writer",
+                "ext-intl": "PHP Internationalization Functions",
+                "mitoteam/jpgraph": "Option for rendering charts, or including charts with PDF or HTML Writers",
+                "mpdf/mpdf": "Option for rendering PDF with PDF Writer",
+                "tecnickcom/tcpdf": "Option for rendering PDF with PDF Writer"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PhpOffice\\PhpSpreadsheet\\": "src/PhpSpreadsheet"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Maarten Balliauw",
+                    "homepage": "https://blog.maartenballiauw.be"
+                },
+                {
+                    "name": "Mark Baker",
+                    "homepage": "https://markbakeruk.net"
+                },
+                {
+                    "name": "Franck Lefevre",
+                    "homepage": "https://rootslabs.net"
+                },
+                {
+                    "name": "Erik Tilt"
+                },
+                {
+                    "name": "Adrien Crivelli"
+                }
+            ],
+            "description": "PHPSpreadsheet - Read, Create and Write Spreadsheet documents in PHP - Spreadsheet engine",
+            "homepage": "https://github.com/PHPOffice/PhpSpreadsheet",
+            "keywords": [
+                "OpenXML",
+                "excel",
+                "gnumeric",
+                "ods",
+                "php",
+                "spreadsheet",
+                "xls",
+                "xlsx"
+            ],
+            "support": {
+                "issues": "https://github.com/PHPOffice/PhpSpreadsheet/issues",
+                "source": "https://github.com/PHPOffice/PhpSpreadsheet/tree/2.3.8"
+            },
+            "time": "2025-02-08T03:01:45+00:00"
+        },
+        {
             "name": "phpowermove/docblock",
             "version": "v4.0",
             "source": {
@@ -17491,6 +18337,57 @@
                 "source": "https://github.com/php-fig/log/tree/3.0.2"
             },
             "time": "2024-09-11T13:17:53+00:00"
+        },
+        {
+            "name": "psr/simple-cache",
+            "version": "3.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/simple-cache.git",
+                "reference": "764e0b3939f5ca87cb904f570ef9be2d78a07865"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/simple-cache/zipball/764e0b3939f5ca87cb904f570ef9be2d78a07865",
+                "reference": "764e0b3939f5ca87cb904f570ef9be2d78a07865",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.0.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\SimpleCache\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "https://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interfaces for simple caching",
+            "keywords": [
+                "cache",
+                "caching",
+                "psr",
+                "psr-16",
+                "simple-cache"
+            ],
+            "support": {
+                "source": "https://github.com/php-fig/simple-cache/tree/3.0.0"
+            },
+            "time": "2021-10-29T13:26:27+00:00"
         },
         {
             "name": "psy/psysh",
@@ -21594,85 +22491,6 @@
             "time": "2021-04-07T13:37:33+00:00"
         },
         {
-            "name": "composer/pcre",
-            "version": "3.3.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/composer/pcre.git",
-                "reference": "b2bed4734f0cc156ee1fe9c0da2550420d99a21e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/composer/pcre/zipball/b2bed4734f0cc156ee1fe9c0da2550420d99a21e",
-                "reference": "b2bed4734f0cc156ee1fe9c0da2550420d99a21e",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.4 || ^8.0"
-            },
-            "conflict": {
-                "phpstan/phpstan": "<1.11.10"
-            },
-            "require-dev": {
-                "phpstan/phpstan": "^1.12 || ^2",
-                "phpstan/phpstan-strict-rules": "^1 || ^2",
-                "phpunit/phpunit": "^8 || ^9"
-            },
-            "type": "library",
-            "extra": {
-                "phpstan": {
-                    "includes": [
-                        "extension.neon"
-                    ]
-                },
-                "branch-alias": {
-                    "dev-main": "3.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Composer\\Pcre\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jordi Boggiano",
-                    "email": "j.boggiano@seld.be",
-                    "homepage": "http://seld.be"
-                }
-            ],
-            "description": "PCRE wrapping library that offers type-safe preg_* replacements.",
-            "keywords": [
-                "PCRE",
-                "preg",
-                "regex",
-                "regular expression"
-            ],
-            "support": {
-                "issues": "https://github.com/composer/pcre/issues",
-                "source": "https://github.com/composer/pcre/tree/3.3.2"
-            },
-            "funding": [
-                {
-                    "url": "https://packagist.com",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/composer",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/composer/composer",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2024-11-12T16:29:46+00:00"
-        },
-        {
             "name": "composer/spdx-licenses",
             "version": "1.5.9",
             "source": {
@@ -22654,71 +23472,6 @@
                 "source": "https://github.com/protocolbuffers/protobuf-php/tree/v4.31.1"
             },
             "time": "2025-05-28T18:52:35+00:00"
-        },
-        {
-            "name": "justinrainbow/json-schema",
-            "version": "5.3.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/jsonrainbow/json-schema.git",
-                "reference": "feb2ca6dd1cebdaf1ed60a4c8de2e53ce11c4fd8"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/jsonrainbow/json-schema/zipball/feb2ca6dd1cebdaf1ed60a4c8de2e53ce11c4fd8",
-                "reference": "feb2ca6dd1cebdaf1ed60a4c8de2e53ce11c4fd8",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.1"
-            },
-            "require-dev": {
-                "friendsofphp/php-cs-fixer": "~2.2.20||~2.15.1",
-                "json-schema/json-schema-test-suite": "1.2.0",
-                "phpunit/phpunit": "^4.8.35"
-            },
-            "bin": [
-                "bin/validate-json"
-            ],
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "JsonSchema\\": "src/JsonSchema/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Bruno Prieto Reis",
-                    "email": "bruno.p.reis@gmail.com"
-                },
-                {
-                    "name": "Justin Rainbow",
-                    "email": "justin.rainbow@gmail.com"
-                },
-                {
-                    "name": "Igor Wiedler",
-                    "email": "igor@wiedler.ch"
-                },
-                {
-                    "name": "Robert Schönthal",
-                    "email": "seroscho@googlemail.com"
-                }
-            ],
-            "description": "A library to validate a json schema.",
-            "homepage": "https://github.com/justinrainbow/json-schema",
-            "keywords": [
-                "json",
-                "schema"
-            ],
-            "support": {
-                "issues": "https://github.com/jsonrainbow/json-schema/issues",
-                "source": "https://github.com/jsonrainbow/json-schema/tree/5.3.0"
-            },
-            "time": "2024-07-06T21:00:26+00:00"
         },
         {
             "name": "lullabot/mink-selenium2-driver",
@@ -26896,6 +27649,7 @@
         "drupal/private_message": 20,
         "drupal/privatemsg": 15,
         "drupal/rabbit_hole": 10,
+        "drupal/sdc_display": 20,
         "drupal/site_verify": 15,
         "drupal/term_merge": 10,
         "drupal/ultimate_cron": 15,

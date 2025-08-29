@@ -1,0 +1,33 @@
+
+{% set classes = ['c-breadcrumbs'] %}
+{% set id = 'section-breadcrumbs'|clean_unique_id %}
+
+<nav
+  {{ attributes.addClass(classes) }}
+  role="navigation"
+  aria-labelledby="{{ id }}"
+>
+  <h2 id="{{ id }}" class="visually-hidden">
+    {{ '@label'|t({ '@label': label|default('Breadcrumbs')}) }}
+  </h2>
+
+  <ol class="c-breadcrumbs__items">
+    {% for item in items %}
+      <li class="c-breadcrumbs__item">
+        {% if item.url %}
+          <a class="c-breadcrumbs__link" href="{{ item.url }}">
+            {{ item.text }}
+          </a>
+        {% else %}
+          <span class="c-breadcrumbs__current">{{ item.text }}</span>
+        {% endif %}
+
+        {% if not loop.last %}
+          <span class="c-breadcrumbs__divider" aria-hidden="true">
+            {{ divider|default('/') }}
+          </span>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ol>
+</nav>

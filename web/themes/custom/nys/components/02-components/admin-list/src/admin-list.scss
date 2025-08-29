@@ -1,0 +1,63 @@
+@use 'partials' as *;
+
+.c-admin-list-container {
+  container: admin-list / inline-size;
+}
+
+.c-admin-list {
+  @include grid(1, 20px);
+}
+
+.c-admin-list__title {
+  font-family: var(--nys-ff-serif);
+  font-size: rem(28px);
+  font-weight: 300;
+  line-height: 1.5;
+  margin: 0;
+
+  @container admin-list (width > 500px) {
+    font-size: rem(32px);
+  }
+}
+
+.c-admin-list__items {
+  @include grid(1, 20px);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.c-admin-list__item {
+  @include grid(1, 8px);
+}
+
+.c-admin-list__action,
+.c-admin-list__description {
+  margin: 0;
+}
+
+.c-admin-list__action {
+  color: var(--nys-color-button-blue);
+  font-size: rem(20px);
+  line-height: 1.27272727;
+
+  @container admin-list (width > 500px) {
+    font-size: rem(22px);
+  }
+}
+
+.c-admin-list__description {
+  font-family: var(--nys-ff-sans);
+  font-size: rem(16px);
+  line-height: 1.5;
+}
+
+.c-admin-list__link {
+  color: currentColor;
+  text-decoration: underline;
+  transition: text-decoration-color .35s ease-in-out;
+
+  &:hover {
+    text-decoration-color: transparent;
+  }
+}

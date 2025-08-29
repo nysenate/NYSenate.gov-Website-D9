@@ -1,0 +1,39 @@
+uuid: 1bfbc245-bfc7-4129-b93b-e9b43dd98bd0
+langcode: en
+status: true
+dependencies:
+  module:
+    - nys_dashboard
+    - system
+  theme:
+    - nys
+id: nys_dashboardactionbar_edit_account
+theme: nys
+region: above_content
+weight: -13
+provider: null
+plugin: dashboard_action_bar
+settings:
+  id: dashboard_action_bar
+  label: 'Dashboard Actionbar - Edit Account'
+  label_display: '0'
+  provider: nys_dashboard
+  heading: 'Edit Account'
+  subheading: 'Edit your account information.'
+  featured_link:
+    text: 'My Dashboard'
+    url: /dashboard
+    icon: gauge
+  featured_link_1:
+    text: 'My Dashboard'
+    url: /dashboard
+    icon: gauge
+  featured_link_2:
+    text: ''
+    url: ''
+    icon: ''
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: /dashboard/edit

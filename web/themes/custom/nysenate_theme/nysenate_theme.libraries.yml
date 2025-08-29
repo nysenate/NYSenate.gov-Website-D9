@@ -548,6 +548,26 @@ nysenate-issues:
     - core/drupalSettings
   js:
     dist/js/nysenate-issues.js: {}
+nysenate-dashboard:
+  css:
+    component:
+      dist/css/nysenate-dashboard.css: {}
+  js:
+    dist/js/nysenate-dashboard.js: {}
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+    - core/once
+nysenate-dashboard-menu:
+  css:
+    component:
+      dist/css/nysenate-dashboard-menu.css: {}
+  js:
+    dist/js/nysenate-dashboard-menu.js: {}
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+    - core/once
 nysenate-legislation:
   css:
     component:

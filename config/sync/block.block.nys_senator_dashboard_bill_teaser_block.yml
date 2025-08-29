@@ -1,0 +1,36 @@
+uuid: 3412daaf-3f7b-4966-841d-c7d9d742ff18
+langcode: en
+status: true
+dependencies:
+  module:
+    - nys_senator_dashboard
+    - system
+    - user
+  theme:
+    - nys
+id: nys_senator_dashboard_bill_teaser_block
+theme: nys
+region: content
+weight: -17
+provider: null
+plugin: nys_senator_dashboard_bill_teaser
+settings:
+  id: nys_senator_dashboard_bill_teaser
+  label: 'All Activity'
+  label_display: visible
+  provider: nys_senator_dashboard
+  context_mapping:
+    node: '@node.node_route_context:node'
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: '/senator-dashboard/constituent-activity/bills/*'
+  user_role:
+    id: user_role
+    negate: false
+    context_mapping:
+      user: '@user.current_user_context:current_user'
+    roles:
+      microsite_content_producer: microsite_content_producer
+      legislative_correspondent: legislative_correspondent

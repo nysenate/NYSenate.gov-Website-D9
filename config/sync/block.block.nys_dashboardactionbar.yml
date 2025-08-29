@@ -1,0 +1,47 @@
+uuid: 52934fdd-ebc6-42c6-8392-270bc5cf5399
+langcode: en
+status: true
+dependencies:
+  module:
+    - nys_dashboard
+    - system
+    - user
+  theme:
+    - nys
+id: nys_dashboardactionbar
+theme: nys
+region: above_content
+weight: -14
+provider: null
+plugin: dashboard_action_bar
+settings:
+  id: dashboard_action_bar
+  label: 'Dashboard Actionbar'
+  label_display: '0'
+  provider: nys_dashboard
+  heading: 'My Dashboard'
+  subheading: 'Browse and filter New York State Senate content that you follow.'
+  featured_link:
+    text: 'Manage Dashboard'
+    url: /dashboard/manage
+    icon: gear-six
+  featured_link_1:
+    text: 'Edit Account'
+    url: /dashboard/edit
+    icon: user-gear
+  featured_link_2:
+    text: 'Manage Dashboard'
+    url: /dashboard/manage
+    icon: gear-six
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: /dashboard
+  user_role:
+    id: user_role
+    negate: false
+    context_mapping:
+      user: '@user.current_user_context:current_user'
+    roles:
+      authenticated: authenticated

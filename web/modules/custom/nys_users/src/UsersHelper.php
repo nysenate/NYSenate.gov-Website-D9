@@ -78,8 +78,8 @@ class UsersHelper {
     $user = static::resolveUser($user);
     $district = $user->field_district->entity ?? NULL;
     return ($district instanceof Term)
-        ? ($district->field_senator->entity ?? NULL)
-        : NULL;
+      ? ($district->field_senator->entity ?? NULL)
+      : NULL;
   }
 
   /**
@@ -104,6 +104,8 @@ class UsersHelper {
   /**
    * Check if a user reference owns a particular role.
    *
+   * Note that user ID 1 will always own all roles.
+   *
    * @param \Drupal\user\Entity\User|int|null $user
    *   Either a User entity or the ID of one.  If NULL, current user is used.
    * @param array|string $check_roles
@@ -115,14 +117,18 @@ class UsersHelper {
    * @see static::NYS_USERS_OWNS_ANY
    */
   public static function hasRoles(mixed $user, array|string $check_roles, int $test = self::NYS_USERS_OWNS_ALL): bool {
-    $user_roles = static::resolveUser($user)->getRoles();
+    $loaded_user = static::resolveUser($user);
+    $is_root = ($loaded_user->id() == 1);
+    $user_roles = $loaded_user->getRoles();
     if (!is_array($check_roles)) {
       $check_roles = [$check_roles];
     }
-    return match ($test) {
-      self::NYS_USERS_OWNS_ALL => (array_intersect($check_roles, $user_roles) === $check_roles),
-            self::NYS_USERS_OWNS_ANY => (bool) (count(array_intersect($check_roles, $user_roles)))
-    };
+    return (
+      match ($test) {
+        self::NYS_USERS_OWNS_ALL => (array_intersect($check_roles, $user_roles) === $check_roles),
+        self::NYS_USERS_OWNS_ANY => (bool) (count(array_intersect($check_roles, $user_roles)))
+      }
+      ) || $is_root;
   }
 
   /**
@@ -131,7 +137,7 @@ class UsersHelper {
    * @param \Drupal\user\Entity\User|int|null $user
    *   Either a User entity or the ID of one.  If NULL, current user is used.
    */
-  public static function isSenator(mixed $user): bool {
+  public static function isSenator(mixed $user = NULL): bool {
     return static::hasRoles($user, ['senator']);
   }
 
@@ -141,7 +147,7 @@ class UsersHelper {
    * @param \Drupal\user\Entity\User|int|null $user
    *   Either a User entity or the ID of one.  If NULL, current user is used.
    */
-  public static function isMcp(mixed $user): bool {
+  public static function isMcp(mixed $user = NULL): bool {
     return static::hasRoles($user, ['microsite_content_producer']);
   }
 
@@ -151,7 +157,7 @@ class UsersHelper {
    * @param \Drupal\user\Entity\User|int|null $user
    *   Either a User entity or the ID of one.  If NULL, current user is used.
    */
-  public static function isLc(mixed $user): bool {
+  public static function isLc(mixed $user = NULL): bool {
     return static::hasRoles($user, ['legislative_correspondent']);
   }
 
@@ -161,27 +167,66 @@ class UsersHelper {
    * @param \Drupal\user\Entity\User|int|null $user
    *   Either a User entity or the ID of one.  If NULL, current user is used.
    */
-  public static function isLcOrMcp(mixed $user): bool {
+  public static function isLcOrMcp(mixed $user = NULL): bool {
     return static::hasRoles(
-          $user,
-          ['microsite_content_producer', 'legislative_correspondent'],
-          static::NYS_USERS_OWNS_ANY
-      );
+      $user,
+      ['microsite_content_producer', 'legislative_correspondent'],
+      static::NYS_USERS_OWNS_ANY
+    );
   }
 
   /**
-   * Gets a list of all the senators assigned to a user for management.
+   * Checks if a user has been assigned administrator or content_admin roles.
    *
    * @param \Drupal\user\Entity\User|int|null $user
    *   Either a User entity or the ID of one.  If NULL, current user is used.
    */
-  public static function getManagedSenators(mixed $user): array {
-    $user = static::resolveUser($user);
-    $senator_tids = [];
-    $senators = $user->field_senator_multiref->getValue() ?? $senator_tids;
-    $senator_tids = array_column($senators, 'target_id', 'target_id');
+  public static function isAdmin(mixed $user = NULL): bool {
+    return static::hasRoles(
+      $user,
+      ['administrator', 'content_admin'],
+      static::NYS_USERS_OWNS_ANY
+    );
+  }
 
-    return $senator_tids;
+  /**
+   * Gets an array of all the senators assigned to a user for management.
+   *
+   * @param \Drupal\user\Entity\User|int|null $user
+   *   Either a User entity or the ID of one.  If NULL, current user is used.
+   */
+  public static function getAllManagedSenators(mixed $user = NULL): array {
+    return array_unique(
+      static::getMcpSenators($user) + static::getLcSenators($user)
+    );
+  }
+
+  /**
+   * Gets an array of all the senators assigned to a user for LC role.
+   *
+   * @param \Drupal\user\Entity\User|int|null $user
+   *   Either a User entity or the ID of one.  If NULL, current user is used.
+   */
+  public static function getLcSenators(mixed $user = NULL): array {
+    $user = static::resolveUser($user);
+    $senators = static::isLc($user)
+      ? ($user->field_senator_inbox_access->getValue() ?? [])
+      : [];
+    return array_column($senators, 'target_id', 'target_id');
+  }
+
+  /**
+   * Gets an array of all the senators assigned to a user for MCP role.
+   *
+   * @param \Drupal\user\Entity\User|int|null $user
+   *   Either a User entity or the ID of one.  If NULL, current user is used.
+   */
+  public static function getMcpSenators(mixed $user = NULL): array {
+    $user = static::resolveUser($user);
+    $senators = static::isMcp($user)
+      ? ($user->field_senator_multiref->getValue() ?? [])
+      : [];
+    return array_column($senators, 'target_id', 'target_id');
   }
 
   /**
@@ -190,11 +235,11 @@ class UsersHelper {
    * @param \Drupal\user\Entity\User|int|null $user
    *   Either a User entity or the ID of one.  If NULL, current user is used.
    */
-  public static function getManagedCommittees(mixed $user): array {
+  public static function getManagedCommittees(mixed $user = NULL): array {
     $user = static::resolveUser($user);
-    $senator_tids = UsersHelper::getManagedSenators($user);
+    $senators = UsersHelper::getAllManagedSenators($user);
     // Get the committee TIDs from senator TIDs based on the committee chair.
-    return SenatorsHelper::getChairedCommittees($senator_tids);
+    return SenatorsHelper::getChairedCommittees($senators);
   }
 
 }

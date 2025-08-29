@@ -1,0 +1,5 @@
+#!/bin/bash
+## Description: Build theme assets.
+## Usage: theme:nys-build [flags] [args]
+## Example: "theme:nys-build"
+cd "${DDEV_COMPOSER_ROOT}/${NYS_THEME_PATH}" && nvm install && npm run build $@

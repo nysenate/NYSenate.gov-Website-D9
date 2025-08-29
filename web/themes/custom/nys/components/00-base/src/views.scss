@@ -1,0 +1,509 @@
+@use 'partials' as *;
+
+.view {
+  font-family: var(--nys-ff-sans);
+  font-size: 14px;
+  font-weight: 400;
+  overflow: hidden;
+
+  .form-type-checkbox, th.views-field-views-bulk-operations-bulk-form {
+    position: relative;
+
+    input[type="checkbox"] {
+      box-sizing: border-box;
+      width: 15px;
+      height: 15px;
+      margin-right: 6px;
+      padding: 0;
+      border: 2px solid var(--nys-color-button-blue);
+      border-radius: 2px;
+      appearance: none;
+      background-color: transparent;
+      outline: none;
+      transition: outline 0.1s;
+      position: absolute;
+
+      &.vbo-select-all {
+        top: 2px;
+      }
+    }
+
+    input[type="checkbox"]:checked {
+      background-size: cover;
+      padding: 2px;
+      border-color: var(--nys-color-darker-blue);
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="20" viewBox="0 0 32 32" xml:space="preserve"><path style="fill: %23274c77" d="M11.941,28.877l-11.941-11.942l5.695-5.696l6.246,6.246l14.364-14.364L32,8.818"/></svg>');
+    }
+  }
+
+  .form-type-checkbox {
+    float: left;
+    margin: 0;
+  }
+
+  .button {
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    background-color: var(--nys-color-white);
+    padding: 12px 20px;
+    color: var(--nys-color-white);
+    background: var(--nys-color-button-blue);
+    border: 1px solid var(--nys-color-button-blue);
+    height: auto;
+    float: left;
+    margin-right: 0;
+    margin-left: 20px;
+
+    &:hover {
+      background: var(--nys-color-white);
+      color: var(--nys-color-button-blue);
+      border: 1px solid var(--nys-color-button-blue);
+    }
+  }
+
+  th.views-field-views-bulk-operations-bulk-form {
+    input[type="checkbox"] {
+      border-color: #fff;
+      top: 15px;
+      left: 8px;
+    }
+
+    input[type="checkbox"]:checked {
+      border-color: #fff;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="20" viewBox="0 0 32 32" xml:space="preserve"><path style="fill: %23ffffff" d="M11.941,28.877l-11.941-11.942l5.695-5.696l6.246,6.246l14.364-14.364L32,8.818"/></svg>');
+    }
+  }
+
+  &.simple-pager {
+    .pager {
+      margin-top: 32px;
+      margin-bottom: 60px;
+      float: left;
+      width: auto;
+
+      .pager__items {
+        line-height: 17px;
+        margin: 0;
+        padding: 0;
+
+        .pager__item {
+          padding: 0 5px;
+          line-height: inherit;
+
+          a {
+            font-size: 14px;
+            line-height: 17px;
+            font-family: var(--nys-ff-sans-bold);
+            color: var(--nys-color-button-blue);
+            text-underline-offset: 3px;
+            padding-bottom: 3px;
+            text-decoration-thickness: 1px;
+            text-decoration: underline;
+
+            &:hover {
+              text-decoration: none;
+            }
+          }
+
+          &.is-active a {
+            text-decoration: none;
+            color: var(--nys-color-black);
+            cursor: default;
+          }
+
+          &.pager__item--next:after, &.pager__item--last:after, &.pager__item--previous:before, &.pager__item--first:before {
+            font-family: "Phosphor-Bold" !important;
+            speak: never;
+            font-style: normal;
+            font-weight: normal;
+            font-variant: normal;
+            text-transform: none;
+            line-height: 1;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            color: var(--nys-color-button-blue);
+            top: 2px;
+            position: relative;
+            font-size: 14px;
+          }
+
+          &.pager__item--next:after {
+            content: "\ea00";
+          }
+
+          &.pager__item--last:after {
+            content: "\e9fc";
+          }
+
+          &.pager__item--previous:before {
+            content: "\e9ff";
+          }
+
+          &.pager__item--first:before {
+            content: "\e9fb";
+          }
+        }
+      }
+    }
+  }
+}
+
+.view-header {
+  margin-bottom: 32px;
+  overflow: hidden;
+}
+
+.view-content {
+  li {
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+  }
+
+  details {
+    margin-bottom: 0;
+    border: 0;
+    max-width: 280px;
+
+    summary {
+      padding: 0;
+      width: fit-content;
+      border: none;
+      cursor: text;
+    }
+  }
+
+  .vbo-multipage-selector {
+    // @todo Remove at template level
+    .details-wrapper {
+      display: none;
+    }
+  }
+
+  .form-item-select-all {
+    position: relative;
+    margin: 16px 12px;
+
+    label {
+      color: var(--nys-color-button-blue);
+      font-weight: 600;
+      font-size: 14px;
+      line-height: normal;
+      text-decoration-line: underline;
+      text-decoration-style: solid;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 2px;
+      margin-left: 20px;
+      text-transform: none;
+
+      &:hover {
+        text-decoration-line: none;
+      }
+    }
+  }
+
+  .vbo-view-form .form-actions {
+    float: right;
+    margin-right: 12px;
+    position: relative;
+
+    &:before {
+      content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20' fill='none'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M11 2.54883C11 1.99654 10.5523 1.54883 10 1.54883C9.44772 1.54883 9 1.99654 9 2.54883V11.0373L5.70711 7.74442C5.31658 7.35389 4.68342 7.35389 4.29289 7.74442C3.90237 8.13494 3.90237 8.76811 4.29289 9.15863L10 14.8657L15.7071 9.15863C16.0976 8.76811 16.0976 8.13494 15.7071 7.74442C15.3166 7.35389 14.6834 7.35389 14.2929 7.74442L11 11.0373V2.54883ZM15 18.4512C15.5523 18.4512 16 18.0035 16 17.4512C16 16.8989 15.5523 16.4512 15 16.4512H5C4.44772 16.4512 4 16.8989 4 17.4512C4 18.0035 4.44772 18.4512 5 18.4512H15Z' fill='%232B6A90'/%3E%3C/svg%3E");
+      color: var(--nys-color-button-blue);
+      position: absolute;
+      top: 0;
+    }
+  }
+
+  input[data-vbo='vbo-action'],
+  .details-wrapper input {
+    background: none;
+    border: none;
+    padding: 0 0 0 22px;
+    text-transform: none;
+    color: var(--nys-color-button-blue);
+    font-weight: 600;
+    font-size: 14px;
+    line-height: normal;
+    text-decoration-line: underline;
+    text-decoration-style: solid;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+    z-index: 1;
+    position: relative;
+    letter-spacing: normal;
+    display: inline;
+    float: none;
+
+    &:hover {
+      text-decoration-line: none;
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
+
+    &#edit-clear {
+      padding: 0;
+      margin: 10px 0 0;
+    }
+  }
+}
+
+.view-footer {
+  margin-top: 60px;
+  clear: both;
+}
+
+.view-filters {
+  .form--inline {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 32px;
+
+    @include bp-max(xsm) {
+      flex-direction: column;
+    }
+
+    .form-item,
+    .form-actions,
+    .form--inline .form-item,
+    .form--inline .form-actions {
+      margin: 0;
+      width: auto;
+      clear: none;
+      float: left;
+
+      @include bp-max(xsm) {
+        width: 100%;
+      }
+    }
+  }
+
+  .form-item-search {
+    position: relative;
+
+    &:after {
+      text-indent: 0;
+      position: absolute;
+      bottom: 8px;
+      right: 2px;
+      padding-right: 10px;
+      font-family: var(--nys-ff-senate-icons);
+      speak: none;
+      font-style: normal;
+      font-weight: normal;
+      font-variant: normal;
+      text-transform: none;
+      padding-left: 3px;
+      content: '\6d';
+      font-size: 22px;
+      color: var(--nys-color-button-blue);
+      background: var(--nys-color-white);
+    }
+  }
+
+  .form-type-select {
+    position: relative;
+
+    &:after {
+      position: absolute;
+      right: 2px;
+      bottom: 5px;
+      padding-right: 8px;
+      font-size: 25px;
+      color: var(--nys-color-button-blue);
+      background: var(--nys-color-white);
+      pointer-events: none;
+      cursor: pointer;
+      content: '\65';
+      font-family: var(--nys-ff-senate-icons);
+      display: inline-block;
+      vertical-align: middle;
+      speak: none;
+      font-style: normal;
+      font-weight: normal;
+      font-variant: normal;
+      text-transform: none;
+      padding-left: 3px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+  }
+
+  label {
+    font-family: var(--nys-ff-sans);
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  input[type='text'],
+  input[type='password'],
+  input[type='date'],
+  input[type='datetime'],
+  input[type='datetime-local'],
+  input[type='month'],
+  input[type='week'],
+  input[type='email'],
+  input[type='number'],
+  input[type='search'],
+  input[type='tel'],
+  input[type='time'],
+  input[type='url'],
+  input[type='submit'],
+  textarea,
+  select {
+    font-family: var(--nys-ff-sans) !important; // Remove once old theme has been killed.
+    color: var(--nys-color-button-blue);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 0 10px;
+    margin: 0;
+    background-color: var(--nys-color-white);
+    border: 1px solid var(--nys-color-dash-grey-1);
+    height: 52px;
+  }
+
+  select {
+    margin: 0 !important; // Remove once old theme has been killed.
+  }
+
+  input.form-autocomplete.ui-autocomplete-input {
+    background-position: 95% center;
+  }
+
+  #edit-actions {
+    display: flex;
+    align-items: flex-end;
+    gap: 20px;
+  }
+
+  input[type='submit'] {
+    padding: 12px 20px;
+    font-size: 12px;
+    color: var(--nys-color-white);
+    background: var(--nys-color-button-blue);
+    border: 1px solid var(--nys-color-button-blue);
+    height: auto;
+    float: left;
+
+    &:hover {
+      background: var(--nys-color-white);
+      color: var(--nys-color-button-blue);
+      border: 1px solid var(--nys-color-button-blue);
+    }
+
+    &[name='reset'] {
+      background: var(--nys-color-dash-grey-2);
+      border: 1px solid var(--nys-color-dash-grey-2);
+      color: var(--nys-color-button-blue);
+
+      &:hover {
+        background: var(--nys-color-white);
+        border: 1px solid var(--nys-color-button-blue);
+      }
+    }
+  }
+}
+
+.views-table-wrapper {
+  position: relative;
+  width: 100%;
+  overflow-x: auto;
+  background-image: 
+    linear-gradient(to right, var(--nys-color-white), var(--nys-color-white)),
+    linear-gradient(to right, var(--nys-color-white), var(--nys-color-white)),
+    linear-gradient(to right, rgba(0, 0, 0, 0.125), rgba(255, 255, 255, 0)),
+    linear-gradient(to left, rgba(0, 0, 0, 0.125), rgba(255, 255, 255, 0));
+  background-position: left center, right center, left center, right center;
+  background-repeat: no-repeat;
+  background-color: var(--nys-color-white);
+  background-size: 20px 100%, 20px 100%, 10px 100%, 10px 100%;
+  background-attachment: local, local, scroll, scroll;
+}
+
+.views-table {
+  border: none;
+  width: 100%;
+
+  thead {
+    border: none;
+
+    th {
+      border: 1px solid var(--nys-color-dash-grey-1);
+      border-width: 1px 0;
+      background: var(--nys-color-button-blue);
+      padding: 12px;
+      font-size: 16px;
+      font-style: normal;
+      text-align: left;
+      font-weight: 700;
+      line-height: 22px;
+      color: var(--nys-color-white);
+
+      a {
+        color: var(--nys-color-white);
+        position: relative;
+
+        &:hover {
+          text-decoration: underline;
+        }
+
+        .tablesort {
+          margin: 0 0 -3px -3px;
+        }
+
+        .tablesort--asc {
+          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M10.7526 13.1399C10.3542 13.5952 9.64584 13.5952 9.24742 13.1399L4.45119 7.6585C3.88543 7.01192 4.34461 6 5.20377 6L14.7962 6C15.6554 6 16.1146 7.01192 15.5488 7.6585L10.7526 13.1399Z' fill='%23fff'/%3E%3C/svg%3E");
+        }
+
+        .tablesort--desc {
+          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M10.7526 6.86009C10.3542 6.40476 9.64584 6.40476 9.24742 6.86009L4.45119 12.3415C3.88543 12.9881 4.34461 14 5.20377 14L14.7962 14C15.6554 14 16.1146 12.9881 15.5488 12.3415L10.7526 6.86009Z' fill='%23fff'/%3E%3C/svg%3E");
+        }
+      }
+
+      &:first-child {
+        border-right: none;
+      }
+    }
+  }
+
+  tbody {
+    border: none;
+
+    tr {
+      border: none;
+
+      &:nth-child(even) {
+        background-color: var(--nys-color-dash-grey-2);
+      }
+    }
+
+    td {
+      border: 1px solid var(--nys-color-dash-grey-1);
+      border-width: 1px 0;
+      padding: 9px 11px;
+
+      input[type='checkbox'] {
+        top: -7px;
+        left: -3px;
+      }
+    }
+  }
+
+  tr.selected td {
+    background: #FCF6ED;
+  }
+}

@@ -1,0 +1,25 @@
+uuid: 69634fe8-1d12-458c-9a7e-5efe92ab58f8
+langcode: en
+status: false
+dependencies:
+  config:
+    - system.menu.policies
+  module:
+    - system
+  theme:
+    - nys
+id: nys_policies
+theme: nys
+region: addendum
+weight: -16
+provider: null
+plugin: 'system_menu_block:policies'
+settings:
+  id: 'system_menu_block:policies'
+  label: Policies
+  label_display: '0'
+  provider: system
+  level: 1
+  depth: 0
+  expand_all_items: false
+visibility: {  }

@@ -1,0 +1,25 @@
+uuid: 672f9b77-084c-4389-adf2-5f0ba6aaae9c
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.global_block
+    - field.storage.block_content.field_global_content
+id: block_content.global_block.field_global_content
+field_name: field_global_content
+entity_type: block_content
+bundle: global_block
+label: 'Global Content'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: views
+  handler_settings:
+    view:
+      view_name: featured_content_entref
+      display_name: entity_reference_3
+      arguments: {  }
+field_type: entity_reference

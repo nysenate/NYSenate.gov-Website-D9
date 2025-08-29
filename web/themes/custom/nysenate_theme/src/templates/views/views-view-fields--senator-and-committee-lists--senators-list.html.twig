@@ -36,7 +36,7 @@
       {{ fields.field_member_headshot_1.content|render|striptags('<img>')|raw }}
     </div>
     <div class="nys-senator--info">
-      <h4 class="nys-senator--name">{{ fields.field_senator_name_2.content }}</h4>
+      <h2 class="nys-senator--name">{{ fields.field_senator_name_2.content }}</h2>
       <span class="nys-senator--district">
         <span class="nys-senator--party">
           {% if not fields.field_party_1.content|render|striptags|trim is empty %}

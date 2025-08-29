@@ -69,7 +69,7 @@ $grey01: #323232; // rgb(50, 50, 50)
 $grey02: #7d7c7c;
 $grey03: #666666;
 $grey04: #888888;
-$grey05: #aaaaaa;
+$grey05: #797676;
 $grey06: #eeeeee; // used to be - #F4F4F7 : rgb(244, 244, 247)
 $greyLight: #f4f4f7;
 
@@ -77,22 +77,29 @@ $greyVoteBtnText: #d0d0d0;
 
 // colors for bill track small
 $grey-dot: #e2e8ec;
-$grey-line: #e3e3e3;
+$grey-line: #767676;
 
 // additional colors NOT defined in specs but in comps.
 $grey07: #ababab;
 $grey08: #444444;
 $grey09: #d8d8d8;
 $grey10: #222222;
+$grey-dot-ms: #AAAAAA; //used for bill graph dot on darker backgrounds on microsites
 
 // Senate Site
-$orange01: #cb8d37; // rgb(203, 141, 55)
+$orange01: #cb8d37; // rgb(203, 141, 55)cb8d37
 $blue01: #2b6990; // rgb(43, 106, 144)
 $blue02: #004c71; // rgb(0, 77, 113) - or there about
 $blue03: #04a9c5;
+
 $yellow01: #f1af58; //rgb(241, 175, 88);
 $yellow02: #e29c44;
 $yellow03: #cb8d37;
+$orange-text: #A36A1A;
+$background-yellow: #f1af58;
+$background-text: #444444;
+$background-hover: #A36A1A; //test
+
 
 // Dashboard
 $blue04: #e1e5ec;
@@ -122,7 +129,8 @@ $contrast_lgt: $color-white;
 $gen_blue_lgt: #2b6a90;
 $gen_blue_med: #175b81;
 $gen_blue_drk: #004d71;
-$gen_link: $orange01;
+$gen_link: $orange-text;
+$gen_link_hover: #805314;
 
 // TRADITIONAL BLUE
 $trad_blue_lgt: #1b5187;
@@ -131,10 +139,11 @@ $trad_blue_drk: #1c364e;
 $trad_blue_link: $trad_blue_lgt;
 
 // CONTEMPORARY BLUE
-$cont_blue_lgt: #04a9c5;
-$cont_blue_med: #008ca6;
-$cont_blue_drk: #1f798f;
-$cont_blue_link: $cont_blue_lgt;
+$cont_blue_text: #004b66; //#005e80;
+$cont_blue_lgt: #017185; //#0288a0; //#0288a0; //#04a9c5;
+$cont_blue_med: #015866; //#026b7d;//#006b8f; //#008ca6;
+$cont_blue_drk: #0f4a58; //#1a6375; //#1f798f;
+$cont_blue_link: $cont_blue_text;
 
 // INDIVIDUALISTIC PURPLE
 $purple_lgt: #90668f;
@@ -167,14 +176,15 @@ $trad_green_drk: #416837;
 $trad_green_link: $trad_green_lgt;
 
 // CONTEMPORARY GREEN
-$cont_green_lgt: #65c5b6;
-$cont_green_med: #479e93;
-$cont_green_drk: #378479;
+$cont_green_text: #007575; //#378479;//#145a53;
+$cont_green_lgt:  #018383;  //#65c5b6; //#0c816c; //
+$cont_green_med:  #007575; // #479e93; //#0a7a65; //
+$cont_green_drk:  #006666;//#378479;  //#0e6a5e; //
 $cont_green_link: $cont_green_lgt;
 
 // NO LONGER SERVING
-$ns_grey_lgt: #b2b2b2;
-$ns_grey_med: #999999;
+$ns_grey_lgt: #636363;
+$ns_grey_med: #737373;
 $ns_grey_drk: #808080;
 $ns_accent: #1b5187;
 
@@ -200,11 +210,20 @@ $ns_accent: #1b5187;
 .drk-text {
   color: $gen_blue_drk;
 }
+a.drk-text {
+  color: $gen_blue_drk;
+  &:hover {
+    color: $gen_blue_med;
+  }
+}
 .drk-bg {
   background-color: $gen_blue_drk;
 }
 .link-text {
   color: $gen_link;
+  &:hover {
+    color: $gen_link_hover;
+  }
 }
 // no other accent defined
 // so it is the 'no longer serving accent'
@@ -238,6 +257,9 @@ $ns_accent: #1b5187;
   .lgt-bg {
     background-color: $trad_blue_lgt;
   }
+  .lgt-border {
+    border-color: $trad_blue_lgt;
+  }
   .med-text {
     color: $trad_blue_med;
   }
@@ -247,11 +269,23 @@ $ns_accent: #1b5187;
   .drk-text {
     color: $trad_blue_drk;
   }
+  a.drk-text {
+    color: $trad_blue_drk;
+    &:hover {
+      color: $trad_blue_med;
+    }
+  }
   .drk-bg {
     background-color: $trad_blue_drk;
   }
   .link-text {
     color: $trad_blue_lgt;
+    &:hover {
+      color: $trad_blue_lgt;
+    }
+  }
+  .bill-graph-dot {
+    background-color: $grey-dot-ms;
   }
 
   @media #{$tablet} {
@@ -270,13 +304,16 @@ $ns_accent: #1b5187;
 // CONTEMPORARY BLUE
 .cont_blue {
   .contrast_text {
-    color: $contrast_drk;
+    color: $contrast_lgt;
   }
   .lgt-text {
     color: $cont_blue_lgt;
   }
   .lgt-bg {
     background-color: $cont_blue_lgt;
+  }
+  .lgt-border {
+    border-color: $cont_blue_lgt;
   }
   .med-text {
     color: $cont_blue_med;
@@ -287,13 +324,21 @@ $ns_accent: #1b5187;
   .drk-text {
     color: $cont_blue_drk;
   }
+  a.drk-text {
+    color: $cont_blue_drk;
+    &:hover {
+      color: $cont_blue_med;
+    }
+  }
   .drk-bg {
     background-color: $cont_blue_drk;
   }
   .link-text {
-    color: $cont_blue_lgt;
+    color: $cont_blue_med;
   }
-
+  .bill-graph-dot {
+    background-color: #000;
+  }
   @media #{$tablet} {
     .nav-text {
       color: $grey08;
@@ -318,6 +363,9 @@ $ns_accent: #1b5187;
   .lgt-bg {
     background-color: $purple_lgt;
   }
+  .lgt-border {
+    border-color: $purple_lgt;
+  }
   .med-text {
     color: $purple_med;
   }
@@ -327,11 +375,20 @@ $ns_accent: #1b5187;
   .drk-text {
     color: $purple_drk;
   }
+  a.drk-text {
+    color: $purple_drk;
+    &:hover {
+      color: $purple_med;
+    }
+  }
   .drk-bg {
     background-color: $purple_drk;
   }
   .link-text {
     color: $purple_lgt;
+  }
+  .bill-graph-dot {
+    background-color: #000;
   }
 
   .nav-text {
@@ -361,6 +418,9 @@ $ns_accent: #1b5187;
   .lgt-bg {
     background-color: $trad_red_lgt;
   }
+  .lgt-border {
+    border-color: $trad_red_lgt;
+  }
   .med-text {
     color: $trad_red_med;
   }
@@ -370,11 +430,21 @@ $ns_accent: #1b5187;
   .drk-text {
     color: $trad_red_drk;
   }
+  a.drk-text {
+    color: $trad_red_drk;
+    &:hover {
+      color: $trad_red_med;
+    }
+  }
+
   .drk-bg {
     background-color: $trad_red_drk;
   }
   .link-text {
     color: $trad_red_lgt;
+  }
+  .bill-graph-dot {
+    background-color: $grey-dot-ms;
   }
 
   .nav-text {
@@ -404,6 +474,9 @@ $ns_accent: #1b5187;
   .lgt-bg {
     background-color: $cont_red_lgt;
   }
+  .lgt-border {
+    border-color: $cont_red_lgt;
+  }
   .med-text {
     color: $cont_red_med;
   }
@@ -413,11 +486,20 @@ $ns_accent: #1b5187;
   .drk-text {
     color: $cont_red_drk;
   }
+  a.drk-text {
+    color: $cont_red_drk;
+    &:hover {
+      color: $cont_red_med;
+    }
+  }
   .drk-bg {
     background-color: $cont_red_drk;
   }
   .link-text {
     color: $cont_red_lgt;
+  }
+  .bill-graph-dot {
+    background-color: #000;
   }
 
   .nav-text {
@@ -447,6 +529,9 @@ $ns_accent: #1b5187;
   .lgt-bg {
     background-color: $orange_lgt;
   }
+  .lgt-border {
+    border-color: $orange_lgt;
+  }
   .med-text {
     color: $orange_med;
   }
@@ -456,11 +541,20 @@ $ns_accent: #1b5187;
   .drk-text {
     color: $orange_drk;
   }
+  a.drk-text {
+    color: $orange_drk;
+    &:hover {
+      color: $orange_med;
+    }
+  }
   .drk-bg {
     background-color: $orange_drk;
   }
   .link-text {
     color: $orange_lgt;
+  }
+  .bill-graph-dot {
+    background-color: #000;
   }
 
   .nav-text {
@@ -490,6 +584,9 @@ $ns_accent: #1b5187;
   .lgt-bg {
     background-color: $trad_green_lgt;
   }
+  .lgt-border {
+    border-color: $trad_green_lgt;
+  }
   .med-text {
     color: $trad_green_med;
   }
@@ -499,13 +596,21 @@ $ns_accent: #1b5187;
   .drk-text {
     color: $trad_green_drk;
   }
+  a.drk-text {
+    color: $trad_green_drk;
+    &:hover {
+      color: $trad_green_med;
+    }
+  }
   .drk-bg {
     background-color: $trad_green_drk;
   }
   .link-text {
     color: $trad_green_lgt;
   }
-
+  .bill-graph-dot {
+    background-color: #000;
+  }
   .nav-text {
     color: $color-white;
   }
@@ -525,13 +630,16 @@ $ns_accent: #1b5187;
 // CONTEMPORARY GREEN
 .cont_green {
   .contrast_text {
-    color: $contrast_drk;
+    color: $contrast_lgt;
   }
   .lgt-text {
     color: $cont_green_lgt;
   }
   .lgt-bg {
     background-color: $cont_green_lgt;
+  }
+  .lgt-border {
+    border-color: $cont_green_lgt;
   }
   .med-text {
     color: $cont_green_med;
@@ -542,11 +650,20 @@ $ns_accent: #1b5187;
   .drk-text {
     color: $cont_green_drk;
   }
+  a.drk-text {
+    color: $cont_green_drk;
+    &:hover {
+      color: $cont_green_med;
+    }
+  }
   .drk-bg {
     background-color: $cont_green_drk;
   }
   .link-text {
     color: $cont_green_lgt;
+  }
+  .bill-graph-dot {
+    background-color: #000;
   }
 
   .nav-text {
@@ -568,7 +685,7 @@ $ns_accent: #1b5187;
 // INACTIVE PALLETTE
 .inactive-pallette {
   .contrast_text {
-    color: $contrast_drk;
+    color: #fff;
   }
   .lgt-text {
     color: $ns_accent;
@@ -594,6 +711,9 @@ $ns_accent: #1b5187;
 
   .nav-text {
     color: $color-white;
+  }
+  .bill-graph-dot {
+    background-color: #000;
   }
   @media #{$tablet} {
     .nav-text {

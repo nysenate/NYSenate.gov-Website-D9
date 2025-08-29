@@ -6,7 +6,7 @@
   {%- for i in 0..5 -%}
     {%- set is_group = (positions[i]|length > 1) -%}
     {%- if is_group -%}
-      <li class="nys-bill-status-grouped">
+      <li class="nys-bill-status-grouped lgt-bg bill-graph-border">
       <ul class="nys-bill-status nys-bill-status-split-step">
     {%- endif -%}
     {%- for j in 0..1 -%}

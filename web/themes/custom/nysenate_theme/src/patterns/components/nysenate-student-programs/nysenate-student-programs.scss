@@ -33,24 +33,28 @@
     a {
       display: block;
       width: 100%;
-      color: $color-white;
+      color: #fff;
       font-family: $font-sans-bold;
       font-size: 14px;
       line-height: 18px;
       text-align: center;
       text-transform: uppercase;
     }
-
+	a.nys-btn--blue {
+	  color: $color-white;
+	}
     .content {
       transition: background-color 0.25s ease;
       margin-bottom: 48px;
 
       .nys-btn--gold {
-        background: $yellow01;
+        background: $background-yellow;
+		  color: $background-text;
       }
 
       .nys-btn--gold:hover {
-        background-color: $yellow02;
+		background-color: $background-hover;
+		color: #fff;
       }
 
       .nys-btn--blue {

@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.card_list
+    - field.field.node.promotional_banner.field_accessible_sitewide
     - field.field.node.promotional_banner.field_call_to_action
     - field.field.node.promotional_banner.field_date
     - field.field.node.promotional_banner.field_link
@@ -50,12 +51,14 @@ hidden:
   entity_print_view_epub: true
   entity_print_view_pdf: true
   entity_print_view_word_docx: true
+  field_accessible_sitewide: true
   field_date: true
   field_link_type: true
   field_promotional_banner_image: true
   field_promotional_content: true
   field_senator_multiref: true
   langcode: true
+  nys_senator_dashboard_path_alias: true
   private_message_link: true
   rabbit_hole__settings: true
   search_api_excerpt: true

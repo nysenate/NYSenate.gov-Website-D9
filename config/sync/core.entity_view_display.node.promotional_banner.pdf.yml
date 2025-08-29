@@ -1,9 +1,9 @@
-uuid: 90fb2287-d336-4481-b824-09bc52cf2e94
+uuid: 24ecf60f-88c8-4a29-a211-c7cfc7103970
 langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_mode.node.teaser
+    - core.entity_view_mode.node.pdf
     - field.field.node.promotional_banner.field_accessible_sitewide
     - field.field.node.promotional_banner.field_call_to_action
     - field.field.node.promotional_banner.field_date
@@ -15,66 +15,39 @@ dependencies:
     - field.field.node.promotional_banner.rabbit_hole__settings
     - node.type.promotional_banner
   module:
-    - link
-    - options
     - user
-id: node.promotional_banner.teaser
+id: node.promotional_banner.pdf
 targetEntityType: node
 bundle: promotional_banner
-mode: teaser
+mode: pdf
 content:
-  field_call_to_action:
-    type: list_default
+  field_accessible_sitewide:
+    type: boolean
     label: hidden
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 8
+    region: content
+  links:
     settings: {  }
     third_party_settings: {  }
-    weight: 1
-    region: content
-  field_link:
-    type: link
-    label: hidden
-    settings:
-      trim_length: 80
-      url_only: false
-      url_plain: false
-      rel: ''
-      target: ''
-    third_party_settings: {  }
-    weight: 5
-    region: content
-  field_link_type:
-    type: list_default
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
-    weight: 2
-    region: content
-  field_promotional_banner_image:
-    type: entity_reference_entity_view
-    label: hidden
-    settings:
-      view_mode: default
-      link: true
-    third_party_settings: {  }
-    weight: 3
-    region: content
-  field_promotional_content:
-    type: entity_reference_label
-    label: hidden
-    settings:
-      link: true
-    third_party_settings: {  }
-    weight: 4
+    weight: 100
     region: content
 hidden:
   entity_print_view_epub: true
   entity_print_view_pdf: true
   entity_print_view_word_docx: true
-  field_accessible_sitewide: true
+  field_call_to_action: true
   field_date: true
+  field_link: true
+  field_link_type: true
+  field_promotional_banner_image: true
+  field_promotional_content: true
   field_senator_multiref: true
   langcode: true
-  links: true
   nys_senator_dashboard_path_alias: true
   private_message_link: true
   rabbit_hole__settings: true

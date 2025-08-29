@@ -27,14 +27,10 @@
       const trigger = event.target.closest(this.triggerSelector);
       this.isOpen(trigger) ? this.menuClose(trigger) : this.menuOpen(trigger);
     },
-    bodyClose: function (event) {
-      if (!event.target.closest(this.dashboardSelector)) this.menuClose();
-    },
     init: function (dashboard) {
       const triggers = dashboard.querySelectorAll(this.triggerSelector);
       triggers.forEach(trigger => trigger.addEventListener('click', this.handleTriggerClick.bind(this)));
       document.body.classList.add('nysenate-dashboard-init');
-      document.body.addEventListener('click', this.bodyClose.bind(this));
 
       // Check if a div with class c-actionbar or hero--senator exists on the page and doesn't have the hidden class
       const actionbar = document.querySelector('.c-actionbar');

@@ -34,7 +34,7 @@
   ] %}
   <div{{ attributes.addClass(classes) }}>
     <div class="newsroom-content l-row">
-      <dl class="l-tab-bar" role="tablist">
+      <div class="l-tab-bar" role="tablist">
         <div class="c-tab--arrow u-mobile-only"></div>
         {% for key, tab in content.field_tab_names %}
           {% if key matches '/^\\d+$/' %}
@@ -50,7 +50,7 @@
             </div>
           {% endif %}
         {% endfor %}
-      </dl>
+      </div>
       <div class="tabs-content" aria-live="polite">
         {% for key in content.field_tab_names|keys %}
           {% if key matches '/^\\d+$/' and content.field_block_views[key] %}

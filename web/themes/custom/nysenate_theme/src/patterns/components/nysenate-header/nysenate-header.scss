@@ -20,6 +20,7 @@ body {
   &.toolbar-vertical {
     &.nav-open #js-sticky .c-nav--wrap {
       top: 99px;
+      display: initial;
     }
 
     #js-sticky {
@@ -408,6 +409,7 @@ body {
   z-index: 6;
   transition: all 0.3s ease-out 0s;
   padding: 0;
+  display: none;
 
   @include breakpoint($bp-sm) {
     position: relative;
@@ -415,6 +417,9 @@ body {
     height: 55px;
     overflow: hidden;
     top: auto;
+    &#main-site-menu {
+      display: block;
+    }
   }
 
   &.closed {
@@ -479,6 +484,7 @@ body {
     top: 60px;
     bottom: 0;
     height: auto;
+    display: block;
   }
 
 	.c-nav--toggle {
@@ -1311,6 +1317,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
 
   &.nav-open .c-nav--wrap {
     top: 99px;
+    display: block;
   }
 }
 

@@ -4244,9 +4244,10 @@ function nysenate_theme_preprocess_node__open_data(&$variables) {
         if ($item->isDisplayed()) {
           $file = File::load($item->target_id);
           $file_url_generator = \Drupal::service('file_url_generator');
+          $mime = strtoupper(explode('/', $file->getMimeType())[1] ?? '');
           $variables['file_items'][] = [
             'url' => $file_url_generator->generateAbsoluteString($file->getFileUri()),
-            'text' => ($item->description) ? $item->description : $file->getFilename(),
+            'text' => ($item->description ?: $file->getFilename()) . ' (' . $mime . ')',
             'type' => $file->getMimeType(),
           ];
         }

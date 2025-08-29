@@ -328,6 +328,24 @@
   font-weight: bold;
 }
 
+form#nys-openleg-search-form h3.search-title::before {
+  content: '\00a0\3e';
+  font-family: senate_icons;
+  font-size: 16pt;
+  vertical-align: middle;
+  display: inline-block;
+  margin-top: -0.2em;
+  line-height: 1em;
+  font-weight: bold;
+  margin-right: 0.2em;
+  transition: transform .2s ease, margin-top .1s ease;
+}
+
+form#nys-openleg-search-form.open h3.search-title::before {
+  transform: rotate(90deg);
+  margin-top: -0.5em;
+}
+
 #nys-openleg-search-form .form-item-search-term  {
   display: inline-block;
   width: 80%;

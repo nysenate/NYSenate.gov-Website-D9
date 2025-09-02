@@ -99,6 +99,13 @@ function nys_access_permissions_form_alter(&$form, FormStateInterface $form_stat
       }
     }
   }
+  if ($form_id === 'node_promotional_banner_edit_form' || $form_id === 'node_promotional_banner_form') {
+    $is_admin = in_array('administrator', $user, true);
+    if (!$is_admin && isset($form['field_link_type']['widget']['#options'])) {
+      unset($form['field_link_type']['widget']['#options']['thankful']);
+      unset($form['field_link_type']['widget']['#options']['earthday']);
+    }
+  }
 }
 
 /**

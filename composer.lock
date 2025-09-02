@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b2bce14702cf7712f2f0d6efd2a2ab02",
+    "content-hash": "1295f37eb3d22737f820b851b8d54f49",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -5633,6 +5633,58 @@
             "support": {
                 "source": "https://git.drupalcode.org/project/field_permissions",
                 "issues": "https://www.drupal.org/project/issues/field_permissions"
+            }
+        },
+        {
+            "name": "drupal/field_token_value",
+            "version": "3.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/field_token_value.git",
+                "reference": "3.1.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/field_token_value-3.1.0.zip",
+                "reference": "3.1.0",
+                "shasum": "af17b023855bedf070e42a750fa60700b24be9af"
+            },
+            "require": {
+                "drupal/core": "^10 || ^11",
+                "drupal/token": "^1.15",
+                "php": ">=8.1.0"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "3.1.0",
+                    "datestamp": "1740522009",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                },
+                "drush": {
+                    "services": {
+                        "drush.services.yml": "^10 || ^11"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "haydent",
+                    "homepage": "https://www.drupal.org/u/haydent"
+                }
+            ],
+            "description": "Allows you to use a Views to display an entity or entities for an entity_reference field display.",
+            "homepage": "https://www.drupal.org/project/field_token_value",
+            "support": {
+                "source": "https://git.drupalcode.org/project/field_token_value",
+                "issues": "https://www.drupal.org/project/issues/field_token_value"
             }
         },
         {

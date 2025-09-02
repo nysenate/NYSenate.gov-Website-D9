@@ -1002,6 +1002,10 @@ function nysenate_theme_preprocess_block_content__promotional_banner(&$variables
         $url = $banner['#node']->field_link->uri;
       }
 
+      elseif ($banner['#node']->field_link_type->value == 'dynamic') {
+        $url = $banner['#node']->field_dynamic_url->uri;
+      }
+
       // Call to action string.
       $text = t('Read More');
       $senator_name = NULL;

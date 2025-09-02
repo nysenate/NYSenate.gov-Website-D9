@@ -42,6 +42,11 @@
   margin-bottom: 0;
 }
 
+.nys-openleg-items-container {
+  padding-left: 0;
+  list-style-type: none;
+}
+
 .nys-openleg-head-container > * {
   vertical-align: top;
 }
@@ -49,8 +54,7 @@
 .nys-openleg-result-title {
   padding-top: 20px;
   padding-bottom: 20px;
-  display: inline-block;
-  width: 66%;
+  display: block;
   font-family: 'Adelle Bold', serif;
   font-size: 32px;
 }
@@ -59,8 +63,14 @@
   margin-bottom: 0.3em;
 }
 
+.nys-openleg-result-title-headline {
+  font-size: inherit;
+  letter-spacing: .03em;
+}
+
 .nys-openleg-result-title-short {
   font-size: .8em;
+  font-weight: normal;
 }
 
 .nys-openleg-result-title-location {
@@ -100,7 +110,7 @@
 
 .nys-openleg-result-item-description {
   display: inline-block;
-  width: 66%;
+  width: 65%;
   font-size: 20px;
   font-family: "Adelle Light", serif;
   vertical-align: middle;
@@ -357,6 +367,14 @@ form#nys-openleg-search-form.open h3.search-title::before {
   margin-top: -0.5em;
 }
 
+#nys-openleg-search-form #edit-search-form-container {
+  display:none;
+}
+
+#nys-openleg-search-form.open #edit-search-form-container {
+  display: block;
+}
+
 #nys-openleg-search-form .form-item-search-term  {
   display: inline-block;
   width: 80%;
@@ -365,9 +383,10 @@ form#nys-openleg-search-form.open h3.search-title::before {
 #nys-openleg-search-form button.search__submit {
   position: relative;
   top: 3px;
-  width: 15%;
-  line-height: 1em;
-  padding: 0.6em;
+  width: fit-content;
+  height: 1.9em;
+  line-height: 2em;
+  padding: 0 .7em;
   margin-right: 0;
   background-color: #2b6a90;
   color: #ffffff;
@@ -426,7 +445,7 @@ form#nys-openleg-search-form.open h3.search-title::before {
 }
 
 .nys-openleg-statute-container #nys-openleg-search-form.open {
-  height: 10.5em;
+  height: 100%;
   border-bottom: 1px solid #777;
 }
 
@@ -463,6 +482,7 @@ form#nys-openleg-search-form.open h3.search-title::before {
 
   .nys-openleg-result-tools .c-detail--social-item {
     width: 60px;
+    color: #444444;
   }
 
   .nys-openleg-history-container .form-item-history select {

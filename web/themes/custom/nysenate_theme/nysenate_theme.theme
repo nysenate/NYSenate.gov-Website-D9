@@ -4246,10 +4246,11 @@ function nysenate_theme_preprocess_node__open_data(&$variables) {
         if ($item->isDisplayed()) {
           $file = File::load($item->target_id);
           $file_url_generator = \Drupal::service('file_url_generator');
-          $mime = strtoupper(explode('/', $file->getMimeType())[1] ?? '');
+          $mime = '(' . strtoupper(explode('/', $file->getMimeType())[1] ?? '') . ')';
+          $name = $item->description ?: $file->getFilename();
           $variables['file_items'][] = [
             'url' => $file_url_generator->generateAbsoluteString($file->getFileUri()),
-            'text' => ($item->description ?: $file->getFilename()) . ' (' . $mime . ')',
+            'text' => $name . (str_contains($name, $mime) ? '' : (' ' . $mime)),
             'type' => $file->getMimeType(),
           ];
         }

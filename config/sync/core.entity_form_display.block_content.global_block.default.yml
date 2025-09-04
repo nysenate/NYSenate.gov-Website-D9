@@ -1,29 +1,28 @@
-uuid: 356de900-3a7b-432c-b56b-6f1fe630e281
+uuid: bd25a0bb-4cec-4b9e-945c-38f9e4d34d61
 langcode: en
 status: true
 dependencies:
   config:
-    - block_content.type.blocks
-    - field.field.block_content.blocks.field_block
-  module:
-    - block_field
-id: block_content.blocks.default
+    - block_content.type.global_block
+    - field.field.block_content.global_block.field_global_content
+id: block_content.global_block.default
 targetEntityType: block_content
-bundle: blocks
+bundle: global_block
 mode: default
 content:
-  field_block:
-    type: block_field_default
-    weight: 1
+  field_global_content:
+    type: entity_reference_autocomplete
+    weight: 2
     region: content
     settings:
-      plugin_id: ''
-      settings: {  }
-      configuration_form: full
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
   info:
     type: string_textfield
-    weight: 0
+    weight: 1
     region: content
     settings:
       size: 60
@@ -31,10 +30,10 @@ content:
     third_party_settings: {  }
   status:
     type: boolean_checkbox
+    weight: 0
+    region: content
     settings:
       display_label: true
-    region: content
-    weight: -99
     third_party_settings: {  }
 hidden:
   langcode: true

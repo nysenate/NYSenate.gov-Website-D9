@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.promotional_banner.field_accessible_sitewide
     - field.field.node.promotional_banner.field_call_to_action
     - field.field.node.promotional_banner.field_date
     - field.field.node.promotional_banner.field_link
@@ -29,6 +30,13 @@ content:
     weight: 9
     region: content
     settings: {  }
+    third_party_settings: {  }
+  field_accessible_sitewide:
+    type: boolean_checkbox
+    weight: 7
+    region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
   field_call_to_action:
     type: options_select

@@ -3576,19 +3576,14 @@ function nysenate_theme_preprocess_node__bill(&$variables) {
     $status_value = $state_node->field_ol_last_status->value;
   }
 
-  switch ($status_value) {
-    case 'SIGNED_BY_GOV':
-      $variables['signed_veto_status'] = '<span class="c-bill--flag">Signed By Governor</span>';
-      break;
-
-    case 'VETOED':
-      $variables['signed_veto_status'] = '<span class="c-bill--flag">Vetoed By Governor</span>';
-      break;
-
-    default:
-      $variables['signed_veto_status'] = '';
-      break;
-  }
+  $status_marker = match ($status_value) {
+    'SIGNED_BY_GOV' => "Signed By Governor",
+    'VETOED' => 'Vetoed By Governor',
+    default => '',
+  };
+  $variables['signed_veto_status'] = $status_marker
+    ? '<h3 class="c-bill--flag">' . $status_marker . '</h3>'
+    : '';
 
   // Bill display status.
   $status_to_values = [

@@ -10,15 +10,21 @@
 {% set classes = ['node--bill'] %}
 <!-- BILL TEMPLATE -->
 <div class="{{ classes|join(' ') }}" {{ attributes }}>
+
+  <!-- Bill Vote Widget -->
+  <div class="c-bill--vote-widget">
+    {{ content.vote_widget }}
+  </div>
+
   <div class="node node-bill node-promoted view-mode-full clearfix">
     <div class="c-block c-detail--header c-detail--header__bill">
       <!-- Bill Title -->
       <div class="c-bill--heading-block">
-        <h2 class="nys-title c-bill-title">
+        <h1 class="nys-title c-bill-title">
           {{ content.field_ol_chamber[0]['#markup'] }}
           Bill
           {{ bill.name }}
-        </h2>
+        </h1>
         {{ signed_veto_status|raw }}
         <div class="clearfix"></div>
         <div class="c-bill--session-year">
@@ -126,11 +132,6 @@
     {% include '@nysenate_theme/src/templates/includes/nys-bill-status.html.twig' with {positions: positions} %}
   </div>
 
-  <!-- Bill Vote Widget -->
-  <div class="c-bill--vote-widget">
-    {{ content.vote_widget }}
-  </div>
-
   <!-- Bill Message Form -->
   <div class="c-bill--message-form clearfix">
     {{ content.bill_form }}
@@ -139,7 +140,7 @@
   <!-- Bill Actions -->
   <div class="c-block c-bill-section">
     <section class="nysenate-accordion__wrapper nysenate-accordion__wrapper--bills">
-      <div class="nysenate-accordion__wrapper-title">Actions</div>
+      <h2 class="nysenate-accordion__wrapper-title">Actions</h2>
 
       <div>
         {% block accordion_items %}
@@ -206,7 +207,7 @@
   {% if votes_block %}
     <div class="c-block c-bill-section">
       <section class="nysenate-accordion__wrapper nysenate-accordion__wrapper--bills">
-        <div class="nysenate-accordion__wrapper-title">Votes</div>
+        <h2 class="nysenate-accordion__wrapper-title">Votes</h2>
 
         <div>
           <ul class="nysenate-accordion-nested">

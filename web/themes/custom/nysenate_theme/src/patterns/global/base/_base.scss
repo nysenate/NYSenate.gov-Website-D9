@@ -354,14 +354,14 @@ main.l-row--main {
 }
 
 .nys-senator--thumb {
-	position: relative;
-	display: inline-block;
-	vertical-align: middle;
-	height: 46px;
-	width: 45px;
-	margin-right: 15px;
-  border-radius: 50%;
-  overflow: hidden;
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  height: 46px;
+  width: 46px;
+  margin-right: 15px;
+  padding: 2px;
+  box-sizing: content-box;
 
   &--placeholder {
     width: 100%;
@@ -370,19 +370,21 @@ main.l-row--main {
     margin-bottom: 24px;
   }
 
-	a {
-		display: block;
-		position: absolute;
-		top: 0;
-		left: 0;
-		height: 100%;
-		width: 100%;
+  a {
+    display: block;
+    position: relative;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
+    overflow: hidden;
 
     .field {
       width: 100%;
       height: 100%;
     }
-	}
+  }
 
   img {
     min-height: 46px;

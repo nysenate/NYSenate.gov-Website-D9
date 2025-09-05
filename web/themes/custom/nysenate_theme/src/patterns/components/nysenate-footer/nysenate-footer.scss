@@ -18,9 +18,12 @@ footer {
       letter-spacing: 0.1em;
       font-family: $font-sans-bold;
       text-transform: uppercase;
-
       @include breakpoint($bp-sm) {
         font-size: 14px;
+        &:hover {
+          text-decoration: underline;
+          color: $grey08;
+        }
       }
     }
   }

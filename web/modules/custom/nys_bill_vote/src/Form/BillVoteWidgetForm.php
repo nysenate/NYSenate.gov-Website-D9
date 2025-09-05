@@ -156,7 +156,7 @@ class BillVoteWidgetForm extends FormBase {
 
       // Primary label.
       'nys_bill_vote_label' => [
-        '#markup' => '<p class="c-bill-polling--cta">' . $label . '</p>',
+        '#markup' => '<h2 class="c-bill-polling--cta">' . $label . '</h2>',
       ],
 
       'nys_bill_vote_button_wrapper' => [
@@ -317,7 +317,7 @@ class BillVoteWidgetForm extends FormBase {
           '#attributes' => ['class' => ['nys-bill-subscribe']],
           '#id' => 'edit-nys-bill-subscribe-container-' . $node_id,
           'nys_bill_subscribe_title' => [
-            '#markup' => '<div class="nys-bill-subscribe-title">' . 'Get Status Alerts for ' . $ref_node->label() . '</div>',
+            '#markup' => '<h2 class="nys-bill-subscribe-title">Get Status Alerts for ' . $ref_node->label() . '</h2>',
           ],
         ];
         if (!$this->currentUser->isAuthenticated()) {

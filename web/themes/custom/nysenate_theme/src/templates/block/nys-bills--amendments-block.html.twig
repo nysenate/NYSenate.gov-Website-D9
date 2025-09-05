@@ -39,7 +39,7 @@
           {% for key, list in amendment.sponsors_array %}
             {% if list|length > 0 %}
               <div class="c-{{ key }}-sponsors c-sponsors-detail">
-                <h3 class="c-detail--subhead c-detail--section-title c-bill-detail--subhead">{{ key }}-Sponsors</h3>
+                <h2 class="c-detail--subhead c-detail--section-title c-bill-detail--subhead">{{ key }}-Sponsors</h2>
                 <div class="initial_{{ key }}-sponsors">
                   {% for item in list[0:4] %}
                     {{ item }}
@@ -72,9 +72,9 @@
 
       <!-- Bill Amendment Details -->
       <div class="c-block c-bill-section c-bill--details">
-        <h3 class="c-detail--subhead c-detail--section-title">{{ node_wrapper.title() }}
+        <h2 class="c-detail--subhead c-detail--section-title">{{ node_wrapper.title() }}
           {{ is_active_version ? ' (ACTIVE)' : '' }}
-          - Details</h3>
+          - Details</h2>
         <dl>
 
           {% if content.same_as %}

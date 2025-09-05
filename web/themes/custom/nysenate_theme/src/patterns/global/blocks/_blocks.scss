@@ -113,20 +113,22 @@ body {
 
 	p {
 		font-family: $font-serif;
-    line-height: 1.5em;
-    color: $grey03;
-    font-size: 16px;
-    line-height: 24px;
-    margin: 0;
-
-    @include breakpoint($bp-sm) {
-      font-size: 20px;
-      line-height: 32px;
-    }
+        line-height: 1.5em;
+        color: $grey03;
+        font-size: 16px;
+        line-height: 24px;
+        margin: 0;
+        @include breakpoint($bp-sm) {
+          font-size: 20px;
+          line-height: 32px;
+        }
 	}
 
   a {
     @extend .link-text;
+    &:hover {
+      text-decoration: underline;
+    }
   }
 
   p + p {
@@ -375,12 +377,11 @@ body {
   width: 120px;
   height: 120px;
   margin: 0 auto;
-  background: $yellow01;
+  background: $background-yellow;
   border-radius: 50%;
-
   text-align: center;
   font-family: $font-serif-regular;
-  color: #fff;
+  color: $background-text;
   font-size: 16px;
   line-height: 1.3em;
 
@@ -431,7 +432,7 @@ body {
     margin: auto;
     text-align: center;
     line-height: 120px;
-    color: #fff;
+    color: #000;
     font-size: 36px;
   }
 }
@@ -589,7 +590,7 @@ p.c-senate-works-step-description {
 //stats
 
 .c-stats--container {
-  background-color: $yellow01;
+  background-color: $orange-text;
   padding-bottom: 35px;
   position: relative;
   display: block;
@@ -602,7 +603,7 @@ p.c-senate-works-step-description {
   .c-container--title {
     padding: 25px 10px 0 10px;
     font-family: $font-serif;
-    color: $color-white;
+    color: #fff;
     text-transform: capitalize;
     font-size: 18px;
     text-align: center;
@@ -739,7 +740,7 @@ p.c-senate-works-step-description {
   .c-stat {
     margin-bottom: 5px;
     text-align: center;
-    color: $color-white;
+    color: #fff;
     font-family: $font-serif-bold;
     font-size: 54px;
   }
@@ -748,7 +749,7 @@ p.c-senate-works-step-description {
     width: 135px;
     margin: 0 auto 20px;
     text-align: center;
-    color: $grey01;
+    color: #fff;
     text-transform: uppercase;
     font-family: $font-sans;
     font-size: 14px;
@@ -915,16 +916,26 @@ p.c-senate-works-step-description {
       font-size: 13px;
       letter-spacing: 2.6px;
       padding-left: 20px;
-      text-align: left;
       transition: background-color 0.2s ease;
-      color: #fff;
+      color: $background-text;
+      span.btn-text {
+        width: unset;
+      }
       &:hover {
-        background: $yellow03;
+        background: $background-hover;
+        color: #fff;
+        text-decoration: none;
+
+        .btn-text,
+        span.c-senator--cta {
+          text-decoration: underline;
+        }
       }
 
       &::before {
         height: auto;
       }
+
     }
 
     .nys-senator--thumb {

@@ -44,11 +44,18 @@
     border: 0;
   }
 
+  svg {
+    transition: transform .4s ease;
+  }
+
   &.open {
     background: $color-white;
 
     .accordion__heading {
       font-weight: 600;
+      &:hover {
+        text-decoration: underline;
+      }
     }
 
     svg {

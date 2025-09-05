@@ -8,7 +8,7 @@
 */ #}
 {# /modules/custom/nys_openleg/templates/nys-openleg-result-item.html.twig #}
 {% if item_type is empty %}{% set item_type = 'item' %}{% endif %}
-<div class="nys-openleg-result-{{ item_type }}-container">
+<li class="nys-openleg-result-{{ item_type }}-container">
     {% if name %}
         {% if url %}
             <a href="{{ url }}" class="nys-openleg-result-{{ item_type }}-link">
@@ -27,4 +27,4 @@
     {% else %}
         <!-- empty item -->
     {% endif %}
-</div>
+</li>

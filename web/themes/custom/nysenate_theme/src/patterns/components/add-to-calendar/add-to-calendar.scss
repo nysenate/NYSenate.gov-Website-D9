@@ -18,9 +18,13 @@
     border-radius: 3px;
     cursor: pointer;
     text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.004);
-  
+
     &.active {
       background-color: $greyLight;
+    }
+    &:hover {
+      text-decoration: underline;
+      border-color: $grey_accessible;
     }
   }
 
@@ -97,7 +101,7 @@
 .c-event-block--featured .add-to-calendar,
 .c-event-block--featured-image .add-to-calendar {
   margin-top: 20px;
-    
+
   @include breakpoint($bp-sm) {
     float: right;
     clear: right;

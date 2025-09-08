@@ -6,30 +6,3 @@ nys_senators.json_feed:
     shortname: '__all'
   requirements:
     _permission: 'access content'
-
-# For the user's dashboard's "Senator Management" local task.
-nys_senators.dashboard.senators:
-  path: '/dashboard/senators'
-  defaults:
-    _title: 'Senator Management'
-    _controller: '\Drupal\nys_senators\Controller\DashboardSenatorsController::senatorManagement'
-  requirements:
-    _role: legislative_correspondent+microsite_content_producer
-  options:
-    no_cache: 'TRUE'
-
-# for the actual senator management page, might not need this anymore
-# the path will need to change as it is now based on the term's page
-nys_senators.management:
-  path: '/taxonomy/term/{taxonomy_term}/{tab}'
-  defaults:
-    _title: 'Senator Management'
-    _controller: '\Drupal\nys_senators\Controller\DashboardManagementController::senatorPage'
-  requirements:
-    _lc_mcp_senator_access: 'TRUE'
-  options:
-    no_cache: 'TRUE'
-    parameters:
-      taxonomy_term:
-        type: entity:taxonomy_term
-        bundle: ['senator']

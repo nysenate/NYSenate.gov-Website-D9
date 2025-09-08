@@ -1,0 +1,15 @@
+<div class="c-senator-dashboard-bill-teaser">
+  <h2>
+    <a href="{{ url }}">{{ title }}</a>
+  </h2>
+  {{ description }}
+  <div class="c-senator-dashboard-bill-teaser--vote-stats">
+    {% if vote_totals_chart is defined and '<div class="total-value total-value--overall">0</div>' in vote_totals_chart|render %}
+      <p class="c-senator-dashboard-bill-teaser--no-activity">No constituent activity on this bill</p>
+    {% else %}
+      {{ vote_totals_chart }}
+      {{ district_breakdown_chart }}
+      {{ action_links }}
+    {% endif %}
+  </div>
+</div>

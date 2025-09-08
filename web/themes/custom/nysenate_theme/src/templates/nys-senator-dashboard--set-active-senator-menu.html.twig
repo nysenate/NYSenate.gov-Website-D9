@@ -1,0 +1,6 @@
+{% if active_senator_links %}
+  {{ include('@nysenate_theme/nysenate-dashboard/nysenate-dashboard-menu.twig', {
+    items: items,
+    label: 'Senator Dashboard'|t,
+  }, with_context = false) }}
+{% endif %}

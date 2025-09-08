@@ -10,6 +10,7 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\File\FileExists;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Drupal\file\Entity\File;
 use Drupal\node\Entity\Node;
@@ -156,6 +157,7 @@ function nys_school_forms_inline_entity_form_entity_form_alter(&$form, FormState
     match (_nys_school_forms_get_form_type()) {
       'thanksgiving' => $form['field_submission_type']['widget']['#required'] = TRUE,
       'earth_day' => $form['field_submission_type']['#access'] = FALSE,
+      'peace' => $form['field_submission_type']['#access'] = FALSE,
       default => NULL,
     };
   }
@@ -338,11 +340,12 @@ function nys_school_forms_entity_presave(EntityInterface $entity): void {
 /**
  * Custom submit handler for custom redirect.
  */
-function _nys_school_forms_ss_container_submit_handler(array &$form, \Drupal\Core\Form\FormStateInterface $form_state): void {
+function _nys_school_forms_ss_container_submit_handler(array &$form, FormStateInterface $form_state) {
   $form_type = $form_state->getValue('field_form_type')[0]['value'] ?? NULL;
   $redirect_uri = match ($form_type) {
     'thanksgiving' => 'internal:/questionnaires/what-are-you-thankful/received',
     'earth_day' => 'internal:/earthday/received',
+    'peace' => 'internal:/pinwheels/received',
     default => 'internal:/',
   };
   $redirect_url = Url::fromUri($redirect_uri);
@@ -394,4 +397,16 @@ function nys_school_forms_entity_operation(EntityInterface $entity): array {
     }
   }
   return $operations;
+}
+
+/**
+ * Implements hook_page_attachments().
+ *
+ * Adds CSS to hide schools forms content types from the node/add page.
+ */
+function nys_school_forms_page_attachments(array &$attachments) {
+  $current_path = \Drupal::service('path.current')->getPath();
+  if ($current_path === '/node/add') {
+    $attachments['#attached']['library'][] = 'nys_school_forms/hide_from_admin_ui';
+  }
 }

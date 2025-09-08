@@ -1,0 +1,38 @@
+uuid: 8d95b857-be41-462c-aa63-47fd17b532d0
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.constituent_activity_issues
+  module:
+    - system
+    - user
+    - views
+  theme:
+    - nys
+id: nys_views_block__constituent_activity_issues_block_1
+theme: nys
+region: content
+weight: -18
+provider: null
+plugin: 'views_block:constituent_activity_issues-block_1'
+settings:
+  id: 'views_block:constituent_activity_issues-block_1'
+  label: ''
+  label_display: '0'
+  provider: views
+  views_label: ''
+  items_per_page: none
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: /senator-dashboard/constituent-activity/issues
+  user_role:
+    id: user_role
+    negate: false
+    context_mapping:
+      user: '@user.current_user_context:current_user'
+    roles:
+      microsite_content_producer: microsite_content_producer
+      legislative_correspondent: legislative_correspondent

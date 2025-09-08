@@ -1,0 +1,24 @@
+$schema: https://git.drupalcode.org/project/sdc/-/raw/1.x/src/metadata.schema.json
+name: Senator Dashboard bill teaser
+props:
+  type: object
+  required: [title, url, description, vote_totals_chart, district_breakdown_chart, action_links]
+  properties:
+    title:
+      type: string
+      description: The title of the bill
+    url:
+      type: string
+      description: The URL of the bill
+    description:
+      type: string
+      description: A short description of the bill
+    vote_totals_chart:
+      type: string
+      description: Chart of vote totals
+    district_breakdown_chart:
+      type: string
+      description: Chart of vote totals broken down by district
+    action_links:
+      type: string
+      description: Bill action links

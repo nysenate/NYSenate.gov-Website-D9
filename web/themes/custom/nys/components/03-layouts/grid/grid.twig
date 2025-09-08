@@ -1,0 +1,19 @@
+
+{% set classes = [
+  'l-grid',
+  'l-grid--columns-' ~ grid_max,
+] %}
+
+<div class="l-grid-container">
+  <div {{ attributes.addClass(classes) }}>
+    {% if title %}
+      <h2 class="l-grid__title">{{ title }}</h2>
+    {% endif %}
+
+    <ul class="l-grid__items">
+      {% for item in items %}
+        <li class="l-grid__item">{{ item|raw }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>

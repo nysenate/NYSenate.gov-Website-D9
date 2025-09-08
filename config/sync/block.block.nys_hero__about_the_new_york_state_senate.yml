@@ -1,0 +1,30 @@
+uuid: 31633f5e-d4d3-4ec1-ad75-44ebb57a4e60
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:hero:bd331c24-3f92-4f92-90af-0c2aba0b8359'
+  module:
+    - block_content
+    - system
+  theme:
+    - nys
+id: nys_hero__about_the_new_york_state_senate
+theme: nys
+region: above_content
+weight: -11
+provider: null
+plugin: 'block_content:bd331c24-3f92-4f92-90af-0c2aba0b8359'
+settings:
+  id: 'block_content:bd331c24-3f92-4f92-90af-0c2aba0b8359'
+  label: 'Hero: About The New York State Senate'
+  label_display: '0'
+  provider: block_content
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: /about

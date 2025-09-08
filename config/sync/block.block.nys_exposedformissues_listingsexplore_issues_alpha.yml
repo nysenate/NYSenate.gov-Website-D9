@@ -1,0 +1,28 @@
+uuid: 5023774d-6308-4dd0-b3dd-3015470d6e6b
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.issues_listings
+  module:
+    - system
+    - views
+  theme:
+    - nys
+id: nys_exposedformissues_listingsexplore_issues_alpha
+theme: nys
+region: content
+weight: -13
+provider: null
+plugin: 'views_exposed_filter_block:issues_listings-explore_issues_alpha'
+settings:
+  id: 'views_exposed_filter_block:issues_listings-explore_issues_alpha'
+  label: ''
+  label_display: visible
+  provider: views
+  views_label: ''
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: '/explore-issues/*'

@@ -1,0 +1,83 @@
+@import '../../global/utils/breakpoints';
+@import '../../global/colors/colors';
+@import '../../global/fonts/fonts';
+@import '../../global/fonts/phosphor';
+@import '../../global/utils/typography';
+
+.nysenate-dashboard {
+  background-color: $dash_grey_2;
+  margin: 0 auto;
+  padding: 20px;
+  max-width: 1500px;
+
+  @include breakpoint($bp-under-md) {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: 1fr;
+    justify-items: end;
+  }
+
+  @include breakpoint($bp-sm) {
+    padding: 20px 60px;
+  }
+}
+
+.senate-dashboard__trigger {
+  align-items: center;
+  appearance: none;
+  background-color: transparent;
+  border: none;
+  color: #2B6A90;
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  gap: 8px;
+  letter-spacing: 1px;
+  line-height: 1.25;
+  padding: 8px 0;
+  position: relative;
+  text-align: left;
+  text-transform: uppercase;
+  transition: color ease-in-out .25s;
+
+  .icon,
+  .text {
+    display: block;
+  }
+
+  .icon {
+    height: 12px;
+    width: 12px;
+
+    svg { width: 100%; }
+
+    path { fill: currentColor; }
+  }
+
+  &:hover,
+  &:focus {
+    text-decoration: underline;
+  }
+
+  &[aria-expanded='true'] {
+    color: #222;
+
+    .icon--arrow {
+      rotate: 180deg;
+    }
+  }
+
+  @include breakpoint($bp-md) {
+    display: none;
+  }
+}
+
+.senate-dashboard__content {
+  @include breakpoint($bp-under-md) {
+    width: 100%;
+
+    &[aria-hidden='true'] {
+      display: none;
+    }
+  }
+}

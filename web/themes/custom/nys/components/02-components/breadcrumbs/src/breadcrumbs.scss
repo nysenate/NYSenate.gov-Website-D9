@@ -1,0 +1,46 @@
+@use 'partials' as *;
+
+:root {
+  --nys-breadcrumbs-gap: 12px;
+}
+
+.c-breadcrumbs__items,
+.c-breadcrumbs__item {
+  align-items: center;
+  display: flex;
+  gap: var(--nys-breadcrumbs-gap);
+  margin-top: 0;
+
+  @include bp-max(sm) {
+    font-size: 14px;
+    gap: 6px;
+  }
+}
+
+.c-breadcrumbs__items {
+  flex-wrap: wrap;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.c-breadcrumbs__link,
+.c-breadcrumbs__divider,
+.c-breadcrumbs__current {
+  @include type-scale(body, breadcrumbs);
+  color: #fff;
+  font-family: var(--nys-ff-sans);
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.c-breadcrumbs__link {
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  transition: text-decoration-color .35s ease-in-out;
+
+  &:hover {
+    text-decoration-color: #fff;
+  }
+}

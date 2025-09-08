@@ -1,0 +1,14 @@
+{#
+/**
+ * @file
+ * Theme override for a breadcrumb trail.
+ *
+ * Available variables:
+ * - breadcrumb: Breadcrumb trail items.
+ */
+#}
+
+{{ include('nys:breadcrumbs', {
+  divider: '|',
+  items: breadcrumb,
+}, with_context = false) }}

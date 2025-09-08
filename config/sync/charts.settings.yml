@@ -1,14 +1,14 @@
 langcode: en
 charts_default_settings:
-  library: ''
-  type: line
+  library: apexcharts
+  type: donut
   display:
     title: ''
     title_position: out
     subtitle: ''
-    data_labels: false
+    data_labels: true
     data_markers: false
-    legend: false
+    connect_nulls: false
     legend_position: right
     background: ''
     three_dimensional: 0
@@ -40,7 +40,6 @@ charts_default_settings:
       - '#ff7581'
     polar: 0
     tooltips: true
-    tooltips_use_html: false
     dimensions:
       width: ''
       width_units: '%'
@@ -67,8 +66,11 @@ charts_default_settings:
     suffix: ''
     decimal_count: ''
     labels_rotation: '0'
+  library_config: {  }
 advanced:
   debug: false
   requirements:
-    cdn: true
-dependencies: {  }
+    cdn: false
+dependencies:
+  module:
+    - charts_apexcharts

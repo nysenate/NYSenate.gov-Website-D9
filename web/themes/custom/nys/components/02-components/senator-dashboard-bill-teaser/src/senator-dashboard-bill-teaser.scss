@@ -1,0 +1,162 @@
+@use 'partials' as *;
+
+.c-senator-dashboard-bill-teaser {
+  border: 1px solid var(--nys-color-dash-grey-1);
+  margin-bottom: 60px;
+
+  h2 {
+    padding: 40px 32px 0;
+    margin-bottom: 10px;
+    color: var(--nys-color-black-2);
+    font-family: var(--nys-ff-serif-semibold);
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+
+    a {
+      color: var(--nys-color-black-2);
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .c-senator-dashboard-bill-teaser--no-activity {
+    font-family: var(--nys-ff-sans);
+    font-size: 14px;
+    font-style: italic;
+    margin: 0;
+  }
+
+  .field--name-field-ol-name {
+    padding: 0 32px 40px;
+    font-family: var(--nys-ff-sans-bold);
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 22px;
+  }
+
+  .c-senator-dashboard-bill-teaser--vote-stats {
+    overflow: hidden;
+    background: #F7F7F7;
+    padding: 24px 32px;
+  }
+
+  .chart-container {
+    float: left;
+    position: relative;
+    color: var(--nys-color-black-2);
+    font-family: var(--nys-ff-sans);
+    font-size: 14px;
+    font-style: normal;
+    line-height: normal;
+
+    .apexcharts-legend-text {
+      font-family: var(--nys-ff-sans-bold) !important;
+      padding-left: 22px;
+    }
+
+    &.chart-container--total-votes {
+      width: 271px;
+    }
+
+    &.chart-container--in-district-votes {
+      width: 276px;
+    }
+
+    &.chart-container--out-of-district-votes {
+      width: 313px;
+    }
+
+    .apexcharts-legend-marker[rel="1"] {
+      content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M12.2422 1.28525C13.2578 1.48838 13.918 2.47666 13.7148 3.49229L13.625 3.9376C13.418 4.98057 13.0352 5.97275 12.5 6.8751H18.125C19.1602 6.8751 20 7.71494 20 8.7501C20 9.47275 19.5898 10.1017 18.9883 10.4142C19.4141 10.7579 19.6875 11.2853 19.6875 11.8751C19.6875 12.7892 19.0312 13.5509 18.168 13.7149C18.3398 14.0001 18.4375 14.3321 18.4375 14.6876C18.4375 15.5196 17.8945 16.2267 17.1445 16.4688C17.1719 16.5978 17.1875 16.7345 17.1875 16.8751C17.1875 17.9103 16.3477 18.7501 15.3125 18.7501H11.5039C10.7617 18.7501 10.0391 18.5313 9.42188 18.1212L7.91797 17.1173C6.875 16.422 6.25 15.2501 6.25 13.9962V9.65244C6.25 8.51182 6.76953 7.4376 7.65625 6.72275L7.94531 6.49228C8.98047 5.66416 9.6875 4.5001 9.94531 3.20322L10.0352 2.75791C10.2383 1.74228 11.2266 1.08213 12.2422 1.28525ZM1.25 7.5001H3.75C4.44141 7.5001 5 8.05869 5 8.7501V17.5001C5 18.1915 4.44141 18.7501 3.75 18.7501H1.25C0.558594 18.7501 0 18.1915 0 17.5001V8.7501C0 8.05869 0.558594 7.5001 1.25 7.5001Z' fill='%23D48011'/%3E%3C/svg%3E");
+    }
+
+    .apexcharts-legend-marker[rel="2"] {
+      content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M12.2422 18.7148C13.2578 18.5117 13.918 17.5234 13.7148 16.5078L13.625 16.0625C13.418 15.0195 13.0352 14.0273 12.5 13.125H18.125C19.1602 13.125 20 12.2852 20 11.25C20 10.5273 19.5898 9.89844 18.9883 9.58594C19.4141 9.24219 19.6875 8.71484 19.6875 8.125C19.6875 7.21094 19.0312 6.44922 18.168 6.28516C18.3398 6 18.4375 5.66797 18.4375 5.3125C18.4375 4.48047 17.8945 3.77344 17.1445 3.53125C17.1719 3.40234 17.1875 3.26562 17.1875 3.125C17.1875 2.08984 16.3477 1.25 15.3125 1.25H11.5039C10.7617 1.25 10.0391 1.46875 9.42188 1.87891L7.91797 2.88281C6.875 3.57812 6.25 4.75 6.25 6.00391V10.3477C6.25 11.4883 6.76953 12.5625 7.65625 13.2773L7.94531 13.5078C8.98047 14.3359 9.6875 15.5 9.94531 16.7969L10.0352 17.2422C10.2383 18.2578 11.2266 18.918 12.2422 18.7148ZM1.25 15H3.75C4.44141 15 5 14.4414 5 13.75V5C5 4.30859 4.44141 3.75 3.75 3.75H1.25C0.558594 3.75 0 4.30859 0 5V13.75C0 14.4414 0.558594 15 1.25 15Z' fill='%23444444'/%3E%3C/svg%3E");
+    }
+
+    @include bp-max(sm) {
+      width: 100%;
+      padding-bottom: 20px;
+    }
+  }
+
+  .district-breakdown-charts .chart-container {
+    .apexcharts-legend-marker[rel="1"] {
+      content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='15' height='15' viewBox='0 0 15 15' fill='none'%3E%3Cg clip-path='url(%23clip0_1274_2711)'%3E%3Cpath d='M9.18164 0.964062C9.94336 1.11641 10.4385 1.85762 10.2861 2.61934L10.2188 2.95332C10.0635 3.73555 9.77637 4.47969 9.375 5.15645H13.5938C14.3701 5.15645 15 5.78633 15 6.5627C15 7.10469 14.6924 7.57637 14.2412 7.81074C14.5605 8.06855 14.7656 8.46406 14.7656 8.90645C14.7656 9.59199 14.2734 10.1633 13.626 10.2863C13.7549 10.5002 13.8281 10.7492 13.8281 11.0158C13.8281 11.6398 13.4209 12.1701 12.8584 12.3518C12.8789 12.4484 12.8906 12.551 12.8906 12.6564C12.8906 13.4328 12.2607 14.0627 11.4844 14.0627H8.62793C8.07129 14.0627 7.5293 13.8986 7.06641 13.591L5.93848 12.8381C5.15625 12.3166 4.6875 11.4377 4.6875 10.4973V7.23945C4.6875 6.38398 5.07715 5.57832 5.74219 5.04219L5.95898 4.86934C6.73535 4.24824 7.26562 3.3752 7.45898 2.40254L7.52637 2.06855C7.67871 1.30684 8.41992 0.811719 9.18164 0.964062ZM0.9375 5.6252H2.8125C3.33105 5.6252 3.75 6.04414 3.75 6.5627V13.1252C3.75 13.6438 3.33105 14.0627 2.8125 14.0627H0.9375C0.418945 14.0627 0 13.6438 0 13.1252V6.5627C0 6.04414 0.418945 5.6252 0.9375 5.6252Z' fill='%23367866'/%3E%3C/g%3E%3Cdefs%3E%3CclipPath id='clip0_1274_2711'%3E%3Crect width='15' height='15' fill='white'/%3E%3C/clipPath%3E%3C/defs%3E%3C/svg%3E");
+    }
+
+    .apexcharts-legend-marker[rel="2"] {
+      content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='15' height='15' viewBox='0 0 15 15' fill='none'%3E%3Cg clip-path='url(%23clip0_1274_2715)'%3E%3Cpath d='M9.18164 14.0361C9.94336 13.8838 10.4385 13.1426 10.2861 12.3809L10.2188 12.0469C10.0635 11.2646 9.77637 10.5205 9.375 9.84375H13.5938C14.3701 9.84375 15 9.21387 15 8.4375C15 7.89551 14.6924 7.42383 14.2412 7.18945C14.5605 6.93164 14.7656 6.53613 14.7656 6.09375C14.7656 5.4082 14.2734 4.83691 13.626 4.71387C13.7549 4.5 13.8281 4.25098 13.8281 3.98438C13.8281 3.36035 13.4209 2.83008 12.8584 2.64844C12.8789 2.55176 12.8906 2.44922 12.8906 2.34375C12.8906 1.56738 12.2607 0.9375 11.4844 0.9375H8.62793C8.07129 0.9375 7.5293 1.10156 7.06641 1.40918L5.93848 2.16211C5.15625 2.68359 4.6875 3.5625 4.6875 4.50293V7.76074C4.6875 8.61621 5.07715 9.42188 5.74219 9.95801L5.95898 10.1309C6.73535 10.752 7.26562 11.625 7.45898 12.5977L7.52637 12.9316C7.67871 13.6934 8.41992 14.1885 9.18164 14.0361ZM0.9375 11.25H2.8125C3.33105 11.25 3.75 10.8311 3.75 10.3125V3.75C3.75 3.23145 3.33105 2.8125 2.8125 2.8125H0.9375C0.418945 2.8125 0 3.23145 0 3.75V10.3125C0 10.8311 0.418945 11.25 0.9375 11.25Z' fill='%23444444'/%3E%3C/g%3E%3Cdefs%3E%3CclipPath id='clip0_1274_2715'%3E%3Crect width='15' height='15' fill='white'/%3E%3C/clipPath%3E%3C/defs%3E%3C/svg%3E");
+    }
+  }
+
+  .total-label {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 22px;
+    min-height: 22px;
+  }
+
+  .total-value {
+    text-align: center;
+    width: 60px;
+  }
+
+  .total-value--overall {
+    font-weight: 700;
+    width: 72px;
+  }
+
+  .senator-dashboard-bill-action-links {
+    float: left;
+    margin-top: 52px;
+
+    a {
+      display: inline-block;
+      margin-bottom: 4px;
+      float: left;
+      clear: both;
+      color: var(--nys-color-button-blue);
+      font-family: var(--nys-ff-sans-bold);
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: normal;
+      text-decoration-line: underline;
+      text-decoration-style: solid;
+      text-decoration-skip-ink: none;
+      text-decoration-thickness: auto;
+      text-underline-offset: auto;
+      text-underline-position: from-font;
+
+      &:hover {
+        text-decoration-line: none;
+      }
+    }
+  }
+}
+
+// @todo Update component to handle alt display context.
+.block-nys-senator-dashboard-bill-teaser .c-senator-dashboard-bill-teaser {
+  border: none;
+
+  h2, .field--name-field-ol-name, .senator-dashboard-bill-constituents-link {
+    display: none;
+  }
+
+  .c-senator-dashboard-bill-teaser--vote-stats {
+    padding: 0;
+    background: transparent;
+  }
+}
+
+.views-row:last-child {
+  .c-senator-dashboard-bill-teaser {
+    margin-bottom: 0;
+  }
+}

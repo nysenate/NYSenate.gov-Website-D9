@@ -1,0 +1,502 @@
+<?php
+
+/**
+ * @file
+ * Contains custom module logic for NYS Senator Dashboard.
+ */
+
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Database\Query\SelectInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Url;
+use Drupal\flag\Plugin\Flag\EntityFlagType;
+use Drupal\user\UserInterface;
+use Drupal\webform\WebformInterface;
+use Drupal\webform\WebformSubmissionInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+
+/**
+ * Implements hook_query_TAG_alter().
+ *
+ * Ensures views with the "senators_constituents_only" tag only display profiles
+ * linked to the current user's active managed senator's districts.
+ *
+ * @param \Drupal\Core\Database\Query\SelectInterface $query
+ *
+ * @return void
+ */
+function nys_senator_dashboard_query_senators_constituents_only_alter(SelectInterface $query): void {
+  // Get active managed senator.
+  try {
+    $senator_term = \Drupal::service('nys_senator_dashboard.managed_senators_handler')
+      ->getActiveSenator(FALSE);
+  }
+  catch (AccessDeniedHttpException) {
+    $query->alwaysFalse();
+    return;
+  }
+
+  // Get senator's districts.
+  $managed_district_ids = [];
+  try {
+    $senator_districts = \Drupal::entityTypeManager()
+      ->getStorage('taxonomy_term')
+      ->loadByProperties([
+        'vid' => 'districts',
+        'field_senator' => $senator_term->id(),
+      ]);
+  }
+  catch (\Throwable) {
+    $query->alwaysFalse();
+    return;
+  }
+  foreach ($senator_districts as $senator_district) {
+    $managed_district_ids[] = $senator_district->id();
+  }
+  if (empty($managed_district_ids)) {
+    $query->alwaysFalse();
+    return;
+  }
+
+  // Get the views table alias corresponding to the users_field_data table
+  // (could be users_field_data_1, etc.).
+  $table_aliases = $query->getTables();
+  $user_table_alias = NULL;
+  foreach ($table_aliases as $alias => $table_info) {
+    if ($table_info['table'] === 'users_field_data') {
+      $user_table_alias = $alias;
+      break;
+    }
+  }
+  if (!$user_table_alias) {
+    $query->alwaysFalse();
+    return;
+  }
+
+  // Ensure the users being fetched are within the user's active managed
+  // senator's districts.
+  $query->leftJoin(
+    'user__field_district',
+    'ufd',
+    "{$user_table_alias}.uid = ufd.entity_id"
+  );
+  $query->condition('ufd.field_district_target_id', $managed_district_ids, 'IN');
+}
+
+/**
+ * Implements hook_theme().
+ *
+ * @return array
+ *   An array of theme hook information.
+ */
+function nys_senator_dashboard_theme(): array {
+  return [
+    'nys_senator_dashboard_header' => [
+      'variables' => [
+        'senator_image_url' => '',
+        'breadcrumbs' => '',
+        'header_title' => '',
+        'header_blurb' => '',
+        'homepage_url' => '',
+      ],
+    ],
+    'nys_senator_dashboard_constituent_engagement' => [
+      'variables' => [
+        'items' => [],
+        'title' => '',
+      ],
+    ],
+    'nys_senator_dashboard__set_active_senator_menu' => [
+      'variables' => [
+        'mode' => '',
+        'items' => [],
+      ],
+    ],
+    'menu__senator_dashboard' => [
+      'variables' => [
+        'mode' => '',
+        'items' => [],
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_form_alter().
+ *
+ * Hides the footer bulk operation in senator dashboard view.
+ */
+function nys_senator_dashboard_form_alter(&$form, FormStateInterface $form_state, $form_id): void {
+  if (str_starts_with($form_id, 'views_form_senator_dashboard_constituents_')) {
+    $form['actions']['#access'] = FALSE;
+  }
+}
+
+/**
+ * Implements hook_views_data().
+ *
+ * @return array
+ *   An array of data describing various views tables and fields.
+ */
+function nys_senator_dashboard_views_data(): array {
+  $data['users']['votingapi_vote']['relationship'] = [
+    'title' => t('User votes'),
+    'label' => t('Vote entity'),
+    'group' => 'Users',
+    'help' => t('Reference to vote entities by a user.'),
+    'id' => 'standard',
+    'base' => 'votingapi_vote',
+    'base field' => 'user_id',
+    'field' => 'uid',
+  ];
+  $data['users']['flagging']['relationship'] = [
+    'title' => t('User flaggings'),
+    'label' => t('Flagging entity'),
+    'group' => 'Users',
+    'help' => t('Reference to flagging entities by a user.'),
+    'id' => 'flag_relationship',
+    'base' => 'flagging',
+    'base field' => 'uid',
+    'field' => 'uid',
+  ];
+  $data['users']['nys_senator_dashboard_contextual_filter_flag_link'] = [
+    'title' => t('NYS Senator Dashboard: Flag link (from issue ID contextual filter)'),
+    'help' => t('Displays a flag link based on an issue ID context filter value.'),
+    'field' => [
+      'id' => 'nys_senator_dashboard_contextual_filter_flag_link',
+    ],
+  ];
+  $data['users']['nys_senator_dashboard_contextual_filter_webform_id'] = [
+    'title' => t('NYS Senator Dashboard: Webform ID (from entity ID contextual filter)'),
+    'help' => t('Displays the Webform ID based on the parent entity ID from the context filter value.'),
+    'field' => [
+      'id' => 'nys_senator_dashboard_contextual_filter_webform_id',
+    ],
+  ];
+  $data['node']['nys_senator_dashboard_active_senator_sponsor_filter'] = [
+    'title' => t('NYS Senator Dashboard: Active senator sponsor filter'),
+    'help' => t('Filter bills to those sponsored or co-sponsored by the active senator.'),
+    'filter' => [
+      'id' => 'nys_senator_dashboard_active_senator_sponsor_filter',
+    ],
+  ];
+  $data['node__field_senator_multiref']['nys_senator_dashboard_active_senator_filter'] = [
+    'title' => t('NYS Senator Dashboard: Active managed senator filter'),
+    'help' => t("Filter nodes to those linked to the user's active managed senator."),
+    'filter' => [
+      'id' => 'nys_senator_dashboard_active_senator_filter',
+      'field' => 'field_senator_multiref_target_id',
+      'group' => t('Content'),
+    ],
+  ];
+  $data['taxonomy_term_data']['nys_senator_dashboard_active_senator_used_issues'] = [
+    'title' => t('NYS Senator Dashboard: Active senator used issues filter'),
+    'help' => t('Filter issues to those used in content (Articles, Press Releases, etc.) by the active senator.'),
+    'filter' => [
+      'id' => 'nys_senator_dashboard_active_senator_used_issues',
+    ],
+  ];
+  $data['taxonomy_term_data']['nys_senator_dashboard_issue_followers_count_sort'] = [
+    'title' => t('NYS Senator Dashboard: Issue followers'),
+    'help' => t('Sort taxonomy terms by the number of follow_issue flaggings.'),
+    'sort' => [
+      'id' => 'nys_senator_dashboard_issue_followers_count_sort',
+    ],
+  ];
+  return $data;
+}
+
+/**
+ * Implements hook_entity_extra_field_info().
+ *
+ * @return array
+ *   An array of extra field information.
+ */
+function nys_senator_dashboard_entity_extra_field_info(): array {
+  $extra = [];
+
+  $entity_type_manager = \Drupal::entityTypeManager();
+  try {
+    $node_types = $entity_type_manager->getStorage('node_type')->loadMultiple();
+  }
+  catch (\Throwable) {
+    $node_types = [];
+  }
+  foreach ($node_types as $bundle => $type) {
+    $extra['node'][$bundle]['display']['nys_senator_dashboard_path_alias'] = [
+      'label' => t('NYS Senator Dashboard: Path alias'),
+      'description' => t("Displays the node's path alias as a basic string."),
+      'weight' => 10,
+      'visible' => FALSE,
+    ];
+  }
+
+  $flag_service = \Drupal::service('flag');
+  $flags = $flag_service->getAllFlags();
+  /** @var \Drupal\flag\FlagInterface $flag */
+  foreach ($flags as $flag) {
+    $flag_type_plugin = $flag->getFlagTypePlugin();
+    if (!($flag_type_plugin instanceof EntityFlagType)) {
+      continue;
+    }
+
+    $flaggable_bundles = $flag->getApplicableBundles();
+    foreach ($flaggable_bundles as $bundle_name) {
+      $extra[$flag->getFlaggableEntityTypeId()][$bundle_name]['display']['nys_senator_dashboard_flag_count_' . $flag->id()] = [
+        'label' => t('NYS Senator Dashboard: Flag count: %title', ['%title' => $flag->label()]),
+        'description' => t('A custom field that displays the total flagging count on an entity.'),
+        'weight' => 10,
+        'visible' => FALSE,
+      ];
+
+      $extra[$flag->getFlaggableEntityTypeId()][$bundle_name]['display']['nys_senator_dashboard_district_flag_count_' . $flag->id()] = [
+        'label' => t('NYS Senator Dashboard: In / out district flagging counts: %title', ['%title' => $flag->label()]),
+        'description' => t('A custom field that displays in / out district flagging counts.'),
+        'weight' => 10,
+        'visible' => FALSE,
+      ];
+    }
+  }
+
+  $extra['node']['petition']['display']['nys_senator_dashboard_link_to_constituents_list'] = [
+    'label' => t('NYS Senator Dashboard: Link to constituents list'),
+    'description' => t('Displays a link to the constituents list.'),
+    'weight' => 10,
+    'visible' => FALSE,
+  ];
+
+  $nys_senator_dashboard_status = [
+    'label' => t('NYS Senator Dashboard: Active status'),
+    'description' => t('Displays the nodes status as Active or Inactive.'),
+    'weight' => 10,
+    'visible' => FALSE,
+  ];
+  $extra['node']['petition']['display']['nys_senator_dashboard_status'] = $nys_senator_dashboard_status;
+  $extra['node']['webform']['display']['nys_senator_dashboard_status'] = $nys_senator_dashboard_status;
+
+  $extra['node']['webform']['display']['nys_senator_dashboard_constituents_response_count'] = [
+    'label' => t('NYS Senator Dashboard: Questionnaire constituents response count'),
+    'description' => t('Displays the constituents response count as link to the constituents list.'),
+    'weight' => 10,
+    'visible' => FALSE,
+  ];
+
+  $extra['node']['webform']['display']['nys_senator_dashboard_webform_submissions_download'] = [
+    'label' => t('NYS Senator Dashboard: Link to webform submissions download form'),
+    'description' => t('Displays a link to the webform submissions download form.'),
+    'weight' => 10,
+    'visible' => FALSE,
+  ];
+
+  $extra['node']['bill']['display']['nys_senator_dashboard_vote_totals'] = [
+    'label' => t('NYS Senator Dashboard: Chart of vote totals'),
+    'description' => t('Displays a chart of vote totals using the Charts module.'),
+    'weight' => 10,
+    'visible' => FALSE,
+  ];
+
+  $extra['node']['bill']['display']['nys_senator_dashboard_vote_totals_district_breakdown'] = [
+    'label' => t('NYS Senator Dashboard: Chart of vote totals broken down by district'),
+    'description' => t('Displays two charts of vote totals broken down by district using the Charts module.'),
+    'weight' => 10,
+    'visible' => FALSE,
+  ];
+
+  $extra['node']['bill']['display']['nys_senator_dashboard_bill_action_links'] = [
+    'label' => t('NYS Senator Dashboard: Bill action links'),
+    'description' => t('Displays links to view in-district constituents and comments.'),
+    'weight' => 10,
+    'visible' => FALSE,
+  ];
+
+  $extra['taxonomy_term']['issues']['display']['nys_senator_dashboard_followers_link'] = [
+    'label' => t('NYS Senator Dashboard: Followers link'),
+    'description' => t('A link to the constituent followers list.'),
+    'weight' => 10,
+    'visible' => FALSE,
+  ];
+
+  return $extra;
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_access().
+ *
+ * Allows access to webforms where the user's managed senators match the
+ * senator linked to the webform.
+ *
+ * @return \Drupal\Core\Access\AccessResult
+ *   The access result.
+ */
+function nys_senator_dashboard_webform_access(WebformInterface $webform, $operation, AccountInterface $account): AccessResult {
+  // Skip access check for users with administrative permissions.
+  if ($account->hasPermission('administer webform') || $account->hasPermission('administer webforms')) {
+    return AccessResult::neutral();
+  }
+
+  // Get the user's active managed senator.
+  try {
+    $active_managed_senator = \Drupal::service('nys_senator_dashboard.managed_senators_handler')
+      ->getActiveSenator();
+  }
+  catch (\Throwable) {
+    return AccessResult::neutral();
+  }
+
+  // Get the webform node (used to get linked senators).
+  try {
+    /** @var \Drupal\Core\Entity\EntityStorageBase $node_storage */
+    $node_storage = \Drupal::entityTypeManager()->getStorage('node');
+    $query = $node_storage->getQuery()
+      ->condition('type', 'webform')
+      ->condition('webform', $webform->id())
+      ->accessCheck(FALSE);
+    $nids = $query->execute();
+  }
+  catch (\Throwable) {
+    $nids = NULL;
+  }
+  if (empty($nids)) {
+    return AccessResult::neutral();
+  }
+  /** @var \Drupal\node\Entity\Node $webform_node */
+  $webform_node = $node_storage->load(reset($nids));
+
+  // Get the senator IDs referenced in the webform node.
+  $webform_senator_ids = [];
+  if ($webform_node->hasField('field_senator_multiref')) {
+    $field_senator_multiref_value = $webform_node
+      ->get('field_senator_multiref')
+      ?->getValue();
+    if ($field_senator_multiref_value) {
+      foreach ($field_senator_multiref_value as $item) {
+        $webform_senator_ids[] = $item['target_id'];
+      }
+    }
+  }
+  if (empty($webform_senator_ids)) {
+    return AccessResult::neutral();
+  }
+
+  // Check if the webform references the user's active managed senator.
+  if (in_array($active_managed_senator, $webform_senator_ids)) {
+    return AccessResult::allowed();
+  }
+
+  // Otherwise, return neutral.
+  return AccessResult::neutral();
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_access().
+ *
+ * Delegates 'webform_submission' access to
+ * nys_senator_dashboard_webform_access().
+ *
+ * @return \Drupal\Core\Access\AccessResult
+ *   The access result.
+ */
+function nys_senator_dashboard_webform_submission_access(WebformSubmissionInterface $webform_submission, $operation, AccountInterface $account): AccessResult {
+  if ($account->hasPermission('administer webform') || $account->hasPermission('administer webform submission')) {
+    return AccessResult::neutral();
+  }
+
+  $webform = $webform_submission->getWebform();
+  if (!$webform) {
+    return AccessResult::neutral();
+  }
+
+  // Delegate to the webform access check.
+  return nys_senator_dashboard_webform_access($webform, $operation, $account);
+}
+
+/**
+ * Implements hook_entity_view().
+ *
+ * @param array $build
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ * @param \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display
+ *
+ * @return void
+ */
+function nys_senator_dashboard_entity_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display): void {
+  /** @var Drupal\flag\FlagService $flag_service */
+  $flag_service = \Drupal::service('flag');
+  /** @var \Drupal\nys_senator_dashboard\Service\ExtraFieldBuilder $extra_field_builder */
+  $extra_field_builder = \Drupal::service('nys_senator_dashboard.extra_field_builder');
+
+  $flags = $flag_service->getAllFlags($entity->getEntityTypeId(), $entity->bundle());
+  foreach ($flags as $flag) {
+    if (!$flag->status()) {
+      continue;
+    }
+
+    if ($display->getComponent('nys_senator_dashboard_flag_count_' . $flag->id())) {
+      $build['nys_senator_dashboard_flag_count_' . $flag->id()] = $extra_field_builder->buildFlagCount($entity, $flag->id());
+    }
+
+    if ($display->getComponent('nys_senator_dashboard_district_flag_count_' . $flag->id())) {
+      $build['nys_senator_dashboard_district_flag_count_' . $flag->id()] = $extra_field_builder->buildDistrictFlagCount($entity, $flag->id());
+    }
+  }
+
+  // Optimize repetitive field building.
+  $fields = [
+    'status',
+    'constituents_response_count',
+    'webform_submissions_download',
+    'vote_totals',
+    'vote_totals_district_breakdown',
+    'bill_action_links',
+    'followers_link',
+    'link_to_constituents_list',
+    'path_alias'
+  ];
+  $prefix = 'nys_senator_dashboard_';
+  foreach ($fields as $one_field) {
+    $field_name = $prefix . $one_field;
+    if ($display->getComponent($field_name)) {
+      $func_name = 'build' . implode('', array_map('ucfirst', explode('_', $one_field)));
+      $build[$field_name] = $extra_field_builder->$func_name($entity);
+    }
+  }
+}
+
+/**
+ * Implements hook_user_login().
+ *
+ * Redirects MCPs and LCs to their respective dashboard pages on login.
+ *
+ * @param \Drupal\user\UserInterface $account
+ *
+ * @return void
+ */
+function nys_senator_dashboard_user_login(UserInterface $account): void {
+  $request = \Drupal::request();
+  $path = $request->getPathInfo();
+
+  // Make sure destination is not set, and this is not a password reset.
+  if ($request->query->get('destination') || str_starts_with($path, '/user/reset/')) {
+    return;
+  }
+
+  if ($account->hasRole('microsite_content_producer')) {
+    $url = Url::fromRoute('nys_senator_dashboard.manage_senator')->toString();
+    $response = new RedirectResponse($url);
+    $request->getSession()->save();
+    $response->send();
+    exit;
+  }
+
+  if ($account->hasRole('legislative_correspondent')) {
+    $url = Url::fromRoute('nys_senator_dashboard.constituent_activity')->toString();
+    $response = new RedirectResponse($url);
+    $request->getSession()->save();
+    $response->send();
+    exit;
+  }
+}

@@ -4,7 +4,7 @@
   {{ title_prefix }}
   {{ title_suffix }}
   <div class="c-container--header">
-    <h3 class="c-container--title">{{ title }}</h3>
+    <h2 class="c-container--title">{{ title }}</h2>
   </div>
   <span class="c-stats--highlight u-mobile-only"></span>
 
@@ -16,13 +16,13 @@
     {% for fact in facts %}
       <li class="c-carousel--item c-stats--item {% if not hide_icons and fact.status %}show-icons{% endif %}">
         {% if fact.link %}
-        <a href="{{ fact.link }}" class="c-senate-quick-facts__button" data-tab="{{ fact.panel_id }}">
-          <h4 class="c-stat">{{ fact.statistic }}</h4>
+        <a href="{{ fact.link }}" class="c-senate-quick-facts__button"
+           data-tab="{{ fact.panel_id }}">
+          {% endif %}
+          <h3 class="c-stat">{{ fact.statistic }}</h3>
           <p class="c-stat--descript">{{ fact.description }}</p>
+          {% if fact.link %}
         </a>
-        {% else %}
-            <h4 class="c-stat">{{ fact.statistic }}</h4>
-            <p class="c-stat--descript">{{ fact.description }}</p>
         {% endif %}
         {% if not hide_icons and fact.status %}
           <span class="c-stat--illus c-illus__{{ fact.status }}"></span>

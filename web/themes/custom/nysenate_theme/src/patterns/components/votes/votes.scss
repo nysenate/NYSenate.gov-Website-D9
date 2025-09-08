@@ -72,6 +72,12 @@
     width: 50%;
   }
 
+  dd,
+  dt,
+  dl {
+    margin: 0;
+  }
+
   .vote-container {
     margin-bottom: 18px;
 
@@ -90,13 +96,13 @@
 
       .vote-count {
         display: inline-block;
-        font: 18px/18px $font-serif-bold;
-        color: $grey08;
+        font: 18px/1em $font-serif-bold;
+        color: $grey03;
       }
 
       .vote-label {
         display: inline-block;
-        font: 13px/16px $font-sans-bold;
+        font: 13px/1.6em $font-sans-bold;
         color: $grey08;
         text-transform: uppercase;
       }
@@ -130,17 +136,10 @@
       color: $grey08;
       text-transform: uppercase;
 
-      div {
+      dt,
+      dd {
         display: inline-block;
-
-        &:nth-child(1) {
-          color: $grey03;
-        }
-
-        &:nth-child(2) {
-          position: absolute;
-          left: 25%;
-        }
+        margin-right: 1em;
       }
 
       .meta-count {
@@ -182,7 +181,7 @@
       margin: 0 0 20px 40px;
 
       .vote-container {
-        margin: 38px 0 0px 0;
+        margin: 38px 0 0 0;
         .aye,
         .nay {
           width: 100px;
@@ -196,13 +195,13 @@
           .vote-count {
             display: block;
             font: 24px/30px $font-serif-bold;
-            color: $grey08;
+            color: $grey03;
           }
           .vote-label {
             display: block;
             font: 15px/16px $font-sans-bold;
             padding-bottom: 5px;
-            color: $grey08;
+            color: $grey04;
             text-transform: uppercase;
           }
         }

@@ -251,36 +251,36 @@
 
                         <div class="c-bill--vote-details">
                           <div class="c-bill--vote-details-wrapper">
-                            <div class="vote-container">
+                            <dl class="vote-container">
                               <div class="aye {{ vote.type|lower != 'floor' ? " committee_vote" : " " }}">
-                                <div class="vote-count">{{ vote.aye_count|default(0) }}</div>
-                                <div class="vote-label">Aye</div>
+                                <dd class="vote-count">{{ vote.aye_count|default(0) }}</dd>
+                                <dt class="vote-label">Aye</dt>
                               </div>
                               <div class="nay {{ vote.type|lower != 'floor' ? " committee_vote" : " " }}">
-                                <div class="vote-count">{{ vote.nay_count|default(0)  }}</div>
-                                <div class="vote-label">Nay</div>
+                                <dd class="vote-count">{{ vote.nay_count|default(0)  }}</dd>
+                                <dt class="vote-label">Nay</dt>
                               </div>
-                            </div>
-                            <div class="vote-meta">
+                            </dl>
+                            <dl class="vote-meta">
                               {% if vote.type|lower != 'floor' %}
                                 <div class="meta-row">
-                                  <div class="meta-count">{{ vote.aye_reservations_count|default(0)  }}</div>
-                                  <div class="meta-label">Aye with Reservations</div>
+                                  <dd class="meta-count">{{ vote.aye_reservations_count|default(0)  }}</dd>
+                                  <dt class="meta-label">Aye with Reservations</dt>
                                 </div>
                               {% endif %}
                               <div class="meta-row">
-                                <div class="meta-count">{{ vote.absent_count|default(0)  }}</div>
-                                <div class="meta-label">Absent</div>
+                                <dd class="meta-count">{{ vote.absent_count|default(0)  }}</dd>
+                                <dt class="meta-label">Absent</dt>
                               </div>
                               <div class="meta-row">
-                                <div class="meta-count">{{ vote.excused_count|default(0)  }}</div>
-                                <div class="meta-label">Excused</div>
+                                <dd class="meta-count">{{ vote.excused_count|default(0)  }}</dd>
+                                <dt class="meta-label">Excused</dt>
                               </div>
                               <div class="meta-row">
-                                <div class="meta-count">{{ vote.abstained_count|default(0)  }}</div>
-                                <div class="meta-label">Abstained</div>
+                                <dd class="meta-count">{{ vote.abstained_count|default(0)  }}</dd>
+                                <dt class="meta-label">Abstained</dt>
                               </div>
-                            </div>
+                            </dl>
                           </div>
                         </div>
                       </div>

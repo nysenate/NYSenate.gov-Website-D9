@@ -8,9 +8,9 @@
 {# /modules/custom/nys_openleg/templates/nys-openleg-result-head-breadcrumbs.html.twig #}
 
 {% if breadcrumbs is iterable and breadcrumbs|length > 0 %}
-    <div class="nys-openleg-result-breadcrumbs-container">
+    <ol class="nys-openleg-result-breadcrumbs-container">
         {% for val in breadcrumbs %}
             {{ include('nys-openleg-result-item.html.twig', val|merge({'item_type': 'breadcrumb'})) }}
         {% endfor %}
-    </div>
+    </ol>
 {% endif %}

@@ -7730,6 +7730,7 @@
         },
         {
             "name": "drupal/linkit",
+<<<<<<< HEAD
             "version": "6.1.7",
             "source": {
                 "type": "git",
@@ -7741,9 +7742,22 @@
                 "url": "https://ftp.drupal.org/files/projects/linkit-6.1.7.zip",
                 "reference": "6.1.7",
                 "shasum": "15bb27596fa076b0afbbe3e3a7587c1ee69ded9f"
+=======
+            "version": "7.0.8",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/linkit.git",
+                "reference": "7.0.8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/linkit-7.0.8.zip",
+                "reference": "7.0.8",
+                "shasum": "3a16053650934b3942cf369ac1ee3ad85c655d45"
+>>>>>>> main
             },
             "require": {
-                "drupal/core": "^10.1"
+                "drupal/core": "^10.1 || ^11"
             },
             "require-dev": {
                 "drupal/ckeditor": "*",
@@ -7752,8 +7766,13 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
+<<<<<<< HEAD
                     "version": "6.1.7",
                     "datestamp": "1752532708",
+=======
+                    "version": "7.0.8",
+                    "datestamp": "1754406731",
+>>>>>>> main
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -27852,7 +27871,6 @@
         "drupal/rabbit_hole": 10,
         "drupal/sdc_display": 20,
         "drupal/site_verify": 15,
-        "drupal/term_merge": 10,
         "drupal/ultimate_cron": 15,
         "drupal/views_combine": 15,
         "drupal/views_exclude_previous": 10,

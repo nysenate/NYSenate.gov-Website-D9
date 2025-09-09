@@ -1,0 +1,5 @@
+services:
+  nys_entity_print.events:
+    class: Drupal\nys_entity_print\EventSubscriber\EntityPrintSubscriber
+    tags:
+      - { name: event_subscriber }

@@ -146,6 +146,12 @@ function nysenate_theme_preprocess_node__article(&$variables) {
     }
     $variables['senator_name'] = $senator_name;
   }
+
+  if (isset($variables['content']['entity_print_view_pdf']['#url'])) {
+    $variables['content']['entity_print_view_pdf']['#url']->setOption('attributes', [
+      'rel' => 'nofollow',
+    ]);
+  }
 }
 
 /**

@@ -38,13 +38,9 @@ dependencies:
     - node.type.resolution
   module:
     - datetime
-    - entity_print
     - media
     - nys_list_formatter
     - user
-third_party_settings:
-  entity_print:
-    pdf_label: 'Download PDF'
 id: node.resolution.my_dashboard_teaser
 targetEntityType: node
 bundle: resolution
@@ -134,6 +130,7 @@ hidden:
   field_ol_summary: true
   langcode: true
   links: true
+  nys_senator_dashboard_path_alias: true
   private_message_link: true
   rabbit_hole__settings: true
   search_api_excerpt: true

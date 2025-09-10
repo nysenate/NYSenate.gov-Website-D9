@@ -38,13 +38,9 @@ dependencies:
   module:
     - comment
     - datetime
-    - entity_print
     - nys_list_formatter
     - options
     - user
-third_party_settings:
-  entity_print:
-    pdf_label: 'Download PDF'
 id: node.resolution.default
 targetEntityType: node
 bundle: resolution
@@ -303,6 +299,7 @@ hidden:
   entity_print_view_epub: true
   entity_print_view_word_docx: true
   langcode: true
+  nys_senator_dashboard_path_alias: true
   private_message_link: true
   rabbit_hole__settings: true
   search_api_excerpt: true

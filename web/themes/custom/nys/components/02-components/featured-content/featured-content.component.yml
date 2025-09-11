@@ -1,0 +1,21 @@
+$schema: https://git.drupalcode.org/project/sdc/-/raw/1.x/src/metadata.schema.json
+name: Featured Content
+props:
+  type: object
+  required: [title, url, image, issues]
+  properties:
+    title:
+      type: string
+      description: The title of the content
+    url:
+      type: string
+      description: The URL of the content
+    image:
+      type: string
+      description: Image associated with the content
+    issues:
+      type: string
+      description: Issue tags
+    date:
+      type: string
+      description: Date of content

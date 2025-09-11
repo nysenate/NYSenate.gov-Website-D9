@@ -1,0 +1,151 @@
+@use 'partials' as *;
+
+
+.c-event-featured-story {
+  overflow: hidden;
+  padding-bottom: 40px;
+
+  .l-left {
+    width: 100%;
+
+    img {
+      width: 380px;
+      height: 215px;
+    }
+  }
+
+  .c-story-name {
+    font-family: $font-serif;
+    font-size: 24px;
+    margin: 0px;
+    line-height: 120%;
+    padding-top: 16px;
+    max-width: 440px;
+    margin-bottom: 25px;
+    color: $grey08;
+    font-weight: $font-weight-normal;
+
+    a {
+      color: $grey08;
+      text-decoration: none;
+      font-weight: $font-weight-normal;
+    }
+  }
+
+  .c-story-image {
+    width: 100%;
+  }
+
+  .c-story--date {
+    color: $color-blue;
+    margin-bottom: 3px;
+    text-transform: uppercase;
+  }
+
+  .c-story-link {
+    color: $yellow03;
+    font-family: $font-sans-bold;
+    font-size: 14px;
+    @extend .lgt-text;
+  }
+
+  .c-featured-story-issue-tag {
+    @extend .link-text;
+    font-family: $font-sans-bold;
+    font-size: 12px;
+  }
+
+  .c-featured-story-issue-tag a {
+    text-transform: uppercase;
+    font-family: $font-sans-bold;
+    font-size: 12px;
+    line-height: 1em;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    @extend .link-text;
+
+    &:hover {
+      @extend .link-text;
+      text-decoration: underline;
+    }
+  }
+
+  @include breakpoint($bp-sm) {
+
+    .c-story-name {
+      font-size: 26px;
+    }
+
+    .l-left {
+      width: 50%;
+    }
+
+    .l-right {
+      width: 340px;
+      float: right;
+    }
+
+    .story-container {
+      display: flex;
+      gap: 40px;
+    }
+  }
+}
+
+.c-block.c-event-featured-story,
+.nysenate-majority-issue-home .c-event-featured-story{
+  margin-bottom: 0;
+}
+
+.nysenate-majority-issue-home img {
+  margin-bottom: 16px;
+}
+
+.c-event-video--home {
+  color: #666666;
+  font-size: 12px;
+  //vertical-align: top;
+  //margin: 12px 0;
+  display: flex;
+  align-items: center;
+  font-family: $font-sans;
+  text-transform: uppercase;
+  text-decoration: none;
+  @extend .contrast_text;
+  margin-bottom: 15px;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  span {
+    line-height: 1;
+  }
+
+  svg {
+    margin-right: 10px;
+
+    path {
+      fill: $orange01;
+    }
+  }
+}
+
+
+.stream-title {
+  font-family: $font-sans-bold;
+  text-transform: uppercase;
+  color: $orange01;
+  margin: 0;
+}
+
+.nysenate-happening-now {
+  .c-meeting-video--status.icon-before__youtube{
+    &:before {
+      color: $yellow03;
+      font-size: 24px;
+    }
+    font-size: 14px;
+  }
+}
+

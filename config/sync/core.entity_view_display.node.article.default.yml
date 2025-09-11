@@ -27,14 +27,23 @@ dependencies:
     - node.type.article
   module:
     - datetime
-    - entity_print
     - entity_reference_revisions
     - options
+    - sdc_display
     - text
     - user
 third_party_settings:
-  entity_print:
-    pdf_label: 'Print as PDF'
+  sdc_display:
+    enabled: false
+    component:
+      machine_name: ''
+    mappings:
+      static:
+        props: {  }
+        slots: {  }
+      dynamic:
+        props: {  }
+        slots: {  }
 id: node.article.default
 targetEntityType: node
 bundle: article
@@ -46,11 +55,6 @@ content:
     settings: {  }
     third_party_settings: {  }
     weight: 1
-    region: content
-  entity_print_view_pdf:
-    settings: {  }
-    third_party_settings: {  }
-    weight: 21
     region: content
   field_accessible_sitewide:
     type: boolean
@@ -218,8 +222,10 @@ content:
     region: content
 hidden:
   entity_print_view_epub: true
+  entity_print_view_pdf: true
   entity_print_view_word_docx: true
   langcode: true
+  nys_senator_dashboard_path_alias: true
   private_message_link: true
   rabbit_hole__settings: true
   search_api_excerpt: true

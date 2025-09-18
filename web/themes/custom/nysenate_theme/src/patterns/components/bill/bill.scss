@@ -254,7 +254,7 @@ h4.c-bill-topic {
   text-align: center;
   &.c-bill-action--orig-bill {
     background: #eee;
-    color: $grey04;
+    color: $grey08;
   }
 }
 
@@ -521,6 +521,7 @@ th.c-bill--actions-table-header strong {
 .c-bill--actions-table {
   border: none;
   color: $grey03;
+  font-size: .875rem;
 
   thead {
     border-bottom: 4px solid $grey15;
@@ -538,11 +539,23 @@ th.c-bill--actions-table-header strong {
   &-col1,
   &-col2,
   &-header {
-    padding: 0.5rem 0.625rem 0.625rem;
-    font-size: 0.875rem;
-    text-align: left;
-    vertical-align: top;
-    line-height: 1.625rem;
+
+    th {
+      padding: 0.5rem 0.625rem 0.625rem;
+      vertical-align: top;
+      text-align: right;
+      line-height: 1.125rem;
+      font-weight: bold;
+      color: $color-white;
+      font-size: 0.875rem;
+      &:first-child {
+        text-align: center;
+      }
+    }
+
+    strong {
+      font-family: $font-sans;
+    }
   }
 
   &-col1 {
@@ -553,17 +566,6 @@ th.c-bill--actions-table-header strong {
     width: 70%;
   }
 
-  &-header {
-    text-align: right;
-    line-height: 1.125rem;
-    font-weight: bold;
-    color: $color-white;
-
-    strong {
-      font-family: $font-sans;
-      display: block;
-    }
-  }
 }
 
 @include breakpoint($bp-sm) {

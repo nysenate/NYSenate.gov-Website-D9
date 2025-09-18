@@ -6,7 +6,7 @@
 {% if content.amendments|length > 1 %}
   <div class="c-bill--amendment-details c-bill-section">
     <div id="amendment-details"></div>
-    <h3 class="c-detail--subhead c-detail--section-title">Bill Amendments</h3>
+    <h2 class="c-detail--subhead c-detail--section-title">Bill Amendments</h2>
 
     <dl class="l-tab-bar">
       {% for title, amendment_url in content.amended_versions_tab_data %}
@@ -146,11 +146,11 @@
         {% if node_wrapper.field_ol_summary.value %}
           <div class="c-bill-text__summary">
             <a name="summary-text-top"></a>
-            <h3 class="c-detail--subhead c-detail--section-title">
+            <h2 class="c-detail--subhead c-detail--section-title">
               {{ node_wrapper.label() }}
               {{ is_active_version ? ' (ACTIVE)' : '' }}
               - Summary
-            </h3>
+            </h2>
             <div id="summary-{{ content.bill_wrapper.label() }}">
               <div class="c-block c-detail--summary c-bill-section">
                 <p>
@@ -171,11 +171,11 @@
       {% if node_wrapper.field_ol_memo.value %}
         <div class="c-bill-text__memo">
           <a name="memo-text-top"></a>
-          <h3 class="c-detail--subhead c-detail--section-title">
+          <h2 class="c-detail--subhead c-detail--section-title">
             {{ node_wrapper.label() }}
             {{ is_active_version ? ' (ACTIVE)' : '' }}
             - Sponsor Memo
-          </h3>
+          </h2>
           <div id="sponsor-memo-{{ content.bill_wrapper.label() }}" class="c-text--preformatted">
             <div class="c-detail--memo">
               <pre class="c-bill-fulltext">
@@ -204,14 +204,14 @@
       <!-- Full Text -->
       <div class="c-bill-text__bill" style="clear:both;">
         <a name="bill-text-top"></a>
-        <h3 class="c-detail--subhead c-detail--section-title">
+        <h2 class="c-detail--subhead c-detail--section-title">
           {{ node_wrapper.label() }}
           {{ is_active_version ? ' (ACTIVE)' : '' }}
           - Bill Text
           <span style="float:right;">
             <a href="{{ content.ol_base_url }}/pdf/bills/{{ content.bill_wrapper.field_ol_session.value}}/{{ content.bill_wrapper.field_ol_print_no.value|lower }}" class="c-detail--download" target="_blank">download pdf</a>
           </span>
-        </h3>
+        </h2>
         {% if node_wrapper.field_ol_full_text.value %}
           <div id="full-text-{{ content.bill_wrapper.label() }}" class="c-text--preformatted">
             <div class="c-detail--memo">

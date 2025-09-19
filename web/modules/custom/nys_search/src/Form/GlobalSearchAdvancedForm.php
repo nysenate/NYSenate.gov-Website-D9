@@ -157,7 +157,7 @@ class GlobalSearchAdvancedForm extends FormBase {
         '#markup' => $this->t('<h1>Global Search</h1>'),
       ];
     }
-    $args = $this->requestStack->getCurrentRequest()->query->all();
+    $args = $this->getRequest()->query->all();
 
     $form['advanced_search']['advanced_search_text'] = [
       '#type' => 'item',

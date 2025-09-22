@@ -1,28 +1,33 @@
-<div class="c-block c-event-featured-story">
-    <div class="c-container--header__top-border">
-        <h3 class="c-container--title">
-            Featured Story
-        </h3>
-    </div>
+{% if microsite %}
+<article class="node--view-mode-featured-content">
+    <div class="c-block c-event-featured-story">
+        <div class="c-container--header__top-border">
+            <h3 class="c-container--title">
+                Featured Story
+            </h3>
+        </div>
+    {% endif %}
 
     <div class="story-container">
+        {% if content_type %}
+            <div class="c-title">{{ content_type }}</div>
+        {% endif %}
         <div class="l-left">
-                {{ image }}
+            {{ image }}
         </div>
         <div class="l-right">
-            <div class="c-story--date med-text">
-                {{ date }}
-            </div>
+            {% if microsite %}
+                <div class="c-story--date med-text">
+                    {{ date }}
+                </div>
+            {% endif %}
             <h3 class="c-story-name">
                 <a href="{{ url }}">{{ title }}</a>
             </h3>
-            {% if issues %}
-                <div class="c-featured-story-issue-tag">
-                    {% issue tag in issues %}
-                        {{ issue }}{% if not loop.last %}, {% endif %}
-                    {% endfor %}
-                </div>
-            {% endif %}
+            {{ issues }}
         </div>
     </div>
-</div>
+        {% if microsite %}
+    </div>
+</article>
+{% endif %}

@@ -1,0 +1,62 @@
+<?php
+
+/**
+ * @file
+ * Contains custom module logic for NYS Extra Fields.
+ */
+
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\node\NodeInterface;
+
+/**
+ * Implements hook_entity_extra_field_info().
+ *
+ * @return array
+ *   An array of extra field information.
+ */
+function nys_extra_fields_entity_extra_field_info(): array {
+  $extra = [];
+
+  $entity_type_manager = \Drupal::entityTypeManager();
+  try {
+    $node_types = $entity_type_manager->getStorage('node_type')->loadMultiple();
+  }
+  catch (\Throwable) {
+    $node_types = [];
+  }
+
+  // Add the content type field to all node content types
+  foreach ($node_types as $bundle => $type) {
+    $extra['node'][$bundle]['display']['nys_content_type'] = [
+      'label' => t('Content Type'),
+      'description' => t("Displays the node's content type as a string."),
+      'weight' => 10,
+      'visible' => FALSE,
+    ];
+  }
+
+  return $extra;
+}
+
+/**
+ * Implements hook_entity_view().
+ *
+ * @param array $build
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ * @param \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display
+ *
+ * @return void
+ */
+function nys_extra_fields_entity_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display): void {
+  // Only process if the entity is a node
+  if ($entity instanceof NodeInterface) {
+    // Check if our extra field is configured to be displayed
+    if ($display->getComponent('nys_content_type')) {
+      // Get the content type service
+      $extra_field_builder = \Drupal::service('nys_extra_fields.content_type_builder');
+      // Build the content type field
+      $build['nys_content_type'] = $extra_field_builder->buildContentType($entity);
+    }
+  }
+}

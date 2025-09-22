@@ -2,7 +2,7 @@ $schema: https://git.drupalcode.org/project/sdc/-/raw/1.x/src/metadata.schema.js
 name: Featured Content
 props:
   type: object
-  required: [title, url, image, issues]
+  required: [title, url]
   properties:
     title:
       type: string
@@ -19,3 +19,9 @@ props:
     date:
       type: string
       description: Date of content
+    microsite:
+      type: string
+      description: Senator page
+    content_type:
+      type: string
+      description: Content Type

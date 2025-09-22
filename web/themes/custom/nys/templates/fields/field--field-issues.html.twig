@@ -1,0 +1,8 @@
+{# field--field-issues.html.twig #}
+{% if items %}
+    <span class="c-featured-story-issue-tag">
+    {% for item in items %}
+        {{ item.content }}{% if not loop.last %}, {% endif %}
+    {% endfor %}
+  </span>
+{% endif %}

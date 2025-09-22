@@ -1,4 +1,5 @@
 @use 'partials' as *;
+@use 'partials/breakpoints' as *;
 
 
 .c-event-featured-story {
@@ -13,22 +14,30 @@
       height: 215px;
     }
   }
-
+  .c-title, .c-news-container .c-title h3 {
+    font-family: var(--nys-ff-sans);
+    font-size: 14px;
+    font-weight: normal;
+    text-transform: uppercase;
+    position: relative;
+    padding-bottom: 20px;
+    padding-top: 20px;
+    margin: 0;
+  }
   .c-story-name {
-    font-family: $font-serif;
+    font-family: var(--nys-ff-serif);
     font-size: 24px;
-    margin: 0px;
+    margin: 0 0 25px 0;
     line-height: 120%;
     padding-top: 16px;
     max-width: 440px;
-    margin-bottom: 25px;
-    color: $grey08;
-    font-weight: $font-weight-normal;
+    color: var(--nys-color-grey08);
+    font-weight: var(--nys-fw-normal);
 
     a {
-      color: $grey08;
+      color: var(--nys-color-grey08);
       text-decoration: none;
-      font-weight: $font-weight-normal;
+      font-weight: var(--nys-fw-normal);
     }
   }
 
@@ -37,40 +46,39 @@
   }
 
   .c-story--date {
-    color: $color-blue;
+    color: var(--nys-color-blue);
     margin-bottom: 3px;
     text-transform: uppercase;
   }
 
   .c-story-link {
-    color: $yellow03;
-    font-family: $font-sans-bold;
+    font-family: var(--nys-ff-sans-bold);
     font-size: 14px;
-    @extend .lgt-text;
+    color: var(--nys-color-lgt-text);
   }
 
   .c-featured-story-issue-tag {
-    @extend .link-text;
-    font-family: $font-sans-bold;
+    color: var(--nys-color-link);
+    font-family: var(--nys-ff-sans-bold);
     font-size: 12px;
   }
 
   .c-featured-story-issue-tag a {
     text-transform: uppercase;
-    font-family: $font-sans-bold;
+    font-family: var(--nys-ff-sans-bold);
     font-size: 12px;
     line-height: 1em;
     letter-spacing: 0.05em;
     text-decoration: none;
-    @extend .link-text;
+    color: var(--nys-color-link);
 
     &:hover {
-      @extend .link-text;
+      color: var(--nys-color-link);
       text-decoration: underline;
     }
   }
 
-  @include breakpoint($bp-sm) {
+  @include bp-min(sm) {
 
     .c-story-name {
       font-size: 26px;
@@ -102,16 +110,13 @@
 }
 
 .c-event-video--home {
-  color: #666666;
   font-size: 12px;
-  //vertical-align: top;
-  //margin: 12px 0;
   display: flex;
   align-items: center;
-  font-family: $font-sans;
+  font-family: var(nys-ff-sans);
   text-transform: uppercase;
   text-decoration: none;
-  @extend .contrast_text;
+  color: var(--nys-color-contrast-text);
   margin-bottom: 15px;
 
   &:hover {
@@ -126,26 +131,59 @@
     margin-right: 10px;
 
     path {
-      fill: $orange01;
+      fill: var(--nys-color-gold);
     }
   }
 }
 
 
 .stream-title {
-  font-family: $font-sans-bold;
+  font-family: var(--nys-ff-sans-bold);
   text-transform: uppercase;
-  color: $orange01;
+  color: var(--nys-color-gold);
   margin: 0;
 }
 
 .nysenate-happening-now {
-  .c-meeting-video--status.icon-before__youtube{
-    &:before {
-      color: $yellow03;
+  .c-meeting-video--status.icon-before__youtube:before{
+      color: var(--nys-color-yellow03);
       font-size: 24px;
-    }
-    font-size: 14px;
   }
 }
+.node--view-mode-featured-content {
+  grid-column: 1 / span 2
+}
 
+@include bp-min(sm) {
+  .view-display-id-block_1 {
+    .view-content {
+      @include grid(2, 40px);
+      .views-row {
+        border-bottom: 1px solid var(--nys-color-grey05)
+      }
+
+      .c-event-featured-story {
+        .c-container--header__top-border {
+          display: none;
+        }
+
+        .story-container {
+          display: block;
+
+          .l-left {
+            width: 100%;
+          }
+
+          .l-right {
+            width: 100%;
+            float: none;
+          }
+
+          .c-story--date {
+            margin-top: 24px;
+          }
+        }
+      }
+    }
+  }
+}

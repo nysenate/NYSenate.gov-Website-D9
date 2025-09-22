@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_view_mode.node.featured_content
     - core.entity_view_mode.node.upcoming_event
     - field.storage.node.field_category
     - field.storage.node.field_date
@@ -1410,9 +1411,19 @@ display:
         operator: AND
         groups:
           1: AND
+      style:
+        type: default
+        options: {  }
+      row:
+        type: 'entity:node'
+        options:
+          relationship: none
+          view_mode: featured_content
       defaults:
         title: false
         pager: false
+        style: false
+        row: false
         fields: false
         sorts: false
         arguments: false
@@ -1420,7 +1431,18 @@ display:
         filter_groups: false
         header: false
       display_description: 'Newsroom Landing Block'
-      header: {  }
+      header:
+        area_text_custom:
+          id: area_text_custom
+          table: views
+          field: area_text_custom
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text_custom
+          empty: false
+          content: "<div class=\"c-container  c-news-container  newsroom-landing\">\r\n  <div class=\"c-container--header\">\r\n    <h2 class=\"c-container--title\">\r\n              Newsroom\r\n          </h2>\r\n    <a href=\"/news-and-issues\" class=\"c-container--link\">\r\n              Go to News\r\n          </a>\r\n  </div>\r\n  <div>"
+          tokenize: false
       display_extenders: {  }
       block_description: 'Microsite Newsroom Landing'
     cache_metadata:

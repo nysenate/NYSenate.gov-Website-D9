@@ -28,7 +28,33 @@ dependencies:
     - node.type.article
   module:
     - datetime
+    - sdc_display
     - user
+third_party_settings:
+  sdc_display:
+    enabled: true
+    component:
+      machine_name: 'nys:featured-content'
+      show_deprecated: null
+    mappings:
+      static:
+        props:
+          title: 'Title not found'
+          url: 'URL not found'
+          image: 'Image not found'
+          issues: ''
+          date: ''
+          microsite: ''
+          content_type: ''
+      dynamic:
+        props:
+          title: title
+          url: nys_senator_dashboard_path_alias
+          image: field_image_main
+          issues: field_issues
+          date: field_date
+          microsite: field_senator_multiref
+          content_type: nys_content_type
 id: node.article.featured_content
 targetEntityType: node
 bundle: article
@@ -54,16 +80,33 @@ content:
     region: content
   field_issues:
     type: entity_reference_label
-    label: above
+    label: hidden
     settings:
       link: true
     third_party_settings: {  }
     weight: 2
     region: content
+  field_senator_multiref:
+    type: entity_reference_entity_id
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 4
+    region: content
   links:
     settings: {  }
     third_party_settings: {  }
     weight: 0
+    region: content
+  nys_content_type:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 6
+    region: content
+  nys_senator_dashboard_path_alias:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 5
     region: content
 hidden:
   body: true
@@ -82,7 +125,6 @@ hidden:
   field_image_hero: true
   field_layout_components: true
   field_majority_issue_tag: true
-  field_senator_multiref: true
   field_social_image: true
   field_social_teaser: true
   field_subtitle: true

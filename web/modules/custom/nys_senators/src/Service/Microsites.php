@@ -16,32 +16,32 @@ class Microsites {
   /**
    * The cache key for the compiled theme information.
    */
-  const CACHE_NAME_MICROSITES = 'nys_senators.microsite_urls';
+  const string CACHE_NAME_MICROSITES = 'nys_senators.microsite_urls';
 
   /**
    * The cache key for the compiled theme information.
    */
-  const CACHE_NAME_THEMES = 'nys_senators.microsite_themes';
+  const string CACHE_NAME_THEMES = 'nys_senators.microsite_themes';
 
   /**
    * The maximum age in seconds of the theme compilation.
    */
-  const CACHE_MAX_AGE_THEMES = 86400;
+  const int CACHE_MAX_AGE_THEMES = 86400;
 
   /**
    * The path to the relevant SCSS file.
    */
-  const SCSS_FILE = 'src/patterns/global/colors/_colors.scss';
+  const string SCSS_FILE = 'src/patterns/global/colors/_colors.scss';
 
   /**
    * The regex pattern used to parse color assignments in SCSS.
    */
-  const SCSS_PATTERN = '/\\$([A-Za-z_0-9]+)_(%%parts%%): (#[a-fA-F0-9]{6})/';
+  const string SCSS_PATTERN = '/\\$([A-Za-z_0-9]+)_(%%parts%%): (#[a-fA-F0-9]{6})/';
 
   /**
    * A default theme to use if anything goes wrong.
    */
-  const DEFAULT_THEME = [
+  const array DEFAULT_THEME = [
     'name' => 'default',
     'lgt' => '#FFFFFF',
     'med' => '#FFFFFF',
@@ -75,6 +75,20 @@ class Microsites {
    * @var \Symfony\Component\HttpFoundation\RequestStack
    */
   protected RequestStack $requestStack;
+
+  /**
+   * Class-level cache for microsite compilations.
+   *
+   * @var array
+   */
+  protected array $cachedMicrosites = [];
+
+  /**
+   * Class-level cache for theme compilations.
+   *
+   * @var array
+   */
+  protected array $cachedThemes = [];
 
   /**
    * Constructor.
@@ -134,13 +148,18 @@ class Microsites {
   /**
    * Fetch the array of themes, either from cache, or from the file.
    */
-  protected function fetchThemes(): array {
-    $cache = $this->cache->get(static::CACHE_NAME_THEMES);
-    $themes = $cache ? ($cache->data ?? []) : [];
-    if (!$themes) {
-      $themes = $this->rebuild();
+  protected function getThemes(bool $refresh = FALSE): array {
+    // If class-level cache is empty, pull from the database.
+    if (!$this->cachedThemes) {
+      $this->cachedThemes = $this->cache->get(static::CACHE_NAME_THEMES)->data ?? [];
     }
-    return $themes;
+
+    // If still empty, rebuild from source.
+    if (!$this->cachedThemes || $refresh) {
+      $this->compileThemes();
+    }
+
+    return $this->cachedThemes;
   }
 
   /**
@@ -148,17 +167,16 @@ class Microsites {
    */
   public function getTheme(string $name = ''): array {
     return $name
-        ? (($this->fetchThemes()[$name]) ?? static::DEFAULT_THEME)
-        : $this->fetchThemes();
+      ? (($this->getThemes()[$name]) ?? static::DEFAULT_THEME)
+      : $this->getThemes();
   }
 
   /**
    * Rebuilds the cache entry for the compiled array of themes.
    */
-  public function rebuild(): array {
-    $themes = $this->readScssPalettes();
-    $this->cache->set(static::CACHE_NAME_THEMES, $themes, time() + static::CACHE_MAX_AGE_THEMES);
-    return $themes;
+  public function compileThemes(): void {
+    $this->cachedThemes = $this->readScssPalettes();
+    $this->cache->set(static::CACHE_NAME_THEMES, $this->cachedThemes, time() + static::CACHE_MAX_AGE_THEMES);
   }
 
   /**
@@ -171,13 +189,37 @@ class Microsites {
   /**
    * Gets an array matching senator term ID to senator microsite URL.
    */
-  public function getMicrosites(): array {
-    $sites = $this->cache->get(static::CACHE_NAME_MICROSITES);
-    $ret = $sites ? $sites->data : [];
-    if (!$ret) {
-      $ret = $this->compileMicrosites();
+  public function getMicrosites(bool $refresh = FALSE): array {
+    // If local cache is empty, load from the database.
+    if (!$this->cachedMicrosites) {
+      $this->cachedMicrosites = $this->cache->get(static::CACHE_NAME_MICROSITES)->data ?? [];
     }
-    return $ret;
+
+    // If local cache is still empty, rebuild.
+    if (!$this->cachedMicrosites || $refresh) {
+      $this->cachedMicrosites = $this->compileMicrosites();
+    }
+
+    return $this->cachedMicrosites;
+  }
+
+  /**
+   * Gets the taxonomy term for a specified microsite page type.
+   */
+  protected function getPageTypeTerm(string $type): ?Term {
+    try {
+      $terms = $this->entityTypeManager
+        ->getStorage('taxonomy_term')
+        ->loadByProperties([
+          'vid' => 'microsite_page_type',
+          'name' => ucwords($type),
+        ]);
+      $term = current($terms) ?: NULL;
+    }
+    catch (\Throwable) {
+      $term = NULL;
+    }
+    return $term;
   }
 
   /**
@@ -188,33 +230,19 @@ class Microsites {
    * can not be loaded, an empty array will be returned.
    */
   protected function compileMicrosites(): array {
-    // Get the term ID for landing pages.
-    try {
-      $terms = $this->entityTypeManager
-        ->getStorage('taxonomy_term')
-        ->loadByProperties(
-                [
-                  'vid' => 'microsite_page_type',
-                  'name' => 'Landing',
-                ]
-            );
-      $landing_term = current($terms);
-      $landing_id = $landing_term->id();
-    }
-    catch (\Throwable) {
-      $landing_id = 0;
-    }
+    $landing_term = $this->getPageTypeTerm('landing');
+    $landing_id = $landing_term?->id() ?? 0;
 
-    // Find all microsite_page nodes assigned to the "Landing" page type.
+    // Find all microsite_page nodes assigned to the found term.
     try {
       $pages = $this->entityTypeManager
         ->getStorage('node')
         ->loadByProperties(
-                [
-                  'type' => 'microsite_page',
-                  'field_microsite_page_type' => $landing_id,
-                ]
-            );
+          [
+            'type' => 'microsite_page',
+            'field_microsite_page_type' => $landing_id,
+          ]
+        );
     }
     catch (\Throwable) {
       $pages = [];
@@ -222,13 +250,13 @@ class Microsites {
 
     // Compile the array, in the form [<senator_id> => <landing_page_url>, ...].
     $urls = [];
+    $url_options = [
+      'absolute' => TRUE,
+      'base_url' => $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost(),
+    ];
     foreach ($pages as $page) {
       try {
         $senator_id = $page->field_senator_multiref->entity->id() ?? 0;
-        $url_options = [
-          'absolute' => TRUE,
-          'base_url' => $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost(),
-        ];
         $url = $page->toUrl('canonical', $url_options)->toString();
       }
       catch (\Throwable) {

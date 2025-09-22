@@ -25,68 +25,43 @@
  * @see template_preprocess_block()
  */
 #}
-{{ attach_library('nysenate_theme/nysenate-tabs') }}
-{%
-  set classes = [
+{% if content and content.field_tab_names %}
+  {{ attach_library('nysenate_theme/nysenate-tabs') }}
+  {% set classes = [
     'block',
     'block-' ~ configuration.provider|clean_class,
     'block-' ~ plugin_id|clean_class,
-  ]
-%}
-{% if content %}
+  ] %}
   <div{{ attributes.addClass(classes) }}>
-    {% block content %}
     <div class="newsroom-content l-row">
-      <dl class="l-tab-bar">
+      <div class="l-tab-bar" role="tablist">
         <div class="c-tab--arrow u-mobile-only"></div>
-        <div class="c-tab active">
-          <input class="form-radio" type="radio" name="news" value="#panel1" checked="checked">
-          <label class="c-tab-link" for="news">{{ content.field_tab_names[0] }}</label>
-        </div>
-        <div class="c-tab">
-          <input class="form-radio" type="radio" name="legislation" value="#panel2">
-          <label class="c-tab-link" for="legislation">{{ content.field_tab_names[1] }}</label>
-        </div>
-      {% if content.field_tabs_no[0]['#markup'] == "three" %}
-        <div class="c-tab">
-          <input class="form-radio" type="radio" name="events" value="#panel3">
-          <label class="c-tab-link" for="events">{{ content.field_tab_names[2] }}</label>
-        </div>
-      {% endif %}
-      {% if content.field_tabs_no[0]['#markup'] == "four" %}
-        <div class="c-tab">
-          <input class="form-radio" type="radio" name="events" value="#panel3">
-          <label class="c-tab-link" for="events">{{ content.field_tab_names[2] }}</label>
-        </div>
-        <div class="c-tab">
-          <input class="form-radio" type="radio" name="events" value="#panel4">
-          <label class="c-tab-link" for="events">{{ content.field_tab_names[3] }}</label>
-        </div>
-      {% endif %}
-      </dl>
-      <div class="tabs-content">
-        <div class="panel-pane pane-views pane-news-by-issue content active" id="panel1">
-          {{ content.field_block_views[0] }}
-        </div>
-
-        <div class="panel-pane pane-views pane-news-by-issue content" id="panel2">
-          {{ content.field_block_views[1] }}
-        </div>
-      {% if content.field_tabs_no[0]['#markup'] == "three" %}
-        <div class="panel-pane pane-views pane-news-by-issue content" id="panel3">
-          {{ content.field_block_views[2] }}
-        </div>
-      {% endif %}
-      {% if content.field_tabs_no[0]['#markup'] == "four" %}
-        <div class="panel-pane pane-views pane-news-by-issue content" id="panel3">
-          {{ content.field_block_views[2] }}
-        </div>
-        <div class="panel-pane pane-views pane-news-by-issue content" id="panel4">
-          {{ content.field_block_views[3] }}
-        </div>
-      {% endif %}
+        {% for key, tab in content.field_tab_names %}
+          {% if key matches '/^\\d+$/' %}
+            {% set safe_name = tab['#context']['value']|lower|preg_replace('/[^-_0-9a-z]/', '-') %}
+            {% set full_name = "radio-tab--#{safe_name}" %}
+            {% set is_first = key == "0" %}
+            <div class="c-tab{{ is_first ? ' active' : '' }}" role="tab">
+              <input class="form-radio" type="radio" name="{{ safe_name }}"
+                     value="#panel{{ key + 1 }}" id="{{ full_name }}"
+                  {{ is_first ? ' checked="checked"' : '' }}>
+              <label class="c-tab-link"
+                     for="{{ full_name }}">{{ tab['#context']['value'] }}</label>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+      <div class="tabs-content" aria-live="polite">
+        {% for key in content.field_tab_names|keys %}
+          {% if key matches '/^\\d+$/' and content.field_block_views[key] %}
+            <div
+                class="panel-pane pane-views pane-news-by-issue content{{ key == "0" ? ' active' : '' }}"
+                id="panel{{ key + 1 }}" role="tabpanel">
+              {{ content.field_block_views[key] }}
+            </div>
+          {% endif %}
+        {% endfor %}
       </div>
     </div>
-    {% endblock %}
   </div>
 {% endif %}

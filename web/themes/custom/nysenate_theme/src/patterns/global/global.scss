@@ -328,7 +328,7 @@ ol {
   li {
     font-family: $font-serif;
     line-height: 1.5em;
-    color: $grey03;
+    color: $grey05;
     font-size: 16px;
 
     & + li {
@@ -337,6 +337,9 @@ ol {
 
     a {
       @extend .link-text;
+      &:hover {
+        text-decoration: underline;
+      }
     }
   }
 
@@ -355,8 +358,15 @@ ol {
   margin-top: 20px;
 }
 
+.tabs.primary a {
+  color: #000!important;
+}
+
 a {
   @extend .link-text;
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 // Headings are always 'just a bit bigger' than body copy.
@@ -554,20 +564,15 @@ label {
   }
 
   li {
-    display: block;
-    float: left;
-
-    & + li {
-      margin: 0 0 0 20px;
-    }
+    display: inline-block;
   }
 }
 
 .c-detail--social-item {
   position: relative;
   display: block;
-  width: 60px;
-  height: 40px;
+  width: 40px;
+  height: 32px;
   background: $blue01;
   &.bill {
     background: none;
@@ -687,26 +692,23 @@ label {
     border-left: 1px solid $grey05;
 
     .c-detail--subhead {
-      float: right;
-      text-align: right;
+      text-align: center;
     }
 
     ul {
       display: block;
-      float: right;
-      clear: both;
+      text-align: center;
 
       li {
-        & + li {
-          margin-left: 0;
+        margin: 0;
+        padding: 3px 0;
+        &:first-child {
+          margin-left: -10px;
         }
       }
     }
     svg path {
       fill: #2B6A91;
-    }
-    li.email {
-      margin-right: -40px;
     }
   }
 
@@ -860,10 +862,11 @@ section.print.hero--senator {
   }
 }
 
-// Esnure skip link never clipped when focussed.
-.skip-link.visually-hidden.focusable:focus {
+.skip-link.visually-hidden.focusable {
+  position: absolute;
+  top: 5px;
+  left: 5px;
   z-index: 5000;
-  position: relative !important;
 }
 
 // Disable admin menu body padding when on TFA page.
@@ -878,4 +881,11 @@ section.print.hero--senator {
       fill: #1b5187;
     }
   }
+}
+
+.webform-button--submit:hover,
+.search__submit-text:hover,
+.js-form-submit:hover,
+a.c-msg-senator:hover {
+  text-decoration: underline;
 }

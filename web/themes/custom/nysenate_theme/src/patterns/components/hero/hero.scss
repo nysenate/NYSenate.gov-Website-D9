@@ -92,12 +92,13 @@ p.c-hero--welcome {
   background: $color-white;
 
   a {
-    color: $yellow03;
+    color: $gen_link;
     border-bottom: 1px dotted;
     font-style: italic;
 
     &:hover {
-      color: $yellow01;
+      color: $gen_link_hover;
+      border-bottom: none;
     }
   }
 }
@@ -515,7 +516,7 @@ p.c-hero--welcome {
       }
 
       .livestream-date {
-        color: $grey04;
+        color: $color-white;
         font-size: 10px;
       }
     }
@@ -530,8 +531,11 @@ p.c-hero--welcome {
     }
 
     a {
-      text-decoration: none;
-      color: $blue03;
+      color: $color-white;
+      text-decoration: underline;
+      &:hover {
+        text-decoration: none;
+      }
     }
 
     ul {
@@ -558,7 +562,7 @@ p.c-hero--welcome {
       }
 
       a {
-        @extend .link-text;
+        color: $color-white;
         display: inline-block;
         width: 89%;
         vertical-align: top;
@@ -586,7 +590,7 @@ p.c-hero--welcome {
         li {
           list-style: none;
           font-family: $font-sans;
-          color: $grey04;
+          color: $color-white;
           font-size: 95.5%;
           line-height: 26px;
           text-transform: uppercase;
@@ -601,8 +605,9 @@ p.c-hero--welcome {
 
           a {
             font-family: $font-serif-semibold;
-            color: $yellow03;
+            color: $color-white;
             font-size: 111%;
+            text-decoration: underline;
           }
 
           &:last-child {
@@ -654,7 +659,7 @@ p.c-hero--welcome {
       .c-hero-livestream-meta {
         label {
           margin-bottom: 0;
-          color: $grey04;
+          color: $color-white;
           font-size: 0.8rem;
           text-transform: uppercase;
         }
@@ -866,7 +871,10 @@ p.c-hero--welcome {
     font-size: 26px;
     margin: 0 0 15px 0;
     text-transform: capitalize;
-
+    &:hover {
+      text-decoration: underline;
+      color: $color-white;
+    }
     a {
       color: $color-white;
     }
@@ -880,6 +888,7 @@ p.c-hero--welcome {
     font-size: 14px;
     letter-spacing: 0.1em;
     line-height: 1.3em;
+    @extend .contrast_text;
   }
 
   .c-senator-hero--district {
@@ -896,6 +905,9 @@ p.c-hero--welcome {
     a {
       @extend .contrast_text;
       text-decoration: none;
+      &:hover {
+        text-decoration: underline;
+      }
     }
   }
 
@@ -917,6 +929,12 @@ p.c-hero--welcome {
       height: 30px;
       width: 30px;
       filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(104deg) brightness(103%) contrast(103%);
+      svg path {
+        fill: #000;
+      }
+      &:hover svg path {
+        fill: #fff;
+      }
 
       &::after {
         line-height: 1em;
@@ -939,6 +957,13 @@ p.c-hero--welcome {
     height: 60px;
     padding-left: 20px;
     color: $color-white;
+
+    span.contact-btn--message:hover {
+      text-decoration: underline;
+    }
+    &:hover {
+      color: $color-white;
+    }
 
     &::before {
       display: flex;
@@ -1025,10 +1050,9 @@ p.c-hero--welcome {
 
     .inactive-pallette {
       .c-senator-hero--roles {
-        font-size: 13px;
+        font-size: 18px;
       }
     }
-
     .c-senator-hero--contact-btn {
       width: 46%;
       padding-left: 40px;
@@ -1253,6 +1277,7 @@ p.c-hero--welcome {
       &::before {
         line-height: 100px;
       }
+
     }
   }
 }
@@ -1295,7 +1320,7 @@ p.c-hero--welcome {
       display: inline;
       margin: 0 10px 20px 0;
       font-family: $font-sans;
-      color: #888888;
+      color: $color-white;
       font-size: 12px;
     }
 

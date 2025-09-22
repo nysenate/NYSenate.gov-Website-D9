@@ -31,7 +31,7 @@
     <div class="right-col">
     {% if bill.description_position == "top" %}
         <p class="c-bill-descript">
-            <a href="{{ bill.link }}">{{ bill.description }}</a>
+            {{ bill.description }}
         </p>
     {% endif %}
 

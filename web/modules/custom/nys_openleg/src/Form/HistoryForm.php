@@ -45,7 +45,7 @@ class HistoryForm extends FormBase {
     // Render the history form.
     return [
       'milestone' => [
-        '#markup' => '<div class="nys-openleg-history-published">This entry was published on ' . $current . '<div class="nys-openleg-history-note"><div class="nys-openleg-history-note-text">The selection dates indicate all change milestones for the entire volume, not just the location being viewed.  Specifying a milestone date will retrieve the most recent version of the location before that date.</div></div></div>',
+        '#markup' => '<div class="nys-openleg-history-published">This entry was published on ' . $current . '</div>',
       ],
       'history' => [
         '#type' => 'select',
@@ -55,6 +55,9 @@ class HistoryForm extends FormBase {
         '#attributes' => [
           'onChange' => 'this.form.submit();',
         ],
+      ],
+      'history_note' => [
+        '#markup' => '<div class="nys-openleg-history-note">NOTE: The selection dates indicate all change milestones for the entire volume, not just the location being viewed.  Specifying a milestone date will retrieve the most recent version of the location before that date.</div>',
       ],
     ];
   }

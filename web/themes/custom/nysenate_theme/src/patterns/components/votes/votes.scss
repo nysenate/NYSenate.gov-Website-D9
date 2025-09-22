@@ -72,6 +72,12 @@
     width: 50%;
   }
 
+  dd,
+  dt,
+  dl {
+    margin: 0;
+  }
+
   .vote-container {
     margin-bottom: 18px;
 
@@ -90,15 +96,16 @@
 
       .vote-count {
         display: inline-block;
-        font: 18px/18px $font-serif-bold;
-        color: $grey03;
+        font: 18px/1em $font-serif-bold;
+        color: $grey08;
       }
 
       .vote-label {
         display: inline-block;
-        font: 13px/16px $font-sans-bold;
-        color: $grey04;
+        font: 13px/1.6em $font-sans-bold;
+        color: $grey08;
         text-transform: uppercase;
+        margin-right: .7em;
       }
     }
 
@@ -127,20 +134,15 @@
     .meta-row {
       position: relative;
       font: 10px/16px $font-sans;
-      color: $grey04;
+      color: $grey08;
       text-transform: uppercase;
 
-      div {
+      dt,
+      dd {
         display: inline-block;
-
-        &:nth-child(1) {
-          color: $grey03;
-        }
-
-        &:nth-child(2) {
-          position: absolute;
-          left: 25%;
-        }
+        margin-right: 1em;
+        width: 7em;
+        line-height: 1.2em;
       }
 
       .meta-count {
@@ -182,7 +184,7 @@
       margin: 0 0 20px 40px;
 
       .vote-container {
-        margin: 38px 0 0px 0;
+        margin: 38px 0 0 0;
         .aye,
         .nay {
           width: 100px;
@@ -196,14 +198,16 @@
           .vote-count {
             display: block;
             font: 24px/30px $font-serif-bold;
-            color: $grey03;
+            color: $grey08;
+            margin-top: -.2em
           }
           .vote-label {
             display: block;
             font: 15px/16px $font-sans-bold;
-            padding-bottom: 5px;
-            color: $grey04;
+            padding-top: .5em;
+            color: $grey08;
             text-transform: uppercase;
+            margin-right: 0;
           }
         }
       }
@@ -211,12 +215,12 @@
         .meta-row {
           position: relative;
           font: 10px/16px $font-sans;
-          color: $grey04;
+          color: $grey08;
           text-transform: uppercase;
           div {
             display: inline-block;
             &:nth-child(1) {
-              color: $grey03;
+              color: #000;
             }
             &:nth-child(2) {
               position: absolute;
@@ -229,7 +233,7 @@
           label {
             margin: 0;
             font: 11px/14px $font-sans;
-            color: $grey05;
+            color: $grey08;
           }
           .committee-link {
             font: 12px/14px $font-sans-bold;

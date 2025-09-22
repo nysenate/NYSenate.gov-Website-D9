@@ -256,7 +256,7 @@
                 // Set the status label.
                 if (drupalSettings.settings.is_logged_in === false) {
                     var cta_language = 'Complete this form to <strong>' + intent + '</strong> this bill:';
-                    $('p.c-bill-polling--cta', element.form).html(cta_language);
+                    $('.c-bill-polling--cta', element.form).html(cta_language);
                 }
 
                 // Set selected class for highlighting the voter's selection.
@@ -297,16 +297,16 @@
                 }
 
                 if ($('.alert-box-message').length == 0) {
-                    $('div.nys-bill-vote p.c-bill-polling--cta').text('Do you support this bill?');
+                    $('div.nys-bill-vote .c-bill-polling--cta').text('Do you support this bill?');
                     $('#nys-bills-bill-form input[type="submit"]').val(buttonText);
                 }
                 else if ($('.alert-box-message').length != 0 && $('.c-bill--vote-attach').length != 0) {
                     // $('#edit-nys-bill-vote-button-wrapper').hide();
                     if (vote_value == 'no') {
-                        $('div.nys-bill-vote p.c-bill-polling--cta').text("YOU ARE OPPOSED TO THIS BILL");
+                        $('div.nys-bill-vote .c-bill-polling--cta').text("YOU ARE OPPOSED TO THIS BILL");
                     }
                     else if (vote_value == 'yes') {
-                        $('div.nys-bill-vote p.c-bill-polling--cta').text("YOU ARE IN FAVOR OF THIS BILL");
+                        $('div.nys-bill-vote .c-bill-polling--cta').text("YOU ARE IN FAVOR OF THIS BILL");
                     }
                 }
 

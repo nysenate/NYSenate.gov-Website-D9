@@ -10,12 +10,12 @@
 {% set short_title = title_parts[1] ?? '' %}
 {% set location = title_parts[2] ?? '' %}
 <div class="nys-openleg-result-title">
-    <div class="nys-openleg-result-title-headline">{{ headline }}</div>
+    <h2 class="nys-openleg-result-title-headline">{{ headline }}</h2>
     {% if short_title is not empty %}
-        <div class="nys-openleg-result-title-short">{{ short_title }}</div>
+        <h3 class="nys-openleg-result-title-short">{{ short_title }}</h3>
     {% endif %}
     {% if location is not empty %}
-        <div class="nys-openleg-result-title-location">{{ location }}</div>
+        <h4 class="nys-openleg-result-title-location">{{ location }}</h4>
     {% endif %}
 </div>
 

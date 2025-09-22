@@ -80,20 +80,20 @@
 
 <article{{ attributes.addClass(classes) }}>
   <div class="c-event-featured-story">
-    <div class="story-container">
+    <div class="story-container c-container--story-hidden-link">
       <div class="l-left">
-        <a href="{{ url }}">
           {{ image_main }}
-        </a>
       </div>
       <div class="l-right">
         <h3 class="c-story-name">
-          <a href="{{ url }}">{{ label }}</a>
+          <a class="js-link" href="{{ url }}">{{ label }}</a>
         </h3>
         <div class="c-featured-story-issue-tag">
+          <ul>
           {% for tag in tags %}
-            <a class="c-story-link" href="{{ tag.url }}">{{ tag.text }}</a>
+            <li><a class="c-story-link" href="{{ tag.url }}">{{ tag.text }}</a></li>{% if not loop.last %}, {% endif %}
           {% endfor %}
+          </ul>
         </div>
       </div>
     </div>

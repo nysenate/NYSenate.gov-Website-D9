@@ -6,7 +6,6 @@ dependencies:
     - block_content.type.tabs
     - field.field.block_content.tabs.field_block_views
     - field.field.block_content.tabs.field_tab_names
-    - field.field.block_content.tabs.field_tabs_no
   module:
     - viewsreference
 id: block_content.tabs.default
@@ -31,12 +30,6 @@ content:
     settings:
       size: 60
       placeholder: ''
-    third_party_settings: {  }
-  field_tabs_no:
-    type: options_select
-    weight: 1
-    region: content
-    settings: {  }
     third_party_settings: {  }
   info:
     type: string_textfield

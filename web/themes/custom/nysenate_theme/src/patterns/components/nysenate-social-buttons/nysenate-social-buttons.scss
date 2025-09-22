@@ -41,11 +41,11 @@
       width: 160px;
     }
 
-    label {
-      display: none;
+    span {
       cursor: pointer;
-      color: $color-white;
-      font-family: $font-sans-bold;
+      color: #fff;
+      font-size: 0.8rem;
+      display: none;
 
       @include breakpoint($bp-sm) {
         display: block;
@@ -83,4 +83,8 @@
       }
     }
   }
+}
+
+.c-btn--small:hover label {
+  text-decoration: underline;
 }

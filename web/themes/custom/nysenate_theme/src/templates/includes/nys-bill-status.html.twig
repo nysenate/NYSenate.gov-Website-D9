@@ -1,12 +1,12 @@
 {%- set top_class = ['nys-bill-status'] -%}
 {%- if is_small -%}{%- set top_class = top_class|merge(['nys-bill-status__sml']) -%}{%- endif -%}
 {%- if is_featured -%}{%- set top_class = top_class|merge(['nys-bill-status__drk']) -%}{%- endif -%}
-<ul class="{{ top_class|join(' ') }}">
+<ul class="{{ top_class|join(' ') }}" aria-hidden="true">
   <hr/>
   {%- for i in 0..5 -%}
     {%- set is_group = (positions[i]|length > 1) -%}
     {%- if is_group -%}
-      <li class="nys-bill-status-grouped">
+      <li class="nys-bill-status-grouped lgt-bg bill-graph-border">
       <ul class="nys-bill-status nys-bill-status-split-step">
     {%- endif -%}
     {%- for j in 0..1 -%}

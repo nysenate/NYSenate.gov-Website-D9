@@ -30,15 +30,17 @@
 
   <div class="c-news--download">
     {% if file_items is not empty %}
+      <ul class="c-open-data--file-list">
       {% for file_item in file_items %}
-        <span class="file">
+        <li class="file">
           <a href="{{ file_item.url }}"
             target="_blank"
             type="{{ file_item.type }}">
             {{ file_item.text }}
           </a>
-        </span>
+        </li>
       {% endfor %}
+      </ul>
     {% endif %}
   </div>
 </section>

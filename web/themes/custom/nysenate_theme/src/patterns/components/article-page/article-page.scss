@@ -112,6 +112,9 @@
         font-size: 21px;
         line-height: 12px;
       }
+      &:hover {
+        text-decoration: underline;
+      }
     }
   }
 }
@@ -335,4 +338,25 @@
 
 .c-news--print {
   margin-top: 12px;
+}
+
+form.webform-submission-form input[type="submit"].webform-button--submit {
+  background-color: $color-blue;
+  border: 2px solid $color-blue;;
+  color: $color-white;
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: background-color 0.25s, color 0.25s, border-color 0.25s;
+  @extend .lgt-bg;
+  @extend .lgt-border;
+  &:hover {
+    background-color: $color-white;
+    @extend .lgt-text;
+    @extend .lgt-border;
+    text-decoration: underline;
+  }
 }

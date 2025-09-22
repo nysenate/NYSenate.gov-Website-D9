@@ -110,6 +110,9 @@
   display: flex;
   align-items: center;
   margin-top: 20px;
+  .c-sponsor--name a {
+    @extend .drk-text;
+  }
 }
 
 .c-sponsor--img {
@@ -150,6 +153,9 @@
 
   a {
     text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
   }
 }
 

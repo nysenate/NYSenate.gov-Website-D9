@@ -366,6 +366,9 @@
     .js-form-type-select {
       float: none;
     }
+    .search__submit-text:hover {
+      text-decoration: underline;
+    }
   }
 
   .address-container-inline {
@@ -513,5 +516,23 @@
   td.field-multiple-drag + td {
     max-width: 548px;
     padding: 10px;
+  }
+}
+
+// Normalize autocomplete UI fields.
+ul.ui-autocomplete {
+  background-color: rgb(255, 255, 255);
+  color: rgb(51, 51, 51);
+  display: block;
+
+  .ui-menu-item-wrapper {
+    color: rgb(43, 106, 144);
+    display: inline;
+    padding: 3px 16px 3px 6.4px;
+    text-decoration-color: rgb(43, 106, 144);
+
+    &.ui-state-active {
+      background-color: rgb(0, 127, 255);
+    }
   }
 }

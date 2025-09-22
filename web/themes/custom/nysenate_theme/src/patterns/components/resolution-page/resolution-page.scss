@@ -59,6 +59,9 @@
     color: $blue01;
     font-size: 16px;
     vertical-align: middle;
+    &:hover {
+      text-decoration: underline;
+    }
   }
 }
 
@@ -171,7 +174,6 @@
         height: 100%;
         width: 28%;
         margin: 0 10px;
-        margin-top: 0;
         line-height: 50px;
       }
 
@@ -316,7 +318,7 @@
   }
 
   .c-detail--subhead {
-    margin-bottom: 0px;
+    margin-bottom: 0;
     font-size: 12px;
   }
 
@@ -430,10 +432,6 @@
   }
 }
 
-.c-bill--votes {
-  overflow: hidden;
-}
-
 .c-bill-vote--graph,
 .c-bill-vote--stats {
   display: inline-block;
@@ -448,10 +446,6 @@
   > img {
     border-radius: 50%;
   }
-}
-
-.c-bill--vote--stats {
-  width: 50%;
 }
 
 .c-bill-vote--cnt {
@@ -614,7 +608,6 @@
         height: 100%;
         width: 28%;
         margin: 0 10px;
-        margin-top: 0;
         line-height: 50px;
       }
 
@@ -714,116 +707,6 @@
 .pieContainer {
   width: 180px;
   margin: 0 auto;
-}
-
-.c-bill--vote-details {
-  width: 180px;
-  margin: 0 auto 40px;
-
-  h3,
-  h4 {
-    color: $grey08;
-    font-family: $font-serif-regular;
-  }
-  h3 {
-    margin: 10px 0 20px;
-    font-size: 16px;
-  }
-  h4 {
-    clear: both;
-    text-transform: uppercase;
-    font-size: 14px;
-  }
-  ul {
-    list-style: none;
-    overflow: hidden;
-  }
-  li {
-    display: block;
-    float: left;
-    width: 50%;
-  }
-
-  .vote-container {
-    margin-bottom: 18px;
-
-    .aye,
-    .nay {
-      width: auto;
-      float: left;
-      margin-bottom: 20px;
-      padding: 6px 10px;
-      background-color: $grey06;
-      text-align: center;
-
-      &:nth-child(1) {
-        margin-right: 15px;
-      }
-
-      .vote-count {
-        display: inline-block;
-        font: 18px/18px $font-serif-bold;
-        color: $grey03;
-      }
-      .vote-label {
-        display: inline-block;
-        font: 13px/16px $font-sans-bold;
-        color: $grey04;
-        text-transform: uppercase;
-      }
-    }
-
-    .aye {
-      float: left;
-      border-bottom: 4px solid $cont_blue_lgt;
-      &.committee_vote {
-        border-bottom: 4px solid $yellow01;
-      }
-    }
-
-    .nay {
-      float: right;
-      border-bottom: 4px solid $cont_blue_drk;
-      &.committee_vote {
-        border-bottom: 4px solid $yellow03;
-      }
-    }
-  }
-  .vote-meta {
-    clear: both;
-    .meta-row {
-      position: relative;
-      font: 10px/16px $font-sans;
-      color: $grey04;
-      text-transform: uppercase;
-      div {
-        display: inline-block;
-        &:nth-child(1) {
-          color: $grey03;
-        }
-        &:nth-child(2) {
-          position: absolute;
-          left: 25%;
-        }
-      }
-      .meta-count {
-        font-family: $font-sans-bold;
-      }
-    }
-    .meta-comm-referral {
-      margin-top: 20px;
-      label {
-        margin: 0;
-        font: 11px/14px $font-sans;
-        color: $grey05;
-      }
-      .committee-link {
-        font: 12px/14px $font-sans-bold;
-        color: $yellow03;
-        text-transform: uppercase;
-      }
-    }
-  }
 }
 
 .c-vote--container {
@@ -944,12 +827,12 @@
         }
         .vote-count {
           display: block;
-          font: 24px/30px $font-serif-bold;
+          font: 24px/1.25em $font-serif-bold;
           color: $grey03;
         }
         .vote-label {
           display: block;
-          font: 15px/16px $font-sans-bold;
+          font: 15px/1.1em $font-sans-bold;
           padding-bottom: 5px;
           color: $grey04;
           text-transform: uppercase;
@@ -1271,41 +1154,18 @@
       .vote-container {
         margin: 38px 0 0;
 
-        .aye,
-        .nay {
-          width: 100px;
-          float: left;
-          background-color: $grey06;
-          text-align: center;
-          padding: 0;
-          &:nth-child(1) {
-            margin-right: 20px;
-          }
-          .vote-count {
-            display: block;
-            font: 24px/30px $font-serif-bold;
-            color: $grey03;
-          }
-          .vote-label {
-            display: block;
-            font: 15px/16px $font-sans-bold;
-            padding-bottom: 5px;
-            color: $grey04;
-            text-transform: uppercase;
-          }
-        }
       }
 
       .vote-meta {
         .meta-row {
           position: relative;
-          font: 10px/16px $font-sans;
-          color: $grey04;
+          font: 12px/1.6em $font-sans;
+          color: $grey08;
           text-transform: uppercase;
           div {
             display: inline-block;
             &:nth-child(1) {
-              color: $grey03;
+              color: $grey08;
             }
             &:nth-child(2) {
               position: absolute;
@@ -1318,39 +1178,18 @@
           margin-top: 20px;
           label {
             margin: 0;
-            font: 11px/14px $font-sans;
+            font: 12px/1.6em $font-sans;
             color: $grey05;
           }
 
           .committee-link {
-            font: 12px/14px $font-sans-bold;
+            font: 12px/1.6em $font-sans-bold;
             color: $yellow03;
             text-transform: uppercase;
           }
         }
       }
 
-      h3 {
-        margin-bottom: 30px;
-        font-size: 20px;
-      }
-
-      h4 {
-        padding-bottom: 20px;
-        font-size: 16px;
-      }
-
-      .c-detail--vote-grp {
-        display: block;
-        float: left;
-        width: 47%;
-        margin: 0 6% 30px 0;
-
-        & + .c-detail--vote-grp {
-          margin-top: 0;
-          margin-right: 0;
-        }
-      }
     }
   }
 }

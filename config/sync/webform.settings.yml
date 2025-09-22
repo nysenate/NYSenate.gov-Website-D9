@@ -338,29 +338,3 @@ third_party_settings:
     replace_administration_mode: true
   honeypot:
     honeypot: true
-  webform_entity_print:
-    template:
-      header: '<h3>[webform_submission:label]</h3>'
-      footer: ''
-      css: |-
-        /* Remove page margins and padding and rely on the PDF generator's default margins. */
-        body {
-          margin: 0;
-          font-size: 12px;
-        }
-
-        .page {
-          padding: 0;
-        }
-        p {
-          font-size: 12px;
-          font-weight: 400;
-        }
-    export_types:
-      pdf:
-        enabled: true
-        link_text: 'Download PDF'
-        link_attributes:
-          class:
-            - button
-    debug: false

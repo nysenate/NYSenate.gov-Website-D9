@@ -30,15 +30,18 @@ class SearchForm extends FormBase {
     $search_term = (string) ($form_state->getBuildInfo()['args'][0] ?? '');
 
     return [
-      'title' => ['#markup' => '<h3 class="search-title">Search OpenLegislation Statutes</h3>'],
-      'search_term' => [
-        '#type' => 'textfield',
-        '#title' => 'Search Term',
-        '#default_value' => Xss::filter($search_term),
-      ],
-      'go' => [
-        '#type' => 'submit',
-        '#value' => 'Search',
+      'title' => ['#markup' => '<h3 tabindex="0" class="search-title">Search OpenLegislation Statutes</h3>'],
+      'search_form_container' => [
+        '#type' => 'container',
+        'search_term' => [
+          '#type' => 'textfield',
+          '#title' => 'Search Term',
+          '#default_value' => Xss::filter($search_term),
+        ],
+        'go' => [
+          '#type' => 'submit',
+          '#value' => 'Search',
+        ],
       ],
       '#action' => StatuteHelper::baseUrl() . '/search',
     ];

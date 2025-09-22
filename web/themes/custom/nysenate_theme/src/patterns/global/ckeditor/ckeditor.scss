@@ -22,7 +22,7 @@
   }
 }
 /*.ck-content .c-paragraph--more-link,*/
-.c-paragraph--more-link {
+a.c-paragraph--more-link {
   clear: both;
   margin: 15px 0 30px;
   text-transform: uppercase;
@@ -32,6 +32,10 @@
   letter-spacing: 0.1em;
   @extend .icon-after__arrow;
   @extend .link-text;
+  &:hover {
+    text-decoration: underline;
+    color: $gen_link_hover;
+  }
   &.a-left {
     display: block;
     text-align: left;
@@ -67,8 +71,8 @@ a.nys-btn--gold {
   align-items: center;
   justify-content: center;
   padding: 20px 10px;
-  background: $yellow01;
-  color: $color-white;
+  background: $background-yellow;
+  color: $background-text;
   text-align: center;
   text-transform: uppercase;
   font-family: $font-sans-bold;
@@ -79,8 +83,9 @@ a.nys-btn--gold {
   height: 100px;
 
   &:hover {
+    background: $background-hover;
     color: #fff;
-    background: $yellow03;
+    text-decoration: underline;
   }
 }
 /*.ck-content a.nys-btn--blue,*/
@@ -211,11 +216,11 @@ ul.c-block--about-seal {
       left: 0;
       height: 27px;
       width: 28px;
-      background: $yellow01;
+      background: $background-yellow;
       text-align: center;
       font-size: 18px;
       line-height: 28px;
-      color: #fff;
+      color: $background-text!important;
       font-family: $font-sans-bold;
       content: counter(seal-counter);
       counter-increment: seal-counter;

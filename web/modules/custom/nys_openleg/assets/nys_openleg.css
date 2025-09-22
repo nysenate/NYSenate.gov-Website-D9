@@ -21,7 +21,7 @@
 
 .nys-openleg-result-nav-item-link,
 .nys-openleg-result-breadcrumb-link {
-  color: #008CBA !important;
+  color: #2b6a90 !important;
   text-decoration: none;
 }
 
@@ -42,6 +42,11 @@
   margin-bottom: 0;
 }
 
+.nys-openleg-items-container {
+  padding-left: 0;
+  list-style-type: none;
+}
+
 .nys-openleg-head-container > * {
   vertical-align: top;
 }
@@ -49,8 +54,7 @@
 .nys-openleg-result-title {
   padding-top: 20px;
   padding-bottom: 20px;
-  display: inline-block;
-  width: 66%;
+  display: block;
   font-family: 'Adelle Bold', serif;
   font-size: 32px;
 }
@@ -59,8 +63,14 @@
   margin-bottom: 0.3em;
 }
 
+.nys-openleg-result-title-headline {
+  font-size: inherit;
+  letter-spacing: .03em;
+}
+
 .nys-openleg-result-title-short {
   font-size: .8em;
+  font-weight: normal;
 }
 
 .nys-openleg-result-title-location {
@@ -100,7 +110,7 @@
 
 .nys-openleg-result-item-description {
   display: inline-block;
-  width: 66%;
+  width: 65%;
   font-size: 20px;
   font-family: "Adelle Light", serif;
   vertical-align: middle;
@@ -126,14 +136,17 @@
 .nys-openleg-result-breadcrumbs-container {
   line-height: 1.4em;
   font-weight: bold;
-  padding-bottom: 0.6em;
-  margin-bottom: 1.5em;
+  padding: 0 0 0.6em;
+  margin: 0 0 1.5em;
   border-bottom: 1px solid #ddd;
+  list-style: none;
 }
 
 .nys-openleg-result-breadcrumb-container {
-  display: inline;
+  display: inline-block;
   position: relative;
+  font-family: "Proxima Nova Regular", "Arial", sans-serif;
+  font-size: 1em;
 }
 
 .nys-openleg-result-breadcrumb-container::before {
@@ -147,6 +160,13 @@
 .nys-openleg-result-breadcrumb-link {
   display: inline-block;
   margin: 0 7px 0 20px;
+}
+
+.nys-openleg-result-breadcrumb-link:hover,
+.search-title:hover,
+.nys-openleg-result-item-name:hover,
+.nys-openleg-result-item-description:hover {
+  text-decoration: underline;
 }
 
 .nys-openleg-result-breadcrumb-name {
@@ -183,6 +203,10 @@
   font-weight: bold;
 }
 
+.nys-openleg-result-nav-item-container {
+  list-style: none;
+}
+
 .nys-openleg-result-nav-item-container a {
   font-weight: bold;
 }
@@ -203,10 +227,21 @@
   width: 60%;
   vertical-align: top;
   padding-top: 1em;
+  border-right: 1px solid #aaaaaa;
 }
 
 .nys-openleg-history-container .form-item-history {
   margin: 0;
+  width: initial;
+}
+
+.nys-openleg-history-container .js-form-type-select::after {
+  position: relative;
+  right: 1.6em;
+}
+
+.nys-openleg-history-container .form-item-history label:hover {
+  text-decoration: underline;
 }
 
 .nys-openleg-history-container .form-item-history label {
@@ -220,7 +255,7 @@
 
 .nys-openleg-history-container .form-item-history select {
   width: fit-content;
-  padding: 0 1em;
+  padding: 0 3em 0 1em;
   font-family: 'Adelle SemiBold', serif;
 }
 
@@ -230,35 +265,9 @@
 }
 
 .nys-openleg-history-note {
-  display: inline-block;
-  position: relative;
-  margin-left: 1em;
-  vertical-align: top;
-  z-index: 1;
-}
-
-.nys-openleg-history-note::before {
-  display: inline-block;
-  content: '\33';
-  font-family: 'senate_icons', sans-serif;
-}
-
-.nys-openleg-history-note-text {
-  display: none;
-  position: absolute;
-  top: 0;
-  left: 1.6em;
-  text-transform: none;
-  border: 1px solid #aaa;
-  border-radius: .5em;
-  padding: 1em;
-  background-color: #ddd;
-  width: 28vw;
-  text-align: justify;
-}
-
-.nys-openleg-history-note:hover > .nys-openleg-history-note-text {
-  display: block;
+  clear: both;
+  font-size: 12px;
+  padding: 1.5em 0 1em;
 }
 
 /**
@@ -270,6 +279,7 @@
   padding: 20px 0 20px 20px;
   text-align: right;
   float: none;
+  border-left: none;
 }
 
 .nys-openleg-result-tools .c-detail--social ul {
@@ -328,6 +338,46 @@
   font-weight: bold;
 }
 
+form#nys-openleg-search-form {
+  height: 2.25em;
+  overflow: hidden;
+  border-top: 1px solid #777;
+  padding-bottom: 1em;
+  margin-bottom: 1em;
+  transition: height .5s ease;
+}
+
+form#nys-openleg-search-form.open {
+  height: 14em;
+  border-bottom: 1px solid #777;
+}
+
+form#nys-openleg-search-form h3.search-title::before {
+  content: '\00a0\3e';
+  font-family: senate_icons;
+  font-size: 16pt;
+  vertical-align: middle;
+  display: inline-block;
+  margin-top: -0.2em;
+  line-height: 1em;
+  font-weight: bold;
+  margin-right: 0.2em;
+  transition: transform .2s ease, margin-top .1s ease;
+}
+
+form#nys-openleg-search-form.open h3.search-title::before {
+  transform: rotate(90deg);
+  margin-top: -0.5em;
+}
+
+#nys-openleg-search-form #edit-search-form-container {
+  display:none;
+}
+
+#nys-openleg-search-form.open #edit-search-form-container {
+  display: block;
+}
+
 #nys-openleg-search-form .form-item-search-term  {
   display: inline-block;
   width: 80%;
@@ -336,11 +386,12 @@
 #nys-openleg-search-form button.search__submit {
   position: relative;
   top: 3px;
-  width: 15%;
-  line-height: 1em;
-  padding: 0.6em;
+  width: fit-content;
+  height: 1.9em;
+  line-height: 2em;
+  padding: 0 .7em;
   margin-right: 0;
-  background-color: #008CBA;
+  background-color: #2b6a90;
   color: #ffffff;
 }
 
@@ -355,6 +406,10 @@
 
 #nys-openleg-search-form button .search__submit-text {
   font-family: "Helvetica Nueue", sans-serif;
+}
+
+#nys-openleg-search-form button .search__submit-text:hover {
+  text-decoration: underline;
 }
 
 .nys-openleg-search-results-container .search-results-item-container {
@@ -381,20 +436,6 @@
 
 .nys-openleg-search-results-container .search-results-item-container .item-location {
   width: 25%;
-}
-
-.nys-openleg-statute-container #nys-openleg-search-form {
-  height: 2.25em;
-  overflow: hidden;
-  border-top: 1px solid #777;
-  padding-bottom: 1em;
-  margin-bottom: 1em;
-  transition: height .5s ease;
-}
-
-.nys-openleg-statute-container #nys-openleg-search-form.open {
-  height: 10.5em;
-  border-bottom: 1px solid #777;
 }
 
 .nys-openleg-statute-container .search-title {
@@ -424,19 +465,21 @@
     font-size: 32px;
   }
 
-  .nys-openleg-result-tools .c-detail--social {
-    border-left: 1px solid #AAAAAA;
-  }
-
   .nys-openleg-result-tools .c-detail--social-item {
     width: 60px;
+    color: #444444;
   }
 
   .nys-openleg-history-container .form-item-history select {
     margin: 0 0 0 1em;
   }
+
+  form#nys-openleg-search-form.open {
+    height: 10em;
+    border-bottom: 1px solid #777;
+  }
 }
 
-.nys-openleg-result-share li.twitter {
-  padding-top: 10px;
+.nys-openleg-result-share li {
+    vertical-align: middle;
 }

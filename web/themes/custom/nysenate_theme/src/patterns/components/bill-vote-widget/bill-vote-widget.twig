@@ -9,9 +9,9 @@
     <div class="nys-bill-vote form-wrapper" id="edit-nys-bill-vote-container-{{ node_id }}">
       <input type="hidden" name="nid" value="{{ node_id }}" />
       <input type="hidden" name="tid" value="53928" />
-      <p class="c-bill-polling--cta">
+      <h2 class="c-bill-polling--cta">
         {{ poll_text|default("what's your position?") }}
-      </p>
+      </h2>
       <div class="button-wrapper">
         {% if not hide_subscribe %}
         <button class="c-block--btn nys-subscribe-button ajax-processed"
@@ -50,9 +50,9 @@
     {% if has_sub %}
     <div class="nys-bill-subscribe form-wrapper"
       id="edit-nys-bill-subscribe-container-{{ node_id }}">
-      <div class="nys-bill-subscribe-title">
+      <h2 class="nys-bill-subscribe-title">
         Get Status Alerts for S7617
-      </div>
+      </h2>
       <div class="subscribe_email_container form-wrapper" id="edit-email-form">
         <div class="form-item form-type-textfield form-item-email">
           <label for="edit-email-address-entry-{{ node_id }}">Email Address</label>

@@ -10,15 +10,21 @@
 {% set classes = ['node--bill'] %}
 <!-- BILL TEMPLATE -->
 <div class="{{ classes|join(' ') }}" {{ attributes }}>
+
+  <!-- Bill Vote Widget -->
+  <div class="c-bill--vote-widget">
+    {{ content.vote_widget }}
+  </div>
+
   <div class="node node-bill node-promoted view-mode-full clearfix">
     <div class="c-block c-detail--header c-detail--header__bill">
       <!-- Bill Title -->
       <div class="c-bill--heading-block">
-        <h2 class="nys-title c-bill-title">
+        <h1 class="nys-title c-bill-title">
           {{ content.field_ol_chamber[0]['#markup'] }}
           Bill
           {{ bill.name }}
-        </h2>
+        </h1>
         {{ signed_veto_status|raw }}
         <div class="clearfix"></div>
         <div class="c-bill--session-year">
@@ -99,7 +105,7 @@
 
 
   <div class="c-block c-detail--status c-bill-section">
-    <h3 class="c-detail--subhead c-detail--section-title c-bill-detail--subhead">
+    <h2 class="c-detail--subhead c-detail--section-title c-bill-detail--subhead">
       {% if current_session_year == content.field_ol_session[0]['#markup'] %}
         Current
       {% else %}
@@ -120,15 +126,10 @@
           </a>
         {% endif %}
       </span>
-    </h3>
+    </h2>
 
     <!-- Bill Graph Output -->
     {% include '@nysenate_theme/src/templates/includes/nys-bill-status.html.twig' with {positions: positions} %}
-  </div>
-
-  <!-- Bill Vote Widget -->
-  <div class="c-bill--vote-widget">
-    {{ content.vote_widget }}
   </div>
 
   <!-- Bill Message Form -->
@@ -139,7 +140,7 @@
   <!-- Bill Actions -->
   <div class="c-block c-bill-section">
     <section class="nysenate-accordion__wrapper nysenate-accordion__wrapper--bills">
-      <div class="nysenate-accordion__wrapper-title">Actions</div>
+      <h2 class="nysenate-accordion__wrapper-title">Actions</h2>
 
       <div>
         {% block accordion_items %}
@@ -156,10 +157,10 @@
               {% block accordion_content %}
                 <div>
                   <table width="100%" class="table c-bill--actions-table">
-                    <thead>
+                    <thead class="c-bill--actions-table-header">
                       <tr>
-                        <th></th>
-                        <th class="c-bill--actions-table-header">
+                        <th>Date of Action</th>
+                        <th>
                           Assembly Actions -
                           <strong>Lowercase</strong><br/>
                           Senate Actions -
@@ -206,7 +207,7 @@
   {% if votes_block %}
     <div class="c-block c-bill-section">
       <section class="nysenate-accordion__wrapper nysenate-accordion__wrapper--bills">
-        <div class="nysenate-accordion__wrapper-title">Votes</div>
+        <h2 class="nysenate-accordion__wrapper-title">Votes</h2>
 
         <div>
           <ul class="nysenate-accordion-nested">
@@ -250,36 +251,36 @@
 
                         <div class="c-bill--vote-details">
                           <div class="c-bill--vote-details-wrapper">
-                            <div class="vote-container">
+                            <dl class="vote-container">
                               <div class="aye {{ vote.type|lower != 'floor' ? " committee_vote" : " " }}">
-                                <div class="vote-count">{{ vote.aye_count|default(0) }}</div>
-                                <div class="vote-label">Aye</div>
+                                <dt class="vote-label">Aye</dt>
+                                <dd class="vote-count">{{ vote.aye_count|default(0) }}</dd>
                               </div>
                               <div class="nay {{ vote.type|lower != 'floor' ? " committee_vote" : " " }}">
-                                <div class="vote-count">{{ vote.nay_count|default(0)  }}</div>
-                                <div class="vote-label">Nay</div>
+                                <dt class="vote-label">Nay</dt>
+                                <dd class="vote-count">{{ vote.nay_count|default(0)  }}</dd>
                               </div>
-                            </div>
-                            <div class="vote-meta">
+                            </dl>
+                            <dl class="vote-meta">
                               {% if vote.type|lower != 'floor' %}
                                 <div class="meta-row">
-                                  <div class="meta-count">{{ vote.aye_reservations_count|default(0)  }}</div>
-                                  <div class="meta-label">Aye with Reservations</div>
+                                  <dt class="meta-label">Aye with Reservations</dt>
+                                  <dd class="meta-count">{{ vote.aye_reservations_count|default(0)  }}</dd>
                                 </div>
                               {% endif %}
                               <div class="meta-row">
-                                <div class="meta-count">{{ vote.absent_count|default(0)  }}</div>
-                                <div class="meta-label">Absent</div>
+                                <dt class="meta-label">Absent</dt>
+                                <dd class="meta-count">{{ vote.absent_count|default(0)  }}</dd>
                               </div>
                               <div class="meta-row">
-                                <div class="meta-count">{{ vote.excused_count|default(0)  }}</div>
-                                <div class="meta-label">Excused</div>
+                                <dt class="meta-label">Excused</dt>
+                                <dd class="meta-count">{{ vote.excused_count|default(0)  }}</dd>
                               </div>
                               <div class="meta-row">
-                                <div class="meta-count">{{ vote.abstained_count|default(0)  }}</div>
-                                <div class="meta-label">Abstained</div>
+                                <dt class="meta-label">Abstained</dt>
+                                <dd class="meta-count">{{ vote.abstained_count|default(0)  }}</dd>
                               </div>
-                            </div>
+                            </dl>
                           </div>
                         </div>
                       </div>
@@ -349,7 +350,7 @@
 
   <div class="content c-bill-section" id="panel-comments">
     <div class="c-block c-detail--summary">
-      <h3 class="c-detail--subhead c-detail--section-title c-bill-detail--subhead">Comments</h3>
+      <h2 class="c-detail--subhead c-detail--section-title c-bill-detail--subhead">Comments</h2>
       <p>Open Legislation is a forum for New York State legislation. All comments are subject to review and community moderation is encouraged.</p>
       <p>
         Comments deemed off-topic, commercial, campaign-related, self-promotional; or that contain profanity, hate or toxic speech; or that link to sites outside of the nysenate.gov domain are not permitted, and will not be published. Attempts to intimidate and silence contributors or deliberately deceive the public, including excessive or extraneous posting/posts, or coordinated activity, are prohibited and may result in the temporary or permanent banning of the user. Comment moderation is generally performed Monday through Friday. By contributing or voting you agree to the Terms of Participation and verify you are over 13.

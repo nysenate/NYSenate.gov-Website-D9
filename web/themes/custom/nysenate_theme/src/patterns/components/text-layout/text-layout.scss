@@ -12,11 +12,11 @@
   }
 
   blockquote {
-  
+
     p {
       font-family: $font-serif-semibold;
       font-size: 18px;
-  
+
       @include breakpoint($bp-md) {
         font-size: 28px;
         line-height: 1.3em;
@@ -106,6 +106,9 @@
 
     a.c-container--link {
       text-align: left;
+      &:hover {
+        text-decoration: underline;
+      }
     }
   }
 }

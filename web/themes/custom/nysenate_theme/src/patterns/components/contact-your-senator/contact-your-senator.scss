@@ -44,8 +44,15 @@
     color: $color-white;
   }
 
+  span:hover {
+    text-decoration: underline;
+  }
+
   &.no-senator {
     @extend .icon-before__find-senator;
+  }
+  &.no-senator:hover {
+    text-decoration: underline;
   }
 }
 

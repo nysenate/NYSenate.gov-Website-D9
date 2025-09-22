@@ -1,6 +1,7 @@
 @import "../../global/utils/init";
 
 .c-detail--header__bill .c-bill--flag {
+  font-weight: normal;
   @media screen and (min-width: 760px) {
     margin-left: 20px;
     margin-top: 5px;
@@ -87,7 +88,7 @@ h4.c-bill-topic {
     width: 49.5%;
     height: 45px;
     padding: 0;
-    color: $grey05;
+    color: #fff;
     text-align: center;
     text-transform: uppercase;
     font-size: 12px;
@@ -106,7 +107,9 @@ h4.c-bill-topic {
       border-top-width: 1px;
       border-bottom-width: 1px;
     }
-
+    &:hover {
+      text-decoration: underline;
+    }
     &::before {
       position: relative;
     }
@@ -251,7 +254,7 @@ h4.c-bill-topic {
   text-align: center;
   &.c-bill-action--orig-bill {
     background: #eee;
-    color: $grey04;
+    color: $grey08;
   }
 }
 
@@ -317,6 +320,9 @@ h4.c-bill-topic {
 .c-bill--amendment-details dd a.c-detail--download {
   color: $color-cg-blue;
   text-transform: uppercase;
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 .c-bill--amendment-details .l-tab-bar {
@@ -515,6 +521,7 @@ th.c-bill--actions-table-header strong {
 .c-bill--actions-table {
   border: none;
   color: $grey03;
+  font-size: .875rem;
 
   thead {
     border-bottom: 4px solid $grey15;
@@ -532,11 +539,23 @@ th.c-bill--actions-table-header strong {
   &-col1,
   &-col2,
   &-header {
-    padding: 0.5rem 0.625rem 0.625rem;
-    font-size: 0.875rem;
-    text-align: left;
-    vertical-align: top;
-    line-height: 1.625rem;
+
+    th {
+      padding: 0.5rem 0.625rem 0.625rem;
+      vertical-align: top;
+      text-align: right;
+      line-height: 1.125rem;
+      font-weight: bold;
+      color: $color-white;
+      font-size: 0.875rem;
+      &:first-child {
+        text-align: center;
+      }
+    }
+
+    strong {
+      font-family: $font-sans;
+    }
   }
 
   &-col1 {
@@ -547,17 +566,6 @@ th.c-bill--actions-table-header strong {
     width: 70%;
   }
 
-  &-header {
-    text-align: right;
-    line-height: 1.125rem;
-    font-weight: bold;
-    color: $grey10;
-
-    strong {
-      font-family: $font-sans;
-      display: block;
-    }
-  }
 }
 
 @include breakpoint($bp-sm) {
@@ -708,6 +716,9 @@ th.c-bill--actions-table-header strong {
   .nys-senator--district {
     margin: 0;
     line-height: 1.2em;
+    a:hover {
+      text-decoration: underline;
+    }
   }
 
   .nys-senator--district {

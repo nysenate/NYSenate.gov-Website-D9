@@ -2,7 +2,7 @@
 @import '../../global/utils/init';
 
 .newsroom-landing {
-
+  margin-top: 24px;
   .odd,
   .even {
     width: 100%;
@@ -25,18 +25,77 @@
     .c-newsroom--date {
       margin-bottom: 6px;
       text-transform: uppercase;
+      &.med-text {
+        color: $grey08;
+      }
     }
   }
 
   &.c-news-container {
+    .c-container--hidden-link {
+      position: relative;
+      display: inline-block;
+      &:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+      }
+      a {
+        position: relative;
+        z-index: 2;
+      }
+    }
 
     .c-news-block {
-
       .c-newsroom-name {
-
         a {
           color: $grey08;
+          text-decoration: none;
+          font-weight: $font-weight-normal;
+
+          &:hover {
+            text-decoration: underline;
+            color: $gen_blue_lgt;
+            @extend .link-text;
+          }
         }
+      }
+      .c-newsroom-link {
+        line-height: 1em;
+        a.c-press-release--topic {
+          text-transform: uppercase;
+          font-family: $font-sans-bold;
+          font-size: 12px;
+          line-height: 1em!important;
+          letter-spacing: 0.05em;
+          text-decoration: none;
+          padding-right: 0;
+          color: $orange-text;
+          @extend .link-text;
+
+          &:hover {
+            @extend .link-text;
+            text-decoration: underline;
+            color: $gen_link_hover;
+          }
+        }
+      }
+      ul {
+        list-style: none;
+        padding-left: 0;
+        margin-top: 6px;
+        line-height: 1.1em;
+        color: $yellow01;
+      }
+
+      li {
+        display: inline;
+        margin-right: 1px;
+        color: $yellow01;
       }
     }
   }
@@ -79,4 +138,10 @@
 
 .c-container--header.c-events--landing {
   border-bottom: none;
+}
+
+.page--senators {
+  .newsroom-landing {
+
+  }
 }

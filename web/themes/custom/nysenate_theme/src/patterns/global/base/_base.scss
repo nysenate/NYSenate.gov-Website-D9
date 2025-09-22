@@ -116,11 +116,13 @@ h3 {
   text-decoration: none;
   @extend .icon-after__arrow;
   @extend .link-text;
-
   &::after {
     margin-top: -2px;
     font-size: 17px;
     line-height: 12px;
+  }
+  &:hover {
+    text-decoration: underline;
   }
 
   @include breakpoint($bp-sm) {
@@ -352,14 +354,14 @@ main.l-row--main {
 }
 
 .nys-senator--thumb {
-	position: relative;
-	display: inline-block;
-	vertical-align: middle;
-	height: 46px;
-	width: 45px;
-	margin-right: 15px;
-  border-radius: 50%;
-  overflow: hidden;
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  height: 46px;
+  width: 46px;
+  margin-right: 15px;
+  padding: 2px;
+  box-sizing: content-box;
 
   &--placeholder {
     width: 100%;
@@ -368,19 +370,21 @@ main.l-row--main {
     margin-bottom: 24px;
   }
 
-	a {
-		display: block;
-		position: absolute;
-		top: 0;
-		left: 0;
-		height: 100%;
-		width: 100%;
+  a {
+    display: block;
+    position: relative;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
+    overflow: hidden;
 
     .field {
       width: 100%;
       height: 100%;
     }
-	}
+  }
 
   img {
     min-height: 46px;
@@ -414,6 +418,9 @@ main.l-row--main {
 
 	a {
 		color: $grey08 !important;
+      &:hover{
+        text-decoration: underline;
+      }
 	}
 }
 
@@ -610,14 +617,14 @@ main.l-row--main {
     }
 
     .nys-senator--involved {
-      color: $yellow02;
+      color: $grey08;
       font-family: $font-sans-bold;
       font-size: 14px;
 
       &::before {
         @extend .icon-before__recruit-friends;
-        background-color: $yellow02;
-        color: $color-white;
+        background-color: $orange-text;
+        color: #fff;
         height: 30px;
         width: 30px;
         line-height: 30px;
@@ -625,7 +632,6 @@ main.l-row--main {
         font-size: 20px;
         margin-left: 0;
         padding-left: 3px;
-        color: $color-white;
         overflow: hidden;
         -webkit-border-radius: 50%;
         border-radius: 50%;
@@ -664,8 +670,8 @@ main.l-row--main {
   position: relative;
   display: block;
   padding: 20px 10px;
-  background: $yellow01;
-  color: $color-white;
+  background: $background-yellow;
+  color: $background-text;
   text-align: center;
   text-transform: uppercase;
   font-family: $font-sans-bold;
@@ -673,8 +679,8 @@ main.l-row--main {
   letter-spacing: 0.1em;
 
   &:hover {
-    color: $color-white;
-    background: $yellow03;
+    color: #fff;
+    background: $background-hover;
   }
 }
 

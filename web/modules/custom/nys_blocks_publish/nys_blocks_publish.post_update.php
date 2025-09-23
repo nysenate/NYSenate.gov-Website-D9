@@ -1,4 +1,4 @@
-// my_block_publish.post_update.php
+// nys_blocks_publish.post_update.php
 <?php
 
 /**

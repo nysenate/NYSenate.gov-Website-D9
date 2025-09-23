@@ -45,7 +45,7 @@ function nys_blocks_publish_form_block_content_form_alter(array &$form, FormStat
   $form[$container_key]['nys_blocks_publish_status'] = [
     '#type' => 'checkbox',
     '#title' => t('Published'),
-    '#default_value' => (int) (method_exists($block, 'isPublished') ? $block->isPublished() : TRUE),
+    '#default_value' => (int) $block->isPublished(),
     '#weight' => 100,
     '#description' => t('Uncheck to unpublish this custom block.'),
   ];
@@ -82,10 +82,10 @@ function nys_blocks_publish_entity_base_field_info_alter(array &$fields, EntityT
 function nys_blocks_publish_block_content_save_status(array &$form, FormStateInterface $form_state) {
   /** @var \Drupal\block_content\BlockContentInterface $block */
   $block = $form_state->getFormObject()->getEntity();
-  if (!$block instanceof BlockContentInterface || !method_exists($block, 'setPublished')) {
+  if (!$block instanceof BlockContentInterface) {
     return;
   }
-  $published = (bool) $form_state->getValue('my_block_publish_status', TRUE);
+  $published = (bool) $form_state->getValue('nys_blocks_publish_status', TRUE);
   $block->setPublished($published);
   // Important: Don’t call ->save() here if core/submit already saves the entity.
   // Many core entity forms save after submit handlers run. If you find it’s not
@@ -99,21 +99,27 @@ function nys_blocks_publish_block_content_save_status(array &$form, FormStateInt
  * Control view access for unpublished custom blocks.
  */
 function nys_blocks_publish_entity_access(EntityInterface $entity, $operation, AccountInterface $account) {
-  if ($entity->getEntityTypeId() === 'block_content' && $operation === 'view') {
-    // If it's unpublished, enforce our permission explicitly.
-    if (method_exists($entity, 'isPublished') && !$entity->isPublished()) {
-      // Allow only if the user has our custom permission.
-      if ($account->hasPermission('view unpublished custom blocks')) {
-        return AccessResult::allowed()->addCacheContexts(['user.permissions']);
-      }
-      // Explicitly forbid otherwise.
-      return AccessResult::forbidden()->addCacheContexts(['user.permissions']);
-    }
-    // For published blocks, don't interfere (let core allow).
+  // Only apply to block_content entities and view operations
+  if ($entity->getEntityTypeId() !== 'block_content' || $operation !== 'view') {
     return AccessResult::neutral();
   }
 
-  return AccessResult::neutral();
+  // Cast to BlockContentInterface
+  /** @var \Drupal\block_content\BlockContentInterface $block */
+  $block = $entity;
+
+  // If it's published, don't interfere (let core allow)
+  if ($block->isPublished()) {
+    return AccessResult::neutral();
+  }
+
+  // For unpublished blocks, check permission
+  if ($account->hasPermission('view unpublished custom blocks')) {
+    return AccessResult::allowed()->addCacheContexts(['user.permissions']);
+  }
+
+  // Explicitly forbid otherwise
+  return AccessResult::forbidden()->addCacheContexts(['user.permissions']);
 }
 
 
@@ -121,28 +127,34 @@ function nys_blocks_publish_entity_access(EntityInterface $entity, $operation, A
  * Implements hook_inline_entity_form_table_fields_alter().
  */
 function nys_blocks_publish_inline_entity_form_table_fields_alter(array &$fields, array $context) {
+  // Determine the target entity type from context
   $target_type = NULL;
   if (!empty($context['field_definition']) && $context['field_definition'] instanceof FieldDefinitionInterface) {
     $target_type = $context['field_definition']->getSetting('target_type');
-  } elseif (!empty($context['entity_type'])) {
+  }
+  elseif (!empty($context['entity_type'])) {
     $target_type = $context['entity_type'];
   }
 
+  // Only apply to block_content entities
   if ($target_type !== 'block_content') {
     return;
   }
 
-  // Render the base field "status" in the table. REQUIRED: field_name.
+  // Add the status field to the table
   $fields['status'] = [
-    'type'       => 'field',
-    'field_name' => 'status',         // <-- REQUIRED
-    'label'      => t('Published'),
-    'weight'     => 15,
-    // Optional: control how the boolean renders.
+    'type' => 'field',
+    'field_name' => 'status',
+    'label' => t('Status'),
+    'weight' => 15,
     'display_options' => [
       'label' => 'hidden',
-      'type'  => 'boolean',
-      'settings' => ['format' => 'default'],
+      'type' => 'boolean',
+      'settings' => [
+        'format' => 'custom',
+        'format_custom_true' => '<span class="marker marker--published">Published</span>',
+        'format_custom_false' => '<span class="marker">Unpublished</span>',
+      ],
     ],
   ];
 }

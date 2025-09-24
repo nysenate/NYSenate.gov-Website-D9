@@ -19,47 +19,8 @@ use Drupal\Core\Field\FieldDefinitionInterface;
  * Base form ID for all block_content bundles is 'block_content_form'.
  */
 function nys_blocks_publish_form_block_content_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
-  /** @var \Drupal\block_content\BlockContentInterface $block */
-  $block = $form_state->getFormObject()->getEntity();
-  if (!$block instanceof BlockContentInterface) {
-    return;
-  }
-
-  // Only show to users who can update the block.
-  if (!$block->access('update')) {
-    return;
-  }
-
-  // Where to place the control: try a sidebar/details group if present,
-  // otherwise put it near actions. Adjust to taste.
-  $container_key = 'advanced';
-  if (!isset($form[$container_key]) || !is_array($form[$container_key])) {
-    $container_key = 'settings';
-    if (!isset($form[$container_key])) {
-      $container_key = 'actions';
-      $form[$container_key] = $form[$container_key] ?? ['#type' => 'container'];
-    }
-  }
-
-  // Add the Published checkbox with current status as default.
-  $form[$container_key]['nys_blocks_publish_status'] = [
-    '#type' => 'checkbox',
-    '#title' => t('Published'),
-    '#default_value' => (int) $block->isPublished(),
-    '#weight' => 100,
-    '#description' => t('Uncheck to unpublish this custom block.'),
-  ];
-
   // Ensure we save the value after normal submits.
   $form['actions']['submit']['#submit'][] = 'nys_blocks_publish_block_content_save_status';
-
-  // Also handle the "Save and publish"/"Save and unpublish" secondary buttons if your
-  // site/theme adds them—hook them all to the same submit handler:
-  foreach (['publish', 'unpublish', 'save_publish', 'save_unpublish'] as $btn) {
-    if (!empty($form['actions'][$btn]) && is_array($form['actions'][$btn])) {
-      $form['actions'][$btn]['#submit'][] = 'nys_blocks_publish_block_content_save_status';
-    }
-  }
 }
 
 /**
@@ -71,8 +32,6 @@ function nys_blocks_publish_entity_base_field_info_alter(array &$fields, EntityT
   if ($entity_type->id() === 'block_content' && isset($fields['status'])) {
     // Allow the field to appear on "Manage form display".
     $fields['status']->setDisplayConfigurable('form', TRUE);
-    // Optional: also make it configurable on "Manage display" if you want.
-    // $fields['status']->setDisplayConfigurable('view', TRUE);
   }
 }
 
@@ -87,10 +46,6 @@ function nys_blocks_publish_block_content_save_status(array &$form, FormStateInt
   }
   $published = (bool) $form_state->getValue('nys_blocks_publish_status', TRUE);
   $block->setPublished($published);
-  // Important: Don’t call ->save() here if core/submit already saves the entity.
-  // Many core entity forms save after submit handlers run. If you find it’s not
-  // being saved on your site for some reason, uncomment the next line.
-  // $block->save();
 }
 
 /**

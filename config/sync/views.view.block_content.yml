@@ -883,7 +883,7 @@ display:
       tags: {  }
   page_2:
     id: page_2
-    display_title: Page
+    display_title: 'Global Blocks'
     display_plugin: page
     position: 1
     display_options:
@@ -1093,7 +1093,7 @@ display:
           entity_type: block_content
           entity_field: status
           plugin_id: field
-          label: Published
+          label: Status
           exclude: false
           alter:
             alter_text: false
@@ -1137,9 +1137,9 @@ display:
           click_sort_column: value
           type: boolean
           settings:
-            format: default
-            format_custom_false: ''
-            format_custom_true: ''
+            format: custom
+            format_custom_false: Unpublished
+            format_custom_true: Published
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -1259,8 +1259,24 @@ display:
           clear_on_exposed: true
           force_selection_info: false
           selected_actions:
-            2:
+            -
               action_id: views_bulk_operations_delete_entity
+              preconfiguration:
+                add_confirmation: false
+                confirm_help_text: ''
+                message_override: ''
+            -
+              action_id: 'entity:publish_action:block_content'
+              preconfiguration:
+                add_confirmation: false
+                confirm_help_text: ''
+                message_override: ''
+            -
+              action_id: 'entity:unpublish_action:block_content'
+              preconfiguration:
+                add_confirmation: false
+                confirm_help_text: ''
+                message_override: ''
         field_senator_multiref:
           id: field_senator_multiref
           table: node__field_senator_multiref
@@ -1270,7 +1286,7 @@ display:
           admin_label: ''
           plugin_id: field
           label: Senator
-          exclude: false
+          exclude: true
           alter:
             alter_text: false
             text: ''
@@ -1335,7 +1351,7 @@ display:
           entity_field: nid
           plugin_id: field
           label: ID
-          exclude: false
+          exclude: true
           alter:
             alter_text: false
             text: ''
@@ -1539,13 +1555,14 @@ display:
           entity_type: block_content
           plugin_id: entity_reverse
           required: false
+      display_description: ''
       display_extenders: {  }
-      path: admin/content/global-blocks
+      path: admin/dashmenu/global-blocks-2
       menu:
-        type: none
-        title: 'Global Blocks'
+        type: tab
+        title: 'Global Blocks VBO'
         description: 'Create and edit block content.'
-        weight: 0
+        weight: 30
         expanded: false
         menu_name: admin
         parent: system.admin_content

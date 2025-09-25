@@ -28,7 +28,7 @@ display:
     display_plugin: default
     position: 0
     display_options:
-      title: 'Global Blocks'
+      title: 'Senator Global Blocks'
       fields:
         title:
           id: title
@@ -170,7 +170,7 @@ display:
           entity_type: block_content
           entity_field: status
           plugin_id: field
-          label: 'Published Status'
+          label: Status
           exclude: false
           alter:
             alter_text: false
@@ -214,9 +214,9 @@ display:
           click_sort_column: value
           type: boolean
           settings:
-            format: default
-            format_custom_false: ''
-            format_custom_true: ''
+            format: custom
+            format_custom_false: Unpublished
+            format_custom_true: Published
           group_column: value
           group_columns: {  }
           group_rows: true

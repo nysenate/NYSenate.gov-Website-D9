@@ -1,0 +1,34 @@
+<?php
+
+/**
+ * @file
+ * Contains custom module logic for NYS Views Plugins.
+ */
+
+/**
+ * Implements hook_views_data().
+ *
+ * @return array
+ *   An array of data describing various views tables and fields.
+ */
+function nys_views_plugins_views_data(): array {
+  $data = [];
+
+  // Add a relationship from block_content to node via entity_reference_revisions.
+  $data['block_content_field_data']['reverse_entity_reference_revisions_node'] = [
+    'title' => t('Parent Node (via entity_reference_revisions)'),
+    'help' => t('Relates to the node that references this block content entity via an entity_reference_revisions field.'),
+    'relationship' => [
+      'id' => 'entity_reference_revisions_reverse',
+      'base' => 'node_field_data',
+      'base field' => 'nid',
+      'field' => 'id',
+      'field name' => 'field_block',
+      'entity_type' => 'node',
+      'label' => t('Parent Node'),
+      'group' => t('Block Content'),
+    ],
+  ];
+
+  return $data;
+}

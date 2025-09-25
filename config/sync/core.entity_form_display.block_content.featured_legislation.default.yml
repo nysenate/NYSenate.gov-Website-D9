@@ -29,8 +29,8 @@ content:
         add_in_between: false
         add_in_between_link_count: 3
         delete_confirmation: false
-        split_text: false
         show_drag_and_drop: true
+        split_text: false
   info:
     type: string_textfield
     weight: 0
@@ -45,5 +45,12 @@ content:
     region: content
     settings:
       include_locked: true
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    weight: -99
+    region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
 hidden: {  }

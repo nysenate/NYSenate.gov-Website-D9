@@ -1,0 +1,46 @@
+uuid: b66f11a2-9723-4941-a7eb-77eac63f417a
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.global_block
+    - field.field.block_content.global_block.field_global_content
+  module:
+    - sdc_display
+third_party_settings:
+  sdc_display:
+    enabled: false
+    component:
+      machine_name: ''
+    mappings:
+      static:
+        props: {  }
+        slots: {  }
+      dynamic:
+        props: {  }
+        slots: {  }
+id: block_content.global_block.default
+targetEntityType: block_content
+bundle: global_block
+mode: default
+content:
+  field_global_content:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: featured_content
+      link: false
+    third_party_settings:
+      sdc_display:
+        enabled: 0
+        component:
+          machine_name: null
+          show_deprecated: 0
+    weight: 1
+    region: content
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  langcode: true
+  search_api_excerpt: true

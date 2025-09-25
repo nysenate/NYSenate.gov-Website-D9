@@ -1,21 +1,18 @@
-uuid: 7194965e-28d0-4dcf-b2c7-1905c98e9858
+uuid: bd25a0bb-4cec-4b9e-945c-38f9e4d34d61
 langcode: en
 status: true
 dependencies:
   config:
-    - block_content.type.tabs
-    - field.field.block_content.tabs.field_block_views
-    - field.field.block_content.tabs.field_tab_names
-  module:
-    - viewsreference
-id: block_content.tabs.default
+    - block_content.type.global_block
+    - field.field.block_content.global_block.field_global_content
+id: block_content.global_block.default
 targetEntityType: block_content
-bundle: tabs
+bundle: global_block
 mode: default
 content:
-  field_block_views:
-    type: viewsreference_autocomplete
-    weight: 3
+  field_global_content:
+    type: entity_reference_autocomplete
+    weight: 2
     region: content
     settings:
       match_operator: CONTAINS
@@ -23,17 +20,9 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-  field_tab_names:
-    type: string_textfield
-    weight: 2
-    region: content
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
   info:
     type: string_textfield
-    weight: 0
+    weight: 1
     region: content
     settings:
       size: 60
@@ -41,7 +30,7 @@ content:
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    weight: -99
+    weight: 0
     region: content
     settings:
       display_label: true

@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.promotional_banner.field_accessible_sitewide
     - field.field.node.promotional_banner.field_call_to_action
     - field.field.node.promotional_banner.field_date
     - field.field.node.promotional_banner.field_link
@@ -22,6 +23,16 @@ targetEntityType: node
 bundle: promotional_banner
 mode: default
 content:
+  field_accessible_sitewide:
+    type: boolean
+    label: hidden
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 8
+    region: content
   field_call_to_action:
     type: list_default
     label: above

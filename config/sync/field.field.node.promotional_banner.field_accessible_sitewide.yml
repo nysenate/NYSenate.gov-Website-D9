@@ -1,0 +1,23 @@
+uuid: cf0c8151-c430-45d2-b9fc-5610bbbbf206
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_accessible_sitewide
+    - node.type.promotional_banner
+id: node.promotional_banner.field_accessible_sitewide
+field_name: field_accessible_sitewide
+entity_type: node
+bundle: promotional_banner
+label: 'Centrally Accessible'
+description: 'Controls whether article can appear on the nysenate.gov home page and the news and issues page. If a senator is not associated with the article, it will appear in the NYSenate.gov theme and navigation scheme.'
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'yes'
+  off_label: 'no'
+field_type: boolean

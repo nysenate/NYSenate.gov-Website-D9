@@ -1,0 +1,115 @@
+<?php
+
+/**
+ * @file
+ * Contains custom code for exposing publish status on content blocks.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\block_content\BlockContentInterface;
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter() for block content forms.
+ *
+ * Base form ID for all block_content bundles is 'block_content_form'.
+ */
+function nys_blocks_publish_form_block_content_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
+  // Ensure we save the value after normal submits.
+  $form['actions']['submit']['#submit'][] = 'nys_blocks_publish_block_content_save_status';
+}
+
+/**
+ * Implements hook_entity_base_field_info_alter().
+ *
+ * Ensure block_content 'status' is configurable on form displays.
+ */
+function nys_blocks_publish_entity_base_field_info_alter(array &$fields, EntityTypeInterface $entity_type) {
+  if ($entity_type->id() === 'block_content' && isset($fields['status'])) {
+    // Allow the field to appear on "Manage form display".
+    $fields['status']->setDisplayConfigurable('form', TRUE);
+  }
+}
+
+/**
+ * Submit handler to persist Published checkbox to the block_content entity.
+ */
+function nys_blocks_publish_block_content_save_status(array &$form, FormStateInterface $form_state) {
+  /** @var \Drupal\block_content\BlockContentInterface $block */
+  $block = $form_state->getFormObject()->getEntity();
+  if (!$block instanceof BlockContentInterface) {
+    return;
+  }
+  $published = (bool) $form_state->getValue('nys_blocks_publish_status', TRUE);
+  $block->setPublished($published);
+}
+
+/**
+ * Implements hook_entity_access().
+ *
+ * Control view access for unpublished custom blocks.
+ */
+function nys_blocks_publish_entity_access(EntityInterface $entity, $operation, AccountInterface $account) {
+  // Only apply to block_content entities and view operations
+  if ($entity->getEntityTypeId() !== 'block_content' || $operation !== 'view') {
+    return AccessResult::neutral();
+  }
+
+  // Cast to BlockContentInterface
+  /** @var \Drupal\block_content\BlockContentInterface $block */
+  $block = $entity;
+
+  // If it's published, don't interfere (let core allow)
+  if ($block->isPublished()) {
+    return AccessResult::neutral();
+  }
+
+  // For unpublished blocks, check permission
+  if ($account->hasPermission('view unpublished custom blocks')) {
+    return AccessResult::allowed()->addCacheContexts(['user.permissions']);
+  }
+
+  // Explicitly forbid otherwise
+  return AccessResult::forbidden()->addCacheContexts(['user.permissions']);
+}
+
+
+/**
+ * Implements hook_inline_entity_form_table_fields_alter().
+ */
+function nys_blocks_publish_inline_entity_form_table_fields_alter(array &$fields, array $context) {
+  // Determine the target entity type from context
+  $target_type = NULL;
+  if (!empty($context['field_definition']) && $context['field_definition'] instanceof FieldDefinitionInterface) {
+    $target_type = $context['field_definition']->getSetting('target_type');
+  }
+  elseif (!empty($context['entity_type'])) {
+    $target_type = $context['entity_type'];
+  }
+
+  // Only apply to block_content entities
+  if ($target_type !== 'block_content') {
+    return;
+  }
+
+  // Add the status field to the table
+  $fields['status'] = [
+    'type' => 'field',
+    'field_name' => 'status',
+    'label' => t('Status'),
+    'weight' => 15,
+    'display_options' => [
+      'label' => 'hidden',
+      'type' => 'boolean',
+      'settings' => [
+        'format' => 'custom',
+        'format_custom_true' => '<span class="marker marker--published">Published</span>',
+        'format_custom_false' => '<span class="marker">Unpublished</span>',
+      ],
+    ],
+  ];
+}

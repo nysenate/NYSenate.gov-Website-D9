@@ -4892,6 +4892,32 @@ function get_item_cta($node) {
     }
   }
 
+  if (($node->field_link_type->value === 'thankful') || ($node->field_link_type->value === 'earthday')) {
+    $current_path = \Drupal::service('path.current')->getPath(); // e.g. /example/test/page
+    $alias        = \Drupal::service('path_alias.manager')->getAliasByPath($current_path); // aliased path
+
+    // Split and keep the first two segments.
+    $parts = explode('/', trim($alias, '/')); // ["example","test","page"]
+    if (count($parts) >= 2) {
+      $first_two = '/' . $parts[0] . '/' . $parts[1]; // "/example/test"
+    } elseif (count($parts) === 1 && $parts[0] !== '') {
+      $first_two = '/' . $parts[0];
+    } else {
+      $first_two = '/'; // homepage fallback
+    }
+
+    // ✅ Append /thankful
+    if ($node->field_link_type->value === 'thankful') {
+      $first_two .= '/thankful';
+    }
+    elseif ($node->field_link_type->value === 'earthday') {
+      $first_two .= '/earthday';
+    }
+
+    // Build an absolute URL from a user input path (alias).
+    $url = Url::fromUserInput($first_two, ['absolute' => TRUE])->toString();
+  }
+
   return [
     'url' => $url,
     'text' => $allowed_values[$banner_cta_value],

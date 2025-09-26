@@ -6,6 +6,7 @@ dependencies:
     - block_content.type.global_block
     - field.storage.node.field_senator_multiref
     - taxonomy.vocabulary.senator
+    - user.role.administrator
   module:
     - block_content
     - node
@@ -1343,6 +1344,11 @@ display:
                 add_confirmation: false
                 confirm_help_text: ''
                 message_override: ''
+      access:
+        type: role
+        options:
+          role:
+            administrator: administrator
       arguments: {  }
       filters:
         info:
@@ -1580,6 +1586,7 @@ display:
         groups:
           1: AND
       defaults:
+        access: false
         relationships: false
         fields: false
         arguments: false
@@ -1601,7 +1608,7 @@ display:
       path: admin/dashmenu/global-blocks-2
       menu:
         type: tab
-        title: 'Global Blocks VBO'
+        title: 'Global Blocks'
         description: 'Create and edit block content.'
         weight: 30
         expanded: false
@@ -1615,6 +1622,6 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
-        - user.permissions
+        - user.roles
       tags:
         - 'config:field.storage.node.field_senator_multiref'

@@ -25,16 +25,3 @@
     } only %}
   {% endfor %}
 </div>
-
-{% set limit = 4 %}
-
-{% if contents|length > limit %}
-  <div class="item-list" data-limit="{{ limit }}">
-    <div class="pager pager-load-more">
-      <span class="pager-next first last">
-        <a class="load-more">See More News
-          {{ panel.pagination_link_text }}</a>
-      </span>
-    </div>
-  </div>
-{% endif %}

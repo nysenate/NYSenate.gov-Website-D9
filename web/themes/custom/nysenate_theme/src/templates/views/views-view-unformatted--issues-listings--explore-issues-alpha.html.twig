@@ -36,15 +36,3 @@
 {% for row in rows %}
   {{- row.content -}}
 {% endfor %}
-
-{% set limit = 12 %}
-
-{% if rows|length > limit %}
-  <div class="item-list" data-limit="{{ limit }}">
-    <div class="pager pager-load-more">
-      <span class="pager-next first last">
-        <a class="load-more">Load more</a>
-      </span>
-    </div>
-  </div>
-{% endif %}

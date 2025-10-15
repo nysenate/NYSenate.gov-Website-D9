@@ -1,4 +1,3 @@
-// nys_blocks_publish.post_update.php
 <?php
 
 /**

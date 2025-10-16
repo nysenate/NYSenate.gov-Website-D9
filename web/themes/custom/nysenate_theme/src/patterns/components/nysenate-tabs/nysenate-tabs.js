@@ -5,7 +5,6 @@
       const tabContainer = $('.l-tab-bar');
       const tabLink = $('.c-tab .c-tab-link');
       const textExpander = $('.text-expander');
-      const loadMore = $('.load-more');
 
       tabContainer.each(function () {
         const tabArrowDown = $(this).find('.c-tab--arrow');
@@ -63,45 +62,6 @@
             link.html('View Less');
             link.addClass('expanded');
           }
-        });
-      }
-
-      // event for load more
-      if (loadMore) {
-        const animationDelay = 200;
-        const animationDuration = 400;
-        loadMore.each(function () {
-          const pagerContainer = $(this).closest('.item-list');
-          const items = pagerContainer.parent().find('.content__item');
-
-          const limit = parseInt(pagerContainer.data('limit')) || 5;
-
-          items.css('display', 'none');
-
-          items.slice(0, limit).show();
-
-          let itemsHidden = $(this)
-            .closest('.item-list')
-            .parent()
-            .find('.content__item:hidden');
-
-          $(this).on('click', function (e) {
-            e.preventDefault();
-
-            itemsHidden
-              .slice(0, limit)
-              .delay(animationDelay)
-              .slideDown(animationDuration, () => {
-                itemsHidden = $(this)
-                  .closest('.item-list')
-                  .parent()
-                  .find('.content__item:hidden');
-
-                if (itemsHidden.length === 0) {
-                  $(this).css('display', 'none');
-                }
-              });
-          });
         });
       }
     },

@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.teaser
+    - field.field.node.article.ai_automator_status
     - field.field.node.article.body
     - field.field.node.article.field_accessible_sitewide
     - field.field.node.article.field_article_author
@@ -20,6 +21,7 @@ dependencies:
     - field.field.node.article.field_issues
     - field.field.node.article.field_layout_components
     - field.field.node.article.field_majority_issue_tag
+    - field.field.node.article.field_moderation_reason
     - field.field.node.article.field_senator_multiref
     - field.field.node.article.field_social_image
     - field.field.node.article.field_social_teaser
@@ -42,12 +44,18 @@ content:
     third_party_settings: {  }
     weight: 101
     region: content
+  content_moderation_control:
+    settings: {  }
+    third_party_settings: {  }
+    weight: -20
+    region: content
   links:
     settings: {  }
     third_party_settings: {  }
     weight: 100
     region: content
 hidden:
+  ai_automator_status: true
   entity_print_view_epub: true
   entity_print_view_pdf: true
   entity_print_view_word_docx: true
@@ -66,11 +74,13 @@ hidden:
   field_issues: true
   field_layout_components: true
   field_majority_issue_tag: true
+  field_moderation_reason: true
   field_senator_multiref: true
   field_social_image: true
   field_social_teaser: true
   field_subtitle: true
   langcode: true
+  nys_senator_dashboard_path_alias: true
   private_message_link: true
   rabbit_hole__settings: true
   search_api_excerpt: true

@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.featured_content
+    - field.field.node.article.ai_automator_status
     - field.field.node.article.body
     - field.field.node.article.field_accessible_sitewide
     - field.field.node.article.field_article_author
@@ -20,6 +21,7 @@ dependencies:
     - field.field.node.article.field_issues
     - field.field.node.article.field_layout_components
     - field.field.node.article.field_majority_issue_tag
+    - field.field.node.article.field_moderation_reason
     - field.field.node.article.field_senator_multiref
     - field.field.node.article.field_social_image
     - field.field.node.article.field_social_teaser
@@ -34,6 +36,11 @@ targetEntityType: node
 bundle: article
 mode: featured_content
 content:
+  content_moderation_control:
+    settings: {  }
+    third_party_settings: {  }
+    weight: -20
+    region: content
   field_date:
     type: datetime_default
     label: hidden
@@ -66,6 +73,7 @@ content:
     weight: 0
     region: content
 hidden:
+  ai_automator_status: true
   body: true
   entity_print_view_epub: true
   entity_print_view_pdf: true
@@ -82,6 +90,7 @@ hidden:
   field_image_hero: true
   field_layout_components: true
   field_majority_issue_tag: true
+  field_moderation_reason: true
   field_senator_multiref: true
   field_social_image: true
   field_social_teaser: true

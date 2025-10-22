@@ -190,6 +190,8 @@
      */
     mobileMenu: function () {
       const mobileMenu = document.querySelector('button.js-mobile-nav--btn');
+      const closeMenuButton = document.querySelector('button.js-mobile-nav--btn.c-nav--toggle--close');
+
       mobileMenu.addEventListener('click', (e) => {
         document.body.classList.toggle('nav-open');
         e.currentTarget.setAttribute('aria-expanded', document.body.classList.contains('nav-open') ? 'true' : 'false');
@@ -197,6 +199,14 @@
           e.currentTarget.focus();
         }
       });
+
+      if (closeMenuButton) {
+        closeMenuButton.addEventListener('click', (e) => {
+          document.body.classList.remove('nav-open');
+          e.currentTarget.setAttribute('aria-expanded', 'false');
+          document.querySelector('button.js-mobile-nav--btn.button--menu').focus();
+        });
+      }
     },
 
     /**

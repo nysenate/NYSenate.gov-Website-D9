@@ -260,7 +260,7 @@
     @extend .icon-after__see-more;
     position: absolute;
     right: 10px;
-    top: auto;
+    top: 24px;
     font-size: 25px;
     color: $blue01;
     pointer-events: none;
@@ -323,6 +323,10 @@
   width: 100%;
   margin-top: 0;
   margin-bottom: 0;
+
+  select:after {
+    top: 27px;
+  }
 }
 
 .js-form-wrapper#edit-field-address-0 summary {
@@ -331,7 +335,7 @@
 
 .nys-registration-register-form {
   #edit-mail--description {
-    color: $grey07;
+    color: $grey08;
   }
 
   input[type="submit"] {
@@ -428,7 +432,7 @@
     #edit-mail--description {
       display: flex;
       align-items: center;
-      color: $grey07;
+      color: $grey08;
       grid-row: 1/span 2;
       grid-column: 2/span 1;
     }

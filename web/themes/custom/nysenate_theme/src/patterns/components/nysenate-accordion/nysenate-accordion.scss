@@ -81,6 +81,12 @@
   align-items: center;
   justify-content: space-between;
 
+  &:hover {
+    span {
+      text-decoration: underline;
+    }
+  }
+
   &::after {
     display: none;
   }
@@ -105,12 +111,6 @@
 
   &.hide-number .count {
     display: none;
-  }
-  span:hover {
-    text-decoration: underline;
-  }
-  &:hover {
-    text-decoration: underline;
   }
 }
 

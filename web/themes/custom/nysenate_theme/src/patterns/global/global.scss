@@ -264,6 +264,20 @@ textarea {
   }
 }
 
+.datepicker .datepicker-switch,
+.datepicker .next,
+.datepicker .prev, {
+  color: $grey01;
+}
+
+.datepicker.dropdown-menu {
+  top: 289px !important;
+
+  .toolbar-fixed.user-logged-in & {
+    top: 387px !important;
+  }
+}
+
 // Correct the cursor style of increment and decrement buttons in Chrome.
 [type='number']::-webkit-inner-spin-button,
 [type='number']::-webkit-outer-spin-button {
@@ -491,6 +505,7 @@ label {
   }
 }
 
+.page-title h1,
 .nys-title {
   margin: 0 0 20px 0;
   color: $grey08;

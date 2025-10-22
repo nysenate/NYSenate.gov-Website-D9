@@ -66,14 +66,15 @@ function nys_opendata_preprocess_node(&$variables) {
               '#weight' => $count,
               'datatable_caption' => [
                 '#markup' => $caption,
-                '#prefix' => '<div class="managed-csv-datatable-caption">',
-                '#suffix' => '</div>',
+                '#prefix' => '<h2 class="managed-csv-datatable-caption">',
+                '#suffix' => '</h2>',
               ],
 
               'datatable' => $file->buildRenderArray() + [
                 '#weight' => $count,
                 '#attributes' => [
                   'class' => ['managed-csv-datatable'],
+                  'aria-hidden' => 'true',
                 ],
               ],
             ];

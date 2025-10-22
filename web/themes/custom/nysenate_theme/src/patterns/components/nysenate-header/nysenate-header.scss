@@ -21,6 +21,7 @@ body {
     &.nav-open #js-sticky .c-nav--wrap {
       top: 99px;
       display: initial;
+      z-index: 99;
     }
 
     #js-sticky {
@@ -28,6 +29,7 @@ body {
 
       .c-nav--toggle {
         top: 39px;
+        z-index: 999;
       }
     }
   }
@@ -172,6 +174,7 @@ body {
 
     &.hidden {
       margin-top: -60px;
+      display: none;
     }
   }
 }
@@ -315,7 +318,7 @@ body {
 
       &.hidden {
         margin-top: -100px;
-        display: block;
+        display: none;
       }
 
       .c-actionbar--cta {
@@ -413,7 +416,7 @@ body {
   z-index: 6;
   transition: all 0.3s ease-out 0s;
   padding: 0;
-  /*display: none;*/
+  display: none;
 
   @include breakpoint($bp-sm) {
     position: relative;
@@ -460,7 +463,7 @@ body {
       @extend .lgt-bg;
 
       @include breakpoint($bp-under-sm) {
-        padding: 100px 0 0;
+        padding: 0;
       }
     }
 
@@ -495,12 +498,41 @@ body {
 		position: fixed;
 		height: 40px;
 		width: 40px;
+    display: none;
 		@extend .icon-replace__x;
 
 		&::after {
 			font-size: 24px;
 		}
 	}
+  .c-nav--toggle--close {
+    background: $color-white;
+    border: 0;
+    cursor: pointer;
+    display: block;
+    height: 60px;
+    left: auto;
+    right: 0;
+    padding: 0;
+    position: fixed;
+    top: 39px;
+    width: 40px;
+    z-index: 10;
+		@extend .icon-replace__x;
+
+    &::after {
+      width: 100%;
+      margin-left: 1px;
+      font-size: 24px;
+      line-height: 60px;
+      text-align: center;
+      @extend .med-text;
+    }
+
+    @include breakpoint($bp-sm) {
+      display: none;
+    }
+  }
 }
 
 // class added to .c-nav--wrap through js
@@ -547,6 +579,10 @@ body {
 		.c-nav--toggle {
 			display: none;
 		}
+
+    .c-nav--toggle--close {
+      display: none;
+    }
 	}
 
   .c-nav--wrap {
@@ -669,6 +705,12 @@ header {
 	}
 }
 
+#js-sticky .c-nav--toggle--close {
+  @include breakpoint($bp-sm) {
+    display: none;
+  }
+}
+
 /* From old site */
 // Non-modular or client styles for .l-header region.
 .l-header {
@@ -754,6 +796,13 @@ nav ul.c-nav--list li a {
   text-decoration: none;
   text-transform: uppercase;
   color: $color-white;
+
+  @include breakpoint($bp-under-sm) {
+    &:hover {
+      color: $color-white;
+      text-decoration: underline;
+    }
+  }
 
   @include breakpoint($bp-sm) {
     height: auto;
@@ -851,11 +900,14 @@ nav ul.c-nav--list {
   }
 
   a {
-    width: 28px;
-    height: 0;
-    padding: 28px 0 0 0;
+    width: 44px;
+    height: 44px;
+    padding: 0;
     font-size: 28px;
     color: $color-white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     &::after {
       color: $color-white;
@@ -1072,14 +1124,15 @@ a:hover.c-header--btn.c-header--btn__taking_action {
 
 .c-site-search {
   display: flex;
-  position: absolute;
-  top: 60px;
   width: 100%;
-  padding: 30px 20px 20px 20px;
+  position: relative;
+  padding: 30px 20px 0 20px;
   margin: 0;
 
   @include breakpoint($bp-sm) {
     display: block;
+    position: absolute;
+    top: 60px;
   }
 
   @include breakpoint($bp-under-sm) {
@@ -1126,11 +1179,10 @@ a:hover.c-header--btn.c-header--btn__taking_action {
   .u-mobile-only &.nys-searchglobal-form {
 
     .search__submit {
-      top: 48%;
-      transform: translateY(-50%);
+      top: 30px;
       margin-right: 0;
       left: auto;
-      right: 20px;
+      right: 25px;
 
       &::after {
         top: 0;
@@ -1305,6 +1357,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     height: 0;
     padding: 0;
     overflow: hidden;
+    display: none;
 
     &::before,
     &::after {
@@ -1314,6 +1367,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     &.open {
       height: 225px;
       padding: 25px 9%;
+      display: block;
     }
   }
 

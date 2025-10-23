@@ -206,7 +206,7 @@ display:
                 advanced:
                   placeholder_text: ''
                   collapsible: false
-                  collapsible_disable_automatic_open: false
+                  collapsible_disable_automatic_open: true
                   is_secondary: false
               title:
                 plugin_id: default
@@ -295,7 +295,7 @@ display:
           exposed: true
           expose:
             operator_id: field_publication_date_value_op
-            label: 'Post Date'
+            label: 'Post Date (yyyy)'
             description: ''
             use_operator: false
             operator: field_publication_date_value_op
@@ -315,6 +315,7 @@ display:
               legislative_correspondent: '0'
               student_programs: '0'
               constituent: '0'
+              comment_moderator: '0'
             min_placeholder: ''
             max_placeholder: ''
             placeholder: ''

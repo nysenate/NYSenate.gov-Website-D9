@@ -9,35 +9,45 @@
 
       tabContainer.each(function () {
         const tabArrowDown = $(this).find('.c-tab--arrow');
-        const tabInput = $(this).find('input.form-radio');
+        const tabButton = $(this).find('button.c-tab');
 
         if (tabArrowDown.length < 1) {
           $(this).append('<div class="c-tab--arrow u-mobile-only"></div>');
         }
 
-        tabInput.each(function () {
-          // Use .attr('checked') instead of .is(:checked), because
-          // tabInput.on('click') logic below operates on checked attribute.
-          if ($(this).attr('checked')) {
-            $(this).parent().addClass('active');
+        tabButton.each(function () {
+          // Check if button has 'active' class - no need to add class to parent since button is the tab
+          if ($(this).hasClass('active')) {
+            // Button is already active, no additional setup needed
           }
         });
 
-        tabInput.on('click', function () {
-          const tabInputContainer = tabInput.parent();
-          const tabContent = tabInputContainer
-            .parent()
-            .parent()
-            .find('.tabs-content');
+        tabButton.on('click', function () {
+          const tabContent = $(this).closest('.l-row').find('.tabs-content');
+          const targetPanel = $(this).val(); // Get the target panel ID from value attribute
+          const tabBar = $(this).closest('.l-tab-bar');
 
-          tabInput.removeAttr('checked');
-          tabInputContainer.removeClass('active');
+          // Remove active state from all buttons
+          tabButton.removeClass('active').attr('aria-selected', 'false');
 
-          $(this).attr('checked', 'checked');
-          $(this).parent().addClass('active');
+          // Set active state on clicked button
+          $(this).addClass('active').attr('aria-selected', 'true');
 
-          tabContent.find('.active').removeClass('active');
-          tabContent.find($(this).val()).addClass('active');
+          // Update content visibility
+          tabContent.find('.content').removeClass('active');
+          tabContent.find(targetPanel).addClass('active');
+
+          // Toggle mobile dropdown behavior - only on mobile/tablet screens
+          if (window.innerWidth <= 768) {
+            if ($(this).hasClass('active') && !tabBar.hasClass('open')) {
+              tabBar.addClass('open');
+            } else {
+              tabBar.removeClass('open');
+            }
+          } else {
+            // Remove open class on desktop
+            tabBar.removeClass('open');
+          }
         });
       });
 

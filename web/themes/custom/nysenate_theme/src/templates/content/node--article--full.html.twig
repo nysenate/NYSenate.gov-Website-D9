@@ -13,7 +13,7 @@
 
 <article {{ attributes.addClass(classes) }}>
   {{ title_prefix }}
-
+{{ vardumper(node.moderation_state.value) }}
   {% if node.moderation_state.value == 'flagged' and content.field_moderation_reason|render %}
     <div class="messages messages--warning">
       <div class="messages__content">

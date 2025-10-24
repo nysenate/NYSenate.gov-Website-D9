@@ -192,6 +192,13 @@ content:
     third_party_settings: {  }
     weight: 5
     region: content
+  field_moderation_reason:
+    type: basic_string
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 22
+    region: content
   field_senator_multiref:
     type: entity_reference_label
     label: hidden
@@ -232,7 +239,6 @@ hidden:
   entity_print_view_epub: true
   entity_print_view_pdf: true
   entity_print_view_word_docx: true
-  field_moderation_reason: true
   langcode: true
   nys_senator_dashboard_path_alias: true
   private_message_link: true

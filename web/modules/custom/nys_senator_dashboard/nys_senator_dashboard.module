@@ -16,7 +16,6 @@ use Drupal\flag\Plugin\Flag\EntityFlagType;
 use Drupal\user\UserInterface;
 use Drupal\webform\WebformInterface;
 use Drupal\webform\WebformSubmissionInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
@@ -454,7 +453,7 @@ function nys_senator_dashboard_entity_view(array &$build, EntityInterface $entit
     'bill_action_links',
     'followers_link',
     'link_to_constituents_list',
-    'path_alias'
+    'path_alias',
   ];
   $prefix = 'nys_senator_dashboard_';
   foreach ($fields as $one_field) {
@@ -480,23 +479,26 @@ function nys_senator_dashboard_user_login(UserInterface $account): void {
   $path = $request->getPathInfo();
 
   // Make sure destination is not set, and this is not a password reset.
-  if ($request->query->get('destination') || str_starts_with($path, '/user/reset/')) {
+  // If the normal user redirection has fired, it will have set the "dashboard"
+  // query value.  This should take precedence.
+  // We have co-opted the normal password reset page, but Drupal still routes
+  // the core version.  Check for both, just in case.
+  /* @see nys_registration_form_user_pass_reset_alter() */
+  if (
+    ($request->query->get('destination') && !$request->query->get('dashboard'))
+    || preg_match('=^(/nys)?/user/reset/=', $path)
+  ) {
     return;
   }
 
-  if ($account->hasRole('microsite_content_producer')) {
-    $url = Url::fromRoute('nys_senator_dashboard.manage_senator')->toString();
-    $response = new RedirectResponse($url);
-    $request->getSession()->save();
-    $response->send();
-    exit;
-  }
-
-  if ($account->hasRole('legislative_correspondent')) {
-    $url = Url::fromRoute('nys_senator_dashboard.constituent_activity')->toString();
-    $response = new RedirectResponse($url);
-    $request->getSession()->save();
-    $response->send();
-    exit;
+  // Check for role, fall through if no privilege is found.
+  $url = match (TRUE) {
+    $account->hasRole('microsite_content_producer') => 'nys_senator_dashboard.manage_senator',
+    $account->hasRole('legislative_correspondent') => 'nys_senator_dashboard.constituent_activity',
+    default => ''
+  };
+  if ($url) {
+    \Drupal::request()->query
+      ->set('destination', Url::fromRoute($url)->toString());
   }
 }

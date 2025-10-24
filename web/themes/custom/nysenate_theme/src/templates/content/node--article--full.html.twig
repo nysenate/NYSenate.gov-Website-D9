@@ -13,8 +13,7 @@
 
 <article {{ attributes.addClass(classes) }}>
   {{ title_prefix }}
-
-  {% if node.moderation_state.value == 'flagged' and content.field_moderation_reason|render %}
+  {% if node.moderation_state.value == 'flagged' and content.field_moderation_reason.0['#context']['value'] %}
     <div class="messages messages--warning">
       <div class="messages__content">
         <h2 class="visually-hidden">Warning message</h2>

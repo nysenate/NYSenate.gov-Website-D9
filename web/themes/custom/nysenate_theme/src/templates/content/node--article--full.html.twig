@@ -14,6 +14,18 @@
 <article {{ attributes.addClass(classes) }}>
   {{ title_prefix }}
 
+  {% if node.moderation_state.value == 'flagged' and content.field_moderation_reason|render %}
+    <div class="messages messages--warning">
+      <div class="messages__content">
+        <h2 class="visually-hidden">Warning message</h2>
+        <p>This content has been flagged for review.</p>
+        <p><strong>Reason:</strong> {{ content.field_moderation_reason }}</p>
+          <p><strong>If you edit your content to abide by Senate guidelines and resave, it will be automatically published. If you think it should not have been flagged,
+           please contact xxxx at xxxx.</strong></p>
+      </div>
+    </div>
+  {% endif %}
+
   {% if page %}
     <header class="c-news--head">
       <h1 class="nys-article-title">{{ title }}</h1>
@@ -58,6 +70,7 @@
               attachment: content.field_attachment,
           } only %}
         {% endif %}
+      </div>
 
     </header>
   {% endif %}
@@ -69,7 +82,7 @@
       <div class="c-block c-block--img">
         {{ content.field_image_main }}
         {% if image_caption %}
-          <p class="c-img--caption">{{ image_caption }}
+          <p class="c-img--caption">{{ image_caption }}</p>
         {% endif %}
       </div>
     {% endif %}

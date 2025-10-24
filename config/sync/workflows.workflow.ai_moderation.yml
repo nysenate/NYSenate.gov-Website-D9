@@ -32,18 +32,24 @@ type_settings:
       published: true
       default_revision: true
   transitions:
-    create_new_draft:
-      label: 'Create New Draft'
+    create:
+      label: Create
       from:
         - draft
-      to: draft
-      weight: 0
+      to: flagged
+      weight: -3
     flagged:
       label: Flagged
       from:
         - flagged
       to: draft
-      weight: 3
+      weight: -1
+    not_flagged:
+      label: 'Not Flagged'
+      from:
+        - draft
+      to: published
+      weight: -2
     pre_published:
       label: Pre-published
       from:
@@ -51,13 +57,14 @@ type_settings:
         - flagged
         - published
       to: pre_published
-      weight: 2
+      weight: 1
     publish:
       label: Publish
       from:
         - pre_published
       to: published
-      weight: 1
+      weight: 0
   entity_types:
     node:
       - article
+  default_moderation_state: draft

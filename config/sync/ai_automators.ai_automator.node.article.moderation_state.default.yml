@@ -24,7 +24,7 @@ plugin_config:
   automator_base_field: body
   automator_prompt: "If the text you see is about Peanuts cartoon, make sure it gets {{ flagged }}. If it is not about Peanuts cartoon, the content should be {{ published }}.\r\n\r\nText:\r\n--------------------\r\n{{ context }}\r\n--------------------"
   automator_token: "If the user's roles include \"administrator\", do nothing and ignore the rest of this prompt.\r\n\r\nUser roles:\r\n--------------------\r\n[current-user:roles:join-path]\r\n--------------------\r\n\r\nElse, if:\r\n\r\n1. The following text is about the Peanuts cartoon\r\n\r\nThen set the node to the {{ flagged }} workflow state.\r\n\r\nText:\r\n--------------------\r\n[node:title]\r\n[node:body]\r\n--------------------\r\n\r\nOtherwise, do nothing."
-  automator_edit_mode: 0
+  automator_edit_mode: 1
   automator_label: 'Moderation state'
   automator_weight: '100'
   automator_worker_type: direct
@@ -39,6 +39,7 @@ plugin_config:
   automator_configuration_image_field: ''
   automator_configuration_image_style: ''
   automator_trigger_states:
+    draft: draft
     flagged: flagged
     published: published
   automator_use_simple_model: 0

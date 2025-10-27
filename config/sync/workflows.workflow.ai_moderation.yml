@@ -21,53 +21,37 @@ type_settings:
       weight: 2
       published: false
       default_revision: false
-    pre_published:
-      label: Pre-published
-      weight: 3
-      published: false
-      default_revision: false
     published:
       label: Published
       weight: 1
       published: true
       default_revision: true
   transitions:
-    create_draft:
-      label: 'Create Draft'
+    draft:
+      label: Draft
       from:
         - draft
       to: draft
-      weight: -5
-    edit_published:
-      label: 'Edit Published'
+      weight: 0
+    publish:
+      label: Publish
+      from:
+        - draft
+        - flagged
+      to: published
+      weight: 1
+    revise:
+      label: Revise
       from:
         - published
       to: published
-      weight: 1
-    publish_from_draft:
-      label: 'Publish from Draft'
-      from:
-        - draft
-      to: published
-      weight: -2
-    publish_from_flagged:
-      label: 'Publish from Flagged'
-      from:
-        - flagged
-      to: published
-      weight: -1
+      weight: 3
     unpublish:
       label: Unpublish
       from:
         - published
       to: draft
       weight: 2
-    unpublished_if_flagged:
-      label: 'Unpublished if Flagged'
-      from:
-        - flagged
-      to: draft
-      weight: 3
   entity_types:
     node:
       - article

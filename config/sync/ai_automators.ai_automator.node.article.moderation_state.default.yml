@@ -3,11 +3,11 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.node.article.moderation_state
+    - core.base_field_override.node.article.moderation_state
 id: node.article.moderation_state.default
-label: 'Moderation state Default'
+label: 'Moderation state'
 rule: llm_moderation_state
-input_mode: base
+input_mode: token
 weight: 100
 worker_type: direct
 entity_type: node
@@ -15,17 +15,17 @@ bundle: article
 field_name: moderation_state
 edit_mode: true
 base_field: body
-prompt: "If the text you see is about Peanuts cartoon, make sure it gets {{ flagged }}. Otherwise set the content to {{ published }}.\r\n\r\nText:\r\n--------------------\r\n{{ context }}\r\n--------------------"
-token: ''
+prompt: "If the text you see is about Peanuts cartoon, make sure it gets {{ flagged }}. If it is not about Peanuts cartoon, the content should be {{ published }}.\r\n\r\nText:\r\n--------------------\r\n{{ context }}\r\n--------------------"
+token: "If the user's roles include \"administrator\", do nothing and ignore the rest of this prompt.\r\n\r\nUser roles:\r\n--------------------\r\n[current-user:roles:join-path]\r\n--------------------\r\n\r\nElse, if:\r\n\r\n1. The following text is about the Peanuts cartoon\r\n\r\nThen set the node to the {{ flagged }} workflow state.\r\n\r\nText:\r\n--------------------\r\n[node:title]\r\n[node:body]\r\n--------------------\r\n\r\nOtherwise, do nothing."
 plugin_config:
   automator_enabled: 1
   automator_rule: llm_moderation_state
-  automator_mode: base
+  automator_mode: token
   automator_base_field: body
-  automator_prompt: "If the text you see is about Peanuts cartoon, make sure it gets {{ flagged }}. Otherwise set the content to {{ published }}.\r\n\r\nText:\r\n--------------------\r\n{{ context }}\r\n--------------------"
-  automator_token: ''
-  automator_edit_mode: 1
-  automator_label: 'Moderation state Default'
+  automator_prompt: "If the text you see is about Peanuts cartoon, make sure it gets {{ flagged }}. If it is not about Peanuts cartoon, the content should be {{ published }}.\r\n\r\nText:\r\n--------------------\r\n{{ context }}\r\n--------------------"
+  automator_token: "If the user's roles include \"administrator\", do nothing and ignore the rest of this prompt.\r\n\r\nUser roles:\r\n--------------------\r\n[current-user:roles:join-path]\r\n--------------------\r\n\r\nElse, if:\r\n\r\n1. The following text is about the Peanuts cartoon\r\n\r\nThen set the node to the {{ flagged }} workflow state.\r\n\r\nText:\r\n--------------------\r\n[node:title]\r\n[node:body]\r\n--------------------\r\n\r\nOtherwise, do nothing."
+  automator_edit_mode: 0
+  automator_label: 'Moderation state'
   automator_weight: '100'
   automator_worker_type: direct
   automator_ai_provider: openai
@@ -41,12 +41,9 @@ plugin_config:
   automator_trigger_states:
     flagged: flagged
     published: published
-    draft: 0
-    pre_published: 0
   automator_use_simple_model: 0
   automator_trigger_lookup:
+    draft: draft
     flagged: flagged
     published: published
-    draft: 0
-    pre_published: 0
   automator_store_explanation: field_moderation_reason

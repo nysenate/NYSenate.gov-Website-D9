@@ -15,6 +15,7 @@ dependencies:
     - node.type.video
     - node.type.webform
     - workflows.workflow.ai_moderation
+    - workflows.workflow.default
   module:
     - captcha
     - contact
@@ -64,6 +65,7 @@ permissions:
   - 'delete own files'
   - 'delete own image media'
   - 'delete own remote_video media'
+  - 'edit any article content'
   - 'edit field_moderation_reason'
   - 'edit own field_featured'
   - 'edit own field_moderation_reason'
@@ -86,18 +88,34 @@ permissions:
   - 'rabbit hole bypass media'
   - 'rabbit hole bypass node'
   - 'rabbit hole bypass taxonomy_term'
+  - 'revert article revisions'
   - 'skip CAPTCHA'
   - 'unflag follow_committee'
   - 'unflag follow_issue'
   - 'unflag follow_this_bill'
   - 'unflag sign_petition'
   - 'update media'
-  - 'use ai_moderation transition create'
-  - 'use ai_moderation transition flagged'
+  - 'use ai_moderation transition create_draft'
+  - 'use ai_moderation transition edit_published'
+  - 'use ai_moderation transition publish_from_draft'
+  - 'use ai_moderation transition publish_from_flagged'
+  - 'use ai_moderation transition unpublish'
+  - 'use ai_moderation transition unpublished_if_flagged'
+  - 'use default transition archived_to_draft'
+  - 'use default transition archived_to_published'
+  - 'use default transition archived_to_review'
+  - 'use default transition create_new_draft'
+  - 'use default transition draft_need_review'
+  - 'use default transition publish'
+  - 'use default transition review_archived'
+  - 'use default transition review_draft'
+  - 'use default transition review_published'
   - 'use text format basic_html'
   - 'view any unpublished content'
+  - 'view article revisions'
   - 'view field_chair'
   - 'view field_moderation_reason'
+  - 'view latest version'
   - 'view own field_chair'
   - 'view own field_featured'
   - 'view own field_moderation_reason'

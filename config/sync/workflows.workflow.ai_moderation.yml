@@ -28,11 +28,17 @@ type_settings:
       default_revision: true
   transitions:
     draft:
-      label: Draft
+      label: 'Create Draft'
       from:
         - draft
       to: draft
       weight: 0
+    flagged:
+      label: Flagged
+      from:
+        - draft
+      to: flagged
+      weight: 4
     publish:
       label: Publish
       from:

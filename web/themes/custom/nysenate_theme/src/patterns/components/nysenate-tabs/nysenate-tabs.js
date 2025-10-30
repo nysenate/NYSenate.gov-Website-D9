@@ -6,6 +6,19 @@
       const tabLink = $('.c-tab .c-tab-link');
       const textExpander = $('.text-expander');
       const loadMore = $('.load-more');
+      const ariaAnnouncement = $('.aria-announcement');
+
+      // Function to update aria announcement with row counts
+      const updateAriaAnnouncement = function() {
+        const activePanel = $('.tabs-content .content.active');
+        if (activePanel.length > 0) {
+          const message = `${activePanel.find('.view-header .rows-message')[0].innerHTML}`;
+          ariaAnnouncement.text(message);
+        }
+      };
+
+      // Update announcement on page load
+      setTimeout(updateAriaAnnouncement, 500);
 
       tabContainer.each(function () {
         const tabArrowDown = $(this).find('.c-tab--arrow');
@@ -36,6 +49,9 @@
           // Update content visibility
           tabContent.find('.content').removeClass('active');
           tabContent.find(targetPanel).addClass('active');
+
+          // Update aria announcement with new content row counts
+          setTimeout(updateAriaAnnouncement, 100);
 
           // Toggle mobile dropdown behavior - only on mobile/tablet screens
           if (window.innerWidth <= 768) {

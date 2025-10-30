@@ -31,6 +31,10 @@ body {
         top: 39px;
         z-index: 999;
       }
+
+      .c-nav--toggle--close {
+        top: 39px;
+      }
     }
   }
 
@@ -459,7 +463,7 @@ body {
       width: 100%;
       height: 100%;
       padding: 155px 0 0;
-      overflow: scroll;
+      // overflow: scroll;
       @extend .lgt-bg;
 
       @include breakpoint($bp-under-sm) {
@@ -492,6 +496,7 @@ body {
     bottom: 0;
     height: auto;
     display: block;
+    z-index: 99;
   }
 
 	.c-nav--toggle {
@@ -515,7 +520,7 @@ body {
     right: 0;
     padding: 0;
     position: fixed;
-    top: 39px;
+    top: 0px;
     width: 40px;
     z-index: 10;
 		@extend .icon-replace__x;

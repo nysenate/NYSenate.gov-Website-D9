@@ -54,7 +54,8 @@
           {% endif %}
         {% endfor %}
       </div>
-      <div class="tabs-content" aria-live="polite">
+      <div class="tabs-content">
+      <div class="aria-announcement visually-hidden" aria-live="polite" tab-index="-1"></div>
         {% for key in content.field_tab_names|keys %}
           {% if key matches '/^\\d+$/' and content.field_block_views[key] %}
             <div

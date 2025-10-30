@@ -43,6 +43,11 @@ content:
     third_party_settings: {  }
     weight: 1
     region: content
+  content_moderation_control:
+    settings: {  }
+    third_party_settings: {  }
+    weight: -20
+    region: content
   field_category:
     type: list_default
     label: above
@@ -114,6 +119,7 @@ hidden:
   field_social_teaser: true
   field_subtitle: true
   langcode: true
+  nys_senator_dashboard_path_alias: true
   private_message_link: true
   rabbit_hole__settings: true
   search_api_excerpt: true

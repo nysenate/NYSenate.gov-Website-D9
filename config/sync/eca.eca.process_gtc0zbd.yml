@@ -1,0 +1,33 @@
+uuid: 72838c5f-ad79-4766-8004-a9ba5bff24ac
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.article
+  module:
+    - eca_content
+id: process_gtc0zbd
+modeller: bpmn_io
+label: noname
+version: ''
+weight: 0
+events:
+  Event_0gbb224:
+    plugin: 'content_entity:insert'
+    label: Event_0gbb224
+    configuration:
+      type: 'node article'
+    successors:
+      -
+        id: Activity_1bq9l66
+        condition: ''
+conditions: {  }
+gateways: {  }
+actions:
+  Activity_1bq9l66:
+    plugin: action_message_action
+    label: message
+    configuration:
+      replace_tokens: false
+      message: 'ECA Test message'
+    successors: {  }

@@ -165,6 +165,7 @@
       }
 
       .field {
+        overflow: hidden;
         .field__label {
           font-weight: normal;
         }
@@ -172,6 +173,14 @@
         .field__item {
           float: left;
           padding-right: 0;
+        }
+
+        a img {
+          transition: ease-in-out 0.2s;
+        }
+
+        a:hover img {
+          transform: scale(1.1);
         }
       }
 

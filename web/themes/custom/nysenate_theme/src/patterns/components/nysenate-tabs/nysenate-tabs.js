@@ -29,9 +29,17 @@
         }
 
         tabButton.each(function () {
-          // Check if button has 'active' class - no need to add class to parent since button is the tab
+          // Set aria-controls to the panel ID (removing the # from the value)
+          const panelId = $(this).val().replace('#', '');
+          $(this).attr('aria-controls', panelId);
+          
+          // Set proper aria-selected based on active class
           if ($(this).hasClass('active')) {
-            // Button is already active, no additional setup needed
+            $(this).attr('aria-selected', 'true');
+            $(this).attr('aria-expanded', 'true');
+          } else {
+            $(this).attr('aria-selected', 'false');
+            $(this).attr('aria-expanded', 'false');
           }
         });
 
@@ -41,10 +49,10 @@
           const tabBar = $(this).closest('.l-tab-bar');
 
           // Remove active state from all buttons
-          tabButton.removeClass('active').attr('aria-selected', 'false');
+          tabButton.removeClass('active').attr('aria-selected', 'false').attr('aria-expanded', 'false');
 
           // Set active state on clicked button
-          $(this).addClass('active').attr('aria-selected', 'true');
+          $(this).addClass('active').attr('aria-selected', 'true').attr('aria-expanded', 'true');
 
           // Update content visibility
           tabContent.find('.content').removeClass('active');

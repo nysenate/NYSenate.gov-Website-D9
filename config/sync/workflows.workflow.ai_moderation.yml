@@ -2,6 +2,8 @@ uuid: 3f54926e-830f-4a47-bf77-adf1dc1dc518
 langcode: en
 status: true
 dependencies:
+  config:
+    - node.type.article
   module:
     - content_moderation
 id: ai_moderation
@@ -39,5 +41,7 @@ type_settings:
         - published
       to: published
       weight: 1
-  entity_types: {  }
+  entity_types:
+    node:
+      - article
   default_moderation_state: draft

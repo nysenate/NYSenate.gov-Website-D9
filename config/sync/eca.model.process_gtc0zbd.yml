@@ -5,7 +5,7 @@ dependencies:
   config:
     - eca.eca.process_gtc0zbd
 id: process_gtc0zbd
-label: noname
+label: 'AI Moderation'
 tags:
   - ''
 documentation: ''
@@ -13,7 +13,7 @@ filename: ''
 modeldata: |
   <?xml version="1.0" encoding="UTF-8"?>
   <bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:qa="http://some-company/schema/bpmn/qa" id="sample-diagram" targetNamespace="http://bpmn.io/schema/bpmn" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
-    <bpmn2:process id="Process_gTC0zBd" isExecutable="true">
+    <bpmn2:process id="Process_gTC0zBd" name="AI Moderation" isExecutable="true">
       <bpmn2:extensionElements>
         <camunda:properties>
           <camunda:property name="Save message" value="message" />
@@ -44,22 +44,37 @@ modeldata: |
         </bpmn2:extensionElements>
         <bpmn2:incoming>Flow_0wa2q34</bpmn2:incoming>
       </bpmn2:task>
-      <bpmn2:sequenceFlow id="Flow_0wa2q34" name="Save message" sourceRef="Event_0gbb224" targetRef="Activity_1bq9l66" />
+      <bpmn2:sequenceFlow id="Flow_0wa2q34" name="Save message" camunda:modelerTemplate="org.drupal.condition.eca_user_role" sourceRef="Event_0gbb224" targetRef="Activity_1bq9l66">
+        <bpmn2:extensionElements>
+          <camunda:properties>
+            <camunda:property name="pluginid" value="eca_user_role" />
+          </camunda:properties>
+          <camunda:field name="account">
+            <camunda:string></camunda:string>
+          </camunda:field>
+          <camunda:field name="role">
+            <camunda:string>administrator</camunda:string>
+          </camunda:field>
+          <camunda:field name="negate">
+            <camunda:string>no</camunda:string>
+          </camunda:field>
+        </bpmn2:extensionElements>
+      </bpmn2:sequenceFlow>
     </bpmn2:process>
     <bpmndi:BPMNDiagram id="sid-58f011ec-1d11-48eb-a175-416aa464b9ed">
       <bpmndi:BPMNPlane id="sid-1033b60e-188f-474e-9451-c1a97c5bc11b" bpmnElement="Process_gTC0zBd">
+        <bpmndi:BPMNShape id="Event_0gbb224_di" bpmnElement="Event_0gbb224">
+          <dc:Bounds x="412" y="-328" width="36" height="36" />
+        </bpmndi:BPMNShape>
         <bpmndi:BPMNShape id="Activity_1bq9l66_di" bpmnElement="Activity_1bq9l66">
           <dc:Bounds x="560" y="-350" width="100" height="80" />
           <bpmndi:BPMNLabel />
         </bpmndi:BPMNShape>
-        <bpmndi:BPMNShape id="Event_0gbb224_di" bpmnElement="Event_0gbb224">
-          <dc:Bounds x="482" y="-328" width="36" height="36" />
-        </bpmndi:BPMNShape>
         <bpmndi:BPMNEdge id="Flow_0wa2q34_di" bpmnElement="Flow_0wa2q34">
-          <di:waypoint x="518" y="-310" />
+          <di:waypoint x="448" y="-310" />
           <di:waypoint x="560" y="-310" />
           <bpmndi:BPMNLabel>
-            <dc:Bounds x="504" y="-328" width="73" height="14" />
+            <dc:Bounds x="472" y="-328" width="73" height="14" />
           </bpmndi:BPMNLabel>
         </bpmndi:BPMNEdge>
       </bpmndi:BPMNPlane>

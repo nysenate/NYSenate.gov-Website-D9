@@ -6,9 +6,10 @@ dependencies:
     - node.type.article
   module:
     - eca_content
+    - eca_user
 id: process_gtc0zbd
 modeller: bpmn_io
-label: noname
+label: 'AI Moderation'
 version: ''
 weight: 0
 events:
@@ -20,8 +21,14 @@ events:
     successors:
       -
         id: Activity_1bq9l66
-        condition: ''
-conditions: {  }
+        condition: Flow_0wa2q34
+conditions:
+  Flow_0wa2q34:
+    plugin: eca_user_role
+    configuration:
+      negate: false
+      account: ''
+      role: administrator
 gateways: {  }
 actions:
   Activity_1bq9l66:

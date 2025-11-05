@@ -1,0 +1,17 @@
+uuid: 41474bba-28c3-41d5-96ca-fb4c06690efc
+langcode: en
+status: true
+dependencies:
+  module:
+    - ai_logging
+title: 'Default cron handler'
+id: ai_logging_cron
+weight: 0
+module: ai_logging
+callback: 'ai_logging#cron'
+scheduler:
+  id: simple
+launcher:
+  id: serial
+logger:
+  id: database

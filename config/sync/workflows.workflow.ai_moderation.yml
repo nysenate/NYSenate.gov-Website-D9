@@ -13,19 +13,24 @@ type_settings:
   states:
     draft:
       label: Draft
-      weight: 0
+      weight: -2
       published: false
       default_revision: false
     flagged:
       label: Flagged
-      weight: 2
+      weight: 1
       published: false
       default_revision: false
     published:
       label: Published
-      weight: 1
+      weight: 0
       published: true
       default_revision: true
+    review:
+      label: Review
+      weight: -1
+      published: false
+      default_revision: false
   transitions:
     draft:
       label: 'Create Draft'

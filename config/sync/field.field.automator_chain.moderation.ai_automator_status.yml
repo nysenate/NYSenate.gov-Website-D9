@@ -1,0 +1,22 @@
+uuid: b690e719-cef5-42ef-9af9-d6c83bbd8643
+langcode: en
+status: true
+dependencies:
+  config:
+    - ai_automators.automator_chain_type.moderation
+    - field.storage.automator_chain.ai_automator_status
+  module:
+    - options
+id: automator_chain.moderation.ai_automator_status
+field_name: ai_automator_status
+entity_type: automator_chain
+bundle: moderation
+label: 'AI Automator Status'
+description: ''
+required: true
+translatable: true
+default_value:
+  - pending
+default_value_callback: ''
+settings: {  }
+field_type: list_string

@@ -26,7 +26,56 @@ settings:
       - heading
       - '|'
       - sourceEditing
+      - aickeditor
   plugins:
+    ai_ckeditor_ai:
+      dialog:
+        autoresize: 'min-width: 600px'
+        height: '750'
+        width: '900'
+        dialog_class: ai-ckeditor-modal
+      plugins:
+        ai_automators_ckeditor:
+          workflows:
+            moderation:
+              enabled: 1
+              inputs:
+                field_input: field_input
+              output: field_ouput
+              selected_input: field_input
+              require_selection: 1
+              write_mode: replace
+          enabled: true
+        ai_ckeditor_completion:
+          enabled: false
+          provider: openai__gpt-4.1
+        ai_ckeditor_help:
+          enabled: false
+        ai_ckeditor_modify_prompt:
+          enabled: false
+          provider: openai__gpt-4.1
+        ai_ckeditor_reformat_html:
+          enabled: false
+          provider: openai__gpt-4.1
+        ai_ckeditor_spellfix:
+          enabled: false
+          provider: openai__gpt-4.1
+        ai_ckeditor_summarize:
+          enabled: false
+          provider: openai__gpt-4.1
+        ai_ckeditor_tone:
+          autocreate: false
+          provider: openai__gpt-4.1
+          tone_vocabulary: committees
+          use_description: 0
+          enabled: false
+        ai_ckeditor_translate:
+          autocreate: false
+          provider: openai__gpt-4.1
+          translate_vocabulary: committees
+          use_description: false
+          language_source: tax
+          enabled: false
     ckeditor5_heading:
       enabled_headings:
         - heading2

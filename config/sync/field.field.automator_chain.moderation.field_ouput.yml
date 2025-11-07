@@ -1,0 +1,22 @@
+uuid: e0baa1c5-a1a6-4b71-9777-7195ec7afa71
+langcode: en
+status: true
+dependencies:
+  config:
+    - ai_automators.automator_chain_type.moderation
+    - field.storage.automator_chain.field_ouput
+  module:
+    - text
+id: automator_chain.moderation.field_ouput
+field_name: field_ouput
+entity_type: automator_chain
+bundle: moderation
+label: Output
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  allowed_formats: {  }
+field_type: text_long

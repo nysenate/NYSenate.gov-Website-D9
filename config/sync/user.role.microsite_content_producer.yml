@@ -16,6 +16,7 @@ dependencies:
     - node.type.webform
     - workflows.workflow.ai_moderation
   module:
+    - ai_ckeditor
     - captcha
     - contact
     - content_moderation
@@ -95,6 +96,7 @@ permissions:
   - 'unflag follow_this_bill'
   - 'unflag sign_petition'
   - 'update media'
+  - 'use ai ckeditor'
   - 'use ai_moderation transition draft'
   - 'use ai_moderation transition publish'
   - 'use ai_moderation transition revise'

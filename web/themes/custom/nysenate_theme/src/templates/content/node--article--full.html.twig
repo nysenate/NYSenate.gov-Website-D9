@@ -14,13 +14,13 @@
 <article {{ attributes.addClass(classes) }}>
   {{ title_prefix }}
   {% if node.moderation_state.value == 'flagged' and content.field_moderation_reason.0['#context']['value'] %}
-    <div class="messages messages--warning">
+    <div class="messages messages--error">
       <div class="messages__content">
         <h2 class="visually-hidden">Warning message</h2>
-        <p>This content has been flagged for review.</p>
-        <p><strong>Reason:</strong> {{ content.field_moderation_reason }}</p>
-          <p><strong>If you edit your content to abide by Senate guidelines and resave, it will be automatically published. If you think it should not have been flagged,
-           please contact xxx at xxxx.</strong></p>
+          <p><span>This content has been flagged for violating New York State Senate content guidelines.</span></p>
+        <p><span>Reason:</span> {{ content.field_moderation_reason }}</p>
+          <p><span>How to fix:</span><br>If you edit your content to abide by <a href="/">Senate guidelines</a> and resave, it will be automatically published. If you think it should not have been flagged,
+           please contact xxx at xxxx.</p>
       </div>
     </div>
   {% endif %}

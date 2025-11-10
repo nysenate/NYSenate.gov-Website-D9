@@ -6,6 +6,7 @@ dependencies:
     - field.field.node.article.ai_automator_status
     - field.field.node.article.body
     - field.field.node.article.field_accessible_sitewide
+    - field.field.node.article.field_ai_test
     - field.field.node.article.field_article_author
     - field.field.node.article.field_associated_senators
     - field.field.node.article.field_attachment
@@ -14,6 +15,7 @@ dependencies:
     - field.field.node.article.field_committee
     - field.field.node.article.field_committee_featured
     - field.field.node.article.field_date
+    - field.field.node.article.field_flag
     - field.field.node.article.field_image_caption
     - field.field.node.article.field_image_hero
     - field.field.node.article.field_image_main
@@ -72,6 +74,16 @@ content:
       format_custom_true: ''
     third_party_settings: {  }
     weight: 9
+    region: content
+  field_ai_test:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 24
     region: content
   field_article_author:
     type: string
@@ -141,6 +153,16 @@ content:
       date_format: 'F j, Y'
     third_party_settings: {  }
     weight: 4
+    region: content
+  field_flag:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 23
     region: content
   field_image_caption:
     type: string

@@ -50,7 +50,6 @@ class GlobalSearchController extends ControllerBase {
     $content['#cache']['contexts'][] = 'url.query_args';
 
     $content['global_search_form'] = $this->formBuilder->getForm('Drupal\nys_search\Form\GlobalSearchAdvancedForm');
-    $request = $this->requestStack->getCurrentRequest();
 
     try {
       $view = Views::getView('core_search');
@@ -60,7 +59,7 @@ class GlobalSearchController extends ControllerBase {
       $message = 'An unexpected error has occurred while searching. Please try again later.';
       $variables = [
         'msg' => $e->getMessage(),
-        'search' => $request,
+        'search' => $this->requestStack->getCurrentRequest(),
       ];
       $this->loggerFactory->get('nys_search')->error($message, $variables);
     }

@@ -7,20 +7,12 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
-use Drupal\nys_search\GlobalSearchAdvancedHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * The Search advanced legislation form class.
  */
 class GlobalSearchAdvancedForm extends FormBase {
-
-  /**
-   * Search Advanced Legislation helper service.
-   *
-   * @var \Drupal\nys_search\GlobalSearchAdvancedHelper
-   */
-  protected GlobalSearchAdvancedHelper $helper;
 
   /**
    * Drupal's Entity Type Manager service.
@@ -47,7 +39,6 @@ class GlobalSearchAdvancedForm extends FormBase {
    */
   public static function create(ContainerInterface $container): static {
     return new static(
-      $container->get('nys_search.helper'),
       $container->get('entity_type.manager'),
       $container->get('database')
     );
@@ -56,15 +47,12 @@ class GlobalSearchAdvancedForm extends FormBase {
   /**
    * Search Advanced Legislation form constructor.
    *
-   * @param \Drupal\nys_search\GlobalSearchAdvancedHelper $helper
-   *   The GlobalSearchAdvancedHelper service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   Drupal's Entity Type Manager service.
    * @param \Drupal\Core\Database\Connection $database
    *   Drupal's Database Connection service.
    */
-  public function __construct(GlobalSearchAdvancedHelper $helper, EntityTypeManagerInterface $entityTypeManager, Connection $database) {
-    $this->helper = $helper;
+  public function __construct(EntityTypeManagerInterface $entityTypeManager, Connection $database) {
     $this->entityTypeManager = $entityTypeManager;
     $this->database = $database;
   }
@@ -143,25 +131,17 @@ class GlobalSearchAdvancedForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state): array {
     // Build your form here.
     $form['#cache']['contexts'][] = 'url.query_args';
-    $results_page = $this->helper->isResultsPage();
-    $markup = '';
-    $form['global_search'] = [
-      '#type' => 'block',
-      '#attributes' => [
-        'class' => ['adv-search-container'],
-      ],
-    ];
-    if (!$results_page) {
-      $form['global_search']['global_search_title'] = [
-        '#type' => 'item',
-        '#markup' => $this->t('<h1>Global Search</h1>'),
-      ];
-    }
+
     $args = $this->getRequest()->query->all();
 
-    $form['advanced_search']['advanced_search_text'] = [
-      '#type' => 'item',
-      '#markup' => $markup,
+    $form['full_text'] = [
+      '#type' => 'textfield',
+      '#title' => 'Search Term',
+      '#default_value' => $args['full_text'] ?? NULL,
+      '#attributes' => [
+        'class' => ['full-text-search'],
+        'placeholder' => 'Enter search term',
+      ],
     ];
 
     $form['senator'] = [
@@ -197,11 +177,6 @@ class GlobalSearchAdvancedForm extends FormBase {
       '#title' => 'Filter By Type',
     ];
 
-    $form['full_text'] = [
-      '#type' => 'hidden',
-      '#default_value' => $args['full_text'] ?? NULL,
-    ];
-
     $form['actions']['#type'] = 'actions';
     $form['#attached']['library'][] = 'nys_search/nys_search';
     $form['actions']['submit'] = [
@@ -209,6 +184,25 @@ class GlobalSearchAdvancedForm extends FormBase {
       '#value' => $this->t('FILTER RESULT'),
       '#button_type' => 'small',
     ];
+
+    // Only show clear filters button if there are active filters/params.
+    $has_filters = FALSE;
+    foreach (['full_text', 'senator', 'committee', 'type'] as $param) {
+      if (!empty($args[$param])) {
+        $has_filters = TRUE;
+        break;
+      }
+    }
+
+    if ($has_filters) {
+      $form['actions']['reset'] = [
+        '#type' => 'submit',
+        '#value' => $this->t('CLEAR FILTERS'),
+        '#button_type' => 'small',
+        '#submit' => ['::resetForm'],
+      ];
+    }
+
     return $form;
   }
 
@@ -235,6 +229,15 @@ class GlobalSearchAdvancedForm extends FormBase {
 
     $url = Url::fromRoute('nys_search.globalSearch', [], ['query' => $params]);
 
+    $form_state->setRedirectUrl($url);
+  }
+
+  /**
+   * Reset form handler.
+   */
+  public function resetForm(array &$form, FormStateInterface $form_state): void {
+    // Redirect to the search page without any query parameters.
+    $url = Url::fromRoute('nys_search.globalSearch');
     $form_state->setRedirectUrl($url);
   }
 

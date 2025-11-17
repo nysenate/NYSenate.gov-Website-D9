@@ -39,25 +39,52 @@ class HistoryForm extends FormBase {
     // Ensure this form is not cached.
     $form_state->disableCache();
 
-    // Find the date of the current history marker.
+    // Find the date of the current history marker and the true latest date.
     $current = $statute->detail->result->activeDate ?? '--ERROR--';
+    $latest = $statute->getLatestActiveDate();
+
+    // Get the relevant publish dates (filtered up to the latest revision).
+    $dates = $statute->relevantPublishDates($latest);
+
+    // Sort dates in descending order (most recent first).
+    rsort($dates);
+
+    // Determine if the current revision is the most recent.
+    $is_most_recent = ($current === $latest);
+
+    // Build the milestone banner with conditional link or text.
+    if ($is_most_recent) {
+      $milestone_html = '<div class="nys-openleg-history-published">'
+        . 'Viewing most recent revision (from ' . $current . ')'
+        . '</div>';
+    }
+    else {
+      $milestone_html = '<div class="nys-openleg-history-published">'
+        . 'Viewing historical revision (from ' . $current . ')<br />'
+        . '<a href="javascript:void(0);" class="nys-openleg-history-view-latest" data-latest="' . htmlspecialchars($latest) . '">Click here to view most recent revision (' . $latest . ')</a>'
+        . '</div>';
+    }
 
     // Render the history form.
     return [
+      '#attached' => [
+        'library' => ['nys_openleg/history-form'],
+      ],
       'milestone' => [
-        '#markup' => '<div class="nys-openleg-history-published">This entry was published on ' . $current . '</div>',
+        '#markup' => $milestone_html,
       ],
       'history' => [
         '#type' => 'select',
-        '#options' => array_combine($statute->publishDates(), $statute->publishDates()),
-        '#default_value' => $current,
-        '#title' => 'See most recent version before or on: ',
+        '#empty_option' => '-- Choose a Date --',
+        '#options' => array_combine($dates, $dates),
+        '#default_value' => '',
+        '#title' => 'View historical revision as of: ',
         '#attributes' => [
           'onChange' => 'this.form.submit();',
         ],
       ],
       'history_note' => [
-        '#markup' => '<div class="nys-openleg-history-note">NOTE: The selection dates indicate all change milestones for the entire volume, not just the location being viewed.  Specifying a milestone date will retrieve the most recent version of the location before that date.</div>',
+        '#markup' => '<div class="nys-openleg-history-note">NOTE: The above date options correlate to ALL revision records for the entire volume, not just the section being viewed. The retrieved revision will likely be from an earlier date than the chosen date.</div>',
       ],
     ];
   }

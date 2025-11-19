@@ -13,7 +13,6 @@
 
 <article {{ attributes.addClass(classes) }}>
   {{ title_prefix }}
-    {{ vardumper(node.field_layout_components.1.entity.field_accordion_item.0.entity.field_body.value) }}
   {% if node.moderation_state.value == 'flagged' and content.field_moderation_reason.0['#context']['value'] %}
     <div class="messages messages--error">
       <div class="messages__content">

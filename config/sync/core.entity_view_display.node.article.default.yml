@@ -7,6 +7,7 @@ dependencies:
     - field.field.node.article.body
     - field.field.node.article.field_accessible_sitewide
     - field.field.node.article.field_ai_test
+    - field.field.node.article.field_ai_test_set
     - field.field.node.article.field_article_author
     - field.field.node.article.field_associated_senators
     - field.field.node.article.field_attachment
@@ -84,6 +85,13 @@ content:
       format_custom_true: ''
     third_party_settings: {  }
     weight: 24
+    region: content
+  field_ai_test_set:
+    type: list_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 25
     region: content
   field_article_author:
     type: string

@@ -8,6 +8,7 @@ dependencies:
     - field.field.node.article.body
     - field.field.node.article.field_accessible_sitewide
     - field.field.node.article.field_ai_test
+    - field.field.node.article.field_ai_test_set
     - field.field.node.article.field_article_author
     - field.field.node.article.field_associated_senators
     - field.field.node.article.field_attachment
@@ -44,8 +45,6 @@ third_party_settings:
   field_group:
     group_heading_info:
       children:
-        - field_ai_test
-        - field_flag
         - title
         - field_category
         - field_image_main
@@ -121,7 +120,7 @@ third_party_settings:
       label: 'Sitewide Settings'
       region: content
       parent_name: group_site_promotion
-      weight: 4
+      weight: 18
       format_type: tab
       format_settings:
         classes: ''
@@ -136,7 +135,7 @@ third_party_settings:
       label: 'Senator Microsite Settings'
       region: content
       parent_name: group_site_promotion
-      weight: 5
+      weight: 19
       format_type: tab
       format_settings:
         classes: ''
@@ -152,7 +151,7 @@ third_party_settings:
       label: 'Committee Settings'
       region: content
       parent_name: group_site_promotion
-      weight: 6
+      weight: 21
       format_type: tab
       format_settings:
         classes: ''
@@ -176,6 +175,27 @@ third_party_settings:
         id: ''
         description: ''
         required_fields: true
+    group_ai_moderation:
+      children:
+        - field_ai_test
+        - field_ai_test_set
+        - field_flag
+        - field_moderation_reason
+      label: 'AI Moderation'
+      region: content
+      parent_name: ''
+      weight: 4
+      format_type: details_sidebar
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        label_as_html: false
+        open: true
+        description: ''
+        description_display: after
+        required_fields: true
+        weight: 0
 id: node.article.default
 targetEntityType: node
 bundle: article
@@ -183,7 +203,7 @@ mode: default
 content:
   body:
     type: text_textarea_with_summary
-    weight: 14
+    weight: 13
     region: content
     settings:
       rows: 9
@@ -193,27 +213,33 @@ content:
     third_party_settings: {  }
   created:
     type: datetime_timestamp
-    weight: 6
+    weight: 7
     region: content
     settings: {  }
     third_party_settings: {  }
   field_accessible_sitewide:
     type: boolean_checkbox
-    weight: 7
+    weight: 18
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_ai_test:
     type: boolean_checkbox
-    weight: 2
+    weight: 20
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
+  field_ai_test_set:
+    type: options_select
+    weight: 21
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   field_article_author:
     type: string_textfield
-    weight: 8
+    weight: 7
     region: content
     settings:
       size: 60
@@ -221,7 +247,7 @@ content:
     third_party_settings: {  }
   field_associated_senators:
     type: entity_reference_autocomplete
-    weight: 6
+    weight: 17
     region: content
     settings:
       match_operator: CONTAINS
@@ -249,7 +275,7 @@ content:
             selector: ''
   field_attachment:
     type: inline_entity_form_simple
-    weight: 15
+    weight: 14
     region: content
     settings:
       form_mode: inline_entity
@@ -262,7 +288,7 @@ content:
     third_party_settings: {  }
   field_bills:
     type: entity_reference_autocomplete
-    weight: 16
+    weight: 15
     region: content
     settings:
       match_operator: CONTAINS
@@ -272,7 +298,7 @@ content:
     third_party_settings: {  }
   field_category:
     type: options_select
-    weight: 5
+    weight: 4
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -291,20 +317,20 @@ content:
     third_party_settings: {  }
   field_date:
     type: datetime_default
-    weight: 9
+    weight: 10
     region: content
     settings: {  }
     third_party_settings: {  }
   field_flag:
     type: boolean_checkbox
-    weight: 3
+    weight: 22
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_image_caption:
     type: string_textfield
-    weight: 7
+    weight: 6
     region: content
     settings:
       size: 60
@@ -312,14 +338,14 @@ content:
     third_party_settings: {  }
   field_image_hero:
     type: media_library_widget
-    weight: 10
+    weight: 20
     region: content
     settings:
       media_types: {  }
     third_party_settings: {  }
   field_image_main:
     type: media_library_widget
-    weight: 6
+    weight: 5
     region: content
     settings:
       media_types: {  }
@@ -336,7 +362,7 @@ content:
     third_party_settings: {  }
   field_layout_components:
     type: inline_entity_form_complex
-    weight: 17
+    weight: 18
     region: content
     settings:
       form_mode: default
@@ -354,13 +380,13 @@ content:
     third_party_settings: {  }
   field_majority_issue_tag:
     type: options_select
-    weight: 8
+    weight: 19
     region: content
     settings: {  }
     third_party_settings: {  }
   field_moderation_reason:
     type: string_textarea
-    weight: 13
+    weight: 23
     region: content
     settings:
       rows: 5
@@ -397,38 +423,38 @@ content:
     third_party_settings: {  }
   moderation_state:
     type: moderation_state_default
-    weight: 11
+    weight: 12
     region: content
     settings: {  }
     third_party_settings: {  }
   path:
     type: path
-    weight: 7
+    weight: 8
     region: content
     settings: {  }
     third_party_settings: {  }
   rabbit_hole__settings:
     type: rabbit_hole_default
-    weight: 12
+    weight: 13
     region: content
     settings:
       advanced: true
     third_party_settings: {  }
   simple_sitemap:
-    weight: 10
+    weight: 11
     region: content
     settings: {  }
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    weight: 9
+    weight: 10
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   title:
     type: string_textfield
-    weight: 4
+    weight: 3
     region: content
     settings:
       size: 60
@@ -436,7 +462,7 @@ content:
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 4
+    weight: 5
     region: content
     settings:
       match_operator: CONTAINS
@@ -445,7 +471,7 @@ content:
       placeholder: ''
     third_party_settings: {  }
   url_redirects:
-    weight: 8
+    weight: 9
     region: content
     settings: {  }
     third_party_settings: {  }

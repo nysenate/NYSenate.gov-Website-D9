@@ -12,13 +12,50 @@
       const updateAriaAnnouncement = function() {
         const activePanel = $('.tabs-content .content.active');
         if (activePanel.length > 0) {
-          const message = `${activePanel.find('.view-header .rows-message')[0].innerHTML}`;
-          ariaAnnouncement.text(message);
+          const rowsMessageElement = activePanel.find('.view-header .rows-message')[0];
+          if (rowsMessageElement) {
+            const message = rowsMessageElement.innerHTML;
+            
+            // Clear and reset to force screen reader announcement
+            ariaAnnouncement.text('');
+            setTimeout(function() {
+              ariaAnnouncement.text(message);
+            }, 100);
+          }
         }
       };
 
       // Update announcement on page load
       setTimeout(updateAriaAnnouncement, 500);
+
+      // Function to save active tab to sessionStorage
+      const saveActiveTab = function(tabId) {
+        sessionStorage.setItem('activeNewsTab', tabId);
+      };
+
+      // Function to restore active tab from sessionStorage
+      const restoreActiveTab = function() {
+        const savedTabId = sessionStorage.getItem('activeNewsTab');
+        if (savedTabId) {
+          const savedButton = $(savedTabId);
+          if (savedButton.length > 0) {
+            // Remove active from all tabs
+            $('.l-tab-bar button.c-tab').removeClass('active').attr('aria-selected', 'false').attr('aria-expanded', 'false');
+            $('.tabs-content .content').removeClass('active');
+            
+            // Set active on saved tab
+            savedButton.addClass('active').attr('aria-selected', 'true').attr('aria-expanded', 'true');
+            const targetPanel = savedButton.val();
+            $(targetPanel).addClass('active');
+            
+            // Update announcement
+            setTimeout(updateAriaAnnouncement, 100);
+          }
+        }
+      };
+
+      // Restore active tab on page load
+      restoreActiveTab();
 
       tabContainer.each(function () {
         const tabArrowDown = $(this).find('.c-tab--arrow');
@@ -47,6 +84,10 @@
           const tabContent = $(this).closest('.l-row').find('.tabs-content');
           const targetPanel = $(this).val(); // Get the target panel ID from value attribute
           const tabBar = $(this).closest('.l-tab-bar');
+          const tabId = '#' + $(this).attr('id'); // Save the button ID
+
+          // Save active tab to sessionStorage
+          saveActiveTab(tabId);
 
           // Remove active state from all buttons
           tabButton.removeClass('active').attr('aria-selected', 'false').attr('aria-expanded', 'false');

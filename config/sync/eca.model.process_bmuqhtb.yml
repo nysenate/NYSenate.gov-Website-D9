@@ -1,0 +1,38 @@
+uuid: 967bab4b-ba36-40b5-a77d-8220fede9602
+langcode: en
+status: true
+dependencies:
+  config:
+    - eca.eca.process_bmuqhtb
+id: process_bmuqhtb
+label: noname
+tags:
+  - untagged
+documentation: ''
+filename: ''
+modeldata: |
+  <?xml version="1.0" encoding="UTF-8"?>
+  <bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:qa="http://some-company/schema/bpmn/qa" id="sample-diagram" targetNamespace="http://bpmn.io/schema/bpmn" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
+    <bpmn2:process id="Process_bMuqhTb" isExecutable="true">
+      <bpmn2:startEvent id="Event_1252qs6" name="Save Article" camunda:modelerTemplate="org.drupal.event.content_entity:presave">
+        <bpmn2:extensionElements>
+          <camunda:field name="type">
+            <camunda:string>_all</camunda:string>
+          </camunda:field>
+          <camunda:properties>
+            <camunda:property name="pluginid" value="content_entity:presave" />
+          </camunda:properties>
+        </bpmn2:extensionElements>
+      </bpmn2:startEvent>
+    </bpmn2:process>
+    <bpmndi:BPMNDiagram id="sid-8576c80c-88d1-4859-83f6-46e86a235ab8">
+      <bpmndi:BPMNPlane id="sid-a4892dab-2904-4dae-8880-e103f17ab2b1" bpmnElement="Process_bMuqhTb">
+        <bpmndi:BPMNShape id="Event_1252qs6_di" bpmnElement="Event_1252qs6">
+          <dc:Bounds x="172" y="132" width="36" height="36" />
+          <bpmndi:BPMNLabel>
+            <dc:Bounds x="161" y="175" width="59" height="14" />
+          </bpmndi:BPMNLabel>
+        </bpmndi:BPMNShape>
+      </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+  </bpmn2:definitions>

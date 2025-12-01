@@ -1,0 +1,18 @@
+uuid: 21967a32-bc0d-4681-8870-8113dfb54dbb
+langcode: en
+status: true
+dependencies: {  }
+id: ai_moderator
+label: 'AI Moderator'
+description: 'ai moderation'
+workflow: automator_chain--ai_moderation
+field_connections:
+  -
+    field_name: metatag
+    agent_process: ignore
+    tool_field_type: metatag_computed
+    drupal_field_type: metatag_computed
+    input_explanation: ''
+    required: 0
+    output_explanation: ''
+    default_value: ''

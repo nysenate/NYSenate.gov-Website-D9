@@ -1,0 +1,23 @@
+uuid: f23843a4-3b80-4469-9868-6ab0b59b2884
+langcode: en
+status: true
+dependencies:
+  config:
+    - ai_automators.automator_chain_type.moderation
+    - field.field.automator_chain.moderation.ai_automator_status
+    - field.field.automator_chain.moderation.field_input
+id: automator_chain.moderation.default
+targetEntityType: automator_chain
+bundle: moderation
+mode: default
+content:
+  field_input:
+    type: basic_string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  ai_automator_status: true
+  search_api_excerpt: true

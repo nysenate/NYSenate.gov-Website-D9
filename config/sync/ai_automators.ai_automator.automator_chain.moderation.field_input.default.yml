@@ -1,0 +1,33 @@
+uuid: 2b8613e0-e8e6-411b-86bc-e7a31d9fc533
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.automator_chain.moderation.field_input
+id: automator_chain.moderation.field_input.default
+label: 'Input Default'
+rule: llm_string_long
+input_mode: base
+weight: 100
+worker_type: direct
+entity_type: automator_chain
+bundle: moderation
+field_name: field_input
+edit_mode: false
+base_field: field_input
+prompt: 'test prompt'
+token: ''
+plugin_config:
+  automator_enabled: 1
+  automator_rule: llm_string_long
+  automator_mode: base
+  automator_base_field: field_input
+  automator_prompt: 'test prompt'
+  automator_token: ''
+  automator_edit_mode: 0
+  automator_label: 'Input Default'
+  automator_weight: '100'
+  automator_worker_type: direct
+  automator_ai_provider: default_json
+  automator_joiner: ''
+  automator_joiner_other: ''

@@ -11,22 +11,24 @@
       // Function to update aria announcement with row counts
       const updateAriaAnnouncement = function() {
         const activePanel = $('.tabs-content .content.active');
-        if (activePanel.length > 0) {
+        const activeTab = $('.l-tab-bar button.c-tab.active');
+        
+        if (activePanel.length > 0 && activeTab.length > 0) {
           const rowsMessageElement = activePanel.find('.view-header .rows-message')[0];
+          const tabName = activeTab.text().trim();
+          
           if (rowsMessageElement) {
-            const message = rowsMessageElement.innerHTML;
+            const rowsMessage = rowsMessageElement.innerHTML;
+            const fullMessage = tabName + ' tab. ' + rowsMessage;
             
             // Clear and reset to force screen reader announcement
             ariaAnnouncement.text('');
             setTimeout(function() {
-              ariaAnnouncement.text(message);
-            }, 100);
+              ariaAnnouncement.text(fullMessage);
+            }, 50);
           }
         }
       };
-
-      // Update announcement on page load
-      setTimeout(updateAriaAnnouncement, 500);
 
       // Function to save active tab to sessionStorage
       const saveActiveTab = function(tabId) {
@@ -47,15 +49,17 @@
             savedButton.addClass('active').attr('aria-selected', 'true').attr('aria-expanded', 'true');
             const targetPanel = savedButton.val();
             $(targetPanel).addClass('active');
-            
-            // Update announcement
-            setTimeout(updateAriaAnnouncement, 100);
           }
         }
       };
 
       // Restore active tab on page load
       restoreActiveTab();
+      
+      // Always announce on page load, after tab restoration and DOM is ready
+      setTimeout(function() {
+        updateAriaAnnouncement();
+      }, 200);
 
       tabContainer.each(function () {
         const tabArrowDown = $(this).find('.c-tab--arrow');
@@ -100,7 +104,7 @@
           tabContent.find(targetPanel).addClass('active');
 
           // Update aria announcement with new content row counts
-          setTimeout(updateAriaAnnouncement, 100);
+          setTimeout(updateAriaAnnouncement, 50);
 
           // Toggle mobile dropdown behavior - only on mobile/tablet screens
           if (window.innerWidth <= 768) {

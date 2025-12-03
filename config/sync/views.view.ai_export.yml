@@ -8,6 +8,7 @@ dependencies:
     - field.storage.node.field_flag
     - node.type.article
     - taxonomy.vocabulary.senator
+    - user.role.administrator
   module:
     - node
     - options
@@ -308,9 +309,10 @@ display:
           sort_asc_label: Asc
           sort_desc_label: Desc
       access:
-        type: perm
+        type: role
         options:
-          perm: 'access content'
+          role:
+            administrator: administrator
       cache:
         type: tag
         options: {  }
@@ -415,7 +417,7 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - 'user.node_grants:view'
-        - user.permissions
+        - user.roles
       tags:
         - 'config:field.storage.node.body'
         - 'config:field.storage.node.field_flag'
@@ -684,6 +686,68 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
+        field_ai_test_set:
+          id: field_ai_test_set
+          table: node__field_ai_test_set
+          field: field_ai_test_set
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: 'AI Test Set'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: list_default
+          settings: {  }
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
       filters:
         type:
           id: type
@@ -733,6 +797,56 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           accept_null: false
+        field_ai_test_set_value:
+          id: field_ai_test_set_value
+          table: node__field_ai_test_set
+          field: field_ai_test_set_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: list_field
+          operator: or
+          value:
+            1: '1'
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_ai_test_set_value_op
+            label: 'AI Test Set'
+            description: ''
+            use_operator: false
+            operator: field_ai_test_set_value_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: field_ai_test_set_value
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+              frontpage_editor: '0'
+              senator: '0'
+              microsite_content_producer: '0'
+              legislative_correspondent: '0'
+              student_programs: '0'
+              constituent: '0'
+              comment_moderator: '0'
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
       filter_groups:
         operator: AND
         groups:
@@ -763,6 +877,9 @@ display:
         filter_groups: false
       display_extenders: {  }
       path: admin/ai-moderation-export
+      displays:
+        page_1: page_1
+        default: '0'
       filename: nodes-ai-moderation.json
       automatic_download: false
       store_in_public_file_directory: false
@@ -775,10 +892,12 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - request_format
+        - url
         - 'user.node_grants:view'
-        - user.permissions
+        - user.roles
       tags:
         - 'config:field.storage.node.body'
+        - 'config:field.storage.node.field_ai_test_set'
         - 'config:field.storage.node.field_flag'
   page_1:
     id: page_1
@@ -1627,7 +1746,7 @@ display:
         - 'languages:language_interface'
         - url
         - 'user.node_grants:view'
-        - user.permissions
+        - user.roles
       tags:
         - 'config:field.storage.node.body'
         - 'config:field.storage.node.field_ai_test_set'

@@ -164,12 +164,25 @@
 
       // Implement expandable search button in header for full site.
       searchButtons.forEach((searchButton, index) => {
+        // Set initial inert state on closed search forms
+        if (!searchForms.item(index).classList.contains('open')) {
+          searchForms.item(index).setAttribute('inert', '');
+        }
+
         searchButton.addEventListener('click', (clickElem) => {
           let isHeaderSearchButton = clickElem.currentTarget.closest('.c-header-bar');
           navWraps.item(index).classList.toggle('search-open');
           searchForms.item(index).classList.toggle('open');
           clickElem.currentTarget.setAttribute('aria-expanded', searchForms.item(index).classList.contains('open') ? 'true' : 'false');
           clickElem.currentTarget.innerHTML = (searchForms.item(index).classList.contains('open') ? 'close' : 'open') + ' search';
+          
+          // Toggle inert attribute to prevent keyboard navigation when closed
+          if (searchForms.item(index).classList.contains('open')) {
+            searchForms.item(index).removeAttribute('inert');
+          } else {
+            searchForms.item(index).setAttribute('inert', '');
+          }
+          
           if (!isMicrositeLandingPage) {
             document.body.classList.toggle('search-open');
           }

@@ -1362,15 +1362,27 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     height: 0;
     padding: 0;
     overflow: hidden;
+    visibility: hidden;
+    pointer-events: none;
 
     &::before,
     &::after {
       display: none;
     }
 
+    * {
+      visibility: hidden;
+    }
+
     &.open {
       height: 225px;
       padding: 25px 9%;
+      visibility: visible;
+      pointer-events: auto;
+
+      * {
+        visibility: visible;
+      }
     }
   }
 

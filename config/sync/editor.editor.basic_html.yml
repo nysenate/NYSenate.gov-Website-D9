@@ -26,7 +26,6 @@ settings:
       - heading
       - '|'
       - sourceEditing
-      - aickeditor
   plugins:
     ai_ckeditor_ai:
       dialog:
@@ -38,14 +37,14 @@ settings:
         ai_automators_ckeditor:
           workflows:
             moderation:
-              enabled: 1
+              enabled: 0
               inputs:
                 field_input: field_input
               output: field_ouput
               selected_input: field_input
               require_selection: 1
               write_mode: replace
-          enabled: true
+          enabled: false
         ai_ckeditor_completion:
           enabled: false
           provider: openai__gpt-4.1

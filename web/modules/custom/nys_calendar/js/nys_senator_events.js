@@ -3,36 +3,10 @@
     Drupal.behaviors.nys_senator_events = {
         attach: function (context, settings) {
             let $submit = $('#views-exposed-form-senator-events-upcoming-events input[type="submit"]');
-            let $first_day_of_month = $('input[name="first_day_of_month"]');
-            let $last_day_of_month = $('input[name="last_day_of_month"]');
-
-            $submit.closest('.form-actions').hide();
-            $('#views-exposed-form-senator-events-upcoming-events fieldset', context).hide();
-            $('#views-exposed-form-senator-events-upcoming-events .form-item-field-event-place-value', context).hide();
+            
+            // Set active tab based on current filter value.
             var $eventPlace = $('select[name="field_event_place_value"]').val();
             $('.c-tab-link[data-value="' + $eventPlace + '"]').parent().addClass('active');
-
-            function submitDateValues()
-            {
-                var $real_min = $('input[name="field_date_range_value[min]"]', context);
-                var $real_max = $('input[name="field_date_range_value[max]"]', context);
-
-
-              let a = new Date($last_day_of_month.val());
-              a.setDate(a.getDate() + 1);
-
-              $real_min.val($first_day_of_month.val());
-              $real_max.val(a.toLocaleString());
-              $submit.click();
-            }
-
-            $(once('submitDefaultValues', 'html', context)).each(
-                function (i) {
-                    setTimeout(function() {
-                        submitDateValues();
-                    }, 10);
-                }
-            );
 
             $('#next-month').on(
                 'mousedown', function (e) {

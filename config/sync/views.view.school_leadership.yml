@@ -8,8 +8,10 @@ dependencies:
     - taxonomy.vocabulary.senator
     - user.role.administrator
     - webform.webform.graduation_certificate_program_
+    - webform.webform.teachers_certificate_program
     - webform.webform.youth_leadership
   module:
+    - address
     - better_exposed_filters
     - csv_serialization
     - node
@@ -232,6 +234,104 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
+        field_senator_name_family:
+          id: field_senator_name_family
+          table: taxonomy_term__field_senator_name
+          field: field_senator_name_family
+          relationship: field_senator
+          group_type: group
+          admin_label: ''
+          plugin_id: standard
+          label: ''
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+        field_senator_name_given:
+          id: field_senator_name_given
+          table: taxonomy_term__field_senator_name
+          field: field_senator_name_given
+          relationship: field_senator
+          group_type: group
+          admin_label: ''
+          plugin_id: standard
+          label: ''
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
         field_senator:
           id: field_senator
           table: taxonomy_term__field_senator
@@ -241,7 +341,7 @@ display:
           admin_label: ''
           plugin_id: field
           label: Senator
-          exclude: false
+          exclude: true
           alter:
             alter_text: false
             text: ''
@@ -306,8 +406,8 @@ display:
           label: 'Senate District'
           exclude: false
           alter:
-            alter_text: false
-            text: ''
+            alter_text: true
+            text: "{{ field_senator_name_family }}, {{ field_senator_name_given }} <br>\r\n{{ field_district }}"
             make_link: false
             path: ''
             absolute: false
@@ -1547,14 +1647,15 @@ display:
             webform_submission_bulk_form: webform_submission_bulk_form
             sid: sid
             created: created
+            field_senator_name_family: field_senator_name_family
+            field_senator_name_given: field_senator_name_given
             field_senator: field_senator
-            field_district: field_senator
+            field_district: field_district
             webform_submission_value_2: webform_submission_value_2
             webform_submission_value_9: webform_submission_value_9
             webform_submission_value_1: webform_submission_value_1
             webform_submission_value_7: webform_submission_value_7
             webform_submission_value_10: webform_submission_value_10
-            webform_submission_value_5: webform_submission_value_5
             webform_submission_value_3: webform_submission_value_3
             webform_submission_value_8: webform_submission_value_8
             webform_submission_value: webform_submission_value
@@ -1582,11 +1683,25 @@ display:
               separator: ''
               empty_column: false
               responsive: ''
+            field_senator_name_family:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            field_senator_name_given:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
             field_senator:
               sortable: false
               default_sort_order: asc
               align: ''
-              separator: '<br>'
+              separator: ''
               empty_column: false
               responsive: ''
             field_district:
@@ -1625,13 +1740,6 @@ display:
               empty_column: false
               responsive: ''
             webform_submission_value_10:
-              sortable: false
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            webform_submission_value_5:
               sortable: false
               default_sort_order: asc
               align: ''
@@ -1714,6 +1822,15 @@ display:
           relationship: webform_submission_value
           group_type: group
           admin_label: 'field_district: Taxonomy term'
+          plugin_id: standard
+          required: false
+        field_senator:
+          id: field_senator
+          table: taxonomy_term__field_senator
+          field: field_senator
+          relationship: field_district
+          group_type: group
+          admin_label: 'field_senator: Taxonomy term'
           plugin_id: standard
           required: false
       header: {  }
@@ -1880,6 +1997,104 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
+        field_senator_name_given:
+          id: field_senator_name_given
+          table: taxonomy_term__field_senator_name
+          field: field_senator_name_given
+          relationship: field_senator
+          group_type: group
+          admin_label: ''
+          plugin_id: standard
+          label: 'Senator Name (field_senator_name:given)'
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+        field_senator_name_family:
+          id: field_senator_name_family
+          table: taxonomy_term__field_senator_name
+          field: field_senator_name_family
+          relationship: field_senator
+          group_type: group
+          admin_label: ''
+          plugin_id: standard
+          label: 'Senator Name (field_senator_name:family)'
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
         field_senator:
           id: field_senator
           table: taxonomy_term__field_senator
@@ -1891,8 +2106,8 @@ display:
           label: Senator
           exclude: false
           alter:
-            alter_text: false
-            text: ''
+            alter_text: true
+            text: "{{ field_senator_name_family }}, {{ field_senator_name_given }}\r\n"
             make_link: false
             path: ''
             absolute: false
@@ -2324,59 +2539,6 @@ display:
           webform_multiple_value: true
           webform_multiple_delta: 0
           webform_check_access: 1
-        webform_submission_value:
-          id: webform_submission_value
-          table: webform_submission_field_youth_leadership_school
-          field: webform_submission_value
-          relationship: none
-          group_type: group
-          admin_label: ''
-          plugin_id: webform_submission_field
-          label: School
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: true
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          webform_element_format: label
-          webform_multiple_value: true
-          webform_multiple_delta: 0
-          webform_check_access: 1
         webform_submission_value_15:
           id: webform_submission_value_15
           table: webform_submission_field_youth_leadership_student_email
@@ -2430,6 +2592,257 @@ display:
           webform_multiple_value: true
           webform_multiple_delta: 0
           webform_check_access: 1
+        webform_submission_value:
+          id: webform_submission_value
+          table: webform_submission_field_youth_leadership_school
+          field: webform_submission_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: webform_submission_field
+          label: School
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          webform_element_format: label
+          webform_multiple_value: true
+          webform_multiple_delta: 0
+          webform_check_access: 1
+        field_school_address_address_line1:
+          id: field_school_address_address_line1
+          table: node__field_school_address
+          field: field_school_address_address_line1
+          relationship: webform_submission_value
+          group_type: group
+          admin_label: ''
+          plugin_id: standard
+          label: 'School Address'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+        field_school_address_locality:
+          id: field_school_address_locality
+          table: node__field_school_address
+          field: field_school_address_locality
+          relationship: webform_submission_value
+          group_type: group
+          admin_label: ''
+          plugin_id: subdivision
+          label: 'School City'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          display_name: true
+        field_school_address_administrative_area:
+          id: field_school_address_administrative_area
+          table: node__field_school_address
+          field: field_school_address_administrative_area
+          relationship: webform_submission_value
+          group_type: group
+          admin_label: ''
+          plugin_id: subdivision
+          label: 'School State'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          display_name: true
+        field_school_address_postal_code:
+          id: field_school_address_postal_code
+          table: node__field_school_address
+          field: field_school_address_postal_code
+          relationship: webform_submission_value
+          group_type: group
+          admin_label: ''
+          plugin_id: standard
+          label: 'School Zip'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
         webform_submission_value_5:
           id: webform_submission_value_5
           table: webform_submission_field_youth_leadership_cumulative_gpa
@@ -3097,6 +3510,104 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
+        field_senator_name_given:
+          id: field_senator_name_given
+          table: taxonomy_term__field_senator_name
+          field: field_senator_name_given
+          relationship: field_senator
+          group_type: group
+          admin_label: ''
+          plugin_id: standard
+          label: ''
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+        field_senator_name_family:
+          id: field_senator_name_family
+          table: taxonomy_term__field_senator_name
+          field: field_senator_name_family
+          relationship: field_senator
+          group_type: group
+          admin_label: ''
+          plugin_id: standard
+          label: ''
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
         field_senator:
           id: field_senator
           table: taxonomy_term__field_senator
@@ -3108,8 +3619,8 @@ display:
           label: Senator
           exclude: false
           alter:
-            alter_text: false
-            text: ''
+            alter_text: true
+            text: "{{ field_senator_name_family }}, {{ field_senator_name_given }}\r\n"
             make_link: false
             path: ''
             absolute: false
@@ -3329,6 +3840,204 @@ display:
           webform_multiple_value: true
           webform_multiple_delta: 0
           webform_check_access: 1
+        field_school_address_address_line1:
+          id: field_school_address_address_line1
+          table: node__field_school_address
+          field: field_school_address_address_line1
+          relationship: webform_submission_value
+          group_type: group
+          admin_label: ''
+          plugin_id: standard
+          label: 'School Address'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+        field_school_address_locality:
+          id: field_school_address_locality
+          table: node__field_school_address
+          field: field_school_address_locality
+          relationship: webform_submission_value
+          group_type: group
+          admin_label: ''
+          plugin_id: subdivision
+          label: City/Town
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          display_name: true
+        field_school_address_administrative_area:
+          id: field_school_address_administrative_area
+          table: node__field_school_address
+          field: field_school_address_administrative_area
+          relationship: webform_submission_value
+          group_type: group
+          admin_label: ''
+          plugin_id: subdivision
+          label: State
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          display_name: true
+        field_school_address_postal_code:
+          id: field_school_address_postal_code
+          table: node__field_school_address
+          field: field_school_address_postal_code
+          relationship: webform_submission_value
+          group_type: group
+          admin_label: ''
+          plugin_id: standard
+          label: Zip
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
         webform_submission_value_1:
           id: webform_submission_value_1
           table: webform_submission_field_teachers_certificate_program_department
@@ -4003,6 +4712,15 @@ display:
           admin_label: 'field_district: Taxonomy term'
           plugin_id: standard
           required: false
+        field_senator:
+          id: field_senator
+          table: taxonomy_term__field_senator
+          field: field_senator
+          relationship: field_district
+          group_type: group
+          admin_label: 'field_senator: Taxonomy term'
+          plugin_id: standard
+          required: false
       display_description: ''
       display_extenders: {  }
       path: admin/teacher-certificate-csv
@@ -4178,6 +4896,104 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
+        field_senator_name_given:
+          id: field_senator_name_given
+          table: taxonomy_term__field_senator_name
+          field: field_senator_name_given
+          relationship: field_senator
+          group_type: group
+          admin_label: ''
+          plugin_id: standard
+          label: ''
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+        field_senator_name_family:
+          id: field_senator_name_family
+          table: taxonomy_term__field_senator_name
+          field: field_senator_name_family
+          relationship: field_senator
+          group_type: group
+          admin_label: ''
+          plugin_id: standard
+          label: ''
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
         field_senator:
           id: field_senator
           table: taxonomy_term__field_senator
@@ -4189,8 +5005,8 @@ display:
           label: Senator
           exclude: false
           alter:
-            alter_text: false
-            text: ''
+            alter_text: true
+            text: "{{ field_senator_name_family }}, {{ field_senator_name_given }}\r\n"
             make_link: false
             path: ''
             absolute: false
@@ -4675,15 +5491,15 @@ display:
           webform_multiple_value: true
           webform_multiple_delta: 0
           webform_check_access: 1
-        webform_submission_value_5:
-          id: webform_submission_value_5
-          table: webform_submission_field_graduation_certificate_program__school_address_for_certificates_to_be_delivered_to__address
-          field: webform_submission_value
-          relationship: none
+        field_school_address_address_line1:
+          id: field_school_address_address_line1
+          table: node__field_school_address
+          field: field_school_address_address_line1
+          relationship: webform_submission_value
           group_type: group
           admin_label: ''
-          plugin_id: webform_submission_composite_field
-          label: Address
+          plugin_id: standard
+          label: 'School Address'
           exclude: false
           alter:
             alter_text: false
@@ -4724,19 +5540,15 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          webform_element_format: value
-          webform_multiple_value: true
-          webform_multiple_delta: 0
-          webform_check_access: 1
-        webform_submission_value_9:
-          id: webform_submission_value_9
-          table: webform_submission_field_graduation_certificate_program__school_address_for_certificates_to_be_delivered_to__city
-          field: webform_submission_value
-          relationship: none
+        field_school_address_locality:
+          id: field_school_address_locality
+          table: node__field_school_address
+          field: field_school_address_locality
+          relationship: webform_submission_value
           group_type: group
           admin_label: ''
-          plugin_id: webform_submission_composite_field
-          label: City/Town
+          plugin_id: subdivision
+          label: 'School City'
           exclude: false
           alter:
             alter_text: false
@@ -4777,19 +5589,16 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          webform_element_format: value
-          webform_multiple_value: true
-          webform_multiple_delta: 0
-          webform_check_access: 1
-        webform_submission_value_10:
-          id: webform_submission_value_10
-          table: webform_submission_field_graduation_certificate_program__school_address_for_certificates_to_be_delivered_to__state_province
-          field: webform_submission_value
-          relationship: none
+          display_name: true
+        field_school_address_administrative_area:
+          id: field_school_address_administrative_area
+          table: node__field_school_address
+          field: field_school_address_administrative_area
+          relationship: webform_submission_value
           group_type: group
           admin_label: ''
-          plugin_id: webform_submission_composite_field
-          label: State
+          plugin_id: subdivision
+          label: 'School State'
           exclude: false
           alter:
             alter_text: false
@@ -4830,19 +5639,16 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          webform_element_format: value
-          webform_multiple_value: true
-          webform_multiple_delta: 0
-          webform_check_access: 1
-        webform_submission_value_11:
-          id: webform_submission_value_11
-          table: webform_submission_field_graduation_certificate_program__school_address_for_certificates_to_be_delivered_to__postal_code
-          field: webform_submission_value
-          relationship: none
+          display_name: true
+        field_school_address_postal_code:
+          id: field_school_address_postal_code
+          table: node__field_school_address
+          field: field_school_address_postal_code
+          relationship: webform_submission_value
           group_type: group
           admin_label: ''
-          plugin_id: webform_submission_composite_field
-          label: 'ZIP/Postal Code'
+          plugin_id: standard
+          label: 'School Zip'
           exclude: false
           alter:
             alter_text: false
@@ -4883,10 +5689,6 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          webform_element_format: value
-          webform_multiple_value: true
-          webform_multiple_delta: 0
-          webform_check_access: 1
       filters:
         webform_id:
           id: webform_id
@@ -5084,6 +5886,15 @@ display:
           admin_label: 'field_district: Taxonomy term'
           plugin_id: standard
           required: false
+        field_senator:
+          id: field_senator
+          table: taxonomy_term__field_senator
+          field: field_senator
+          relationship: field_district
+          group_type: group
+          admin_label: 'field_senator: Taxonomy term'
+          plugin_id: standard
+          required: false
       display_description: ''
       display_extenders: {  }
       path: admin/grad-certs-csv
@@ -5116,6 +5927,8 @@ display:
     display_plugin: page
     position: 1
     display_options:
+      defaults:
+        fields: true
       display_description: ''
       display_extenders: {  }
       path: admin/content/school-submissions/leadership
@@ -5349,6 +6162,104 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
+        field_senator_name_family:
+          id: field_senator_name_family
+          table: taxonomy_term__field_senator_name
+          field: field_senator_name_family
+          relationship: field_senator
+          group_type: group
+          admin_label: ''
+          plugin_id: standard
+          label: ''
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+        field_senator_name_given:
+          id: field_senator_name_given
+          table: taxonomy_term__field_senator_name
+          field: field_senator_name_given
+          relationship: field_senator
+          group_type: group
+          admin_label: ''
+          plugin_id: standard
+          label: ''
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
         field_senator:
           id: field_senator
           table: taxonomy_term__field_senator
@@ -5358,10 +6269,10 @@ display:
           admin_label: ''
           plugin_id: field
           label: Senator
-          exclude: false
+          exclude: true
           alter:
-            alter_text: false
-            text: ''
+            alter_text: true
+            text: '{{ field_senator_name_family }}, {{ field_senator_name_given }}'
             make_link: false
             path: ''
             absolute: false
@@ -5423,8 +6334,8 @@ display:
           label: 'Senate District'
           exclude: false
           alter:
-            alter_text: false
-            text: ''
+            alter_text: true
+            text: "{{ field_senator_name_family }}, {{ field_senator_name_given }}<br>\r\n{{ field_district }}"
             make_link: false
             path: ''
             absolute: false
@@ -6241,6 +7152,15 @@ display:
           admin_label: 'field_district: Taxonomy term'
           plugin_id: standard
           required: false
+        field_senator:
+          id: field_senator
+          table: taxonomy_term__field_senator
+          field: field_senator
+          relationship: field_district
+          group_type: group
+          admin_label: 'field_senator: Taxonomy term'
+          plugin_id: standard
+          required: false
       display_description: ''
       display_extenders: {  }
       path: admin/content/school-submissions/teacher-certificate
@@ -6469,6 +7389,104 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
+        field_senator_name_given:
+          id: field_senator_name_given
+          table: taxonomy_term__field_senator_name
+          field: field_senator_name_given
+          relationship: field_senator
+          group_type: group
+          admin_label: ''
+          plugin_id: standard
+          label: ''
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+        field_senator_name_family:
+          id: field_senator_name_family
+          table: taxonomy_term__field_senator_name
+          field: field_senator_name_family
+          relationship: field_senator
+          group_type: group
+          admin_label: ''
+          plugin_id: standard
+          label: ''
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
         field_senator:
           id: field_senator
           table: taxonomy_term__field_senator
@@ -6480,8 +7498,8 @@ display:
           label: Senator
           exclude: false
           alter:
-            alter_text: false
-            text: ''
+            alter_text: true
+            text: "{{ field_senator_name_family }}, {{ field_senator_name_given }}\r\n"
             make_link: false
             path: ''
             absolute: false
@@ -7465,6 +8483,15 @@ display:
           relationship: webform_submission_value
           group_type: group
           admin_label: 'field_district: Taxonomy term'
+          plugin_id: standard
+          required: false
+        field_senator:
+          id: field_senator
+          table: taxonomy_term__field_senator
+          field: field_senator
+          relationship: field_district
+          group_type: group
+          admin_label: 'field_senator: Taxonomy term'
           plugin_id: standard
           required: false
       display_description: ''

@@ -32,75 +32,74 @@ function nys_config_update_9002(&$sandbox) {
   $entity_type_manager = \Drupal::entityTypeManager();
   $field_manager = \Drupal::service('entity_field.manager');
   $logger = \Drupal::logger('nys_config');
-  
+
   // Initialize batch.
   if (!isset($sandbox['progress'])) {
     $sandbox['progress'] = 0;
     $sandbox['edited_nodes'] = [];
     $sandbox['nids_to_process'] = [];
-    
+
     // Find all text fields with iframes.
     $field_map = $field_manager->getFieldMapByFieldType('text_long');
     $field_map += $field_manager->getFieldMapByFieldType('text_with_summary');
-    
+
     $nids_with_iframes = [];
-    
+
     foreach ($field_map as $entity_type => $fields) {
       if ($entity_type !== 'node') {
         continue;
       }
-      
+
       foreach ($fields as $field_name => $info) {
         $table = 'node__' . $field_name;
         $value_column = $field_name . '_value';
-        
+
         if ($connection->schema()->tableExists($table)) {
           $query = $connection->select($table, 't')
             ->fields('t', ['entity_id'])
             ->condition($value_column, '%<iframe%', 'LIKE')
             ->distinct();
-          
+
           $results = $query->execute()->fetchCol();
           $nids_with_iframes = array_merge($nids_with_iframes, $results);
         }
       }
     }
-    
+
     $sandbox['nids_to_process'] = array_unique($nids_with_iframes);
-    // $sandbox['nids_to_process'] = array_slice($sandbox['nids_to_process'], 0, 100);  // Uncomment for testing (1 node total).
     $sandbox['max'] = count($sandbox['nids_to_process']);
-    
+
     if ($sandbox['max'] === 0) {
       $sandbox['#finished'] = 1;
       return t('No nodes with iframes found.');
     }
   }
-  
+
   // Process nodes in batches of 50.
   $batch_size = 50;
   $nids_batch = array_slice($sandbox['nids_to_process'], $sandbox['progress'], $batch_size);
-  
+
   $node_storage = $entity_type_manager->getStorage('node');
   $nodes = $node_storage->loadMultiple($nids_batch);
-  
+
   foreach ($nodes as $node) {
     $changed = FALSE;
-    
+
     foreach ($node->getFields() as $field_name => $field) {
       $type = $field->getFieldDefinition()->getType();
-      
+
       if ($type === 'text_long' || $type === 'text_with_summary') {
         foreach ($field as $item) {
           if (stripos($item->value, '<iframe') !== FALSE) {
             $original = $item->value;
-            
+
             // Remove only non-YouTube iframes.
             $cleaned = preg_replace(
               '/<iframe(?![^>]*(?:youtube\.com|youtu\.be))[^>]*>.*?<\/iframe>/is',
               '',
               $item->value
             );
-            
+
             if ($cleaned !== $original) {
               $item->value = $cleaned;
               $changed = TRUE;
@@ -109,25 +108,25 @@ function nys_config_update_9002(&$sandbox) {
         }
       }
     }
-    
+
     if ($changed) {
       $node->save();
       $sandbox['edited_nodes'][$node->bundle()][] = $node->id();
     }
-    
+
     $sandbox['progress']++;
   }
-  
+
   $sandbox['#finished'] = $sandbox['progress'] / $sandbox['max'];
-  
+
   // Log results when complete.
   if ($sandbox['#finished'] >= 1) {
     if (!empty($sandbox['edited_nodes'])) {
       $base_url = \Drupal::request()->getSchemeAndHttpHost();
       $total_edited = array_sum(array_map('count', $sandbox['edited_nodes']));
-      
+
       $list = '<p><strong>Total nodes edited: ' . $total_edited . '</strong></p>';
-      
+
       foreach ($sandbox['edited_nodes'] as $bundle => $nids) {
         $list .= '<h3>' . ucfirst($bundle) . '</h3><ul>';
         foreach ($nids as $nid) {
@@ -136,10 +135,10 @@ function nys_config_update_9002(&$sandbox) {
         }
         $list .= '</ul>';
       }
-      
+
       $logger->info('Removed non-YouTube iframes from the following nodes: ' . $list);
     }
-    
+
     $total_edited = array_sum(array_map('count', $sandbox['edited_nodes']));
     return t('Processed @count nodes, edited @edited nodes.', [
       '@count' => $sandbox['max'],

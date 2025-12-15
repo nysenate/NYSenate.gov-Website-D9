@@ -79,7 +79,7 @@
 }
 
 .nys-openleg-result-item-container {
-  padding: 12px ;
+  padding: 12px 0;
   border-bottom: 1px solid #a0a0a0;
 }
 
@@ -88,7 +88,8 @@
 }
 
 .nys-openleg-result-item-link {
-  display: block;
+  display: flex;
+  justify-content: space-between;
   font-family: "Adelle Bold", serif;
   font-size: 26px;
   line-height: 1em;
@@ -104,7 +105,7 @@
   border-bottom: 2px solid transparent !important;
 }
 
-.nys-oneleg-result-item-link:hover .nys-openleg-result-item-name {
+.nys-openleg-result-item-link:hover .nys-openleg-result-item-name {
   border-bottom: 2px solid transparent !important;
 }
 

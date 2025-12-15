@@ -79,7 +79,7 @@
 }
 
 .nys-openleg-result-item-container {
-  padding: 0;
+  padding: 12px ;
   border-bottom: 1px solid #a0a0a0;
 }
 
@@ -93,15 +93,19 @@
   font-size: 26px;
   line-height: 1em;
   letter-spacing: 0.05em;
-  padding: 20px 0;
+  padding: 7px 0;
   color: #444 !important;
   border-bottom: 2px solid transparent;
+  color: #0078a0 !important;
 }
 
 .nys-openleg-result-item-link:hover {
   text-decoration: none;
-  color: #0078a0 !important;
-  border-bottom: 2px solid #0078a0 !important;
+  border-bottom: 2px solid transparent !important;
+}
+
+.nys-oneleg-result-item-link:hover .nys-openleg-result-item-name {
+  border-bottom: 2px solid transparent !important;
 }
 
 .nys-openleg-result-item-name {
@@ -109,6 +113,8 @@
   width: 33%;
   font-weight: bold;
   vertical-align: middle;
+  color: #0078a0 !important;
+  border-bottom: 2px solid #0078a0 !important;
 }
 
 .nys-openleg-result-item-description {

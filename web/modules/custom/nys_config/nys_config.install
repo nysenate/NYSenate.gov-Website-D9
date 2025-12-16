@@ -30,39 +30,31 @@ function nys_config_update_9001() {
 function nys_config_update_9002(&$sandbox) {
   $connection = \Drupal::database();
   $entity_type_manager = \Drupal::entityTypeManager();
-  $field_manager = \Drupal::service('entity_field.manager');
   $logger = \Drupal::logger('nys_config');
 
   // Initialize batch.
   if (!isset($sandbox['progress'])) {
     $sandbox['progress'] = 0;
     $sandbox['edited_nodes'] = [];
+    $sandbox['iframe_domains'] = [];
     $sandbox['nids_to_process'] = [];
 
-    // Find all text fields with iframes.
-    $field_map = $field_manager->getFieldMapByFieldType('text_long');
-    $field_map += $field_manager->getFieldMapByFieldType('text_with_summary');
-
+    // Check both body and field_body explicitly (field manager may miss base fields).
+    $fields_to_check = ['body', 'field_body'];
     $nids_with_iframes = [];
 
-    foreach ($field_map as $entity_type => $fields) {
-      if ($entity_type !== 'node') {
-        continue;
-      }
+    foreach ($fields_to_check as $field_name) {
+      $table = 'node__' . $field_name;
+      $value_column = $field_name . '_value';
 
-      foreach ($fields as $field_name => $info) {
-        $table = 'node__' . $field_name;
-        $value_column = $field_name . '_value';
+      if ($connection->schema()->tableExists($table)) {
+        $query = $connection->select($table, 't')
+          ->fields('t', ['entity_id'])
+          ->condition($value_column, '%<iframe%', 'LIKE')
+          ->distinct();
 
-        if ($connection->schema()->tableExists($table)) {
-          $query = $connection->select($table, 't')
-            ->fields('t', ['entity_id'])
-            ->condition($value_column, '%<iframe%', 'LIKE')
-            ->distinct();
-
-          $results = $query->execute()->fetchCol();
-          $nids_with_iframes = array_merge($nids_with_iframes, $results);
-        }
+        $results = $query->execute()->fetchCol();
+        $nids_with_iframes = array_merge($nids_with_iframes, $results);
       }
     }
 
@@ -84,34 +76,86 @@ function nys_config_update_9002(&$sandbox) {
 
   foreach ($nodes as $node) {
     $changed = FALSE;
+    $node_domains = [];
 
-    foreach ($node->getFields() as $field_name => $field) {
-      $type = $field->getFieldDefinition()->getType();
+    // Only check body and field_body fields (the ones we queried).
+    $fields_to_process = ['body', 'field_body'];
 
-      if ($type === 'text_long' || $type === 'text_with_summary') {
-        foreach ($field as $item) {
-          if (stripos($item->value, '<iframe') !== FALSE) {
-            $original = $item->value;
+    foreach ($fields_to_process as $field_name) {
+      if (!$node->hasField($field_name)) {
+        continue;
+      }
 
-            // Remove only non-YouTube iframes.
-            $cleaned = preg_replace(
-              '/<iframe(?![^>]*(?:youtube\.com|youtu\.be))[^>]*>.*?<\/iframe>/is',
-              '',
-              $item->value
-            );
+      $field = $node->get($field_name);
 
-            if ($cleaned !== $original) {
-              $item->value = $cleaned;
-              $changed = TRUE;
-            }
+      if ($field->isEmpty()) {
+        continue;
+      }
+
+      foreach ($field as $item) {
+        if (empty($item->value) || stripos($item->value, '<iframe') === FALSE) {
+          continue;
+        }
+
+        $original = $item->value;
+
+        // Extract all iframe domains from this content.
+        preg_match_all('/<iframe\s[^>]*?src=["\'](?:https?:)?\/\/([^\/"\'\s]+)[^"\']*["\']/i', $original, $domain_matches);
+        if (!empty($domain_matches[1])) {
+          foreach ($domain_matches[1] as $domain) {
+            // Normalize domain (remove www. prefix).
+            $domain = preg_replace('/^www\./', '', $domain);
+            $node_domains[$domain] = TRUE;
           }
+        }
+
+        // Remove only non-YouTube iframes using a two-step approach.
+        // First, temporarily mark YouTube iframes.
+        $placeholder = '{{YOUTUBE_IFRAME_' . md5(microtime()) . '}}';
+        $youtube_iframes = [];
+
+        // Match YouTube iframes (handles malformed closing tags with attributes)
+        $temp = preg_replace_callback(
+          '/<iframe\s[^>]*?(?:youtube\.com|youtu\.be)[^>]*?(?:>[\s\S]*?<\/iframe[^>]*>|\s*\/>)/i',
+          function($matches) use (&$youtube_iframes, $placeholder) {
+            $index = count($youtube_iframes);
+            $youtube_iframes[$index] = $matches[0];
+            return $placeholder . $index . $placeholder;
+          },
+          $original
+        );
+
+        // Remove all remaining iframes - handles malformed closing tags with attributes
+        $cleaned = preg_replace('/<iframe\s[^>]*?(?:>[\s\S]*?<\/iframe[^>]*>|\s*\/>)/i', '', $temp);
+
+        // Restore YouTube iframes.
+        $cleaned = preg_replace_callback(
+          '/' . preg_quote($placeholder, '/') . '(\d+)' . preg_quote($placeholder, '/') . '/',
+          function($matches) use ($youtube_iframes) {
+            return isset($youtube_iframes[$matches[1]]) ? $youtube_iframes[$matches[1]] : '';
+          },
+          $cleaned
+        );
+
+        if ($cleaned !== $original) {
+          $item->value = $cleaned;
+          $changed = TRUE;
         }
       }
     }
 
     if ($changed) {
-      $node->save();
+      // Re-enable once clean-up strategy is confirmed.
+      // $node->save();
       $sandbox['edited_nodes'][$node->bundle()][] = $node->id();
+    }
+
+    // Track nodes by iframe domain.
+    foreach (array_keys($node_domains) as $domain) {
+      if (!isset($sandbox['iframe_domains'][$domain])) {
+        $sandbox['iframe_domains'][$domain] = [];
+      }
+      $sandbox['iframe_domains'][$domain][$node->bundle()][] = $node->id();
     }
 
     $sandbox['progress']++;
@@ -121,28 +165,80 @@ function nys_config_update_9002(&$sandbox) {
 
   // Log results when complete.
   if ($sandbox['#finished'] >= 1) {
-    if (!empty($sandbox['edited_nodes'])) {
-      $base_url = \Drupal::request()->getSchemeAndHttpHost();
-      $total_edited = array_sum(array_map('count', $sandbox['edited_nodes']));
+    $base_url = \Drupal::request()->getSchemeAndHttpHost();
+    $message = '';
 
-      $list = '<p><strong>Total nodes edited: ' . $total_edited . '</strong></p>';
+    // Summary at top: totals by domain and node type.
+    if (!empty($sandbox['iframe_domains'])) {
+      $message .= '<h2>Summary</h2>';
 
-      foreach ($sandbox['edited_nodes'] as $bundle => $nids) {
-        $list .= '<h3>' . ucfirst($bundle) . '</h3><ul>';
-        foreach ($nids as $nid) {
-          $url = $base_url . '/node/' . $nid;
-          $list .= '<li><a href="' . $url . '">' . $url . '</a></li>';
+      // Domain totals.
+      $message .= '<h3>Iframes by Domain</h3><ul>';
+      foreach ($sandbox['iframe_domains'] as $domain => $bundles) {
+        $total_for_domain = 0;
+        foreach ($bundles as $nids) {
+          $total_for_domain += count($nids);
         }
-        $list .= '</ul>';
+        $message .= '<li><strong>' . $domain . ':</strong> ' . $total_for_domain . ' nodes</li>';
       }
+      $message .= '</ul>';
 
-      $logger->info('Removed non-YouTube iframes from the following nodes: ' . $list);
+      // Node type totals.
+      $bundle_totals = [];
+      foreach ($sandbox['iframe_domains'] as $domain => $bundles) {
+        foreach ($bundles as $bundle => $nids) {
+          if (!isset($bundle_totals[$bundle])) {
+            $bundle_totals[$bundle] = 0;
+          }
+          $bundle_totals[$bundle] += count($nids);
+        }
+      }
+      $message .= '<h3>Iframes by Node Type</h3><ul>';
+      foreach ($bundle_totals as $bundle => $total) {
+        $message .= '<li><strong>' . ucfirst($bundle) . ':</strong> ' . $total . ' nodes</li>';
+      }
+      $message .= '</ul>';
     }
 
-    $total_edited = array_sum(array_map('count', $sandbox['edited_nodes']));
-    return t('Processed @count nodes, edited @edited nodes.', [
+    // Detailed lists by domain.
+    if (!empty($sandbox['iframe_domains'])) {
+      $message .= '<h2>Detailed Node Lists by Domain</h2>';
+
+      foreach ($sandbox['iframe_domains'] as $domain => $bundles) {
+        $total_for_domain = 0;
+        foreach ($bundles as $nids) {
+          $total_for_domain += count($nids);
+        }
+        
+        $message .= '<h3>' . $domain . ' (' . $total_for_domain . ' nodes)</h3>';
+
+        foreach ($bundles as $bundle => $nids) {
+          $message .= '<h4>' . ucfirst($bundle) . '</h4><ul>';
+          foreach ($nids as $nid) {
+            $url = $base_url . '/node/' . $nid;
+            $message .= '<li><a href="' . $url . '">' . $url . '</a></li>';
+          }
+          $message .= '</ul>';
+        }
+      }
+    }
+
+    if ($message) {
+      $logger->info('Iframe cleanup results: ' . $message);
+    }
+
+    $total_edited = !empty($sandbox['edited_nodes']) ? array_sum(array_map('count', $sandbox['edited_nodes'])) : 0;
+    $total_with_iframes = 0;
+    foreach ($sandbox['iframe_domains'] as $domain => $bundles) {
+      foreach ($bundles as $nids) {
+        $total_with_iframes += count($nids);
+      }
+    }
+
+    return t('Processed @count nodes. Edited: @edited, Total with iframes: @total_iframes', [
       '@count' => $sandbox['max'],
       '@edited' => $total_edited,
+      '@total_iframes' => $total_with_iframes,
     ]);
   }
 }

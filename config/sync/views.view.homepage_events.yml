@@ -1671,6 +1671,7 @@ display:
           settings:
             timezone_override: ''
             date_format: 'M d'
+            from_to: both
             separator: '-'
           group_column: value
           group_columns: {  }
@@ -1723,7 +1724,7 @@ display:
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: true
+          element_label_colon: false
           element_wrapper_type: ''
           element_wrapper_class: ''
           element_default_classes: true
@@ -1822,7 +1823,7 @@ display:
           exclude: true
           alter:
             alter_text: true
-            text: '<span class="date-display-single">{{ field_date_range_2  | split('' - '')[0] | striptags}}</span>'
+            text: '<H3 class="date-display-single">{{ field_date_range_2  | split('' - '')[0] | striptags}}</h3>'
             make_link: false
             path: ''
             absolute: false
@@ -1864,8 +1865,8 @@ display:
           settings:
             timezone_override: ''
             format_type: day_only
+            from_to: both
             separator: '-'
-            fromto: start_date
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -1930,8 +1931,8 @@ display:
           settings:
             timezone_override: ''
             format_type: month_only
+            from_to: both
             separator: '-'
-            fromto: start_date
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -1962,10 +1963,10 @@ display:
             element_type: div
             attributes: class|title
           list:
-            element_type: ''
+            element_type: ul
             attributes: ''
           row:
-            element_type: div
+            element_type: li
             attributes: class|
             last_every_nth: '0'
             first_class: first
@@ -1982,21 +1983,6 @@ display:
             title:
               element_type: div
               attributes: class|event-title
-            field_senator_name:
-              element_type: div
-              attributes: ''
-            field_senator_name_1:
-              element_type: div
-              attributes: class|event-senator
-            field_location_organization:
-              element_type: div
-              attributes: 'class|event-location-name icon-before__circle-pin'
-            field_location_locality:
-              element_type: div
-              attributes: ''
-            field_location_administrative_area:
-              element_type: div
-              attributes: class|event-location
             field_date_range_1:
               element_type: div
               attributes: class|event-date

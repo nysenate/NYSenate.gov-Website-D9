@@ -25,6 +25,17 @@ class Statute {
   public StatuteDetail $detail;
 
   /**
+   * Property to cache the latest revision's activeDate.
+   *
+   * When viewing a historical revision, $detail->result->activeDate reflects
+   * that historical date. This property stores the true latest activeDate
+   * for comparison purposes.
+   *
+   * @var string|null
+   */
+  protected ?string $latestActiveDate = NULL;
+
+  /**
    * Constructor.
    *
    * @param \Drupal\nys_openleg_api\Plugin\OpenlegApi\Response\StatuteTree $tree
@@ -105,6 +116,53 @@ class Statute {
   }
 
   /**
+   * Gets a filtered list of publish dates relevant to the current location.
+   *
+   * This method filters the full list of volume-wide publish dates to include
+   * only those dates up to a specified "most recent" date, typically the
+   * latest revision available for the current document.
+   *
+   * If no most-recent date is provided, it will be inferred from the full
+   * publish dates list (the maximum date).
+   *
+   * Note: The API only provides volume-wide dates, not location-specific ones.
+   * This filtering removes future dates but may still include dates that
+   * affected other parts of the volume.
+   *
+   * @param string|null $most_recent_date
+   *   (Optional) The most recent date to filter up to. If not provided,
+   *   the maximum date from publishedDates is used.
+   *
+   * @return array
+   *   An array of filtered, sorted publish dates.
+   */
+  public function relevantPublishDates(?string $most_recent_date = NULL): array {
+    $all_dates = $this->publishDates();
+
+    // If no most-recent date provided, use the maximum from the list.
+    if (!$most_recent_date && !empty($all_dates)) {
+      $most_recent_date = max($all_dates);
+    }
+
+    // If there's no most-recent date, return all dates (no filtering possible).
+    if (!$most_recent_date) {
+      return $all_dates;
+    }
+
+    // Filter to dates on or before the most recent date.
+    $relevant = array_filter(
+      $all_dates,
+      function ($date) use ($most_recent_date) {
+        return $date <= $most_recent_date;
+      }
+    );
+
+    // Re-sort and return.
+    sort($relevant);
+    return $relevant;
+  }
+
+  /**
    * Gets an array of the siblings associated with the current entry.
    *
    * @return array
@@ -127,6 +185,29 @@ class Statute {
    */
   public function text(bool $raw = FALSE): string {
     return $this->detail->text($raw);
+  }
+
+  /**
+   * Sets the latest activeDate (for the most recent revision).
+   *
+   * @param string $date
+   *   The latest activeDate to cache.
+   */
+  public function setLatestActiveDate(string $date): void {
+    $this->latestActiveDate = $date;
+  }
+
+  /**
+   * Gets the latest activeDate (for the most recent revision).
+   *
+   * Returns the cached latest date if set, otherwise returns the current
+   * detail's activeDate.
+   *
+   * @return string
+   *   The latest activeDate.
+   */
+  public function getLatestActiveDate(): string {
+    return $this->latestActiveDate ?? ($this->detail->result->activeDate ?? '');
   }
 
 }

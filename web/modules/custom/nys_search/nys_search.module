@@ -10,25 +10,57 @@ use Drupal\views\ViewExecutable;
 
 /**
  * Implements hook_views_pre_render().
+ *
+ * Dynamically updates the search results header with the search term from the URL.
+ * Properly decodes URL-encoded search terms and handles empty search queries.
  */
 function nys_search_views_pre_render(ViewExecutable $view) {
-  if ($view->id() == 'core_search') {
-    $path_array = explode('/', trim($_SERVER['REQUEST_URI'], '/'));
-    $param_value = $path_array[2] ?? '';
-    if ($view->current_display == 'search_results_block') {
-      $params_array = explode('?full_text=', $param_value);
-      $param_value = $params_array[1] ?? '';
-      if (strpos($param_value, "&senator") > 0) {
-        $params_array = explode('&senator', $param_value);
-        $param_value = $params_array[0] ?? '';
-      }
-    }
-    $param_value = strstr($param_value, '?', TRUE) ?: $param_value;
-    $param_value = str_replace('""', '"' . strtoupper($param_value) . '"', $view->header['result']->options['content']);
-    $view->header['result']->options['content'] = $param_value;
-    str_replace('""', '"' . strtoupper($param_value) . '"',
-      $view->header['result']->options['content']);
+  if ($view->id() !== 'core_search') {
+    return;
   }
+
+  // Only process search results displays that have a header.
+  if (!isset($view->header['result'])) {
+    return;
+  }
+
+  // Extract the search term from the request.
+  $search_term = _nys_search_extract_search_term();
+
+  $current_content = $view->header['result']->options['content'] ?? '';
+
+  if ($search_term !== NULL) {
+    // Replace empty quotes placeholder with the search term (uppercase).
+    $updated_content = str_replace('FOR ""', 'FOR "' . strtoupper($search_term) . '"', $current_content);
+  } else {
+    // Remove "FOR """ if no search term.
+    $updated_content = str_replace('FOR ""', '', $current_content);
+  }
+
+  $view->header['result']->options['content'] = $updated_content;
+}
+
+/**
+ * Extracts the search term from the current request.
+ *
+ * The extracted term is URL-decoded to handle encoded characters.
+ *
+ * @return string|null
+ *   The decoded search term, or NULL if no search term could be extracted.
+ */
+function _nys_search_extract_search_term() {
+  // Get the current request.
+  $request = \Drupal::request();
+
+  // Extract the search term from the full_text query parameter.
+  $search_term = $request->query->get('full_text', '');
+
+  // URL-decode and trim the search term.
+  $search_term = urldecode($search_term);
+  $search_term = trim($search_term);
+
+  // Return NULL if the search term is empty, otherwise return the term.
+  return empty($search_term) ? NULL : $search_term;
 }
 
 /**
@@ -45,4 +77,14 @@ function _nys_search_custom_search_submit($form, &$form_state) {
 function nys_search_preprocess_page(&$variables) {
   $form = \Drupal::formBuilder()->getForm(GlobalSearchForm::class);
   $variables['form'] = $form;
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function nys_search_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  // Remove the unwanted "Global Search" title from the GlobalSearchAdvancedForm.
+  if ($form_id === 'nys_search_global_form') {
+    unset($form['global_search']);
+  }
 }

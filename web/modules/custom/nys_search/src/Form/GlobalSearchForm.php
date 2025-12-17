@@ -92,8 +92,19 @@ class GlobalSearchForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $keys = $form_state->getValue('keys');
     $senator = $form_state->getValue('senator');
-    $senator_param = $senator ? '&senator=' . $senator : '';
-    $url = '/search/global/result?full_text=' . $keys . $senator_param;
+
+    // Build URL parameters, only including full_text if it has a value.
+    $url_params = [];
+    if (!empty($keys)) {
+      $url_params[] = 'full_text=' . urlencode($keys);
+    }
+    if ($senator) {
+      $url_params[] = 'senator=' . $senator;
+    }
+
+    $query_string = !empty($url_params) ? '?' . implode('&', $url_params) : '';
+    $url = '/search/global/result' . $query_string;
+
     $response = new TrustedRedirectResponse($url);
     $response->send();
   }

@@ -5,38 +5,118 @@
       const tabContainer = $('.l-tab-bar');
       const tabLink = $('.c-tab .c-tab-link');
       const textExpander = $('.text-expander');
+      const loadMore = $('.load-more');
+      const ariaAnnouncement = $('.aria-announcement');
+
+      // Function to update aria announcement with row counts
+      const updateAriaAnnouncement = function() {
+        const activePanel = $('.tabs-content .content.active');
+        const activeTab = $('.l-tab-bar button.c-tab.active');
+        
+        if (activePanel.length > 0 && activeTab.length > 0) {
+          const rowsMessageElement = activePanel.find('.view-header .rows-message')[0];
+          const tabName = activeTab.text().trim();
+          
+          if (rowsMessageElement) {
+            const rowsMessage = rowsMessageElement.innerHTML;
+            const fullMessage = tabName + ' tab. ' + rowsMessage;
+            
+            // Clear and reset to force screen reader announcement
+            ariaAnnouncement.text('');
+            setTimeout(function() {
+              ariaAnnouncement.text(fullMessage);
+            }, 50);
+          }
+        }
+      };
+
+      // Function to save active tab to sessionStorage
+      const saveActiveTab = function(tabId) {
+        sessionStorage.setItem('activeNewsTab', tabId);
+      };
+
+      // Function to restore active tab from sessionStorage
+      const restoreActiveTab = function() {
+        const savedTabId = sessionStorage.getItem('activeNewsTab');
+        if (savedTabId) {
+          const savedButton = $(savedTabId);
+          if (savedButton.length > 0) {
+            // Remove active from all tabs
+            $('.l-tab-bar button.c-tab').removeClass('active').attr('aria-selected', 'false').attr('aria-expanded', 'false');
+            $('.tabs-content .content').removeClass('active');
+            
+            // Set active on saved tab
+            savedButton.addClass('active').attr('aria-selected', 'true').attr('aria-expanded', 'true');
+            const targetPanel = savedButton.val();
+            $(targetPanel).addClass('active');
+          }
+        }
+      };
+
+      // Restore active tab on page load
+      restoreActiveTab();
+      
+      // Always announce on page load, after tab restoration and DOM is ready
+      setTimeout(function() {
+        updateAriaAnnouncement();
+      }, 200);
 
       tabContainer.each(function () {
         const tabArrowDown = $(this).find('.c-tab--arrow');
-        const tabInput = $(this).find('input.form-radio');
+        const tabButton = $(this).find('button.c-tab');
 
         if (tabArrowDown.length < 1) {
           $(this).append('<div class="c-tab--arrow u-mobile-only"></div>');
         }
 
-        tabInput.each(function () {
-          // Use .attr('checked') instead of .is(:checked), because
-          // tabInput.on('click') logic below operates on checked attribute.
-          if ($(this).attr('checked')) {
-            $(this).parent().addClass('active');
+        tabButton.each(function () {
+          // Set aria-controls to the panel ID (removing the # from the value)
+          const panelId = $(this).val().replace('#', '');
+          $(this).attr('aria-controls', panelId);
+          
+          // Set proper aria-selected based on active class
+          if ($(this).hasClass('active')) {
+            $(this).attr('aria-selected', 'true');
+            $(this).attr('aria-expanded', 'true');
+          } else {
+            $(this).attr('aria-selected', 'false');
+            $(this).attr('aria-expanded', 'false');
           }
         });
 
-        tabInput.on('click', function () {
-          const tabInputContainer = tabInput.parent();
-          const tabContent = tabInputContainer
-            .parent()
-            .parent()
-            .find('.tabs-content');
+        tabButton.on('click', function () {
+          const tabContent = $(this).closest('.l-row').find('.tabs-content');
+          const targetPanel = $(this).val(); // Get the target panel ID from value attribute
+          const tabBar = $(this).closest('.l-tab-bar');
+          const tabId = '#' + $(this).attr('id'); // Save the button ID
 
-          tabInput.removeAttr('checked');
-          tabInputContainer.removeClass('active');
+          // Save active tab to sessionStorage
+          saveActiveTab(tabId);
 
-          $(this).attr('checked', 'checked');
-          $(this).parent().addClass('active');
+          // Remove active state from all buttons
+          tabButton.removeClass('active').attr('aria-selected', 'false').attr('aria-expanded', 'false');
 
-          tabContent.find('.active').removeClass('active');
-          tabContent.find($(this).val()).addClass('active');
+          // Set active state on clicked button
+          $(this).addClass('active').attr('aria-selected', 'true').attr('aria-expanded', 'true');
+
+          // Update content visibility
+          tabContent.find('.content').removeClass('active');
+          tabContent.find(targetPanel).addClass('active');
+
+          // Update aria announcement with new content row counts
+          setTimeout(updateAriaAnnouncement, 50);
+
+          // Toggle mobile dropdown behavior - only on mobile/tablet screens
+          if (window.innerWidth <= 768) {
+            if ($(this).hasClass('active') && !tabBar.hasClass('open')) {
+              tabBar.addClass('open');
+            } else {
+              tabBar.removeClass('open');
+            }
+          } else {
+            // Remove open class on desktop
+            tabBar.removeClass('open');
+          }
         });
       });
 

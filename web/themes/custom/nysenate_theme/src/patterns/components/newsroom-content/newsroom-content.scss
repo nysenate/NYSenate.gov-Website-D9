@@ -220,6 +220,16 @@
   .c-container--header {
     border-bottom: 0;
   }
+
+  // Override margin on views header for newsroom.
+  .view-newsroom {
+    .view-header {
+      margin-bottom: 0;
+      .rows-message {
+        display: none;
+      }
+    }
+  }
 }
 
 .view-senator-events {

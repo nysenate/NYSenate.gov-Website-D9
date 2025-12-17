@@ -79,8 +79,8 @@ function nys_registration_form_user_login_form_alter(&$form, FormStateInterface 
   $footer = $nys_config->get('user_login_footer');
 
   $form['registration_teaser'] = [
-    '#markup' => '<div class="c-login-left"><h3 class="nys-title">' .
-      $header . '</h3>' . $body . '<a href="/user/register" ' .
+    '#markup' => '<div class="c-login-left"><h2 class="nys-title">' .
+      $header . '</h2>' . $body . '<a href="/user/register" ' .
       'class="c-block--btn c-login-create">Create Account</a>' .
       $footer . '</div>',
     '#weight' => 95,
@@ -88,8 +88,8 @@ function nys_registration_form_user_login_form_alter(&$form, FormStateInterface 
 
   $form['login_right_top'] = [
     '#weight' => 96,
-    '#markup' => '<div class="c-login-right"><h3 class="nys-title">' .
-      t('I already have an account...') . '</h3>',
+    '#markup' => '<div class="c-login-right"><h2 class="nys-title">' .
+      t('I already have an account...') . '</h2>',
   ];
 
   $form['name']['#weight'] = 97;

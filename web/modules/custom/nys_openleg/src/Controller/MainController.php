@@ -182,7 +182,17 @@ class MainController extends ControllerBase {
       // Get the statute.  Consider any historical milestone being requested.
       $history = $this->request->request->get('history') ?: '';
       try {
-        $statute = $this->openLegApi->getStatute($book, $location, $history);
+        // Always fetch the latest version first to capture the true latest
+        // activeDate.
+        $statute = $this->openLegApi->getStatute($book, $location);
+        $latest_active_date = $statute->detail->result->activeDate ?? '';
+
+        // If a specific history date was requested, fetch that version too.
+        if ($history) {
+          $statute = $this->openLegApi->getStatute($book, $location, $history);
+          // Cache the latest activeDate so we know what the true latest is.
+          $statute->setLatestActiveDate($latest_active_date);
+        }
       }
       catch (\Throwable) {
         $statute = NULL;

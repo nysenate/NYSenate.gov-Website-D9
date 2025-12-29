@@ -9,8 +9,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\user\UserInterface;
 use Drupal\views\ViewExecutable;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Implements hook_module_implements_alter().
@@ -35,30 +33,19 @@ function nys_dashboard_user_login(UserInterface $account): void {
   $request = \Drupal::request();
   $path = $request->getPathInfo();
 
-  // Make sure destination is not set, and this is not a password reset.
-  if (!(
+  // If no preset destination, and not a password reset, redirect to dashboard.
+  // We have co-opted the normal password reset page, but Drupal still routes
+  // the core version.  Check for both, just in case.
+  if (
     $request->query->get('destination')
-    || str_starts_with($path, '/nys/user/reset/')
-  )) {
-    $url = Url::fromRoute('view.my_dashboard.main')->toString();
-
-    // This is the preferred method, left here for safe-keeping.  This
-    // fails because EmailTfaVerifyLoginForm::buildForm() redirects to
-    // entity.user.canonical if TFA is not applicable to the account,
-    // and ignores the 'destination' parameter.
-    // See https://www.drupal.org/project/email_tfa/issues/3475043.
-    //
-    // \Drupal::request()->query->set('destination', $url);
-
-    // For now, fight fire with fire - preemptive redirect and stop.
-    // The proper way, per https://www.drupal.org/node/2023537.
-    $response = new RedirectResponse($url, Response::HTTP_SEE_OTHER);
-    $request->getSession()->save();
-    $response->prepare($request);
-    \Drupal::service('kernel')->terminate($request, $response);
-    $response->send();
-    exit;
+    || preg_match('=^(/nys)?/user/reset/=', $path)
+  ) {
+    return;
   }
+  $url = Url::fromRoute('view.my_dashboard.main')->toString();
+  \Drupal::request()->query->set('destination', $url);
+  // To aid with execution order, set a request flag other hooks can detect.
+  \Drupal::request()->query->set('dashboard', 1);
 }
 
 

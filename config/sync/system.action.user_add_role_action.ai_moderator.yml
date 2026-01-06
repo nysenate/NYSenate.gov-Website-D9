@@ -1,0 +1,14 @@
+uuid: 83d71d4b-8e5b-45a6-9c6b-fc4628f5a9e5
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.ai_moderator
+  module:
+    - user
+id: user_add_role_action.ai_moderator
+label: 'Add the AI Moderator role to the selected user(s)'
+type: user
+plugin: user_add_role_action
+configuration:
+  rid: ai_moderator

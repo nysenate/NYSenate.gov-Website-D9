@@ -7,6 +7,8 @@ dependencies:
     - field.storage.node.field_senator_multiref
     - node.type.article
     - taxonomy.vocabulary.senator
+    - user.role.administrator
+    - user.role.ai_moderator
     - workflows.workflow.ai_moderation
   module:
     - content_moderation
@@ -16,7 +18,7 @@ dependencies:
 _core:
   default_config_hash: Zr13Yp_ouS-l8P_-VeQUJwI8bQneFCa-StfIL1r_OpU
 id: moderated_content
-label: 'Moderated content'
+label: 'AI Moderation'
 module: views
 description: 'Find and moderate content.'
 tag: ''
@@ -29,7 +31,7 @@ display:
     display_plugin: default
     position: 0
     display_options:
-      title: 'Moderated content'
+      title: 'AI Moderation'
       fields:
         title:
           id: title
@@ -574,9 +576,11 @@ display:
           sort_asc_label: Asc
           sort_desc_label: Desc
       access:
-        type: perm
+        type: role
         options:
-          perm: 'view any unpublished content'
+          role:
+            administrator: administrator
+            ai_moderator: ai_moderator
       cache:
         type: tag
         options: {  }
@@ -967,14 +971,14 @@ display:
         - url
         - url.query_args
         - 'user.node_grants:view'
-        - user.permissions
+        - user.roles
       tags:
         - 'config:field.storage.node.field_moderation_reason'
         - 'config:field.storage.node.field_senator_multiref'
         - 'config:workflow_list'
   moderated_content:
     id: moderated_content
-    display_title: 'Moderated content'
+    display_title: 'AI Moderation'
     display_plugin: page
     position: 1
     display_options:
@@ -989,7 +993,7 @@ display:
         - url
         - url.query_args
         - 'user.node_grants:view'
-        - user.permissions
+        - user.roles
       tags:
         - 'config:field.storage.node.field_moderation_reason'
         - 'config:field.storage.node.field_senator_multiref'

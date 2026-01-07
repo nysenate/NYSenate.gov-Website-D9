@@ -1,0 +1,17 @@
+/**
+ * @file
+ * Styles for Senator Events view to prevent flicker on page load.
+ */
+
+/* Hide form elements that are controlled by JavaScript */
+#views-exposed-form-senator-events-upcoming-events .form-actions {
+  display: none;
+}
+
+#views-exposed-form-senator-events-upcoming-events fieldset {
+  display: none;
+}
+
+#views-exposed-form-senator-events-upcoming-events .form-item-field-event-place-value {
+  display: none;
+}

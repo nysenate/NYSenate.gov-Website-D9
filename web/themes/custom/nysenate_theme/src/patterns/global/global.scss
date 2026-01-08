@@ -877,6 +877,26 @@ section.print.hero--senator {
   }
 }
 
+.a11y-wayfinding {
+  position: relative;
+
+  .skip-link.visually-hidden.focusable {
+    position: absolute !important;
+    top: -40px;
+    left: 5px;
+    z-index: 5000;
+  }
+}
+
+.skip-link {
+  background-color: white;
+  display: inline-block;
+  padding: 0.25em;
+  position: absolute;
+  text-align: center;
+  z-index: 1000;
+}
+
 .skip-link.visually-hidden.focusable {
   position: absolute;
   top: 5px;

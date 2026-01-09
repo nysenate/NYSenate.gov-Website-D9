@@ -8,7 +8,7 @@ dependencies:
     - node.type.article
     - taxonomy.vocabulary.senator
     - user.role.administrator
-    - user.role.ai_moderator
+    - user.role.comment_moderator
     - workflows.workflow.ai_moderation
   module:
     - content_moderation
@@ -580,7 +580,7 @@ display:
         options:
           role:
             administrator: administrator
-            ai_moderator: ai_moderator
+            comment_moderator: comment_moderator
       cache:
         type: tag
         options: {  }

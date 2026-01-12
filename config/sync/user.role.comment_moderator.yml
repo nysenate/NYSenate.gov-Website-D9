@@ -2,10 +2,13 @@ uuid: 7aeb835f-7c08-4586-aae9-5a7c09e68132
 langcode: en
 status: true
 dependencies:
+  config:
+    - node.type.article
   module:
     - comment
     - field_permissions
     - file
+    - node
 id: comment_moderator
 label: 'Comment and AI Moderator'
 weight: 11
@@ -14,6 +17,7 @@ permissions:
   - 'administer comments'
   - 'create field_user_banned_comments'
   - 'delete own files'
+  - 'edit any article content'
   - 'edit field_user_banned_comments'
   - 'edit own field_user_banned_comments'
   - 'view field_user_banned_comments'

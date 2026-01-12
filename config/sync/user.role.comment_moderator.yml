@@ -4,8 +4,10 @@ status: true
 dependencies:
   config:
     - node.type.article
+    - workflows.workflow.ai_moderation
   module:
     - comment
+    - content_moderation
     - field_permissions
     - file
     - node
@@ -20,5 +22,12 @@ permissions:
   - 'edit any article content'
   - 'edit field_user_banned_comments'
   - 'edit own field_user_banned_comments'
+  - 'use ai_moderation transition draft'
+  - 'use ai_moderation transition flagged'
+  - 'use ai_moderation transition publish'
+  - 'use ai_moderation transition revise'
+  - 'use ai_moderation transition unpublish'
+  - 'view any unpublished content'
   - 'view field_user_banned_comments'
+  - 'view latest version'
   - 'view own field_user_banned_comments'

@@ -24,6 +24,11 @@ ul.c-login--list {
     width: 100%;
     margin-top: 15px;
     margin-left: 0;
+    display: none;
+
+    @include breakpoint($bp-under-sm) {
+      display: block;
+    }
 
     .c-header--btn.c-header--btn__primary {
       line-height: 58px;

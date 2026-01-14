@@ -72,11 +72,6 @@
         return;
       }
       
-      // Check if already wrapped in a11y-wayfinding div
-      // if (firstHeading.parentElement && firstHeading.parentElement.classList.contains('a11y-wayfinding')) {
-      //   return;
-      // }
-      
       // Create wrapper div
       const wrapper = document.createElement('div');
       wrapper.classList.add('a11y-wayfinding');

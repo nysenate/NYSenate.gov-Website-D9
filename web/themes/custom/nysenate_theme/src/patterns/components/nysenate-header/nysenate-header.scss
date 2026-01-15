@@ -881,9 +881,19 @@ nav ul.c-nav--list {
     position: relative;
     display: block;
     float: left;
-    margin: 12px 0;
-    padding: 0 20px 0 0;
-    border-right: 1px solid $grey05;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+
+    &:after {
+      content: '';
+      display: block;
+      height: 28px;
+      width: 1px;
+      background: $grey05;
+      right: 0;
+    }
   }
 }
 

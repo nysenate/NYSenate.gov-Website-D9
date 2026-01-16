@@ -39,20 +39,16 @@ class HistoryForm extends FormBase {
     // Ensure this form is not cached.
     $form_state->disableCache();
 
-    // Find the date of the current history marker and the true latest date.
-    $current = $statute->detail->result->activeDate ?? '--ERROR--';
+    // Find the publish dates (most recent, and for this history marker)
+    $current = $statute->getPublishDate() ?: '--ERROR--';
     $latest = $statute->getLatestActiveDate();
 
-    // Get the relevant publish dates (filtered up to the latest revision).
-    $dates = $statute->relevantPublishDates($latest);
-
-    // Sort dates in descending order (most recent first).
+    // Get the relevant publish dates.  Reverse the sort order.
+    $dates = $statute->getPublishDates();
     rsort($dates);
 
-    // Determine if the current revision is the most recent.
-    $is_most_recent = ($current === $latest);
-
     // Build the milestone banner with conditional link or text.
+    $is_most_recent = ($current === $latest);
     if ($is_most_recent) {
       $milestone_html = '<div class="nys-openleg-history-published">'
         . 'Viewing most recent revision (from ' . $current . ')'
@@ -77,7 +73,7 @@ class HistoryForm extends FormBase {
         '#type' => 'select',
         '#empty_option' => '-- Choose a Date --',
         '#options' => array_combine($dates, $dates),
-        '#default_value' => '',
+        '#default_value' => $current,
         '#title' => 'View historical revision as of: ',
         '#attributes' => [
           'onChange' => 'this.form.submit();',

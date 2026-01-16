@@ -27,13 +27,13 @@ class Statute {
   /**
    * Property to cache the latest revision's activeDate.
    *
-   * When viewing a historical revision, $detail->result->activeDate reflects
-   * that historical date. This property stores the true latest activeDate
-   * for comparison purposes.
+   * When viewing a historical revision, the publish date (activeDate) reflects
+   * that historical date. This property stores the most recent publish date
+   * for the location without regard to historical context.
    *
-   * @var string|null
+   * @var string
    */
-  protected ?string $latestActiveDate = NULL;
+  protected string $latestActiveDate;
 
   /**
    * Constructor.
@@ -43,10 +43,13 @@ class Statute {
    * @param \Drupal\nys_openleg_api\Plugin\OpenlegApi\Response\StatuteDetail|null $detail
    *   A StatuteDetail Response object.  Could be null for non-locations.
    *   (e.g., /laws/ABC vs. /laws/ABC/A1)
+   * @param string $latestActiveDate
+   *   Date (Y-m-d) of the most recent version.  If empty, will be detected.
    */
-  public function __construct(StatuteTree $tree, ?StatuteDetail $detail = NULL) {
+  public function __construct(StatuteTree $tree, ?StatuteDetail $detail = NULL, string $latestActiveDate = '') {
     $this->tree = $tree;
     $this->detail = $detail ?? new StatuteDetail();
+    $this->latestActiveDate = $latestActiveDate ?: $tree->getActiveDate();
   }
 
   /**
@@ -80,14 +83,14 @@ class Statute {
   public function fullTitle(): array {
     $detail = $this->detail->result();
     $parents = array_map(
-          function ($v) {
-              return $v->docType . ' ' . $v->docLevelId;
-          },
-          $this->parents()
-      );
+      function ($v) {
+        return $v->docType . ' ' . $v->docLevelId;
+      },
+      $this->parents()
+    );
     $location = $parents
-        ? $detail->lawName . ' (' . $detail->lawId . ') ' . implode(', ', $parents)
-        : '';
+      ? $detail->lawName . ' (' . $detail->lawId . ') ' . implode(', ', $parents)
+      : '';
     return [
       $detail->docType . ' ' . $detail->docLevelId,
       $detail->title,
@@ -106,42 +109,41 @@ class Statute {
   }
 
   /**
-   * Gets a sorted list of history markers for the most recent call.
+   * Gets a list of all historical publish dates available in the volume.
+   *
+   * Note that this list is for the ENTIRE volume, not just this location.
    *
    * @return array
-   *   An array of available history markers.
+   *   An array of available history markers for the volume.
    */
-  public function publishDates(): array {
+  public function getAllPublishDates(): array {
     return $this->tree->publishDates();
   }
 
   /**
-   * Gets a filtered list of publish dates relevant to the current location.
+   * Gets a subset of publish dates based on a maximum publish date.
    *
-   * This method filters the full list of volume-wide publish dates to include
-   * only those dates up to a specified "most recent" date, typically the
-   * latest revision available for the current document.
+   * This method filters the full list to remove any dates later than an
+   * arbitrary date $latest_date.  If not passed, the most recent publish
+   * date of this location will be used.
    *
-   * If no most-recent date is provided, it will be inferred from the full
-   * publish dates list (the maximum date).
+   * Note that the full list includes all publish dates for the entire volume.
+   * This location may or may not have changed on any particular date found in
+   * the return array.
    *
-   * Note: The API only provides volume-wide dates, not location-specific ones.
-   * This filtering removes future dates but may still include dates that
-   * affected other parts of the volume.
-   *
-   * @param string|null $most_recent_date
-   *   (Optional) The most recent date to filter up to. If not provided,
-   *   the maximum date from publishedDates is used.
+   * @param string $most_recent_date
+   *   (Optional) The most recent date to filter up to, as 'Y-m-d'.  If not
+   *   provided, this location's latest publish date is used.
    *
    * @return array
    *   An array of filtered, sorted publish dates.
    */
-  public function relevantPublishDates(?string $most_recent_date = NULL): array {
-    $all_dates = $this->publishDates();
+  public function getPublishDates(string $most_recent_date = ''): array {
+    $all_dates = $this->getAllPublishDates();
 
-    // If no most-recent date provided, use the maximum from the list.
-    if (!$most_recent_date && !empty($all_dates)) {
-      $most_recent_date = max($all_dates);
+    // If no most-recent date provided, use the location's latest revision.
+    if (!$most_recent_date) {
+      $most_recent_date = $this->latestActiveDate;
     }
 
     // If there's no most-recent date, return all dates (no filtering possible).
@@ -188,26 +190,17 @@ class Statute {
   }
 
   /**
-   * Sets the latest activeDate (for the most recent revision).
-   *
-   * @param string $date
-   *   The latest activeDate to cache.
+   * Gets the publish date of the most recent revision of this location (Y-m-d).
    */
-  public function setLatestActiveDate(string $date): void {
-    $this->latestActiveDate = $date;
+  public function getLatestActiveDate(): string {
+    return $this->latestActiveDate;
   }
 
   /**
-   * Gets the latest activeDate (for the most recent revision).
-   *
-   * Returns the cached latest date if set, otherwise returns the current
-   * detail's activeDate.
-   *
-   * @return string
-   *   The latest activeDate.
+   * Gets the publish date of the loaded revision (Y-m-d), or an empty string.
    */
-  public function getLatestActiveDate(): string {
-    return $this->latestActiveDate ?? ($this->detail->result->activeDate ?? '');
+  public function getPublishDate(): string {
+    return $this->detail->result->activeDate ?? '';
   }
 
 }

@@ -151,27 +151,38 @@ class Api {
    *   a response plugin object.
    */
   public function getStatute(string $book, string $location, string $history = ''): Statute {
+    $most_recent = '';
     $param = ['history' => $history];
 
     $this->logger->info('Requesting statute, book: "@book", location: "@location"', [
       '@book' => $book,
       '@location' => $location,
     ]);
-    /** @var \Drupal\nys_openleg_api\Plugin\OpenlegApi\Response\StatuteTree $tree */
-    $tree = $this->get('statute', $book, $param + ['location' => $location]);
 
-    // Enforce use of the returned location, if available.
-    if (!$location && $tree->success()) {
-      $location = $tree->location();
+    // @todo OL may change the response to include this for us.
+    // Get the current tree (not historical).  Necessary because the historical
+    // revision does not include the most recent publish date.
+    /** @var \Drupal\nys_openleg_api\Plugin\OpenlegApi\Response\StatuteTree $tree */
+    $tree = $this->get('statute', $book, ['location' => $location]);
+
+    // If a history is requested, save the latest publish date and request the
+    // historical revision.
+    if ($history) {
+      $most_recent = $tree->getActiveDate();
+      /** @var \Drupal\nys_openleg_api\Plugin\OpenlegApi\Response\StatuteTree $tree */
+      $tree = $this->get('statute', $book, $param + ['location' => $location]);
     }
 
     // If location is empty, there will be no detail.
+    if ($tree->success() && !$location) {
+      $location = $tree->location();
+    }
     $detail = $this->get('statute', $book . '/' . $location, $param);
     if (!($detail instanceof StatuteDetail)) {
       $detail = NULL;
     }
 
-    return new Statute($tree, $detail);
+    return new Statute($tree, $detail, $most_recent);
   }
 
   /**

@@ -57,4 +57,19 @@ class StatuteTree extends ResponsePluginBase {
     return $this->documents()->locationId ?? '';
   }
 
+  /**
+   * Gets the publish date of the current document.
+   *
+   * Note that a doc tree can hold pointers to several levels of documents.
+   * This method returns the top level only.
+   *
+   * @return string
+   *   The publish date as Y-m-d, or an empty string on failure.
+   */
+  public function getActiveDate(): string {
+    return $this->success()
+      ? ($this->result->documents->activeDate ?? '')
+      : '';
+  }
+
 }

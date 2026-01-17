@@ -32,49 +32,15 @@
     sections.forEach(function (section) {
       // Extract the section number from the id (e.g., "section-1" -> "1")
       const sectionId = section.getAttribute('id');
-      
-      // Find the first heading (h1-h6) - first check within the section element itself
-      let firstHeading = section.querySelector('h1, h2, h3, h4, h5, h6');
-      
-      // If not found within, check the next siblings
-      if (!firstHeading) {
-        let nextEl = section.nextElementSibling;
-        while (nextEl) {
-          // Check if the element itself is a heading
-          if (nextEl.tagName && nextEl.tagName.match(/^H[1-6]$/)) {
-            firstHeading = nextEl;
-            break;
-          }
-          // Also check within the next element for a heading
-          const headingInNext = nextEl.querySelector('h1, h2, h3, h4, h5, h6');
-          if (headingInNext) {
-            firstHeading = headingInNext;
-            break;
-          }
-          // Stop if we encounter another section
-          if (nextEl.getAttribute('id') && nextEl.getAttribute('id').startsWith('section-')) {
-            break;
-          }
-          nextEl = nextEl.nextElementSibling;
-        }
-      }
-      
-      if (!firstHeading) {
-        return;
-      }
-      
+
       // Check if the visually hidden anchor already exists
-      const previousElement = firstHeading.previousElementSibling;
+      const previousElement = section.previousElementSibling;
       if (
         previousElement &&
         previousElement.matches('a.js-section-wayfinding')
       ) {
         return;
       }
-      
-      // Create wrapper div
-      const wrapper = document.createElement('div');
-      wrapper.classList.add('a11y-wayfinding');
       
       // Create the visually hidden anchor
       const anchor = document.createElement('a');
@@ -111,12 +77,8 @@
         }
       });
       
-      // Insert wrapper before the heading
-      firstHeading.before(wrapper);
-      
-      // Move heading into wrapper and add anchor before it
-      wrapper.appendChild(anchor);
-      wrapper.appendChild(firstHeading);
+      // Insert anchor directly before the section
+      section.before(anchor);
     });
   };
 

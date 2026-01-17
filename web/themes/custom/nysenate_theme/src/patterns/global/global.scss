@@ -877,17 +877,6 @@ section.print.hero--senator {
   }
 }
 
-.a11y-wayfinding {
-  position: relative;
-
-  .skip-link.visually-hidden.focusable {
-    position: absolute !important;
-    top: -40px;
-    left: 5px;
-    z-index: 5000;
-  }
-}
-
 .skip-link {
   background-color: white;
   display: inline-block;
@@ -902,6 +891,19 @@ section.print.hero--senator {
   top: 5px;
   left: 5px;
   z-index: 5000;
+}
+
+.skip-link.visually-hidden.focusable.js-section-wayfinding {
+  position: relative !important;
+  top: 10px;
+  left: 5px;
+  z-index: 5000;
+  scroll-margin-top: 300px;
+  padding: 0;
+}
+
+div[id^="section-"] {
+  scroll-margin-top: 200px;
 }
 
 // Disable admin menu body padding when on TFA page.

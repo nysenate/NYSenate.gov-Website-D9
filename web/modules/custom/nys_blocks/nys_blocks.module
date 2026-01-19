@@ -5,6 +5,8 @@
  * Contains custom blocks.
  */
 
+use Drupal\block_content\BlockContentInterface;
+use Drupal\Core\Render\Element;
 use Drupal\node\NodeInterface;
 
 /**
@@ -89,5 +91,49 @@ function nys_blocks_deploy_contact_us_block() {
         }
       }
     }
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view_alter() for block_content entities.
+ *
+ * Replaces the issues_listings view rendering with a lazy builder to
+ * prevent the flag-count sorting from making the page uncacheable.
+ */
+function nys_blocks_block_content_view_alter(array &$build, BlockContentInterface $block_content, $display) {
+  // Only target 'views' bundle block content.
+  if ($block_content->bundle() !== 'views') {
+    return;
+  }
+
+  // Check if this block has a viewsreference field.
+  if (!$block_content->hasField('field_views_ref') || $block_content->get('field_views_ref')->isEmpty()) {
+    return;
+  }
+
+  // Get the view reference values.
+  $view_ref = $block_content->get('field_views_ref')->first();
+  if (!$view_ref) {
+    return;
+  }
+
+  $view_name = $view_ref->target_id ?? NULL;
+  $display_id = $view_ref->display_id ?? NULL;
+
+  // Only apply lazy builder to the issues_listings view.
+  if ($view_name !== 'issues_listings') {
+    return;
+  }
+
+  // Replace the field_views_ref element with a lazy builder placeholder.
+  // This allows the page to be cached while the view loads dynamically.
+  if (isset($build['field_views_ref'])) {
+    $build['field_views_ref'] = [
+      '#lazy_builder' => [
+        'nys_blocks.issues_listing_lazy_builder:renderIssuesListing',
+        [$display_id ?: 'news_issues_listing'],
+      ],
+      '#create_placeholder' => TRUE,
+    ];
   }
 }

@@ -5100,6 +5100,12 @@ function get_how_a_bill_becomes_law_block() {
     $block_content = $view_builder->view($block);
 
     $bill = $view_builder->build($block_content);
+    
+    // Manually bubble cache metadata from the block to prevent cache-busting.
+    // When rendering blocks in preprocess, we must explicitly collect and attach
+    // cache metadata or it won't bubble up to the page level.
+    $renderer = \Drupal::service('renderer');
+    $renderer->addCacheableDependency($bill, $block);
   }
   else {
     $block_manager = \Drupal::service('plugin.manager.block');

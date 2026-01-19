@@ -4460,7 +4460,8 @@ function nysenate_theme_preprocess_node__event__featured_content(&$variables) {
  * Implements hook_preprocess_node_TYPE().
  */
 function nysenate_theme_preprocess_node__promotional_banner__featured_content(&$variables) {
-  $variables['#cache']['max-age'] = 0;
+  // Note: Removed max-age = 0 as it was preventing page caching.
+  // Promotional banner content should be cacheable with proper cache tags.
   $variables['banner_image'] = !empty($variables['content']['field_promotional_banner_image'][0]) ? $variables['content']['field_promotional_banner_image'][0] : [];
   $node = $variables['node'];
   if ($node->hasField('field_call_to_action') && !$node->field_call_to_action->isEmpty()) {

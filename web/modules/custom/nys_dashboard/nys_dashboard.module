@@ -111,6 +111,13 @@ function nys_dashboard_form_views_exposed_form_alter(&$form, FormStateInterface 
  * Implements hook_preprocess_page().
  */
 function nys_dashboard_preprocess_page(&$variables): void {
+  // Only process dashboard-specific variables on dashboard pages.
+  // Loading the current user on every page breaks page caching.
+  $request_uri = \Drupal::request()->getRequestUri();
+  if (!str_starts_with($request_uri, '/dashboard')) {
+    return;
+  }
+
   // Setup variables for top nav dashboard menu.
   $user_storage = \Drupal::entityTypeManager()->getStorage('user');
   $user = $user_storage->load(\Drupal::currentUser()->id());
@@ -120,11 +127,8 @@ function nys_dashboard_preprocess_page(&$variables): void {
   $variables['edit_account_link'] = '/dashboard/edit';
 
   // Attach full width library to dashboard.
-  $request_uri = \Drupal::request()->getRequestUri();
-  if (str_starts_with($request_uri, '/dashboard')) {
-    $variables['#attached']['library'][] = 'nysenate_theme/full-width-main';
-    $variables['actionbar']['type'] = 'disabled';
-  }
+  $variables['#attached']['library'][] = 'nysenate_theme/full-width-main';
+  $variables['actionbar']['type'] = 'disabled';
 }
 
 /**

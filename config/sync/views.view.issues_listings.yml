@@ -7,14 +7,11 @@ dependencies:
     - flag.flag.follow_issue
     - taxonomy.vocabulary.issues
     - taxonomy.vocabulary.majority_issues
-    - user.role.anonymous
-    - user.role.authenticated
   module:
     - better_exposed_filters
     - flag
     - node
     - taxonomy
-    - user
     - views_infinite_scroll
 id: issues_listings
 label: 'Issues Listings'
@@ -258,15 +255,15 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - user
-        - user.permissions
       tags:
         - flag.flag.follow_issue
   block_2:
     id: block_2
-    display_title: 'Most Recent (Anon)'
+    display_title: '[Disabled] Most Recent (Anon)'
     display_plugin: block
     position: 4
     display_options:
+      enabled: false
       pager:
         type: infinite_scroll
         options:
@@ -318,14 +315,14 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url.query_args
-        - user.permissions
       tags: {  }
   block_3:
     id: block_3
-    display_title: 'Most Followed (Anon)'
+    display_title: '[Disabled] Most Followed (Anon)'
     display_plugin: block
     position: 6
     display_options:
+      enabled: false
       fields:
         name:
           id: name
@@ -598,7 +595,6 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url.query_args
-        - user.roles
       tags:
         - flag.flag.follow_issue
   constituent_dashboard:
@@ -686,12 +682,11 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url
-        - user.permissions
       tags:
         - flag.flag.follow_issue
   explore_issues_alpha:
     id: explore_issues_alpha
-    display_title: 'Alphabetical (Auth)'
+    display_title: Alphabetical
     display_plugin: block
     position: 1
     display_options:
@@ -1025,15 +1020,15 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
-        - user.roles
       tags:
         - 'config:field.storage.taxonomy_term.field_keywords'
   explore_issues_alpha_anon:
     id: explore_issues_alpha_anon
-    display_title: 'Alphabetical (Anon)'
+    display_title: '[Disabled] Alphabetical (Anon)'
     display_plugin: block
     position: 2
     display_options:
+      enabled: false
       fields:
         name:
           id: name
@@ -1364,12 +1359,11 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
-        - user.roles
       tags:
         - 'config:field.storage.taxonomy_term.field_keywords'
   explore_issues_most_recent:
     id: explore_issues_most_recent
-    display_title: 'Most Recent (Auth)'
+    display_title: 'Most Recent'
     display_plugin: block
     position: 3
     display_options:
@@ -1423,7 +1417,6 @@ display:
         - 'languages:language_interface'
         - url.query_args
         - user
-        - user.permissions
       tags:
         - flag.flag.follow_issue
   meeting_issues:
@@ -1724,11 +1717,10 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url
-        - user.permissions
       tags: {  }
   most_followed:
     id: most_followed
-    display_title: 'Most Followed (Auth)'
+    display_title: 'Most Followed'
     display_plugin: block
     position: 5
     display_options:
@@ -1898,27 +1890,10 @@ display:
           empty_zero: false
           hide_alter_empty: true
       pager:
-        type: infinite_scroll
+        type: some
         options:
           offset: 0
-          items_per_page: 21
-          total_pages: null
-          id: 0
-          tags:
-            next: 'Next ›'
-            previous: '‹ Previous'
-          expose:
-            items_per_page: false
-            items_per_page_label: 'Items per page'
-            items_per_page_options: '5, 10, 25, 50'
-            items_per_page_options_all: false
-            items_per_page_options_all_label: '- All -'
-            offset: false
-            offset_label: Offset
-          views_infinite_scroll:
-            button_text: 'Load More'
-            automatically_load_content: false
-            initially_load_all_pages: false
+          items_per_page: 9
       access:
         type: none
         options: {  }
@@ -2030,6 +2005,7 @@ display:
         filters: false
         filter_groups: false
         header: false
+        footer: false
       relationships:
         flag_relationship:
           id: flag_relationship
@@ -2045,7 +2021,34 @@ display:
           user_scope: any
       group_by: true
       display_description: ''
-      header: {  }
+      header:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text
+          empty: false
+          content:
+            value: "<h2 class=\"nys-subtitle-title\">Find and Follow Issues</h2>\r\n<p class=\"c-explore-issues--descript\">Find and follow the issues that matter to you, and see how they're being handled in the Senate. Send your senator messages by issue, and let them know you care.</p>"
+            format: full_html
+          tokenize: false
+      footer:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text
+          empty: false
+          content:
+            value: "<div class=\"c-block--explore-issues\">\r\n<a href=\"/explore-issues\" title=\"explore issues\">Explore Issues</a>\r\n</div>"
+            format: full_html
+          tokenize: false
       display_extenders: {  }
       block_description: 'Explore Issues Alphabetical'
     cache_metadata:
@@ -2053,13 +2056,11 @@ display:
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
-        - url.query_args
-        - user.roles
       tags:
         - flag.flag.follow_issue
   most_followed_page:
     id: most_followed_page
-    display_title: 'Most Followed Page (Auth)'
+    display_title: 'Most Followed Page'
     display_plugin: page
     position: 7
     display_options:
@@ -2232,6 +2233,7 @@ display:
         type: infinite_scroll
         options:
           offset: 0
+          pagination_heading_level: h4
           items_per_page: 21
           total_pages: null
           id: 0
@@ -2385,7 +2387,6 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url.query_args
-        - user.roles
       tags:
         - flag.flag.follow_issue
   most_recent_page:
@@ -2449,7 +2450,6 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url.query_args
-        - user.permissions
       tags: {  }
   news_issues_listing:
     id: news_issues_listing
@@ -2494,14 +2494,14 @@ display:
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
-        - user.permissions
       tags: {  }
   page_1:
     id: page_1
-    display_title: 'Most Followed Page (Anon)'
+    display_title: '[Disabled] Most Followed Page (Anon)'
     display_plugin: page
     position: 8
     display_options:
+      enabled: false
       fields:
         name:
           id: name
@@ -2774,7 +2774,6 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url.query_args
-        - user.roles
       tags:
         - flag.flag.follow_issue
   popular_senators:
@@ -3071,7 +3070,6 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url.query_args
-        - user.permissions
       tags: {  }
   popular_senators_page:
     id: popular_senators_page
@@ -3367,5 +3365,4 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url.query_args
-        - user.permissions
       tags: {  }

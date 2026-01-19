@@ -21,10 +21,6 @@ function nys_opendata_form_alter(&$form, &$form_state, $form_id) {
         if (isset($form['field_publication_date_value'])) {
           // Attach our custom library to handle the year datepicker constraints.
           $form['#attached']['library'][] = 'nys_opendata/year_filter_limit';
-          
-          // Add the current year as a data attribute for JavaScript to access.
-          $current_year = (int) date('Y');
-          $form['field_publication_date_value']['#attributes']['data-max-year'] = $current_year;
         }
       }
     }

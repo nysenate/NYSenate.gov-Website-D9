@@ -8,13 +8,12 @@
 
   Drupal.behaviors.nysOpenDataYearFilterLimit = {
     attach: function (context, settings) {
-      var $yearField = $("[data-max-year]", context);
-      if (!$yearField.length) {
+      var $input = $(".js-datepicker-years-filter", context);
+      if (!$input.length) {
         return;
       }
 
-      var maxYear = parseInt($yearField.data("max-year"), 10);
-      var $input = $(".js-datepicker-years-filter", context);
+      var maxYear = new Date().getFullYear();
 
       // Disable future year cells when datepicker is shown
       $input.on("show.bs.datepicker", function () {

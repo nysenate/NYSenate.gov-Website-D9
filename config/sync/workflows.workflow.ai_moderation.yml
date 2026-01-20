@@ -51,6 +51,18 @@ type_settings:
         - flagged
       to: published
       weight: -1
+    republish:
+      label: 'Move to Draft'
+      from:
+        - unpublish
+      to: draft
+      weight: 3
+    republished:
+      label: Republish
+      from:
+        - unpublish
+      to: published
+      weight: 4
     revise:
       label: Revise
       from:

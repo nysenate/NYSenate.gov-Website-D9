@@ -897,9 +897,13 @@ section.print.hero--senator {
   position: relative !important;
   top: 10px;
   left: 5px;
-  z-index: 5000;
-  scroll-margin-top: 300px;
+  z-index: 50;
   padding: 0;
+  scroll-margin-top: 300px;
+
+  .landing-page-hero & {
+    position: absolute !important;
+  }
 }
 
 div[id^="section-"] {

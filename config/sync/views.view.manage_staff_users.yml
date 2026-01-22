@@ -5027,6 +5027,19 @@ display:
           plugin_id: result
           empty: false
           content: 'Displaying @start - @end of @total'
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text
+          empty: false
+          content:
+            value: "<div style=\"float: right;\">\r\n<ul>\r\n<li class=\"local-actions__item\"><a href=\"/admin/people/create\" class=\"button button--action button--primary\" data-drupal-link-system-path=\"admin/people/create\">Add user</a></li>\r\n</ul>\r\n</div>"
+            format: full_html
+          tokenize: false
       display_extenders: {  }
       path: admin/people/reports-all
       menu:

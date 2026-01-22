@@ -63,18 +63,18 @@ settings:
           enabled: false
           provider: openai__gpt-4.1
         ai_ckeditor_tone:
-          autocreate: false
-          provider: openai__gpt-4.1
-          tone_vocabulary: committees
-          use_description: 0
           enabled: false
-        ai_ckeditor_translate:
-          autocreate: false
           provider: openai__gpt-4.1
+          autocreate: false
+          tone_vocabulary: committees
+          use_description: false
+        ai_ckeditor_translate:
+          enabled: false
+          provider: openai__gpt-4.1
+          language_source: tax
+          autocreate: false
           translate_vocabulary: committees
           use_description: false
-          language_source: tax
-          enabled: false
     ckeditor5_heading:
       enabled_headings:
         - heading2

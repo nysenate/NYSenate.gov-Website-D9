@@ -26,6 +26,12 @@ class HistoryForm extends FormBase {
    * Requires an instance of Drupal\nys_openleg\Api\Request\Statute as the
    * first buildInfo argument.
    *
+   * Note that this form is meant to embed into a page with its own controller.
+   * The caller must deal with any submissions.
+   *
+   * The 'history' control could be empty, or a selected milestone as "Y-m-d",
+   * or the string "current" (indicating "most recent revision").
+   *
    * @throws \InvalidArgumentException
    *   If no Statute is received.
    */
@@ -40,7 +46,7 @@ class HistoryForm extends FormBase {
     $form_state->disableCache();
 
     // Find the publish dates (most recent, and for this history marker)
-    $current = $statute->getPublishDate() ?: '--ERROR--';
+    $current = $statute->getActiveDate() ?: '--ERROR--';
     $latest = $statute->getLatestActiveDate();
 
     // Get the relevant publish dates.  Reverse the sort order.

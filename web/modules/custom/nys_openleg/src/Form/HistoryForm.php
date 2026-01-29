@@ -85,9 +85,6 @@ class HistoryForm extends FormBase {
           'onChange' => 'this.form.submit();',
         ],
       ],
-      'history_note' => [
-        '#markup' => '<div class="nys-openleg-history-note">NOTE: The above date options correlate to ALL revision records for the entire volume, not just the section being viewed. The retrieved revision will likely be from an earlier date than the chosen date.</div>',
-      ],
     ];
   }
 

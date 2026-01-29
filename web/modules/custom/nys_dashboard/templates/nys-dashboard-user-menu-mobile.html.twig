@@ -1,0 +1,32 @@
+{#
+/**
+ * @file
+ * Template for mobile user menu section in header.
+ *
+ * Available variables:
+ * - is_logged: Boolean indicating if user is authenticated.
+ * - user_first_name: User's first name.
+ * - dashboard_link: URL to user dashboard.
+ * - manage_dashboard_link: URL to manage dashboard.
+ * - edit_account_link: URL to edit account.
+ * - senator_microsite_link: URL to senator's microsite (if applicable).
+ */
+#}
+{% if not is_logged %}
+  <div class="c-mobile-login--list u-mobile-only">
+    <span class="c-header--btn c-header--btn-login icon-before__recruit-friends">
+      <a href="/user/login">login</a>
+    </span>
+  </div>
+{% else %}
+  {%
+    include '@nysenate_theme/nysenate-header-user-menu/nysenate-header-user-menu.twig' with {
+      dashboard_link: dashboard_link,
+      user_first_name: user_first_name,
+      manage_dashboard_link: manage_dashboard_link,
+      edit_account_link: edit_account_link,
+      mobile_mode: 1,
+      senator_microsite_link: senator_microsite_link,
+    } only
+  %}
+{% endif %}

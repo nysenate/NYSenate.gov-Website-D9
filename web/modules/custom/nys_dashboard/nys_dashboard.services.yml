@@ -1,0 +1,5 @@
+services:
+  nys_dashboard.user_menu_lazy_builder:
+    class: Drupal\nys_dashboard\UserMenuLazyBuilder
+    tags:
+      - { name: render.placeholder_renderer_lazy_builder }

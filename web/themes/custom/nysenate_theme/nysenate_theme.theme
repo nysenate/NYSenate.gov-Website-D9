@@ -456,6 +456,20 @@ function nysenate_theme_preprocess_block_content__microsite_hero(&$variables) {
     ];
   }
 
+  if (!empty($senator->field_threads_url->value)) {
+    $socials[] = [
+      'name' => 'threads',
+      'url' => $senator->field_threads_url->value,
+    ];
+  }
+
+  if (!empty($senator->field_bluesky_url->value)) {
+    $socials[] = [
+      'name' => 'bluesky',
+      'url' => $senator->field_bluesky_url->value,
+    ];
+  }
+
   $variables['user_id'] = \Drupal::currentUser()->id();
   $variables['senator_name'] = $senator_name;
   $variables['senator_party'] = '( ' . $party . ' )';

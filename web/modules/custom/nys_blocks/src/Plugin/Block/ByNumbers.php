@@ -18,7 +18,7 @@ class ByNumbers extends BlockBase {
    * {@inheritdoc}
    */
   public function getCacheMaxAge(): int {
-    return 1800;
+    return 86400;
   }
 
   /**

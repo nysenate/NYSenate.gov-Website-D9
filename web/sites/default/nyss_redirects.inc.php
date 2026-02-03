@@ -8,7 +8,8 @@
  * Project: NYSenate.gov Public Website
  * Author: Ken Zalewski
  * Date: 2017-12-30
- * Revised: 2018-02-09 - added URL redirects for committees
+ * Revised: 2018-02-09 - added URL redirects for
+ * Revised: 2026-01-23 - removed deprecated SSL detection logic
  *
  *
  * There are three components of the URL to consider:
@@ -55,7 +56,7 @@ switch ($site_env) {
 }
 
 // If the request scheme is not using SSL, flag the request for redirection.
-if (!isset($_SERVER['HTTP_X_SSL']) || $_SERVER['HTTP_X_SSL'] != 'ON') {
+if (($_SERVER['REQUEST_SCHEME'] ?? '') == 'http') {
   $must_redirect = true;
 }
 

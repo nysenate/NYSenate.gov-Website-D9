@@ -69,14 +69,14 @@ class Statute {
   public function fullTitle(): array {
     $detail = $this->detail->result();
     $parents = array_map(
-          function ($v) {
-              return $v->docType . ' ' . $v->docLevelId;
-          },
-          $this->parents()
-      );
+      function ($v) {
+        return $v->docType . ' ' . $v->docLevelId;
+      },
+      $this->parents()
+    );
     $location = $parents
-        ? $detail->lawName . ' (' . $detail->lawId . ') ' . implode(', ', $parents)
-        : '';
+      ? $detail->lawName . ' (' . $detail->lawId . ') ' . implode(', ', $parents)
+      : '';
     return [
       $detail->docType . ' ' . $detail->docLevelId,
       $detail->title,
@@ -95,13 +95,22 @@ class Statute {
   }
 
   /**
-   * Gets a sorted list of history markers for the most recent call.
+   * Gets a list of all historical publish dates available in the volume.
+   *
+   * Note that this list is for the ENTIRE volume, not just this location.
    *
    * @return array
-   *   An array of available history markers.
+   *   An array of available history markers for the volume.
    */
-  public function publishDates(): array {
-    return $this->tree->publishDates();
+  public function getAllPublishDates(): array {
+    return $this->tree->getVolumePublishDates();
+  }
+
+  /**
+   * Gets a sorted array of history markers for the current location.
+   */
+  public function getPublishDates(): array {
+    return $this->tree->getPublishDates();
   }
 
   /**
@@ -127,6 +136,20 @@ class Statute {
    */
   public function text(bool $raw = FALSE): string {
     return $this->detail->text($raw);
+  }
+
+  /**
+   * Gets the publish date of the most recent revision of this location (Y-m-d).
+   */
+  public function getLatestActiveDate(): string {
+    return $this->detail->getLatestActiveDate();
+  }
+
+  /**
+   * Gets the publish date of the loaded revision (Y-m-d), or an empty string.
+   */
+  public function getActiveDate(): string {
+    return $this->detail->getActiveDate();
   }
 
 }

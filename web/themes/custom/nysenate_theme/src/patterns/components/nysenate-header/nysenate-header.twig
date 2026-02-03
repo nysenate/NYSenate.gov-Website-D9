@@ -80,6 +80,14 @@
         <div class="c-nav--wrap" id="main-site-menu">
           <div class="c-nav l-row l-row--nav">
             <nav aria-label="main">
+              
+              <div class="u-mobile-only">
+                <div>
+                  {{ form }}
+                  <a class="c-site-search--link icon-after__right u-tablet-plus" href="{{ search.link.href }}">{{ search.link.text }}</a>
+                </div>
+              </div>
+
               {% block menu %}
                 {%
                   include '@nysenate_theme/main-menu/main-menu.twig' with
@@ -90,12 +98,6 @@
                 %}
               {% endblock %}
               {# {{ drupal_menu('main') }}#}
-              <div class="u-mobile-only">
-                <div>
-                  {{ form }}
-                  <a class="c-site-search--link icon-after__right u-tablet-plus" href="{{ search.link.href }}">{{ search.link.text }}</a>
-                </div>
-              </div>
               <button class="js-search--toggle u-tablet-plus c-site-search--btn GoogleAnalyticsET-processed icon-replace__search">open and focus search</button>
               {% if socials %}
                 <ul class="c-nav--social u-mobile-only">
@@ -124,6 +126,7 @@
                 } only
                 %}
               {% endif %}
+              <button id="" class="js-mobile-nav--btn c-block--btn c-nav--toggle--close icon-replace button--menu" aria-controls="main-site-menu" aria-expanded="false" aria-label="Site Menu"></button>
             </nav>
           </div>
         </div>

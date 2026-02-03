@@ -39,19 +39,23 @@
         {% for key, tab in content.field_tab_names %}
           {% if key matches '/^\\d+$/' %}
             {% set safe_name = tab['#context']['value']|lower|preg_replace('/[^-_0-9a-z]/', '-') %}
-            {% set full_name = "radio-tab--#{safe_name}" %}
+            {% set full_name = "tab--#{safe_name}" %}
             {% set is_first = key == "0" %}
-            <div class="c-tab{{ is_first ? ' active' : '' }}" role="tab">
-              <input class="form-radio" type="radio" name="{{ safe_name }}"
-                     value="#panel{{ key + 1 }}" id="{{ full_name }}"
-                  {{ is_first ? ' checked="checked"' : '' }}>
-              <label class="c-tab-link"
-                     for="{{ full_name }}">{{ tab['#context']['value'] }}</label>
-            </div>
+              <button class="c-tab{{ is_first ? ' active' : '' }}" 
+                type="tab" 
+                name="{{ safe_name }}"
+                value="#panel{{ key + 1 }}" id="{{ full_name }}"
+                aria-haspopup="true"
+                aria-selected="true"
+                aria-expanded="true"
+                aria-controls="{{ item.id }}">
+                {{ tab['#context']['value'] }}
+              </button>
           {% endif %}
         {% endfor %}
       </div>
-      <div class="tabs-content" aria-live="polite">
+      <div class="tabs-content">
+        <div class="aria-announcement visually-hidden" aria-atomic="true" aria-live="polite" tabindex="0"> </div>
         {% for key in content.field_tab_names|keys %}
           {% if key matches '/^\\d+$/' and content.field_block_views[key] %}
             <div

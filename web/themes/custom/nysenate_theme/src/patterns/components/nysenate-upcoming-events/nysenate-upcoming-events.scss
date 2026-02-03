@@ -273,7 +273,7 @@
           }
 
           &:last-child {
-            padding-bottom: 0;
+            padding-bottom: 25px;
           }
 
           > .view-grouping-header {
@@ -327,7 +327,14 @@
                 }
 
                 // individual event
-                > div {
+                > ul {
+                  margin: 0;
+                  padding: 0;
+                  list-style: none;
+                }
+
+                > div,
+                li {
                   clear: left;
                   border-top: 1px solid #d2d2d2;
                   padding: 12px 0;

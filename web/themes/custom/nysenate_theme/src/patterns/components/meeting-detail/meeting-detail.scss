@@ -38,9 +38,12 @@
   .vote-meta {
     .meta-row {
       position: relative;
-      font: 10px/16px $font-sans;
+      font: 14px/18px $font-sans;
       color: $grey08;
       text-transform: uppercase;
+      display: flex;
+      gap: 10px;
+      margin-block-end: 6px;
 
       div {
         display: inline-block;
@@ -56,12 +59,12 @@
 
         &.meta-count {
           font-family: $font-sans-bold;
+          min-width: 20px;
         }
 
         &.meta-label {
           position: relative;
           left: auto;
-          margin-left: 10px;
         }
       }
 
@@ -140,12 +143,12 @@
       color: #000;
       text-transform: uppercase;
       font-family: $font-sans;
-      font-size: 10px;
+      font-size: 12px;
     }
 
     .nys-senator--name {
       color: $grey03;
-      font-size: 14px;
+      font-size: 18px;
 
       a {
         color: $grey03 !important;
@@ -159,7 +162,7 @@
     .nys-senator--party {
       color: $grey08;
       text-transform: uppercase;
-      font-size: 10px;
+      font-size: 12px;
     }
   }
 

@@ -79,8 +79,7 @@
 }
 
 .nys-openleg-result-item-container {
-  padding: 5px 0;
-  border-bottom: 1px solid #a0a0a0;
+  padding: 12px 0;
 }
 
 .nys-openleg-result-item-container:last-child {
@@ -88,24 +87,28 @@
 }
 
 .nys-openleg-result-item-link {
-  display: block;
+  display: flex;
+  justify-content: space-between;
   font-family: "Adelle Bold", serif;
   font-size: 26px;
   line-height: 1em;
   letter-spacing: 0.05em;
-  padding: 20px 0;
-  color: #444 !important;
+  padding: 7px 0;
+  color: #444;
+  border-bottom: 2px solid #0078a0;
+  color: #0078a0;
 }
 
 .nys-openleg-result-item-link:hover {
-  color: #0078a0 !important;
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
 }
 
 .nys-openleg-result-item-name {
   display: inline-block;
-  width: 33%;
   font-weight: bold;
   vertical-align: middle;
+  color: #0078a0;
 }
 
 .nys-openleg-result-item-description {
@@ -114,6 +117,7 @@
   font-size: 20px;
   font-family: "Adelle Light", serif;
   vertical-align: middle;
+  color: #0078a0;
 }
 
 .nys-openleg-result-text {
@@ -163,9 +167,7 @@
 }
 
 .nys-openleg-result-breadcrumb-link:hover,
-.search-title:hover,
-.nys-openleg-result-item-name:hover,
-.nys-openleg-result-item-description:hover {
+.search-title:hover {
   text-decoration: underline;
 }
 
@@ -227,6 +229,7 @@
   width: 60%;
   vertical-align: top;
   padding-top: 1em;
+  padding-bottom: 1em;
   border-right: 1px solid #aaaaaa;
 }
 
@@ -262,12 +265,7 @@
 .nys-openleg-history-published {
   text-transform: uppercase;
   font-weight: bold;
-}
-
-.nys-openleg-history-note {
-  clear: both;
-  font-size: 12px;
-  padding: 1.5em 0 1em;
+  margin-bottom: 18px;
 }
 
 /**

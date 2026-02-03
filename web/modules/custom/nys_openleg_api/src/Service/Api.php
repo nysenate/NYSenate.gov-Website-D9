@@ -156,16 +156,19 @@ class Api {
     $this->logger->info('Requesting statute, book: "@book", location: "@location"', [
       '@book' => $book,
       '@location' => $location,
+      '@param' => $param,
     ]);
+
+    // Fetch the tree.
     /** @var \Drupal\nys_openleg_api\Plugin\OpenlegApi\Response\StatuteTree $tree */
     $tree = $this->get('statute', $book, $param + ['location' => $location]);
 
-    // Enforce use of the returned location, if available.
-    if (!$location && $tree->success()) {
+    // If location is empty, there will be no detail.
+    if ($tree->success() && !$location) {
       $location = $tree->location();
     }
 
-    // If location is empty, there will be no detail.
+    // Fetch the detail.
     $detail = $this->get('statute', $book . '/' . $location, $param);
     if (!($detail instanceof StatuteDetail)) {
       $detail = NULL;

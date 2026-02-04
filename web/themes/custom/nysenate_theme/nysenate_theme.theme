@@ -4598,63 +4598,111 @@ function nysenate_theme_views_pre_render(ViewExecutable $view) {
 
   if ($view->id() == 'upcoming_legislation' && $view->current_display != 'a_s_replace_record') {
     $results = $view->result;
-    $unique_node_ids = [];
+
+    // First pass: collect all assembly bills that need same-as lookups.
+    $assembly_bills = [];
     foreach ($results as $key => $item) {
       $node = $item->_entity;
-      $a_s_replace_view = NULL;
       /* @phpstan-ignore-next-line */
       $view->result[$key]->overridden = NULL;
 
       if (isset($node->field_ol_chamber[0]) && $node->field_ol_chamber[0]->value == 'assembly') {
-        // Assembly bills should show their Senate same-as's.
         /* @phpstan-ignore-next-line */
-        $same_as_info = json_decode($item->node__field_ol_same_as_field_ol_same_as_value)[0];
-
-        // Query DB for correct bill to display.
-        $query = \Drupal::database()->select('node__field_ol_print_no', 'pn');
-        $query->addField('pn', 'entity_id');
-        $query->leftJoin('node__field_ol_session', 's', 'pn.entity_id = s.entity_id');
-        $query->condition('pn.field_ol_print_no_value', ($same_as_info->printNo ?? ''));
-        $query->condition('s.field_ol_session_value', ($same_as_info->session ?? ''));
-        $sa_bill_nid = $query->execute()->fetchField();
-
-        // Load replacement result record.
-        $a_s_replace_view = NULL;
-        $a_s_replace_view = Views::getView('upcoming_legislation');
-        $a_s_replace_view->setArguments([$sa_bill_nid]);
-        $a_s_replace_view->setDisplay('a_s_replace_record');
-        $a_s_replace_view->preExecute();
-        $a_s_replace_view->execute();
-
-        $node = $a_s_replace_view->result[0]->_entity;
-
-        /* @phpstan-ignore-next-line */
-        $assembly_status = $item->node__field_ol_last_status_field_ol_last_status_value;
-        /* @phpstan-ignore-next-line */
-        $assembly_status_date = $item->node__field_ol_last_status_date_field_ol_last_status_date_va;
-
-        $view->result[$key] = $a_s_replace_view->result[0];
-        $view->result[$key]->index = $item->index;
-        /* @phpstan-ignore-next-line */
-        $view->result[$key]->node_field_data_title = $node->title->value ?? NULL;
-        /* @phpstan-ignore-next-line */
-        $view->result[$key]->node__field_issues_field_issues_target_id = $node->field_issues[0]->target_id ?? NULL;
-        /* @phpstan-ignore-next-line */
-        $view->result[$key]->node__field_ol_name_field_ol_name_value = $node->field_ol_name[0]->value ?? NULL;
-        /* @phpstan-ignore-next-line */
-        $view->result[$key]->node__field_ol_name_field_ol_name_value = $node->field_ol_name[0]->value ?? NULL;
-        /* @phpstan-ignore-next-line */
-        $view->result[$key]->node__field_ol_sponsor_field_ol_sponsor_target_id = $node->field_ol_sponsor[0]->target_id ?? NULL;
-        /* @phpstan-ignore-next-line */
-        $view->result[$key]->node__field_ol_sponsor_name_field_ol_sponsor_name_value = $node->field_ol_sponsor_name[0]->value ?? NULL;
-        /* @phpstan-ignore-next-line */
-        $view->result[$key]->node__field_ol_last_status_field_ol_last_status_value = $assembly_status;
-        /* @phpstan-ignore-next-line */
-        $view->result[$key]->node__field_ol_last_status_date_field_ol_last_status_date_va = $assembly_status_date;
-
-        /* @phpstan-ignore-next-line */
-        $view->result[$key]->overridden = $item->nid;
+        $same_as_info = json_decode($item->node__field_ol_same_as_field_ol_same_as_value)[0] ?? NULL;
+        if ($same_as_info && !empty($same_as_info->printNo) && !empty($same_as_info->session)) {
+          $assembly_bills[$key] = [
+            'printNo' => $same_as_info->printNo,
+            'session' => $same_as_info->session,
+            'item' => $item,
+          ];
+        }
       }
+    }
+
+    // Batch query: lookup all same-as bill nids in a single query.
+    $same_as_nids = [];
+    if (!empty($assembly_bills)) {
+      $db = \Drupal::database();
+      $or_conditions = $db->condition('OR');
+      foreach ($assembly_bills as $key => $bill_info) {
+        $and_condition = $db->condition('AND')
+          ->condition('pn.field_ol_print_no_value', $bill_info['printNo'])
+          ->condition('s.field_ol_session_value', $bill_info['session']);
+        $or_conditions->condition($and_condition);
+      }
+
+      $query = $db->select('node__field_ol_print_no', 'pn');
+      $query->addField('pn', 'entity_id');
+      $query->addField('pn', 'field_ol_print_no_value', 'print_no');
+      $query->addField('s', 'field_ol_session_value', 'session');
+      $query->leftJoin('node__field_ol_session', 's', 'pn.entity_id = s.entity_id');
+      $query->condition($or_conditions);
+      $batch_results = $query->execute()->fetchAll();
+
+      // Map results back by printNo+session key.
+      foreach ($batch_results as $row) {
+        $lookup_key = $row->print_no . '|' . $row->session;
+        $same_as_nids[$lookup_key] = $row->entity_id;
+      }
+    }
+
+    // Collect all nids we need to load via the replacement view.
+    $nids_to_load = [];
+    foreach ($assembly_bills as $key => $bill_info) {
+      $lookup_key = $bill_info['printNo'] . '|' . $bill_info['session'];
+      if (isset($same_as_nids[$lookup_key])) {
+        $nids_to_load[$key] = $same_as_nids[$lookup_key];
+      }
+    }
+
+    // Single view execution with multiple nids (if any).
+    $replacement_nodes = [];
+    if (!empty($nids_to_load)) {
+      // Load all replacement nodes via entity storage (faster than view per-item).
+      $node_storage = \Drupal::entityTypeManager()->getStorage('node');
+      $replacement_nodes = $node_storage->loadMultiple($nids_to_load);
+    }
+
+    // Second pass: apply replacements.
+    foreach ($assembly_bills as $key => $bill_info) {
+      $item = $bill_info['item'];
+      $lookup_key = $bill_info['printNo'] . '|' . $bill_info['session'];
+
+      if (!isset($same_as_nids[$lookup_key])) {
+        continue;
+      }
+
+      $sa_bill_nid = $same_as_nids[$lookup_key];
+      if (!isset($replacement_nodes[$sa_bill_nid])) {
+        continue;
+      }
+
+      $node = $replacement_nodes[$sa_bill_nid];
+
+      /* @phpstan-ignore-next-line */
+      $assembly_status = $item->node__field_ol_last_status_field_ol_last_status_value;
+      /* @phpstan-ignore-next-line */
+      $assembly_status_date = $item->node__field_ol_last_status_date_field_ol_last_status_date_va;
+
+      // Update the result row with replacement node data.
+      /* @phpstan-ignore-next-line */
+      $view->result[$key]->node_field_data_title = $node->title->value ?? NULL;
+      /* @phpstan-ignore-next-line */
+      $view->result[$key]->node__field_issues_field_issues_target_id = $node->field_issues[0]->target_id ?? NULL;
+      /* @phpstan-ignore-next-line */
+      $view->result[$key]->node__field_ol_name_field_ol_name_value = $node->field_ol_name[0]->value ?? NULL;
+      /* @phpstan-ignore-next-line */
+      $view->result[$key]->node__field_ol_sponsor_field_ol_sponsor_target_id = $node->field_ol_sponsor[0]->target_id ?? NULL;
+      /* @phpstan-ignore-next-line */
+      $view->result[$key]->node__field_ol_sponsor_name_field_ol_sponsor_name_value = $node->field_ol_sponsor_name[0]->value ?? NULL;
+      /* @phpstan-ignore-next-line */
+      $view->result[$key]->node__field_ol_last_status_field_ol_last_status_value = $assembly_status;
+      /* @phpstan-ignore-next-line */
+      $view->result[$key]->node__field_ol_last_status_date_field_ol_last_status_date_va = $assembly_status_date;
+      /* @phpstan-ignore-next-line */
+      $view->result[$key]->overridden = $item->nid;
+      /* @phpstan-ignore-next-line */
+      $view->result[$key]->_entity = $node;
     }
   }
 

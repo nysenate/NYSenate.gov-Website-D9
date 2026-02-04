@@ -152,3 +152,41 @@ function nys_bills_update_9003() {
   $nodes_to_del = $node_storage->loadMultiple($nids_to_del_arr);
   $node_storage->delete($nodes_to_del);
  }
+
+/**
+ * Add index on field_ol_last_status for improved view query performance.
+ *
+ * @see https://atendesign.atlassian.net/browse/NYS-365
+ */
+function nys_bills_update_9004() {
+  $database = \Drupal::database();
+  $schema = $database->schema();
+  $table = 'node__field_ol_last_status';
+  $index_name = 'field_ol_last_status_value_idx';
+
+  // Check if the index already exists.
+  if (!$schema->indexExists($table, $index_name)) {
+    $schema->addIndex(
+      $table,
+      $index_name,
+      ['field_ol_last_status_value'],
+      [
+        'fields' => [
+          'field_ol_last_status_value' => [
+            'type' => 'varchar',
+            'length' => 255,
+          ],
+        ],
+      ]
+    );
+    return t('Added index @index on @table.', [
+      '@index' => $index_name,
+      '@table' => $table,
+    ]);
+  }
+
+  return t('Index @index already exists on @table.', [
+    '@index' => $index_name,
+    '@table' => $table,
+  ]);
+}

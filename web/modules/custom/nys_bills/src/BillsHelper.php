@@ -3,6 +3,7 @@
 namespace Drupal\nys_bills;
 
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityInterface;
@@ -76,6 +77,13 @@ class BillsHelper {
   protected FlagServiceInterface $flagService;
 
   /**
+   * The config factory service.
+   *
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  protected $configFactory;
+
+  /**
    * Constructor class for Bills Helper.
    *
    * @param \Drupal\Core\Database\Connection $connection
@@ -88,13 +96,16 @@ class BillsHelper {
    *   The senators helper.
    * @param \Drupal\flag\FlagServiceInterface $flagService
    *   The Flag module's Flag service.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The config factory service.
    */
-  public function __construct(Connection $connection, EntityTypeManagerInterface $entity_type_manager, CacheBackendInterface $cache_backend, SenatorsHelper $senators_helper, FlagServiceInterface $flagService) {
+  public function __construct(Connection $connection, EntityTypeManagerInterface $entity_type_manager, CacheBackendInterface $cache_backend, SenatorsHelper $senators_helper, FlagServiceInterface $flagService, ConfigFactoryInterface $config_factory) {
     $this->connection = $connection;
     $this->entityTypeManager = $entity_type_manager;
     $this->cache = $cache_backend;
     $this->senatorsHelper = $senators_helper;
     $this->flagService = $flagService;
+    $this->configFactory = $config_factory;
 
     $this->log = $this->getLogger('nys_bills');
   }
@@ -374,7 +385,6 @@ class BillsHelper {
   public function resolveAmendmentSponsors($amendment, $chamber) {
     $ret = [];
     $cycle = ['co', 'multi'];
-    $senators = $this->senatorsHelper->getNameMapping();
     foreach ($cycle as $type) {
       $ret[$type] = [];
       $propname = "field_ol_{$type}_sponsor_names";
@@ -527,7 +537,7 @@ class BillsHelper {
         }
       }
       catch (\Throwable $e) {
-        \Drupal::logger('nys_bills')
+        $this->log
           ->error('BillsHelper was unable to create or update an alias', ['message' => $e->getMessage()]);
       }
     }
@@ -657,7 +667,7 @@ class BillsHelper {
     $prev_vers_result = $query->execute();
 
     // Cache data for later use.
-    $cache_ttl = \Drupal::configFactory()
+    $cache_ttl = $this->configFactory
       ->get('nys_config.settings')
       ->get('nys_access_permissions_prev_query_ttl');
     if (empty($cache_ttl)) {
@@ -845,10 +855,19 @@ class BillsHelper {
    *   data points relevant to the vote instance.
    */
   public function compileVoteInfo(NodeInterface $node, bool $last_floor_only = FALSE): array {
+    // Static cache to avoid redundant processing within the same request.
+    static $vote_info_cache = [];
+
+    $cache_key = $node->id() . ':' . ($last_floor_only ? '1' : '0');
+    if (isset($vote_info_cache[$cache_key])) {
+      return $vote_info_cache[$cache_key];
+    }
+
     $ret = [];
 
     // If not a bill, return empty.
     if (!$this->isBill($node)) {
+      $vote_info_cache[$cache_key] = $ret;
       return $ret;
     }
 
@@ -957,12 +976,16 @@ class BillsHelper {
     if ($last_floor_only) {
       foreach ($ret as $key => $val) {
         if (str_contains($key, '_FLOOR')) {
-          return [$key => $val];
+          $result = [$key => $val];
+          $vote_info_cache[$cache_key] = $result;
+          return $result;
         }
       }
+      $vote_info_cache[$cache_key] = [];
       return [];
     }
 
+    $vote_info_cache[$cache_key] = $ret;
     return $ret;
   }
 

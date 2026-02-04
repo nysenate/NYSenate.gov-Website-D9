@@ -7,6 +7,7 @@ services:
       - '@cache.default'
       - '@nys_senators.senators_helper'
       - '@flag'
+      - '@config.factory'
   nys_bills.twig.filters:
     class: Drupal\nys_bills\CustomTwig
     tags:

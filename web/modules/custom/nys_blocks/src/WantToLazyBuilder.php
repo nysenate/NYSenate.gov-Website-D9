@@ -2,15 +2,33 @@
 
 namespace Drupal\nys_blocks;
 
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Url;
+use Drupal\nys_senators\Service\Microsites;
 use Drupal\taxonomy\TermInterface;
-use Drupal\user\Entity\User;
 
 /**
  * Lazy builder for user-specific content in the "I Want To" block.
  */
 class WantToLazyBuilder implements TrustedCallbackInterface {
+
+  /**
+   * Constructs a new WantToLazyBuilder.
+   *
+   * @param \Drupal\Core\Session\AccountProxyInterface $currentUser
+   *   The current user.
+   * @param \Drupal\nys_senators\Service\Microsites $microsites
+   *   The microsites service.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
+   *   The entity type manager.
+   */
+  public function __construct(
+    protected AccountProxyInterface $currentUser,
+    protected Microsites $microsites,
+    protected EntityTypeManagerInterface $entityTypeManager,
+  ) {}
 
   /**
    * {@inheritdoc}
@@ -25,23 +43,23 @@ class WantToLazyBuilder implements TrustedCallbackInterface {
    * @return array
    *   A render array for the senator section.
    */
-  public static function renderSenatorSection(): array {
+  public function renderSenatorSection(): array {
     $headshot = NULL;
     $senator_link = NULL;
-    $logged_in = \Drupal::currentUser()->isAuthenticated();
+    $logged_in = $this->currentUser->isAuthenticated();
 
     if ($logged_in) {
-      /** @var \Drupal\user\Entity\User $user */
-      $user = User::load(\Drupal::currentUser()->id());
+      /** @var \Drupal\user\UserInterface|null $user */
+      $user = $this->entityTypeManager->getStorage('user')->load($this->currentUser->id());
       if ($user) {
-        $senator = $user->get('field_district')->entity->field_senator->entity ?? NULL;
+        $senator = $user->get('field_district')->entity?->field_senator->entity ?? NULL;
         $senator_link = ($senator instanceof TermInterface)
-          ? \Drupal::service('nys_senators.microsites')->getMicrosite($senator)
+          ? $this->microsites->getMicrosite($senator)
           : NULL;
-        $image = $user->get('field_district')->entity->field_senator
-          ->entity->field_member_headshot->entity ?? NULL;
+        $image = $user->get('field_district')->entity?->field_senator
+          ->entity?->field_member_headshot->entity ?? NULL;
         $headshot = $image
-          ? \Drupal::entityTypeManager()
+          ? $this->entityTypeManager
             ->getViewBuilder('media')
             ->view($image, 'thumbnail')
           : NULL;

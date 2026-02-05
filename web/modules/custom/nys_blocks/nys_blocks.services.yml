@@ -3,8 +3,3 @@ services:
     class: Drupal\nys_blocks\WantToLazyBuilder
     tags:
       - { name: render.placeholder_renderer_lazy_builder }
-
-  nys_blocks.issues_listing_lazy_builder:
-    class: Drupal\nys_blocks\IssuesListingLazyBuilder
-    tags:
-      - { name: render.placeholder_renderer_lazy_builder }

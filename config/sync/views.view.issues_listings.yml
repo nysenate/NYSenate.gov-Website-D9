@@ -1897,6 +1897,11 @@ display:
       access:
         type: none
         options: {  }
+      cache:
+        type: time
+        options:
+          results_lifespan: 86400
+          output_lifespan: 86400
       sorts:
         count:
           id: count
@@ -1996,6 +2001,7 @@ display:
           query_tags: {  }
       defaults:
         access: false
+        cache: false
         query: false
         pager: false
         group_by: false

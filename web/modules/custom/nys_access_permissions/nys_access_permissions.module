@@ -29,7 +29,7 @@ function nys_access_permissions_node_access(NodeInterface $node, $operation, Acc
     $edit_own = 'edit own ' . $node->bundle() . ' content';
     // If user has access to edit own content.
     if ($node->uid->target_id == $account->id() && $account->hasPermission($edit_own)) {
-      return AccessResult::neutral()->cachePerUser()->addCacheableDependency($node);
+      return AccessResult::neutral();
     }
 
     // Check if users have same role and permissions to update
@@ -42,7 +42,7 @@ function nys_access_permissions_node_access(NodeInterface $node, $operation, Acc
         $edit_same_roles = array_filter($edit_same_roles, fn(RoleInterface $edit_same_roles) => $edit_same_roles->hasPermission('edit same role'));
         foreach ($author->getRoles() as $role) {
           if (in_array($role, $account->getRoles()) && in_array($role, array_keys($edit_same_roles))) {
-            return AccessResult::allowed()->cachePerUser()->addCacheableDependency($node);
+            return AccessResult::allowed();
           }
         }
       }
@@ -53,11 +53,10 @@ function nys_access_permissions_node_access(NodeInterface $node, $operation, Acc
     $current_path = \Drupal::service('path.current')->getPath();
     $args = explode('/', $current_path);
     if (in_array('frontpage_editor', $account->getRoles()) && $operation == 'update' && !empty($args[0]) && $args[0] == 'batch') {
-      return AccessResult::allowed()->cachePerUser();
+      return AccessResult::allowed();
     }
   }
-  // Return neutral with node dependency to allow proper cache invalidation.
-  return AccessResult::neutral()->addCacheableDependency($node);
+  return AccessResult::neutral();
 }
 
 /**

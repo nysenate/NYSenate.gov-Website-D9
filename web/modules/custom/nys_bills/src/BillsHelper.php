@@ -855,19 +855,10 @@ class BillsHelper {
    *   data points relevant to the vote instance.
    */
   public function compileVoteInfo(NodeInterface $node, bool $last_floor_only = FALSE): array {
-    // Static cache to avoid redundant processing within the same request.
-    static $vote_info_cache = [];
-
-    $cache_key = $node->id() . ':' . ($last_floor_only ? '1' : '0');
-    if (isset($vote_info_cache[$cache_key])) {
-      return $vote_info_cache[$cache_key];
-    }
-
     $ret = [];
 
     // If not a bill, return empty.
     if (!$this->isBill($node)) {
-      $vote_info_cache[$cache_key] = $ret;
       return $ret;
     }
 
@@ -976,16 +967,12 @@ class BillsHelper {
     if ($last_floor_only) {
       foreach ($ret as $key => $val) {
         if (str_contains($key, '_FLOOR')) {
-          $result = [$key => $val];
-          $vote_info_cache[$cache_key] = $result;
-          return $result;
+          return [$key => $val];
         }
       }
-      $vote_info_cache[$cache_key] = [];
       return [];
     }
 
-    $vote_info_cache[$cache_key] = $ret;
     return $ret;
   }
 

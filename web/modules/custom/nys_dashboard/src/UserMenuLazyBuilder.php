@@ -2,9 +2,11 @@
 
 namespace Drupal\nys_dashboard;
 
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\Core\Session\AccountProxyInterface;
+use Drupal\nys_senators\Service\Microsites;
 use Drupal\taxonomy\TermInterface;
-use Drupal\user\Entity\User;
 
 /**
  * Lazy builder for user-specific header menu content.
@@ -14,6 +16,22 @@ use Drupal\user\Entity\User;
  * user's name and personalized links.
  */
 class UserMenuLazyBuilder implements TrustedCallbackInterface {
+
+  /**
+   * Constructs a new UserMenuLazyBuilder.
+   *
+   * @param \Drupal\Core\Session\AccountProxyInterface $currentUser
+   *   The current user.
+   * @param \Drupal\nys_senators\Service\Microsites $microsites
+   *   The microsites service.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
+   *   The entity type manager.
+   */
+  public function __construct(
+    protected AccountProxyInterface $currentUser,
+    protected Microsites $microsites,
+    protected EntityTypeManagerInterface $entityTypeManager,
+  ) {}
 
   /**
    * {@inheritdoc}
@@ -31,9 +49,8 @@ class UserMenuLazyBuilder implements TrustedCallbackInterface {
    * @return array
    *   A render array for the user menu section.
    */
-  public static function renderUserMenu(): array {
-    $current_user = \Drupal::currentUser();
-    $is_logged = $current_user->isAuthenticated();
+  public function renderUserMenu(): array {
+    $is_logged = $this->currentUser->isAuthenticated();
 
     // Default values for anonymous users.
     $user_first_name = 'Guest';
@@ -45,21 +62,21 @@ class UserMenuLazyBuilder implements TrustedCallbackInterface {
     $senator_image = NULL;
 
     if ($is_logged) {
-      /** @var \Drupal\user\Entity\User $user */
-      $user = User::load($current_user->id());
+      /** @var \Drupal\user\UserInterface|null $user */
+      $user = $this->entityTypeManager->getStorage('user')->load($this->currentUser->id());
 
       if ($user) {
         // Get user's first name.
-        $user_first_name = $user->field_first_name?->value ?? 'Guest';
+        $user_first_name = $user->get('field_first_name')->value ?? 'Guest';
 
         // Get user's senator information.
-        $senator = $user->get('field_district')->entity->field_senator->entity ?? NULL;
-        $headshot = $senator->field_member_headshot->entity ?? NULL;
+        $senator = $user->get('field_district')->entity?->field_senator->entity ?? NULL;
+        $headshot = $senator?->field_member_headshot->entity ?? NULL;
 
         if (($senator instanceof TermInterface) && $headshot) {
           $has_senator = TRUE;
-          $senator_microsite_link = \Drupal::service('nys_senators.microsites')->getMicrosite($senator);
-          $senator_image = \Drupal::entityTypeManager()
+          $senator_microsite_link = $this->microsites->getMicrosite($senator);
+          $senator_image = $this->entityTypeManager
             ->getViewBuilder('media')
             ->view($headshot, 'thumbnail');
         }
@@ -94,9 +111,8 @@ class UserMenuLazyBuilder implements TrustedCallbackInterface {
    * @return array
    *   A render array for the mobile user menu section.
    */
-  public static function renderUserMenuMobile(): array {
-    $current_user = \Drupal::currentUser();
-    $is_logged = $current_user->isAuthenticated();
+  public function renderUserMenuMobile(): array {
+    $is_logged = $this->currentUser->isAuthenticated();
 
     // Default values for anonymous users.
     $user_first_name = 'Guest';
@@ -106,17 +122,17 @@ class UserMenuLazyBuilder implements TrustedCallbackInterface {
     $senator_microsite_link = NULL;
 
     if ($is_logged) {
-      /** @var \Drupal\user\Entity\User $user */
-      $user = User::load($current_user->id());
+      /** @var \Drupal\user\UserInterface|null $user */
+      $user = $this->entityTypeManager->getStorage('user')->load($this->currentUser->id());
 
       if ($user) {
         // Get user's first name.
-        $user_first_name = $user->field_first_name?->value ?? 'Guest';
+        $user_first_name = $user->get('field_first_name')->value ?? 'Guest';
 
         // Get user's senator microsite link.
-        $senator = $user->get('field_district')->entity->field_senator->entity ?? NULL;
+        $senator = $user->get('field_district')->entity?->field_senator->entity ?? NULL;
         if ($senator instanceof TermInterface) {
-          $senator_microsite_link = \Drupal::service('nys_senators.microsites')->getMicrosite($senator);
+          $senator_microsite_link = $this->microsites->getMicrosite($senator);
         }
       }
     }

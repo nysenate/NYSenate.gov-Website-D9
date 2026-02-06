@@ -43,6 +43,7 @@
       );
       this.jsSearchBox(isMicrositeLandingPage, micrositeMenuClone);
       this.mobileMenu();
+      this.handleResponsiveMenu();
 
       // Add keypress event to close mobile menu.
       document.addEventListener('keydown', (e) => {
@@ -220,6 +221,31 @@
           document.querySelector('button.js-mobile-nav--btn.button--menu').focus();
         });
       }
+    },
+
+    /**
+     * Implements responsive menu behavior for tablet and desktop.
+     *
+     * @returns void
+     */
+    handleResponsiveMenu: function () {
+      const mediaQuery = window.matchMedia('(min-width: 768px)');
+      const mobileMenuButton = document.querySelector('button.js-mobile-nav--btn.button--menu');
+
+      const handleBreakpointChange = (e) => {
+        if (e.matches) {
+          document.body.classList.remove('nav-open');
+          if (mobileMenuButton) {
+            mobileMenuButton.setAttribute('aria-expanded', 'false');
+          }
+        }
+      };
+
+      // Check initial state.
+      handleBreakpointChange(mediaQuery);
+
+      // Listen for breakpoint changes.
+      mediaQuery.addEventListener('change', handleBreakpointChange);
     },
 
     /**

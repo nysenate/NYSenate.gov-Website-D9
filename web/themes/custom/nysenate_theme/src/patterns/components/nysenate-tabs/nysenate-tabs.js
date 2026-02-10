@@ -41,13 +41,21 @@
         if (savedTabId) {
           const savedButton = $(savedTabId);
           if (savedButton.length > 0) {
+            const targetPanel = savedButton.val();
+            
+            // Validate targetPanel before proceeding
+            if (!targetPanel || targetPanel === '#') {
+              console.warn('Saved tab has invalid value attribute, clearing sessionStorage');
+              sessionStorage.removeItem('activeNewsTab');
+              return;
+            }
+            
             // Remove active from all tabs
             $('.l-tab-bar button.c-tab').removeClass('active').attr('aria-selected', 'false').attr('aria-expanded', 'false');
             $('.tabs-content .content').removeClass('active');
             
             // Set active on saved tab
             savedButton.addClass('active').attr('aria-selected', 'true').attr('aria-expanded', 'true');
-            const targetPanel = savedButton.val();
             $(targetPanel).addClass('active');
           }
         }
@@ -71,8 +79,11 @@
 
         tabButton.each(function () {
           // Set aria-controls to the panel ID (removing the # from the value)
-          const panelId = $(this).val().replace('#', '');
-          $(this).attr('aria-controls', panelId);
+          const buttonValue = $(this).val();
+          if (buttonValue && buttonValue !== '#') {
+            const panelId = buttonValue.replace('#', '');
+            $(this).attr('aria-controls', panelId);
+          }
           
           // Set proper aria-selected based on active class
           if ($(this).hasClass('active')) {
@@ -89,6 +100,12 @@
           const targetPanel = $(this).val(); // Get the target panel ID from value attribute
           const tabBar = $(this).closest('.l-tab-bar');
           const tabId = '#' + $(this).attr('id'); // Save the button ID
+
+          // Validate targetPanel before proceeding
+          if (!targetPanel || targetPanel === '#') {
+            console.warn('Tab button missing or invalid value attribute:', this);
+            return;
+          }
 
           // Save active tab to sessionStorage
           saveActiveTab(tabId);
@@ -160,11 +177,18 @@
           .closest('.c-bill--amendment-details')
           .parent()
           .find('.tabs-content');
+        const targetPanel = $(this).val();
+
+        // Validate targetPanel before proceeding
+        if (!targetPanel || targetPanel === '#') {
+          console.warn('Tab link missing or invalid value attribute:', this);
+          return;
+        }
 
         history.pushState({}, 'NY State Senate Bill ' + billVersion[1], newUrl);
 
         tabContent.find('.active').removeClass('active');
-        tabContent.find($(this).val()).addClass('active');
+        tabContent.find(targetPanel).addClass('active');
       }
 
       if (tab.hasClass('active') && !tabBar.hasClass('open')) {

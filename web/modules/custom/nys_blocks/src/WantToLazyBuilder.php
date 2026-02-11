@@ -76,7 +76,6 @@ class WantToLazyBuilder implements TrustedCallbackInterface {
       '#logged_in' => $logged_in,
       '#cache' => [
         'contexts' => ['user'],
-        'max-age' => 1800,
       ],
     ];
   }

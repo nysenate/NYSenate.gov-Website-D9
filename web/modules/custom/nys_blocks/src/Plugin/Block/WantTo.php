@@ -17,13 +17,6 @@ class WantTo extends BlockBase {
   /**
    * {@inheritdoc}
    */
-  public function getCacheMaxAge(): int {
-    return 1800;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function build(): array {
     // Use lazy builder for user-specific senator section.
     // This allows the rest of the page to be cached for anonymous users.
@@ -38,9 +31,6 @@ class WantTo extends BlockBase {
     return [
       '#theme' => 'nys_blocks_want_to',
       '#senator_section' => $senator_section,
-      '#cache' => [
-        'max-age' => 1800,
-      ],
     ];
   }
 

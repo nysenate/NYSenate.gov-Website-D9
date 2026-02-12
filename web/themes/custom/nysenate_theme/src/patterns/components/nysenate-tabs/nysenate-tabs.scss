@@ -5,6 +5,16 @@
 /   Tabs
 /
 /-------------------------------------------------------*/
+
+// Mobile only: Override flex layout when tabs are present
+// This allows tabs to stack vertically on mobile
+@include breakpoint($bp-under-sm) {
+  .view-filters form.l-tab-bar .form--inline,
+  .view-filters .l-tab-bar .form--inline {
+    display: block;
+  }
+}
+
 .c-tab-block--title {
   font-family: $font-serif-semibold;
   font-weight: $font-weight-normal;
@@ -21,6 +31,7 @@
   height: 45px;
   box-sizing: border-box;
   overflow: hidden;
+  padding-top: 10px;
   border: 1px solid #c0c0c0;
   margin-bottom: -1px;
 
@@ -36,22 +47,22 @@
     @extend .lgt-text;
   }
 
-  .c-tab {
-    display: flex;
+  // Mobile-first: Shared styles for both button and div.c-tab
+  .c-tab,
+  button.c-tab {
+    display: block; // Changed from flex to block for proper stacking
     position: relative;
     margin: 0;
     width: 100%;
     height: 45px;
     box-sizing: border-box;
     text-transform: uppercase;
-
     cursor: pointer;
-    width: 100%;
-    height: 100%;
-    width: 100%;
-    height: 100%;
-    padding: 0px 50px;
-    display: block;
+  }
+
+  // Button-based tabs (new accessible pattern)
+  button.c-tab {
+    padding: 0px 20px;
     @extend .lgt-text;
     font-family: $font-sans-bold;
     font-size: 14px;
@@ -59,6 +70,9 @@
     letter-spacing: 0.03em;
     background: $color-white;
     border: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 
     &:hover {
       text-decoration: underline;
@@ -67,12 +81,56 @@
     &.active {
       position: absolute;
       top: 0;
+      left: 0;
       z-index: 9;
     }
   }
 
+  // Input-based tabs (legacy pattern for views exposed forms)
+  .c-tab:not(button) {
+    .c-tab-link {
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+      padding: 0px 20px 0px 20px;
+      display: block;
+      @extend .lgt-text;
+      font-family: $font-sans-bold;
+      font-size: 14px;
+      line-height: 45px;
+      letter-spacing: 0.03em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    input[type="radio"] {
+      cursor: pointer;
+      opacity: 0;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+    }
+
+    &.active {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 9;
+
+      input[type="radio"] {
+        width: auto;
+      }
+    }
+  }
+
   &.open {
-    .c-tab.active {
+    .c-tab.active,
+    button.c-tab.active {
       position: relative;
       border: none;
     }
@@ -317,7 +375,9 @@
       display: none;
     }
 
-    .c-tab {
+    // Apply to both div.c-tab and button.c-tab
+    .c-tab,
+    button.c-tab {
       list-style: none;
       float: left;
       height: 50px;
@@ -327,10 +387,38 @@
       text-transform: uppercase;
       width: auto;
       cursor: pointer;
+      position: relative; // Override mobile absolute positioning
 
       .section-committees & {
         width: 33.5%;
       }
+    }
+
+    // Button-specific desktop styles
+    button.c-tab {
+      padding: 0 50px;
+      line-height: 50px;
+      text-align: center;
+      white-space: nowrap;
+      background: none;
+
+      &:hover {
+        background: none;
+        text-decoration: underline;
+      }
+
+      &.active {
+        position: relative; // Keep relative on desktop
+      }
+
+      &:first-child {
+        width: auto; // Override mobile 100%
+      }
+    }
+
+    // Input-based tab label styles
+    .c-tab:not(button) {
+      position: relative; // Override mobile absolute for active
 
       .c-tab-link {
         display: block;
@@ -346,12 +434,15 @@
       .c-tab-link:hover,
       a:hover {
         background: none;
+        text-decoration: underline;
+      }
+
+      &.active {
+        position: relative; // Keep relative on desktop
       }
 
       &:first-child {
-        button {
-          width: 100%;
-        }
+        width: auto; // Override mobile 100%
       }
     }
 
@@ -359,7 +450,8 @@
       border-left: none;
     }
 
-    .c-tab.active {
+    .c-tab.active,
+    button.c-tab.active {
       border: 1px solid #aaa;
       border-bottom: 0;
       position: relative;

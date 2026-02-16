@@ -66,6 +66,15 @@
     }
   }
 
+  // Remove link styling for bill node topics
+  &.c-block-press-release--bill .c-press-release--topic {
+    color: inherit;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
   .c-press-release {
 
     &--header {
@@ -320,6 +329,11 @@
           letter-spacing: 0.05em;
           color: $gen_blue_lgt;
         }
+      }
+
+      // Remove link styling for bill node topics in advanced search
+      &.c-block-press-release--bill .c-press-release--topic {
+        color: inherit;
       }
     }
   }

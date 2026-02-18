@@ -16,7 +16,6 @@ dependencies:
     - node
     - options
     - semanticviews
-    - user
 id: global_promo_banner
 label: 'Global Promo Banner'
 module: views
@@ -99,8 +98,9 @@ display:
         type: none
         options: {  }
       cache:
-        type: tag
-        options: {  }
+        type: custom_tag
+        options:
+          custom_tag: 'node_list:promotional_banner'
       empty: {  }
       sorts: {  }
       arguments: {  }
@@ -236,11 +236,16 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - 'user.node_grants:view'
-        - user.permissions
       tags:
         - 'config:entityqueue.entity_queue.global_promo_banner'
-        - entity_field_info
-        - views_data
+    cache:
+      type: custom_tag
+      options:
+        custom_tag: 'node_list:promotional_banner'
+    query:
+      type: views_query
+      options:
+        disable_sql_rewrite: true
   global_promo_banner:
     id: global_promo_banner
     display_title: 'Global Promo Banner'
@@ -256,11 +261,8 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - 'user.node_grants:view'
-        - user.permissions
       tags:
         - 'config:entityqueue.entity_queue.global_promo_banner'
-        - entity_field_info
-        - views_data
   senator_microsite_interior_footer:
     id: senator_microsite_interior_footer
     display_title: 'Senator Microsite Footer Blocks'
@@ -890,7 +892,6 @@ display:
         - 'languages:language_interface'
         - url
         - 'user.node_grants:view'
-        - user.permissions
       tags:
         - 'config:field.storage.node.field_call_to_action'
         - 'config:field.storage.node.field_image_main'

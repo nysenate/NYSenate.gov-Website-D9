@@ -993,8 +993,9 @@ display:
         options:
           perm: 'access content'
       cache:
-        type: tag
-        options: {  }
+        type: custom_tag
+        options:
+          custom_tag: "node_list:bill\nnode_list:session"
       empty: {  }
       sorts:
         field_ol_last_status_date_value:

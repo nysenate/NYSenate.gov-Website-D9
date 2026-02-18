@@ -22,7 +22,7 @@ dependencies:
     - datetime
     - entityqueue
     - node
-    - user
+    - views_custom_cache_tag
 id: homepage_news
 label: 'Homepage News'
 module: views
@@ -247,8 +247,12 @@ display:
         type: none
         options: {  }
       cache:
-        type: tag
-        options: {  }
+        type: custom_tag
+        options:
+          custom_tag: |-
+            node_list:article
+            node_list:in_the_news
+            node_list:video
       empty: {  }
       sorts: {  }
       arguments: {  }
@@ -370,10 +374,20 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - 'user.node_grants:view'
-        - user.permissions
       tags:
         - 'config:field.storage.node.field_image_main'
         - 'config:field.storage.node.field_issues'
+    cache:
+      type: custom_tag
+      options:
+        custom_tag: |-
+          node_list:article
+          node_list:in_the_news
+          node_list:video
+    query:
+      type: views_query
+      options:
+        disable_sql_rewrite: true
   entity_reference_1:
     id: entity_reference_1
     display_title: 'Happening Now EF'
@@ -776,7 +790,6 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - 'user.node_grants:view'
-        - user.permissions
       tags:
         - 'config:field.storage.node.field_image_main'
         - 'config:field.storage.node.field_issues'
@@ -853,11 +866,17 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - 'user.node_grants:view'
-        - user.permissions
       tags:
         - 'config:entityqueue.entity_queue.homepage_featured_story'
         - 'config:field.storage.node.field_image_main'
         - 'config:field.storage.node.field_issues'
+    cache:
+      type: custom_tag
+      options:
+        custom_tag: |-
+          node_list:article
+          node_list:in_the_news
+          node_list:video
   hp_live:
     id: hp_live
     display_title: 'Happening Now'
@@ -1108,6 +1127,12 @@ display:
           text: view
           output_url_as_text: true
           absolute: false
+      cache:
+        type: custom_tag
+        options:
+          custom_tag: |-
+            node_list:event
+            node_list:public_hearing
       sorts:
         queue:
           id: queue
@@ -1233,6 +1258,7 @@ display:
         groups:
           1: AND
       defaults:
+        cache: false
         title: false
         css_class: false
         relationships: false
@@ -1275,11 +1301,16 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - 'user.node_grants:view'
-        - user.permissions
       tags:
         - 'config:entityqueue.entity_queue.happening_now'
         - 'config:field.storage.node.field_image_main'
         - 'config:field.storage.node.field_issues'
+    cache:
+      type: custom_tag
+      options:
+        custom_tag: |-
+          node_list:event
+          node_list:public_hearing
   hp_news_updates:
     id: hp_news_updates
     display_title: 'News and Updates'
@@ -1837,7 +1868,6 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - 'user.node_grants:view'
-        - user.permissions
       tags:
         - 'config:entityqueue.entity_queue.frontpage_news'
         - 'config:field.storage.node.field_associated_senators'
@@ -1846,3 +1876,10 @@ display:
         - 'config:field.storage.node.field_issues'
         - 'config:field.storage.node.field_senator_multiref'
         - 'config:field.storage.node.field_yt'
+    cache:
+      type: custom_tag
+      options:
+        custom_tag: |-
+          node_list:article
+          node_list:in_the_news
+          node_list:video

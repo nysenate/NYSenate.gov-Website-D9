@@ -80,6 +80,14 @@
   align-items: center;
   justify-content: space-between;
 
+  &:hover,
+  &:focus {
+    outline: 1px solid #2b6a90;
+    span {
+      text-decoration: underline;
+    }
+  }
+
   &::after {
     display: none;
   }

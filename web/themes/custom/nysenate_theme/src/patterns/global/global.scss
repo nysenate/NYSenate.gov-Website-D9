@@ -264,6 +264,20 @@ textarea {
   }
 }
 
+.datepicker .datepicker-switch,
+.datepicker .next,
+.datepicker .prev, {
+  color: $grey01;
+}
+
+.datepicker.dropdown-menu {
+  top: 289px !important;
+
+  .toolbar-fixed.user-logged-in & {
+    top: 387px !important;
+  }
+}
+
 // Correct the cursor style of increment and decrement buttons in Chrome.
 [type='number']::-webkit-inner-spin-button,
 [type='number']::-webkit-outer-spin-button {
@@ -491,6 +505,7 @@ label {
   }
 }
 
+.page-title h1,
 .nys-title {
   margin: 0 0 20px 0;
   color: $grey08;
@@ -862,11 +877,37 @@ section.print.hero--senator {
   }
 }
 
+.skip-link {
+  background-color: white;
+  display: inline-block;
+  padding: 0.25em;
+  position: absolute;
+  text-align: center;
+  z-index: 1000;
+}
+
 .skip-link.visually-hidden.focusable {
   position: absolute;
   top: 5px;
   left: 5px;
   z-index: 5000;
+}
+
+.skip-link.visually-hidden.focusable.js-section-wayfinding {
+  position: relative !important;
+  top: 10px;
+  left: 5px;
+  z-index: 50;
+  padding: 0;
+  scroll-margin-top: 300px;
+
+  .landing-page-hero & {
+    position: absolute !important;
+  }
+}
+
+div[id^="section-"] {
+  scroll-margin-top: 200px;
 }
 
 // Disable admin menu body padding when on TFA page.

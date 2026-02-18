@@ -21,12 +21,18 @@ body {
     &.nav-open #js-sticky .c-nav--wrap {
       top: 99px;
       display: initial;
+      z-index: 99;
     }
 
     #js-sticky {
       top: 39px;
 
       .c-nav--toggle {
+        top: 39px;
+        z-index: 999;
+      }
+
+      .c-nav--toggle--close {
         top: 39px;
       }
     }
@@ -145,6 +151,7 @@ body {
   }
 }
 
+
 // Misc fixes from header js rewrite.
 .c-senator-nav--wrap .c-nav nav button.js-search--toggle.u-tablet-plus::after {
   top: 0px;
@@ -172,6 +179,7 @@ body {
 
     &.hidden {
       margin-top: -60px;
+      display: none;
     }
   }
 }
@@ -315,7 +323,7 @@ body {
 
       &.hidden {
         margin-top: -100px;
-        display: block;
+        display: none;
       }
 
       .c-actionbar--cta {
@@ -413,7 +421,6 @@ body {
   z-index: 6;
   transition: all 0.3s ease-out 0s;
   padding: 0;
-  /*display: none;*/
 
   @include breakpoint($bp-sm) {
     position: relative;
@@ -456,11 +463,11 @@ body {
       width: 100%;
       height: 100%;
       padding: 155px 0 0;
-      overflow: scroll;
+      // overflow: scroll;
       @extend .lgt-bg;
 
       @include breakpoint($bp-under-sm) {
-        padding: 100px 0 0;
+        padding: 0;
       }
     }
 
@@ -489,6 +496,7 @@ body {
     bottom: 0;
     height: auto;
     display: block;
+    z-index: 99;
   }
 
 	.c-nav--toggle {
@@ -501,6 +509,34 @@ body {
 			font-size: 24px;
 		}
 	}
+  .c-nav--toggle--close {
+    background: $color-white;
+    border: 0;
+    cursor: pointer;
+    display: block;
+    height: 60px;
+    left: auto;
+    right: 0;
+    padding: 0;
+    position: fixed;
+    top: 0px;
+    width: 40px;
+    z-index: 10;
+		@extend .icon-replace__x;
+
+    &::after {
+      width: 100%;
+      margin-left: 1px;
+      font-size: 24px;
+      line-height: 60px;
+      text-align: center;
+      @extend .med-text;
+    }
+
+    @include breakpoint($bp-sm) {
+      display: none;
+    }
+  }
 }
 
 // class added to .c-nav--wrap through js
@@ -547,6 +583,10 @@ body {
 		.c-nav--toggle {
 			display: none;
 		}
+
+    .c-nav--toggle--close {
+      display: none;
+    }
 	}
 
   .c-nav--wrap {
@@ -669,6 +709,12 @@ header {
 	}
 }
 
+#js-sticky .c-nav--toggle--close {
+  @include breakpoint($bp-sm) {
+    display: none;
+  }
+}
+
 /* From old site */
 // Non-modular or client styles for .l-header region.
 .l-header {
@@ -755,6 +801,13 @@ nav ul.c-nav--list li a {
   text-transform: uppercase;
   color: $color-white;
 
+  @include breakpoint($bp-under-sm) {
+    &:hover {
+      color: $color-white;
+      text-decoration: underline;
+    }
+  }
+
   @include breakpoint($bp-sm) {
     height: auto;
     display: inline-block;
@@ -827,9 +880,20 @@ nav ul.c-nav--list {
     position: relative;
     display: block;
     float: left;
-    margin: 12px 0;
-    padding: 0 20px 0 0;
-    border-right: 1px solid $grey05;
+    margin: 0;
+    padding: 0 10px 0 0;
+    display: flex;
+    align-items: center;
+
+    &:after {
+      content: '';
+      display: block;
+      height: 28px;
+      width: 1px;
+      background: $grey05;
+      right: -10px;
+      position: relative
+    }
   }
 }
 
@@ -851,11 +915,14 @@ nav ul.c-nav--list {
   }
 
   a {
-    width: 28px;
-    height: 0;
-    padding: 28px 0 0 0;
+    width: 44px;
+    height: 44px;
+    padding: 0;
     font-size: 28px;
     color: $color-white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     &::after {
       color: $color-white;
@@ -1037,6 +1104,10 @@ a:hover.c-header--btn.c-header--btn__taking_action {
   letter-spacing: 0.1em;
   line-height: 1em;
 
+  &:first-of-type {
+    border-top: 0;
+  }
+
   @include breakpoint($bp-sm) {
     padding: 20px 0;
     position: relative;
@@ -1072,14 +1143,15 @@ a:hover.c-header--btn.c-header--btn__taking_action {
 
 .c-site-search {
   display: flex;
-  position: absolute;
-  top: 60px;
   width: 100%;
-  padding: 30px 20px 20px 20px;
+  position: relative;
+  padding: 30px 20px 0 20px;
   margin: 0;
 
   @include breakpoint($bp-sm) {
     display: block;
+    position: absolute;
+    top: 60px;
   }
 
   @include breakpoint($bp-under-sm) {
@@ -1126,11 +1198,10 @@ a:hover.c-header--btn.c-header--btn__taking_action {
   .u-mobile-only &.nys-searchglobal-form {
 
     .search__submit {
-      top: 48%;
-      transform: translateY(-50%);
+      top: 30px;
       margin-right: 0;
       left: auto;
-      right: 20px;
+      right: 25px;
 
       &::after {
         top: 0;
@@ -1305,15 +1376,27 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     height: 0;
     padding: 0;
     overflow: hidden;
+    visibility: hidden;
+    pointer-events: none;
 
     &::before,
     &::after {
       display: none;
     }
 
+    * {
+      visibility: hidden;
+    }
+
     &.open {
       height: 225px;
       padding: 25px 9%;
+      visibility: visible;
+      pointer-events: auto;
+
+      * {
+        visibility: visible;
+      }
     }
   }
 

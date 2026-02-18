@@ -19,6 +19,7 @@
  * Revised: 2024-01-02 - updated 5 entries for the 2025-2026 session
  * Revised: 2025-01-23 - updated microsite URL for Senator Rolison
  * Revised: 2025-05-27 - added pattern for Senator Sutton; removed Felder
+ * Revised: 2026-02-12 - added patterns for Bottcher and Zellner
  *
  */
 
@@ -48,6 +49,7 @@ function get_nyss_senator_patterns()
     'jamaal-bailey'           => '(jamaal)?bailey',
     'april-baskin'            => '(april)?(mccants\-?)?baskin',
     'george-borrello'         => '(george)?borrello',
+    'erik-bottcher'           => '(erik)?bottcher',
     'jabari-brisport'         => '(jabari)?brisport',
     'samra-g-brouk'           => '(samra)?brouk',
     'siela-bynoe'             => '(siela)?bynoe',
@@ -66,7 +68,6 @@ function get_nyss_senator_patterns()
     'pete-harckham'           => '(peter)?harckham',
     'pamela-helming'          => '(pamela|pam)?helming',
     'michelle-hinchey'        => '(michelle)?hinchey',
-    'brad-hoylman'            => '(brad)?hoylman',
     'robert-jackson'          => '(robert)?jackson',
     'brian-kavanagh'          => '(brian)?kavanagh',
     'liz-krueger'             => '(liz)?krueger',
@@ -90,7 +91,6 @@ function get_nyss_senator_patterns()
     'gustavo-rivera'          => '(gustavo)?rivera',
     'rob-rolison'             => '(robert)?rolison',
     'christopher-j-ryan'      => '(chris(topher)?ryan|ryanc)',
-    'sean-m-ryan'             => '(sean)?ryan',
     'julia-salazar'           => '(julia)?salazar',
     'james-sanders-jr'        => '(james)?sanders',
     'luis-r-sepulveda'        => '(luis)?sepulveda',
@@ -107,6 +107,7 @@ function get_nyss_senator_patterns()
     'lea-webb'                => '(lea)?webb',
     'bill-weber'              => '(william|bill)?weber',
     'alexis-weik'             => '(alexis)?weik',
+    'jeremy-j-zellner'        => '(jeremy)?zellner',
   );
 } // get_nyss_senator_patterns()
 

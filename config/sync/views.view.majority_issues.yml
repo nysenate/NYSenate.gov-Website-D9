@@ -466,7 +466,7 @@ display:
         type: bef
         options:
           submit_button: Apply
-          reset_button: false
+          reset_button: true
           reset_button_label: Reset
           exposed_sorts_label: 'Sort by'
           expose_sort_order: true
@@ -476,7 +476,7 @@ display:
           text_input_required_format: full_html
           bef:
             general:
-              autosubmit: true
+              autosubmit: false
               autosubmit_exclude_textfield: false
               autosubmit_textfield_delay: 500
               autosubmit_hide: true
@@ -484,7 +484,7 @@ display:
               allow_secondary: false
               secondary_label: 'Advanced options'
               secondary_open: false
-              reset_button_always_show: false
+              reset_button_always_show: true
             filter:
               field_date_range_value:
                 plugin_id: default
@@ -1685,9 +1685,11 @@ display:
         groups:
           1: AND
       defaults:
+        use_ajax: false
         fields: false
         filters: false
         filter_groups: false
+      use_ajax: false
       display_description: ''
       display_extenders: {  }
     cache_metadata:
@@ -1840,8 +1842,10 @@ display:
         groups:
           1: AND
       defaults:
+        use_ajax: false
         filters: false
         filter_groups: false
+      use_ajax: false
       display_description: ''
       display_extenders: {  }
     cache_metadata:
@@ -3361,11 +3365,13 @@ display:
         groups:
           1: AND
       defaults:
+        use_ajax: false
         fields: false
         sorts: false
         arguments: false
         filters: false
         filter_groups: false
+      use_ajax: false
       display_description: ''
       display_extenders: {  }
     cache_metadata:

@@ -572,7 +572,17 @@ display:
       use_more_text: more
       link_display: '0'
       link_url: /news-and-issues
-      header: {  }
+      header:
+        result:
+          id: result
+          table: views
+          field: result
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: result
+          empty: false
+          content: '<div class="rows-message">Now showing @start - @end of @total</div>'
       footer: {  }
       display_extenders: {  }
     cache_metadata:
@@ -595,8 +605,33 @@ display:
     position: 1
     display_options:
       title: ''
+      pager:
+        type: full
+        options:
+          offset: null
+          pagination_heading_level: h4
+          items_per_page: 5
+          total_pages: 0
+          id: 0
+          tags:
+            next: 'Next ›'
+            previous: '‹ Previous'
+            first: '« First'
+            last: 'Last »'
+          expose:
+            items_per_page: false
+            items_per_page_label: 'Items per page'
+            items_per_page_options: '2, 5, 10, 25, 50'
+            items_per_page_options_all: false
+            items_per_page_options_all_label: '- All -'
+            offset: false
+            offset_label: Offset
+          quantity: 9
       defaults:
         title: false
+        use_ajax: false
+        pager: false
+      use_ajax: false
       display_description: ''
       display_extenders: {  }
       block_description: 'Sitewide All News'
@@ -622,6 +657,28 @@ display:
     position: 1
     display_options:
       title: ''
+      pager:
+        type: full
+        options:
+          offset: null
+          pagination_heading_level: h4
+          items_per_page: 5
+          total_pages: null
+          id: 0
+          tags:
+            next: 'Next ›'
+            previous: '‹ Previous'
+            first: '« First'
+            last: 'Last »'
+          expose:
+            items_per_page: false
+            items_per_page_label: 'Items per page'
+            items_per_page_options: '2, 5, 10, 25, 50'
+            items_per_page_options_all: false
+            items_per_page_options_all_label: '- All -'
+            offset: false
+            offset_label: Offset
+          quantity: 9
       filters:
         status:
           id: status
@@ -765,8 +822,11 @@ display:
           1: AND
       defaults:
         title: false
+        use_ajax: false
+        pager: false
         filters: false
         filter_groups: false
+      use_ajax: false
       display_description: ''
       display_extenders: {  }
       block_description: 'Sitewide Press Releases'

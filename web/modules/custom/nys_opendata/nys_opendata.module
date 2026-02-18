@@ -9,6 +9,25 @@ use Drupal\file\Entity\File;
 use Drupal\nys_opendata\NysOpenDataCsv;
 
 /**
+ * Implements hook_form_alter().
+ *
+ * Attach data attribute and JS library to disable future datepicker years.
+ */
+function nys_opendata_form_alter(&$form, &$form_state, $form_id) {
+  if (strpos($form_id, 'views_exposed_form') === 0) {
+    if ($form_state->has('view')) {
+      $view = $form_state->get('view');
+      if ($view && $view->id() === 'open_data' && $view->current_display === 'block_1') {
+        if (isset($form['field_publication_date_value'])) {
+          // Attach our custom library to handle the year datepicker constraints.
+          $form['#attached']['library'][] = 'nys_opendata/year_filter_limit';
+        }
+      }
+    }
+  }
+}
+
+/**
  * Implements hook_preprocess_HOOK().
  *
  * Find any CSV files associated with open_data node types, and render
@@ -66,14 +85,15 @@ function nys_opendata_preprocess_node(&$variables) {
               '#weight' => $count,
               'datatable_caption' => [
                 '#markup' => $caption,
-                '#prefix' => '<div class="managed-csv-datatable-caption">',
-                '#suffix' => '</div>',
+                '#prefix' => '<h2 class="managed-csv-datatable-caption">',
+                '#suffix' => '</h2>',
               ],
 
               'datatable' => $file->buildRenderArray() + [
                 '#weight' => $count,
                 '#attributes' => [
                   'class' => ['managed-csv-datatable'],
+                  'aria-hidden' => 'true',
                 ],
               ],
             ];

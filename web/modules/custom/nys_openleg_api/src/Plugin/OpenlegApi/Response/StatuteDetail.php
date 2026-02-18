@@ -57,4 +57,36 @@ class StatuteDetail extends ResponsePluginBase {
     return $ret;
   }
 
+  /**
+   * The actual publish date of this location.
+   *
+   * @return string
+   *   The publish date as "Y-m-d", or an empty string on failure.
+   */
+  public function getActiveDate(): string {
+    return $this->success()
+      ? ($this->response->result->activeDate ?? '')
+      : '';
+  }
+
+  /**
+   * Get the active date for this location's most recent revision.
+   *
+   * @return string
+   *   The active date as "Y-m-d", or an empty string on failure.
+   */
+  public function getLatestActiveDate(): string {
+    $all_dates = $this->getPublishDates();
+    return end($all_dates) ?: '';
+  }
+
+  /**
+   * Gets a sorted array of history markers for the current location.
+   */
+  public function getPublishDates(): array {
+    $sorted = $this->response->result->publishedDates ?? [];
+    sort($sorted);
+    return $sorted;
+  }
+
 }

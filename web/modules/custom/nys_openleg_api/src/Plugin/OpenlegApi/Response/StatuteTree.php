@@ -36,15 +36,33 @@ class StatuteTree extends ResponsePluginBase {
   }
 
   /**
-   * Gets a sorted list of history markers for the most recent call.
-   *
-   * @return array
-   *   An array of available history markers.
+   * Gets a sorted array of history markers for the entire volume.
    */
-  public function publishDates(): array {
+  public function getVolumePublishDates(): array {
     $sorted = $this->response->result->publishedDates ?? [];
     sort($sorted);
     return $sorted;
+  }
+
+  /**
+   * Gets a sorted array of history markers for the current location.
+   */
+  public function getPublishDates(): array {
+    $sorted = $this->response->result->documents->publishedDates ?? [];
+    sort($sorted);
+    return $sorted;
+  }
+
+  /**
+   * The actual publish date of this tree's root.
+   *
+   * @return string
+   *   The publish date as "Y-m-d", or an empty string on failure.
+   */
+  public function getActiveDate(): string {
+    return $this->success()
+      ? ($this->response->result->documents->activeDate ?? '')
+      : '';
   }
 
   /**

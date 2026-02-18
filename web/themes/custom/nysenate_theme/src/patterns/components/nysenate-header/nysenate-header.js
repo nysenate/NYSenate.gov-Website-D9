@@ -43,6 +43,7 @@
       );
       this.jsSearchBox(isMicrositeLandingPage, micrositeMenuClone);
       this.mobileMenu();
+      this.handleResponsiveMenu();
 
       // Add keypress event to close mobile menu.
       document.addEventListener('keydown', (e) => {
@@ -164,12 +165,25 @@
 
       // Implement expandable search button in header for full site.
       searchButtons.forEach((searchButton, index) => {
+        // Set initial inert state on closed search forms
+        if (!searchForms.item(index).classList.contains('open')) {
+          searchForms.item(index).setAttribute('inert', '');
+        }
+
         searchButton.addEventListener('click', (clickElem) => {
           let isHeaderSearchButton = clickElem.currentTarget.closest('.c-header-bar');
           navWraps.item(index).classList.toggle('search-open');
           searchForms.item(index).classList.toggle('open');
           clickElem.currentTarget.setAttribute('aria-expanded', searchForms.item(index).classList.contains('open') ? 'true' : 'false');
           clickElem.currentTarget.innerHTML = (searchForms.item(index).classList.contains('open') ? 'close' : 'open') + ' search';
+          
+          // Toggle inert attribute to prevent keyboard navigation when closed
+          if (searchForms.item(index).classList.contains('open')) {
+            searchForms.item(index).removeAttribute('inert');
+          } else {
+            searchForms.item(index).setAttribute('inert', '');
+          }
+          
           if (!isMicrositeLandingPage) {
             document.body.classList.toggle('search-open');
           }
@@ -190,6 +204,8 @@
      */
     mobileMenu: function () {
       const mobileMenu = document.querySelector('button.js-mobile-nav--btn');
+      const closeMenuButton = document.querySelector('button.js-mobile-nav--btn.c-nav--toggle--close');
+
       mobileMenu.addEventListener('click', (e) => {
         document.body.classList.toggle('nav-open');
         e.currentTarget.setAttribute('aria-expanded', document.body.classList.contains('nav-open') ? 'true' : 'false');
@@ -197,6 +213,39 @@
           e.currentTarget.focus();
         }
       });
+
+      if (closeMenuButton) {
+        closeMenuButton.addEventListener('click', (e) => {
+          document.body.classList.remove('nav-open');
+          e.currentTarget.setAttribute('aria-expanded', 'false');
+          document.querySelector('button.js-mobile-nav--btn.button--menu').focus();
+        });
+      }
+    },
+
+    /**
+     * Implements responsive menu behavior for tablet and desktop.
+     *
+     * @returns void
+     */
+    handleResponsiveMenu: function () {
+      const mediaQuery = window.matchMedia('(min-width: 768px)');
+      const mobileMenuButton = document.querySelector('button.js-mobile-nav--btn.button--menu');
+
+      const handleBreakpointChange = (e) => {
+        if (e.matches) {
+          document.body.classList.remove('nav-open');
+          if (mobileMenuButton) {
+            mobileMenuButton.setAttribute('aria-expanded', 'false');
+          }
+        }
+      };
+
+      // Check initial state.
+      handleBreakpointChange(mediaQuery);
+
+      // Listen for breakpoint changes.
+      mediaQuery.addEventListener('change', handleBreakpointChange);
     },
 
     /**

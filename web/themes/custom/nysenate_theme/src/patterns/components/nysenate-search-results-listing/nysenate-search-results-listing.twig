@@ -1,7 +1,7 @@
 {{ attach_library('nysenate_theme/nysenate-search-results-listing') }}
 {{ attach_library('nysenate_theme/bill-item') }}
 
-<article class="c-block c-block-press-release content__item">
+<article class="c-block c-block-press-release content__item{% if article.bill %} c-block-press-release--bill{% endif %}">
   <div class="c-press-release--header">
     {% if article.bill_title %}
       <h3 class="c-bill-num">

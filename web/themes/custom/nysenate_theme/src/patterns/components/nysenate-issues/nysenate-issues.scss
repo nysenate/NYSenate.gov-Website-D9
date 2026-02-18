@@ -247,6 +247,12 @@
   margin-bottom: 0;
   margin-left: 0;
 
+  @include breakpoint($bp-under-sm) {
+    height: auto;
+    padding-top: 0;
+    margin-bottom: 15px;
+  }
+
   li.menu-item {
     width: 100%;
     height: 45px;

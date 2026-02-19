@@ -19,6 +19,12 @@ use Drupal\user\RoleInterface;
  * Grant access to content on unique content basis.
  */
 function nys_access_permissions_node_access(NodeInterface $node, $operation, AccountInterface $account) {
+  // For 'view' operation on published nodes, allow access without adding
+  // user-specific cache contexts to improve page cacheability.
+  if ($operation === 'view' && $node->isPublished()) {
+    return AccessResult::neutral()->addCacheableDependency($node);
+  }
+
   if (is_object($node) && is_object($account)) {
     $edit_own = 'edit own ' . $node->bundle() . ' content';
     // If user has access to edit own content.

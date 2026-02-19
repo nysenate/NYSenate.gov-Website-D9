@@ -29,7 +29,10 @@
               {% endfor %}
             </ul>
 
-            {% if is_logged %}
+            {# User menu is now lazy-loaded for proper per-user caching #}
+            {% if user_menu_data %}
+              {{ user_menu_data }}
+            {% elseif is_logged %}
               {% if has_senator %}
                 <a class="c-header--btn c-senator-header--btn" href="{{ senator_microsite_link }}">
                   <div class="nys-senator">
@@ -108,7 +111,10 @@
                   {% endfor %}
                 </ul>
               {% endif %}
-              {% if not is_logged %}
+              {# Mobile user menu is now lazy-loaded for proper per-user caching #}
+              {% if user_menu_data_mobile %}
+                {{ user_menu_data_mobile }}
+              {% elseif not is_logged %}
                 <div class="c-mobile-login--list u-mobile-only">
                   <span class="c-header--btn c-header--btn-login icon-before__recruit-friends">
                     <a href="/user/login">login</a>

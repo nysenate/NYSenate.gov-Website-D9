@@ -14,7 +14,6 @@ dependencies:
     - node
     - options
     - taxonomy
-    - user
 id: homepage_hero
 label: 'Homepage Hero'
 module: views
@@ -607,16 +606,17 @@ display:
           sort_asc_label: Asc
           sort_desc_label: Desc
       access:
-        type: perm
-        options:
-          perm: 'access content'
+        type: none
+        options: {  }
       cache:
-        type: time
+        type: custom_tag
         options:
-          results_lifespan: 0
-          results_lifespan_custom: 0
-          output_lifespan: 0
-          output_lifespan_custom: 0
+          custom_tag: |-
+            node_list:article
+            node_list:event
+            node_list:meeting
+            node_list:public_hearing
+            node_list:session
       empty: {  }
       sorts:
         created:
@@ -692,15 +692,12 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - 'user.node_grants:view'
-        - user.permissions
       tags:
         - 'config:entityqueue.entity_queue.homepage_hero'
         - 'config:field.storage.node.field_image_hero'
         - 'config:field.storage.node.field_ol_publish_date'
         - 'config:field.storage.node.field_session_calendars'
         - 'config:field.storage.node.field_ustream'
-        - entity_field_info
-        - views_data
   homepage_hero:
     id: homepage_hero
     display_title: Block
@@ -715,12 +712,9 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - 'user.node_grants:view'
-        - user.permissions
       tags:
         - 'config:entityqueue.entity_queue.homepage_hero'
         - 'config:field.storage.node.field_image_hero'
         - 'config:field.storage.node.field_ol_publish_date'
         - 'config:field.storage.node.field_session_calendars'
         - 'config:field.storage.node.field_ustream'
-        - entity_field_info
-        - views_data

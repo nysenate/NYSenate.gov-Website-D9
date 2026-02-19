@@ -1,0 +1,79 @@
+entity.moderation_test_set.collection:
+  path: '/admin/settings/nysenate/ai_moderation/test_sets'
+  defaults:
+    _entity_list: 'moderation_test_set'
+    _title: 'Moderation Test Sets'
+  requirements:
+    _permission: 'administer site configuration'
+
+entity.moderation_test_set.add_form:
+  path: '/admin/settings/nysenate/ai_moderation/test_sets/add'
+  defaults:
+    _entity_form: 'moderation_test_set.add'
+  requirements:
+    _permission: 'administer site configuration'
+
+entity.moderation_test_set.edit_form:
+  path: '/admin/settings/nysenate/ai_moderation/test_sets/{moderation_test_set}'
+  defaults:
+    _entity_form: 'moderation_test_set.edit'
+  requirements:
+    _permission: 'administer site configuration'
+
+entity.moderation_test_set.delete_form:
+  path: '/admin/settings/nysenate/ai_moderation/test_sets/{moderation_test_set}/delete'
+  defaults:
+    _entity_form: 'moderation_test_set.delete'
+  requirements:
+    _permission: 'administer site configuration'
+
+entity.moderation_test_set.canonical:
+  path: '/admin/settings/nysenate/ai_moderation/test_sets/{moderation_test_set}'
+  defaults:
+    _entity_form: 'moderation_test_set.edit'
+  requirements:
+    _permission: 'administer site configuration'
+
+entity.moderation_test_set.run:
+  path: '/admin/settings/nysenate/ai_moderation/test_sets/{moderation_test_set}/run'
+  defaults:
+    _entity_form: 'moderation_test_set.run'
+  requirements:
+    _permission: 'administer site configuration'
+
+entity.moderation_test_log.collection:
+  path: '/admin/settings/nysenate/ai_moderation/test_logs'
+  defaults:
+    _entity_list: 'moderation_test_log'
+    _title: 'Moderation Test Logs'
+  requirements:
+    _permission: 'administer site configuration'
+
+entity.moderation_test_log.edit_form:
+  path: '/admin/settings/nysenate/ai_moderation/test_logs/{moderation_test_log}'
+  defaults:
+    _entity_form: 'moderation_test_log.edit'
+  requirements:
+    _permission: 'administer site configuration'
+
+entity.moderation_test_log.delete_form:
+  path: '/admin/settings/nysenate/ai_moderation/test_logs/{moderation_test_log}/delete'
+  defaults:
+    _entity_form: 'moderation_test_log.delete'
+  requirements:
+    _permission: 'administer site configuration'
+
+entity.moderation_test_log.canonical:
+  path: '/admin/settings/nysenate/ai_moderation/test_logs/{moderation_test_log}'
+  defaults:
+    _entity_form: 'moderation_test_log.edit'
+  requirements:
+    _permission: 'administer site configuration'
+
+entity.moderation_test_log_item.canonical:
+  path: '/admin/settings/nysenate/ai_moderation/test_log_item/{moderation_test_log_item}'
+  defaults:
+    _controller: '\Drupal\Core\Entity\Controller\EntityViewController::view'
+  requirements:
+    _permission: 'administer site configuration'
+    moderation_test_log_item: '\d+'

@@ -1,0 +1,11 @@
+services:
+  nys_moderation.log_channel:
+    parent: logger.channel_base
+    arguments: [ 'nys_moderation' ]
+  nys_moderation.prompt_test:
+    class: Drupal\nys_moderation\Service\PromptTest
+    arguments:
+      - '@entity_type.manager'
+      - '@current_user'
+      - '@plugin.manager.ai_automator'
+      - '@nys_moderation.log_channel'

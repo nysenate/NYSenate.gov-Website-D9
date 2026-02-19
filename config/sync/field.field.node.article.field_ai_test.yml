@@ -1,0 +1,21 @@
+uuid: ec30e29c-93f9-4945-8460-52a55c40fa7f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_ai_test
+    - node.type.article
+id: node.article.field_ai_test
+field_name: field_ai_test
+entity_type: node
+bundle: article
+label: 'AI Test'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

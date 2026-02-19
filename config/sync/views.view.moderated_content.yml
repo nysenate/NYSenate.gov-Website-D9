@@ -2,13 +2,23 @@ uuid: be348ee2-0446-46ae-802d-ec68466ebe79
 langcode: en
 status: true
 dependencies:
+  config:
+    - field.storage.node.field_moderation_reason
+    - field.storage.node.field_senator_multiref
+    - node.type.article
+    - taxonomy.vocabulary.senator
+    - user.role.administrator
+    - user.role.comment_moderator
+    - workflows.workflow.ai_moderation
   module:
+    - content_moderation
     - node
+    - taxonomy
     - user
 _core:
   default_config_hash: Zr13Yp_ouS-l8P_-VeQUJwI8bQneFCa-StfIL1r_OpU
 id: moderated_content
-label: 'Moderated content'
+label: 'AI Moderation'
 module: views
 description: 'Find and moderate content.'
 tag: ''
@@ -21,7 +31,7 @@ display:
     display_plugin: default
     position: 0
     display_options:
-      title: 'Moderated content'
+      title: 'AI Moderation'
       fields:
         title:
           id: title
@@ -99,7 +109,7 @@ display:
           entity_field: type
           plugin_id: field
           label: 'Content type'
-          exclude: false
+          exclude: true
           alter:
             alter_text: false
             text: ''
@@ -143,6 +153,69 @@ display:
           type: entity_reference_label
           settings:
             link: false
+          group_column: target_id
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+        field_senator_multiref:
+          id: field_senator_multiref
+          table: node__field_senator_multiref
+          field: field_senator_multiref
+          relationship: nid
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: Senator
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: target_id
+          type: entity_reference_label
+          settings:
+            link: true
           group_column: target_id
           group_columns: {  }
           group_rows: true
@@ -208,6 +281,68 @@ display:
           type: user_name
           settings:
             link_to_entity: true
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+        field_moderation_reason:
+          id: field_moderation_reason
+          table: node__field_moderation_reason
+          field: field_moderation_reason
+          relationship: nid
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: 'Moderation Reason'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: basic_string
+          settings: {  }
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -361,7 +496,7 @@ display:
           id: operations
           table: node_revision
           field: operations
-          relationship: none
+          relationship: nid
           group_type: group
           admin_label: ''
           entity_type: node
@@ -441,9 +576,11 @@ display:
           sort_asc_label: Asc
           sort_desc_label: Desc
       access:
-        type: perm
+        type: role
         options:
-          perm: 'view any unpublished content'
+          role:
+            administrator: administrator
+            comment_moderator: comment_moderator
       cache:
         type: tag
         options: {  }
@@ -554,9 +691,10 @@ display:
           entity_field: type
           plugin_id: bundle
           operator: in
-          value: {  }
+          value:
+            article: article
           group: 1
-          exposed: true
+          exposed: false
           expose:
             operator_id: type_op
             label: 'Content type'
@@ -597,8 +735,7 @@ display:
           plugin_id: moderation_state_filter
           operator: in
           value:
-            editorial-draft: editorial-draft
-            editorial-archived: editorial-archived
+            ai_moderation-flagged: ai_moderation-flagged
           group: 1
           exposed: true
           expose:
@@ -617,49 +754,13 @@ display:
               authenticated: authenticated
               anonymous: '0'
               administrator: '0'
-            reduce: true
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-        langcode:
-          id: langcode
-          table: node_field_revision
-          field: langcode
-          relationship: none
-          group_type: group
-          admin_label: ''
-          entity_type: node
-          entity_field: langcode
-          plugin_id: language
-          operator: in
-          value: {  }
-          group: 1
-          exposed: true
-          expose:
-            operator_id: langcode_op
-            label: Language
-            description: ''
-            use_operator: false
-            operator: langcode_op
-            operator_limit_selection: false
-            operator_list: {  }
-            identifier: langcode
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
+              frontpage_editor: '0'
+              senator: '0'
+              microsite_content_producer: '0'
+              legislative_correspondent: '0'
+              student_programs: '0'
+              constituent: '0'
+              comment_moderator: '0'
             reduce: false
           is_grouped: false
           group_info:
@@ -713,6 +814,60 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
+        field_senator_multiref_target_id:
+          id: field_senator_multiref_target_id
+          table: node__field_senator_multiref
+          field: field_senator_multiref_target_id
+          relationship: nid
+          group_type: group
+          admin_label: ''
+          plugin_id: taxonomy_index_tid
+          operator: or
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_senator_multiref_target_id_op
+            label: Senator
+            description: ''
+            use_operator: false
+            operator: field_senator_multiref_target_id_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: field_senator_multiref_target_id
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+              frontpage_editor: '0'
+              senator: '0'
+              microsite_content_producer: '0'
+              legislative_correspondent: '0'
+              student_programs: '0'
+              constituent: '0'
+              comment_moderator: '0'
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+          vid: senator
+          type: textfield
+          hierarchy: false
+          limit: true
+          error_message: true
       filter_groups:
         operator: AND
         groups:
@@ -805,6 +960,17 @@ display:
           entity_field: uid
           plugin_id: standard
           required: false
+        vid:
+          id: vid
+          table: node_field_revision
+          field: vid
+          relationship: none
+          group_type: group
+          admin_label: vid
+          entity_type: node
+          entity_field: vid
+          plugin_id: standard
+          required: false
       header: {  }
       footer: {  }
       display_extenders: {  }
@@ -816,12 +982,14 @@ display:
         - url
         - url.query_args
         - 'user.node_grants:view'
-        - user.permissions
+        - user.roles
       tags:
+        - 'config:field.storage.node.field_moderation_reason'
+        - 'config:field.storage.node.field_senator_multiref'
         - 'config:workflow_list'
   moderated_content:
     id: moderated_content
-    display_title: 'Moderated content'
+    display_title: 'AI Moderation'
     display_plugin: page
     position: 1
     display_options:
@@ -836,6 +1004,8 @@ display:
         - url
         - url.query_args
         - 'user.node_grants:view'
-        - user.permissions
+        - user.roles
       tags:
+        - 'config:field.storage.node.field_moderation_reason'
+        - 'config:field.storage.node.field_senator_multiref'
         - 'config:workflow_list'

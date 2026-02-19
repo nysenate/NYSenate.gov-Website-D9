@@ -14,7 +14,9 @@ dependencies:
     - node.type.promotional_banner
     - node.type.video
     - node.type.webform
+    - workflows.workflow.ai_moderation
   module:
+    - ai_ckeditor
     - captcha
     - contact
     - content_moderation
@@ -47,6 +49,7 @@ permissions:
   - 'create article content'
   - 'create event content'
   - 'create field_featured'
+  - 'create field_moderation_reason'
   - 'create file media'
   - 'create image media'
   - 'create in_the_news content'
@@ -62,7 +65,11 @@ permissions:
   - 'delete own files'
   - 'delete own image media'
   - 'delete own remote_video media'
+  - 'edit any article content'
+  - 'edit field_moderation_reason'
+  - 'edit own article content'
   - 'edit own field_featured'
+  - 'edit own field_moderation_reason'
   - 'edit own file media'
   - 'edit own image media'
   - 'edit own remote_video media'
@@ -82,17 +89,30 @@ permissions:
   - 'rabbit hole bypass media'
   - 'rabbit hole bypass node'
   - 'rabbit hole bypass taxonomy_term'
+  - 'revert article revisions'
   - 'skip CAPTCHA'
   - 'unflag follow_committee'
   - 'unflag follow_issue'
   - 'unflag follow_this_bill'
   - 'unflag sign_petition'
   - 'update media'
+  - 'use ai ckeditor'
+  - 'use ai_moderation transition draft'
+  - 'use ai_moderation transition publish'
+  - 'use ai_moderation transition republish'
+  - 'use ai_moderation transition republished'
+  - 'use ai_moderation transition revise'
+  - 'use ai_moderation transition unpublish'
+  - 'use ai_moderation transition unpublished'
   - 'use text format basic_html'
   - 'view any unpublished content'
+  - 'view article revisions'
   - 'view field_chair'
+  - 'view field_moderation_reason'
+  - 'view latest version'
   - 'view own field_chair'
   - 'view own field_featured'
+  - 'view own field_moderation_reason'
   - 'view own field_senator_multiref'
   - 'view own unpublished content'
   - 'view own unpublished media'

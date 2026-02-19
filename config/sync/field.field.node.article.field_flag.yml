@@ -1,0 +1,21 @@
+uuid: aa32d8c3-ce88-49dc-bcf9-04079e2c9336
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_flag
+    - node.type.article
+id: node.article.field_flag
+field_name: field_flag
+entity_type: node
+bundle: article
+label: 'AI Flag'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

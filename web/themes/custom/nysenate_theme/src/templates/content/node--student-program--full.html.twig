@@ -67,6 +67,15 @@
     {% endif %}
 
     <div class="c-block">
+        {% if content.field_yt[0] %}
+            <div class="c-block">
+                {% include '@nysenate_theme/video-embed/video-embed.twig' with {
+                    video: content.field_yt
+                } only
+                %}
+            </div>
+        {% endif %}
+
       {{ content.body }}
     </div>
 

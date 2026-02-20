@@ -1,9 +1,9 @@
-uuid: 06490f13-e896-4f98-bcff-75240a186810
+uuid: 0328e717-d594-4bad-b863-180bce0e4499
 langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_mode.node.search_index
+    - core.entity_view_mode.node.upcoming_event
     - field.field.node.student_program.body
     - field.field.node.student_program.field_accordion
     - field.field.node.student_program.field_article_author
@@ -19,63 +19,38 @@ dependencies:
     - field.field.node.student_program.rabbit_hole__settings
     - node.type.student_program
   module:
-    - datetime
-    - text
     - user
-id: node.student_program.search_index
+id: node.student_program.upcoming_event
 targetEntityType: node
 bundle: student_program
-mode: search_index
+mode: upcoming_event
 content:
-  body:
-    type: text_default
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
-    weight: 1
-    region: content
-  field_article_author:
-    type: string
-    label: hidden
+  field_yt:
+    type: entity_reference_entity_view
+    label: above
     settings:
-      link_to_entity: false
+      view_mode: default
+      link: false
     third_party_settings: {  }
-    weight: 3
-    region: content
-  field_date:
-    type: datetime_default
-    label: hidden
-    settings:
-      timezone_override: ''
-      format_type: medium
-    third_party_settings: {  }
-    weight: 4
-    region: content
-  field_issues:
-    type: entity_reference_label
-    label: hidden
-    settings:
-      link: true
-    third_party_settings: {  }
-    weight: 2
+    weight: 20
     region: content
   links:
     settings: {  }
     third_party_settings: {  }
-    weight: 0
+    weight: 100
     region: content
 hidden:
-  entity_print_view_epub: true
-  entity_print_view_pdf: true
-  entity_print_view_word_docx: true
+  body: true
   field_accordion: true
+  field_article_author: true
   field_attachment: true
+  field_date: true
   field_featured: true
   field_image_main: true
+  field_issues: true
   field_student_program_intro: true
   field_subtitle: true
   field_webform: true
-  field_yt: true
   langcode: true
   nys_senator_dashboard_path_alias: true
   private_message_link: true

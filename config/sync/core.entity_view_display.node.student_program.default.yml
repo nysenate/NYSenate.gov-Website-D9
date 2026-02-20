@@ -14,6 +14,7 @@ dependencies:
     - field.field.node.student_program.field_student_program_intro
     - field.field.node.student_program.field_subtitle
     - field.field.node.student_program.field_webform
+    - field.field.node.student_program.field_yt
     - field.field.node.student_program.rabbit_hole__settings
     - node.type.student_program
   module:
@@ -122,6 +123,15 @@ content:
     third_party_settings: {  }
     weight: 111
     region: content
+  field_yt:
+    type: entity_reference_entity_view
+    label: above
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    weight: 20
+    region: content
   links:
     settings: {  }
     third_party_settings: {  }
@@ -132,6 +142,7 @@ hidden:
   entity_print_view_pdf: true
   entity_print_view_word_docx: true
   langcode: true
+  nys_senator_dashboard_path_alias: true
   private_message_link: true
   rabbit_hole__settings: true
   search_api_excerpt: true

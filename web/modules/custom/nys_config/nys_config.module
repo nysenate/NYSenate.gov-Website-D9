@@ -61,10 +61,17 @@ function nys_config_preprocess_node__landing(&$variables) {
  * Implements hook_form_alter().
  */
 function nys_config_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+
   // Session nodes should always have a uStream redirect URL prepopulated.
   if ($form_id == 'node_session_form' && empty($form['field_video_redirect']['widget'][0]['#default_value'])) {
     $redirect_url = \Drupal::configFactory()->get('nys_config.settings')->get('nys_vid_redir_url');
     $form['field_video_redirect']['widget'][0]['value']['#default_value'] = Xss::filter($redirect_url);
+  }
+  if ($form_id === 'node_student_program_edit_form') {
+    $form['field_yt']['widget']['#title'] = t('Video');
+    $form['field_yt']['widget']['#field_title'] = t('Video');
+    $form['field_yt']['widget'][0]['#after_build'][] = '_nys_config_alter_field_yt_label';
+    $form['field_yt']['widget']['#description'] = t('');
   }
 }
 
@@ -80,4 +87,11 @@ function nys_config_entity_display_build_alter(&$build, $context) {
     'field_yt',
   ];
   // TO DO: D7 nys_access_permissions_field_attach_view_alter() codes here.
+}
+
+function _nys_config_alter_field_yt_label($element, \Drupal\Core\Form\FormStateInterface $form_state) {
+  $element['#field_title'] = t('Video');
+  $element['#title'] = t('Video');
+  $element['#description'] = t('Enter share url for YouTube');
+  return $element;
 }

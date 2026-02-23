@@ -61,7 +61,6 @@ function nys_config_preprocess_node__landing(&$variables) {
  * Implements hook_form_alter().
  */
 function nys_config_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-
   // Session nodes should always have a uStream redirect URL prepopulated.
   if ($form_id == 'node_session_form' && empty($form['field_video_redirect']['widget'][0]['#default_value'])) {
     $redirect_url = \Drupal::configFactory()->get('nys_config.settings')->get('nys_vid_redir_url');

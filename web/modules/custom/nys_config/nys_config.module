@@ -67,11 +67,6 @@ function nys_config_form_alter(&$form, FormStateInterface $form_state, $form_id)
     $redirect_url = \Drupal::configFactory()->get('nys_config.settings')->get('nys_vid_redir_url');
     $form['field_video_redirect']['widget'][0]['value']['#default_value'] = Xss::filter($redirect_url);
   }
-  if (in_array($form_id, ['node_student_program_form', 'node_student_program_edit_form'])) {
-    $form['field_yt']['widget']['#title'] = t('Video');
-    $form['field_yt']['widget']['#field_title'] = t('Video');
-    //$form['field_yt']['widget']['#description'] = t('');
-  }
 }
 
 /**
@@ -87,4 +82,3 @@ function nys_config_entity_display_build_alter(&$build, $context) {
   ];
   // TO DO: D7 nys_access_permissions_field_attach_view_alter() codes here.
 }
-

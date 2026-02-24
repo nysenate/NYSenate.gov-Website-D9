@@ -3,9 +3,6 @@
 namespace Drupal\nys_blocks\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
-use Drupal\Core\Url;
-use Drupal\taxonomy\TermInterface;
-use Drupal\user\Entity\User;
 
 /**
  * Block for How a Bill Becomes a Law.
@@ -20,39 +17,20 @@ class WantTo extends BlockBase {
   /**
    * {@inheritdoc}
    */
-  public function getCacheMaxAge(): int {
-    return 1800;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function build(): array {
-    if (\Drupal::currentUser()->isAuthenticated()) {
-      /** @var \Drupal\user\Entity\User $user */
-      $user = User::load(\Drupal::currentUser()->id());
-      $senator = $user->get('field_district')->entity->field_senator->entity ?? NULL;
-      $senator_link = ($senator instanceof TermInterface)
-        ? \Drupal::service('nys_senators.microsites')->getMicrosite($senator)
-        : NULL;
-      $image = $user->get('field_district')->entity->field_senator
-        ->entity->field_member_headshot->entity ?? NULL;
-      $headshot = $image
-        ? \Drupal::entityTypeManager()
-          ->getViewBuilder('media')
-          ->view($image, 'thumbnail')
-        : NULL;
-    }
-    $register = Url::fromRoute('user.register')->toString();
+    // Use lazy builder for user-specific senator section.
+    // This allows the rest of the page to be cached for anonymous users.
+    $senator_section = [
+      '#lazy_builder' => [
+        'nys_blocks.want_to_lazy_builder:renderSenatorSection',
+        [],
+      ],
+      '#create_placeholder' => TRUE,
+    ];
 
     return [
       '#theme' => 'nys_blocks_want_to',
-      '#headshot' => $headshot ?? NULL,
-      '#senator_link' => $senator_link ?? NULL,
-      '#register' => $register,
-      '#cache' => [
-        'contexts' => ['user'],
-      ],
+      '#senator_section' => $senator_section,
     ];
   }
 

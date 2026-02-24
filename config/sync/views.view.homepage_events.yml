@@ -17,7 +17,6 @@ dependencies:
     - node
     - semanticviews
     - taxonomy
-    - user
 id: homepage_events
 label: 'Homepage Events'
 module: views
@@ -652,12 +651,14 @@ display:
           sort_asc_label: Asc
           sort_desc_label: Desc
       access:
-        type: perm
-        options:
-          perm: 'access content'
-      cache:
-        type: tag
+        type: none
         options: {  }
+      cache:
+        type: custom_tag
+        options:
+          custom_tag: |-
+            node_list:event
+            node_list:public_hearing
       empty:
         area_text_custom:
           id: area_text_custom
@@ -860,10 +861,19 @@ display:
         - 'languages:language_interface'
         - url
         - 'user.node_grants:view'
-        - user.permissions
       tags:
         - 'config:field.storage.node.field_date_range'
         - 'config:field.storage.taxonomy_term.field_senator_name'
+    cache:
+      type: custom_tag
+      options:
+        custom_tag: |-
+          node_list:event
+          node_list:public_hearing
+    query:
+      type: views_query
+      options:
+        disable_sql_rewrite: true
   block_1:
     id: block_1
     display_title: 'In Session'
@@ -1607,7 +1617,6 @@ display:
         - 'languages:language_interface'
         - url
         - 'user.node_grants:view'
-        - user.permissions
       tags:
         - 'config:field.storage.node.field_date_range'
   out_session:
@@ -2006,6 +2015,5 @@ display:
         - 'languages:language_interface'
         - url
         - 'user.node_grants:view'
-        - user.permissions
       tags:
         - 'config:field.storage.node.field_date_range'

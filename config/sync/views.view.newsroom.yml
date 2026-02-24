@@ -429,12 +429,12 @@ display:
           sort_asc_label: Asc
           sort_desc_label: Desc
       access:
-        type: perm
-        options:
-          perm: 'access content'
-      cache:
-        type: tag
+        type: none
         options: {  }
+      cache:
+        type: custom_tag
+        options:
+          custom_tag: "node_list:article\nnode_list:in_the_news\nnode_list:video"
       empty: {  }
       sorts:
         field_date_value:

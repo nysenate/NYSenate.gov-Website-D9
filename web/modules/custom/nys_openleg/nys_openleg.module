@@ -124,3 +124,13 @@ function nys_openleg_preprocess_block__nys_blocks_bythe_numbers(&$variables): vo
     }
   }
 }
+
+/**
+ * Implements hook_cron().
+ */
+function nys_openleg_cron(): void {
+  // Invalidate the cache tag for the By the Numbers block.
+  // Schedule is controlled via Ultimate Cron configuration.
+  \Drupal::service('cache_tags.invalidator')->invalidateTags(['nys_openleg:bythe_numbers']);
+  \Drupal::logger('nys_openleg')->info('By the Numbers cache invalidated.');
+}

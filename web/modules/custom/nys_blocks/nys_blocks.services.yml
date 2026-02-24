@@ -1,0 +1,9 @@
+services:
+  nys_blocks.want_to_lazy_builder:
+    class: Drupal\nys_blocks\WantToLazyBuilder
+    arguments:
+      - '@current_user'
+      - '@nys_senators.microsites'
+      - '@entity_type.manager'
+    tags:
+      - { name: render.placeholder_renderer_lazy_builder }

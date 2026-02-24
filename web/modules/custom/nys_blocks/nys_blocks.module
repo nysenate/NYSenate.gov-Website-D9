@@ -19,9 +19,15 @@ function nys_blocks_theme($existing, $type, $theme, $path):array {
     ],
     'nys_blocks_want_to' => [
       'variables' => [
+        'senator_section' => NULL,
+      ],
+    ],
+    'nys_blocks_want_to_senator_section' => [
+      'variables' => [
         'headshot' => NULL,
         'senator_link' => NULL,
         'register' => NULL,
+        'logged_in' => FALSE,
       ],
     ],
     'nys_blocks_bythe_numbers' => [
@@ -85,3 +91,5 @@ function nys_blocks_deploy_contact_us_block() {
     }
   }
 }
+
+

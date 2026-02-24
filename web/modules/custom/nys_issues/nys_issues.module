@@ -5,6 +5,47 @@
  * Contains custom code for Issues.
  */
 
+use Drupal\views\ViewExecutable;
+
+/**
+ * Implements hook_views_post_render().
+ *
+ * Override cache metadata for issues_listings view to enable page caching.
+ * The flag_counts sort causes Views to compute max-age: -1, which prevents
+ * page caching. We override this with a custom cache tag that we invalidate
+ * via cron on a 24-hour schedule.
+ */
+function nys_issues_views_post_render(ViewExecutable $view, array &$output): void {
+  if ($view->id() !== 'issues_listings') {
+    return;
+  }
+
+  // Only apply to displays that use flag_counts sorting.
+  $dominated_displays = ['most_followed', 'most_followed_page', 'block_3', 'page_1'];
+  if (!in_array($view->current_display, $dominated_displays)) {
+    return;
+  }
+
+  // Override the cache metadata to allow page caching.
+  // Add our custom cache tag for cron-based invalidation.
+  $output['#cache']['max-age'] = -1;
+  $output['#cache']['tags'] = array_merge(
+    $output['#cache']['tags'] ?? [],
+    ['nys_issues:most_followed']
+  );
+}
+
+/**
+ * Implements hook_cron().
+ *
+ * Invalidate the cache tag for issues listings every 24 hours.
+ * Schedule is controlled via Ultimate Cron configuration.
+ */
+function nys_issues_cron(): void {
+  \Drupal::service('cache_tags.invalidator')->invalidateTags(['nys_issues:most_followed']);
+  \Drupal::logger('nys_issues')->info('Issues Most Followed cache invalidated.');
+}
+
 /**
  * Implements hook_theme().
  */

@@ -90,30 +90,33 @@ class OpenlegImport extends DrushCommands {
   protected ImporterInterface $importer;
 
   /**
+   * Custom logger channel for OpenLeg imports.
+   *
+   * @var \Drupal\Core\Logger\LoggerChannelInterface|null
+   */
+  protected ?LoggerChannelInterface $customLogger = NULL;
+
+  /**
    * Constructor.
    */
-  public function __construct(Api $api, OpenlegImporterManager $manager, State $state, Slack $slack, LoggerChannelInterface $logChannel = NULL) {
+  public function __construct(Api $api, OpenlegImporterManager $manager, State $state, Slack $slack, ?LoggerChannelInterface $logChannel = NULL) {
     parent::__construct();
 
     $this->manager = $manager;
     $this->api = $api;
     $this->state = $state;
-    $this->setLogger($logChannel);
+    $this->customLogger = $logChannel;
     $this->slack = $slack;
   }
 
   /**
-   * Override for setLogger()
+   * Get the logger to use (custom logger if available, otherwise Drush logger).
    *
-   * Drush likes to replace the logger after instantiation, but the logger
-   * created by OpenLeg API already has a drush logger, and allows for
-   * conditional logging based on config.  A better option would be to figure
-   * out how to replace drush's DbLog logger with a ConditionalLogger.
+   * @return \Psr\Log\LoggerInterface|null
+   *   The active logger instance, or NULL if not available.
    */
-  public function setLogger(LoggerInterface $logger): void {
-    if (!($this->logger instanceof LoggerChannelInterface)) {
-      $this->logger = $logger;
-    }
+  protected function getActiveLogger(): ?LoggerInterface {
+    return $this->customLogger ?? $this->logger();
   }
 
   /**
@@ -162,8 +165,8 @@ class OpenlegImport extends DrushCommands {
 
     // This should be using our conditional logger.  If not, ignore it.
     try {
-      if ($this->logger instanceof ConditionalLogger) {
-        $this->logger->setLogLevel($options['log-level']);
+      if ($this->customLogger instanceof ConditionalLogger) {
+        $this->customLogger->setLogLevel($options['log-level']);
       }
     }
     catch (\Throwable) {
@@ -189,12 +192,12 @@ class OpenlegImport extends DrushCommands {
   protected function processLock(): bool {
     $has_lock = $this->getState('locked', 0);
     if ($has_lock) {
-      $this->logger->warning("Process lock detected ...");
+      $this->getActiveLogger()->warning("Process lock detected ...");
       if (!$this->options['force']) {
         $message = "Process lock in place since " .
           date(Request::OPENLEG_TIME_SIMPLE, $has_lock) .
           ".  Wait for it to release, or use option --force to reset.";
-        $this->logger->critical($message);
+        $this->getActiveLogger()->critical($message);
         $opts = array_intersect_key($this->options,
           [
             'ids' => 0,
@@ -212,7 +215,7 @@ class OpenlegImport extends DrushCommands {
           ->send('Unexpected process lock detected during OpenLeg imports');
         return FALSE;
       }
-      $this->logger->notice("Ignoring lock because --force was used.");
+      $this->getActiveLogger()->notice("Ignoring lock because --force was used.");
     }
     return TRUE;
   }
@@ -233,7 +236,7 @@ class OpenlegImport extends DrushCommands {
   protected function doSetup(string $type, array $options = []): bool {
     // Get the importer and note the start of execution.
     $this->importer = $this->getImporter($type);
-    $this->logger->info(
+    $this->getActiveLogger()->info(
       "[@time] Beginning @type import", [
         '@type' => $type,
         '@time' => date(Request::OPENLEG_TIME_SIMPLE, time()),
@@ -260,7 +263,7 @@ class OpenlegImport extends DrushCommands {
    */
   protected function doCleanup(ImportResult $result): void {
     // Record the results.
-    $result->report($this->logger);
+    $result->report($this->getActiveLogger());
 
     // Release the lock.
     $this->setState('locked', 0);
@@ -402,7 +405,7 @@ class OpenlegImport extends DrushCommands {
     }
 
     // Run the import.
-    $this->logger->info('Total IDs selected: @count', ['@count' => count($this->options['ids'])]);
+    $this->getActiveLogger()->info('Total IDs selected: @count', ['@count' => count($this->options['ids'])]);
     return $this->importer->import($this->options['ids']);
   }
 
@@ -420,7 +423,7 @@ class OpenlegImport extends DrushCommands {
     // If a ResponseSearch is returned, add the results.
     if ($search instanceof YearBasedSearchList) {
       $names = $search->getIdFromYearList();
-      $this->logger->notice('Adding @session items from session @year', [
+      $this->getActiveLogger()->notice('Adding @session items from session @year', [
         '@session' => count($names),
         '@year' => $this->options['session'],
       ]);
@@ -428,12 +431,12 @@ class OpenlegImport extends DrushCommands {
     // If an EmptyList is returned, nothing was found.
     elseif ($search instanceof EmptyList) {
       $names = [];
-      $this->logger->notice('No items found for session @year', ['@year' => $this->options['session']]);
+      $this->getActiveLogger()->notice('No items found for session @year', ['@year' => $this->options['session']]);
     }
     // Anything else is unexpected.  Tell somebody.
     else {
       $names = [];
-      $this->logger->warning('Unexpected return from session search (success: @success, @msg)', [
+      $this->getActiveLogger()->warning('Unexpected return from session search (success: @success, @msg)', [
         '@msg' => $search->message(),
         '@success' => $search->success(),
       ]);
@@ -466,7 +469,7 @@ class OpenlegImport extends DrushCommands {
       $importer = $this->manager->getImporter($type);
     }
     catch (\Throwable $e) {
-      $this->logger->error('Could not instantiate importer for @type', [
+      $this->getActiveLogger()->error('Could not instantiate importer for @type', [
         '@type' => $type,
         '@msg' => $e->getMessage(),
       ]);

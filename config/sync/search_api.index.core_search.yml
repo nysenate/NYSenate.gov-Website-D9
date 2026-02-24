@@ -41,7 +41,7 @@ dependencies:
     - field.storage.node.field_subtitle
     - field.storage.node.field_summary
     - field.storage.taxonomy_term.field_committee_types
-    - search_api.server.pantheon_solr8
+    - search_api.server.pantheon_search
   module:
     - block_content
     - node
@@ -636,6 +636,7 @@ tracker_settings:
     indexing_order: fifo
 options:
   cron_limit: 50
+  delete_on_fail: true
   index_directly: false
   track_changes_in_references: false
-server: pantheon_solr8
+server: pantheon_search

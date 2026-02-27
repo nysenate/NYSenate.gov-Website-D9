@@ -13,6 +13,17 @@
 
 <article {{ attributes.addClass(classes) }}>
   {{ title_prefix }}
+  {% if node.moderation_state.value == 'flagged' and content.field_moderation_reason.0['#context']['value'] %}
+    <div class="messages messages--error">
+      <div class="messages__content">
+        <h2 class="visually-hidden">Warning message</h2>
+          <p><span>This content has been flagged and will not be published.</span></p>
+        <p><span>Reason:</span> {{ content.field_moderation_reason }}</p>
+          <p><span>How to fix:</span><br>To address the examples provided above, edit and resave, it will be automatically published.
+              To contest these findings, please contact the Secretary of the Senate at <a href="mailto=publish@nysenate.gov">publish@nysenate.gov</a></p>
+      </div>
+    </div>
+  {% endif %}
 
   {% if page %}
     <header class="c-news--head">
@@ -58,6 +69,7 @@
               attachment: content.field_attachment,
           } only %}
         {% endif %}
+      </div>
 
     </header>
   {% endif %}
@@ -69,7 +81,7 @@
       <div class="c-block c-block--img">
         {{ content.field_image_main }}
         {% if image_caption %}
-          <p class="c-img--caption">{{ image_caption }}
+          <p class="c-img--caption">{{ image_caption }}</p>
         {% endif %}
       </div>
     {% endif %}

@@ -1,0 +1,24 @@
+nys_moderation.moderation_test_set.*:
+  type: config_entity
+  label: 'Moderation Prompt Test Set'
+  mapping:
+    id:
+      type: machine_name
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
+    automator:
+      type: string
+      label: 'Automator'
+    entity_type:
+      type: string
+      label: 'Test Entity Type'
+    entities:
+      type: sequence
+      label: 'Entities'
+      orderby: value
+      nullable: true
+      sequence:
+        type: string
+        label: 'Entity ID'

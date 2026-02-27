@@ -34,9 +34,14 @@
         "drupal/address": "^2.0",
         "drupal/address_map_link": "^1.4",
         "drupal/admin_toolbar": "^3.0",
+        "drupal/ai": "^1.2",
+        "drupal/ai_agents": "^1.2",
+        "drupal/ai_provider_anthropic": "^1.2",
+        "drupal/ai_provider_openai": "^1.2",
         "drupal/ajax_comments": "^1.0@beta",
         "drupal/allowed_formats": "^2.0 || ^3.0",
         "drupal/auto_entitylabel": "^3.0@beta",
+        "drupal/base_field_override_ui": "^1.2",
         "drupal/better_exposed_filters": "^6.0",
         "drupal/block_content_template": "^1.5",
         "drupal/block_field": "^1.0@RC",
@@ -91,7 +96,6 @@
         "drupal/gin_toolbar": "^2.1",
         "drupal/google_analytics": "^3.1 || ^4.0.0",
         "drupal/google_tag": "^2.0",
-        "drupal/guardr_core": "2.x-dev",
         "drupal/honeypot": "^2.2",
         "drupal/htmlpurifier": "^1.0@RC",
         "drupal/image_style_quality": "^1.4",
@@ -131,6 +135,7 @@
         "drupal/privatemsg": "^1.0@alpha",
         "drupal/queue_ui": "^3.1",
         "drupal/queue_unique": "^3.0",
+        "drupal/r4032login": "^2.2",
         "drupal/rabbit_hole": "^2.0@beta",
         "drupal/real_aes": "^2.6",
         "drupal/recaptcha": "^3.0",
@@ -304,7 +309,8 @@
                 "2741877 - Nested modals don't work - fixed focal point preview modal": "https://www.drupal.org/files/issues/2024-06-20/drupal-core--2024-06-20--2741877--mr-8105.patch",
                 "3049216 - ajax error": "https://www.drupal.org/files/issues/2023-01-31/3049216-21_0.patch",
                 "3315678 - strnatcasecmp(): Passing null to parameter #2 ($string2) of type string is deprecated": "https://www.drupal.org/files/issues/2023-01-30/categorizing_plugin_error-3315678-16.patch",
-                "3359511 - [regression] missing menu active trail since Drupal 9.5.9": "https://www.drupal.org/files/issues/2025-01-14/3359511-103.patch"
+                "3359511 - [regression] missing menu active trail since Drupal 9.5.9": "https://www.drupal.org/files/issues/2025-01-14/3359511-103.patch",
+                "3199281 - Tableselect not applying \"selected\" classes to preselected rows": "https://git.drupalcode.org/project/drupal/-/merge_requests/13308.patch"
             },
             "drupal/inline_entity_form": {
                 "3099844 - Required fields make an optional IEF (erroneously) required": "https://www.drupal.org/files/issues/2024-02-01/inline_entity_form-required_fields_optional_ief-3099844-35.patch"
@@ -348,6 +354,15 @@
             },
             "drupal/entity_print": {
                 "Possibility to alter http headers when we generate PDF": "https://www.drupal.org/files/issues/2021-08-17/entity_print-3202847-4.patch"
+            },
+            "drupal/rabbit_hole": {
+              "3383171 - VBO Error": "https://www.drupal.org/files/issues/2025-11-12/entity-browser-error-3383171-16.patch"
+            },
+            "drupal/gin": {
+                "fix cache error": "https://git.drupalcode.org/project/gin/-/merge_requests/601.patch"
+            },
+            "drupal/ai": {
+                "3561131 - Config import error when adding automator to base fields": "https://git.drupalcode.org/project/ai/-/merge_requests/1032.patch"
             }
         }
     }

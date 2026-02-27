@@ -8,7 +8,7 @@
  * Project: NYSenate.gov Public Website
  * Author: Ken Zalewski
  * Date: 2017-12-30
- * Revised: 2018-02-09 - added URL redirects for committees
+ * Revised: 2018-02-09 - added URL redirects for
  * Revised: 2026-01-23 - removed deprecated SSL detection logic
  *
  *

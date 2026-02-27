@@ -1,0 +1,13 @@
+nys_moderation.prompt_testing:
+  title: 'Moderation Prompt Testing'
+  parent: nys_config.config
+  description: 'Prompt testing and test log review'
+  route_name: entity.moderation_test_set.collection
+nys_moderation.new_test_set:
+  title: 'Add a New Test Set'
+  parent: nys_moderation.prompt_testing
+  route_name: entity.moderation_test_set.add_form
+nys_moderation.review_logs:
+  title: 'Review Logs'
+  parent: nys_moderation.prompt_testing
+  route_name: entity.moderation_test_log.collection

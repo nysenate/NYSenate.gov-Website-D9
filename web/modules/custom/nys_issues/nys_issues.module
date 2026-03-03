@@ -20,9 +20,11 @@ function nys_issues_views_post_render(ViewExecutable $view, array &$output): voi
     return;
   }
 
-  // Only apply to displays that use flag_counts sorting.
-  $dominated_displays = ['most_followed', 'most_followed_page', 'block_3', 'page_1'];
-  if (!in_array($view->current_display, $dominated_displays)) {
+  // Only apply to displays that sort by flag_counts (global aggregate).
+  // Per-user flag displays (constituent_dashboard, etc.) already carry the
+  // 'user' cache context and are not page-cacheable regardless.
+  $flag_aggregate_displays = ['most_followed', 'most_followed_page'];
+  if (!in_array($view->current_display, $flag_aggregate_displays)) {
     return;
   }
 

@@ -14,6 +14,8 @@ dependencies:
     - node
     - options
     - taxonomy
+    - user
+    - views_custom_cache_tag
 id: homepage_hero
 label: 'Homepage Hero'
 module: views
@@ -606,8 +608,9 @@ display:
           sort_asc_label: Asc
           sort_desc_label: Desc
       access:
-        type: none
-        options: {  }
+        type: perm
+        options:
+          perm: 'access content'
       cache:
         type: custom_tag
         options:
@@ -692,6 +695,7 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - 'user.node_grants:view'
+        - user.permissions
       tags:
         - 'config:entityqueue.entity_queue.homepage_hero'
         - 'config:field.storage.node.field_image_hero'
@@ -712,6 +716,7 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - 'user.node_grants:view'
+        - user.permissions
       tags:
         - 'config:entityqueue.entity_queue.homepage_hero'
         - 'config:field.storage.node.field_image_hero'

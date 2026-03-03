@@ -17,6 +17,8 @@ dependencies:
     - node
     - semanticviews
     - taxonomy
+    - user
+    - views_custom_cache_tag
 id: homepage_events
 label: 'Homepage Events'
 module: views
@@ -651,8 +653,9 @@ display:
           sort_asc_label: Asc
           sort_desc_label: Desc
       access:
-        type: none
-        options: {  }
+        type: perm
+        options:
+          perm: 'access content'
       cache:
         type: custom_tag
         options:
@@ -861,19 +864,10 @@ display:
         - 'languages:language_interface'
         - url
         - 'user.node_grants:view'
+        - user.permissions
       tags:
         - 'config:field.storage.node.field_date_range'
         - 'config:field.storage.taxonomy_term.field_senator_name'
-    cache:
-      type: custom_tag
-      options:
-        custom_tag: |-
-          node_list:event
-          node_list:public_hearing
-    query:
-      type: views_query
-      options:
-        disable_sql_rewrite: true
   block_1:
     id: block_1
     display_title: 'In Session'
@@ -1195,6 +1189,14 @@ display:
         type: none
         options:
           offset: 0
+      cache:
+        type: custom_tag
+        options:
+          custom_tag: |-
+            node_list:event
+            node_list:meeting
+            node_list:public_hearing
+            node_list:session
       empty:
         area_text_custom:
           id: area_text_custom
@@ -1587,6 +1589,7 @@ display:
               attributes: ''
       defaults:
         empty: false
+        cache: false
         title: false
         pager: false
         style: false
@@ -1617,6 +1620,7 @@ display:
         - 'languages:language_interface'
         - url
         - 'user.node_grants:view'
+        - user.permissions
       tags:
         - 'config:field.storage.node.field_date_range'
   out_session:
@@ -2015,5 +2019,6 @@ display:
         - 'languages:language_interface'
         - url
         - 'user.node_grants:view'
+        - user.permissions
       tags:
         - 'config:field.storage.node.field_date_range'

@@ -12,6 +12,7 @@ dependencies:
     - flag
     - node
     - taxonomy
+    - user
     - views_infinite_scroll
 id: issues_listings
 label: 'Issues Listings'
@@ -173,8 +174,9 @@ display:
               reset_button_always_show: false
             filter: {  }
       access:
-        type: none
-        options: {  }
+        type: perm
+        options:
+          perm: 'access content'
       cache:
         type: tag
         options: {  }
@@ -255,6 +257,7 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - user
+        - user.permissions
       tags:
         - flag.flag.follow_issue
   block_2:
@@ -315,6 +318,7 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url.query_args
+        - user.permissions
       tags: {  }
   block_3:
     id: block_3
@@ -682,6 +686,7 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url
+        - user.permissions
       tags:
         - flag.flag.follow_issue
   explore_issues_alpha:
@@ -1417,6 +1422,7 @@ display:
         - 'languages:language_interface'
         - url.query_args
         - user
+        - user.permissions
       tags:
         - flag.flag.follow_issue
   meeting_issues:
@@ -1717,6 +1723,7 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url
+        - user.permissions
       tags: {  }
   most_followed:
     id: most_followed
@@ -2424,8 +2431,9 @@ display:
             automatically_load_content: false
             initially_load_all_pages: false
       access:
-        type: none
-        options: {  }
+        type: perm
+        options:
+          perm: 'access content'
       sorts:
         created:
           id: created
@@ -2456,6 +2464,7 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url.query_args
+        - user.permissions
       tags: {  }
   news_issues_listing:
     id: news_issues_listing
@@ -2500,6 +2509,7 @@ display:
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
+        - user.permissions
       tags: {  }
   page_1:
     id: page_1
@@ -3076,6 +3086,7 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url.query_args
+        - user.permissions
       tags: {  }
   popular_senators_page:
     id: popular_senators_page
@@ -3371,4 +3382,5 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url.query_args
+        - user.permissions
       tags: {  }

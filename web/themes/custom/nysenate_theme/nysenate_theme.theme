@@ -2782,9 +2782,19 @@ function nysenate_theme_preprocess_semanticviews_style__global_promo_banner__sen
  * Method for building the issue_card array.
  */
 function get_issue_card($term) {
-  $flag_link_service = \Drupal::service('flag.link_builder');
+  // Use a lazy builder for the flag link so that the user-specific follow
+  // state is isolated from the globally-cached view output. Calling
+  // flag.link_builder->build() directly would bake the current user's flag
+  // state into the view's render cache, causing cache poisoning where one
+  // authenticated user's follow state is served to another user.
+  $flag_link = [
+    '#lazy_builder' => [
+      'nys_issues.flag_lazy_builder:renderFlagLink',
+      [$term->getEntityTypeId(), $term->id()],
+    ],
+    '#create_placeholder' => TRUE,
+  ];
 
-  $flag_link = $flag_link_service->build($term->getEntityTypeId(), $term->id(), 'follow_issue', 'default');
   $issue_card = [
     'issue_link' => [
       'text' => $term->label(),

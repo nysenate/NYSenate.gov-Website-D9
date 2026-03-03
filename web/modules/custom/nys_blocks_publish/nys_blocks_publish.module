@@ -63,20 +63,18 @@ function nys_blocks_publish_entity_access(EntityInterface $entity, $operation, A
   /** @var \Drupal\block_content\BlockContentInterface $block */
   $block = $entity;
 
-  // If it's published, don't interfere (let core allow).
-  // Add cache dependency on the block so access is rechecked if it changes.
+  // If it's published, don't interfere (let core allow)
   if ($block->isPublished()) {
-    return AccessResult::neutral()->addCacheableDependency($block);
+    return AccessResult::neutral();
   }
 
-  // For unpublished blocks, check permission.
-  // Use cachePerPermissions() to properly vary by user permissions only when needed.
+  // For unpublished blocks, check permission
   if ($account->hasPermission('view unpublished custom blocks')) {
-    return AccessResult::allowed()->cachePerPermissions()->addCacheableDependency($block);
+    return AccessResult::allowed()->addCacheContexts(['user.permissions']);
   }
 
-  // Explicitly forbid otherwise.
-  return AccessResult::forbidden()->cachePerPermissions()->addCacheableDependency($block);
+  // Explicitly forbid otherwise
+  return AccessResult::forbidden()->addCacheContexts(['user.permissions']);
 }
 
 

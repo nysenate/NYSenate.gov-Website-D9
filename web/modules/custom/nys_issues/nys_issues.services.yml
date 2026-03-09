@@ -9,5 +9,6 @@ services:
     class: Drupal\nys_issues\IssueFlagLazyBuilder
     arguments:
       - '@flag.link_builder'
+      - '@current_user'
     tags:
       - { name: render.placeholder_renderer_lazy_builder }

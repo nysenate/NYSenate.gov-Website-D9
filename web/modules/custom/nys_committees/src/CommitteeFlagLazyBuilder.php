@@ -1,22 +1,22 @@
 <?php
 
-namespace Drupal\nys_issues;
+namespace Drupal\nys_committees;
 
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\flag\FlagLinkBuilderInterface;
 
 /**
- * Lazy builder for per-user follow flag links on issue listings.
+ * Lazy builder for per-user follow flag links in the committee actionbar.
  *
  * Wrapping the flag link in a lazy builder isolates the user-specific flag
- * state from the globally-cached view output, preventing cache poisoning
+ * state from the globally-cached page output, preventing cache poisoning
  * where one authenticated user's follow state is served to another user.
  */
-class IssueFlagLazyBuilder implements TrustedCallbackInterface {
+class CommitteeFlagLazyBuilder implements TrustedCallbackInterface {
 
   /**
-   * Constructs a new IssueFlagLazyBuilder.
+   * Constructs a new CommitteeFlagLazyBuilder.
    *
    * @param \Drupal\flag\FlagLinkBuilderInterface $flagLinkBuilder
    *   The flag link builder service.
@@ -32,32 +32,11 @@ class IssueFlagLazyBuilder implements TrustedCallbackInterface {
    * {@inheritdoc}
    */
   public static function trustedCallbacks(): array {
-    return ['renderFlagLink', 'renderActionbarFlagLink'];
+    return ['renderActionbarFlagLink'];
   }
 
   /**
-   * Renders the follow/unfollow flag link for the given taxonomy term.
-   *
-   * @param string $entity_type_id
-   *   The entity type ID (e.g. 'taxonomy_term').
-   * @param int|string $entity_id
-   *   The entity ID of the issue term.
-   *
-   * @return array
-   *   A render array for the flag link, varying by user.
-   */
-  public function renderFlagLink(string $entity_type_id, int|string $entity_id): array {
-    $build = $this->flagLinkBuilder->build($entity_type_id, $entity_id, 'follow_issue', 'default');
-
-    // Ensure the user cache context is explicit so the render cache creates
-    // separate entries per user rather than poisoning a shared entry.
-    $build['#cache']['contexts'][] = 'user';
-
-    return $build;
-  }
-
-  /**
-   * Renders the follow/unfollow issue flag link for the actionbar.
+   * Renders the follow/unfollow committee flag link for the actionbar.
    *
    * For anonymous users, returns a login link styled as the follow button.
    * For authenticated users, returns the per-user flag link.
@@ -65,7 +44,7 @@ class IssueFlagLazyBuilder implements TrustedCallbackInterface {
    * @param string $entity_type_id
    *   The entity type ID (e.g. 'taxonomy_term').
    * @param int|string $entity_id
-   *   The entity ID of the issue term.
+   *   The entity ID of the committee term.
    *
    * @return array
    *   A render array for the flag link or anonymous login link.
@@ -75,11 +54,11 @@ class IssueFlagLazyBuilder implements TrustedCallbackInterface {
       return [
         '#type' => 'html_tag',
         '#tag' => 'a',
-        '#value' => 'follow this issue',
+        '#value' => 'follow this committee',
         '#attributes' => [
           'href' => '/user/login',
-          'class' => ['icon-before__issue-follow'],
-          'title' => 'follow this issue',
+          'class' => ['icon-before__committee-follow'],
+          'title' => 'follow this committee',
         ],
         '#cache' => [
           'contexts' => ['user.roles:anonymous'],
@@ -87,7 +66,7 @@ class IssueFlagLazyBuilder implements TrustedCallbackInterface {
       ];
     }
 
-    $build = $this->flagLinkBuilder->build($entity_type_id, $entity_id, 'follow_issue', 'default');
+    $build = $this->flagLinkBuilder->build($entity_type_id, $entity_id, 'follow_committee', 'default');
     $build['#cache']['contexts'][] = 'user';
 
     return $build;

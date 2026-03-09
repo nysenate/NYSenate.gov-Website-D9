@@ -2927,7 +2927,13 @@ function nysenate_theme_preprocess_page__node__microsite_page(&$variables) {
     $tid = $node->field_committee->target_id;
     $term = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load($tid);
     $variables['actionbar']['type'] = 'committee';
-    $variables['actionbar']['flag_follow_committee'] = \Drupal::service('flag.link_builder')->build($term->getEntityTypeId(), $term->id(), 'follow_committee', 'default');
+    $variables['actionbar']['flag_follow_committee'] = [
+      '#lazy_builder' => [
+        'nys_committees.flag_lazy_builder:renderActionbarFlagLink',
+        [$term->getEntityTypeId(), $term->id()],
+      ],
+      '#create_placeholder' => TRUE,
+    ];
     $variables['actionbar']['committee_title'] = $term->getName();
     $variables['actionbar']['committee_type'] = $term->field_committee_types->value;
   }
@@ -4752,7 +4758,6 @@ function nysenate_theme_preprocess_form_element(&$variables) {
  */
 function nysenate_theme_preprocess_page(&$variables) {
   $user = \Drupal::service('nys_users.user_helper')->resolveUser();
-  $flag_link_service = \Drupal::service('flag.link_builder');
   $menu_tree = \Drupal::menuTree();
   // Build the typical default set of menu tree parameters.
   $parameters = $menu_tree->getCurrentRouteMenuTreeParameters('socials');
@@ -4821,17 +4826,35 @@ function nysenate_theme_preprocess_page(&$variables) {
 
       if ($vocabulary->label() == "Issues") {
         $variables['actionbar']['type'] = 'issue';
-        $variables['actionbar']['flag_follow_issue'] = $flag_link_service->build($term->getEntityTypeId(), $term->id(), 'follow_issue', 'default');
+        $variables['actionbar']['flag_follow_issue'] = [
+          '#lazy_builder' => [
+            'nys_issues.flag_lazy_builder:renderActionbarFlagLink',
+            [$term->getEntityTypeId(), $term->id()],
+          ],
+          '#create_placeholder' => TRUE,
+        ];
         $variables['actionbar']['issue_title'] = $term->getName();
       }
       if ($vocabulary->label() == "Majority Issues") {
         $variables['actionbar']['type'] = 'issue';
-        $variables['actionbar']['flag_follow_issue'] = $flag_link_service->build($term->getEntityTypeId(), $term->id(), 'follow_issue', 'default');
+        $variables['actionbar']['flag_follow_issue'] = [
+          '#lazy_builder' => [
+            'nys_issues.flag_lazy_builder:renderActionbarFlagLink',
+            [$term->getEntityTypeId(), $term->id()],
+          ],
+          '#create_placeholder' => TRUE,
+        ];
         $variables['actionbar']['issue_title'] = $term->getName();
       }
       if ($vocabulary->label() == "Committees") {
         $variables['actionbar']['type'] = 'committee';
-        $variables['actionbar']['flag_follow_committee'] = $flag_link_service->build($term->getEntityTypeId(), $term->id(), 'follow_committee', 'default');
+        $variables['actionbar']['flag_follow_committee'] = [
+          '#lazy_builder' => [
+            'nys_committees.flag_lazy_builder:renderActionbarFlagLink',
+            [$term->getEntityTypeId(), $term->id()],
+          ],
+          '#create_placeholder' => TRUE,
+        ];
         $variables['actionbar']['committee_title'] = $term->getName();
         $variables['actionbar']['committee_type'] = $term->field_committee_types->value;
       }

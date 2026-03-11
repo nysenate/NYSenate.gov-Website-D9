@@ -1541,21 +1541,22 @@ display:
             webform_submission_bulk_form: webform_submission_bulk_form
             sid: sid
             created: created
-            field_senator_name_family: field_senator_name_family
             field_senator_name_given: field_senator_name_given
+            field_senator_name_family: field_senator_name_family
             field_senator: field_senator
             field_district: field_district
-            webform_submission_value_2: webform_submission_value_2
-            webform_submission_value_9: webform_submission_value_9
-            webform_submission_value_1: webform_submission_value_1
             webform_submission_value_7: webform_submission_value_7
-            webform_submission_value_10: webform_submission_value_10
+            webform_submission_value_6: webform_submission_value_6
+            webform_submission_value: webform_submission_value
             webform_submission_value_3: webform_submission_value_3
             webform_submission_value_8: webform_submission_value_8
-            webform_submission_value: webform_submission_value
-            webform_submission_value_4: webform_submission_value_4
-            view_webform_submission: view_webform_submission
+            webform_submission_value_1: webform_submission_value_1
+            webform_submission_value_5: webform_submission_value_5
+            webform_submission_value_10: webform_submission_value_10
+            webform_submission_value_11: webform_submission_value_11
+            webform_submission_value_12: webform_submission_value_12
             edit_webform_submission: view_webform_submission
+            view_webform_submission: view_webform_submission
           default: '-1'
           info:
             webform_submission_bulk_form:
@@ -1577,14 +1578,14 @@ display:
               separator: ''
               empty_column: false
               responsive: ''
-            field_senator_name_family:
+            field_senator_name_given:
               sortable: false
               default_sort_order: asc
               align: ''
               separator: ''
               empty_column: false
               responsive: ''
-            field_senator_name_given:
+            field_senator_name_family:
               sortable: false
               default_sort_order: asc
               align: ''
@@ -1605,27 +1606,6 @@ display:
               separator: ''
               empty_column: false
               responsive: ''
-            webform_submission_value_2:
-              sortable: false
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            webform_submission_value_9:
-              sortable: false
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            webform_submission_value_1:
-              sortable: false
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
             webform_submission_value_7:
               sortable: false
               default_sort_order: asc
@@ -1633,7 +1613,14 @@ display:
               separator: ''
               empty_column: false
               responsive: ''
-            webform_submission_value_10:
+            webform_submission_value_6:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            webform_submission_value:
               sortable: false
               default_sort_order: asc
               align: ''
@@ -1654,14 +1641,42 @@ display:
               separator: ''
               empty_column: false
               responsive: ''
-            webform_submission_value:
+            webform_submission_value_1:
               sortable: false
               default_sort_order: asc
               align: ''
               separator: ''
               empty_column: false
               responsive: ''
-            webform_submission_value_4:
+            webform_submission_value_5:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: '<br>'
+              empty_column: false
+              responsive: ''
+            webform_submission_value_10:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            webform_submission_value_11:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            webform_submission_value_12:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            edit_webform_submission:
               sortable: false
               default_sort_order: asc
               align: ''
@@ -1673,13 +1688,6 @@ display:
               default_sort_order: asc
               align: ''
               separator: '<br>'
-              empty_column: false
-              responsive: ''
-            edit_webform_submission:
-              sortable: false
-              default_sort_order: asc
-              align: ''
-              separator: ''
               empty_column: false
               responsive: ''
           override: true
@@ -4101,15 +4109,15 @@ display:
           webform_multiple_value: true
           webform_multiple_delta: 0
           webform_check_access: 1
-        webform_submission_value:
-          id: webform_submission_value
-          table: webform_submission_field_teachers_certificate_program_contact_information
+        webform_submission_value_5:
+          id: webform_submission_value_5
+          table: webform_submission_field_teachers_certificate_program_contact_phone_number
           field: webform_submission_value
           relationship: none
           group_type: group
           admin_label: ''
           plugin_id: webform_submission_field
-          label: 'Contact information'
+          label: 'Contact Phone Number'
           exclude: false
           alter:
             alter_text: false
@@ -4151,6 +4159,59 @@ display:
           empty_zero: false
           hide_alter_empty: true
           webform_element_format: value
+          webform_multiple_value: true
+          webform_multiple_delta: 0
+          webform_check_access: 1
+        webform_submission_value_6:
+          id: webform_submission_value_6
+          table: webform_submission_field_teachers_certificate_program_your_school_email_address
+          field: webform_submission_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: webform_submission_field
+          label: 'School Email Address'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          webform_element_format: link
           webform_multiple_value: true
           webform_multiple_delta: 0
           webform_check_access: 1
@@ -5024,59 +5085,6 @@ display:
           webform_multiple_value: true
           webform_multiple_delta: 0
           webform_check_access: 1
-        webform_submission_value_2:
-          id: webform_submission_value_2
-          table: webform_submission_field_graduation_certificate_program__grade_moving_up_or_graduating_from
-          field: webform_submission_value
-          relationship: none
-          group_type: group
-          admin_label: ''
-          plugin_id: webform_submission_field
-          label: Grade
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: true
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          webform_element_format: value
-          webform_multiple_value: true
-          webform_multiple_delta: 0
-          webform_check_access: 1
         webform_submission_value:
           id: webform_submission_value
           table: webform_submission_field_graduation_certificate_program__certificate_requested
@@ -5191,7 +5199,7 @@ display:
           group_type: group
           admin_label: ''
           plugin_id: webform_submission_field
-          label: Telephone
+          label: 'Telephone Number'
           exclude: false
           alter:
             alter_text: false
@@ -5244,7 +5252,7 @@ display:
           group_type: group
           admin_label: ''
           plugin_id: webform_submission_field
-          label: Email
+          label: 'School Email Address'
           exclude: false
           alter:
             alter_text: false
@@ -5289,15 +5297,15 @@ display:
           webform_multiple_value: true
           webform_multiple_delta: 0
           webform_check_access: 1
-        field_school_address_address_line1:
-          id: field_school_address_address_line1
-          table: node__field_school_address
-          field: field_school_address_address_line1
-          relationship: webform_submission_value
+        webform_submission_value_5:
+          id: webform_submission_value_5
+          table: webform_submission_field_graduation_certificate_program__school_address_for_certificates_to_be_delivered_to__address
+          field: webform_submission_value
+          relationship: none
           group_type: group
           admin_label: ''
-          plugin_id: standard
-          label: 'School Address'
+          plugin_id: webform_submission_composite_field
+          label: Address
           exclude: false
           alter:
             alter_text: false
@@ -5338,15 +5346,19 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-        field_school_address_locality:
-          id: field_school_address_locality
-          table: node__field_school_address
-          field: field_school_address_locality
-          relationship: webform_submission_value
+          webform_element_format: value
+          webform_multiple_value: true
+          webform_multiple_delta: 0
+          webform_check_access: 1
+        webform_submission_value_9:
+          id: webform_submission_value_9
+          table: webform_submission_field_graduation_certificate_program__school_address_for_certificates_to_be_delivered_to__city
+          field: webform_submission_value
+          relationship: none
           group_type: group
           admin_label: ''
-          plugin_id: subdivision
-          label: 'School City'
+          plugin_id: webform_submission_composite_field
+          label: City/Town
           exclude: false
           alter:
             alter_text: false
@@ -5387,16 +5399,19 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          display_name: true
-        field_school_address_administrative_area:
-          id: field_school_address_administrative_area
-          table: node__field_school_address
-          field: field_school_address_administrative_area
-          relationship: webform_submission_value
+          webform_element_format: value
+          webform_multiple_value: true
+          webform_multiple_delta: 0
+          webform_check_access: 1
+        webform_submission_value_10:
+          id: webform_submission_value_10
+          table: webform_submission_field_graduation_certificate_program__school_address_for_certificates_to_be_delivered_to__state_province
+          field: webform_submission_value
+          relationship: none
           group_type: group
           admin_label: ''
-          plugin_id: subdivision
-          label: 'School State'
+          plugin_id: webform_submission_composite_field
+          label: State
           exclude: false
           alter:
             alter_text: false
@@ -5437,16 +5452,19 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          display_name: true
-        field_school_address_postal_code:
-          id: field_school_address_postal_code
-          table: node__field_school_address
-          field: field_school_address_postal_code
-          relationship: webform_submission_value
+          webform_element_format: value
+          webform_multiple_value: true
+          webform_multiple_delta: 0
+          webform_check_access: 1
+        webform_submission_value_11:
+          id: webform_submission_value_11
+          table: webform_submission_field_graduation_certificate_program__school_address_for_certificates_to_be_delivered_to__postal_code
+          field: webform_submission_value
+          relationship: none
           group_type: group
           admin_label: ''
-          plugin_id: standard
-          label: 'School Zip'
+          plugin_id: webform_submission_composite_field
+          label: 'ZIP/Postal Code'
           exclude: false
           alter:
             alter_text: false
@@ -5487,6 +5505,10 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
+          webform_element_format: value
+          webform_multiple_value: true
+          webform_multiple_delta: 0
+          webform_check_access: 1
       filters:
         webform_id:
           id: webform_id
@@ -6555,15 +6577,68 @@ display:
           webform_multiple_value: true
           webform_multiple_delta: 0
           webform_check_access: 1
-        webform_submission_value:
-          id: webform_submission_value
-          table: webform_submission_field_teachers_certificate_program_contact_information
+        webform_submission_value_5:
+          id: webform_submission_value_5
+          table: webform_submission_field_teachers_certificate_program_contact_phone_number
           field: webform_submission_value
           relationship: none
           group_type: group
           admin_label: ''
           plugin_id: webform_submission_field
-          label: 'Contact information'
+          label: 'Contact Information'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          webform_element_format: value
+          webform_multiple_value: true
+          webform_multiple_delta: 0
+          webform_check_access: 1
+        webform_submission_value_6:
+          id: webform_submission_value_6
+          table: webform_submission_field_teachers_certificate_program_your_school_email_address
+          field: webform_submission_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: webform_submission_field
+          label: Email
           exclude: false
           alter:
             alter_text: false
@@ -7517,59 +7592,6 @@ display:
           webform_multiple_value: true
           webform_multiple_delta: 0
           webform_check_access: 1
-        webform_submission_value_2:
-          id: webform_submission_value_2
-          table: webform_submission_field_graduation_certificate_program__grade_moving_up_or_graduating_from
-          field: webform_submission_value
-          relationship: none
-          group_type: group
-          admin_label: ''
-          plugin_id: webform_submission_field
-          label: Grade
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: true
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          webform_element_format: value
-          webform_multiple_value: true
-          webform_multiple_delta: 0
-          webform_check_access: 1
         webform_submission_value:
           id: webform_submission_value
           table: webform_submission_field_graduation_certificate_program__certificate_requested
@@ -7684,7 +7706,7 @@ display:
           group_type: group
           admin_label: ''
           plugin_id: webform_submission_field
-          label: Telephone
+          label: 'Telephone Number'
           exclude: false
           alter:
             alter_text: false
@@ -7737,7 +7759,7 @@ display:
           group_type: group
           admin_label: ''
           plugin_id: webform_submission_field
-          label: Email
+          label: 'School Email Address'
           exclude: false
           alter:
             alter_text: false

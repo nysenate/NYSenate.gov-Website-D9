@@ -1,0 +1,43 @@
+uuid: 506e50bf-7033-4e30-8e4b-2915d233d0bf
+langcode: en
+status: true
+dependencies:
+  module:
+    - field_permissions
+    - node
+    - options
+third_party_settings:
+  field_permissions:
+    permission_type: custom
+id: node.field_ai_test_set
+field_name: field_ai_test_set
+entity_type: node
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: '1'
+      label: 'Set 1'
+    -
+      value: '2'
+      label: 'Set 2'
+    -
+      value: '3'
+      label: 'Set 3'
+    -
+      value: '4'
+      label: 'Set 4'
+    -
+      value: '5'
+      label: 'Set 5'
+    -
+      value: '6'
+      label: 'Set 6'
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

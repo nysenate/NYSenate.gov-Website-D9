@@ -1,0 +1,8 @@
+services:
+  nys_committees.flag_lazy_builder:
+    class: Drupal\nys_committees\CommitteeFlagLazyBuilder
+    arguments:
+      - '@flag.link_builder'
+      - '@current_user'
+    tags:
+      - { name: render.placeholder_renderer_lazy_builder }

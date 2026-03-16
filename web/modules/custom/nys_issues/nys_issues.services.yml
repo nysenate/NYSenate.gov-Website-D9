@@ -4,3 +4,11 @@ services:
     arguments: ['@flag', '@entity_type.manager', '@logger.factory', '@messenger', '@string_translation']
     tags:
       - { name: event_subscriber }
+
+  nys_issues.flag_lazy_builder:
+    class: Drupal\nys_issues\IssueFlagLazyBuilder
+    arguments:
+      - '@flag.link_builder'
+      - '@current_user'
+    tags:
+      - { name: render.placeholder_renderer_lazy_builder }

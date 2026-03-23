@@ -211,7 +211,8 @@
         "phpstan/phpstan": "^1.10",
         "phpstan/phpstan-deprecation-rules": "^1.1",
         "symfony/var-dumper": "^6.0",
-        "vlucas/phpdotenv": "^2.4"
+        "vlucas/phpdotenv": "^2.4",
+        "weitzman/drupal-test-traits": "^2.0"
     },
     "conflict": {
         "drupal/drupal": "*"
@@ -246,6 +247,9 @@
         ]
     },
     "autoload-dev": {
+        "psr-4": {
+            "Drupal\\Tests\\nys\\": "tests/dtt/src/"
+        },
         "files": ["load.environment.php"]
     },
     "scripts": {

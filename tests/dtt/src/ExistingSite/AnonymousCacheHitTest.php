@@ -1,0 +1,126 @@
+<?php
+
+namespace Drupal\Tests\nys\ExistingSite;
+
+/**
+ * Verifies anonymous page cache (x-drupal-cache) behavior.
+ *
+ * Covers:
+ *  - Cache HITs on the 6 top-level navigation pages after a warm request.
+ *  - cache-control: max-age=86400, public on those pages.
+ *  - Negative cases: irrelevant content edits must not bust unrelated pages.
+ *
+ * Add new test methods here for any additional anonymous caching assertions.
+ *
+ * @group cache_regression
+ */
+class AnonymousCacheHitTest extends CacheTestBase {
+
+  // ---------------------------------------------------------------------------
+  // Cache HIT per page
+  // ---------------------------------------------------------------------------
+
+  /**
+   * Each top-level page must return x-drupal-cache: HIT on second request.
+   *
+   * @dataProvider topLevelPageProvider
+   */
+  public function testAnonymousCacheHit(string $path): void {
+    $this->warmCache($path);
+    $this->assertAnonymousCacheHit($path);
+  }
+
+  // ---------------------------------------------------------------------------
+  // cache-control: max-age=86400, public
+  // ---------------------------------------------------------------------------
+
+  /**
+   * All 6 top-level pages must declare a 24-hour public cache lifetime.
+   *
+   * @dataProvider topLevelPageProvider
+   */
+  public function testCacheControlMaxAge(string $path): void {
+    $this->assertCacheControlMaxAge($path, 86400);
+  }
+
+  // ---------------------------------------------------------------------------
+  // Content edit non-invalidation (negative cases)
+  //
+  // For each content type, assert that pages it does NOT feed remain cached
+  // after a re-save. The complement (MISS on pages that DO display the
+  // content) is covered in CacheMissInvalidationTest.
+  // ---------------------------------------------------------------------------
+
+  /**
+   * An article edit must not invalidate pages that don't display articles.
+   *
+   * Articles feed / and /news-and-issues only.
+   *
+   * @dataProvider articleNonInvalidatedPagesProvider
+   */
+  public function testArticleEditDoesNotInvalidate(string $path): void {
+    $article = $this->findNodeByType('article');
+    $this->assertNotNull($article, "No published 'article' node found.");
+    $this->warmCache($path);
+    $article->save();
+    $this->assertAnonymousCacheHit($path);
+  }
+
+  public function articleNonInvalidatedPagesProvider(): array {
+    return $this->asProvider(['/senators-committees', '/legislation', '/events', '/about']);
+  }
+
+  /**
+   * A bill edit must not invalidate pages that don't display bills.
+   *
+   * Bills appear on /legislation only.
+   *
+   * @dataProvider billNonInvalidatedPagesProvider
+   */
+  public function testBillEditDoesNotInvalidate(string $path): void {
+    $bill = $this->findSaveableBillNode();
+    $this->assertNotNull($bill, 'No bill with valid print number and session found.');
+    $this->warmCache($path);
+    $bill->save();
+    $this->assertAnonymousCacheHit($path);
+  }
+
+  public function billNonInvalidatedPagesProvider(): array {
+    return $this->asProvider(['/', '/news-and-issues', '/senators-committees', '/events', '/about']);
+  }
+
+  /**
+   * An event edit must not invalidate pages that don't display events.
+   *
+   * Events appear on / and /events only.
+   *
+   * @dataProvider eventNonInvalidatedPagesProvider
+   */
+  public function testEventEditDoesNotInvalidate(string $path): void {
+    $event = $this->findNodeByType('event');
+    $this->assertNotNull($event, "No published 'event' node found.");
+    $this->warmCache($path);
+    $event->save();
+    $this->assertAnonymousCacheHit($path);
+  }
+
+  public function eventNonInvalidatedPagesProvider(): array {
+    return $this->asProvider(['/news-and-issues', '/senators-committees', '/legislation', '/about']);
+  }
+
+  /**
+   * A petition edit must not invalidate any top-level page.
+   *
+   * Petitions appear on no top-level navigation pages.
+   *
+   * @dataProvider topLevelPageProvider
+   */
+  public function testPetitionEditDoesNotInvalidate(string $path): void {
+    $petition = $this->findNodeByType('petition');
+    $this->assertNotNull($petition, "No published 'petition' node found.");
+    $this->warmCache($path);
+    $petition->save();
+    $this->assertAnonymousCacheHit($path);
+  }
+
+}

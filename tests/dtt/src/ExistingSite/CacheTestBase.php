@@ -83,6 +83,9 @@ abstract class CacheTestBase extends ExistingSiteBase {
       'allow_redirects' => FALSE,
       // Do not share a cookie jar across requests so no session bleeds through.
       'cookies' => FALSE,
+      // Fail fast rather than hanging indefinitely if the server stalls.
+      'connect_timeout' => 15,
+      'timeout' => 60,
     ]);
   }
 
@@ -170,14 +173,30 @@ abstract class CacheTestBase extends ExistingSiteBase {
   }
 
   /**
-   * Asserts that the next anonymous request returns x-drupal-cache: MISS.
+   * Asserts that a cache invalidation has propagated and returns a MISS.
    *
-   * Does NOT warm the cache first — callers control when to issue this.
+   * On Pantheon, Drupal invalidates Redis page cache synchronously but the
+   * Fastly BAN/purge is sent asynchronously over the network. There is a
+   * short window after $entity->save() where Fastly still returns a HIT
+   * before it processes the surrogate-key purge — the same race condition
+   * warmCache() handles in the opposite direction. This method polls until a
+   * MISS is confirmed (or fails after exhausting retries), giving Fastly time
+   * to act on the cache tag invalidation.
+   *
+   * On DDEV the first request is typically an immediate MISS with no sleep.
    */
   protected function assertAnonymousCacheMiss(string $path): void {
-    $response = $this->anonClient->get($path);
-    $status = $this->getCacheStatus($response);
-    $this->assertSame('MISS', $status,
+    for ($attempt = 0; $attempt <= 10; $attempt++) {
+      $response = $this->anonClient->get($path);
+      $status = $this->getCacheStatus($response);
+      if ($status === 'MISS') {
+        return;
+      }
+      if ($attempt < 10) {
+        usleep(500000);
+      }
+    }
+    $this->assertSame('MISS', $status ?? '',
       "Expected cache MISS on anonymous request to {$path}, got: {$status}");
   }
 

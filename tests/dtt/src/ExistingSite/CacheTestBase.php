@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\nys\ExistingSite;
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\node\NodeInterface;
 use Drupal\taxonomy\TermInterface;
 use GuzzleHttp\Client;
@@ -173,19 +174,21 @@ abstract class CacheTestBase extends ExistingSiteBase {
   }
 
   /**
-   * Asserts that a cache invalidation has propagated and returns a MISS.
+   * Asserts that an anonymous request returns a cache MISS.
    *
-   * On Pantheon, Drupal invalidates Redis page cache synchronously but the
-   * Fastly BAN/purge is sent asynchronously over the network. There is a
-   * short window after $entity->save() where Fastly still returns a HIT
-   * before it processes the surrogate-key purge — the same race condition
-   * warmCache() handles in the opposite direction. This method polls until a
-   * MISS is confirmed (or fails after exhausting retries), giving Fastly time
-   * to act on the cache tag invalidation.
+   * All cache invalidations in this suite are triggered by saveViaWebRequest(),
+   * which submits the entity edit form as a real HTTP POST through the full
+   * stack. On Pantheon, PHP-FPM fires kernel.terminate after sending the
+   * response, which causes pantheon_advanced_page_cache to dispatch a Fastly
+   * BAN for the invalidated cache tags. There is a short window between the
+   * save completing and Fastly processing the BAN, so this method polls until
+   * x-cache: MISS is confirmed — the same race warmCache() handles in reverse.
    *
-   * On DDEV the first request is typically an immediate MISS with no sleep.
+   * On DDEV there is no Fastly; getCacheStatus() falls back to x-drupal-cache
+   * which reflects the Redis state and returns MISS immediately after a save.
    */
   protected function assertAnonymousCacheMiss(string $path): void {
+    $status = '';
     for ($attempt = 0; $attempt <= 10; $attempt++) {
       $response = $this->anonClient->get($path);
       $status = $this->getCacheStatus($response);
@@ -196,7 +199,7 @@ abstract class CacheTestBase extends ExistingSiteBase {
         usleep(500000);
       }
     }
-    $this->assertSame('MISS', $status ?? '',
+    $this->assertSame('MISS', $status,
       "Expected cache MISS on anonymous request to {$path}, got: {$status}");
   }
 
@@ -220,6 +223,24 @@ abstract class CacheTestBase extends ExistingSiteBase {
       return strtoupper((string) end($parts));
     }
     return strtoupper(trim($response->getHeaderLine('x-drupal-cache')));
+  }
+
+  /**
+   * Saves an entity by submitting its edit form through the DTT browser.
+   *
+   * Submitting via real HTTP POST fires kernel.terminate on the web server,
+   * which causes pantheon_advanced_page_cache to dispatch Fastly BAN requests
+   * for any cache tags invalidated by the save. This is required for
+   * assertAnonymousCacheMiss() to observe x-cache: MISS on Pantheon; CLI saves
+   * ($entity->save()) correctly invalidate Redis but never reach Fastly because
+   * kernel.terminate is never fired outside a web request.
+   *
+   * The caller must be logged in (e.g. via drupalLogin()) before calling this.
+   */
+  protected function saveViaWebRequest(EntityInterface $entity): void {
+    $path = $entity->toUrl('edit-form')->setAbsolute(FALSE)->toString();
+    $this->visit($path);
+    $this->getSession()->getPage()->pressButton('Save');
   }
 
   /**

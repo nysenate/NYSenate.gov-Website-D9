@@ -4,6 +4,7 @@ namespace Drupal\Tests\nys\ExistingSite;
 
 use Drupal\block_content\BlockContentInterface;
 use Drupal\node\NodeInterface;
+use Drupal\user\UserInterface;
 
 /**
  * Verifies that cache is invalidated (MISS) when relevant content changes.
@@ -11,21 +12,51 @@ use Drupal\node\NodeInterface;
  * Each test follows the same pattern:
  *  1. warmCache() — primes the page cache (first request, MISS, discarded).
  *  2. assertAnonymousCacheHit() — confirms the page is now cached.
- *  3. Trigger a relevant change via the Drupal API.
- *  4. assertAnonymousCacheMiss() — cache tags invalidated, fresh MISS.
+ *  3. saveViaWebRequest() — submits the entity edit form as a real HTTP POST.
+ *     On Pantheon this fires kernel.terminate which dispatches a Fastly BAN for
+ *     the invalidated cache tags, making the next anonymous request a MISS via
+ *     x-cache rather than only via x-drupal-cache. CLI saves ($entity->save())
+ *     invalidate Redis but never reach Fastly, so they cannot be used here.
+ *  4. assertAnonymousCacheMiss() — polls until x-cache (Fastly) or
+ *     x-drupal-cache (DDEV) returns MISS.
  *  5. assertAnonymousCacheHit() — cache rebuilt correctly after the MISS.
  *
  * Note: assertAnonymousCacheHit() does NOT internally warm the cache.
  * Every test must call warmCache() explicitly (step 1) to avoid false
  * failures from cross-test cache contamination.
  *
- * Most tests trigger a no-op entity re-save (no field values are altered).
- * Tests that cannot use a re-save (e.g. Views cache tag invalidation) call
- * the cache_tags.invalidator service directly, mirroring the production code.
+ * Exception: testHomepageMissOnHomepageHeroQueueChange() uses CLI tag
+ * invalidation and checks the Redis page cache bin directly, because the
+ * production trigger (HomepageHeroController::homepageHeroAddItem()) is an
+ * AJAX form submit handler that cannot be invoked without a JS-capable driver.
  *
  * @group cache_regression
  */
 class CacheMissInvalidationTest extends CacheTestBase {
+
+  /**
+   * Administrator user created for web-form–based entity saves.
+   *
+   * @var \Drupal\user\UserInterface|null
+   */
+  protected ?UserInterface $adminUser = NULL;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+    $this->adminUser = $this->createUser([], 'cache_test_admin', TRUE);
+    $this->drupalLogin($this->adminUser);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function tearDown(): void {
+    $this->drupalLogout();
+    parent::tearDown();
+  }
 
   // ---------------------------------------------------------------------------
   // Homepage ( / )
@@ -40,7 +71,7 @@ class CacheMissInvalidationTest extends CacheTestBase {
 
     $this->warmCache('/');
     $this->assertAnonymousCacheHit('/');
-    $article->save();
+    $this->saveViaWebRequest($article);
     $this->assertAnonymousCacheMiss('/');
     $this->assertAnonymousCacheHit('/');
   }
@@ -54,19 +85,28 @@ class CacheMissInvalidationTest extends CacheTestBase {
 
     $this->warmCache('/');
     $this->assertAnonymousCacheHit('/');
-    $event->save();
+    $this->saveViaWebRequest($event);
     $this->assertAnonymousCacheMiss('/');
     $this->assertAnonymousCacheHit('/');
   }
 
   /**
-   * Adding a session node to the homepage_hero queue invalidates the homepage.
+   * Changing the homepage_hero queue invalidates the homepage.
    *
-   * Saving the entity_subqueue entity alone does not invalidate the page
-   * cache; HomepageHeroController::homepageHeroAddItem() explicitly invalidates
-   * the views:homepage_hero tag whenever the queue changes. This test confirms
-   * the homepage page cache is properly tagged and misses when that tag is
-   * invalidated.
+   * The production trigger is the "Add item" button on the entity subqueue
+   * edit form. nys_homepage_hero_form_entity_subqueue_homepage_hero_edit_form_alter()
+   * registers HomepageHeroController::homepageHeroAddItem() as a #submit
+   * callback on that button, which calls invalidateTags(['views:homepage_hero']).
+   *
+   * Although the button also carries a #ajax key, Drupal's #submit callbacks
+   * run identically for plain HTTP POST requests (Goutte) and AJAX requests —
+   * #ajax only changes what the client receives in response. Pressing the
+   * button via Goutte therefore exercises the real production code path end-to-
+   * end: HTTP POST → Drupal form pipeline → homepageHeroAddItem() →
+   * invalidateTags → kernel.terminate → Fastly BAN → x-cache: MISS.
+   *
+   * The "Add item" button does NOT invoke the main entity save handler, so
+   * the queue contents are NOT permanently modified; this test is side-effect-free.
    */
   public function testHomepageMissOnHomepageHeroQueueChange(): void {
     $this->assertNotNull(
@@ -74,9 +114,26 @@ class CacheMissInvalidationTest extends CacheTestBase {
       "homepage_hero entity_subqueue not found."
     );
 
+    $node = $this->findHomepageHeroQueueItem();
+    $this->assertNotNull($node,
+      'No published node found with a valid homepage_hero queue bundle (article, event, meeting, public_hearing, session).'
+    );
+
     $this->warmCache('/');
     $this->assertAnonymousCacheHit('/');
-    \Drupal::service('cache_tags.invalidator')->invalidateTags(['views:homepage_hero']);
+
+    // Navigate to the entity subqueue edit form and submit the "Add item"
+    // button. The autocomplete field expects "Entity Label (entity_id)" format.
+    // Pressing the button (not the main Save) fires homepageHeroAddItem() and
+    // rebuilds the form without persisting changes to the database.
+    $this->visit('/admin/structure/entityqueue/homepage_hero/homepage_hero');
+    $page = $this->getSession()->getPage();
+    $page->fillField(
+      'items[add_more][new_item][target_id]',
+      $node->label() . ' (' . $node->id() . ')'
+    );
+    $page->pressButton('Add item');
+
     $this->assertAnonymousCacheMiss('/');
     $this->assertAnonymousCacheHit('/');
   }
@@ -94,7 +151,7 @@ class CacheMissInvalidationTest extends CacheTestBase {
 
     $this->warmCache('/news-and-issues');
     $this->assertAnonymousCacheHit('/news-and-issues');
-    $article->save();
+    $this->saveViaWebRequest($article);
     $this->assertAnonymousCacheMiss('/news-and-issues');
     $this->assertAnonymousCacheHit('/news-and-issues');
   }
@@ -112,7 +169,7 @@ class CacheMissInvalidationTest extends CacheTestBase {
 
     $this->warmCache('/senators-committees');
     $this->assertAnonymousCacheHit('/senators-committees');
-    $senator->save();
+    $this->saveViaWebRequest($senator);
     $this->assertAnonymousCacheMiss('/senators-committees');
     $this->assertAnonymousCacheHit('/senators-committees');
   }
@@ -126,7 +183,7 @@ class CacheMissInvalidationTest extends CacheTestBase {
 
     $this->warmCache('/senators-committees');
     $this->assertAnonymousCacheHit('/senators-committees');
-    $committee->save();
+    $this->saveViaWebRequest($committee);
     $this->assertAnonymousCacheMiss('/senators-committees');
     $this->assertAnonymousCacheHit('/senators-committees');
   }
@@ -146,7 +203,7 @@ class CacheMissInvalidationTest extends CacheTestBase {
 
     $this->warmCache('/legislation');
     $this->assertAnonymousCacheHit('/legislation');
-    $bill->save();
+    $this->saveViaWebRequest($bill);
     $this->assertAnonymousCacheMiss('/legislation');
     $this->assertAnonymousCacheHit('/legislation');
   }
@@ -164,7 +221,7 @@ class CacheMissInvalidationTest extends CacheTestBase {
 
     $this->warmCache('/events');
     $this->assertAnonymousCacheHit('/events');
-    $event->save();
+    $this->saveViaWebRequest($event);
     $this->assertAnonymousCacheMiss('/events');
     $this->assertAnonymousCacheHit('/events');
   }
@@ -187,7 +244,7 @@ class CacheMissInvalidationTest extends CacheTestBase {
 
     $this->warmCache('/about');
     $this->assertAnonymousCacheHit('/about');
-    $node->save();
+    $this->saveViaWebRequest($node);
     $this->assertAnonymousCacheMiss('/about');
     $this->assertAnonymousCacheHit('/about');
   }
@@ -213,7 +270,7 @@ class CacheMissInvalidationTest extends CacheTestBase {
 
     $this->warmCache('/about');
     $this->assertAnonymousCacheHit('/about');
-    $blockContent->save();
+    $this->saveViaWebRequest($blockContent);
     $this->assertAnonymousCacheMiss('/about');
     $this->assertAnonymousCacheHit('/about');
   }
@@ -233,6 +290,25 @@ class CacheMissInvalidationTest extends CacheTestBase {
       return \Drupal::entityTypeManager()
         ->getStorage('node')
         ->load((int) $matches[1]);
+    }
+    return NULL;
+  }
+
+  /**
+   * Returns a published node suitable for adding to the homepage_hero queue.
+   *
+   * Valid bundles are those configured on the homepage_hero entityqueue handler:
+   * article, event, meeting, public_hearing, session. The first available type
+   * is returned so the test is not skipped even on sparse database clones.
+   *
+   * @return \Drupal\node\NodeInterface|null
+   */
+  private function findHomepageHeroQueueItem(): ?NodeInterface {
+    foreach (['session', 'event', 'article', 'meeting', 'public_hearing'] as $type) {
+      $node = $this->findNodeByType($type);
+      if ($node !== NULL) {
+        return $node;
+      }
     }
     return NULL;
   }

@@ -132,13 +132,26 @@ abstract class CacheTestBase extends ExistingSiteBase {
   // ---------------------------------------------------------------------------
 
   /**
-   * Warms the page cache for a path by issuing one anonymous request.
+   * Warms the page cache for a path and waits until a HIT is confirmed.
    *
-   * The first request will always be a MISS; this helper discards the response
-   * so subsequent assertions start from a warm-cache state.
+   * The first request triggers rendering and initiates page cache storage.
+   * On PHP-FPM environments (e.g. Pantheon), cache storage happens in
+   * kernel.terminate AFTER the response is sent to the client, creating a
+   * race window where a second request can arrive before the cache entry is
+   * written. This method polls until a HIT is returned (or exhausts retries),
+   * so subsequent assertions always start from a genuinely warm-cache state.
+   *
+   * On DDEV the second request is usually an immediate HIT with no sleep.
    */
   protected function warmCache(string $path): void {
     $this->anonClient->get($path);
+    for ($attempt = 0; $attempt < 10; $attempt++) {
+      $response = $this->anonClient->get($path);
+      if ($this->getCacheStatus($response) === 'HIT') {
+        return;
+      }
+      usleep(250000);
+    }
   }
 
   /**

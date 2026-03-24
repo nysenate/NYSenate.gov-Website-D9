@@ -7,10 +7,12 @@ Automated cache regression tests for NYSenate.gov, built on [Drupal Test Traits]
 **Anonymous page cache** (`AnonymousCacheHitTest`)
 - All 6 top-level navigation pages return `x-drupal-cache: HIT` after the first request.
 - All 6 pages declare a 24-hour `cache-control: max-age=86400, public` lifetime.
-- Editing content that does not feed a given page leaves that page's cache intact (cross-invalidation negative cases).
+- Editing content that does not feed a given page leaves that page's cache intact (cross-invalidation negative cases). These edits are submitted via the entity edit form (same mechanism as `CacheMissInvalidationTest`) to ensure Fastly BAN dispatch is deterministic and avoids race conditions from synchronous CLI saves.
 
 **Cache invalidation** (`CacheMissInvalidationTest`)
 - Editing relevant content — articles, events, bills, senator/committee taxonomy terms, landing page nodes, embedded block content, and homepage hero queue changes — correctly invalidates the corresponding page cache entries.
+- All entity edits are submitted via the Drupal UI (real HTTP POST) rather than the Drupal API, so `kernel.terminate` fires and `pantheon_advanced_page_cache` dispatches Fastly BAN requests for the invalidated cache tags.
+- The homepage hero test exercises the real production code path: it fills the entity subqueue autocomplete and presses "Add item", triggering `HomepageHeroController::homepageHeroAddItem()` which invalidates the `views:homepage_hero` cache tag.
 
 **Authenticated dynamic page cache** (`AuthenticatedDynamicCacheTest`)
 - Authenticated users always get a `x-drupal-dynamic-cache: MISS` on first visit and `HIT` on second.
@@ -80,6 +82,7 @@ DTT_BASE_URL=https://pr-123-nys-website.pantheonsite.io \
 
 - **Production database required.** Tests query real content (nodes, taxonomy terms, entityqueues). Running against a fresh install with no content will cause tests to skip or fail. A clone of the production database is required for full coverage.
 - **Redis must be running.** The site uses Redis as the page cache backend. If Redis is not running, `x-drupal-cache` headers will be absent and all cache header assertions will fail. In CI, this is guaranteed because tests run inside the Pantheon container. Locally, ensure DDEV's Redis service is running (`ddev redis-cli ping`).
-- **Tests are non-destructive.** Entity re-saves change no field values. Flag operations are cleaned up in `finally` blocks. Synthetic users created by `NoCachePoisoningTest` and `AuthenticatedDynamicCacheTest` are deleted after each test run by DTT's built-in teardown.
+- **Tests are non-destructive.** Entity saves change no field values. The homepage hero test presses "Add item" (not the main Save button), so no queue changes are persisted. Flag operations are cleaned up in `finally` blocks. Synthetic users created by all test classes are deleted after each test run by DTT's built-in teardown.
 - **Cron noise is suppressed.** The `automated_cron` module emits PHP warnings on every request via `kernel.terminate`. These are a pre-existing issue unrelated to cache behavior and are suppressed via `$failOnPhpWatchdogMessages = FALSE` in `CacheTestBase`.
 - **Docker memory.** If PHPUnit exits with code 137 (OOM/SIGKILL), increase Docker Desktop's memory allocation to at least 6–8 GB (Settings → Resources → Memory).
+- **Pantheon container memory.** `run-on-container.sh` invokes PHPUnit with `php -d memory_limit=2048M` to override the Pantheon container's default 1 GB web PHP limit. If the run is killed mid-suite on Pantheon, this limit may need to be raised further.

@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\nys\ExistingSite;
 
+use Drupal\user\UserInterface;
+
 /**
  * Verifies anonymous page cache (x-drupal-cache) behavior.
  *
@@ -15,6 +17,40 @@ namespace Drupal\Tests\nys\ExistingSite;
  * @group cache_regression
  */
 class AnonymousCacheHitTest extends CacheTestBase {
+
+  /**
+   * Administrator user used by the negative-case "does not invalidate" tests.
+   *
+   * @var \Drupal\user\UserInterface|null
+   */
+  protected ?UserInterface $adminUser = NULL;
+
+  /**
+   * {@inheritdoc}
+   *
+   * Creates an admin user and logs in so that saveViaWebRequest() is available
+   * for the negative-case tests. This mirrors CacheMissInvalidationTest and
+   * makes Fastly BAN dispatch deterministic: saveViaWebRequest() submits a
+   * real HTTP POST, kernel.terminate fires, and pantheon_advanced_page_cache
+   * dispatches Fastly BANs for the saved entity's cache tags via
+   * pantheon_clear_edge_keys(). CLI saves ($entity->save()) also call
+   * pantheon_clear_edge_keys() synchronously, but the BAN arrives at
+   * Fastly before the page has fully re-cached from the warmCache() call,
+   * creating a race that generates spurious failures in the full test suite.
+   */
+  protected function setUp(): void {
+    parent::setUp();
+    $this->adminUser = $this->createUser([], NULL, TRUE);
+    $this->drupalLogin($this->adminUser);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function tearDown(): void {
+    $this->drupalLogout();
+    parent::tearDown();
+  }
 
   // ---------------------------------------------------------------------------
   // Cache HIT per page
@@ -49,6 +85,11 @@ class AnonymousCacheHitTest extends CacheTestBase {
   // For each content type, assert that pages it does NOT feed remain cached
   // after a re-save. The complement (MISS on pages that DO display the
   // content) is covered in CacheMissInvalidationTest.
+  //
+  // saveViaWebRequest() is used rather than $entity->save() so that the Fastly
+  // BAN is dispatched via a real kernel.terminate event (identical to a real
+  // editorial save). This eliminates the cross-test contamination race that
+  // occurs when CLI saves interact with the full test suite's warmCache state.
   // ---------------------------------------------------------------------------
 
   /**
@@ -62,7 +103,7 @@ class AnonymousCacheHitTest extends CacheTestBase {
     $article = $this->findNodeByType('article');
     $this->assertNotNull($article, "No published 'article' node found.");
     $this->warmCache($path);
-    $article->save();
+    $this->saveViaWebRequest($article);
     $this->assertAnonymousCacheHit($path);
   }
 
@@ -81,7 +122,7 @@ class AnonymousCacheHitTest extends CacheTestBase {
     $bill = $this->findSaveableBillNode();
     $this->assertNotNull($bill, 'No bill with valid print number and session found.');
     $this->warmCache($path);
-    $bill->save();
+    $this->saveViaWebRequest($bill);
     $this->assertAnonymousCacheHit($path);
   }
 
@@ -100,7 +141,7 @@ class AnonymousCacheHitTest extends CacheTestBase {
     $event = $this->findNodeByType('event');
     $this->assertNotNull($event, "No published 'event' node found.");
     $this->warmCache($path);
-    $event->save();
+    $this->saveViaWebRequest($event);
     $this->assertAnonymousCacheHit($path);
   }
 
@@ -119,8 +160,9 @@ class AnonymousCacheHitTest extends CacheTestBase {
     $petition = $this->findNodeByType('petition');
     $this->assertNotNull($petition, "No published 'petition' node found.");
     $this->warmCache($path);
-    $petition->save();
+    $this->saveViaWebRequest($petition);
     $this->assertAnonymousCacheHit($path);
   }
 
 }
+

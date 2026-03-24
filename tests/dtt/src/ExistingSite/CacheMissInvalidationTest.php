@@ -46,7 +46,7 @@ class CacheMissInvalidationTest extends CacheTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->adminUser = $this->createUser([], 'cache_test_admin', TRUE);
+    $this->adminUser = $this->createUser([], NULL, TRUE);
     $this->drupalLogin($this->adminUser);
   }
 

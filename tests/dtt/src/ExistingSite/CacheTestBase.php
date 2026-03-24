@@ -184,23 +184,23 @@ abstract class CacheTestBase extends ExistingSiteBase {
   /**
    * Normalises the page cache status from whichever header is present.
    *
-   * - DDEV / local: Drupal sets x-drupal-cache: HIT or MISS directly.
-   * - Pantheon: the CDN layer sets x-cache, which may be a comma-separated
-   *   list (e.g. "MISS, HIT"); the last token is the authoritative value.
+   * Priority order:
+   *  1. x-cache (Fastly/CDN) — present on Pantheon. This is the authoritative
+   *     signal because Fastly faithfully replays the original x-drupal-cache
+   *     header from the PHP-FPM response, making x-drupal-cache stale on
+   *     subsequent Fastly hits. x-cache may be a comma-separated list
+   *     (e.g. "MISS, HIT"); the last token is the most recent CDN result.
+   *  2. x-drupal-cache — present on DDEV/local where there is no CDN layer.
    *
    * Returns 'HIT', 'MISS', or an empty string if neither header is present.
    */
   private function getCacheStatus(ResponseInterface $response): string {
-    $drupalCache = strtoupper(trim($response->getHeaderLine('x-drupal-cache')));
-    if ($drupalCache !== '') {
-      return $drupalCache;
-    }
     $xCache = $response->getHeaderLine('x-cache');
-    if ($xCache === '') {
-      return '';
+    if ($xCache !== '') {
+      $parts = array_map('trim', explode(',', $xCache));
+      return strtoupper((string) end($parts));
     }
-    $parts = array_map('trim', explode(',', $xCache));
-    return strtoupper((string) end($parts));
+    return strtoupper(trim($response->getHeaderLine('x-drupal-cache')));
   }
 
   /**

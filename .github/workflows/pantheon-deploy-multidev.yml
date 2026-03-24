@@ -189,12 +189,6 @@ jobs:
       - name: Wake up the multidev (Pantheon envs sleep when idle)
         run: terminus env:wake ${{ vars.PANTHEON_SITE }}.${{ env.PANTHEON_MULTIDEV }}
 
-      - name: Wait for Pantheon deployment workflow to complete
-        # After the git push in run_if, Pantheon runs an async deployment
-        # workflow (code sync, DB updates). This waits up to 20 minutes for
-        # that workflow to finish before probing the HTTP endpoint.
-        run: terminus workflow:wait ${{ vars.PANTHEON_SITE }}.${{ env.PANTHEON_MULTIDEV }} --max=1200
-
       - name: Wait for multidev HTTP endpoint to be ready
         # Polls the homepage until it returns a non-5xx status. Handles the
         # gap between workflow completion and the appserver accepting requests.

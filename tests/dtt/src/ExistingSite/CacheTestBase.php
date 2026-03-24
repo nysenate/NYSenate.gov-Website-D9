@@ -2,10 +2,10 @@
 
 namespace Drupal\Tests\nys\ExistingSite;
 
-use Drupal\block_content\BlockContentInterface;
 use Drupal\node\NodeInterface;
 use Drupal\taxonomy\TermInterface;
 use GuzzleHttp\Client;
+use Psr\Http\Message\ResponseInterface;
 use weitzman\DrupalTestTraits\ExistingSiteBase;
 
 /**
@@ -151,9 +151,9 @@ abstract class CacheTestBase extends ExistingSiteBase {
    */
   protected function assertAnonymousCacheHit(string $path): void {
     $response = $this->anonClient->get($path);
-    $header = strtoupper(trim($response->getHeaderLine('x-drupal-cache')));
-    $this->assertSame('HIT', $header,
-      "Expected x-drupal-cache: HIT on anonymous request to {$path}, got: {$header}");
+    $status = $this->getCacheStatus($response);
+    $this->assertSame('HIT', $status,
+      "Expected cache HIT on anonymous request to {$path}, got: {$status}");
   }
 
   /**
@@ -163,9 +163,31 @@ abstract class CacheTestBase extends ExistingSiteBase {
    */
   protected function assertAnonymousCacheMiss(string $path): void {
     $response = $this->anonClient->get($path);
-    $header = strtoupper(trim($response->getHeaderLine('x-drupal-cache')));
-    $this->assertSame('MISS', $header,
-      "Expected x-drupal-cache: MISS on anonymous request to {$path}, got: {$header}");
+    $status = $this->getCacheStatus($response);
+    $this->assertSame('MISS', $status,
+      "Expected cache MISS on anonymous request to {$path}, got: {$status}");
+  }
+
+  /**
+   * Normalises the page cache status from whichever header is present.
+   *
+   * - DDEV / local: Drupal sets x-drupal-cache: HIT or MISS directly.
+   * - Pantheon: the CDN layer sets x-cache, which may be a comma-separated
+   *   list (e.g. "MISS, HIT"); the last token is the authoritative value.
+   *
+   * Returns 'HIT', 'MISS', or an empty string if neither header is present.
+   */
+  private function getCacheStatus(ResponseInterface $response): string {
+    $drupalCache = strtoupper(trim($response->getHeaderLine('x-drupal-cache')));
+    if ($drupalCache !== '') {
+      return $drupalCache;
+    }
+    $xCache = $response->getHeaderLine('x-cache');
+    if ($xCache === '') {
+      return '';
+    }
+    $parts = array_map('trim', explode(',', $xCache));
+    return strtoupper((string) end($parts));
   }
 
   /**

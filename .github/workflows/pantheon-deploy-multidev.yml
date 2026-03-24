@@ -189,6 +189,33 @@ jobs:
       - name: Wake up the multidev (Pantheon envs sleep when idle)
         run: terminus env:wake ${{ vars.PANTHEON_SITE }}.${{ env.PANTHEON_MULTIDEV }}
 
+      - name: Wait for Pantheon deployment workflow to complete
+        # After the git push in run_if, Pantheon runs an async deployment
+        # workflow (code sync, DB updates). This waits up to 20 minutes for
+        # that workflow to finish before probing the HTTP endpoint.
+        run: terminus workflow:wait ${{ vars.PANTHEON_SITE }}.${{ env.PANTHEON_MULTIDEV }} --max=1200
+
+      - name: Wait for multidev HTTP endpoint to be ready
+        # Polls the homepage until it returns a non-5xx status. Handles the
+        # gap between workflow completion and the appserver accepting requests.
+        # 40 attempts × 30 s = up to 20 minutes total.
+        run: |
+          SITE_URL="https://${{ env.PANTHEON_MULTIDEV }}-${{ vars.PANTHEON_SITE }}.pantheonsite.io"
+          echo "Polling $SITE_URL..."
+          for i in $(seq 1 40); do
+            STATUS=$(curl -sSo /dev/null -w "%{http_code}" --connect-timeout 10 --max-time 30 "$SITE_URL/" 2>/dev/null || echo "000")
+            if [[ "$STATUS" =~ ^[23] ]]; then
+              echo "Site ready (HTTP $STATUS, attempt $i/40)"
+              break
+            fi
+            if [[ $i -eq 40 ]]; then
+              echo "Timed out waiting for site to be ready (last HTTP $STATUS)" >&2
+              exit 1
+            fi
+            echo "Attempt $i/40: HTTP $STATUS — sleeping 30s"
+            sleep 30
+          done
+
       - name: Run cache regression tests on Pantheon container
         run: |
           terminus remote:drush ${{ vars.PANTHEON_SITE }}.${{ env.PANTHEON_MULTIDEV }} -- \

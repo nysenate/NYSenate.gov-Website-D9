@@ -34,6 +34,7 @@ if printf '%s\n' "$@" | grep -q -- '--filter'; then
     --testsuite existing-site \
     --group cache_regression \
     --testdox \
+    --do-not-cache-result \
     "$@"
 fi
 
@@ -57,6 +58,7 @@ for CLASS in "${CLASSES[@]}"; do
     --testsuite existing-site \
     --group cache_regression \
     --testdox \
+    --do-not-cache-result \
     --filter "$CLASS" \
     "$@"
   STATUS=$?

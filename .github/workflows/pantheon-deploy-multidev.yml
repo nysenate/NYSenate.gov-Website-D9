@@ -211,9 +211,18 @@ jobs:
           done
 
       - name: Run cache regression tests on Pantheon container
+        # Run each test class in a separate terminus call so that no single SSH
+        # session exceeds Pantheon's server-side timeout (~20 min). The classes
+        # are ordered fastest-last so a failure is detected quickly.
         run: |
-          terminus remote:drush ${{ vars.PANTHEON_SITE }}.${{ env.PANTHEON_MULTIDEV }} -- \
-            ev "passthru('bash /code/tests/dtt/run-on-container.sh https://${{ env.PANTHEON_MULTIDEV }}-${{ vars.PANTHEON_SITE }}.pantheonsite.io 2>&1', \$c); exit(\$c);"
+          SITE="${{ vars.PANTHEON_SITE }}.${{ env.PANTHEON_MULTIDEV }}"
+          URL="https://${{ env.PANTHEON_MULTIDEV }}-${{ vars.PANTHEON_SITE }}.pantheonsite.io"
+          SCRIPT="bash /code/tests/dtt/run-on-container.sh $URL"
+          for CLASS in AnonymousCacheHitTest AuthenticatedDynamicCacheTest CacheMissInvalidationTest NoCachePoisoningTest; do
+            echo "=== Running $CLASS ==="
+            terminus remote:drush "$SITE" -- \
+              ev "passthru('$SCRIPT --filter $CLASS 2>&1', \$c); exit(\$c);"
+          done
 
   # ---------------------------------------------------------------------------
   # Umbrella gate — the single required branch protection status check.

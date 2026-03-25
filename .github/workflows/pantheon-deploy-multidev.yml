@@ -211,18 +211,24 @@ jobs:
           done
 
       - name: Run cache regression tests on Pantheon container
-        # Run each test class in a separate terminus call so that no single SSH
-        # session exceeds Pantheon's server-side timeout (~20 min). The classes
-        # are ordered fastest-last so a failure is detected quickly.
+        # Each class runs in its own terminus call to bound session duration.
+        #
+        # exit() inside drush ev is treated as abnormal termination by Drush,
+        # which overrides the exit code to 1 regardless of the value passed.
+        # Instead, we throw an exception on PHPUnit failure — Drush exits 0
+        # when ev completes normally and 1 when an uncaught exception is thrown,
+        # which maps exactly to pass/fail semantics.
         run: |
           SITE="${{ vars.PANTHEON_SITE }}.${{ env.PANTHEON_MULTIDEV }}"
           URL="https://${{ env.PANTHEON_MULTIDEV }}-${{ vars.PANTHEON_SITE }}.pantheonsite.io"
-          SCRIPT="bash /code/tests/dtt/run-on-container.sh $URL"
+          OVERALL=0
           for CLASS in AnonymousCacheHitTest AuthenticatedDynamicCacheTest CacheMissInvalidationTest NoCachePoisoningTest; do
             echo "=== Running $CLASS ==="
             terminus remote:drush "$SITE" -- \
-              ev "passthru('$SCRIPT --filter $CLASS 2>&1', \$c); exit(\$c);"
+              ev "error_reporting(E_ERROR); passthru('bash /code/tests/dtt/run-on-container.sh $URL --filter $CLASS 2>&1', \$c); if (\$c !== 0) { throw new \Exception('PHPUnit failed with exit code ' . \$c); }" \
+              || OVERALL=$?
           done
+          exit $OVERALL
 
   # ---------------------------------------------------------------------------
   # Umbrella gate — the single required branch protection status check.

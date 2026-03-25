@@ -33,11 +33,11 @@ Tests run automatically on every pull request from a `feature/*` branch via the 
 
 **Why tests run on the container:** Drupal's cache tag invalidation works by incrementing integer checksums in Redis. When `$entity->save()` is called in the test process, it must increment those checksums in the *same* Redis instance the web server reads from — otherwise cache MISS assertions never trigger. Pantheon's Redis is not publicly reachable; running the test process inside the container ensures the test process, web server, database, and Redis are all co-located. `vendor/bin/phpunit` is available on the container because `vendor/` is included in the deployed artifact.
 
-The CI step invokes `tests/dtt/run-on-container.sh` on the container, passing the multidev URL as the first argument. The script accepts additional PHPUnit arguments after the URL, which is useful when debugging a failing CI run — e.g. to re-run a single test:
+The CI step invokes `tests/dtt/run-on-container.sh` on the container via `terminus remote:drush -- ev`, passing the multidev URL as the first argument. The script accepts additional PHPUnit arguments after the URL, which is useful when debugging a failing CI run — e.g. to re-run a single test:
 
 ```bash
 terminus remote:drush nysenate-2022.pr-NNN -- \
-  ev "passthru('bash /code/tests/dtt/run-on-container.sh https://pr-NNN-nysenate-2022.pantheonsite.io --filter testHomepageMissOnArticleEdit 2>&1', \$c); exit(\$c);"
+  ev "error_reporting(E_ERROR); passthru('bash /code/tests/dtt/run-on-container.sh https://pr-NNN-nysenate-2022.pantheonsite.io --filter testHomepageMissOnArticleEdit 2>&1', \$c); if (\$c !== 0) { throw new \Exception('PHPUnit failed with exit code ' . \$c); }"
 ```
 
 The `functional_tests_passed` umbrella job depends on `run_cache_tests` and is the single status check to register in GitHub branch protection settings (Settings → Branches → branch protection rule for `main`). Adding `functional_tests_passed` as a required status check means all test jobs must pass before a PR can be merged, without needing to update branch protection rules as new test jobs are added.

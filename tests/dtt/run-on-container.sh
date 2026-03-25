@@ -26,9 +26,40 @@ cd /code
 
 export DTT_BASE_URL
 
-exec php -d memory_limit=2048M vendor/bin/phpunit \
-  -c tests/dtt/phpunit.xml \
-  --testsuite existing-site \
-  --group cache_regression \
-  --testdox \
-  "$@"
+# If a specific --filter was passed (manual debugging), run as a single
+# invocation so the caller's filter is not inadvertently overridden.
+if printf '%s\n' "$@" | grep -q -- '--filter'; then
+  exec php -d memory_limit=2048M vendor/bin/phpunit \
+    -c tests/dtt/phpunit.xml \
+    --testsuite existing-site \
+    --group cache_regression \
+    --testdox \
+    "$@"
+fi
+
+# Default CI path: run each test class in a separate PHP process.
+#
+# PHPUnit accumulates Mink session state and Redis-unserialized objects across
+# every test in a single process. On Pantheon's 2 GB container this exhausts
+# memory partway through the full 64-test suite. Running one class per process
+# keeps peak RSS well under 1 GB while total test time is unchanged.
+CLASSES=(
+  AnonymousCacheHitTest
+  AuthenticatedDynamicCacheTest
+  CacheMissInvalidationTest
+  NoCachePoisoningTest
+)
+
+OVERALL=0
+for CLASS in "${CLASSES[@]}"; do
+  php -d memory_limit=2048M vendor/bin/phpunit \
+    -c tests/dtt/phpunit.xml \
+    --testsuite existing-site \
+    --group cache_regression \
+    --testdox \
+    --filter "$CLASS" \
+    "$@"
+  STATUS=$?
+  if [[ $STATUS -ne 0 ]]; then OVERALL=$STATUS; fi
+done
+exit $OVERALL

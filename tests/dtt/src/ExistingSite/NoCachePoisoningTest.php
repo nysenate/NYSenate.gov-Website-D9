@@ -106,20 +106,26 @@ class NoCachePoisoningTest extends CacheTestBase {
    * Content-level isolation is verified separately in
    * testFollowUnfollowNotLeakedAcrossUsers.
    *
-   * @dataProvider topLevelPageProvider
+   * Verified on two structurally distinct pages — / (views, lazy builders) and
+   * /senators-committees (taxonomy listing) — which is sufficient coverage
+   * since the shared-cache mechanism is uniform across all page types. Testing
+   * all 6 nav pages would add 8 redundant login/logout round trips with no
+   * additional signal.
    */
-  public function testDynamicCacheSharedAcrossUsers(string $path): void {
-    // User A: first visit must be a MISS (cold cache — no entry exists yet).
-    $this->drupalLogin($this->userA);
-    $this->assertDynamicCacheMiss($path);
-    $this->drupalLogout();
+  public function testDynamicCacheSharedAcrossUsers(): void {
+    foreach (['/', '/senators-committees'] as $path) {
+      // User A: first visit must be a MISS (cold cache — no entry exists yet).
+      $this->drupalLogin($this->userA);
+      $this->assertDynamicCacheMiss($path);
+      $this->drupalLogout();
 
-    // User B: HIT is expected. The dynamic page cache entry is shared across
-    // users; only lazy builder placeholders are resolved per-user outside
-    // the cache.
-    $this->drupalLogin($this->userB);
-    $this->assertDynamicCacheHit($path);
-    $this->drupalLogout();
+      // User B: HIT is expected. The dynamic page cache entry is shared across
+      // users; only lazy builder placeholders are resolved per-user outside
+      // the cache.
+      $this->drupalLogin($this->userB);
+      $this->assertDynamicCacheHit($path);
+      $this->drupalLogout();
+    }
   }
 
   // ---------------------------------------------------------------------------

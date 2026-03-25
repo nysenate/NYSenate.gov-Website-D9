@@ -86,6 +86,11 @@ class AnonymousCacheHitTest extends CacheTestBase {
   // after a re-save. The complement (MISS on pages that DO display the
   // content) is covered in CacheMissInvalidationTest.
   //
+  // Each method warms all unrelated pages, calls saveViaWebRequest() once,
+  // then asserts every page is still a HIT. One HTTP round trip per content
+  // type instead of one per (type × page) pair keeps growth O(content_types)
+  // rather than O(content_types × pages) as new types and pages are added.
+  //
   // saveViaWebRequest() is used rather than $entity->save() so that the Fastly
   // BAN is dispatched via a real kernel.terminate event (identical to a real
   // editorial save). This eliminates the cross-test contamination race that
@@ -96,72 +101,71 @@ class AnonymousCacheHitTest extends CacheTestBase {
    * An article edit must not invalidate pages that don't display articles.
    *
    * Articles feed / and /news-and-issues only.
-   *
-   * @dataProvider articleNonInvalidatedPagesProvider
    */
-  public function testArticleEditDoesNotInvalidate(string $path): void {
+  public function testArticleEditDoesNotInvalidateUnrelatedPages(): void {
     $article = $this->findNodeByType('article');
     $this->assertNotNull($article, "No published 'article' node found.");
-    $this->warmCache($path);
+    $unrelated = ['/senators-committees', '/legislation', '/events', '/about'];
+    foreach ($unrelated as $path) {
+      $this->warmCache($path);
+    }
     $this->saveViaWebRequest($article);
-    $this->assertAnonymousCacheHit($path);
-  }
-
-  public function articleNonInvalidatedPagesProvider(): array {
-    return $this->asProvider(['/senators-committees', '/legislation', '/events', '/about']);
+    foreach ($unrelated as $path) {
+      $this->assertAnonymousCacheHit($path);
+    }
   }
 
   /**
    * A bill edit must not invalidate pages that don't display bills.
    *
    * Bills appear on /legislation only.
-   *
-   * @dataProvider billNonInvalidatedPagesProvider
    */
-  public function testBillEditDoesNotInvalidate(string $path): void {
+  public function testBillEditDoesNotInvalidateUnrelatedPages(): void {
     $bill = $this->findSaveableBillNode();
     $this->assertNotNull($bill, 'No bill with valid print number and session found.');
-    $this->warmCache($path);
+    $unrelated = ['/', '/news-and-issues', '/senators-committees', '/events', '/about'];
+    foreach ($unrelated as $path) {
+      $this->warmCache($path);
+    }
     $this->saveViaWebRequest($bill);
-    $this->assertAnonymousCacheHit($path);
-  }
-
-  public function billNonInvalidatedPagesProvider(): array {
-    return $this->asProvider(['/', '/news-and-issues', '/senators-committees', '/events', '/about']);
+    foreach ($unrelated as $path) {
+      $this->assertAnonymousCacheHit($path);
+    }
   }
 
   /**
    * An event edit must not invalidate pages that don't display events.
    *
    * Events appear on / and /events only.
-   *
-   * @dataProvider eventNonInvalidatedPagesProvider
    */
-  public function testEventEditDoesNotInvalidate(string $path): void {
+  public function testEventEditDoesNotInvalidateUnrelatedPages(): void {
     $event = $this->findNodeByType('event');
     $this->assertNotNull($event, "No published 'event' node found.");
-    $this->warmCache($path);
+    $unrelated = ['/news-and-issues', '/senators-committees', '/legislation', '/about'];
+    foreach ($unrelated as $path) {
+      $this->warmCache($path);
+    }
     $this->saveViaWebRequest($event);
-    $this->assertAnonymousCacheHit($path);
-  }
-
-  public function eventNonInvalidatedPagesProvider(): array {
-    return $this->asProvider(['/news-and-issues', '/senators-committees', '/legislation', '/about']);
+    foreach ($unrelated as $path) {
+      $this->assertAnonymousCacheHit($path);
+    }
   }
 
   /**
    * A petition edit must not invalidate any top-level page.
    *
    * Petitions appear on no top-level navigation pages.
-   *
-   * @dataProvider topLevelPageProvider
    */
-  public function testPetitionEditDoesNotInvalidate(string $path): void {
+  public function testPetitionEditDoesNotInvalidateAnyTopLevelPage(): void {
     $petition = $this->findNodeByType('petition');
     $this->assertNotNull($petition, "No published 'petition' node found.");
-    $this->warmCache($path);
+    foreach (self::TOP_LEVEL_PAGES as $path) {
+      $this->warmCache($path);
+    }
     $this->saveViaWebRequest($petition);
-    $this->assertAnonymousCacheHit($path);
+    foreach (self::TOP_LEVEL_PAGES as $path) {
+      $this->assertAnonymousCacheHit($path);
+    }
   }
 
 }

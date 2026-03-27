@@ -44,7 +44,7 @@
     overflow: hidden;
     padding-top: 1em;
     text-indent: -99999px;
-    @extend .icon-replace__x;
+    @include icon-replace-x;
 
     &::after {
       line-height: 30px;
@@ -80,13 +80,13 @@
   &.alert {
     color: $grey02;
     background-color: $grey06;
-    @extend .icon-before__error;
+    @include icon-before-error;
   }
 
   &.success {
     color: $grey02;
     background-color: $grey06;
-    @extend .icon-before__circle-check;
+    @include icon-before-circle-check;
   }
 
   &::before {
@@ -127,13 +127,13 @@
     &.alert {
       color: $grey02;
       background-color: $grey06;
-      @extend .icon-before__error;
+      @include icon-before-error;
     }
 
     &.success {
       color: $grey02;
       background-color: $grey06;
-      @extend .icon-before__circle-check;
+      @include icon-before-circle-check;
     }
 
     &::before {

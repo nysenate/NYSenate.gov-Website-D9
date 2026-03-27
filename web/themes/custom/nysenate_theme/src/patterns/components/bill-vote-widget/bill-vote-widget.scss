@@ -88,12 +88,12 @@
     flex: 1;
     @extend .drk-bg;
 
-		&.nys-bill-vote-yes { @extend .icon-before__check; }
-		&.nys-bill-vote-no { @extend .icon-before__x; }
+		&.nys-bill-vote-yes { @include icon-before-check; }
+		&.nys-bill-vote-no { @include icon-before-x; }
 
     &.nys-subscribe-button {
       width: 100%;
-      @extend .icon-before__notification;
+      @include icon-before-notification;
       flex: 2;
     }
 
@@ -161,7 +161,7 @@
       overflow: hidden;
       padding-top: 1em;
       text-indent: -99999px;
-			@extend .icon-replace__x;
+			@include icon-replace-x;
 
 			&::after {
 				margin-left: 20px;
@@ -192,7 +192,7 @@
       font-size: 12px;
       letter-spacing: 0.2em;
       line-height: 60px;
-      @extend .icon-before__mail;
+      @include icon-before-mail;
 
       &:hover {
         @extend .lgt-bg;

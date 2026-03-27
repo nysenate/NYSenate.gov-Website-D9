@@ -96,11 +96,11 @@ h4.c-bill-topic {
     @extend .drk-bg;
 
     &.nys-bill-vote-yes {
-      @extend .icon-before__check;
+      @include icon-before-check;
     }
 
     &.nys-bill-vote-no {
-      @extend .icon-before__x;
+      @include icon-before-x;
     }
 
     &.nys-subscribe-button {

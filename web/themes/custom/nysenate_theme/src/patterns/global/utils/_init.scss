@@ -15,23 +15,15 @@
 // Import mixins
 @import 'mixins';
 
+// Import extend-replacement mixins (for converting @extend to @include)
+@import 'extend-mixins';
+
 // Import breakpoints
 @import 'breakpoints';
 
 // Import typography
 @import 'typography';
 
-// Import fonts
-@import '../fonts/fonts';
-
-// Import form styles.
-@import '../forms/forms';
-
-// Import base
-@import '../base/base';
-
-// Import images
-@import '../images/images';
-
-// Import summer reading
-@import '../reading/reading';
+// NOTE: fonts, forms, base, images, and reading are now imported ONLY in global.scss
+// to prevent CSS duplication. All @extend usages have been converted to @include
+// using mixins defined in _extend-mixins.scss.

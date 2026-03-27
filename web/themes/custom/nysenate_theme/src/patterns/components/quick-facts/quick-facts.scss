@@ -46,12 +46,12 @@
 
 		&.prev {
 			left: 0;
-			@extend .icon-replace__left;
+			@include icon-replace-left;
 		}
 
 		&.next {
 			right: 0;
-			@extend .icon-replace__right;
+			@include icon-replace-right;
 		}
 
     &.hidden {

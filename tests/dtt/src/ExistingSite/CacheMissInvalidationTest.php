@@ -12,11 +12,10 @@ use Drupal\user\UserInterface;
  * Each test follows the same pattern:
  *  1. warmCache() — primes the page cache (first request, MISS, discarded).
  *  2. assertAnonymousCacheHit() — confirms the page is now cached.
- *  3. saveViaWebRequest() — submits the entity edit form as a real HTTP POST.
- *     On Pantheon this fires kernel.terminate which dispatches a Fastly BAN for
- *     the invalidated cache tags, making the next anonymous request a MISS via
- *     x-cache rather than only via x-drupal-cache. CLI saves ($entity->save())
- *     invalidate Redis but never reach Fastly, so they cannot be used here.
+ *  3. saveViaWebRequest() — submits the entity edit form as a real HTTP POST
+ *     so that kernel.terminate fires and Fastly BAN dispatch reaches the CDN
+ *     layer. See CacheTestBase::saveViaWebRequest() for the full rationale.
+ *     CLI saves ($entity->save()) must not be used here.
  *  4. assertAnonymousCacheMiss() — polls until x-cache (Fastly) or
  *     x-drupal-cache (DDEV) returns MISS.
  *  5. assertAnonymousCacheHit() — cache rebuilt correctly after the MISS.
@@ -24,11 +23,6 @@ use Drupal\user\UserInterface;
  * Note: assertAnonymousCacheHit() does NOT internally warm the cache.
  * Every test must call warmCache() explicitly (step 1) to avoid false
  * failures from cross-test cache contamination.
- *
- * Exception: testHomepageMissOnHomepageHeroQueueChange() uses CLI tag
- * invalidation and checks the Redis page cache bin directly, because the
- * production trigger (HomepageHeroController::homepageHeroAddItem()) is an
- * AJAX form submit handler that cannot be invoked without a JS-capable driver.
  *
  * @group cache_regression
  */

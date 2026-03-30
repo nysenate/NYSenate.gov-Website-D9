@@ -1,6 +1,12 @@
 # Cache Regression Tests (DTT)
 
-Automated cache regression tests for NYSenate.gov, built on [Drupal Test Traits](https://gitlab.com/weitzman/drupal-test-traits) (DTT) `ExistingSiteBase`. Unlike unit or kernel tests, these make real HTTP requests to a running Drupal site so that actual cache headers (`x-drupal-cache`, `x-drupal-dynamic-cache`, `cache-control`) are present in responses.
+Automated cache regression tests for NYSenate.gov, built on [Drupal Test Traits](https://gitlab.com/weitzman/drupal-test-traits) (DTT) `ExistingSiteBase`. Unlike `BrowserTestBase` — which installs a fresh Drupal database and uses an internal test client — DTT's `ExistingSiteBase` makes real HTTP requests to an already-running site. This means responses pass through the actual cache infrastructure (Redis, Fastly) and carry real cache headers (`x-drupal-cache`, `x-drupal-dynamic-cache`, `cache-control`, `x-cache`) that reflect production behavior.
+
+The suite is designed to exercise the full cache stack on both local and Pantheon environments:
+- **DDEV / VM:** Redis is the page cache backend. `x-drupal-cache` is the authoritative cache status header.
+- **Pantheon:** Fastly sits in front of PHP-FPM. `x-cache` (Fastly) is the authoritative header — `x-drupal-cache` reflects only what PHP-FPM returned and is stale on subsequent Fastly hits. Cache invalidations must also reach Fastly via BAN dispatch, which happens in `kernel.terminate` after a real web request. `saveViaWebRequest()` exists for this reason: it submits entity edit forms as real HTTP POSTs so `pantheon_advanced_page_cache` dispatches BAN requests for the invalidated cache tags.
+
+`CacheTestBase::getCacheStatus()` normalises across both environments automatically.
 
 ## What these tests ensure
 
@@ -15,7 +21,7 @@ Automated cache regression tests for NYSenate.gov, built on [Drupal Test Traits]
 - The homepage hero test exercises the real production code path: it fills the entity subqueue autocomplete and presses "Add item", triggering `HomepageHeroController::homepageHeroAddItem()` which invalidates the `views:homepage_hero` cache tag.
 
 **Authenticated dynamic page cache** (`AuthenticatedDynamicCacheTest`)
-- Authenticated users always get a `x-drupal-dynamic-cache: MISS` on first visit and `HIT` on second.
+- A second authenticated visit to a cold-cache page returns `x-drupal-dynamic-cache: HIT`. The dynamic page cache bin is cleared in `setUp()` to guarantee a cold-cache starting state.
 - Any account change (role, district, preferences) busts that user's warmed entries via the `user:{uid}` cache tag.
 
 **Cache poisoning prevention** (`NoCachePoisoningTest`)
@@ -27,11 +33,13 @@ Automated cache regression tests for NYSenate.gov, built on [Drupal Test Traits]
 
 Tests run automatically on every pull request from a `feature/*` branch via the `run_cache_tests` job in `.github/workflows/pantheon-deploy-multidev.yml`. The job:
 
-1. Deploys code to the Pantheon multidev for that PR (done by the preceding `run_if` job).
+1. Deploys code to the Pantheon multidev for that PR (done by the preceding `deploy_multidev` job).
 2. Wakes the multidev (Pantheon environments sleep when idle).
 3. Runs PHPUnit **on the Pantheon container itself** via `terminus remote:drush -- ev`.
 
-**Why tests run on the container:** Drupal's cache tag invalidation works by incrementing integer checksums in Redis. When `$entity->save()` is called in the test process, it must increment those checksums in the *same* Redis instance the web server reads from — otherwise cache MISS assertions never trigger. Pantheon's Redis is not publicly reachable; running the test process inside the container ensures the test process, web server, database, and Redis are all co-located. `vendor/bin/phpunit` is available on the container because `vendor/` is included in the deployed artifact.
+**Why tests run on the container:** This is an architectural constraint of DTT's `ExistingSiteBase`, not a configuration choice. DTT bootstraps a full Drupal instance **inside the test process** — every `createUser()`, `drupalLogin()`, entity query, and teardown cleanup makes direct database calls. Pantheon's database can be reached via SSH tunnel, but Pantheon's Redis cannot — there is no supported tunnel path to the Redis instance from outside the container network. Since cache tag invalidation writes checksums to Redis from the test process, the test process must share the same Redis instance as the web server. Running from an external GitHub Actions VM is therefore not possible without abandoning the DTT architecture entirely and rewriting the suite as pure black-box HTTP tests — which would lose entity creation, controlled test users, session management, and DTT's automatic teardown.
+
+Running inside the container is the minimal viable approach. `vendor/bin/phpunit` is available there because `vendor/` is included in the deployed artifact, and `terminus remote:drush -- ev` is the mechanism Pantheon exposes for executing arbitrary code on the container.
 
 The CI step invokes `tests/dtt/run-on-container.sh` on the container via `terminus remote:drush -- ev`, passing the multidev URL as the first argument. The script accepts additional PHPUnit arguments after the URL, which is useful when debugging a failing CI run — e.g. to re-run a single test:
 
@@ -40,11 +48,11 @@ terminus remote:drush nysenate-2022.pr-NNN -- \
   ev "error_reporting(E_ERROR); passthru('bash /code/tests/dtt/run-on-container.sh https://pr-NNN-nysenate-2022.pantheonsite.io --filter testHomepageMissOnArticleEdit 2>&1', \$c); if (\$c !== 0) { throw new \Exception('PHPUnit failed with exit code ' . \$c); }"
 ```
 
-The `functional_tests_passed` umbrella job depends on `run_cache_tests` and is the single status check to register in GitHub branch protection settings (Settings → Branches → branch protection rule for `main`). Adding `functional_tests_passed` as a required status check means all test jobs must pass before a PR can be merged, without needing to update branch protection rules as new test jobs are added.
+Pass/fail status for each test class is visible directly on the PR via the `run_cache_tests` job.
 
 ## Running locally
 
-The easiest way is via the DDEV custom command:
+### With DDEV
 
 ```bash
 ddev run-cache-tests
@@ -61,22 +69,38 @@ ddev run-cache-tests --filter testHomepageMissOnArticleEdit
 ddev run-cache-tests --all
 ```
 
-To run against a remote environment (e.g. a Pantheon multidev), set `DTT_BASE_URL` in `tests/dtt/.env` (copy from `.env.example`) or as a shell environment variable:
+### Without DDEV (VM or any local webserver)
 
-```
-DTT_BASE_URL=https://pr-123-nys-website.pantheonsite.io
-```
+1. Copy `tests/dtt/.env.example` to `tests/dtt/.env` and set `DTT_BASE_URL` to your local site URL:
 
-Or pass it inline without DDEV:
+   ```
+   DTT_BASE_URL=http://nysenate.local
+   ```
 
-```bash
-DTT_BASE_URL=https://pr-123-nys-website.pantheonsite.io \
-  php -d memory_limit=-1 vendor/bin/phpunit \
-  -c tests/dtt/phpunit.xml \
-  --testsuite existing-site \
-  --group cache_regression \
-  --testdox
-```
+2. Run PHPUnit directly from the project root:
+
+   ```bash
+   php -d memory_limit=-1 vendor/bin/phpunit \
+     -c tests/dtt/phpunit.xml \
+     --testsuite existing-site \
+     --group cache_regression \
+     --testdox
+   ```
+
+   Or pass `DTT_BASE_URL` inline without editing `.env`:
+
+   ```bash
+   DTT_BASE_URL=http://nysenate.local \
+     php -d memory_limit=-1 vendor/bin/phpunit \
+     -c tests/dtt/phpunit.xml \
+     --testsuite existing-site \
+     --group cache_regression \
+     --testdox
+   ```
+
+### Against a remote environment (Pantheon multidev or staging)
+
+Set `DTT_BASE_URL` to the remote URL in `tests/dtt/.env` or inline, then run the same `vendor/bin/phpunit` command above. Note that MISS assertions depend on Redis being co-located with the web server — see **Running in CI** above for why the full CI run executes on the Pantheon container itself rather than from an external machine.
 
 ## Key considerations
 

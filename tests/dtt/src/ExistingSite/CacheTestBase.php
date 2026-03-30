@@ -14,9 +14,25 @@ use weitzman\DrupalTestTraits\ExistingSiteBase;
  *
  * Makes real HTTP requests to DTT_BASE_URL so that actual Drupal cache headers
  * (x-drupal-cache, x-drupal-dynamic-cache, cache-control) are present — which
- * does not happen with Drupal's internal test client. All entity mutations are
- * non-destructive (re-saves with no field changes); all synthetic users are
- * cleaned up in tearDown().
+ * does not happen with Drupal's internal test client.
+ *
+ * The suite is designed to exercise the full cache stack on both local and
+ * Pantheon environments:
+ *  - On local environments (DDEV, VM, etc.), Redis is the page cache backend
+ *    and x-drupal-cache is the authoritative header.
+ *  - On Pantheon, Fastly sits in front of PHP-FPM. x-cache (Fastly) is the
+ *    authoritative header; x-drupal-cache reflects only what PHP-FPM returned
+ *    and is stale on subsequent Fastly hits. Cache invalidations must also reach
+ *    Fastly via BAN dispatch, which happens in kernel.terminate after a real web
+ *    request — not during a CLI entity save. saveViaWebRequest() exists for this
+ *    reason: it submits the entity edit form as a real HTTP POST so that
+ *    kernel.terminate fires and pantheon_advanced_page_cache dispatches BAN
+ *    requests for the invalidated cache tags.
+ *
+ * getCacheStatus() normalises across both environments automatically.
+ *
+ * All entity mutations are non-destructive (re-saves with no field changes);
+ * all synthetic users are cleaned up in tearDown().
  *
  * DTT_BASE_URL resolution order:
  *  1. Shell / CI environment variable (highest priority).
@@ -78,7 +94,7 @@ abstract class CacheTestBase extends ExistingSiteBase {
     parent::setUp();
 
     $this->anonClient = new Client([
-      'base_uri' => getenv('DTT_BASE_URL') ?: 'https://nysenate.ddev.site',
+      'base_uri' => getenv('DTT_BASE_URL'),
       // Never follow redirects — a redirect itself is already a miss signal
       // worth catching explicitly.
       'allow_redirects' => FALSE,
@@ -145,7 +161,7 @@ abstract class CacheTestBase extends ExistingSiteBase {
    * written. This method polls until a HIT is returned (or exhausts retries),
    * so subsequent assertions always start from a genuinely warm-cache state.
    *
-   * On DDEV the second request is usually an immediate HIT with no sleep.
+   * On local environments the second request is usually an immediate HIT with no sleep.
    */
   protected function warmCache(string $path): void {
     $this->anonClient->get($path);
@@ -156,6 +172,7 @@ abstract class CacheTestBase extends ExistingSiteBase {
       }
       usleep(250000);
     }
+    $this->fail("warmCache({$path}): cache did not reach HIT after 10 attempts. Check that the page cache backend is running and that the page is actually cacheable.");
   }
 
   /**
@@ -184,8 +201,9 @@ abstract class CacheTestBase extends ExistingSiteBase {
    * save completing and Fastly processing the BAN, so this method polls until
    * x-cache: MISS is confirmed — the same race warmCache() handles in reverse.
    *
-   * On DDEV there is no Fastly; getCacheStatus() falls back to x-drupal-cache
-   * which reflects the Redis state and returns MISS immediately after a save.
+   * On local environments there is no Fastly; getCacheStatus() falls back to
+   * x-drupal-cache which reflects the Redis state and returns MISS immediately
+   * after a save.
    */
   protected function assertAnonymousCacheMiss(string $path): void {
     $status = '';
@@ -212,7 +230,7 @@ abstract class CacheTestBase extends ExistingSiteBase {
    *     header from the PHP-FPM response, making x-drupal-cache stale on
    *     subsequent Fastly hits. x-cache may be a comma-separated list
    *     (e.g. "MISS, HIT"); the last token is the most recent CDN result.
-   *  2. x-drupal-cache — present on DDEV/local where there is no CDN layer.
+   *  2. x-drupal-cache — present on local environments (DDEV, VM, etc.) where there is no CDN layer.
    *
    * Returns 'HIT', 'MISS', or an empty string if neither header is present.
    */

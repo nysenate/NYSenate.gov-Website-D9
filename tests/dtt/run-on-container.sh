@@ -6,9 +6,7 @@
 #   terminus remote:drush <site>.<env> -- ev "passthru('bash /code/tests/dtt/run-on-container.sh <url>', \$c); exit(\$c);"
 #
 # It must run ON the Pantheon container (not the CI runner) so that the test
-# process shares the same DB and Redis instance as the web server. Drupal's
-# cache tag invalidation writes checksums to Redis; if the test process and
-# web server use different Redis instances, cache MISS assertions never trigger.
+# process shares the same DB and Redis instance as the web server.
 #
 # Usage:
 #   bash /code/tests/dtt/run-on-container.sh <DTT_BASE_URL> [phpunit-extra-args...]
@@ -44,6 +42,10 @@ fi
 # every test in a single process. On Pantheon's 2 GB container this exhausts
 # memory partway through the full 64-test suite. Running one class per process
 # keeps peak RSS well under 1 GB while total test time is unchanged.
+#
+# NOTE: This class list must stay in sync with the per-class loop in
+# .github/workflows/pantheon-deploy-multidev.yml (run_cache_tests job).
+# When adding a new test class, update both locations.
 CLASSES=(
   AnonymousCacheHitTest
   AuthenticatedDynamicCacheTest

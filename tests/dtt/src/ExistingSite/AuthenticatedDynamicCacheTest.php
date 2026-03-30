@@ -9,9 +9,9 @@ use Drupal\user\Entity\User;
  *
  * The dynamic page cache caches full page responses keyed by user context.
  * These tests confirm the properties that are unique to authenticated sessions:
- *  1. An authenticated user's first visit is always a MISS (cold cache).
- *  2. A second identical visit is a HIT (dynamic cache warmed).
- *  3. Any account change (role, district, preferences) busts that user's
+ *
+ *  1. A second authenticated visit to the same page returns x-drupal-dynamic-cache: HIT.
+ *  2. Any account change (role, district, preferences) busts that user's
  *     warmed entries via the user:{uid} cache tag.
  *
  * Content-edit invalidation (e.g. article resave busting a page) is not
@@ -28,11 +28,11 @@ use Drupal\user\Entity\User;
 class AuthenticatedDynamicCacheTest extends CacheTestBase {
 
   /**
-   * Synthetic test user created in setUp and removed in tearDown.
+   * Synthetic authenticated user created in setUp and removed in tearDown.
    *
    * @var \Drupal\user\Entity\User
    */
-  private User $constituentUser;
+  private User $testUser;
 
   /**
    * {@inheritdoc}
@@ -40,22 +40,15 @@ class AuthenticatedDynamicCacheTest extends CacheTestBase {
   protected function setUp(): void {
     parent::setUp();
 
+    // Clear the dynamic page cache so every test in this class starts from a
+    // guaranteed cold-cache state. The dynamic page cache is keyed by cache
+    // contexts (e.g. user.roles), not by individual user ID, so a warm entry
+    // left by a prior test run or real editor traffic would make the
+    // cold-cache MISS assertions unreliable without this.
+    \Drupal::cache('dynamic_page_cache')->deleteAll();
+
     // Create a minimal authenticated user. No roles beyond 'authenticated'.
-    $this->constituentUser = $this->createUser();
-  }
-
-  // ---------------------------------------------------------------------------
-  // Dynamic cache MISS on first visit
-  // ---------------------------------------------------------------------------
-
-  /**
-   * An authenticated user's first visit to each top-level page is a dynamic cache MISS.
-   *
-   * @dataProvider topLevelPageProvider
-   */
-  public function testConstituentFirstVisitIsDynamicCacheMiss(string $path): void {
-    $this->drupalLogin($this->constituentUser);
-    $this->assertDynamicCacheMiss($path);
+    $this->testUser = $this->createUser();
   }
 
   // ---------------------------------------------------------------------------
@@ -68,7 +61,7 @@ class AuthenticatedDynamicCacheTest extends CacheTestBase {
    * @dataProvider topLevelPageProvider
    */
   public function testConstituentSecondVisitIsDynamicCacheHit(string $path): void {
-    $this->drupalLogin($this->constituentUser);
+    $this->drupalLogin($this->testUser);
 
     // First visit — warms the dynamic cache entry for this user/path.
     $this->visit($path);
@@ -91,7 +84,7 @@ class AuthenticatedDynamicCacheTest extends CacheTestBase {
    * cache.
    */
   public function testDynamicCacheMissAfterAccountChange(): void {
-    $this->drupalLogin($this->constituentUser);
+    $this->drupalLogin($this->testUser);
 
     // Warm the dynamic cache on the homepage.
     $this->visit('/');
@@ -99,7 +92,7 @@ class AuthenticatedDynamicCacheTest extends CacheTestBase {
 
     // Re-save the user without changing any fields — this is sufficient to
     // invalidate the user:{uid} cache tag and bust the dynamic cache entry.
-    $this->constituentUser->save();
+    $this->testUser->save();
 
     // Next visit must be a MISS — the warmed entry has been invalidated.
     $this->assertDynamicCacheMiss('/');

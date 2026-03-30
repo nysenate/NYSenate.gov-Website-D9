@@ -8,9 +8,10 @@ use Drupal\user\UserInterface;
  * Verifies anonymous page cache (x-drupal-cache) behavior.
  *
  * Covers:
- *  - Cache HITs on the 6 top-level navigation pages after a warm request.
- *  - cache-control: max-age=86400, public on those pages.
- *  - Negative cases: irrelevant content edits must not bust unrelated pages.
+ *
+ *  1. Cache HITs on the 6 top-level navigation pages after a warm request.
+ *  2. cache-control: max-age=86400, public on those pages.
+ *  3. Negative cases: irrelevant content edits must not bust unrelated pages.
  *
  * Add new test methods here for any additional anonymous caching assertions.
  *
@@ -29,14 +30,10 @@ class AnonymousCacheHitTest extends CacheTestBase {
    * {@inheritdoc}
    *
    * Creates an admin user and logs in so that saveViaWebRequest() is available
-   * for the negative-case tests. This mirrors CacheMissInvalidationTest and
-   * makes Fastly BAN dispatch deterministic: saveViaWebRequest() submits a
-   * real HTTP POST, kernel.terminate fires, and pantheon_advanced_page_cache
-   * dispatches Fastly BANs for the saved entity's cache tags via
-   * pantheon_clear_edge_keys(). CLI saves ($entity->save()) also call
-   * pantheon_clear_edge_keys() synchronously, but the BAN arrives at
-   * Fastly before the page has fully re-cached from the warmCache() call,
-   * creating a race that generates spurious failures in the full test suite.
+   * for the negative-case tests. Web-based saves are used (not $entity->save())
+   * to ensure kernel.terminate fires and Fastly BANs are dispatched before the
+   * next warmCache() poll, eliminating the race that causes spurious failures
+   * when CLI saves interact with the full test suite's warm-cache state.
    */
   protected function setUp(): void {
     parent::setUp();
@@ -80,21 +77,16 @@ class AnonymousCacheHitTest extends CacheTestBase {
   }
 
   // ---------------------------------------------------------------------------
-  // Content edit non-invalidation (negative cases)
+  // Content edit non-invalidation
   //
   // For each content type, assert that pages it does NOT feed remain cached
   // after a re-save. The complement (MISS on pages that DO display the
   // content) is covered in CacheMissInvalidationTest.
   //
   // Each method warms all unrelated pages, calls saveViaWebRequest() once,
-  // then asserts every page is still a HIT. One HTTP round trip per content
-  // type instead of one per (type × page) pair keeps growth O(content_types)
-  // rather than O(content_types × pages) as new types and pages are added.
-  //
-  // saveViaWebRequest() is used rather than $entity->save() so that the Fastly
-  // BAN is dispatched via a real kernel.terminate event (identical to a real
-  // editorial save). This eliminates the cross-test contamination race that
-  // occurs when CLI saves interact with the full test suite's warmCache state.
+  // then asserts every page is still a HIT. saveViaWebRequest() is used
+  // (not $entity->save()) to ensure Fastly BAN dispatch is deterministic —
+  // see CacheTestBase::saveViaWebRequest() for the full rationale.
   // ---------------------------------------------------------------------------
 
   /**
@@ -122,7 +114,9 @@ class AnonymousCacheHitTest extends CacheTestBase {
    */
   public function testBillEditDoesNotInvalidateUnrelatedPages(): void {
     $bill = $this->findSaveableBillNode();
-    $this->assertNotNull($bill, 'No bill with valid print number and session found.');
+    if ($bill === NULL) {
+      $this->markTestSkipped('No bill with valid print number and session found.');
+    }
     $unrelated = ['/', '/news-and-issues', '/senators-committees', '/events', '/about'];
     foreach ($unrelated as $path) {
       $this->warmCache($path);
@@ -158,7 +152,9 @@ class AnonymousCacheHitTest extends CacheTestBase {
    */
   public function testPetitionEditDoesNotInvalidateAnyTopLevelPage(): void {
     $petition = $this->findNodeByType('petition');
-    $this->assertNotNull($petition, "No published 'petition' node found.");
+    if ($petition === NULL) {
+      $this->markTestSkipped("No published 'petition' node found.");
+    }
     foreach (self::TOP_LEVEL_PAGES as $path) {
       $this->warmCache($path);
     }

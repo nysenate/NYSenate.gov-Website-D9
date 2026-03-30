@@ -59,6 +59,11 @@ class NoCachePoisoningTest extends CacheTestBase {
   protected function setUp(): void {
     parent::setUp();
 
+    // Clear the dynamic page cache so the User A MISS / User B HIT assertion
+    // in testDynamicCacheSharedAcrossUsers() is reliable regardless of prior
+    // test runs or real editor traffic warming the same role-keyed entries.
+    \Drupal::cache('dynamic_page_cache')->deleteAll();
+
     // Resolve two distinct district terms if they exist in the DB.
     $districts = \Drupal::entityTypeManager()
       ->getStorage('taxonomy_term')
@@ -108,9 +113,7 @@ class NoCachePoisoningTest extends CacheTestBase {
    *
    * Verified on two structurally distinct pages — / (views, lazy builders) and
    * /senators-committees (taxonomy listing) — which is sufficient coverage
-   * since the shared-cache mechanism is uniform across all page types. Testing
-   * all 6 nav pages would add 8 redundant login/logout round trips with no
-   * additional signal.
+   * since the shared-cache mechanism is uniform across all page types.
    */
   public function testDynamicCacheSharedAcrossUsers(): void {
     foreach (['/', '/senators-committees'] as $path) {

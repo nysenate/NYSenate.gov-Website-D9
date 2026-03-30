@@ -69,10 +69,10 @@
 .sidebar-toggle {
 
   &--show-icon {
-    @extend .icon-replace__hamburger;
+    @include icon-replace-hamburger;
 
     &.show {
-      @extend .icon-replace__x;
+      @include icon-replace-x;
     }
   }
 }

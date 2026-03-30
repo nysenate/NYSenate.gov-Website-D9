@@ -91,7 +91,6 @@
         "drupal/gin_toolbar": "^2.1",
         "drupal/google_analytics": "^3.1 || ^4.0.0",
         "drupal/google_tag": "^2.0",
-        "drupal/guardr_core": "2.x-dev",
         "drupal/honeypot": "^2.2",
         "drupal/htmlpurifier": "^1.0@RC",
         "drupal/image_style_quality": "^1.4",
@@ -131,6 +130,7 @@
         "drupal/privatemsg": "^1.0@alpha",
         "drupal/queue_ui": "^3.1",
         "drupal/queue_unique": "^3.0",
+        "drupal/r4032login": "^2.2",
         "drupal/rabbit_hole": "^2.0@beta",
         "drupal/real_aes": "^2.6",
         "drupal/recaptcha": "^3.0",
@@ -169,6 +169,7 @@
         "drupal/views_bulk_edit": "^3.0",
         "drupal/views_bulk_operations": "^4.3",
         "drupal/views_combine": "^1.0@alpha",
+        "drupal/views_custom_cache_tag": "^1.4",
         "drupal/views_data_export": "^1.1",
         "drupal/views_exclude_previous": "^2.0@beta",
         "drupal/views_field_compare": "^1.0",
@@ -210,7 +211,8 @@
         "phpstan/phpstan": "^1.10",
         "phpstan/phpstan-deprecation-rules": "^1.1",
         "symfony/var-dumper": "^6.0",
-        "vlucas/phpdotenv": "^2.4"
+        "vlucas/phpdotenv": "^2.4",
+        "weitzman/drupal-test-traits": "^2.0"
     },
     "conflict": {
         "drupal/drupal": "*"
@@ -245,6 +247,9 @@
         ]
     },
     "autoload-dev": {
+        "psr-4": {
+            "Drupal\\Tests\\nys\\": "tests/dtt/src/"
+        },
         "files": ["load.environment.php"]
     },
     "scripts": {

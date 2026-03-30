@@ -21,22 +21,14 @@
       {% endif %}
     </div>
     <span class="c-block--btn">
-      {% if is_logged and actionbar.flag_follow_committee %}
-        {{ actionbar.flag_follow_committee }}
-      {% else %}
-        <a href="/user/login" class="icon-before__committee-follow" title="follow this committee">follow this committee</a>
-      {% endif %}
+      {{ actionbar.flag_follow_committee }}
     </span>
   {% elseif actionbar.type == 'issue' %}
     <div class="c-actionbar--info">
       <p class="actionbar--cta">Get updates about Senate activity regarding {{ actionbar.issue_title }}.</p>
     </div>
     <span class="c-block--btn">
-      {% if is_logged and actionbar.flag_follow_issue %}
-        {{ actionbar.flag_follow_issue }}
-      {% else %}
-        <a href="/user/login" class="icon-before__issue-follow" title="follow this committee">follow this issue</a>
-      {% endif %}
+      {{ actionbar.flag_follow_issue }}
     </span>
   {% elseif actionbar.type == 'default' %}
     <div class="c-actionbar--info {{ is_logged ? 'content-logged' }}">

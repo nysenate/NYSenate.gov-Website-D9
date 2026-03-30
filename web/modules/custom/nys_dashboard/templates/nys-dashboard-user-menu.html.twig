@@ -1,0 +1,42 @@
+{#
+/**
+ * @file
+ * Template for user menu section in header.
+ *
+ * Available variables:
+ * - is_logged: Boolean indicating if user is authenticated.
+ * - user_first_name: User's first name.
+ * - dashboard_link: URL to user dashboard.
+ * - manage_dashboard_link: URL to manage dashboard.
+ * - edit_account_link: URL to edit account.
+ * - has_senator: Boolean indicating if user has an assigned senator.
+ * - senator_microsite_link: URL to senator's microsite.
+ * - senator_image: Rendered senator headshot image.
+ */
+#}
+{% if is_logged %}
+  {% if has_senator %}
+    <a class="c-header--btn c-senator-header--btn" href="{{ senator_microsite_link }}">
+      <div class="nys-senator">
+        <div class="nys-senator--thumb">
+          {{ senator_image }}
+        </div>
+        <div class="nys-senator--info">
+          <h3 class="nys-senator--title">My Senator</h3>
+        </div>
+      </div>
+    </a>
+  {% endif %}
+  {%
+    include '@nysenate_theme/nysenate-header-user-menu/nysenate-header-user-menu.twig' with {
+      dashboard_link: dashboard_link,
+      user_first_name: user_first_name,
+      manage_dashboard_link: manage_dashboard_link,
+      edit_account_link: edit_account_link,
+      mobile_mode: 0,
+    } only
+  %}
+{% else %}
+  <a class="c-header--btn c-header--btn__taking_action u-tablet-plus" href="/citizen-guide">get involved</a>
+  <a class="c-header--btn c-header--btn__primary u-tablet-plus GoogleAnalyticsET-processed" href="/user/login">login</a>
+{% endif %}

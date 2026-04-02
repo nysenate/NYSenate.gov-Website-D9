@@ -351,6 +351,35 @@ abstract class CacheTestBase extends ExistingSiteBase {
   }
 
   /**
+   * Returns the most recently changed published node of a given type that has
+   * at least one value in the given field, or NULL if no such node exists.
+   *
+   * Use this instead of findNodeByType() when the test requires the node to
+   * have a specific field populated (e.g. field_senator_multiref on articles).
+   * findNodeByType() returns the most recently changed published node of that
+   * type regardless of whether the field has data, so it can produce un-usable
+   * specimens even on a full production DB clone.
+   *
+   * @return \Drupal\node\NodeInterface|null
+   */
+  protected function findNodeByTypeWithField(string $type, string $fieldName): ?NodeInterface {
+    $ids = \Drupal::entityTypeManager()
+      ->getStorage('node')
+      ->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('type', $type)
+      ->condition('status', 1)
+      ->exists($fieldName)
+      ->sort('changed', 'DESC')
+      ->range(0, 1)
+      ->execute();
+    if (empty($ids)) {
+      return NULL;
+    }
+    return \Drupal::entityTypeManager()->getStorage('node')->load(reset($ids));
+  }
+
+  /**
    * Returns the first published bill node that can be non-destructively saved.
    *
    * Bills with empty field_ol_base_print_no or field_ol_session fail on save
@@ -386,6 +415,47 @@ abstract class CacheTestBase extends ExistingSiteBase {
    */
   protected function asProvider(array $paths): array {
     return array_combine($paths, array_chunk($paths, 1));
+  }
+
+  /**
+   * Returns the canonical root-relative URL path for the most recently changed
+   * published node of a given content type, or NULL if none is found.
+   *
+   * For bill nodes, delegates to findSaveableBillNode() so that only bills
+   * with populated field_ol_base_print_no and field_ol_session are returned —
+   * bills without those fields have no pathauto alias and Drupal throws a 404
+   * in nys_bills_node_view_alter().
+   *
+   * @return string|null
+   */
+  protected function findNodeUrlByType(string $type): ?string {
+    $node = ($type === 'bill') ? $this->findSaveableBillNode() : $this->findNodeByType($type);
+    if ($node === NULL) {
+      return NULL;
+    }
+    return $node->toUrl('canonical')->setAbsolute(FALSE)->toString();
+  }
+
+  /**
+   * Returns the first taxonomy term referenced via an entity-reference field
+   * on a node, or NULL if the field is absent or empty.
+   *
+   * Used by content-type display-page invalidation tests to find the specific
+   * term whose save should bust a given node's cached page (e.g. the senator
+   * tagged on an article, or the committee tagged on a meeting).
+   *
+   * @return \Drupal\taxonomy\TermInterface|null
+   */
+  protected function findReferencedTerm(NodeInterface $node, string $fieldName): ?TermInterface {
+    if (!$node->hasField($fieldName)) {
+      return NULL;
+    }
+    foreach ($node->get($fieldName) as $item) {
+      if ($item->entity instanceof TermInterface) {
+        return $item->entity;
+      }
+    }
+    return NULL;
   }
 
 }

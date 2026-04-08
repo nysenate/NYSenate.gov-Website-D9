@@ -30,6 +30,8 @@ use weitzman\DrupalTestTraits\ExistingSiteBase;
  *    requests for the invalidated cache tags.
  *
  * getCacheStatus() normalises across both environments automatically.
+ * assertCacheMissOnSave() encapsulates the canonical warm → HIT → save →
+ * MISS → HIT test sequence used throughout CacheMissInvalidationTest.
  *
  * All entity mutations are non-destructive (re-saves with no field changes);
  * all synthetic users are cleaned up in tearDown().
@@ -53,6 +55,19 @@ abstract class CacheTestBase extends ExistingSiteBase {
     '/legislation',
     '/events',
     '/about',
+  ];
+
+  /**
+   * The 7 primary content types covered by the cache regression suite.
+   */
+  protected const PRIMARY_CONTENT_TYPES = [
+    'article',
+    'bill',
+    'event',
+    'in_the_news',
+    'meeting',
+    'public_hearing',
+    'resolution',
   ];
 
   /**
@@ -82,6 +97,13 @@ abstract class CacheTestBase extends ExistingSiteBase {
    */
   public function topLevelPageProvider(): array {
     return $this->asProvider(self::TOP_LEVEL_PAGES);
+  }
+
+  /**
+   * Data provider supplying all 7 primary content type names as named datasets.
+   */
+  public function contentTypeProvider(): array {
+    return $this->asProvider(self::PRIMARY_CONTENT_TYPES);
   }
 
   /**
@@ -279,6 +301,22 @@ abstract class CacheTestBase extends ExistingSiteBase {
     );
   }
 
+  /**
+   * Performs the standard warm → HIT → save → MISS → HIT assertion sequence.
+   *
+   * This is the canonical test pattern for cache-miss invalidation: warm the
+   * cache for $path, confirm a HIT, save $entity via a real HTTP POST so that
+   * kernel.terminate fires and Fastly BANs are dispatched, then confirm the
+   * page transitions to MISS and back to HIT once re-cached.
+   */
+  protected function assertCacheMissOnSave(string $path, EntityInterface $entity): void {
+    $this->warmCache($path);
+    $this->assertAnonymousCacheHit($path);
+    $this->saveViaWebRequest($entity);
+    $this->assertAnonymousCacheMiss($path);
+    $this->assertAnonymousCacheHit($path);
+  }
+
   // ---------------------------------------------------------------------------
   // Authenticated / dynamic cache helpers
   // ---------------------------------------------------------------------------
@@ -456,6 +494,65 @@ abstract class CacheTestBase extends ExistingSiteBase {
       }
     }
     return NULL;
+  }
+
+  // ---------------------------------------------------------------------------
+  // Require helpers — assert-and-return variants of the find helpers above.
+  //
+  // These methods call the corresponding find* helper and fail the test
+  // immediately if the result is NULL. Use these in test methods to eliminate
+  // the find + assertNotNull boilerplate at every call site.
+  // ---------------------------------------------------------------------------
+
+  /**
+   * Returns the most recently changed published node of a given type, or fails.
+   */
+  protected function requireNodeByType(string $type): NodeInterface {
+    return $this->findNodeByType($type)
+      ?? $this->fail("No published '{$type}' node found.");
+  }
+
+  /**
+   * Returns the first term of a given vocabulary, or fails.
+   */
+  protected function requireTermByVocabulary(string $vocabulary): TermInterface {
+    return $this->findTermByVocabulary($vocabulary)
+      ?? $this->fail("No '{$vocabulary}' taxonomy term found.");
+  }
+
+  /**
+   * Returns the most recently changed published node of a given type with a
+   * populated field, or fails.
+   */
+  protected function requireNodeByTypeWithField(string $type, string $fieldName): NodeInterface {
+    return $this->findNodeByTypeWithField($type, $fieldName)
+      ?? $this->fail("No published '{$type}' node with field '{$fieldName}' populated found.");
+  }
+
+  /**
+   * Returns the first published bill node that can be non-destructively saved, or fails.
+   */
+  protected function requireSaveableBillNode(): NodeInterface {
+    return $this->findSaveableBillNode()
+      ?? $this->fail('No published bill node with field_ol_base_print_no and field_ol_session populated found.');
+  }
+
+  /**
+   * Returns the canonical root-relative URL path for the most recently changed
+   * published node of a given content type, or fails.
+   */
+  protected function requireNodeUrlByType(string $type): string {
+    return $this->findNodeUrlByType($type)
+      ?? $this->fail("No published '{$type}' node found.");
+  }
+
+  /**
+   * Returns the first taxonomy term referenced via an entity-reference field
+   * on a node, or fails.
+   */
+  protected function requireReferencedTerm(NodeInterface $node, string $fieldName): TermInterface {
+    return $this->findReferencedTerm($node, $fieldName)
+      ?? $this->fail("No term found for field '{$fieldName}'.");
   }
 
 }

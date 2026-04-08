@@ -39,28 +39,54 @@ echo "Running cache regression tests against: $DTT_BASE_URL"
 
 cd "$PROJECT_ROOT"
 
-# Run PHPUnit without set -e so we can inspect the exit code ourselves.
-set +e
-# shellcheck disable=SC2086
-php -d memory_limit=-1 vendor/bin/phpunit \
-  -c tests/dtt/phpunit.xml \
-  --testsuite existing-site \
-  $GROUP \
-  $FILTER_ARG \
-  --testdox
-PHPUNIT_EXIT=$?
-set -e
-
-# Exit 137 = SIGKILL from Docker's OOM killer. We cannot reliably tell whether
-# PHPUnit was killed before, during, or after tests ran, so we must treat this
-# as a failure. Increase Docker Desktop memory (Settings → Resources → Memory,
-# 6-8 GB recommended) to eliminate this.
-if [[ $PHPUNIT_EXIT -eq 137 ]]; then
-  echo ""
-  echo "ERROR: PHPUnit was killed by Docker (OOM/SIGKILL, exit 137)."
-  echo "Tests may not have run at all. This is a Docker memory constraint."
-  echo "Fix: Docker Desktop → Settings → Resources → Memory → set to 6-8 GB."
-  exit 137
+# When a --filter is passed, run as a single invocation (the caller wants a
+# specific test, not the full per-class split).
+if [[ -n "$FILTER_ARG" ]]; then
+  # shellcheck disable=SC2086
+  php -d memory_limit=4096M vendor/bin/phpunit \
+    -c tests/dtt/phpunit.xml \
+    --testsuite existing-site \
+    $GROUP \
+    $FILTER_ARG \
+    --testdox \
+    --do-not-cache-result
+  exit $?
 fi
 
-exit $PHPUNIT_EXIT
+# Default path: run each test class in a separate PHP process.
+#
+# PHPUnit accumulates Mink session state and Redis-unserialized objects across
+# tests in a single process. Even with generous Docker memory the suite can
+# exhaust available RAM and be killed (exit 137). Running one class per process
+# keeps peak RSS well under 2 GB while total test time is unchanged.
+#
+# This class list must stay in sync with run-on-container.sh and the CI
+# workflow. When adding a new test class, update all three locations.
+CLASSES=(
+  AnonymousCacheHitTest
+  AuthenticatedDynamicCacheTest
+  CacheMissInvalidationTest
+  NoCachePoisoningTest
+)
+
+OVERALL=0
+for CLASS in "${CLASSES[@]}"; do
+  set +e
+  # shellcheck disable=SC2086
+  php -d memory_limit=4096M vendor/bin/phpunit \
+    -c tests/dtt/phpunit.xml \
+    --testsuite existing-site \
+    $GROUP \
+    --filter "$CLASS" \
+    --testdox \
+    --do-not-cache-result
+  STATUS=$?
+  set -e
+  if [[ $STATUS -eq 137 ]]; then
+    echo ""
+    echo "ERROR: PHPUnit was killed (OOM/SIGKILL, exit 137) while running $CLASS."
+    exit 137
+  fi
+  if [[ $STATUS -ne 0 ]]; then OVERALL=$STATUS; fi
+done
+exit $OVERALL

@@ -10,12 +10,13 @@ use Drupal\user\Entity\User;
  * Cache poisoning means one user's personalized content is wrongly served
  * from cache to a different user. These tests verify:
  *
- *  1. The dynamic page cache is shared across authenticated users — a second
- *     user's first visit returns HIT from the first user's warmed entry.
- *  2. User A's follow state (issues, committees) is not visible to User B.
- *  3. Each user sees their own name in the header user menu.
- *  4. An anonymous visitor after an authenticated visit still receives the
+ *  1. User A's follow state (issues, committees) is not visible to User B.
+ *  2. Each user sees their own name in the header user menu.
+ *  3. An anonymous visitor after an authenticated visit still receives the
  *     anonymous rendering — not a leaked authenticated response.
+ *
+ * That the dynamic page cache skeleton IS correctly shared across users is
+ * verified in AuthenticatedDynamicCacheTest::testDynamicCacheSharedAcrossUsers.
  *
  * All synthetic users are created via the Drupal entity API and deleted in
  * tearDown(). Flag state and personalised content are asserted on the rendered
@@ -92,46 +93,6 @@ class NoCachePoisoningTest extends CacheTestBase {
   }
 
   // ---------------------------------------------------------------------------
-  // Shared dynamic cache entries across users
-  // ---------------------------------------------------------------------------
-
-  /**
-   * The dynamic page cache is correctly shared across authenticated users.
-   *
-   * Drupal's dynamic page cache stores the full rendered response — including
-   * lazy builder placeholders — after the first visit. All subsequent users
-   * receive x-drupal-dynamic-cache: HIT; their lazy builder elements
-   * (e.g. follow/unfollow buttons from IssueFlagLazyBuilder) are then rendered
-   * server-side per-user on top of that cached skeleton, outside the cache.
-   *
-   * Therefore:
-   *  - User A's first visit (cold cache) returns MISS.
-   *  - User B's first visit hits the now-warm entry and returns HIT.
-   *
-   * Content-level isolation is verified separately in
-   * testFollowUnfollowNotLeakedAcrossUsers.
-   *
-   * Verified on two structurally distinct pages — / (views, lazy builders) and
-   * /senators-committees (taxonomy listing) — which is sufficient coverage
-   * since the shared-cache mechanism is uniform across all page types.
-   */
-  public function testDynamicCacheSharedAcrossUsers(): void {
-    foreach (['/', '/senators-committees'] as $path) {
-      // User A: first visit must be a MISS (cold cache — no entry exists yet).
-      $this->drupalLogin($this->userA);
-      $this->assertDynamicCacheMiss($path);
-      $this->drupalLogout();
-
-      // User B: HIT is expected. The dynamic page cache entry is shared across
-      // users; only lazy builder placeholders are resolved per-user outside
-      // the cache.
-      $this->drupalLogin($this->userB);
-      $this->assertDynamicCacheHit($path);
-      $this->drupalLogout();
-    }
-  }
-
-  // ---------------------------------------------------------------------------
   // Follow/unfollow issue state isolation on /news-and-issues
   // ---------------------------------------------------------------------------
 
@@ -145,21 +106,14 @@ class NoCachePoisoningTest extends CacheTestBase {
    * User B sees "Follow" for the same issue.
    */
   public function testFollowUnfollowNotLeakedAcrossUsers(): void {
-    $issue = $this->findTermByVocabulary('issues');
-    if ($issue === NULL) {
-      $this->markTestSkipped('No issues taxonomy term found.');
-    }
+    $issue = $this->requireTermByVocabulary('issues');
 
-    if (!\Drupal::hasService('flag')) {
-      $this->markTestSkipped('Flag module not available.');
-    }
+    $this->assertTrue(\Drupal::hasService('flag'), 'Flag module not available.');
 
     /** @var \Drupal\flag\FlagServiceInterface $flagService */
     $flagService = \Drupal::service('flag');
     $flag = $flagService->getFlagById('follow_issue');
-    if ($flag === NULL) {
-      $this->markTestSkipped('follow_issue flag not found.');
-    }
+    $this->assertNotNull($flag, 'follow_issue flag not found.');
 
     $issuePath = $issue->toUrl()->toString();
 
@@ -200,21 +154,14 @@ class NoCachePoisoningTest extends CacheTestBase {
    * correctly and not shared across users via the cached page skeleton.
    */
   public function testCommitteeFollowNotLeakedAcrossUsers(): void {
-    $committee = $this->findTermByVocabulary('committees');
-    if ($committee === NULL) {
-      $this->markTestSkipped('No committee taxonomy term found.');
-    }
+    $committee = $this->requireTermByVocabulary('committees');
 
-    if (!\Drupal::hasService('flag')) {
-      $this->markTestSkipped('Flag module not available.');
-    }
+    $this->assertTrue(\Drupal::hasService('flag'), 'Flag module not available.');
 
     /** @var \Drupal\flag\FlagServiceInterface $flagService */
     $flagService = \Drupal::service('flag');
     $flag = $flagService->getFlagById('follow_committee');
-    if ($flag === NULL) {
-      $this->markTestSkipped('follow_committee flag not found.');
-    }
+    $this->assertNotNull($flag, 'follow_committee flag not found.');
 
     $committeePath = $committee->toUrl()->toString();
 

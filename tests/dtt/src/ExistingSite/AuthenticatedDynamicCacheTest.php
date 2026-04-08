@@ -11,8 +11,11 @@ use Drupal\user\Entity\User;
  * These tests confirm the properties that are unique to authenticated sessions:
  *
  *  1. A second authenticated visit to the same page returns x-drupal-dynamic-cache: HIT.
- *  2. Any account change (role, district, preferences) busts that user's
- *     warmed entries via the user:{uid} cache tag.
+ *  2. The dynamic cache skeleton is shared across different authenticated users.
+ *  3. Any account change busts that user's warmed entries via the user:{uid} cache tag.
+ *
+ * Content-level isolation (follow/unfollow state, user menu) is verified in
+ * NoCachePoisoningTest.
  *
  * Content-edit invalidation (e.g. article resave busting a page) is not
  * duplicated here. Both the page cache and the dynamic page cache share the
@@ -28,11 +31,18 @@ use Drupal\user\Entity\User;
 class AuthenticatedDynamicCacheTest extends CacheTestBase {
 
   /**
-   * Synthetic authenticated user created in setUp and removed in tearDown.
+   * First synthetic authenticated user.
    *
    * @var \Drupal\user\Entity\User
    */
-  private User $testUser;
+  private User $userA;
+
+  /**
+   * Second synthetic user for shared-cache assertions.
+   *
+   * @var \Drupal\user\Entity\User
+   */
+  private User $userB;
 
   /**
    * {@inheritdoc}
@@ -47,8 +57,9 @@ class AuthenticatedDynamicCacheTest extends CacheTestBase {
     // cold-cache MISS assertions unreliable without this.
     \Drupal::cache('dynamic_page_cache')->deleteAll();
 
-    // Create a minimal authenticated user. No roles beyond 'authenticated'.
-    $this->testUser = $this->createUser();
+    // Create two minimal authenticated users. No roles beyond 'authenticated'.
+    $this->userA = $this->createUser();
+    $this->userB = $this->createUser();
   }
 
   // ---------------------------------------------------------------------------
@@ -61,13 +72,47 @@ class AuthenticatedDynamicCacheTest extends CacheTestBase {
    * @dataProvider topLevelPageProvider
    */
   public function testConstituentSecondVisitIsDynamicCacheHit(string $path): void {
-    $this->drupalLogin($this->testUser);
+    $this->drupalLogin($this->userA);
 
     // First visit — warms the dynamic cache entry for this user/path.
     $this->visit($path);
 
     // Second visit — must be served from dynamic cache.
     $this->assertDynamicCacheHit($path);
+  }
+
+  // ---------------------------------------------------------------------------
+  // Shared dynamic cache skeleton across users
+  // ---------------------------------------------------------------------------
+
+  /**
+   * The dynamic page cache skeleton is correctly shared across authenticated users.
+   *
+   * Drupal's dynamic page cache stores the full rendered response — including
+   * lazy builder placeholders — after the first visit. All subsequent users
+   * receive x-drupal-dynamic-cache: HIT; their lazy builder elements are then
+   * resolved per-user outside the cache.
+   *
+   * Therefore:
+   *  - userA's first visit (cold cache) returns MISS.
+   *  - A second user's first visit hits the now-warm entry and returns HIT.
+   *
+   * Content-level isolation is verified separately in NoCachePoisoningTest.
+   */
+  public function testDynamicCacheSharedAcrossUsers(): void {
+    foreach (['/', '/senators-committees'] as $path) {
+      // userA: first visit must be a MISS (cold cache — no entry exists yet).
+      $this->drupalLogin($this->userA);
+      $this->assertDynamicCacheMiss($path);
+      $this->drupalLogout();
+
+      // userB: HIT is expected. The dynamic page cache entry is shared across
+      // users; only lazy builder placeholders are resolved per-user outside
+      // the cache.
+      $this->drupalLogin($this->userB);
+      $this->assertDynamicCacheHit($path);
+      $this->drupalLogout();
+    }
   }
 
   // ---------------------------------------------------------------------------
@@ -84,7 +129,7 @@ class AuthenticatedDynamicCacheTest extends CacheTestBase {
    * cache.
    */
   public function testDynamicCacheMissAfterAccountChange(): void {
-    $this->drupalLogin($this->testUser);
+    $this->drupalLogin($this->userA);
 
     // Warm the dynamic cache on the homepage.
     $this->visit('/');
@@ -92,7 +137,7 @@ class AuthenticatedDynamicCacheTest extends CacheTestBase {
 
     // Re-save the user without changing any fields — this is sufficient to
     // invalidate the user:{uid} cache tag and bust the dynamic cache entry.
-    $this->testUser->save();
+    $this->userA->save();
 
     // Next visit must be a MISS — the warmed entry has been invalidated.
     $this->assertDynamicCacheMiss('/');

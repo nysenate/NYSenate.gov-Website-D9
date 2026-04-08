@@ -12,21 +12,36 @@ The suite is designed to exercise the full cache stack on both local and Pantheo
 
 **Anonymous page cache** (`AnonymousCacheHitTest`)
 - All 6 top-level navigation pages return `x-drupal-cache: HIT` after the first request.
-- All 6 pages declare a 24-hour `cache-control: max-age=86400, public` lifetime.
-- Editing content that does not feed a given page leaves that page's cache intact (cross-invalidation negative cases). These edits are submitted via the entity edit form (same mechanism as `CacheMissInvalidationTest`) to ensure Fastly BAN dispatch is deterministic and avoids race conditions from synchronous CLI saves.
+- All 7 primary content type display pages (article, bill, event, in_the_news, meeting, public_hearing, resolution) return `x-drupal-cache: HIT` after the first request.
+- All 13 of those pages declare a 24-hour `cache-control: max-age=86400, public` lifetime.
+- Editing article, bill, or event nodes does not invalidate top-level pages that those content types do not feed (cross-invalidation negative cases).
+- Editing a petition does not invalidate any top-level page.
+- Saving a node of one primary content type does not invalidate the display page of any other primary content type.
+- All content-type edits in these negative cases are submitted via the entity edit form (same mechanism as `CacheMissInvalidationTest`) to ensure Fastly BAN dispatch is deterministic and avoid race conditions from synchronous CLI saves.
 
 **Cache invalidation** (`CacheMissInvalidationTest`)
-- Editing relevant content — articles, events, bills, senator/committee taxonomy terms, landing page nodes, embedded block content, and homepage hero queue changes — correctly invalidates the corresponding page cache entries.
-- All entity edits are submitted via the Drupal UI (real HTTP POST) rather than the Drupal API, so `kernel.terminate` fires and `pantheon_advanced_page_cache` dispatches Fastly BAN requests for the invalidated cache tags.
-- The homepage hero test exercises the real production code path: it fills the entity subqueue autocomplete and presses "Add item", triggering `HomepageHeroController::homepageHeroAddItem()` which invalidates the `views:homepage_hero` cache tag.
+- All invalidation tests follow the canonical `assertCacheMissOnSave($path, $entity)` sequence: warm cache → assert HIT → save entity via HTTP POST → assert MISS → assert HIT (re-cached).
+- Top-level page invalidation:
+  - `/` is invalidated by article edits, event edits, and homepage hero queue changes.
+  - `/news-and-issues` is invalidated by article edits.
+  - `/senators-committees` is invalidated by senator or committee term edits.
+  - `/legislation` is invalidated by bill edits.
+  - `/events` is invalidated by event edits.
+  - `/about` is invalidated by landing page node edits and by edits to block_content entities embedded via `field_landing_blocks`.
+- Content type display page invalidation — direct node edit: all 7 primary content type display pages are invalidated when their node is saved.
+- Content type display page invalidation — related entity edit:
+  - Article and in_the_news pages are invalidated by senator term edits (via `field_senator_multiref`).
+  - Event, meeting, and public_hearing pages are invalidated by committee term edits (via `field_committee`).
+  - Resolution pages are invalidated by senator term edits (via `field_ol_sponsor`).
+- The homepage hero test exercises the real production code path: it fills the entity subqueue autocomplete and presses "Add item", triggering `HomepageHeroController::homepageHeroAddItem()` which calls `invalidateTags(['views:homepage_hero'])`. The "Add item" button does not invoke the main entity save handler, so the queue contents are not permanently modified.
 
 **Authenticated dynamic page cache** (`AuthenticatedDynamicCacheTest`)
-- A second authenticated visit to a cold-cache page returns `x-drupal-dynamic-cache: HIT`. The dynamic page cache bin is cleared in `setUp()` to guarantee a cold-cache starting state.
-- Any account change (role, district, preferences) busts that user's warmed entries via the `user:{uid}` cache tag.
+- A second authenticated visit to each of the 6 top-level pages returns `x-drupal-dynamic-cache: HIT`. The dynamic page cache bin is cleared in `setUp()` to guarantee a cold-cache starting state for every test run.
+- The dynamic cache skeleton is correctly shared across different authenticated users — User A's first visit produces a MISS; User B's first visit to the same page produces a HIT from User A's warmed entry.
+- Any direct entity save on a user account (even with no field changes) busts that user's warmed entries via the `user:{uid}` cache tag.
 
 **Cache poisoning prevention** (`NoCachePoisoningTest`)
-- The dynamic cache is correctly shared across authenticated users (not duplicated per user).
-- Per-user lazy builder output — issue follow/unfollow state, committee follow/unfollow state, and the header user menu (name, senator link) — is personalized correctly per user and never leaked across users.
+- Per-user lazy builder output — issue follow/unfollow state, committee follow/unfollow state, and the header user menu welcome message — is personalized correctly per user and never leaked across users via the shared dynamic cache skeleton.
 - An authenticated visit does not cause authenticated content to be served to anonymous visitors.
 
 ## Running in CI (Pantheon multidev)
@@ -37,10 +52,6 @@ Tests run automatically on every pull request from a `feature/*` branch via the 
 2. Wakes the multidev (Pantheon environments sleep when idle).
 3. Runs PHPUnit **on the Pantheon container itself** via `terminus remote:drush -- ev`.
 
-**Why tests run on the container:** This is an architectural constraint of DTT's `ExistingSiteBase`, not a configuration choice. DTT bootstraps a full Drupal instance **inside the test process** — every `createUser()`, `drupalLogin()`, entity query, and teardown cleanup makes direct database calls. Pantheon's database can be reached via SSH tunnel, but Pantheon's Redis cannot — there is no supported tunnel path to the Redis instance from outside the container network. Since cache tag invalidation writes checksums to Redis from the test process, the test process must share the same Redis instance as the web server. Running from an external GitHub Actions VM is therefore not possible without abandoning the DTT architecture entirely and rewriting the suite as pure black-box HTTP tests — which would lose entity creation, controlled test users, session management, and DTT's automatic teardown.
-
-Running inside the container is the minimal viable approach. `vendor/bin/phpunit` is available there because `vendor/` is included in the deployed artifact, and `terminus remote:drush -- ev` is the mechanism Pantheon exposes for executing arbitrary code on the container.
-
 The CI step invokes `tests/dtt/run-on-container.sh` on the container via `terminus remote:drush -- ev`, passing the multidev URL as the first argument. The script accepts additional PHPUnit arguments after the URL, which is useful when debugging a failing CI run — e.g. to re-run a single test:
 
 ```bash
@@ -49,6 +60,24 @@ terminus remote:drush nysenate-2022.pr-NNN -- \
 ```
 
 Pass/fail status for each test class is visible directly on the PR via the `run_cache_tests` job.
+
+### Why tests run on the container
+
+This is an architectural constraint driven by specific operations in the test suite, not a general configuration choice. Some context first: `saveViaWebRequest()` and all of the `$anonClient->get()` assertions (warmCache, assertAnonymousCacheHit, assertAnonymousCacheMiss) are pure HTTP — they would work fine from an external GitHub Actions VM. The constraint comes from the other side: **DTT bootstraps a full Drupal instance inside the test process** for entity creates, entity queries, cache bin operations, and teardown. On Pantheon, Drupal's configured cache backend is the Pantheon-managed Redis. That Redis is only reachable from within the container network — there is no supported SSH tunnel path to it from outside.
+
+The specific test operations that require co-location with the web server's Redis are:
+
+1. **`\Drupal::cache('dynamic_page_cache')->deleteAll()` in `AuthenticatedDynamicCacheTest::setUp()`** — This must operate on the same Redis the web server uses. It establishes the cold-cache precondition that makes the MISS → HIT sequence in `testConstituentSecondVisitIsDynamicCacheHit` and `testDynamicCacheSharedAcrossUsers` reliable. If the test process connects to a different cache backend (e.g., a local database cache), this call is a no-op against the real cache — Pantheon's Redis still has warm entries from prior traffic, so the cold-cache MISS assertions fail spuriously on every run.
+
+2. **`createUser()` and DTT's automatic teardown entity deletions (all four test classes)** — Entity creates and deletes in the test process write cache tag checksums to Redis (e.g., `user_list`, `user:{uid}`). The web server reads those same checksums to validate page cache entries. If the test process's Redis differs from the web server's, those invalidations are invisible to the web server — leading to stale pages or teardown pollution leaking into the next test run.
+
+3. **`$this->userA->save()` in `testDynamicCacheMissAfterAccountChange()`** — This is a direct entity API save in the test process (intentionally not via `saveViaWebRequest()`, because the point of the test is that a CLI-style save of a user entity still busts the dynamic cache via the `user:{uid}` tag). That invalidation is written to Redis by the test process and must be visible to the web server for the subsequent `assertDynamicCacheMiss()` to observe a MISS.
+
+4. **`$flagService->flag()` and `$flagService->unflag()` in `NoCachePoisoningTest`** — These Drupal service calls in the test process write flag state to the database and trigger cache tag invalidations in Redis. The web server uses those same tag states when rendering the flag UI. The flag state the assertions check is read from the database (reachable via tunnel), but the cache invalidations that make the rendered page reflect fresh flag state are written to Redis from the test process.
+
+The alternative — rewriting as pure black-box HTTP tests with no DTT bootstrap — would sidestep the Redis constraint entirely, but would lose entity creation, controlled test users, database queries for test specimen discovery, service calls for flag operations, and DTT's automatic teardown. The tests would become brittle against whatever live content and session state happen to exist in the environment.
+
+Running on the container is the minimal viable approach. `vendor/bin/phpunit` is available there because `vendor/` is included in the deployed artifact, and `terminus remote:drush -- ev` is the mechanism Pantheon exposes for executing arbitrary code on the container.
 
 ## Running locally
 
@@ -100,13 +129,13 @@ ddev run-cache-tests --all
 
 ### Against a remote environment (Pantheon multidev or staging)
 
-Set `DTT_BASE_URL` to the remote URL in `tests/dtt/.env` or inline, then run the same `vendor/bin/phpunit` command above. Note that MISS assertions depend on Redis being co-located with the web server — see **Running in CI** above for why the full CI run executes on the Pantheon container itself rather than from an external machine.
+Set `DTT_BASE_URL` to the remote URL in `tests/dtt/.env` or inline, then run the same `vendor/bin/phpunit` command above. See **Why tests run on the container** above for why the full CI run executes on the Pantheon container itself rather than from an external machine.
 
 ## Key considerations
 
-- **Production database required.** Tests query real content (nodes, taxonomy terms, entityqueues). Running against a fresh install with no content will cause tests to skip or fail. A clone of the production database is required for full coverage.
+- **Production database required.** Tests query real content (nodes, taxonomy terms, entityqueues). Running against a fresh install with no content will cause tests to fail. A clone of the production database is required for full coverage.
 - **Redis must be running.** The site uses Redis as the page cache backend. If Redis is not running, `x-drupal-cache` headers will be absent and all cache header assertions will fail. In CI, this is guaranteed because tests run inside the Pantheon container. Locally, ensure DDEV's Redis service is running (`ddev redis-cli ping`).
 - **Tests are non-destructive.** Entity saves change no field values. The homepage hero test presses "Add item" (not the main Save button), so no queue changes are persisted. Flag operations are cleaned up in `finally` blocks. Synthetic users created by all test classes are deleted after each test run by DTT's built-in teardown.
 - **Cron noise is suppressed.** The `automated_cron` module emits PHP warnings on every request via `kernel.terminate`. These are a pre-existing issue unrelated to cache behavior and are suppressed via `$failOnPhpWatchdogMessages = FALSE` in `CacheTestBase`.
-- **Docker memory.** If PHPUnit exits with code 137 (OOM/SIGKILL), increase Docker Desktop's memory allocation to at least 6–8 GB (Settings → Resources → Memory).
-- **Pantheon container memory.** `run-on-container.sh` runs each of the four test classes as a separate PHP process (`--filter AnonymousCacheHitTest`, etc.). This keeps peak RSS well under 2 GB per process; a single-process run of all 64 tests exhausts the Pantheon container's 2 GB PHP limit partway through due to Mink session state and Redis object accumulation. Each process still uses `php -d memory_limit=2048M` to override the default 1 GB web limit.
+- **Docker memory.** PHPUnit runs each test class in a separate PHP process (same as CI) so peak RSS stays well under 2 GB per class. Exit 137 (OOM/SIGKILL) should not occur under normal conditions; if it does, check for other resource-hungry containers sharing the same Docker VM.
+- **Pantheon container memory.** `run-on-container.sh` runs each of the four test classes as a separate PHP process (`--filter AnonymousCacheHitTest`, etc.). This keeps peak RSS well under 2 GB per process; a single-process run of all tests exhausts the Pantheon container's 2 GB PHP limit partway through due to Mink session state and Redis object accumulation. Each process still uses `php -d memory_limit=2048M` to override the default 1 GB web limit.

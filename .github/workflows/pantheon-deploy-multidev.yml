@@ -203,7 +203,11 @@ jobs:
           done
 
       - name: Run cache regression tests on Pantheon container
-        # Each class runs in its own terminus call to bound session duration.
+        # run-on-container.sh manages all test chunking internally — it splits
+        # AnonymousCacheHitTest and CacheMissInvalidationTest into smaller
+        # filter-based chunks to stay under Pantheon's 2 GB PHP memory limit.
+        # A single terminus call is sufficient; the script exits nonzero if any
+        # chunk fails.
         #
         # exit() inside drush ev is treated as abnormal termination by Drush,
         # which overrides the exit code to 1 regardless of the value passed.
@@ -213,16 +217,8 @@ jobs:
         run: |
           SITE="${{ vars.PANTHEON_SITE }}.${{ env.PANTHEON_MULTIDEV }}"
           URL="https://${{ env.PANTHEON_MULTIDEV }}-${{ vars.PANTHEON_SITE }}.pantheonsite.io"
-          OVERALL=0
-          # NOTE: This class list must stay in sync with the CLASSES array in
-          # tests/dtt/run-on-container.sh. When adding a new test class, update both.
-          for CLASS in AnonymousCacheHitTest AuthenticatedDynamicCacheTest CacheMissInvalidationTest NoCachePoisoningTest; do
-            echo "=== Running $CLASS ==="
-            terminus remote:drush "$SITE" -- \
-              ev "error_reporting(E_ERROR); passthru('bash /code/tests/dtt/run-on-container.sh $URL --filter $CLASS 2>&1', \$c); if (\$c !== 0) { throw new \Exception('PHPUnit failed with exit code ' . \$c); }" \
-              || OVERALL=$?
-          done
-          exit $OVERALL
+          terminus remote:drush "$SITE" -- \
+            ev "error_reporting(E_ERROR); passthru('bash /code/tests/dtt/run-on-container.sh $URL 2>&1', \$c); if (\$c !== 0) { throw new \Exception('PHPUnit failed with exit code ' . \$c); }"
 
       - name: Add 'cache-tests-passed' label to PR
         if: success()

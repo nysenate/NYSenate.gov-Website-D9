@@ -36,34 +36,41 @@ if printf '%s\n' "$@" | grep -q -- '--filter'; then
     "$@"
 fi
 
-# Default CI path: run each test class in a separate PHP process.
+# Default CI path: run each chunk in a separate PHP process.
 #
-# PHPUnit accumulates Mink session state and Redis-unserialized objects across
-# every test in a single process. On Pantheon's 2 GB container this exhausts
-# memory partway through the full 64-test suite. Running one class per process
-# keeps peak RSS well under 1 GB while total test time is unchanged.
+# Chunk definitions live in tests/dtt/test-chunks.yml — the single source of
+# truth for both this script and the local DDEV command. Edit that file to add,
+# remove, or rebalance chunks; no changes are needed here.
 #
-# NOTE: This class list must stay in sync with the per-class loop in
-# .github/workflows/pantheon-deploy-multidev.yml (run_cache_tests job).
-# When adding a new test class, update both locations.
-CLASSES=(
-  AnonymousCacheHitTest
-  AuthenticatedDynamicCacheTest
-  CacheMissInvalidationTest
-  NoCachePoisoningTest
-)
+# symfony/yaml (already required by Drupal core) is used to parse the YAML
+# so no additional tooling is required on the Pantheon container.
+
+CHUNKS_FILE="tests/dtt/test-chunks.yml"
+
+# Read label\tfilter pairs from the YAML file.
+mapfile -t CHUNK_LINES < <(php -r "
+  require 'vendor/autoload.php';
+  \$chunks = \Symfony\Component\Yaml\Yaml::parseFile('$CHUNKS_FILE')['chunks'];
+  foreach (\$chunks as \$c) { echo \$c['label'] . \"\t\" . \$c['filter'] . PHP_EOL; }
+")
 
 OVERALL=0
-for CLASS in "${CLASSES[@]}"; do
+for line in "${CHUNK_LINES[@]}"; do
+  LABEL="${line%%$'\t'*}"
+  FILTER="${line#*$'\t'}"
+  echo ""
+  echo "=== $LABEL ==="
+  set +e
   php -d memory_limit=2048M vendor/bin/phpunit \
     -c tests/dtt/phpunit.xml \
     --testsuite existing-site \
     --group cache_regression \
     --testdox \
     --do-not-cache-result \
-    --filter "$CLASS" \
+    --filter "$FILTER" \
     "$@"
   STATUS=$?
+  set -e
   if [[ $STATUS -ne 0 ]]; then OVERALL=$STATUS; fi
 done
 exit $OVERALL

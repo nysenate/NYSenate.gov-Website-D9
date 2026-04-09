@@ -53,38 +53,41 @@ if [[ -n "$FILTER_ARG" ]]; then
   exit $?
 fi
 
-# Default path: run each test class in a separate PHP process.
+# Default path: run each chunk in a separate PHP process.
 #
-# PHPUnit accumulates Mink session state and Redis-unserialized objects across
-# tests in a single process. Even with generous Docker memory the suite can
-# exhaust available RAM and be killed (exit 137). Running one class per process
-# keeps peak RSS well under 2 GB while total test time is unchanged.
-#
-# This class list must stay in sync with run-on-container.sh and the CI
-# workflow. When adding a new test class, update all three locations.
-CLASSES=(
-  AnonymousCacheHitTest
-  AuthenticatedDynamicCacheTest
-  CacheMissInvalidationTest
-  NoCachePoisoningTest
-)
+# Chunk definitions live in tests/dtt/test-chunks.yml — the single source of
+# truth for both this command and run-on-container.sh. Edit that file to add,
+# remove, or rebalance chunks; no changes are needed here.
+
+CHUNKS_FILE="${PROJECT_ROOT}/tests/dtt/test-chunks.yml"
+
+# Read label\tfilter pairs from the YAML file.
+mapfile -t CHUNK_LINES < <(php -r "
+  require '${PROJECT_ROOT}/vendor/autoload.php';
+  \$chunks = \Symfony\Component\Yaml\Yaml::parseFile('$CHUNKS_FILE')['chunks'];
+  foreach (\$chunks as \$c) { echo \$c['label'] . \"\t\" . \$c['filter'] . PHP_EOL; }
+")
 
 OVERALL=0
-for CLASS in "${CLASSES[@]}"; do
+for line in "${CHUNK_LINES[@]}"; do
+  LABEL="${line%%$'\t'*}"
+  FILTER="${line#*$'\t'}"
+  echo ""
+  echo "=== $LABEL ==="
   set +e
   # shellcheck disable=SC2086
   php -d memory_limit=4096M vendor/bin/phpunit \
     -c tests/dtt/phpunit.xml \
     --testsuite existing-site \
     $GROUP \
-    --filter "$CLASS" \
+    --filter "$FILTER" \
     --testdox \
     --do-not-cache-result
   STATUS=$?
   set -e
   if [[ $STATUS -eq 137 ]]; then
     echo ""
-    echo "ERROR: PHPUnit was killed (OOM/SIGKILL, exit 137) while running $CLASS."
+    echo "ERROR: PHPUnit was killed (OOM/SIGKILL, exit 137) while running: $LABEL"
     exit 137
   fi
   if [[ $STATUS -ne 0 ]]; then OVERALL=$STATUS; fi

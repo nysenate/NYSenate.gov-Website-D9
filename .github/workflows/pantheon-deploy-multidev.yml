@@ -212,11 +212,19 @@ jobs:
         # to run-on-container.sh via --filter, which takes the fast-path single-
         # invocation branch for that case.
         #
+        # shell: bash --noprofile --norc -o pipefail {0}
+        # Removes bash's -e flag deliberately. GitHub Actions' default -eo pipefail
+        # causes the step to exit on the first failing terminus call even when
+        # guarded by || OVERALL=$?, because set -e interacts with || inside while
+        # loops inconsistently across bash versions. We do our own error
+        # accumulation via OVERALL and exit explicitly at the end.
+        #
         # exit() inside drush ev is treated as abnormal termination by Drush,
         # which overrides the exit code to 1 regardless of the value passed.
         # Instead, we throw an exception on PHPUnit failure — Drush exits 0
         # when ev completes normally and 1 when an uncaught exception is thrown,
         # which maps exactly to pass/fail semantics.
+        shell: bash --noprofile --norc -o pipefail {0}
         run: |
           SITE="${{ vars.PANTHEON_SITE }}.${{ env.PANTHEON_MULTIDEV }}"
           URL="https://${{ env.PANTHEON_MULTIDEV }}-${{ vars.PANTHEON_SITE }}.pantheonsite.io"

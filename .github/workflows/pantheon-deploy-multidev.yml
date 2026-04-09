@@ -207,17 +207,15 @@ jobs:
 
       - name: Run cache regression tests on Pantheon container
         # Each chunk in test-chunks.yml runs in its own terminus call so that
-        # no single SSH session exceeds Pantheon's connection timeout. The
-        # chunk list is read here (CI runner has python3 + PyYAML) and passed
-        # to run-on-container.sh via --filter, which takes the fast-path single-
-        # invocation branch for that case.
+        # no single SSH session exceeds Pantheon's connection timeout. Chunks
+        # are pre-loaded into arrays before any terminus call is made — if
+        # terminus opened SSH while a while-read loop was still active, it
+        # would consume bytes from the loop's stdin and silently drop chunks.
+        # Using a plain index for-loop (same pattern as the original working
+        # code) avoids this entirely.
         #
-        # shell: bash --noprofile --norc -o pipefail {0}
-        # Removes bash's -e flag deliberately. GitHub Actions' default -eo pipefail
-        # causes the step to exit on the first failing terminus call even when
-        # guarded by || OVERALL=$?, because set -e interacts with || inside while
-        # loops inconsistently across bash versions. We do our own error
-        # accumulation via OVERALL and exit explicitly at the end.
+        # shell: without -e so a failing terminus call doesn't abort the step
+        # before remaining chunks run. Error accumulation is manual via OVERALL.
         #
         # exit() inside drush ev is treated as abnormal termination by Drush,
         # which overrides the exit code to 1 regardless of the value passed.
@@ -229,8 +227,8 @@ jobs:
           SITE="${{ vars.PANTHEON_SITE }}.${{ env.PANTHEON_MULTIDEV }}"
           URL="https://${{ env.PANTHEON_MULTIDEV }}-${{ vars.PANTHEON_SITE }}.pantheonsite.io"
 
-          # Read chunks eagerly so a Python/YAML failure exits the step immediately
-          # rather than silently running zero tests and reporting success.
+          # Parse test-chunks.yml. Fail immediately if parsing fails so we
+          # never silently report success with zero tests run.
           CHUNKS=$(python3 -c "
           import yaml
           chunks = yaml.safe_load(open('tests/dtt/test-chunks.yml'))['chunks']
@@ -243,13 +241,22 @@ jobs:
             exit 1
           fi
 
-          OVERALL=0
+          # Pre-load into arrays. All stdin reads complete here, before any
+          # terminus/SSH call that might otherwise consume remaining stdin bytes.
+          LABELS=()
+          FILTERS=()
           while IFS=$'\t' read -r LABEL FILTER; do
-            echo "=== $LABEL ==="
-            terminus remote:drush "$SITE" -- \
-              ev "error_reporting(E_ERROR); passthru('bash /code/tests/dtt/run-on-container.sh $URL --filter $(printf '%q' "$FILTER") 2>&1', \$c); if (\$c !== 0) { throw new \Exception('PHPUnit failed with exit code ' . \$c); }" \
-              || OVERALL=$?
+            LABELS+=("$LABEL")
+            FILTERS+=("$FILTER")
           done <<< "$CHUNKS"
+
+          OVERALL=0
+          for i in "${!LABELS[@]}"; do
+            echo "=== ${LABELS[$i]} ==="
+            terminus remote:drush "$SITE" -- \
+              ev "error_reporting(E_ERROR); passthru('bash /code/tests/dtt/run-on-container.sh $URL --filter $(printf '%q' "${FILTERS[$i]}") 2>&1', \$c); if (\$c !== 0) { throw new \Exception('PHPUnit failed with exit code ' . \$c); }" \
+              || OVERALL=$?
+          done
           exit $OVERALL
 
       - name: Add 'cache-tests-passed' label to PR

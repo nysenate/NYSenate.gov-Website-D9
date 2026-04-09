@@ -52,7 +52,7 @@ Tests run automatically on every pull request from a `feature/*` branch via the 
 2. Wakes the multidev (Pantheon environments sleep when idle).
 3. Runs PHPUnit **on the Pantheon container itself** via `terminus remote:drush -- ev`.
 
-The CI step invokes `tests/dtt/run-on-container.sh` on the container via `terminus remote:drush -- ev`, passing the multidev URL as the first argument. The script accepts additional PHPUnit arguments after the URL, which is useful when debugging a failing CI run — e.g. to re-run a single test:
+The CI step reads `tests/dtt/test-chunks.yml` (using `python3`, available on `ubuntu-latest`) and invokes `run-on-container.sh` via `terminus remote:drush -- ev` **once per chunk**, passing each chunk's filter via `--filter`. One terminus call per chunk bounds each SSH session to a single chunk's runtime, preventing Pantheon's SSH connection timeout from aborting mid-suite. `run-on-container.sh`'s `--filter` fast-path handles this case directly.
 
 ```bash
 terminus remote:drush nysenate-2022.pr-NNN -- \

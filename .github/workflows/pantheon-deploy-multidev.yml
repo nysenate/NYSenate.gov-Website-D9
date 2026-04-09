@@ -203,11 +203,11 @@ jobs:
           done
 
       - name: Run cache regression tests on Pantheon container
-        # run-on-container.sh manages all test chunking internally — it splits
-        # AnonymousCacheHitTest and CacheMissInvalidationTest into smaller
-        # filter-based chunks to stay under Pantheon's 2 GB PHP memory limit.
-        # A single terminus call is sufficient; the script exits nonzero if any
-        # chunk fails.
+        # Each chunk in test-chunks.yml runs in its own terminus call so that
+        # no single SSH session exceeds Pantheon's connection timeout. The
+        # chunk list is read here (CI runner has python3 + PyYAML) and passed
+        # to run-on-container.sh via --filter, which takes the fast-path single-
+        # invocation branch for that case.
         #
         # exit() inside drush ev is treated as abnormal termination by Drush,
         # which overrides the exit code to 1 regardless of the value passed.
@@ -217,8 +217,19 @@ jobs:
         run: |
           SITE="${{ vars.PANTHEON_SITE }}.${{ env.PANTHEON_MULTIDEV }}"
           URL="https://${{ env.PANTHEON_MULTIDEV }}-${{ vars.PANTHEON_SITE }}.pantheonsite.io"
-          terminus remote:drush "$SITE" -- \
-            ev "error_reporting(E_ERROR); passthru('bash /code/tests/dtt/run-on-container.sh $URL 2>&1', \$c); if (\$c !== 0) { throw new \Exception('PHPUnit failed with exit code ' . \$c); }"
+          OVERALL=0
+          while IFS=$'\t' read -r LABEL FILTER; do
+            echo "=== $LABEL ==="
+            terminus remote:drush "$SITE" -- \
+              ev "error_reporting(E_ERROR); passthru('bash /code/tests/dtt/run-on-container.sh $URL --filter $(printf '%q' "$FILTER") 2>&1', \$c); if (\$c !== 0) { throw new \Exception('PHPUnit failed with exit code ' . \$c); }" \
+              || OVERALL=$?
+          done < <(python3 -c "
+          import yaml, sys
+          chunks = yaml.safe_load(open('tests/dtt/test-chunks.yml'))['chunks']
+          for c in chunks:
+              print(c['label'] + '\t' + c['filter'])
+          ")
+          exit $OVERALL
 
       - name: Add 'cache-tests-passed' label to PR
         if: success()

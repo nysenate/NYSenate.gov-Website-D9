@@ -220,18 +220,28 @@ jobs:
         run: |
           SITE="${{ vars.PANTHEON_SITE }}.${{ env.PANTHEON_MULTIDEV }}"
           URL="https://${{ env.PANTHEON_MULTIDEV }}-${{ vars.PANTHEON_SITE }}.pantheonsite.io"
+
+          # Read chunks eagerly so a Python/YAML failure exits the step immediately
+          # rather than silently running zero tests and reporting success.
+          CHUNKS=$(python3 -c "
+          import yaml
+          chunks = yaml.safe_load(open('tests/dtt/test-chunks.yml'))['chunks']
+          for c in chunks:
+              print(c['label'] + '\t' + c['filter'])
+          ") || { echo "ERROR: Failed to parse tests/dtt/test-chunks.yml"; exit 1; }
+
+          if [[ -z "$CHUNKS" ]]; then
+            echo "ERROR: test-chunks.yml parsed successfully but contained no chunks"
+            exit 1
+          fi
+
           OVERALL=0
           while IFS=$'\t' read -r LABEL FILTER; do
             echo "=== $LABEL ==="
             terminus remote:drush "$SITE" -- \
               ev "error_reporting(E_ERROR); passthru('bash /code/tests/dtt/run-on-container.sh $URL --filter $(printf '%q' "$FILTER") 2>&1', \$c); if (\$c !== 0) { throw new \Exception('PHPUnit failed with exit code ' . \$c); }" \
               || OVERALL=$?
-          done < <(python3 -c "
-          import yaml, sys
-          chunks = yaml.safe_load(open('tests/dtt/test-chunks.yml'))['chunks']
-          for c in chunks:
-              print(c['label'] + '\t' + c['filter'])
-          ")
+          done <<< "$CHUNKS"
           exit $OVERALL
 
       - name: Add 'cache-tests-passed' label to PR

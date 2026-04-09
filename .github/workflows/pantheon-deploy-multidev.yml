@@ -157,6 +157,9 @@ jobs:
       pull-requests: write
 
     steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
       - name: Setup PHP (required to run Terminus)
         uses: shivammathur/setup-php@v2
         with:

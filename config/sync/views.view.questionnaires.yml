@@ -8,6 +8,7 @@ dependencies:
     - field.storage.node.webform
     - node.type.webform
     - taxonomy.vocabulary.senator
+    - user.role.administrator
   module:
     - better_exposed_filters
     - datetime
@@ -584,9 +585,10 @@ display:
                   collapsible_disable_automatic_open: false
                   is_secondary: false
       access:
-        type: perm
+        type: role
         options:
-          perm: 'access content'
+          role:
+            administrator: administrator
       cache:
         type: tag
         options: {  }
@@ -835,7 +837,7 @@ display:
         - url
         - url.query_args
         - 'user.node_grants:view'
-        - user.permissions
+        - user.roles
       tags:
         - 'config:field.storage.node.field_date'
         - 'config:field.storage.node.field_senator_multiref'
@@ -1814,7 +1816,7 @@ display:
         - url
         - url.query_args
         - 'user.node_grants:view'
-        - user.permissions
+        - user.roles
       tags:
         - 'config:field.storage.node.field_date'
         - 'config:field.storage.node.field_senator_multiref'
@@ -1963,7 +1965,7 @@ display:
         - url
         - url.query_args
         - 'user.node_grants:view'
-        - user.permissions
+        - user.roles
       tags:
         - 'config:field.storage.node.field_date'
         - 'config:field.storage.node.field_senator_multiref'

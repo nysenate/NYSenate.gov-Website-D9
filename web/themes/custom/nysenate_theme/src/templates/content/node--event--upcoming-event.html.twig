@@ -98,7 +98,8 @@
 
   <div{{ content_attributes.addClass('node__content') }}>
     <article class="c-event-block c-event-block--list">
-      <div class="c-event-date"><span>{{ node.field_date_range.value|date('U')|format_date('day_only') }}</span> {{ node.field_date_range.value|date('U')|format_date('month_only') }}</div>
+      <div class="c-event-date"><span>{{ node.field_date_range.start_date|date('U')|format_date('day_only') }}</span>
+        {{ node.field_date_range.start_date|date('U')|format_date('month_only') }}</div>
       <div class="event-details">
         <a href="{{ url }}"><h3 class="c-event-name">{{ label }}</h3></a>
 

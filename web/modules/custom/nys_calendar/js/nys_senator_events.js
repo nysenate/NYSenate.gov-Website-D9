@@ -10,6 +10,7 @@
 
             $('#next-month').on(
                 'mousedown', function (e) {
+                    if (e.button !== 0) return;
                     e.preventDefault();
                     $fd = $(this).data('first-day');
                     $ld = $(this).data('last-day');
@@ -22,12 +23,19 @@
 
                   $real_min.val($fd.toLocaleString());
                   $real_max.val(a.toLocaleString());
+                  const scrollPos = $(window).scrollTop();
                   $submit.click();
+                  $(document).one('ajaxComplete', function () {
+                      setTimeout(function () {
+                          $(window).scrollTop(scrollPos);
+                      }, 300);
+                  });
                 }
             );
 
             $('#previous-month').on(
                 'mousedown', function (e) {
+                    if (e.button !== 0) return;
                     e.preventDefault();
                     $fd = $(this).data('first-day');
                     $ld = $(this).data('last-day');
@@ -40,7 +48,13 @@
 
                   $real_min.val($fd.toLocaleString());
                   $real_max.val(a.toLocaleString());
+                  const scrollPos = $(window).scrollTop();
                   $submit.click();
+                  $(document).one('ajaxComplete', function () {
+                      setTimeout(function () {
+                          $(window).scrollTop(scrollPos);
+                      }, 300);
+                  });
                 }
             );
 
@@ -50,6 +64,7 @@
                     function (element) {
                         $(element).on(
                             'mousedown', function (e) {
+                                if (e.button !== 0) return;
                                 let field_event_place = $('select[name="field_event_place_value"]');
                                 if ((!$(this).parents('.l-tab-bar').hasClass('open') || $(this).data('value') === field_event_place.val())
                                     && $(window).innerWidth() < 760
@@ -57,8 +72,16 @@
                                       $(this).parents('.l-tab-bar').toggleClass('open');
                                 }
                                 else {
+                                    const scrollPos = $(window).scrollTop();
                                     field_event_place.val($(this).data('value'));
                                     $submit.click();
+                                    // ViewsScrollTop animates scroll over 250ms after AJAX
+                                    // completes. Restore our position after it finishes.
+                                    $(document).one('ajaxComplete', function () {
+                                        setTimeout(function () {
+                                            $(window).scrollTop(scrollPos);
+                                        }, 300);
+                                    });
                                 }
                             }
                         )

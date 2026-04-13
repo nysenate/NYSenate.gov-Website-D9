@@ -144,11 +144,17 @@
             $(this).attr('checked', 'checked');
             $(this).parent().addClass('active');
             
-            // For views exposed forms, trigger form submission for BEF auto-submit
+            // For views exposed forms, BEF auto-submit fires on radio change.
+            // Save scroll position and restore it after the AJAX + ViewsScrollTop
+            // animation (250ms) finishes, so the page doesn't jump to the view.
             const $form = $(this).closest('form');
             if ($form.hasClass('views-exposed-form')) {
-              // The radio button change will trigger BEF auto-submit naturally
-              // No need to manually trigger submit
+              const scrollPos = $(window).scrollTop();
+              $(document).one('ajaxComplete', function () {
+                setTimeout(function () {
+                  $(window).scrollTop(scrollPos);
+                }, 300);
+              });
             }
           });
         }

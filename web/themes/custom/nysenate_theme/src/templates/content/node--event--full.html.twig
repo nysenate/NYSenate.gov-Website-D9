@@ -112,9 +112,16 @@
 
     {% if content.field_event_place[0]['#markup'] == "Online" %}
       <div class="c-event-location online">
+        {% if content.field_event_online_link[0]['#title'] %}
+        <a href="{{ content.field_event_online_link[0]['#title'] }}">
         <span class="icon-before__circle-pin">Online Event</span>
+        </a>
+        {% else  %}
+          <span class="icon-before__circle-pin">Online Event</span>
+        {% endif %}
+
         {% if content.field_meeting_location[0]['#context']['value'] %}
-          <br>{{ content.field_meeting_location[0]['#context']['value'] }}: {{ content.field_event_online_link }}
+          <br>{{ content.field_meeting_location[0]['#context']['value'] }}
         {% endif %}
       </div>
 

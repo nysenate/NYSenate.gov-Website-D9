@@ -145,15 +145,15 @@
             $(this).parent().addClass('active');
             
             // For views exposed forms, BEF auto-submit fires on radio change.
-            // Save scroll position and restore it after the AJAX + ViewsScrollTop
-            // animation (250ms) finishes, so the page doesn't jump to the view.
+            // ajaxComplete fires after drupalViewsProcessed, so ViewsScrollTop
+            // has queued its animation but JS hasn't rendered a frame yet.
+            // stop(true) kills the queued animation before it starts.
             const $form = $(this).closest('form');
             if ($form.hasClass('views-exposed-form')) {
               const scrollPos = $(window).scrollTop();
               $(document).one('ajaxComplete', function () {
-                setTimeout(function () {
-                  $(window).scrollTop(scrollPos);
-                }, 300);
+                $('html, body').stop(true);
+                $(window).scrollTop(scrollPos);
               });
             }
           });

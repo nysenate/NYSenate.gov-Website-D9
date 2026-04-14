@@ -26,9 +26,8 @@
                     const scrollPos = $(window).scrollTop();
                     $submit.click();
                     $(document).one('ajaxComplete', function () {
-                        setTimeout(function () {
-                            $(window).scrollTop(scrollPos);
-                        }, 300);
+                        $('html, body').stop(true);
+                        $(window).scrollTop(scrollPos);
                     });
                 });
             });
@@ -51,9 +50,8 @@
                     const scrollPos = $(window).scrollTop();
                     $submit.click();
                     $(document).one('ajaxComplete', function () {
-                        setTimeout(function () {
-                            $(window).scrollTop(scrollPos);
-                        }, 300);
+                        $('html, body').stop(true);
+                        $(window).scrollTop(scrollPos);
                     });
                 });
             });
@@ -71,12 +69,13 @@
                         const scrollPos = $(window).scrollTop();
                         field_event_place.val($(this).data('value'));
                         $submit.click();
-                        // ViewsScrollTop animates scroll over 250ms after AJAX
-                        // completes. Restore our position after it finishes.
+                        // ajaxComplete fires after drupalViewsProcessed, so
+                        // ViewsScrollTop has queued its animation but JS hasn't
+                        // rendered a frame yet. stop(true) kills the queued
+                        // animation before it starts.
                         $(document).one('ajaxComplete', function () {
-                            setTimeout(function () {
-                                $(window).scrollTop(scrollPos);
-                            }, 300);
+                            $('html, body').stop(true);
+                            $(window).scrollTop(scrollPos);
                         });
                     }
                 });

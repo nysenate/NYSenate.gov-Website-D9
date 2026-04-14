@@ -105,7 +105,6 @@
             {% endif %}
             <br/>Albany, New York
           </p>
-        </div>
 
         {% elseif content.field_event_place[0]['#markup'] == "LOB" %}
           <a class="c-event-location" href="http://maps.google.com/?q=172 State Street+Albany, New York%2C+12247" target="_blank">
@@ -118,9 +117,8 @@
             <br/>
             Albany, New York
           </p>
-        </div>
         {% endif %}
-
-        <div class="c-event-time">{{ content.field_date_range }}</span></div>
       </div>
+
+        <div class="c-event-time">{{ content.field_date_range }}</div>
     </article>

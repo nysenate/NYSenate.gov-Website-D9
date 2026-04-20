@@ -42,7 +42,7 @@ content:
     third_party_settings: {  }
   email_tfa_status:
     type: boolean_checkbox
-    weight: 22
+    weight: 21
     region: content
     settings:
       display_label: true
@@ -97,28 +97,20 @@ content:
     third_party_settings: {  }
   field_last_password_reset:
     type: datetime_default
-    weight: 18
+    weight: 17
     region: content
     settings: {  }
     third_party_settings: {  }
-  field_ldap_username:
-    type: string_textfield
-    weight: 14
-    region: content
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
   field_password_expiration:
     type: boolean_checkbox
-    weight: 17
+    weight: 16
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_profile_picture:
     type: image_image
-    weight: 23
+    weight: 22
     region: content
     settings:
       progress_indicator: throbber
@@ -148,7 +140,7 @@ content:
     third_party_settings: {  }
   field_user_banned_comments:
     type: boolean_checkbox
-    weight: 21
+    weight: 20
     region: content
     settings:
       display_label: true
@@ -169,7 +161,7 @@ content:
     third_party_settings: {  }
   field_voting_auto_subscribe:
     type: boolean_checkbox
-    weight: 15
+    weight: 14
     region: content
     settings:
       display_label: true
@@ -180,13 +172,13 @@ content:
     settings: {  }
     third_party_settings: {  }
   language:
-    weight: 16
+    weight: 15
     region: content
     settings: {  }
     third_party_settings: {  }
   path:
     type: path
-    weight: 20
+    weight: 19
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -196,11 +188,12 @@ content:
     settings: {  }
     third_party_settings: {  }
   timezone:
-    weight: 19
+    weight: 18
     region: content
     settings: {  }
     third_party_settings: {  }
 hidden:
   contact: true
+  field_ldap_username: true
   field_pending_expire_sent: true
   langcode: true

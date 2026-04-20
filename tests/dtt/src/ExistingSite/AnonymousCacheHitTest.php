@@ -78,9 +78,6 @@ class AnonymousCacheHitTest extends CacheTestBase {
    * @dataProvider contentTypeProvider
    */
   public function testContentTypeDisplayPageCacheHit(string $type): void {
-    if ($type === 'bill') {
-      $this->markTestSkipped('Bill display pages are not anonymously page-cacheable (Cache-Control: private, no-cache).');
-    }
     $path = $this->requireNodeUrlByType($type);
     $this->warmCache($path);
     $this->assertAnonymousCacheHit($path);
@@ -105,9 +102,6 @@ class AnonymousCacheHitTest extends CacheTestBase {
    * @dataProvider contentTypeProvider
    */
   public function testContentTypeDisplayPageCacheControlMaxAge(string $type): void {
-    if ($type === 'bill') {
-      $this->markTestSkipped('Bill display pages are not anonymously page-cacheable (Cache-Control: private, no-cache).');
-    }
     $path = $this->requireNodeUrlByType($type);
     $this->assertCacheControlMaxAge($path, 86400);
   }
@@ -218,12 +212,6 @@ class AnonymousCacheHitTest extends CacheTestBase {
     $others = [];
     foreach (self::PRIMARY_CONTENT_TYPES as $other) {
       if ($other === $type) {
-        continue;
-      }
-      // Bill display pages are not anonymously page-cacheable (Cache-Control:
-      // private, no-cache), so they can never reach HIT and cannot be included
-      // in the warm/assert cycle here.
-      if ($other === 'bill') {
         continue;
       }
       // Skip legitimate cross-type invalidations — those pages ARE expected to

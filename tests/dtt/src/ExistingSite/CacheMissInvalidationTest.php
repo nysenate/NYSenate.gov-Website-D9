@@ -230,13 +230,6 @@ class CacheMissInvalidationTest extends CacheTestBase {
     $node = ($type === 'bill') ? $this->requireSaveableBillNode() : $this->requireNodeByType($type);
     $path = $node->toUrl('canonical')->setAbsolute(FALSE)->toString();
 
-    // Bill display pages are not anonymously page-cacheable (they return
-    // Cache-Control: private, no-cache due to session-dependent rendering).
-    // There is no HIT to bust, so this test only applies to cacheable types.
-    if ($type === 'bill') {
-      $this->markTestSkipped('Bill display pages are not anonymously page-cacheable; no HIT/MISS cycle to test.');
-    }
-
     $this->assertCacheMissOnSave($path, $node);
   }
 

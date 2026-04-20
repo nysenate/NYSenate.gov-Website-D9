@@ -700,6 +700,13 @@ display:
                 select_all_none: false
                 select_all_none_nested: false
                 display_inline: true
+      cache:
+        type: custom_tag
+        options:
+          custom_tag: |-
+            node_list:article
+            node_list:in_the_news
+            node_list:video
       sorts:
         field_date_value:
           id: field_date_value
@@ -820,6 +827,7 @@ display:
         groups:
           1: AND
       defaults:
+        cache: false
         title: false
         use_ajax: false
         pager: false

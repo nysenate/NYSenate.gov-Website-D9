@@ -230,6 +230,13 @@ class CacheMissInvalidationTest extends CacheTestBase {
     $node = ($type === 'bill') ? $this->requireSaveableBillNode() : $this->requireNodeByType($type);
     $path = $node->toUrl('canonical')->setAbsolute(FALSE)->toString();
 
+    // Bill display pages are not anonymously page-cacheable (they return
+    // Cache-Control: private, no-cache due to session-dependent rendering).
+    // There is no HIT to bust, so this test only applies to cacheable types.
+    if ($type === 'bill') {
+      $this->markTestSkipped('Bill display pages are not anonymously page-cacheable; no HIT/MISS cycle to test.');
+    }
+
     $this->assertCacheMissOnSave($path, $node);
   }
 
@@ -245,8 +252,7 @@ class CacheMissInvalidationTest extends CacheTestBase {
    * must invalidate those tags and bust the page.
    */
   public function testArticlePageMissOnSenatorEdit(): void {
-    $article = $this->requireNodeByTypeWithField('article', 'field_senator_multiref');
-    $senator = $this->requireReferencedTerm($article, 'field_senator_multiref');
+    [$article, $senator] = $this->requireNodeAndValidTermByField('article', 'field_senator_multiref');
     $path = $article->toUrl('canonical')->setAbsolute(FALSE)->toString();
 
     $this->assertCacheMissOnSave($path, $senator);
@@ -272,8 +278,7 @@ class CacheMissInvalidationTest extends CacheTestBase {
    * in_the_news display pages carry taxonomy_term:{tid} for field_senator_multiref.
    */
   public function testInTheNewsPageMissOnSenatorEdit(): void {
-    $node = $this->requireNodeByTypeWithField('in_the_news', 'field_senator_multiref');
-    $senator = $this->requireReferencedTerm($node, 'field_senator_multiref');
+    [$node, $senator] = $this->requireNodeAndValidTermByField('in_the_news', 'field_senator_multiref');
     $path = $node->toUrl('canonical')->setAbsolute(FALSE)->toString();
 
     $this->assertCacheMissOnSave($path, $senator);

@@ -13,6 +13,7 @@ dependencies:
     - node
     - taxonomy
     - user
+    - views_custom_cache_tag
     - views_infinite_scroll
 id: issues_listings
 label: 'Issues Listings'
@@ -178,8 +179,9 @@ display:
         options:
           perm: 'access content'
       cache:
-        type: tag
-        options: {  }
+        type: custom_tag
+        options:
+          custom_tag: 'taxonomy_term_list:issues'
       empty: {  }
       sorts:
         random:

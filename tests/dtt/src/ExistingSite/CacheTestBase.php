@@ -496,6 +496,49 @@ abstract class CacheTestBase extends ExistingSiteBase {
     return NULL;
   }
 
+  /**
+   * Returns the first node (of $type) whose referenced term in $fieldName
+   * passes entity validation, or NULL if no such pair exists.
+   *
+   * Some senator terms have stale/broken entity-reference field values that
+   * cause the edit form to reject the submission with a validation error,
+   * preventing the save from firing. This helper skips those broken terms so
+   * that tests can reliably trigger a real web-form save.
+   *
+   * Iterates through published nodes of the given type (most recently changed
+   * first) until it finds one whose referenced term has zero validation errors.
+   *
+   * @return array{0: \Drupal\node\NodeInterface, 1: \Drupal\taxonomy\TermInterface}|null
+   */
+  protected function findNodeAndValidTermByField(string $nodeType, string $fieldName): ?array {
+    $ids = \Drupal::entityTypeManager()
+      ->getStorage('node')
+      ->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('type', $nodeType)
+      ->condition('status', 1)
+      ->exists($fieldName)
+      ->sort('changed', 'DESC')
+      ->range(0, 50)
+      ->execute();
+
+    foreach ($ids as $nid) {
+      $node = \Drupal::entityTypeManager()->getStorage('node')->load($nid);
+      if (!$node) {
+        continue;
+      }
+      $term = $this->findReferencedTerm($node, $fieldName);
+      if (!$term) {
+        continue;
+      }
+      // Only use terms whose edit form will pass validation.
+      if ($term->validate()->count() === 0) {
+        return [$node, $term];
+      }
+    }
+    return NULL;
+  }
+
   // ---------------------------------------------------------------------------
   // Require helpers — assert-and-return variants of the find helpers above.
   //
@@ -527,6 +570,17 @@ abstract class CacheTestBase extends ExistingSiteBase {
   protected function requireNodeByTypeWithField(string $type, string $fieldName): NodeInterface {
     return $this->findNodeByTypeWithField($type, $fieldName)
       ?? $this->fail("No published '{$type}' node with field '{$fieldName}' populated found.");
+  }
+
+  /**
+   * Returns the first [node, term] pair where the term passes entity
+   * validation (i.e. its edit form will submit successfully), or fails.
+   *
+   * @return array{0: \Drupal\node\NodeInterface, 1: \Drupal\taxonomy\TermInterface}
+   */
+  protected function requireNodeAndValidTermByField(string $nodeType, string $fieldName): array {
+    return $this->findNodeAndValidTermByField($nodeType, $fieldName)
+      ?? $this->fail("No published '{$nodeType}' node with a valid (saveable) '{$fieldName}' term found.");
   }
 
   /**

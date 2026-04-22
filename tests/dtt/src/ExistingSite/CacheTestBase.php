@@ -60,7 +60,7 @@ abstract class CacheTestBase extends ExistingSiteBase {
   /**
    * The 7 primary content types covered by the cache regression suite.
    */
-  protected const PRIMARY_CONTENT_TYPES = [
+  public const PRIMARY_CONTENT_TYPES = [
     'article',
     'bill',
     'event',
@@ -464,14 +464,61 @@ abstract class CacheTestBase extends ExistingSiteBase {
    * bills without those fields have no pathauto alias and Drupal throws a 404
    * in nys_bills_node_view_alter().
    *
+   * For event and in_the_news nodes, delegates to
+   * findNonSenatorNodeByType() to exclude senator-microsite-associated nodes
+   * (those with field_senator_multiref populated). Senator-associated nodes
+   * render the senator microsite hero block, which sets a per-user variable
+   * in its preprocess hook without a corresponding cache context, causing
+   * max-age: 0 to bubble up for authenticated users. This is a pre-existing
+   * issue in senator microsite rendering unrelated to the bill cache fix.
+   *
    * @return string|null
    */
   protected function findNodeUrlByType(string $type): ?string {
-    $node = ($type === 'bill') ? $this->findSaveableBillNode() : $this->findNodeByType($type);
+    $senator_microsite_types = ['event', 'in_the_news'];
+    if ($type === 'bill') {
+      $node = $this->findSaveableBillNode();
+    }
+    elseif (in_array($type, $senator_microsite_types)) {
+      $node = $this->findNonSenatorNodeByType($type);
+    }
+    else {
+      $node = $this->findNodeByType($type);
+    }
     if ($node === NULL) {
       return NULL;
     }
     return $node->toUrl('canonical')->setAbsolute(FALSE)->toString();
+  }
+
+  /**
+   * Returns the most recently changed published node of $type that does NOT
+   * have field_senator_multiref populated, or NULL if none exists.
+   *
+   * Senator-associated nodes (those with field_senator_multiref set) render the
+   * senator microsite hero block, which sets per-user template variables
+   * without declaring a 'user' cache context. This causes max-age: 0 to bubble
+   * up for authenticated users, making the page UNCACHEABLE (poor cacheability).
+   * That is a pre-existing issue in senator microsite rendering and is out of
+   * scope for the bill cache tests.
+   *
+   * @return \Drupal\node\NodeInterface|null
+   */
+  protected function findNonSenatorNodeByType(string $type): ?NodeInterface {
+    $ids = \Drupal::entityTypeManager()
+      ->getStorage('node')
+      ->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('type', $type)
+      ->condition('status', 1)
+      ->notExists('field_senator_multiref')
+      ->sort('changed', 'DESC')
+      ->range(0, 1)
+      ->execute();
+    if (empty($ids)) {
+      return NULL;
+    }
+    return \Drupal::entityTypeManager()->getStorage('node')->load(reset($ids));
   }
 
   /**

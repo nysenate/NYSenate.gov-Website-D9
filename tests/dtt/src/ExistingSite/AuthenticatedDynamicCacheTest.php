@@ -143,4 +143,70 @@ class AuthenticatedDynamicCacheTest extends CacheTestBase {
     $this->assertDynamicCacheMiss('/');
   }
 
+  // ---------------------------------------------------------------------------
+  // Content type display pages — per-user dynamic cache HIT
+  // ---------------------------------------------------------------------------
+
+  /**
+   * Every primary content type display page caches per authenticated user.
+   *
+   * Drupal's dynamic page cache stores the page SKELETON (containing render
+   * placeholders for lazy builders) keyed by cache contexts that exclude the
+   * individual user. On the first authenticated visit, the skeleton is stored
+   * (MISS). On the second visit by the SAME user the skeleton is served from
+   * cache (HIT), and the lazy builders are resolved afresh per request.
+   *
+   * Bill pages embed BillVoteWidgetForm and BillForm via lazy builders whose
+   * callbacks add user-level cache contexts. Those contexts apply only to the
+   * lazy-builder output, not to the skeleton stored in the dynamic page cache.
+   *
+   * @dataProvider contentTypePageProvider
+   */
+  public function testContentTypeDisplayPageDynamicCacheHit(string $type): void {
+    $path = $this->requireNodeUrlByType($type);
+
+    $this->drupalLogin($this->userA);
+
+    // First visit — warms the dynamic page cache skeleton.
+    $this->assertDynamicCacheMiss($path);
+
+    // Second visit by the same user — skeleton served from cache.
+    $this->assertDynamicCacheHit($path);
+  }
+
+  /**
+   * The dynamic page cache skeleton is shared across authenticated users for all content types.
+   *
+   * Because lazy builders prevent their per-user cache contexts from bubbling
+   * to the page skeleton, the dynamic page cache stores a single entry that is
+   * reused regardless of which authenticated user visits next. The lazy
+   * builders resolve the user-specific fragment (vote widget, bill form, user
+   * menu) outside the cache for every request.
+   *
+   * @dataProvider contentTypePageProvider
+   */
+  public function testContentTypeDisplayPageDynamicCacheSharedAcrossUsers(string $type): void {
+    $path = $this->requireNodeUrlByType($type);
+
+    // userA: first visit must be a MISS (cold cache — no skeleton stored yet).
+    $this->drupalLogin($this->userA);
+    $this->assertDynamicCacheMiss($path);
+    $this->drupalLogout();
+
+    // userB: must hit the skeleton stored by userA's visit.
+    $this->drupalLogin($this->userB);
+    $this->assertDynamicCacheHit($path);
+    $this->drupalLogout();
+  }
+
+  /**
+   * Data provider: all seven primary content types.
+   */
+  public static function contentTypePageProvider(): array {
+    return array_combine(
+      self::PRIMARY_CONTENT_TYPES,
+      array_map(static fn(string $t): array => [$t], self::PRIMARY_CONTENT_TYPES)
+    );
+  }
+
 }

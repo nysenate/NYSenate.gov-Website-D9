@@ -240,4 +240,88 @@ class NoCachePoisoningTest extends CacheTestBase {
     $this->assertSession()->pageTextNotContains('Welcome, NysCacheTestAlpha!');
   }
 
+  // ---------------------------------------------------------------------------
+  // Bill vote widget — per-user lazy builder isolation
+  // ---------------------------------------------------------------------------
+
+  /**
+   * The bill vote widget resolves per-user state and does not leak across users.
+   *
+   * BillVoteWidgetLazyBuilder is invoked for every request (even dynamic page
+   * cache HITs), resolving each user's personal vote state from the database.
+   * This test confirms that User A's voted-yes state is visible only to User A,
+   * and that User B (who has no vote) sees the neutral "Do you support this
+   * bill?" prompt rather than User A's voted label.
+   *
+   * Test strategy:
+   *  1. Create a vote entity for User A (value = 1 = 'yes') directly via the
+   *     entity API, avoiding any form submission side-effects.
+   *  2. User A visits the bill page → the BillVoteWidgetForm::getVotedLabel()
+   *     method, called inside the lazy builder, detects the existing vote and
+   *     renders the "You are in favor of this bill" label.
+   *  3. User B visits the same page (which returns x-drupal-dynamic-cache: HIT
+   *     for the skeleton, confirming sharing) → the lazy builder resolves User
+   *     B's empty vote state and renders "Do you support this bill?".
+   *  4. Confirm User B's rendered output does NOT contain User A's voted label.
+   */
+  public function testBillVoteWidgetIsolatedPerUser(): void {
+    $node = $this->findSaveableBillNode();
+    if ($node === NULL) {
+      $this->markTestSkipped('No suitable published bill node found.');
+    }
+
+    $path = $node->toUrl('canonical')->setAbsolute(FALSE)->toString();
+
+    // Create a 'yes' vote entity for User A directly — value 1 = 'yes' in
+    // BillVoteHelper::getVal().
+    /** @var \Drupal\Core\Entity\EntityStorageInterface $voteStorage */
+    $voteStorage = \Drupal::entityTypeManager()->getStorage('vote');
+    $vote = $voteStorage->create([
+      'type'        => 'nys_bill_vote',
+      'entity_type' => 'node',
+      'entity_id'   => $node->id(),
+      'value'       => 1,
+      'value_type'  => 'option',
+      'user_id'     => $this->userA->id(),
+    ]);
+    $vote->save();
+
+    // Invalidate all dynamic cache entries so both users start cold.
+    \Drupal::cache('dynamic_page_cache')->deleteAll();
+
+    try {
+      // User A (voted 'yes'): the lazy builder must render the voted label.
+      $this->drupalLogin($this->userA);
+      $this->visit($path);
+      // Dynamic cache: MISS (skeleton stored now).
+      $dynamicCache = strtoupper(trim($this->getSession()->getResponseHeader('x-drupal-dynamic-cache') ?? ''));
+      $this->assertSame('MISS', $dynamicCache, "User A's first visit to bill page must be a dynamic cache MISS.");
+      // Use a CSS selector rather than pageTextContains so we only inspect the
+      // vote widget heading, not the full page text (which always includes
+      // drupalSettings JSON containing all vote-option strings regardless of the
+      // current user's vote state).
+      $this->assertSession()->elementTextContains('css', '.c-bill-polling--cta', 'You are in favor of this bill');
+      $this->assertSession()->elementTextNotContains('css', '.c-bill-polling--cta', 'Do you support this bill?');
+      $this->drupalLogout();
+
+      // User B (no vote): the dynamic cache skeleton is HIT (skeleton shared),
+      // but the lazy builder resolves User B's own empty vote state.
+      $this->drupalLogin($this->userB);
+      $this->visit($path);
+      $dynamicCache = strtoupper(trim($this->getSession()->getResponseHeader('x-drupal-dynamic-cache') ?? ''));
+      $this->assertSame('HIT', $dynamicCache, "User B's first visit to bill page must be a dynamic cache HIT (shared skeleton).");
+      // User B has not voted — must see the neutral prompt, not User A's label.
+      // The lazy builder resolves the vote widget per-user on top of the shared
+      // dynamic-cache skeleton, so User A's "in favor" label must not appear
+      // in the vote widget heading.
+      $this->assertSession()->elementTextContains('css', '.c-bill-polling--cta', 'Do you support this bill?');
+      $this->assertSession()->elementTextNotContains('css', '.c-bill-polling--cta', 'You are in favor of this bill');
+      $this->drupalLogout();
+    }
+    finally {
+      $vote->delete();
+    }
+  }
+
 }
+

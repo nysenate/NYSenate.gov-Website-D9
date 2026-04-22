@@ -33,8 +33,11 @@ chunks:
   - label: "AnonymousCacheHitTest (negative — non-invalidation)"
     filter: "AnonymousCacheHitTest::(testArticleEdit|testBillEdit|testEventEdit|testPetition|testContentTypeEdit)"
 
-  - label: "AuthenticatedDynamicCacheTest"
-    filter: "AuthenticatedDynamicCacheTest"
+  - label: "AuthenticatedDynamicCacheTest (top-level pages)"
+    filter: "AuthenticatedDynamicCacheTest::(testConstituentSecondVisitIsDynamicCacheHit|testDynamicCacheSharedAcrossUsers|testDynamicCacheMissAfterAccountChange)"
+
+  - label: "AuthenticatedDynamicCacheTest (content type display pages)"
+    filter: "AuthenticatedDynamicCacheTest::(testContentTypeDisplayPageDynamicCacheHit|testContentTypeDisplayPageDynamicCacheSharedAcrossUsers)"
 
   - label: "CacheMissInvalidationTest (top-level pages)"
     filter: "CacheMissInvalidationTest::(testHomepage|testNewsAndIssues|testSenatorsCommittees|testLegislation|testEvents|testAbout)"
@@ -47,3 +50,4 @@ chunks:
 
   - label: "NoCachePoisoningTest"
     filter: "NoCachePoisoningTest"
+

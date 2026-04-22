@@ -36,8 +36,11 @@ chunks:
   - label: "AnonymousCacheHitTest (content type display page max-age assertions)"
     filter: "AnonymousCacheHitTest::testContentTypeDisplayPageCacheControlMaxAge"
 
-  - label: "AnonymousCacheHitTest (negative — non-invalidation)"
-    filter: "AnonymousCacheHitTest::(testArticleEdit|testBillEdit|testEventEdit|testPetition|testContentTypeEdit)"
+  - label: "AnonymousCacheHitTest (negative — non-invalidation, top-level pages)"
+    filter: "AnonymousCacheHitTest::(testArticleEdit|testBillEdit|testEventEdit|testPetition)"
+
+  - label: "AnonymousCacheHitTest (negative — non-invalidation, cross-content-type)"
+    filter: "AnonymousCacheHitTest::testContentTypeEdit"
 
   - label: "AuthenticatedDynamicCacheTest (top-level pages)"
     filter: "AuthenticatedDynamicCacheTest::(testConstituentSecondVisitIsDynamicCacheHit|testDynamicCacheSharedAcrossUsers|testDynamicCacheMissAfterAccountChange)"
@@ -45,8 +48,11 @@ chunks:
   - label: "AuthenticatedDynamicCacheTest (content type display pages)"
     filter: "AuthenticatedDynamicCacheTest::(testContentTypeDisplayPageDynamicCacheHit|testContentTypeDisplayPageDynamicCacheSharedAcrossUsers)"
 
-  - label: "CacheMissInvalidationTest (top-level pages)"
-    filter: "CacheMissInvalidationTest::(testHomepage|testNewsAndIssues|testSenatorsCommittees|testLegislation|testEvents|testAbout)"
+  - label: "CacheMissInvalidationTest (top-level pages — homepage and news)"
+    filter: "CacheMissInvalidationTest::(testHomepage|testNewsAndIssues)"
+
+  - label: "CacheMissInvalidationTest (top-level pages — senators, legislation, events, about)"
+    filter: "CacheMissInvalidationTest::(testSenatorsCommittees|testLegislation|testEvents|testAbout)"
 
   - label: "CacheMissInvalidationTest (content type display pages — node edit)"
     filter: "CacheMissInvalidationTest::testContentTypeDisplayPage"

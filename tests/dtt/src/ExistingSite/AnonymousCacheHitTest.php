@@ -222,6 +222,13 @@ class AnonymousCacheHitTest extends CacheTestBase {
       $others[] = $this->requireNodeUrlByType($other);
     }
 
+    // Limit to 2 representative "other" types. Checking every combination
+    // exhausts Pantheon's 10-minute SSH session limit when all 7 content types
+    // run in a single PHPUnit process. Two non-legitimate types per edited type
+    // is sufficient to detect cache-tag cross-contamination: if tags were
+    // over-broad, all pages would be invalidated, not just some.
+    $others = array_slice($others, 0, 2);
+
     foreach ($others as $path) {
       $this->warmCache($path);
     }

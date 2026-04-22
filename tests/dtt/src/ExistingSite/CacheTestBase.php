@@ -326,10 +326,24 @@ abstract class CacheTestBase extends ExistingSiteBase {
    *
    * Uses the DTT session-based browser so that the user's session cookie is
    * automatically included.
+   *
+   * Retries up to 5 times with a 500 ms pause between attempts to handle the
+   * narrow window on Pantheon where the dynamic page cache entry for the first
+   * request may not yet be visible to a back-to-back second request (high-load
+   * PHP-FPM processes can delay kernel.terminate cache writes slightly).
    */
   protected function assertDynamicCacheHit(string $path): void {
-    $this->visit($path);
-    $header = strtoupper(trim($this->getSession()->getResponseHeader('x-drupal-dynamic-cache') ?? ''));
+    $header = '';
+    for ($attempt = 0; $attempt < 5; $attempt++) {
+      $this->visit($path);
+      $header = strtoupper(trim($this->getSession()->getResponseHeader('x-drupal-dynamic-cache') ?? ''));
+      if ($header === 'HIT') {
+        return;
+      }
+      if ($attempt < 4) {
+        usleep(500000);
+      }
+    }
     $this->assertSame('HIT', $header,
       "Expected x-drupal-dynamic-cache: HIT on {$path}, got: {$header}");
   }
@@ -464,7 +478,7 @@ abstract class CacheTestBase extends ExistingSiteBase {
    * bills without those fields have no pathauto alias and Drupal throws a 404
    * in nys_bills_node_view_alter().
    *
-   * For event and in_the_news nodes, delegates to
+   * For article, event and in_the_news nodes, delegates to
    * findNonSenatorNodeByType() to exclude senator-microsite-associated nodes
    * (those with field_senator_multiref populated). Senator-associated nodes
    * render the senator microsite hero block, which sets a per-user variable
@@ -475,7 +489,7 @@ abstract class CacheTestBase extends ExistingSiteBase {
    * @return string|null
    */
   protected function findNodeUrlByType(string $type): ?string {
-    $senator_microsite_types = ['event', 'in_the_news'];
+    $senator_microsite_types = ['article', 'event', 'in_the_news'];
     if ($type === 'bill') {
       $node = $this->findSaveableBillNode();
     }

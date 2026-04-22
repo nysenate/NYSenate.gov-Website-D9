@@ -25,10 +25,16 @@
 chunks:
 
   - label: "AnonymousCacheHitTest (cache HIT assertions)"
-    filter: "AnonymousCacheHitTest::(testAnonymousCacheHit|testContentTypeDisplayPageCacheHit)"
+    filter: "AnonymousCacheHitTest::testAnonymousCacheHit"
+
+  - label: "AnonymousCacheHitTest (content type display page HIT assertions)"
+    filter: "AnonymousCacheHitTest::testContentTypeDisplayPageCacheHit"
 
   - label: "AnonymousCacheHitTest (cache-control max-age assertions)"
-    filter: "AnonymousCacheHitTest::(testCacheControlMaxAge|testContentTypeDisplayPageCacheControlMaxAge)"
+    filter: "AnonymousCacheHitTest::testCacheControlMaxAge"
+
+  - label: "AnonymousCacheHitTest (content type display page max-age assertions)"
+    filter: "AnonymousCacheHitTest::testContentTypeDisplayPageCacheControlMaxAge"
 
   - label: "AnonymousCacheHitTest (negative — non-invalidation)"
     filter: "AnonymousCacheHitTest::(testArticleEdit|testBillEdit|testEventEdit|testPetition|testContentTypeEdit)"

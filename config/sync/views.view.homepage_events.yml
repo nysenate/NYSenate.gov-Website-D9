@@ -18,6 +18,7 @@ dependencies:
     - semanticviews
     - taxonomy
     - user
+    - views_custom_cache_tag
 id: homepage_events
 label: 'Homepage Events'
 module: views
@@ -656,8 +657,11 @@ display:
         options:
           perm: 'access content'
       cache:
-        type: tag
-        options: {  }
+        type: custom_tag
+        options:
+          custom_tag: |-
+            node_list:event
+            node_list:public_hearing
       empty:
         area_text_custom:
           id: area_text_custom
@@ -1185,6 +1189,14 @@ display:
         type: none
         options:
           offset: 0
+      cache:
+        type: custom_tag
+        options:
+          custom_tag: |-
+            node_list:event
+            node_list:meeting
+            node_list:public_hearing
+            node_list:session
       empty:
         area_text_custom:
           id: area_text_custom
@@ -1577,6 +1589,7 @@ display:
               attributes: ''
       defaults:
         empty: false
+        cache: false
         title: false
         pager: false
         style: false

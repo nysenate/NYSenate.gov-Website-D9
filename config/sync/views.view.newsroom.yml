@@ -15,6 +15,7 @@ dependencies:
     - node
     - options
     - user
+    - views_custom_cache_tag
     - views_infinite_scroll
 id: newsroom
 label: Newsroom
@@ -433,8 +434,12 @@ display:
         options:
           perm: 'access content'
       cache:
-        type: tag
-        options: {  }
+        type: custom_tag
+        options:
+          custom_tag: |-
+            node_list:article
+            node_list:in_the_news
+            node_list:video
       empty: {  }
       sorts:
         field_date_value:

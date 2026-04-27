@@ -105,7 +105,13 @@ function nys_bills_node_view_alter(array &$build, EntityInterface $entity, Entit
     }
 
     // @phpstan-ignore-next-line
-    $build['bill_form'] = \Drupal::formBuilder()->getForm('Drupal\nys_bills\Form\BillForm', $entity);
+    $build['bill_form'] = [
+      '#lazy_builder' => [
+        'nys_bills.bill_form_lazy_builder:renderBillForm',
+        [(int) $entity->id()],
+      ],
+      '#create_placeholder' => TRUE,
+    ];
 
     // Add settings to javascript that will help with processing vote from
     // Javascript.

@@ -3,6 +3,7 @@
 namespace Drupal\nys_bills;
 
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityInterface;
@@ -69,6 +70,13 @@ class BillsHelper {
   protected LoggerInterface $log;
 
   /**
+   * The config factory service.
+   *
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  protected ConfigFactoryInterface $configFactory;
+
+  /**
    * Flag module's Flag service.
    *
    * @var \Drupal\flag\FlagServiceInterface
@@ -88,13 +96,16 @@ class BillsHelper {
    *   The senators helper.
    * @param \Drupal\flag\FlagServiceInterface $flagService
    *   The Flag module's Flag service.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The config factory service.
    */
-  public function __construct(Connection $connection, EntityTypeManagerInterface $entity_type_manager, CacheBackendInterface $cache_backend, SenatorsHelper $senators_helper, FlagServiceInterface $flagService) {
+  public function __construct(Connection $connection, EntityTypeManagerInterface $entity_type_manager, CacheBackendInterface $cache_backend, SenatorsHelper $senators_helper, FlagServiceInterface $flagService, ConfigFactoryInterface $config_factory) {
     $this->connection = $connection;
     $this->entityTypeManager = $entity_type_manager;
     $this->cache = $cache_backend;
     $this->senatorsHelper = $senators_helper;
     $this->flagService = $flagService;
+    $this->configFactory = $config_factory;
 
     $this->log = $this->getLogger('nys_bills');
   }
@@ -374,7 +385,6 @@ class BillsHelper {
   public function resolveAmendmentSponsors($amendment, $chamber) {
     $ret = [];
     $cycle = ['co', 'multi'];
-    $senators = $this->senatorsHelper->getNameMapping();
     foreach ($cycle as $type) {
       $ret[$type] = [];
       $propname = "field_ol_{$type}_sponsor_names";
@@ -527,7 +537,7 @@ class BillsHelper {
         }
       }
       catch (\Throwable $e) {
-        \Drupal::logger('nys_bills')
+        $this->log
           ->error('BillsHelper was unable to create or update an alias', ['message' => $e->getMessage()]);
       }
     }
@@ -657,7 +667,7 @@ class BillsHelper {
     $prev_vers_result = $query->execute();
 
     // Cache data for later use.
-    $cache_ttl = \Drupal::configFactory()
+    $cache_ttl = $this->configFactory
       ->get('nys_config.settings')
       ->get('nys_access_permissions_prev_query_ttl');
     if (empty($cache_ttl)) {
@@ -913,7 +923,8 @@ class BillsHelper {
         }
 
         // Did the vote happen during the current session?
-        $vote_year = date("Y", strtotime($vote->field_publication_date->value));
+        $pub_date = $vote->field_publication_date->value;
+        $vote_year = $pub_date ? (int) date("Y", strtotime($pub_date)) : (int) date("Y");
         if (!($vote_year % 2)) {
           $vote_year--;
         }
@@ -940,7 +951,7 @@ class BillsHelper {
           'abstained_count' => $vote->field_ol_abstained_count->value ?? 0,
           'all_members' => $all_members,
           'type' => ucwords(strtolower(trim($vote_type_label))),
-          'date' => date("M j, Y", strtotime($vote->field_publication_date->value)),
+          'date' => $pub_date ? date("M j, Y", strtotime($pub_date)) : '',
           'vote_year' => $vote_year,
           'bill_in_current_session' => $bill_in_current_session,
           'bill_url' => $bill_url,

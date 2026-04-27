@@ -15,6 +15,7 @@ dependencies:
     - options
     - taxonomy
     - user
+    - views_custom_cache_tag
 id: homepage_hero
 label: 'Homepage Hero'
 module: views
@@ -611,12 +612,14 @@ display:
         options:
           perm: 'access content'
       cache:
-        type: time
+        type: custom_tag
         options:
-          results_lifespan: 0
-          results_lifespan_custom: 0
-          output_lifespan: 0
-          output_lifespan_custom: 0
+          custom_tag: |-
+            node_list:article
+            node_list:event
+            node_list:meeting
+            node_list:public_hearing
+            node_list:session
       empty: {  }
       sorts:
         created:
@@ -699,8 +702,6 @@ display:
         - 'config:field.storage.node.field_ol_publish_date'
         - 'config:field.storage.node.field_session_calendars'
         - 'config:field.storage.node.field_ustream'
-        - entity_field_info
-        - views_data
   homepage_hero:
     id: homepage_hero
     display_title: Block
@@ -722,5 +723,3 @@ display:
         - 'config:field.storage.node.field_ol_publish_date'
         - 'config:field.storage.node.field_session_calendars'
         - 'config:field.storage.node.field_ustream'
-        - entity_field_info
-        - views_data

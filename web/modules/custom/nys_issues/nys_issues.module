@@ -42,6 +42,8 @@ function nys_issues_views_post_render(ViewExecutable $view, array &$output): voi
   // Override the max-age set by the flag_counts sort (which would otherwise
   // mark the output as uncacheable) and add our custom cache tag so the
   // entry can be selectively invalidated by cron every 24 hours.
+  // -1 is Cache::PERMANENT — the entry persists until the
+  // 'nys_issues:most_followed' tag is explicitly invalidated by cron.
   $output['#cache']['max-age'] = -1;
   $output['#cache']['tags'] = array_merge(
     $output['#cache']['tags'] ?? [],

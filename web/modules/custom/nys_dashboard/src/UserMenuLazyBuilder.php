@@ -50,54 +50,33 @@ class UserMenuLazyBuilder implements TrustedCallbackInterface {
    *   A render array for the user menu section.
    */
   public function renderUserMenu(): array {
-    $is_logged = $this->currentUser->isAuthenticated();
+    $data = $this->loadUserData();
 
-    // Default values for anonymous users.
-    $user_first_name = 'Guest';
-    $dashboard_link = '/dashboard';
-    $manage_dashboard_link = '/dashboard/manage';
-    $edit_account_link = '/dashboard/edit';
     $has_senator = FALSE;
-    $senator_microsite_link = NULL;
     $senator_image = NULL;
-
-    if ($is_logged) {
-      /** @var \Drupal\user\UserInterface|null $user */
-      $user = $this->entityTypeManager->getStorage('user')->load($this->currentUser->id());
-
-      if ($user) {
-        // Get user's first name.
-        $user_first_name = $user->get('field_first_name')->value ?? 'Guest';
-
-        // Get user's senator information.
-        $senator = $user->get('field_district')->entity?->field_senator->entity ?? NULL;
-        $headshot = $senator?->field_member_headshot->entity ?? NULL;
-
-        if (($senator instanceof TermInterface) && $headshot) {
-          $has_senator = TRUE;
-          $senator_microsite_link = $this->microsites->getMicrosite($senator);
-          $senator_image = $this->entityTypeManager
-            ->getViewBuilder('media')
-            ->view($headshot, 'thumbnail');
-        }
+    if ($data['senator'] instanceof TermInterface) {
+      $headshot = $data['senator']->field_member_headshot->entity ?? NULL;
+      if ($headshot) {
+        $has_senator = TRUE;
+        $senator_image = $this->entityTypeManager
+          ->getViewBuilder('media')
+          ->view($headshot, 'thumbnail');
       }
     }
 
-    // Return a render array that will be embedded in the header.
     return [
       '#theme' => 'nys_dashboard_user_menu',
-      '#is_logged' => $is_logged,
-      '#user_first_name' => $user_first_name,
-      '#dashboard_link' => $dashboard_link,
-      '#manage_dashboard_link' => $manage_dashboard_link,
-      '#edit_account_link' => $edit_account_link,
+      '#is_logged' => $data['is_logged'],
+      '#user_first_name' => $data['user_first_name'],
+      '#dashboard_link' => $data['dashboard_link'],
+      '#manage_dashboard_link' => $data['manage_dashboard_link'],
+      '#edit_account_link' => $data['edit_account_link'],
       '#has_senator' => $has_senator,
-      '#senator_microsite_link' => $senator_microsite_link,
+      '#senator_microsite_link' => $data['senator_microsite_link'],
       '#senator_image' => $senator_image,
-      // Cache this per user and by authentication status.
       '#cache' => [
         'contexts' => ['user'],
-        'tags' => $is_logged && isset($user) ? $user->getCacheTags() : [],
+        'tags' => $data['user'] ? $data['user']->getCacheTags() : [],
       ],
     ];
   }
@@ -112,46 +91,67 @@ class UserMenuLazyBuilder implements TrustedCallbackInterface {
    *   A render array for the mobile user menu section.
    */
   public function renderUserMenuMobile(): array {
-    $is_logged = $this->currentUser->isAuthenticated();
+    $data = $this->loadUserData();
 
-    // Default values for anonymous users.
-    $user_first_name = 'Guest';
-    $dashboard_link = '/dashboard';
-    $manage_dashboard_link = '/dashboard/manage';
-    $edit_account_link = '/dashboard/edit';
-    $senator_microsite_link = NULL;
-
-    if ($is_logged) {
-      /** @var \Drupal\user\UserInterface|null $user */
-      $user = $this->entityTypeManager->getStorage('user')->load($this->currentUser->id());
-
-      if ($user) {
-        // Get user's first name.
-        $user_first_name = $user->get('field_first_name')->value ?? 'Guest';
-
-        // Get user's senator microsite link.
-        $senator = $user->get('field_district')->entity?->field_senator->entity ?? NULL;
-        if ($senator instanceof TermInterface) {
-          $senator_microsite_link = $this->microsites->getMicrosite($senator);
-        }
-      }
-    }
-
-    // Return a render array for mobile menu.
     return [
       '#theme' => 'nys_dashboard_user_menu_mobile',
-      '#is_logged' => $is_logged,
-      '#user_first_name' => $user_first_name,
-      '#dashboard_link' => $dashboard_link,
-      '#manage_dashboard_link' => $manage_dashboard_link,
-      '#edit_account_link' => $edit_account_link,
-      '#senator_microsite_link' => $senator_microsite_link,
-      // Cache this per user and by authentication status.
+      '#is_logged' => $data['is_logged'],
+      '#user_first_name' => $data['user_first_name'],
+      '#dashboard_link' => $data['dashboard_link'],
+      '#manage_dashboard_link' => $data['manage_dashboard_link'],
+      '#edit_account_link' => $data['edit_account_link'],
+      '#senator_microsite_link' => $data['senator_microsite_link'],
       '#cache' => [
         'contexts' => ['user'],
-        'tags' => $is_logged && isset($user) ? $user->getCacheTags() : [],
+        'tags' => $data['user'] ? $data['user']->getCacheTags() : [],
       ],
     ];
+  }
+
+  /**
+   * Loads user-specific data shared by both desktop and mobile menu renders.
+   *
+   * Centralises the user/senator resolution so renderUserMenu() and
+   * renderUserMenuMobile() stay in sync without duplicating logic.
+   *
+   * @return array
+   *   Associative array with keys: is_logged, user_first_name, dashboard_link,
+   *   manage_dashboard_link, edit_account_link, senator_microsite_link,
+   *   senator (TermInterface|null), user (UserInterface|null).
+   */
+  private function loadUserData(): array {
+    $is_logged = $this->currentUser->isAuthenticated();
+    $data = [
+      'is_logged' => $is_logged,
+      'user_first_name' => 'Guest',
+      'dashboard_link' => '/dashboard',
+      'manage_dashboard_link' => '/dashboard/manage',
+      'edit_account_link' => '/dashboard/edit',
+      'senator_microsite_link' => NULL,
+      'senator' => NULL,
+      'user' => NULL,
+    ];
+
+    if (!$is_logged) {
+      return $data;
+    }
+
+    /** @var \Drupal\user\UserInterface|null $user */
+    $user = $this->entityTypeManager->getStorage('user')->load($this->currentUser->id());
+    if (!$user) {
+      return $data;
+    }
+
+    $data['user'] = $user;
+    $data['user_first_name'] = $user->get('field_first_name')->value ?? 'Guest';
+
+    $senator = $user->get('field_district')->entity?->field_senator->entity ?? NULL;
+    if ($senator instanceof TermInterface) {
+      $data['senator'] = $senator;
+      $data['senator_microsite_link'] = $this->microsites->getMicrosite($senator);
+    }
+
+    return $data;
   }
 
 }

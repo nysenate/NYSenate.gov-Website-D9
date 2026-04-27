@@ -34,6 +34,13 @@ class SearchFormLazyBuilder implements TrustedCallbackInterface {
   /**
    * Renders the global search form.
    *
+   * No explicit '#cache' contexts are set here. The search form is identical
+   * for all users — it is lazy-built solely to keep the per-request CSRF token
+   * out of the globally-cached page skeleton. The form builder attaches the
+   * 'session' cache context automatically via the token system, which is
+   * sufficient; a 'user' context is not needed because the form content itself
+   * does not vary by user identity.
+   *
    * @return array
    *   A render array for the search form.
    */

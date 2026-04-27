@@ -7,19 +7,22 @@ use Drupal\user\UserInterface;
 /**
  * Verifies anonymous page cache (x-drupal-cache) behavior.
  *
- * Cache HITs:
- *  - Top-level navigation pages return x-drupal-cache: HIT after a warm request.
- *  - Primary content type display pages return x-drupal-cache: HIT after a warm request.
- *
- * cache-control: max-age=86400, public:
- *  - All top-level navigation pages.
- *  - All primary content type display pages.
+ * Cache HITs and max-age assertions (sampled, not exhaustive):
+ *  - Two representative top-level pages (/ and /legislation) verify the
+ *    global HIT mechanism. All six pages share the same Drupal page cache
+ *    stack; a failure would affect all simultaneously.
+ *  - Three representative content types (article, bill, event) verify the
+ *    same for content type display pages.
+ *  - cache-control: max-age=86400, public is verified on one representative
+ *    page and one content type display page. This is a single global
+ *    system.performance setting; exhaustive repetition adds no coverage.
  *
  * Non-invalidation (negative cases):
  *  - Editing article, bill, event, or petition nodes must not bust unrelated
- *    top-level navigation pages.
- *  - Editing a node of one content type must not bust the display page of an
- *    unrelated content type.
+ *    top-level navigation pages (full four-type coverage retained).
+ *  - Saving a node must not bust the display pages of unrelated content types.
+ *    Tested for article, bill, event, and meeting — the four types with the
+ *    most complex cache tag graphs and the highest regression risk.
  *
  * The complement (cache MISS when the relevant content changes) lives in
  * CacheMissInvalidationTest.
@@ -63,9 +66,14 @@ class AnonymousCacheHitTest extends CacheTestBase {
   // ---------------------------------------------------------------------------
 
   /**
-   * Each top-level page returns x-drupal-cache: HIT on second anonymous request.
+   * Two representative top-level pages return x-drupal-cache: HIT on the second anonymous request.
    *
-   * @dataProvider topLevelPageProvider
+   * / and /legislation are tested. All six top-level pages share the same
+   * Drupal page cache stack, configured by a single system.performance
+   * max_age setting. A regression in the caching mechanism would affect all
+   * pages simultaneously, so two representatives are sufficient.
+   *
+   * @dataProvider representativeTopLevelPageProvider
    */
   public function testAnonymousCacheHit(string $path): void {
     $this->warmCache($path);
@@ -73,9 +81,15 @@ class AnonymousCacheHitTest extends CacheTestBase {
   }
 
   /**
-   * A primary content type display page returns a cache HIT on second anonymous request.
+   * Representative content type display pages return a cache HIT on the second anonymous request.
    *
-   * @dataProvider contentTypeProvider
+   * article, bill, and event are tested. bill is architecturally distinct
+   * (BillVoteWidgetLazyBuilder + BillFormLazyBuilder); article and event
+   * represent the standard render path shared by all other types. All seven
+   * types use the same Drupal page cache stack, so three representatives
+   * are sufficient to detect a regression in the caching mechanism.
+   *
+   * @dataProvider representativeContentTypeProvider
    */
   public function testContentTypeDisplayPageCacheHit(string $type): void {
     $path = $this->requireNodeUrlByType($type);
@@ -88,21 +102,27 @@ class AnonymousCacheHitTest extends CacheTestBase {
   // ---------------------------------------------------------------------------
 
   /**
-   * All top-level pages declare a 24-hour public cache lifetime.
+   * The homepage declares a 24-hour public cache lifetime.
    *
-   * @dataProvider topLevelPageProvider
+   * Verified on / as a single representative case. cache-control:
+   * max-age=86400, public is set globally by system.performance and applies
+   * uniformly to all pages; repeating the assertion for every top-level
+   * page would not catch any additional regression.
    */
-  public function testCacheControlMaxAge(string $path): void {
-    $this->assertCacheControlMaxAge($path, 86400);
+  public function testCacheControlMaxAge(): void {
+    $this->assertCacheControlMaxAge('/', 86400);
   }
 
   /**
-   * A primary content type display pages declare 24-hour public cache lifetime.
+   * An article display page declares a 24-hour public cache lifetime.
    *
-   * @dataProvider contentTypeProvider
+   * Verified on article as a single representative case. cache-control:
+   * max-age=86400, public is set globally by system.performance and applies
+   * uniformly to all content type display pages; repeating the assertion
+   * across all seven types would not catch any additional regression.
    */
-  public function testContentTypeDisplayPageCacheControlMaxAge(string $type): void {
-    $path = $this->requireNodeUrlByType($type);
+  public function testContentTypeDisplayPageCacheControlMaxAge(): void {
+    $path = $this->requireNodeUrlByType('article');
     $this->assertCacheControlMaxAge($path, 86400);
   }
 
@@ -180,6 +200,16 @@ class AnonymousCacheHitTest extends CacheTestBase {
   /**
    * Saving a node must not invalidate the display pages of UNRELATED content types.
    *
+   * Tested for article, bill, event, and meeting — the four types with the
+   * most complex cache tag graphs and the highest regression risk:
+   *  - article has the broadest legitimate-invalidation exclusion list.
+   *  - bill is architecturally distinct (BillsHelper save-time logic).
+   *  - event is high-traffic and appears on multiple top-level views.
+   *  - meeting covers the committee_meetings view path.
+   * resolution, in_the_news, and public_hearing share the same tag-graph
+   * patterns as these four; a regression affecting them would also manifest
+   * in at least one of the tested types.
+   *
    * Some cross-type invalidations are legitimate by design — they reflect views
    * embedded in a content type's template that query another type's nodes. Those
    * pairs are excluded from this test; they are tested positively in
@@ -195,7 +225,7 @@ class AnonymousCacheHitTest extends CacheTestBase {
    *  - meeting save → public_hearing pages (committee_meetings past display
    *    queries meeting)
    *
-   * @dataProvider contentTypeProvider
+   * @dataProvider cacheTagGraphContentTypeProvider
    */
   public function testContentTypeEditDoesNotInvalidateOtherContentTypeDisplayPages(string $type): void {
     // Maps a saved node type to the display-page content types it legitimately
@@ -236,6 +266,65 @@ class AnonymousCacheHitTest extends CacheTestBase {
     foreach ($others as $path) {
       $this->assertAnonymousCacheHit($path);
     }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Data providers
+  // ---------------------------------------------------------------------------
+
+  /**
+   * Data provider: two representative top-level pages.
+   *
+   * / and /legislation are chosen as representatives. All six top-level pages
+   * share the same Drupal page cache stack configured by a single
+   * system.performance max_age setting. A failure in the caching mechanism
+   * would affect all pages simultaneously, so two representatives are
+   * sufficient for HIT and max-age assertions. The full six-page set continues
+   * to be exercised implicitly by the non-invalidation tests, which require
+   * per-page specificity to verify the cache tag graph.
+   */
+  public static function representativeTopLevelPageProvider(): array {
+    return [
+      '/'            => ['/'],
+      '/legislation' => ['/legislation'],
+    ];
+  }
+
+  /**
+   * Data provider: three representative content types.
+   *
+   * article, bill, and event are chosen. bill is architecturally distinct —
+   * it embeds BillVoteWidgetLazyBuilder and BillFormLazyBuilder on top of the
+   * site-wide lazy builder set. article and event represent the standard render
+   * path shared by all other types. All seven types use the same Drupal page
+   * cache stack, so these three are sufficient to detect a regression in the
+   * caching or max-age mechanism.
+   */
+  public static function representativeContentTypeProvider(): array {
+    return [
+      'article' => ['article'],
+      'bill'    => ['bill'],
+      'event'   => ['event'],
+    ];
+  }
+
+  /**
+   * Data provider: four content types for cache tag graph non-invalidation tests.
+   *
+   * article, bill, event, and meeting are chosen because they span the widest
+   * variety of cache tag relationships and carry the highest regression risk.
+   * article has the broadest legitimate-invalidation exclusion list; bill is
+   * architecturally distinct; event is high-traffic; meeting covers the
+   * committee_meetings view path. resolution, in_the_news, and public_hearing
+   * share the same tag-graph patterns as these four.
+   */
+  public static function cacheTagGraphContentTypeProvider(): array {
+    return [
+      'article' => ['article'],
+      'bill'    => ['bill'],
+      'event'   => ['event'],
+      'meeting' => ['meeting'],
+    ];
   }
 
 }

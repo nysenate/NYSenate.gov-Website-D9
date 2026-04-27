@@ -10,9 +10,18 @@
 # mid-run. Locally, large single-process runs can be killed (exit 137). Splitting
 # into smaller filter-based chunks keeps peak RSS well under 1 GB per process.
 #
+# CHUNK SIZING (as of the reduced test suite)
+# The suite runs ~30 test cases across 8 chunks (reduced from ~85 cases across
+# 14 chunks). Data providers for HIT and max-age assertions were reduced to
+# 2-3 representative cases each, so all four positive AnonymousCacheHitTest
+# methods now fit in a single chunk. AuthenticatedDynamicCacheTest runs as a
+# single chunk (bill + article providers only). The CacheMissInvalidationTest
+# content type node-edit tests (2 cases) are merged with the related-entity-edit
+# chunk to avoid a near-empty chunk.
+#
 # ADDING A TEST
-# - If the new test belongs to an existing class and that class runs as a single
-#   chunk (e.g. AuthenticatedDynamicCacheTest), no change is needed here.
+# - If the new test belongs to a class that runs as a single chunk
+#   (AuthenticatedDynamicCacheTest or NoCachePoisoningTest), no change is needed.
 # - If the new test is in a split class (AnonymousCacheHitTest or
 #   CacheMissInvalidationTest), add the method name to the relevant filter below.
 # - If you add a new test class, add a new chunk entry at the end.
@@ -24,17 +33,8 @@
 
 chunks:
 
-  - label: "AnonymousCacheHitTest (cache HIT assertions)"
-    filter: "AnonymousCacheHitTest::testAnonymousCacheHit"
-
-  - label: "AnonymousCacheHitTest (content type display page HIT assertions)"
-    filter: "AnonymousCacheHitTest::testContentTypeDisplayPageCacheHit"
-
-  - label: "AnonymousCacheHitTest (cache-control max-age assertions)"
-    filter: "AnonymousCacheHitTest::testCacheControlMaxAge"
-
-  - label: "AnonymousCacheHitTest (content type display page max-age assertions)"
-    filter: "AnonymousCacheHitTest::testContentTypeDisplayPageCacheControlMaxAge"
+  - label: "AnonymousCacheHitTest (positive — HITs and max-age)"
+    filter: "AnonymousCacheHitTest::(testAnonymousCacheHit|testCacheControlMaxAge|testContentTypeDisplayPageCacheHit|testContentTypeDisplayPageCacheControlMaxAge)"
 
   - label: "AnonymousCacheHitTest (negative — non-invalidation, top-level pages)"
     filter: "AnonymousCacheHitTest::(testArticleEdit|testBillEdit|testEventEdit|testPetition)"
@@ -42,11 +42,8 @@ chunks:
   - label: "AnonymousCacheHitTest (negative — non-invalidation, cross-content-type)"
     filter: "AnonymousCacheHitTest::testContentTypeEdit"
 
-  - label: "AuthenticatedDynamicCacheTest (top-level pages)"
-    filter: "AuthenticatedDynamicCacheTest::(testConstituentSecondVisitIsDynamicCacheHit|testDynamicCacheSharedAcrossUsers|testDynamicCacheMissAfterAccountChange)"
-
-  - label: "AuthenticatedDynamicCacheTest (content type display pages)"
-    filter: "AuthenticatedDynamicCacheTest::(testContentTypeDisplayPageDynamicCacheHit|testContentTypeDisplayPageDynamicCacheSharedAcrossUsers)"
+  - label: "AuthenticatedDynamicCacheTest"
+    filter: "AuthenticatedDynamicCacheTest"
 
   - label: "CacheMissInvalidationTest (top-level pages — homepage and news)"
     filter: "CacheMissInvalidationTest::(testHomepage|testNewsAndIssues)"
@@ -54,11 +51,8 @@ chunks:
   - label: "CacheMissInvalidationTest (top-level pages — senators, legislation, events, about)"
     filter: "CacheMissInvalidationTest::(testSenatorsCommittees|testLegislation|testEvents|testAbout)"
 
-  - label: "CacheMissInvalidationTest (content type display pages — node edit)"
-    filter: "CacheMissInvalidationTest::testContentTypeDisplayPage"
-
-  - label: "CacheMissInvalidationTest (content type display pages — related entity edit)"
-    filter: "CacheMissInvalidationTest::(testArticlePage|testEventPage|testInTheNews|testMeeting|testPublicHearing|testResolution)"
+  - label: "CacheMissInvalidationTest (content type display pages)"
+    filter: "CacheMissInvalidationTest::(testContentTypeDisplayPage|testArticlePage|testEventPage|testInTheNews|testMeeting|testPublicHearing|testResolution)"
 
   - label: "NoCachePoisoningTest"
     filter: "NoCachePoisoningTest"

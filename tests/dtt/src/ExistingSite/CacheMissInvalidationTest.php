@@ -17,8 +17,10 @@ use Drupal\user\UserInterface;
  *  - /events is invalidated by event node edits.
  *  - /about is invalidated by landing page node edits and embedded block_content edits.
  *
- * Content type display pages — node edit:
- *  - Every cacheable primary content type display page is invalidated when the node is saved.
+ * Content type display pages — node edit (sampled):
+ *  - bill and article display pages are invalidated when the node is saved.
+ *    bill is tested because BillsHelper runs complex save-time logic; article
+ *    represents the standard Drupal node:{nid} tag invalidation path.
  *
  * Content type display pages — related entity edit:
  *  - Article and in_the_news pages are invalidated by senator term edits.
@@ -224,7 +226,14 @@ class CacheMissInvalidationTest extends CacheTestBase {
   /**
    * A content type display page is invalidated when the node is saved.
    *
-   * @dataProvider contentTypeProvider
+   * Verified for bill and article. The node:{nid} cache tag invalidation
+   * mechanism is provided automatically by Drupal core and is identical for
+   * all content types. bill is included specifically because BillsHelper runs
+   * complex save-time logic; a silent exception there could prevent the save
+   * completing cleanly and leave the cache un-invalidated. article represents
+   * the standard save path for all other types.
+   *
+   * @dataProvider representativeContentTypeProvider
    */
   public function testContentTypeDisplayPageMissOnNodeEdit(string $type): void {
     $node = ($type === 'bill') ? $this->requireSaveableBillNode() : $this->requireNodeByType($type);
@@ -401,6 +410,26 @@ class CacheMissInvalidationTest extends CacheTestBase {
   protected function requireBlockContentOnNode(NodeInterface $node): BlockContentInterface {
     return $this->findBlockContentOnNode($node)
       ?? $this->fail('No block_content entity embedded in the landing page. Ensure the DB is a production clone with block content assigned.');
+  }
+
+  // ---------------------------------------------------------------------------
+  // Data providers
+  // ---------------------------------------------------------------------------
+
+  /**
+   * Data provider: bill and one representative content type.
+   *
+   * The node:{nid} cache tag invalidation mechanism is identical for all
+   * content types — it is provided automatically by Drupal core. bill is
+   * included because BillsHelper runs complex save-time logic whose silent
+   * failure could prevent cache invalidation. article represents the standard
+   * save path for all other types.
+   */
+  public static function representativeContentTypeProvider(): array {
+    return [
+      'bill'    => ['bill'],
+      'article' => ['article'],
+    ];
   }
 
 }

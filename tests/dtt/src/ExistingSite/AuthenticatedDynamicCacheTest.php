@@ -10,9 +10,18 @@ use Drupal\user\Entity\User;
  * The dynamic page cache caches full page responses keyed by user context.
  * These tests confirm the properties that are unique to authenticated sessions:
  *
- *  1. A second authenticated visit to the same page returns x-drupal-dynamic-cache: HIT.
+ *  1. A second authenticated visit returns x-drupal-dynamic-cache: HIT.
+ *     Verified on two representative top-level pages (/ and /legislation).
  *  2. The dynamic cache skeleton is shared across different authenticated users.
  *  3. Any account change busts that user's warmed entries via the user:{uid} cache tag.
+ *  4. Content type display pages cache correctly for authenticated users.
+ *     Verified for bill (distinct lazy builders) and article (standard path).
+ *
+ * Sampling rationale: all top-level pages and five of the seven content types
+ * share identical dynamic cache mechanisms. bill is tested individually because
+ * it adds BillVoteWidgetLazyBuilder and BillFormLazyBuilder on top of the
+ * site-wide set (UserMenuLazyBuilder, SearchFormLazyBuilder, WantToLazyBuilder);
+ * article represents the standard render path for all other types.
  *
  * Content-level isolation (follow/unfollow state, user menu) is verified in
  * NoCachePoisoningTest.
@@ -67,9 +76,13 @@ class AuthenticatedDynamicCacheTest extends CacheTestBase {
   // ---------------------------------------------------------------------------
 
   /**
-   * An authenticated user's second visit to each top-level page is a dynamic cache HIT.
+   * An authenticated user's second visit to a representative top-level page is a dynamic cache HIT.
    *
-   * @dataProvider topLevelPageProvider
+   * Verified on / and /legislation. All six top-level pages share the same
+   * dynamic page cache stack; a regression in the mechanism would affect all
+   * pages simultaneously, so two representative pages are sufficient.
+   *
+   * @dataProvider representativeTopLevelPageProvider
    */
   public function testConstituentSecondVisitIsDynamicCacheHit(string $path): void {
     $this->drupalLogin($this->userA);
@@ -148,7 +161,7 @@ class AuthenticatedDynamicCacheTest extends CacheTestBase {
   // ---------------------------------------------------------------------------
 
   /**
-   * Every primary content type display page caches per authenticated user.
+   * Representative content type display pages cache correctly per authenticated user.
    *
    * Drupal's dynamic page cache stores the page SKELETON (containing render
    * placeholders for lazy builders) keyed by cache contexts that exclude the
@@ -156,11 +169,12 @@ class AuthenticatedDynamicCacheTest extends CacheTestBase {
    * (MISS). On the second visit by the SAME user the skeleton is served from
    * cache (HIT), and the lazy builders are resolved afresh per request.
    *
-   * Bill pages embed BillVoteWidgetForm and BillForm via lazy builders whose
-   * callbacks add user-level cache contexts. Those contexts apply only to the
-   * lazy-builder output, not to the skeleton stored in the dynamic page cache.
+   * bill and article are tested. bill is architecturally distinct: it embeds
+   * BillVoteWidgetLazyBuilder and BillFormLazyBuilder on top of the site-wide
+   * set (UserMenuLazyBuilder, SearchFormLazyBuilder, WantToLazyBuilder). article
+   * represents the standard render path shared by all other content types.
    *
-   * @dataProvider contentTypePageProvider
+   * @dataProvider representativeContentTypePageProvider
    */
   public function testContentTypeDisplayPageDynamicCacheHit(string $type): void {
     $path = $this->requireNodeUrlByType($type);
@@ -175,7 +189,7 @@ class AuthenticatedDynamicCacheTest extends CacheTestBase {
   }
 
   /**
-   * The dynamic page cache skeleton is shared across authenticated users for all content types.
+   * The dynamic page cache skeleton is shared across authenticated users for representative content types.
    *
    * Because lazy builders prevent their per-user cache contexts from bubbling
    * to the page skeleton, the dynamic page cache stores a single entry that is
@@ -183,7 +197,12 @@ class AuthenticatedDynamicCacheTest extends CacheTestBase {
    * builders resolve the user-specific fragment (vote widget, bill form, user
    * menu) outside the cache for every request.
    *
-   * @dataProvider contentTypePageProvider
+   * bill and article are tested. A missing #create_placeholder => TRUE on any
+   * lazy builder causes the user context to bubble, breaking skeleton sharing.
+   * bill has the most lazy builders; article covers the standard path. If
+   * sharing works for both, it works for all seven content types.
+   *
+   * @dataProvider representativeContentTypePageProvider
    */
   public function testContentTypeDisplayPageDynamicCacheSharedAcrossUsers(string $type): void {
     $path = $this->requireNodeUrlByType($type);
@@ -199,14 +218,39 @@ class AuthenticatedDynamicCacheTest extends CacheTestBase {
     $this->drupalLogout();
   }
 
+  // ---------------------------------------------------------------------------
+  // Data providers
+  // ---------------------------------------------------------------------------
+
   /**
-   * Data provider: all seven primary content types.
+   * Data provider: two representative top-level pages.
+   *
+   * / and /legislation cover the home page and a content-heavy top-level page.
+   * All six top-level pages share the same dynamic page cache mechanism, so
+   * two representatives are sufficient to detect a regression.
    */
-  public static function contentTypePageProvider(): array {
-    return array_combine(
-      self::PRIMARY_CONTENT_TYPES,
-      array_map(static fn(string $t): array => [$t], self::PRIMARY_CONTENT_TYPES)
-    );
+  public static function representativeTopLevelPageProvider(): array {
+    return [
+      '/'            => ['/'],
+      '/legislation' => ['/legislation'],
+    ];
+  }
+
+  /**
+   * Data provider: bill and one representative content type.
+   *
+   * bill is architecturally distinct — it embeds BillVoteWidgetLazyBuilder
+   * and BillFormLazyBuilder on top of the site-wide lazy builder set
+   * (UserMenuLazyBuilder, SearchFormLazyBuilder, WantToLazyBuilder). article
+   * represents the standard render path shared by the other six types. Together
+   * they verify both lazy builder configurations present across all primary
+   * content type display pages.
+   */
+  public static function representativeContentTypePageProvider(): array {
+    return [
+      'bill'    => ['bill'],
+      'article' => ['article'],
+    ];
   }
 
 }

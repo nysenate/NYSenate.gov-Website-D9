@@ -479,12 +479,10 @@ abstract class CacheTestBase extends ExistingSiteBase {
    * in nys_bills_node_view_alter().
    *
    * For article, event and in_the_news nodes, delegates to
-   * findNonSenatorNodeByType() to exclude senator-microsite-associated nodes
-   * (those with field_senator_multiref populated). Senator-associated nodes
-   * render the senator microsite hero block, which sets a per-user variable
-   * in its preprocess hook without a corresponding cache context, causing
-   * max-age: 0 to bubble up for authenticated users. This is a pre-existing
-   * issue in senator microsite rendering unrelated to the bill cache fix.
+   * findNonSenatorNodeByType() to scope the test to nodes that do NOT have a
+   * senator microsite association. Senator-associated nodes render additional
+   * senator microsite blocks and are covered by dedicated senator-microsite
+   * cache tests (e.g. testSenatorMicrositeContentTypeDynamicCacheHit).
    *
    * @return string|null
    */
@@ -509,12 +507,11 @@ abstract class CacheTestBase extends ExistingSiteBase {
    * Returns the most recently changed published node of $type that does NOT
    * have field_senator_multiref populated, or NULL if none exists.
    *
-   * Senator-associated nodes (those with field_senator_multiref set) render the
-   * senator microsite hero block, which sets per-user template variables
-   * without declaring a 'user' cache context. This causes max-age: 0 to bubble
-   * up for authenticated users, making the page UNCACHEABLE (poor cacheability).
-   * That is a pre-existing issue in senator microsite rendering and is out of
-   * scope for the bill cache tests.
+   * Used by findNodeUrlByType() to scope generic cache tests to nodes that
+   * are not senator-microsite-associated. Senator-associated nodes render the
+   * senator microsite menu block and hero block in addition to the standard
+   * page layout. Senator-microsite caching behaviour is covered by dedicated
+   * tests in AuthenticatedDynamicCacheTest.
    *
    * @return \Drupal\node\NodeInterface|null
    */
@@ -659,6 +656,58 @@ abstract class CacheTestBase extends ExistingSiteBase {
   protected function requireNodeUrlByType(string $type): string {
     return $this->findNodeUrlByType($type)
       ?? $this->fail("No published '{$type}' node found.");
+  }
+
+  /**
+   * Returns the most recently changed published node of $type that HAS
+   * field_senator_multiref populated (i.e. is associated with a senator
+   * microsite), or NULL if none exists.
+   *
+   * Used by senator-microsite cache tests to verify that senator-tagged
+   * article, event and in_the_news nodes cache correctly for authenticated
+   * users. The senator microsite menu block and hero block are only rendered
+   * for these nodes, so they must be targeted explicitly.
+   *
+   * @return \Drupal\node\NodeInterface|null
+   */
+  protected function findSenatorTaggedNodeByType(string $type): ?NodeInterface {
+    $ids = \Drupal::entityTypeManager()
+      ->getStorage('node')
+      ->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('type', $type)
+      ->condition('status', 1)
+      ->exists('field_senator_multiref')
+      ->sort('changed', 'DESC')
+      ->range(0, 1)
+      ->execute();
+    if (empty($ids)) {
+      return NULL;
+    }
+    return \Drupal::entityTypeManager()->getStorage('node')->load(reset($ids));
+  }
+
+  /**
+   * Returns the canonical URL for the most recently changed published node of
+   * $type that has field_senator_multiref set, or NULL if none is found.
+   *
+   * @return string|null
+   */
+  protected function findSenatorTaggedNodeUrlByType(string $type): ?string {
+    $node = $this->findSenatorTaggedNodeByType($type);
+    if ($node === NULL) {
+      return NULL;
+    }
+    return $node->toUrl('canonical')->setAbsolute(FALSE)->toString();
+  }
+
+  /**
+   * Returns the canonical URL for the most recently changed senator-tagged
+   * published node of $type, or fails the test if none is found.
+   */
+  protected function requireSenatorTaggedNodeUrlByType(string $type): string {
+    return $this->findSenatorTaggedNodeUrlByType($type)
+      ?? $this->fail("No published senator-tagged '{$type}' node found.");
   }
 
   /**

@@ -491,9 +491,18 @@ function nysenate_theme_preprocess_senator_microsite_menu_block(&$variables) {
     }
   }
 
-  // Add the Global Search form to the Microsite page.
-  $form = \Drupal::formBuilder()->getForm(GlobalSearchForm::class);
-  $variables['form'] = $form;
+  // Add the Global Search form to the Microsite page via lazy builder.
+  // Rendering the form directly includes a per-request CSRF token which sets
+  // max-age: 0 and causes UNCACHEABLE (poor cacheability) for the whole page.
+  // The lazy builder defers form rendering to after the page skeleton is
+  // cached, exactly as nys_search_preprocess_page() does for the main header.
+  $variables['form'] = [
+    '#lazy_builder' => [
+      'nys_search.search_form_lazy_builder:renderSearchForm',
+      [],
+    ],
+    '#create_placeholder' => TRUE,
+  ];
 }
 
 /**

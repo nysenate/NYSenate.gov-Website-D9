@@ -16,6 +16,10 @@ use Drupal\user\Entity\User;
  *  3. Any account change busts that user's warmed entries via the user:{uid} cache tag.
  *  4. Content type display pages cache correctly for authenticated users.
  *     Verified for bill (distinct lazy builders) and article (standard path).
+ *  5. Senator-microsite content type pages (article, event, in_the_news with a
+ *     senator ref) cache correctly. These pages render the senator microsite menu
+ *     block; the block's search form must be wrapped in a lazy builder to prevent
+ *     the CSRF form token from setting max-age: 0 on the full page response.
  *
  * Sampling rationale: all top-level pages and five of the seven content types
  * share identical dynamic cache mechanisms. bill is tested individually because
@@ -250,6 +254,52 @@ class AuthenticatedDynamicCacheTest extends CacheTestBase {
     return [
       'bill'    => ['bill'],
       'article' => ['article'],
+    ];
+  }
+
+  // ---------------------------------------------------------------------------
+  // Senator-microsite content type pages — dynamic cache HIT
+  // ---------------------------------------------------------------------------
+
+  /**
+   * Senator-tagged content type pages cache correctly for authenticated users.
+   *
+   * article, event and in_the_news nodes that reference a senator term render
+   * the senator microsite menu block and senator microsite hero block in
+   * addition to the standard page layout. The microsite menu block renders the
+   * GlobalSearchForm via a lazy builder (SearchFormLazyBuilder) so that the
+   * CSRF token-bearing form_token element is deferred past the page cache
+   * layer. Without the lazy builder the form_token's max-age: 0 bubbles to the
+   * response level, causing UNCACHEABLE (poor cacheability) for all users.
+   *
+   * This test acts as a regression guard for that fix.
+   *
+   * @dataProvider senatorMicrositeContentTypeProvider
+   */
+  public function testSenatorMicrositeContentTypeDynamicCacheHit(string $type): void {
+    $path = $this->requireSenatorTaggedNodeUrlByType($type);
+
+    $this->drupalLogin($this->userA);
+
+    // First visit — warms the dynamic page cache skeleton.
+    $this->assertDynamicCacheMiss($path);
+
+    // Second visit — skeleton served from dynamic cache.
+    $this->assertDynamicCacheHit($path);
+  }
+
+  /**
+   * Data provider: senator-microsite content types.
+   *
+   * article, event and in_the_news are the three content types that receive
+   * the page__node__microsite_page template suggestion when field_senator_multiref
+   * is populated, triggering the senator microsite menu block and hero block.
+   */
+  public static function senatorMicrositeContentTypeProvider(): array {
+    return [
+      'article'     => ['article'],
+      'event'       => ['event'],
+      'in_the_news' => ['in_the_news'],
     ];
   }
 

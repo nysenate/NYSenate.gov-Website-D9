@@ -24,6 +24,7 @@ use Drupal\taxonomy\TermInterface;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
 use Drupal\views\Views;
+use Drupal\webform\WebformSubmissionInterface;
 
 /**
  * Implements hook_theme().
@@ -268,6 +269,81 @@ function nys_senators_entity_access(EntityInterface $entity, $operation, Account
 
   // No opinion.
   return AccessResult::neutral();
+}
+
+/**
+ * Implements hook_node_access().
+ *
+ * Grants MCPs access to the webform Results tab on their own senator's
+ * microsite contact page. The 'webform_submission_view' operation is the
+ * custom op checked by WebformNodeAccess::checkAccess() for the Results tab.
+ *
+ * The webform's role-based 'submission_view_any' permission must NOT be
+ * granted to the MCP role in the webform's Access settings — this hook
+ * replaces that global grant with a per-senator check.
+ */
+function nys_senators_node_access(NodeInterface $node, $op, AccountInterface $account) {
+  if ($op !== 'webform_submission_view') {
+    return AccessResult::neutral();
+  }
+
+  if ($node->bundle() !== 'microsite_page') {
+    return AccessResult::neutral();
+  }
+
+  if (UsersHelper::isAdmin($account) || !UsersHelper::isMcp($account)) {
+    return AccessResult::neutral();
+  }
+
+  $node_senator_tid = (int) ($node->get('field_senator_multiref')->target_id ?? 0);
+  if (empty($node_senator_tid)) {
+    return AccessResult::neutral();
+  }
+
+  $mcp_senators = UsersHelper::getMcpSenators($account);
+  if (isset($mcp_senators[$node_senator_tid])) {
+    return AccessResult::allowed()->setCacheMaxAge(0);
+  }
+
+  return AccessResult::neutral();
+}
+
+/**
+ * Implements hook_webform_submission_access().
+ *
+ * Restricts MCP users to only view webform submissions for their senator(s).
+ * The senator TID is stored in submission data as 'tid' by the senator contact
+ * webform. Admins and non-MCP roles are unaffected.
+ */
+function nys_senators_webform_submission_access(WebformSubmissionInterface $webform_submission, string $operation, AccountInterface $account): AccessResult {
+  // Only restrict view operations.
+  if ($operation !== 'view') {
+    return AccessResult::neutral();
+  }
+
+  // Admins are unrestricted.
+  if (UsersHelper::isAdmin($account)) {
+    return AccessResult::neutral();
+  }
+
+  // Only apply to MCP role.
+  if (!UsersHelper::isMcp($account)) {
+    return AccessResult::neutral();
+  }
+
+  // Get the senator TID stored in the submission data.
+  $submission_tid = (int) ($webform_submission->getData()['tid'] ?? 0);
+  if (empty($submission_tid)) {
+    return AccessResult::neutral();
+  }
+
+  // getMcpSenators() returns [target_id => target_id] for the MCP's senators.
+  $mcp_senators = UsersHelper::getMcpSenators($account);
+  if (isset($mcp_senators[$submission_tid])) {
+    return AccessResult::allowed()->setCacheMaxAge(0);
+  }
+
+  return AccessResult::forbidden()->setCacheMaxAge(0);
 }
 
 /**

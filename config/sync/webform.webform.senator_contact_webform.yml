@@ -31,19 +31,21 @@ elements: |-
       press_inquiry: 'Press Inquiry'
     '#options_display': side_by_side
     '#default_value': general_inquiry
-  flexbox_1:
-    '#type': webform_flexbox
-    first_name:
-      '#type': textfield
-      '#title': 'First name'
-      '#required': true
-    last_name:
-      '#type': textfield
-      '#title': 'Last name'
-      '#minlength': 1
-      '#maxlength': 255
-      '#autocomplete': ''
-      '#required': true
+  contact_information:
+    '#type': nys_contact_composite
+    '#title': 'Contact information'
+    '#first_name__required': true
+    '#last_name__required': true
+    '#email__required': true
+    '#phone__title': 'Phone number (optional)'
+    '#address_line1__required': true
+    '#locality__required': true
+    '#administrative_area__access': false
+    '#postal_code__required': true
+  processed_text_01:
+    '#type': processed_text
+    '#text': '<div class="nys-contact-composite__group-label">Your Message</div>'
+    '#format': full_html
   subject:
     '#type': textfield
     '#title': Subject
@@ -59,29 +61,28 @@ elements: |-
       class:
         - form-textarea-wrapper
       style: 'heigth:auto;'
-  flexbox_02:
-    '#type': webform_flexbox
-    from_email:
-      '#type': textfield
-      '#title': 'Your e-mail address'
-      '#minlength': 2
-      '#maxlength': 255
-      '#required': true
-      '#default_value': '[current-user:mail]'
-    phone:
-      '#type': textfield
-      '#title': 'Phone Number (Optional)'
-      '#minlength': 1
-      '#maxlength': 255
-  address:
-    '#type': textfield
-    '#title': 'Street Address'
-    '#minlength': 1
-    '#maxlength': 255
-    '#required': true
-    '#default_value': '[current-user:field_address:address_line1]'
+  tid:
+    '#type': hidden
+    '#title': tid
+    '#default_value': '[current-page:senator-tid]'
+  email:
+    '#type': email
+    '#title': Email
   flexbox_03:
     '#type': webform_flexbox
+    flexbox_1:
+      '#type': webform_flexbox
+      first_name:
+        '#type': textfield
+        '#title': 'First name'
+        '#required': true
+      last_name:
+        '#type': textfield
+        '#title': 'Last name'
+        '#minlength': 1
+        '#maxlength': 255
+        '#autocomplete': ''
+        '#required': true
     city:
       '#type': textfield
       '#title': City
@@ -96,12 +97,6 @@ elements: |-
       '#maxlength': 5
       '#required': true
       '#default_value': '[current-user:field_address:postal_code]'
-  tid:
-    '#type': hidden
-    '#title': tid
-    '#default_value': '[current-page:senator-tid]'
-  captcha:
-    '#type': captcha
   actions:
     '#type': webform_actions
     '#title': 'Submit button(s)'
@@ -213,7 +208,7 @@ settings:
   confirmation_type: message
   confirmation_url: ''
   confirmation_title: ''
-  confirmation_message: ''
+  confirmation_message: '<p>Thank you for contact Senator [current-page:senator-name].</p>'
   confirmation_attributes: {  }
   confirmation_back: true
   confirmation_back_label: ''

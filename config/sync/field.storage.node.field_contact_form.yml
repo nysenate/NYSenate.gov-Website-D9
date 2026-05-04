@@ -1,0 +1,24 @@
+uuid: 294792ec-8f04-453d-a57e-23905d89f8f8
+langcode: en
+status: true
+dependencies:
+  module:
+    - field_permissions
+    - node
+    - webform
+third_party_settings:
+  field_permissions:
+    permission_type: custom
+id: node.field_contact_form
+field_name: field_contact_form
+entity_type: node
+type: webform
+settings:
+  target_type: webform
+module: webform
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

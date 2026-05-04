@@ -1,9 +1,9 @@
-uuid: 1c33d37a-ca88-4f45-9b13-afab9f40c1b5
+uuid: 81de791a-0cec-4d4e-b2e0-6a6771479086
 langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_mode.node.teaser
+    - core.entity_view_mode.node.search_index
     - field.field.node.microsite_page.field_block
     - field.field.node.microsite_page.field_contact_form
     - field.field.node.microsite_page.field_meta_tags
@@ -16,39 +16,26 @@ dependencies:
     - node.type.microsite_page
   module:
     - user
-id: node.microsite_page.teaser
+id: node.microsite_page.search_index
 targetEntityType: node
 bundle: microsite_page
-mode: teaser
+mode: search_index
 content:
-  field_summary:
-    type: basic_string
-    label: hidden
+  links:
     settings: {  }
     third_party_settings: {  }
-    weight: 1
-    region: content
-  field_thumbnail:
-    type: entity_reference_entity_view
-    label: hidden
-    settings:
-      view_mode: thumbnail
-      link: false
-    third_party_settings: {  }
-    weight: 0
+    weight: 100
     region: content
 hidden:
-  entity_print_view_epub: true
-  entity_print_view_pdf: true
-  entity_print_view_word_docx: true
   field_block: true
   field_contact_form: true
   field_meta_tags: true
   field_microsite_page_type: true
   field_senator_multiref: true
   field_short_title: true
+  field_summary: true
+  field_thumbnail: true
   langcode: true
-  links: true
   nys_senator_dashboard_path_alias: true
   private_message_link: true
   rabbit_hole__settings: true

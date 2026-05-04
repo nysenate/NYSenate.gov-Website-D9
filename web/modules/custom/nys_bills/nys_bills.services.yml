@@ -1,4 +1,11 @@
 services:
+  nys_bills.bill_form_lazy_builder:
+    class: Drupal\nys_bills\BillFormLazyBuilder
+    arguments:
+      - '@form_builder'
+      - '@entity_type.manager'
+    tags:
+      - { name: render.placeholder_renderer_lazy_builder }
   nys_bill.bills_helper:
     class: Drupal\nys_bills\BillsHelper
     arguments:
@@ -7,6 +14,7 @@ services:
       - '@cache.default'
       - '@nys_senators.senators_helper'
       - '@flag'
+      - '@config.factory'
   nys_bills.twig.filters:
     class: Drupal\nys_bills\CustomTwig
     tags:

@@ -224,8 +224,6 @@ class BillVoteWidgetForm extends FormBase {
 
     $this->addSubscriptionForm($form, $form_state, $node_id);
 
-    $form['#cache'] = ['max-age' => 0];
-
     if ($parameter['is_embed']) {
       $form['#attributes']['class'][] = 'nys-bill-vote-form-embedded';
     }

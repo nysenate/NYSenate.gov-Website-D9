@@ -1286,8 +1286,13 @@ display:
         options:
           perm: 'access content'
       cache:
-        type: tag
-        options: {  }
+        type: custom_tag
+        options:
+          custom_tag: |-
+            node_list:event
+            node_list:meeting
+            node_list:public_hearing
+            node_list:session
       empty:
         area_text_custom:
           id: area_text_custom

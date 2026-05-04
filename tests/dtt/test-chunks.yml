@@ -1,0 +1,59 @@
+# Test chunk definitions for the DTT cache regression suite.
+#
+# This is the single source of truth for how the suite is split into separate
+# PHP processes at runtime. Both run-on-container.sh (Pantheon CI) and
+# .ddev/commands/web/run-cache-tests (local) read this file via PHP/symfony/yaml.
+#
+# WHY CHUNKS EXIST
+# PHPUnit accumulates Mink session state and Redis-unserialized objects across
+# tests in a single process. On Pantheon's 2 GB PHP limit this exhausts memory
+# mid-run. Locally, large single-process runs can be killed (exit 137). Splitting
+# into smaller filter-based chunks keeps peak RSS well under 1 GB per process.
+#
+# CHUNK SIZING (as of the reduced test suite)
+# The suite runs ~30 test cases across 8 chunks (reduced from ~85 cases across
+# 14 chunks). Data providers for HIT and max-age assertions were reduced to
+# 2-3 representative cases each, so all four positive AnonymousCacheHitTest
+# methods now fit in a single chunk. AuthenticatedDynamicCacheTest runs as a
+# single chunk (bill + article providers only). The CacheMissInvalidationTest
+# content type node-edit tests (2 cases) are merged with the related-entity-edit
+# chunk to avoid a near-empty chunk.
+#
+# ADDING A TEST
+# - If the new test belongs to a class that runs as a single chunk
+#   (AuthenticatedDynamicCacheTest or NoCachePoisoningTest), no change is needed.
+# - If the new test is in a split class (AnonymousCacheHitTest or
+#   CacheMissInvalidationTest), add the method name to the relevant filter below.
+# - If you add a new test class, add a new chunk entry at the end.
+#
+# FILTER SYNTAX
+# Each 'filter' value is passed directly to PHPUnit's --filter option.
+# Use the ClassName::(method1|method2) regex format to select specific methods.
+# A bare class name selects all methods in that class.
+
+chunks:
+
+  - label: "AnonymousCacheHitTest (positive — HITs and max-age)"
+    filter: "AnonymousCacheHitTest::(testAnonymousCacheHit|testCacheControlMaxAge|testContentTypeDisplayPageCacheHit|testContentTypeDisplayPageCacheControlMaxAge)"
+
+  - label: "AnonymousCacheHitTest (negative — non-invalidation, top-level pages)"
+    filter: "AnonymousCacheHitTest::(testArticleEdit|testBillEdit|testEventEdit|testPetition)"
+
+  - label: "AnonymousCacheHitTest (negative — non-invalidation, cross-content-type)"
+    filter: "AnonymousCacheHitTest::testContentTypeEdit"
+
+  - label: "AuthenticatedDynamicCacheTest"
+    filter: "AuthenticatedDynamicCacheTest"
+
+  - label: "CacheMissInvalidationTest (top-level pages — homepage and news)"
+    filter: "CacheMissInvalidationTest::(testHomepage|testNewsAndIssues)"
+
+  - label: "CacheMissInvalidationTest (top-level pages — senators, legislation, events, about)"
+    filter: "CacheMissInvalidationTest::(testSenatorsCommittees|testLegislation|testEvents|testAbout)"
+
+  - label: "CacheMissInvalidationTest (content type display pages)"
+    filter: "CacheMissInvalidationTest::(testContentTypeDisplayPage|testArticlePage|testEventPage|testInTheNews|testMeeting|testPublicHearing|testResolution)"
+
+  - label: "NoCachePoisoningTest"
+    filter: "NoCachePoisoningTest"
+

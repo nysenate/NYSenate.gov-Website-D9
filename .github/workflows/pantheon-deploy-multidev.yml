@@ -10,7 +10,7 @@ env:
   GIT_COMMIT_MESSAGE: 'Github Actions Build'
 
 jobs:
-  run_if:
+  deploy_multidev:
     if: startsWith(github.head_ref, 'feature/')
     runs-on: ubuntu-latest
 
@@ -55,7 +55,7 @@ jobs:
           echo PANTHEON_MULTIDEV=$(echo "pr-${{ github.event.pull_request.number }}") >> $GITHUB_ENV
 
       - name: Cache Composer dependencies to make builds faster
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         env:
           cache-name: cache-vendor
         with:
@@ -69,7 +69,7 @@ jobs:
           php_extensions: gd sodium zip
 
       - name: Setup Node with the version set in .nvmrc
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version-file: '${{ vars.THEME_PATH }}/.nvmrc'
           cache: 'npm'
@@ -82,7 +82,7 @@ jobs:
           npm run build
 
       - name: Update NodeJS to version in nys theme via .nvmrc.
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version-file: 'web/themes/custom/nys/.nvmrc'
           cache: 'npm'
@@ -134,12 +134,172 @@ jobs:
           url: https://${{ env.PANTHEON_MULTIDEV }}-${{ vars.PANTHEON_SITE }}.pantheonsite.io
           description: "Code has been deployed to the Pantheon ${{ env.PANTHEON_MULTIDEV }} multidev environment. Clicks details for the link."
 
+  # ---------------------------------------------------------------------------
+  # Cache regression tests
+  #
+  # Runs DTT ExistingSite tests ON the Pantheon multidev container itself via
+  # `terminus remote:drush -- ev`. The test process must run inside the
+  # container because Pantheon's Redis (used for page cache tag checksums) is
+  # not reachable from outside the container network. Running inside ensures
+  # the test process and the web server share the same DB and Redis instance,
+  # so entity saves correctly invalidate cache entries via Redis.
+  #
+  # vendor/bin/phpunit is already present on the container — it was deployed
+  # by the deploy_multidev job — so no Composer install is needed here.
+  #
+  # To run the same tests locally:
+  #   ddev run-cache-tests
+  # ---------------------------------------------------------------------------
+  run_cache_tests:
+    needs: deploy_multidev
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Setup PHP (required to run Terminus)
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ vars.PHP_VERSION }}
+
+      - name: Add the Pantheon SSH Key for the CI user
+        uses: webfactory/ssh-agent@v0.7.0
+        with:
+          ssh-private-key: ${{ secrets.PANTHEON_SSH_PRIVATE_KEY }}
+
+      - name: Disable Pantheon SSH strict host key checking
+        run: 'printf "\nHost *\n\tStrictHostKeyChecking no" >> ~/.ssh/config'
+
+      - name: Install Terminus
+        uses: pantheon-systems/terminus-github-actions@main
+        with:
+          pantheon-machine-token: ${{ secrets.PANTHEON_MACHINE_TOKEN }}
+
+      - name: Set multidev environment name
+        run: echo "PANTHEON_MULTIDEV=pr-${{ github.event.pull_request.number }}" >> $GITHUB_ENV
+
+      - name: Remove 'cache-tests-passed' label if present (will be re-added on success)
+        uses: actions/github-script@v7
+        with:
+          script: |
+            try {
+              await github.rest.issues.removeLabel({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                name: 'cache-tests-passed'
+              });
+            } catch (e) {
+              if (e.status !== 404) throw e;
+              // 404 means the label wasn't present — that's fine
+            }
+
+      - name: Wake up the multidev (Pantheon envs sleep when idle)
+        run: terminus env:wake ${{ vars.PANTHEON_SITE }}.${{ env.PANTHEON_MULTIDEV }}
+
+      - name: Wait for multidev HTTP endpoint to be ready
+        # Polls the homepage until it returns a non-5xx status. Handles the
+        # gap between workflow completion and the appserver accepting requests.
+        # 40 attempts × 30 s = up to 20 minutes total.
+        run: |
+          SITE_URL="https://${{ env.PANTHEON_MULTIDEV }}-${{ vars.PANTHEON_SITE }}.pantheonsite.io"
+          echo "Polling $SITE_URL..."
+          for i in $(seq 1 40); do
+            STATUS=$(curl -sSo /dev/null -w "%{http_code}" --connect-timeout 10 --max-time 30 "$SITE_URL/" 2>/dev/null || echo "000")
+            if [[ "$STATUS" =~ ^[23] ]]; then
+              echo "Site ready (HTTP $STATUS, attempt $i/40)"
+              break
+            fi
+            if [[ $i -eq 40 ]]; then
+              echo "Timed out waiting for site to be ready (last HTTP $STATUS)" >&2
+              exit 1
+            fi
+            echo "Attempt $i/40: HTTP $STATUS — sleeping 30s"
+            sleep 30
+          done
+
+      - name: Run cache regression tests on Pantheon container
+        # Each chunk in test-chunks.yml runs in its own terminus call so that
+        # no single SSH session exceeds Pantheon's connection timeout. Chunks
+        # are pre-loaded into arrays before any terminus call is made — if
+        # terminus opened SSH while a while-read loop was still active, it
+        # would consume bytes from the loop's stdin and silently drop chunks.
+        # Using a plain index for-loop (same pattern as the original working
+        # code) avoids this entirely.
+        #
+        # shell: without -e so a failing terminus call doesn't abort the step
+        # before remaining chunks run. Error accumulation is manual via OVERALL.
+        #
+        # exit() inside drush ev is treated as abnormal termination by Drush,
+        # which overrides the exit code to 1 regardless of the value passed.
+        # Instead, we throw an exception on PHPUnit failure — Drush exits 0
+        # when ev completes normally and 1 when an uncaught exception is thrown,
+        # which maps exactly to pass/fail semantics.
+        shell: bash --noprofile --norc -o pipefail {0}
+        run: |
+          SITE="${{ vars.PANTHEON_SITE }}.${{ env.PANTHEON_MULTIDEV }}"
+          URL="https://${{ env.PANTHEON_MULTIDEV }}-${{ vars.PANTHEON_SITE }}.pantheonsite.io"
+
+          # Parse test-chunks.yml. Fail immediately if parsing fails so we
+          # never silently report success with zero tests run.
+          CHUNKS=$(python3 -c "
+          import yaml
+          chunks = yaml.safe_load(open('tests/dtt/test-chunks.yml'))['chunks']
+          for c in chunks:
+              print(c['label'] + '\t' + c['filter'])
+          ") || { echo "ERROR: Failed to parse tests/dtt/test-chunks.yml"; exit 1; }
+
+          if [[ -z "$CHUNKS" ]]; then
+            echo "ERROR: test-chunks.yml parsed successfully but contained no chunks"
+            exit 1
+          fi
+
+          # Pre-load into arrays. All stdin reads complete here, before any
+          # terminus/SSH call that might otherwise consume remaining stdin bytes.
+          LABELS=()
+          FILTERS=()
+          while IFS=$'\t' read -r LABEL FILTER; do
+            LABELS+=("$LABEL")
+            FILTERS+=("$FILTER")
+          done <<< "$CHUNKS"
+
+          OVERALL=0
+          for i in "${!LABELS[@]}"; do
+            echo "=== ${LABELS[$i]} ==="
+            terminus remote:drush "$SITE" -- \
+              ev "error_reporting(E_ERROR); passthru('bash /code/tests/dtt/run-on-container.sh $URL --filter $(printf '%q' "${FILTERS[$i]}") 2>&1', \$c); if (\$c !== 0) { throw new \Exception('PHPUnit failed with exit code ' . \$c); }" \
+              || OVERALL=$?
+          done
+          exit $OVERALL
+
+      - name: Add 'cache-tests-passed' label to PR
+        if: success()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              labels: ['cache-tests-passed']
+            });
+
+  # ---------------------------------------------------------------------------
+  # Slack notification — always runs after deploy and tests so a single
+  # post per PR reports the outcome of both.
+  # ---------------------------------------------------------------------------
+  notify:
+    needs: [deploy_multidev, run_cache_tests]
+    runs-on: ubuntu-latest
+    if: always() && needs.deploy_multidev.result != 'skipped'
+    steps:
       - name: Post to a Slack channel
-        if: always()
-        id: slack
         uses: slackapi/slack-github-action@v1.24.0
         with:
           channel-id: '${{ vars.SLACK_CHANNEL }}'
-          slack-message: "@${{ github.actor }} is pushing code today and it was a ${{ job.status }}!\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}\nUsing Workflow: ${{ github.workflow }}\nPantheon: https://${{ env.PANTHEON_MULTIDEV }}-${{ vars.PANTHEON_SITE }}.pantheonsite.io"
+          slack-message: "@${{ github.actor }} PR #${{ github.event.pull_request.number }}: ${{ github.event.pull_request.html_url }}\nDeploy: ${{ needs.deploy_multidev.result }}\nCache tests: ${{ needs.run_cache_tests.result }}\nPantheon: https://pr-${{ github.event.pull_request.number }}-${{ vars.PANTHEON_SITE }}.pantheonsite.io"
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}

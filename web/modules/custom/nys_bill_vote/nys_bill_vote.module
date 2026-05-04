@@ -45,23 +45,25 @@ function nys_bill_vote_node_view_alter(array &$build, EntityInterface $entity, E
   // If the entity is a bill, get the form and save it to content.
   $route_node = \Drupal::routeMatch()->getParameter('node');
   if ($type == 'bill') {
-    $bill_vote_form_settings = [
-      'entity_type' => $entity->bundle(),
-      'entity_id' => $entity->id(),
-      'is_embed' => empty($route_node) || $route_node->id() !== $entity->id(),
-      'simple_mode' => FALSE,
-    ];
+    $is_embed = empty($route_node) || $route_node->id() !== $entity->id();
 
     if ($display->getComponent('vote_widget')) {
       $build['vote_widget'] = [
-        'form' => \Drupal::formBuilder()->getForm('Drupal\nys_bill_vote\Form\BillVoteWidgetForm', $bill_vote_form_settings),
+        '#lazy_builder' => [
+          'nys_bill_vote.vote_widget_lazy_builder:renderVoteWidget',
+          [(int) $entity->id(), $is_embed, FALSE],
+        ],
+        '#create_placeholder' => TRUE,
       ];
     }
 
     if ($display->getComponent('vote_widget_simple')) {
-      $bill_vote_form_settings['simple_mode'] = TRUE;
       $build['vote_widget'] = [
-        'form' => \Drupal::formBuilder()->getForm('Drupal\nys_bill_vote\Form\BillVoteWidgetForm', $bill_vote_form_settings),
+        '#lazy_builder' => [
+          'nys_bill_vote.vote_widget_lazy_builder:renderVoteWidget',
+          [(int) $entity->id(), $is_embed, TRUE],
+        ],
+        '#create_placeholder' => TRUE,
       ];
     }
   }

@@ -49,6 +49,7 @@ dependencies:
     - text
     - user
     - views_field_compare
+    - views_custom_cache_tag
     - views_infinite_scroll
 id: committee_meetings
 label: 'Meeting & Public Hearings Views'
@@ -533,8 +534,9 @@ display:
         options:
           perm: 'access content'
       cache:
-        type: tag
-        options: {  }
+        type: custom_tag
+        options:
+          custom_tag: 'node_list:meeting'
       empty: {  }
       sorts:
         field_date_range_end_value:
@@ -5322,6 +5324,7 @@ display:
           1: AND
           2: OR
       defaults:
+        cache: false
         pager: false
         relationships: false
         fields: false
@@ -5330,6 +5333,10 @@ display:
         filters: false
         filter_groups: false
         header: false
+      cache:
+        type: custom_tag
+        options:
+          custom_tag: "node_list:article\nnode_list:in_the_news\nnode_list:video"
       relationships:
         field_committee:
           id: field_committee
@@ -6079,12 +6086,17 @@ display:
         groups:
           1: AND
       defaults:
+        cache: false
         pager: false
         fields: false
         arguments: false
         filters: false
         filter_groups: false
         header: false
+      cache:
+        type: custom_tag
+        options:
+          custom_tag: 'node_list:meeting'
       display_description: ''
       header:
         area:

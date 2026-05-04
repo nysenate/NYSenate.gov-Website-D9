@@ -20,14 +20,16 @@ use weitzman\DrupalTestTraits\ExistingSiteBase;
  * Pantheon environments:
  *  - On local environments (DDEV, VM, etc.), Redis is the page cache backend
  *    and x-drupal-cache is the authoritative header.
- *  - On Pantheon, Fastly sits in front of PHP-FPM. x-cache (Fastly) is the
- *    authoritative header; x-drupal-cache reflects only what PHP-FPM returned
- *    and is stale on subsequent Fastly hits. Cache invalidations must also reach
- *    Fastly via BAN dispatch, which happens in kernel.terminate after a real web
- *    request — not during a CLI entity save. saveViaWebRequest() exists for this
- *    reason: it submits the entity edit form as a real HTTP POST so that
+ *  - On Pantheon (production and multidev), Cloudflare sits in front of
+ *    PHP-FPM. cf-cache-status (Cloudflare) is the authoritative header;
+ *    x-drupal-cache reflects only what PHP-FPM returned and is stale on
+ *    subsequent Cloudflare hits. Cache invalidations must also reach Cloudflare
+ *    via BAN dispatch, which happens in kernel.terminate after a real web
+ *    request — not during a CLI entity save. saveViaWebRequest() exists for
+ *    this reason: it submits the entity edit form as a real HTTP POST so that
  *    kernel.terminate fires and pantheon_advanced_page_cache dispatches BAN
- *    requests for the invalidated cache tags.
+ *    requests for the invalidated cache tags. Pantheon multidev environments
+ *    not yet migrated to Cloudflare fall back to x-cache (Fastly).
  *
  * getCacheStatus() normalises across both environments automatically.
  * assertCacheMissOnSave() encapsulates the canonical warm → HIT → save →
@@ -218,12 +220,13 @@ abstract class CacheTestBase extends ExistingSiteBase {
    * All cache invalidations in this suite are triggered by saveViaWebRequest(),
    * which submits the entity edit form as a real HTTP POST through the full
    * stack. On Pantheon, PHP-FPM fires kernel.terminate after sending the
-   * response, which causes pantheon_advanced_page_cache to dispatch a Fastly
-   * BAN for the invalidated cache tags. There is a short window between the
-   * save completing and Fastly processing the BAN, so this method polls until
-   * x-cache: MISS is confirmed — the same race warmCache() handles in reverse.
+   * response, which causes pantheon_advanced_page_cache to dispatch a BAN for
+   * the invalidated cache tags. There is a short window between the save
+   * completing and Cloudflare processing the BAN, so this method polls until
+   * cf-cache-status: MISS is confirmed — the same race warmCache() handles in
+   * reverse.
    *
-   * On local environments there is no Fastly; getCacheStatus() falls back to
+   * On local environments there is no CDN; getCacheStatus() falls back to
    * x-drupal-cache which reflects the Redis state and returns MISS immediately
    * after a save.
    */
@@ -244,19 +247,31 @@ abstract class CacheTestBase extends ExistingSiteBase {
   }
 
   /**
-   * Normalises the page cache status from whichever header is present.
+   * Normalises the page cache status from whichever CDN header is present.
    *
    * Priority order:
-   *  1. x-cache (Fastly/CDN) — present on Pantheon. This is the authoritative
-   *     signal because Fastly faithfully replays the original x-drupal-cache
-   *     header from the PHP-FPM response, making x-drupal-cache stale on
-   *     subsequent Fastly hits. x-cache may be a comma-separated list
+   *  1. cf-cache-status (Cloudflare) — present on production (www.nysenate.gov)
+   *     and Pantheon multidev environments (all environments are migrating to
+   *     Cloudflare as the CDN layer). This is the authoritative signal.
+   *     Common values: HIT, MISS, DYNAMIC (content not eligible for caching),
+   *     BYPASS (cache skipped due to cookies or Cache-Control: private).
+   *     warmCache() will poll and eventually fail with a descriptive message if
+   *     Cloudflare returns DYNAMIC or BYPASS, indicating the page is not
+   *     publicly cacheable.
+   *  2. x-cache (Fastly) — legacy fallback for Pantheon multidev environments
+   *     not yet migrated to Cloudflare. x-cache may be a comma-separated list
    *     (e.g. "MISS, HIT"); the last token is the most recent CDN result.
-   *  2. x-drupal-cache — present on local environments (DDEV, VM, etc.) where there is no CDN layer.
+   *  3. x-drupal-cache — present on local environments (DDEV, VM, etc.) where
+   *     there is no CDN layer.
    *
-   * Returns 'HIT', 'MISS', or an empty string if neither header is present.
+   * Returns 'HIT', 'MISS', or the raw uppercase value if neither maps to those
+   * (e.g. 'DYNAMIC', 'BYPASS'). Returns an empty string if no header is present.
    */
   private function getCacheStatus(ResponseInterface $response): string {
+    $cfCacheStatus = $response->getHeaderLine('cf-cache-status');
+    if ($cfCacheStatus !== '') {
+      return strtoupper(trim($cfCacheStatus));
+    }
     $xCache = $response->getHeaderLine('x-cache');
     if ($xCache !== '') {
       $parts = array_map('trim', explode(',', $xCache));
@@ -269,11 +284,11 @@ abstract class CacheTestBase extends ExistingSiteBase {
    * Saves an entity by submitting its edit form through the DTT browser.
    *
    * Submitting via real HTTP POST fires kernel.terminate on the web server,
-   * which causes pantheon_advanced_page_cache to dispatch Fastly BAN requests
-   * for any cache tags invalidated by the save. This is required for
-   * assertAnonymousCacheMiss() to observe x-cache: MISS on Pantheon; CLI saves
-   * ($entity->save()) correctly invalidate Redis but never reach Fastly because
-   * kernel.terminate is never fired outside a web request.
+   * which causes pantheon_advanced_page_cache to dispatch BAN requests for any
+   * cache tags invalidated by the save. This is required for
+   * assertAnonymousCacheMiss() to observe cf-cache-status: MISS on Pantheon;
+   * CLI saves ($entity->save()) correctly invalidate Redis but never reach the
+   * CDN because kernel.terminate is never fired outside a web request.
    *
    * The caller must be logged in (e.g. via drupalLogin()) before calling this.
    */
@@ -306,8 +321,8 @@ abstract class CacheTestBase extends ExistingSiteBase {
    *
    * This is the canonical test pattern for cache-miss invalidation: warm the
    * cache for $path, confirm a HIT, save $entity via a real HTTP POST so that
-   * kernel.terminate fires and Fastly BANs are dispatched, then confirm the
-   * page transitions to MISS and back to HIT once re-cached.
+   * kernel.terminate fires and CDN BANs are dispatched, then confirm the page
+   * transitions to MISS and back to HIT once re-cached.
    */
   protected function assertCacheMissOnSave(string $path, EntityInterface $entity): void {
     $this->warmCache($path);

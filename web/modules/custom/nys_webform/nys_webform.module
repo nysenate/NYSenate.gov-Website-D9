@@ -1,0 +1,25 @@
+<?php
+
+/**
+ * @file
+ * NYS Webform custom elements and behaviors.
+ */
+
+/**
+ * Implements hook_page_attachments().
+ */
+function nys_webform_page_attachments(array &$attachments) {
+  $attachments['#attached']['library'][] = 'nys_webform/contact-composite';
+  $attachments['#attached']['library'][] = 'nys_webform/emailable';
+}
+
+/**
+ * Implements hook_theme().
+ */
+function nys_webform_theme() {
+  return [
+    'webform_composite_nys_contact_composite' => [
+      'render element' => 'elements',
+    ],
+  ];
+}

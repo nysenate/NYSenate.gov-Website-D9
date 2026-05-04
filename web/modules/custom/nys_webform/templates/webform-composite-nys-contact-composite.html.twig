@@ -1,0 +1,34 @@
+{% set col_first_name = elements.first_name|render %}
+{% set col_last_name = elements.last_name|render %}
+{% set col_email = elements.email|render %}
+{% set col_phone = elements.phone|render %}
+{% set col_address_line1 = elements.address_line1|render %}
+{% set col_address_line2 = elements.address_line2|render %}
+{% set col_locality = elements.locality|render %}
+{% set col_administrative_area = elements.administrative_area|render %}
+{% set col_postal_code = elements.postal_code|render %}
+
+<div class="nys-contact-composite__group">
+  <div class="nys-contact-composite__group-label">{{ 'Your Name'|t }}</div>
+  <div class="webform-flexbox js-webform-flexbox js-form-wrapper form-wrapper">
+    {% if col_first_name|trim %}<div class="webform-flex webform-flex--1"><div class="webform-flex--container">{{ col_first_name }}</div></div>{% endif %}
+    {% if col_last_name|trim %}<div class="webform-flex webform-flex--1"><div class="webform-flex--container">{{ col_last_name }}</div></div>{% endif %}
+  </div>
+</div>
+
+<div class="nys-contact-composite__group">
+  <div class="nys-contact-composite__group-label">{{ 'Your Contact Information'|t }}</div>
+  <div class="webform-flexbox js-webform-flexbox js-form-wrapper form-wrapper">
+    {% if col_email|trim %}<div class="webform-flex webform-flex--1"><div class="webform-flex--container">{{ col_email }}</div></div>{% endif %}
+    {% if col_phone|trim %}<div class="webform-flex webform-flex--1"><div class="webform-flex--container">{{ col_phone }}</div></div>{% endif %}
+  </div>
+  <div class="webform-flexbox js-webform-flexbox js-form-wrapper form-wrapper">
+    {% if col_address_line1|trim %}<div class="webform-flex webform-flex--1"><div class="webform-flex--container">{{ col_address_line1 }}</div></div>{% endif %}
+    {% if col_address_line2|trim %}<div class="webform-flex webform-flex--1"><div class="webform-flex--container">{{ col_address_line2 }}</div></div>{% endif %}
+  </div>
+  <div class="webform-flexbox js-webform-flexbox js-form-wrapper form-wrapper">
+    {% if col_locality|trim %}<div class="webform-flex webform-flex--2"><div class="webform-flex--container">{{ col_locality }}</div></div>{% endif %}
+    {% if col_administrative_area|trim %}<div class="webform-flex webform-flex--1"><div class="webform-flex--container">{{ col_administrative_area }}</div></div>{% endif %}
+    {% if col_postal_code|trim %}<div class="webform-flex webform-flex--1"><div class="webform-flex--container">{{ col_postal_code }}</div></div>{% endif %}
+  </div>
+</div>

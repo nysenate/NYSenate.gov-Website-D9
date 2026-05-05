@@ -923,6 +923,12 @@ class BillsHelper {
         }
 
         // Did the vote happen during the current session?
+        // $pub_date is guarded before passing to strtotime() because PHP 8.1
+        // deprecated passing null to strtotime(), and a null $pub_date on any
+        // vote paragraph was causing a PHP deprecation warning. That warning
+        // emitted output during page rendering, which set max-age: 0 on the
+        // response and caused the bill page to be marked UNCACHEABLE by
+        // Drupal's page cache layer.
         $pub_date = $vote->field_publication_date->value;
         $vote_year = $pub_date ? (int) date("Y", strtotime($pub_date)) : (int) date("Y");
         if (!($vote_year % 2)) {

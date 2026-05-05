@@ -27,8 +27,6 @@ function nys_webform_webform_submission_form_alter(array &$form, FormStateInterf
  */
 function nys_webform_emailable_validate(array &$form, FormStateInterface $form_state) {
   $api_key = Settings::get('emailable_private_key');
-  // TEMP DEBUG - remove after confirming.
-  \Drupal::logger('nys_webform')->notice('Emailable validate fired. Key found: @found', ['@found' => empty($api_key) ? 'NO' : 'YES']);
   if (empty($api_key)) {
     return;
   }
@@ -44,8 +42,6 @@ function nys_webform_emailable_validate(array &$form, FormStateInterface $form_s
   if (empty($email)) {
     $email = trim($values['email'] ?? '');
   }
-  // TEMP DEBUG - remove after confirming.
-  \Drupal::logger('nys_webform')->notice('Emailable validate email found: "@email"', ['@email' => $email]);
   if (empty($email)) {
     return;
   }

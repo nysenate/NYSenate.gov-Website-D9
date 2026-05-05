@@ -8,3 +8,11 @@
 })(window, document, 'emailable');
 
 emailable('apiKey', 'test_ce0ea4a4ca4b0c0bbe1f');
+
+// Temporary debug listeners — remove once Live key is confirmed working.
+document.addEventListener('emailable:verified', function (e) {
+  console.log('[emailable] verified', e.detail);
+});
+document.addEventListener('emailable:error', function (e) {
+  console.log('[emailable] error', e.detail);
+});

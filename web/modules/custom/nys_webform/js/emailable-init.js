@@ -10,9 +10,15 @@
 emailable('apiKey', 'test_ce0ea4a4ca4b0c0bbe1f');
 
 // Temporary debug listeners — remove once Live key is confirmed working.
-document.addEventListener('emailable:verified', function (e) {
-  console.log('[emailable] verified', e.detail);
-});
-document.addEventListener('emailable:error', function (e) {
-  console.log('[emailable] error', e.detail);
-});
+// Events fire on the input element itself, so use capture phase to catch them.
+document.addEventListener('verified', function (e) {
+  if (e.target && e.target.type === 'email') {
+    console.log('[emailable] verified', e.detail);
+  }
+}, true);
+
+document.addEventListener('error', function (e) {
+  if (e.target && e.target.type === 'email') {
+    console.log('[emailable] error', e.detail);
+  }
+}, true);

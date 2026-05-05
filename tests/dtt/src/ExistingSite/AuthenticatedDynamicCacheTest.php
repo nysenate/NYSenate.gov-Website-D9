@@ -7,25 +7,17 @@ use Drupal\user\Entity\User;
 /**
  * Verifies dynamic page cache behaviour for authenticated users.
  *
- * The dynamic page cache caches full page responses keyed by user context.
- * These tests confirm the properties that are unique to authenticated sessions:
- *
- *  1. A second authenticated visit returns x-drupal-dynamic-cache: HIT.
- *     Verified on two representative top-level pages (/ and /legislation).
- *  2. The dynamic cache skeleton is shared across different authenticated users.
- *  3. Any account change busts that user's warmed entries via the user:{uid} cache tag.
- *  4. Content type display pages cache correctly for authenticated users.
+ *  1. The dynamic page cache skeleton is shared across authenticated users on two
+ *     representative top-level pages (/ and /legislation).
+ *  2. Content type display pages share their dynamic cache skeleton across users.
  *     Verified for bill (distinct lazy builders) and article (standard path).
- *  5. Senator-microsite content type pages (article, event, in_the_news with a
- *     senator ref) cache correctly. These pages render the senator microsite menu
- *     block; the block's search form must be wrapped in a lazy builder to prevent
- *     the CSRF form token from setting max-age: 0 on the full page response.
+ *  3. Senator-microsite content type pages (article with a senator ref, as a
+ *     representative of article/event/in_the_news) share their skeleton across users.
+ *  4. Any account change busts that user's warmed entries via the user:{uid} cache tag.
  *
- * Sampling rationale: all top-level pages and five of the seven content types
- * share identical dynamic cache mechanisms. bill is tested individually because
- * it adds BillVoteWidgetLazyBuilder and BillFormLazyBuilder on top of the
- * site-wide set (UserMenuLazyBuilder, SearchFormLazyBuilder, WantToLazyBuilder);
- * article represents the standard render path for all other types.
+ * All assertions use the cross-user pattern (userA warms, userB must hit) because
+ * a per-user cache bug — caused by a missing #create_placeholder => TRUE on a lazy
+ * builder — would make same-user repeat-visit tests pass while cross-user tests fail.
  *
  * Content-level isolation (follow/unfollow state, user menu) is verified in
  * NoCachePoisoningTest.
@@ -76,60 +68,133 @@ class AuthenticatedDynamicCacheTest extends CacheTestBase {
   }
 
   // ---------------------------------------------------------------------------
-  // Dynamic cache HIT on second visit
+  // Cross-user cache sharing (top-level pages)
   // ---------------------------------------------------------------------------
 
   /**
-   * An authenticated user's second visit to a representative top-level page is a dynamic cache HIT.
+   * A different authenticated user's first visit to a warmed entry is a dynamic cache HIT.
    *
-   * Verified on / and /legislation. All six top-level pages share the same
-   * dynamic page cache stack; a regression in the mechanism would affect all
-   * pages simultaneously, so two representative pages are sufficient.
+   * userA warms the skeleton; userB's first visit must hit it. Content-level
+   * isolation (personalised fragments such as the user menu) is verified in
+   * NoCachePoisoningTest.
    *
    * @dataProvider representativeTopLevelPageProvider
    */
-  public function testConstituentSecondVisitIsDynamicCacheHit(string $path): void {
+  public function testDynamicCacheSharedAcrossUsers(string $path): void {
+    // userA: first visit must be a MISS (cold cache — no skeleton stored yet).
     $this->drupalLogin($this->userA);
+    $this->assertDynamicCacheMiss($path);
+    $this->drupalLogout();
 
-    // First visit — warms the dynamic cache entry for this user/path.
-    $this->visit($path);
-
-    // Second visit — must be served from dynamic cache.
+    // userB: must hit the skeleton stored by userA's visit.
+    $this->drupalLogin($this->userB);
     $this->assertDynamicCacheHit($path);
+    $this->drupalLogout();
+  }
+
+  /**
+   * Data provider: two representative top-level pages.
+   *
+   * / and /legislation cover the home page and a content-heavy top-level page.
+   * All six top-level pages share the same dynamic page cache mechanism, so
+   * two representatives are sufficient to detect a regression.
+   */
+  public static function representativeTopLevelPageProvider(): array {
+    return [
+      '/'            => ['/'],
+      '/legislation' => ['/legislation'],
+    ];
   }
 
   // ---------------------------------------------------------------------------
-  // Shared dynamic cache skeleton across users
+  // Cross-user cache sharing (content type display pages)
   // ---------------------------------------------------------------------------
 
   /**
-   * The dynamic page cache skeleton is correctly shared across authenticated users.
+   * Content type display page skeletons are shared across authenticated users.
    *
-   * Drupal's dynamic page cache stores the full rendered response — including
-   * lazy builder placeholders — after the first visit. All subsequent users
-   * receive x-drupal-dynamic-cache: HIT; their lazy builder elements are then
-   * resolved per-user outside the cache.
+   * A missing #create_placeholder => TRUE on any lazy builder causes user cache
+   * contexts to bubble into the skeleton key, producing per-user entries. bill
+   * is tested because it has the most lazy builders (BillVoteWidgetLazyBuilder,
+   * BillFormLazyBuilder, plus the site-wide set); article covers the standard
+   * path shared by all other content types.
    *
-   * Therefore:
-   *  - userA's first visit (cold cache) returns MISS.
-   *  - A second user's first visit hits the now-warm entry and returns HIT.
-   *
-   * Content-level isolation is verified separately in NoCachePoisoningTest.
+   * @dataProvider representativeContentTypePageProvider
    */
-  public function testDynamicCacheSharedAcrossUsers(): void {
-    foreach (['/', '/senators-committees'] as $path) {
-      // userA: first visit must be a MISS (cold cache — no entry exists yet).
-      $this->drupalLogin($this->userA);
-      $this->assertDynamicCacheMiss($path);
-      $this->drupalLogout();
+  public function testContentTypeDisplayPageDynamicCacheSharedAcrossUsers(string $type): void {
+    $path = $this->requireNodeUrlByType($type);
 
-      // userB: HIT is expected. The dynamic page cache entry is shared across
-      // users; only lazy builder placeholders are resolved per-user outside
-      // the cache.
-      $this->drupalLogin($this->userB);
-      $this->assertDynamicCacheHit($path);
-      $this->drupalLogout();
-    }
+    // userA: first visit must be a MISS (cold cache — no skeleton stored yet).
+    $this->drupalLogin($this->userA);
+    $this->assertDynamicCacheMiss($path);
+    $this->drupalLogout();
+
+    // userB: must hit the skeleton stored by userA's visit.
+    $this->drupalLogin($this->userB);
+    $this->assertDynamicCacheHit($path);
+    $this->drupalLogout();
+  }
+
+  /**
+   * Data provider: bill and one representative content type.
+   *
+   * bill is architecturally distinct — it embeds BillVoteWidgetLazyBuilder
+   * and BillFormLazyBuilder on top of the site-wide lazy builder set
+   * (UserMenuLazyBuilder, SearchFormLazyBuilder, WantToLazyBuilder). article
+   * represents the standard render path shared by the other six types. Together
+   * they verify both lazy builder configurations present across all primary
+   * content type display pages.
+   */
+  public static function representativeContentTypePageProvider(): array {
+    return [
+      'bill'    => ['bill'],
+      'article' => ['article'],
+    ];
+  }
+
+  // ---------------------------------------------------------------------------
+  // Cross-user cache sharing (senator-microsite pages)
+  // ---------------------------------------------------------------------------
+
+  /**
+   * Senator-microsite page skeletons are shared across authenticated users.
+   *
+   * Regression guard for the GlobalSearchForm lazy builder fix in
+   * nysenate_theme_preprocess_senator_microsite_menu_block(). Without the lazy
+   * builder, the CSRF form token's max-age: 0 bubbles to the response level,
+   * making the page UNCACHEABLE — causing both same-user and cross-user
+   * assertions to fail.
+   *
+   * @dataProvider senatorMicrositeContentTypeProvider
+   */
+  public function testSenatorMicrositeContentTypeDynamicCacheSharedAcrossUsers(string $type): void {
+    $path = $this->requireSenatorTaggedNodeUrlByType($type);
+
+    // userA: first visit must be a MISS (cold cache — no skeleton stored yet).
+    $this->drupalLogin($this->userA);
+    $this->assertDynamicCacheMiss($path);
+    $this->drupalLogout();
+
+    // userB: must hit the skeleton stored by userA's visit.
+    $this->drupalLogin($this->userB);
+    $this->assertDynamicCacheHit($path);
+    $this->drupalLogout();
+  }
+
+  /**
+   * Data provider: one representative senator-microsite content type.
+   *
+   * article, event and in_the_news all receive the page__node__microsite_page
+   * template suggestion when field_senator_multiref is populated, triggering
+   * the same senator microsite menu block and hero block. The fix being guarded
+   * (GlobalSearchForm lazy builder in nysenate_theme_preprocess_senator_microsite_menu_block)
+   * contains no per-type branching, so a regression would affect all three
+   * simultaneously. article is tested as the representative type.
+   */
+  public static function senatorMicrositeContentTypeProvider(): array {
+    return [
+      'article' => ['article'],
+    ];
   }
 
   // ---------------------------------------------------------------------------
@@ -158,149 +223,6 @@ class AuthenticatedDynamicCacheTest extends CacheTestBase {
 
     // Next visit must be a MISS — the warmed entry has been invalidated.
     $this->assertDynamicCacheMiss('/');
-  }
-
-  // ---------------------------------------------------------------------------
-  // Content type display pages — per-user dynamic cache HIT
-  // ---------------------------------------------------------------------------
-
-  /**
-   * Representative content type display pages cache correctly per authenticated user.
-   *
-   * Drupal's dynamic page cache stores the page SKELETON (containing render
-   * placeholders for lazy builders) keyed by cache contexts that exclude the
-   * individual user. On the first authenticated visit, the skeleton is stored
-   * (MISS). On the second visit by the SAME user the skeleton is served from
-   * cache (HIT), and the lazy builders are resolved afresh per request.
-   *
-   * bill and article are tested. bill is architecturally distinct: it embeds
-   * BillVoteWidgetLazyBuilder and BillFormLazyBuilder on top of the site-wide
-   * set (UserMenuLazyBuilder, SearchFormLazyBuilder, WantToLazyBuilder). article
-   * represents the standard render path shared by all other content types.
-   *
-   * @dataProvider representativeContentTypePageProvider
-   */
-  public function testContentTypeDisplayPageDynamicCacheHit(string $type): void {
-    $path = $this->requireNodeUrlByType($type);
-
-    $this->drupalLogin($this->userA);
-
-    // First visit — warms the dynamic page cache skeleton.
-    $this->assertDynamicCacheMiss($path);
-
-    // Second visit by the same user — skeleton served from cache.
-    $this->assertDynamicCacheHit($path);
-  }
-
-  /**
-   * The dynamic page cache skeleton is shared across authenticated users for representative content types.
-   *
-   * Because lazy builders prevent their per-user cache contexts from bubbling
-   * to the page skeleton, the dynamic page cache stores a single entry that is
-   * reused regardless of which authenticated user visits next. The lazy
-   * builders resolve the user-specific fragment (vote widget, bill form, user
-   * menu) outside the cache for every request.
-   *
-   * bill and article are tested. A missing #create_placeholder => TRUE on any
-   * lazy builder causes the user context to bubble, breaking skeleton sharing.
-   * bill has the most lazy builders; article covers the standard path. If
-   * sharing works for both, it works for all seven content types.
-   *
-   * @dataProvider representativeContentTypePageProvider
-   */
-  public function testContentTypeDisplayPageDynamicCacheSharedAcrossUsers(string $type): void {
-    $path = $this->requireNodeUrlByType($type);
-
-    // userA: first visit must be a MISS (cold cache — no skeleton stored yet).
-    $this->drupalLogin($this->userA);
-    $this->assertDynamicCacheMiss($path);
-    $this->drupalLogout();
-
-    // userB: must hit the skeleton stored by userA's visit.
-    $this->drupalLogin($this->userB);
-    $this->assertDynamicCacheHit($path);
-    $this->drupalLogout();
-  }
-
-  // ---------------------------------------------------------------------------
-  // Data providers
-  // ---------------------------------------------------------------------------
-
-  /**
-   * Data provider: two representative top-level pages.
-   *
-   * / and /legislation cover the home page and a content-heavy top-level page.
-   * All six top-level pages share the same dynamic page cache mechanism, so
-   * two representatives are sufficient to detect a regression.
-   */
-  public static function representativeTopLevelPageProvider(): array {
-    return [
-      '/'            => ['/'],
-      '/legislation' => ['/legislation'],
-    ];
-  }
-
-  /**
-   * Data provider: bill and one representative content type.
-   *
-   * bill is architecturally distinct — it embeds BillVoteWidgetLazyBuilder
-   * and BillFormLazyBuilder on top of the site-wide lazy builder set
-   * (UserMenuLazyBuilder, SearchFormLazyBuilder, WantToLazyBuilder). article
-   * represents the standard render path shared by the other six types. Together
-   * they verify both lazy builder configurations present across all primary
-   * content type display pages.
-   */
-  public static function representativeContentTypePageProvider(): array {
-    return [
-      'bill'    => ['bill'],
-      'article' => ['article'],
-    ];
-  }
-
-  // ---------------------------------------------------------------------------
-  // Senator-microsite content type pages — dynamic cache HIT
-  // ---------------------------------------------------------------------------
-
-  /**
-   * Senator-tagged content type pages cache correctly for authenticated users.
-   *
-   * article, event and in_the_news nodes that reference a senator term render
-   * the senator microsite menu block and senator microsite hero block in
-   * addition to the standard page layout. The microsite menu block renders the
-   * GlobalSearchForm via a lazy builder (SearchFormLazyBuilder) so that the
-   * CSRF token-bearing form_token element is deferred past the page cache
-   * layer. Without the lazy builder the form_token's max-age: 0 bubbles to the
-   * response level, causing UNCACHEABLE (poor cacheability) for all users.
-   *
-   * This test acts as a regression guard for that fix.
-   *
-   * @dataProvider senatorMicrositeContentTypeProvider
-   */
-  public function testSenatorMicrositeContentTypeDynamicCacheHit(string $type): void {
-    $path = $this->requireSenatorTaggedNodeUrlByType($type);
-
-    $this->drupalLogin($this->userA);
-
-    // First visit — warms the dynamic page cache skeleton.
-    $this->assertDynamicCacheMiss($path);
-
-    // Second visit — skeleton served from dynamic cache.
-    $this->assertDynamicCacheHit($path);
-  }
-
-  /**
-   * Data provider: senator-microsite content types.
-   *
-   * article, event and in_the_news are the three content types that receive
-   * the page__node__microsite_page template suggestion when field_senator_multiref
-   * is populated, triggering the senator microsite menu block and hero block.
-   */
-  public static function senatorMicrositeContentTypeProvider(): array {
-    return [
-      'article'     => ['article'],
-      'event'       => ['event'],
-      'in_the_news' => ['in_the_news'],
-    ];
   }
 
 }

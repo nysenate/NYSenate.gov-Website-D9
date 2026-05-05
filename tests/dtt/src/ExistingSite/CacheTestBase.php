@@ -97,14 +97,14 @@ abstract class CacheTestBase extends ExistingSiteBase {
   /**
    * Data provider supplying the 6 top-level paths as named PHPUnit datasets.
    */
-  public function topLevelPageProvider(): array {
+  public static function topLevelPageProvider(): array {
     return $this->asProvider(self::TOP_LEVEL_PAGES);
   }
 
   /**
    * Data provider supplying all 7 primary content type names as named datasets.
    */
-  public function contentTypeProvider(): array {
+  public static function contentTypeProvider(): array {
     return $this->asProvider(self::PRIMARY_CONTENT_TYPES);
   }
 
@@ -480,7 +480,7 @@ abstract class CacheTestBase extends ExistingSiteBase {
    * Using the path as both key and value gives readable output in test results
    * ("data set '/about'" instead of "data set #3").
    */
-  protected function asProvider(array $paths): array {
+  protected static function asProvider(array $paths): array {
     return array_combine($paths, array_chunk($paths, 1));
   }
 

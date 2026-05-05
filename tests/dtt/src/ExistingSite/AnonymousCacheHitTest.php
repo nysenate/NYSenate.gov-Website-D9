@@ -15,7 +15,7 @@ use Drupal\user\UserInterface;
  *
  * Non-invalidation (negative cases):
  *  - Editing article, bill, event, or petition nodes must not bust unrelated
- *    top-level navigation pages (full four-type coverage retained).
+ *    top-level navigation pages.
  *
  * The complement (cache MISS when the relevant content changes) lives in
  * CacheMissInvalidationTest.
@@ -65,7 +65,7 @@ class AnonymousCacheHitTest extends CacheTestBase {
    * The max-age assertion is folded in here rather than standing
    * alone because both properties are observable in the same warm GET request.
    *
-   * @dataProvider representativeTopLevelPageProvider
+   * @dataProvider topLevelPageProvider
    */
   public function testAnonymousCacheHit(string $path): void {
     $this->warmCache($path);
@@ -77,12 +77,10 @@ class AnonymousCacheHitTest extends CacheTestBase {
    * All seven content type display pages return a cache HIT and declare a
    * 24-hour public cache lifetime on the second anonymous request.
    *
-   * Full coverage is warranted because individual blocks or lazy builders on a
-   * single content type's template can break caching for that type only without
-   * affecting others. The max-age assertion is folded in here because both
+   * The max-age assertion is folded in here because both
    * properties are observable in the same warm GET request.
    *
-   * @dataProvider representativeContentTypeProvider
+   * @dataProvider contentTypeProvider
    */
   public function testContentTypeDisplayPageCacheHit(string $type): void {
     $path = $this->requireNodeUrlByType($type);
@@ -162,39 +160,4 @@ class AnonymousCacheHitTest extends CacheTestBase {
     }
   }
 
-  // ---------------------------------------------------------------------------
-  // Data providers
-  // ---------------------------------------------------------------------------
-
-  /**
-   * Data provider: all six top-level pages.
-   */
-  public static function representativeTopLevelPageProvider(): array {
-    return [
-      '/'                    => ['/'],
-      '/news-and-issues'     => ['/news-and-issues'],
-      '/senators-committees' => ['/senators-committees'],
-      '/legislation'         => ['/legislation'],
-      '/events'              => ['/events'],
-      '/about'               => ['/about'],
-    ];
-  }
-
-  /**
-   * Data provider: all seven primary content types.
-   */
-  public static function representativeContentTypeProvider(): array {
-    return [
-      'article'       => ['article'],
-      'bill'          => ['bill'],
-      'event'         => ['event'],
-      'in_the_news'   => ['in_the_news'],
-      'meeting'       => ['meeting'],
-      'public_hearing' => ['public_hearing'],
-      'resolution'    => ['resolution'],
-    ];
-  }
-
-
 }
-

@@ -34,7 +34,7 @@
 chunks:
 
   - label: "AnonymousCacheHitTest (positive — HITs and max-age)"
-    filter: "AnonymousCacheHitTest::(testAnonymousCacheHit|testCacheControlMaxAge|testContentTypeDisplayPageCacheHit|testContentTypeDisplayPageCacheControlMaxAge)"
+    filter: "AnonymousCacheHitTest::(testAnonymousCacheHit|testContentTypeDisplayPageCacheHit)"
 
   - label: "AnonymousCacheHitTest (negative — non-invalidation, top-level pages)"
     filter: "AnonymousCacheHitTest::(testArticleEdit|testBillEdit|testEventEdit|testPetition)"

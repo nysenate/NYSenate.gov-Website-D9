@@ -227,8 +227,7 @@ jobs:
         # are pre-loaded into arrays before any terminus call is made — if
         # terminus opened SSH while a while-read loop was still active, it
         # would consume bytes from the loop's stdin and silently drop chunks.
-        # Using a plain index for-loop (same pattern as the original working
-        # code) avoids this entirely.
+        # Using a plain index for-loop avoids this entirely.
         #
         # shell: without -e so a failing terminus call doesn't abort the step
         # before remaining chunks run. Error accumulation is manual via OVERALL.

@@ -5,17 +5,18 @@ namespace Drupal\Tests\nys\ExistingSite;
 use Drupal\user\UserInterface;
 
 /**
- * Verifies anonymous page cache (x-drupal-cache) behavior.
+ * Verifies anonymous page cache behavior.
  *
- * Cache HITs and max-age assertions (sampled, not exhaustive):
- *  - Two representative top-level pages (/ and /legislation) verify the
- *    global HIT mechanism. All six pages share the same Drupal page cache
- *    stack; a failure would affect all simultaneously.
- *  - Three representative content types (article, bill, event) verify the
- *    same for content type display pages.
- *  - cache-control: max-age=86400, public is verified on one representative
- *    page and one content type display page. This is a single global
- *    system.performance setting; exhaustive repetition adds no coverage.
+ * Cache HITs and max-age assertions (exhaustive):
+ *  - All six top-level pages verify the global HIT mechanism and that each
+ *    declares cache-control: max-age=86400, public. All six pages share the
+ *    same Drupal page cache stack; a failure in the caching mechanism or
+ *    max-age configuration would affect all simultaneously.
+ *  - All seven primary content types verify the same for content type display
+ *    pages. Full coverage is warranted because individual blocks or lazy
+ *    builders on a single content type's template can silently break caching
+ *    for that type only, as demonstrated by the senator microsite menu block
+ *    regression (NYS-386).
  *
  * Non-invalidation (negative cases):
  *  - Editing article, bill, event, or petition nodes must not bust unrelated
@@ -43,7 +44,7 @@ class AnonymousCacheHitTest extends CacheTestBase {
    *
    * Creates an admin user and logs in so that saveViaWebRequest() is available
    * for the negative-case tests. Web-based saves are used (not $entity->save())
-   * to ensure kernel.terminate fires and Fastly BANs are dispatched before the
+   * to ensure kernel.terminate fires and CDN BANs are dispatched before the
    * next warmCache() poll, eliminating the race that causes spurious failures
    * when CLI saves interact with the full test suite's warm-cache state.
    */
@@ -66,28 +67,32 @@ class AnonymousCacheHitTest extends CacheTestBase {
   // ---------------------------------------------------------------------------
 
   /**
-   * Two representative top-level pages return x-drupal-cache: HIT on the second anonymous request.
+   * All six top-level pages return a cache HIT and declare a 24-hour public
+   * cache lifetime on the second anonymous request.
    *
-   * / and /legislation are tested. All six top-level pages share the same
-   * Drupal page cache stack, configured by a single system.performance
-   * max_age setting. A regression in the caching mechanism would affect all
-   * pages simultaneously, so two representatives are sufficient.
+   * Full coverage is used because all six pages share the same Drupal page
+   * cache stack and system.performance max_age setting — a regression in either
+   * would affect all pages simultaneously, so the marginal cost of testing all
+   * six is low. The max-age assertion is folded in here rather than standing
+   * alone because both properties are observable in the same warm GET request.
    *
    * @dataProvider representativeTopLevelPageProvider
    */
   public function testAnonymousCacheHit(string $path): void {
     $this->warmCache($path);
     $this->assertAnonymousCacheHit($path);
+    $this->assertCacheControlMaxAge($path, 86400);
   }
 
   /**
-   * Representative content type display pages return a cache HIT on the second anonymous request.
+   * All seven content type display pages return a cache HIT and declare a
+   * 24-hour public cache lifetime on the second anonymous request.
    *
-   * article, bill, and event are tested. bill is architecturally distinct
-   * (BillVoteWidgetLazyBuilder + BillFormLazyBuilder); article and event
-   * represent the standard render path shared by all other types. All seven
-   * types use the same Drupal page cache stack, so three representatives
-   * are sufficient to detect a regression in the caching mechanism.
+   * Full coverage is warranted because individual blocks or lazy builders on a
+   * single content type's template can break caching for that type only without
+   * affecting others — as demonstrated by the senator microsite menu block
+   * regression (NYS-386). The max-age assertion is folded in here because both
+   * properties are observable in the same warm GET request.
    *
    * @dataProvider representativeContentTypeProvider
    */
@@ -95,34 +100,6 @@ class AnonymousCacheHitTest extends CacheTestBase {
     $path = $this->requireNodeUrlByType($type);
     $this->warmCache($path);
     $this->assertAnonymousCacheHit($path);
-  }
-
-  // ---------------------------------------------------------------------------
-  // 24-hour public cache lifetime
-  // ---------------------------------------------------------------------------
-
-  /**
-   * The homepage declares a 24-hour public cache lifetime.
-   *
-   * Verified on / as a single representative case. cache-control:
-   * max-age=86400, public is set globally by system.performance and applies
-   * uniformly to all pages; repeating the assertion for every top-level
-   * page would not catch any additional regression.
-   */
-  public function testCacheControlMaxAge(): void {
-    $this->assertCacheControlMaxAge('/', 86400);
-  }
-
-  /**
-   * An article display page declares a 24-hour public cache lifetime.
-   *
-   * Verified on article as a single representative case. cache-control:
-   * max-age=86400, public is set globally by system.performance and applies
-   * uniformly to all content type display pages; repeating the assertion
-   * across all seven types would not catch any additional regression.
-   */
-  public function testContentTypeDisplayPageCacheControlMaxAge(): void {
-    $path = $this->requireNodeUrlByType('article');
     $this->assertCacheControlMaxAge($path, 86400);
   }
 
@@ -273,38 +250,31 @@ class AnonymousCacheHitTest extends CacheTestBase {
   // ---------------------------------------------------------------------------
 
   /**
-   * Data provider: two representative top-level pages.
-   *
-   * / and /legislation are chosen as representatives. All six top-level pages
-   * share the same Drupal page cache stack configured by a single
-   * system.performance max_age setting. A failure in the caching mechanism
-   * would affect all pages simultaneously, so two representatives are
-   * sufficient for HIT and max-age assertions. The full six-page set continues
-   * to be exercised implicitly by the non-invalidation tests, which require
-   * per-page specificity to verify the cache tag graph.
+   * Data provider: all six top-level pages.
    */
   public static function representativeTopLevelPageProvider(): array {
     return [
-      '/'            => ['/'],
-      '/legislation' => ['/legislation'],
+      '/'                    => ['/'],
+      '/news-and-issues'     => ['/news-and-issues'],
+      '/senators-committees' => ['/senators-committees'],
+      '/legislation'         => ['/legislation'],
+      '/events'              => ['/events'],
+      '/about'               => ['/about'],
     ];
   }
 
   /**
-   * Data provider: three representative content types.
-   *
-   * article, bill, and event are chosen. bill is architecturally distinct —
-   * it embeds BillVoteWidgetLazyBuilder and BillFormLazyBuilder on top of the
-   * site-wide lazy builder set. article and event represent the standard render
-   * path shared by all other types. All seven types use the same Drupal page
-   * cache stack, so these three are sufficient to detect a regression in the
-   * caching or max-age mechanism.
+   * Data provider: all seven primary content types.
    */
   public static function representativeContentTypeProvider(): array {
     return [
-      'article' => ['article'],
-      'bill'    => ['bill'],
-      'event'   => ['event'],
+      'article'       => ['article'],
+      'bill'          => ['bill'],
+      'event'         => ['event'],
+      'in_the_news'   => ['in_the_news'],
+      'meeting'       => ['meeting'],
+      'public_hearing' => ['public_hearing'],
+      'resolution'    => ['resolution'],
     ];
   }
 

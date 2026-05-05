@@ -1,23 +1,22 @@
 # Cache Regression Tests (DTT)
 
-Automated cache regression tests for NYSenate.gov, built on [Drupal Test Traits](https://gitlab.com/weitzman/drupal-test-traits) (DTT) `ExistingSiteBase`. Unlike `BrowserTestBase` — which installs a fresh Drupal database and uses an internal test client — DTT's `ExistingSiteBase` makes real HTTP requests to an already-running site. This means responses pass through the actual cache infrastructure (Redis, Fastly) and carry real cache headers (`x-drupal-cache`, `x-drupal-dynamic-cache`, `cache-control`, `x-cache`) that reflect production behavior.
+Automated cache regression tests for NYSenate.gov, built on [Drupal Test Traits](https://gitlab.com/weitzman/drupal-test-traits) (DTT) `ExistingSiteBase`. Unlike `BrowserTestBase` — which installs a fresh Drupal database and uses an internal test client — DTT's `ExistingSiteBase` makes real HTTP requests to an already-running site. This means responses pass through the actual cache infrastructure (Redis, Cloudflare) and carry real cache headers (`x-drupal-cache`, `x-drupal-dynamic-cache`, `cache-control`, `cf-cache-status`) that reflect production behavior.
 
 The suite is designed to exercise the full cache stack on both local and Pantheon environments:
 - **DDEV / VM:** Redis is the page cache backend. `x-drupal-cache` is the authoritative cache status header.
-- **Pantheon:** Fastly sits in front of PHP-FPM. `x-cache` (Fastly) is the authoritative header — `x-drupal-cache` reflects only what PHP-FPM returned and is stale on subsequent Fastly hits. Cache invalidations must also reach Fastly via BAN dispatch, which happens in `kernel.terminate` after a real web request. `saveViaWebRequest()` exists for this reason: it submits entity edit forms as real HTTP POSTs so `pantheon_advanced_page_cache` dispatches BAN requests for the invalidated cache tags.
+- **Pantheon (production and multidev):** Cloudflare sits in front of PHP-FPM. `cf-cache-status` (Cloudflare) is the authoritative header — `x-drupal-cache` reflects only what PHP-FPM returned and is stale on subsequent Cloudflare hits. Cache invalidations must also reach Cloudflare via BAN dispatch, which happens in `kernel.terminate` after a real web request. `saveViaWebRequest()` exists for this reason: it submits entity edit forms as real HTTP POSTs so `pantheon_advanced_page_cache` dispatches BAN requests for the invalidated cache tags. Pantheon multidev environments not yet migrated to Cloudflare fall back to `x-cache` (Fastly).
 
-`CacheTestBase::getCacheStatus()` normalises across both environments automatically.
+`CacheTestBase::getCacheStatus()` normalises across all environments automatically.
 
 ## What these tests ensure
 
 **Anonymous page cache** (`AnonymousCacheHitTest`)
-- All 6 top-level navigation pages return `x-drupal-cache: HIT` after the first request.
-- All 7 primary content type display pages (article, bill, event, in_the_news, meeting, public_hearing, resolution) return `x-drupal-cache: HIT` after the first request.
-- All 13 of those pages declare a 24-hour `cache-control: max-age=86400, public` lifetime.
+- All 6 top-level navigation pages return a CDN cache HIT (`cf-cache-status: HIT` on Cloudflare environments, `x-drupal-cache: HIT` on local) after the first request, and each declares `cache-control: max-age=86400, public`. Full coverage is used because a regression in the caching mechanism or max-age configuration would affect all pages simultaneously.
+- All 7 primary content type display pages (article, bill, event, in_the_news, meeting, public_hearing, resolution) return a cache HIT and declare a 24-hour `cache-control: max-age=86400, public` lifetime. Full coverage is warranted because individual blocks or lazy builders on a single content type's template can break caching for that type only without affecting others — as demonstrated by the senator microsite menu block regression (NYS-386).
 - Editing article, bill, or event nodes does not invalidate top-level pages that those content types do not feed (cross-invalidation negative cases).
 - Editing a petition does not invalidate any top-level page.
 - Saving a node of one primary content type does not invalidate the display page of any other primary content type.
-- All content-type edits in these negative cases are submitted via the entity edit form (same mechanism as `CacheMissInvalidationTest`) to ensure Fastly BAN dispatch is deterministic and avoid race conditions from synchronous CLI saves.
+- All content-type edits in these negative cases are submitted via the entity edit form (same mechanism as `CacheMissInvalidationTest`) to ensure CDN BAN dispatch is deterministic and avoid race conditions from synchronous CLI saves.
 
 **Cache invalidation** (`CacheMissInvalidationTest`)
 - All invalidation tests follow the canonical `assertCacheMissOnSave($path, $entity)` sequence: warm cache → assert HIT → save entity via HTTP POST → assert MISS → assert HIT (re-cached).

@@ -9,13 +9,13 @@ use Drupal\user\UserInterface;
 /**
  * Verifies that cache is invalidated (MISS) when relevant content changes.
  *
- * Top-level pages:
- *  - / is invalidated by article edits, event edits, and homepage_hero queue changes.
- *  - /news-and-issues is invalidated by article edits.
- *  - /senators-committees is invalidated by senator or committee term edits.
- *  - /legislation is invalidated by bill edits.
- *  - /events is invalidated by event node edits.
- *  - /about is invalidated by landing page node edits and embedded block_content edits.
+ * Top-level pages (sampled by trigger type):
+ *  - Article edits invalidate / and /news-and-issues.
+ *  - Event edits invalidate / and /events.
+ *  - Senator/committee term edits invalidate /senators-committees.
+ *  - Bill edits invalidate /legislation.
+ *  - Landing page node and embedded block_content edits invalidate /about.
+ *  - The homepage_hero entity subqueue invalidates / on queue change.
  *
  * Content type display pages — node edit (sampled):
  *  - bill and article display pages are invalidated when the node is saved.
@@ -62,7 +62,7 @@ class CacheMissInvalidationTest extends CacheTestBase {
   }
 
   // ---------------------------------------------------------------------------
-  // Homepage ( / )
+  // Top-level pages
   // ---------------------------------------------------------------------------
 
   /**
@@ -128,10 +128,6 @@ class CacheMissInvalidationTest extends CacheTestBase {
     $this->assertAnonymousCacheHit('/');
   }
 
-  // ---------------------------------------------------------------------------
-  // /news-and-issues
-  // ---------------------------------------------------------------------------
-
   /**
    * Editing an article invalidates /news-and-issues (articles feed the page views).
    */
@@ -140,10 +136,6 @@ class CacheMissInvalidationTest extends CacheTestBase {
 
     $this->assertCacheMissOnSave('/news-and-issues', $article);
   }
-
-  // ---------------------------------------------------------------------------
-  // /senators-committees
-  // ---------------------------------------------------------------------------
 
   /**
    * Editing a senator term invalidates /senators-committees.
@@ -163,10 +155,6 @@ class CacheMissInvalidationTest extends CacheTestBase {
     $this->assertCacheMissOnSave('/senators-committees', $committee);
   }
 
-  // ---------------------------------------------------------------------------
-  // /legislation
-  // ---------------------------------------------------------------------------
-
   /**
    * Editing a bill node invalidates /legislation.
    */
@@ -176,10 +164,6 @@ class CacheMissInvalidationTest extends CacheTestBase {
     $this->assertCacheMissOnSave('/legislation', $bill);
   }
 
-  // ---------------------------------------------------------------------------
-  // /events
-  // ---------------------------------------------------------------------------
-
   /**
    * Editing an event node invalidates /events.
    */
@@ -188,10 +172,6 @@ class CacheMissInvalidationTest extends CacheTestBase {
 
     $this->assertCacheMissOnSave('/events', $event);
   }
-
-  // ---------------------------------------------------------------------------
-  // /about and shared landing page patterns
-  // ---------------------------------------------------------------------------
 
   /**
    * Editing a landing page node invalidates that page.
@@ -248,10 +228,6 @@ class CacheMissInvalidationTest extends CacheTestBase {
 
   /**
    * Editing a senator term referenced by an article invalidates its display page.
-   *
-   * Article display pages carry taxonomy_term:{tid} tags for each senator
-   * referenced via field_senator_multiref. Saving the referenced senator term
-   * must invalidate those tags and bust the page.
    */
   public function testArticlePageMissOnSenatorEdit(): void {
     [$article, $senator] = $this->requireNodeAndValidTermByField('article', 'field_senator_multiref');
@@ -262,9 +238,6 @@ class CacheMissInvalidationTest extends CacheTestBase {
 
   /**
    * Editing a committee term referenced by an event invalidates its display page.
-   *
-   * Event display pages carry taxonomy_term:{tid} for field_committee. Saving
-   * the referenced committee term must bust the page.
    */
   public function testEventPageMissOnCommitteeEdit(): void {
     $event = $this->requireNodeByTypeWithField('event', 'field_committee');
@@ -276,8 +249,6 @@ class CacheMissInvalidationTest extends CacheTestBase {
 
   /**
    * Editing a senator term referenced by an in_the_news node invalidates its display page.
-   *
-   * in_the_news display pages carry taxonomy_term:{tid} for field_senator_multiref.
    */
   public function testInTheNewsPageMissOnSenatorEdit(): void {
     [$node, $senator] = $this->requireNodeAndValidTermByField('in_the_news', 'field_senator_multiref');
@@ -288,9 +259,6 @@ class CacheMissInvalidationTest extends CacheTestBase {
 
   /**
    * Editing a committee term referenced by a meeting invalidates its display page.
-   *
-   * Meeting display pages carry taxonomy_term:{tid} for field_committee, both
-   * directly on the node and via embedded committee_meetings views.
    */
   public function testMeetingPageMissOnCommitteeEdit(): void {
     $meeting = $this->requireNodeByTypeWithField('meeting', 'field_committee');
@@ -302,8 +270,6 @@ class CacheMissInvalidationTest extends CacheTestBase {
 
   /**
    * Editing a committee term referenced by a public hearing invalidates its display page.
-   *
-   * Public hearing display pages carry taxonomy_term:{tid} for field_committee.
    */
   public function testPublicHearingPageMissOnCommitteeEdit(): void {
     $node = $this->requireNodeByTypeWithField('public_hearing', 'field_committee');
@@ -314,11 +280,7 @@ class CacheMissInvalidationTest extends CacheTestBase {
   }
 
   /**
-   * Editing a senator term referenced by a resolution invalidates its display page.
-   *
-   * Resolution display pages carry taxonomy_term:{tid} for the sponsoring senator
-   * via field_ol_sponsor (resolutions have no field_senator_multiref; the sponsor
-   * is stored as an OpenLeg-imported taxonomy_term reference).
+   * Editing a senator term referenced by a resolution (via field_ol_sponsor) invalidates its display page.
    */
   public function testResolutionPageMissOnSenatorEdit(): void {
     $resolution = $this->requireNodeByTypeWithField('resolution', 'field_ol_sponsor');
@@ -331,29 +293,6 @@ class CacheMissInvalidationTest extends CacheTestBase {
   // ---------------------------------------------------------------------------
   // Helpers
   // ---------------------------------------------------------------------------
-
-  /**
-   * Loads a node by its URL alias, or NULL if not found.
-   *
-   * @return \Drupal\node\NodeInterface|null
-   */
-  protected function findNodeByAlias(string $alias): ?NodeInterface {
-    $path = \Drupal::service('path_alias.manager')->getPathByAlias($alias);
-    if (preg_match('/node\/(\d+)/', $path, $matches)) {
-      return \Drupal::entityTypeManager()
-        ->getStorage('node')
-        ->load((int) $matches[1]);
-    }
-    return NULL;
-  }
-
-  /**
-   * Loads a node by its URL alias, or fails the test.
-   */
-  protected function requireNodeByAlias(string $alias): NodeInterface {
-    return $this->findNodeByAlias($alias)
-      ?? $this->fail("No node found with alias '{$alias}'.");
-  }
 
   /**
    * Returns a published node suitable for adding to the homepage_hero queue, or NULL.

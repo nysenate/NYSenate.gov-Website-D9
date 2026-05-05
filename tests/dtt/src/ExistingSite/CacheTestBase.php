@@ -98,14 +98,14 @@ abstract class CacheTestBase extends ExistingSiteBase {
    * Data provider supplying the 6 top-level paths as named PHPUnit datasets.
    */
   public static function topLevelPageProvider(): array {
-    return $this->asProvider(self::TOP_LEVEL_PAGES);
+    return self::asProvider(self::TOP_LEVEL_PAGES);
   }
 
   /**
    * Data provider supplying all 7 primary content type names as named datasets.
    */
   public static function contentTypeProvider(): array {
-    return $this->asProvider(self::PRIMARY_CONTENT_TYPES);
+    return self::asProvider(self::PRIMARY_CONTENT_TYPES);
   }
 
   /**
@@ -619,6 +619,27 @@ abstract class CacheTestBase extends ExistingSiteBase {
   // immediately if the result is NULL. Use these in test methods to eliminate
   // the find + assertNotNull boilerplate at every call site.
   // ---------------------------------------------------------------------------
+
+  /**
+   * Returns the node whose URL alias matches $alias, or NULL if not found.
+   */
+  protected function findNodeByAlias(string $alias): ?NodeInterface {
+    $path = \Drupal::service('path_alias.manager')->getPathByAlias($alias);
+    if (preg_match('/node\/(\d+)/', $path, $matches)) {
+      return \Drupal::entityTypeManager()
+        ->getStorage('node')
+        ->load((int) $matches[1]);
+    }
+    return NULL;
+  }
+
+  /**
+   * Returns the node whose URL alias matches $alias, or fails the test.
+   */
+  protected function requireNodeByAlias(string $alias): NodeInterface {
+    return $this->findNodeByAlias($alias)
+      ?? $this->fail("No node found with alias '{$alias}'.");
+  }
 
   /**
    * Returns the most recently changed published node of a given type, or fails.

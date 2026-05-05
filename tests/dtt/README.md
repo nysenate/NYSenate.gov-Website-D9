@@ -15,7 +15,6 @@ The suite is designed to exercise the full cache stack on both local and Pantheo
 - All 7 primary content type display pages (article, bill, event, in_the_news, meeting, public_hearing, resolution) return a cache HIT and declare a 24-hour `cache-control: max-age=86400, public` lifetime. Full coverage is warranted because individual blocks or lazy builders on a single content type's template can break caching for that type only without affecting others — as demonstrated by the senator microsite menu block regression (NYS-386).
 - Editing article, bill, or event nodes does not invalidate top-level pages that those content types do not feed (cross-invalidation negative cases).
 - Editing a petition does not invalidate any top-level page.
-- Saving a node of one primary content type does not invalidate the display page of any other primary content type.
 - All content-type edits in these negative cases are submitted via the entity edit form (same mechanism as `CacheMissInvalidationTest`) to ensure CDN BAN dispatch is deterministic and avoid race conditions from synchronous CLI saves.
 
 **Cache invalidation** (`CacheMissInvalidationTest`)

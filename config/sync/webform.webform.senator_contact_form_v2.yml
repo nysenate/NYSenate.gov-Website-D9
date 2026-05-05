@@ -1,7 +1,9 @@
 uuid: 5a49f39f-e0a2-470c-a82d-a8b89b090e0d
 langcode: en
 status: open
-dependencies: {  }
+dependencies:
+  module:
+    - nys_senators
 weight: 0
 open: null
 close: null
@@ -65,7 +67,7 @@ settings:
   form_open_message: ''
   form_close_message: ''
   form_exception_message: ''
-  form_previous_submissions: true
+  form_previous_submissions: false
   form_confidential: false
   form_confidential_message: ''
   form_disable_remote_addr: false
@@ -152,10 +154,10 @@ settings:
   draft_loaded_message: ''
   draft_pending_single_message: ''
   draft_pending_multiple_message: ''
-  confirmation_type: page
+  confirmation_type: message
   confirmation_url: ''
   confirmation_title: ''
-  confirmation_message: ''
+  confirmation_message: '<p>Thank you for contacting Senator [current-page:senator-name].</p>'
   confirmation_attributes: {  }
   confirmation_back: true
   confirmation_back_label: ''
@@ -231,5 +233,42 @@ access:
     roles: {  }
     users: {  }
     permissions: {  }
-handlers: {  }
+handlers:
+  senator_email_v2:
+    id: nys_senator_email_v2
+    handler_id: senator_email_v2
+    label: 'Senator Email'
+    notes: ''
+    status: true
+    conditions: {  }
+    weight: 0
+    settings:
+      states:
+        - completed
+      to_mail: _default
+      to_options: {  }
+      cc_mail: ''
+      cc_options: {  }
+      bcc_mail: ''
+      bcc_options: {  }
+      from_mail: _default
+      from_options: {  }
+      from_name: _default
+      subject: '[webform_submission:values:subject]'
+      body: '<p>Sen. [current-page:senator-name],<br>You have received a [webform_submission:values:inquiry_type] from your contact form at&nbsp; [webform_submission:source-url:absolute]:<br><br>[webform_submission:values:message]</p><p>[webform_submission:values:contact_information]</p>'
+      excluded_elements: {  }
+      ignore_access: 0
+      exclude_empty: true
+      exclude_empty_checkbox: 0
+      exclude_attachments: 0
+      html: true
+      attachments: 0
+      twig: false
+      debug: false
+      reply_to: ''
+      return_path: ''
+      sender_mail: ''
+      sender_name: ''
+      theme_name: ''
+      parameters: {  }
 variants: {  }

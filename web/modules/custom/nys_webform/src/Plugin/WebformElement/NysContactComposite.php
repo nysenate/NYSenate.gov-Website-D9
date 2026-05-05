@@ -30,6 +30,18 @@ class NysContactComposite extends WebformCompositeBase {
   /**
    * {@inheritdoc}
    *
+   * Pre-fills the element title so the webform UI suggests
+   * 'contact_information' as the machine name when the element is added.
+   */
+  protected function defineDefaultProperties(): array {
+    $properties = parent::defineDefaultProperties();
+    $properties['title'] = 'Contact Information';
+    return $properties;
+  }
+
+  /**
+   * {@inheritdoc}
+   *
    * Inject token defaults before prepare runs token replacement. This fires
    * even when #default_value is absent from the webform YAML (which happens
    * because the webform form builder strips values that match

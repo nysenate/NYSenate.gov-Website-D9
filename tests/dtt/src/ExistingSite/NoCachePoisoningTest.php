@@ -10,9 +10,11 @@ use Drupal\user\Entity\User;
  * Cache poisoning means one user's personalized content is wrongly served
  * from cache to a different user. These tests verify:
  *
- *  1. User A's follow state (issues, committees) is not visible to User B.
+ *  1. Follow/unfollow flag state (issues and committees) is not leaked across users.
  *  2. Each user sees their own name in the header user menu.
- *  3. An anonymous visitor after an authenticated visit still receives the
+ *  3. Each user sees their own district senator in the "I Want To" block.
+ *  4. The bill vote widget resolves per-user state on top of the shared dynamic cache skeleton.
+ *  5. An anonymous visitor after an authenticated visit still receives the
  *     anonymous rendering — not a leaked authenticated response.
  *
  * That the dynamic page cache skeleton IS correctly shared across users is
@@ -60,9 +62,9 @@ class NoCachePoisoningTest extends CacheTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    // Clear the dynamic page cache so the User A MISS / User B HIT assertion
-    // in testDynamicCacheSharedAcrossUsers() is reliable regardless of prior
-    // test runs or real editor traffic warming the same role-keyed entries.
+    // Clear the dynamic page cache so tests that assert MISS/HIT sequences
+    // start from a guaranteed cold-cache state, independent of prior test
+    // runs or real editor traffic.
     \Drupal::cache('dynamic_page_cache')->deleteAll();
 
     // Resolve two distinct district terms if they exist in the DB.
@@ -93,97 +95,61 @@ class NoCachePoisoningTest extends CacheTestBase {
   }
 
   // ---------------------------------------------------------------------------
-  // Follow/unfollow issue state isolation on /news-and-issues
+  // Follow/unfollow state isolation (issues and committees)
   // ---------------------------------------------------------------------------
 
   /**
-   * Each user sees their own follow/unfollow state on the issue page.
+   * Each user sees their own follow/unfollow flag state; User A's flagged
+   * state is not served to User B from the shared cache skeleton.
    *
-   * The dynamic page cache skeleton is shared across users, but the
-   * IssueFlagLazyBuilder renders the flag link server-side per user on top of
-   * that skeleton. This test confirms that User A's flagged state does not
-   * bleed through to User B's rendered response — User A sees "Unfollow" and
-   * User B sees "Follow" for the same issue.
+   * Verified for both follow_issue (IssueFlagLazyBuilder) and follow_committee
+   * (CommitteeFlagLazyBuilder) — distinct implementations, same isolation mechanism.
+   *
+   * @dataProvider flagStateProvider
    */
-  public function testFollowUnfollowNotLeakedAcrossUsers(): void {
-    $issue = $this->requireTermByVocabulary('issues');
+  public function testFlagStateNotLeakedAcrossUsers(string $vocabulary, string $flagId, string $cssClass): void {
+    $term = $this->requireTermByVocabulary($vocabulary);
 
     $this->assertTrue(\Drupal::hasService('flag'), 'Flag module not available.');
 
     /** @var \Drupal\flag\FlagServiceInterface $flagService */
     $flagService = \Drupal::service('flag');
-    $flag = $flagService->getFlagById('follow_issue');
-    $this->assertNotNull($flag, 'follow_issue flag not found.');
+    $flag = $flagService->getFlagById($flagId);
+    $this->assertNotNull($flag, "{$flagId} flag not found.");
 
-    $issuePath = $issue->toUrl()->toString();
+    $termPath = $term->toUrl()->toString();
 
-    // User A follows the issue via the service (simulates clicking Follow).
-    $flagService->flag($flag, $issue, $this->userA);
+    // User A follows the term via the service (simulates clicking Follow).
+    $flagService->flag($flag, $term, $this->userA);
 
     try {
-      // User A visits the issue page: the lazy builder must render the
-      // "unflag" link because User A has already followed.
+      // User A visits the page: must see the "unflag" link (already following).
       $this->drupalLogin($this->userA);
-      $this->visit($issuePath);
-      $this->assertSession()->elementExists('css', '.flag-follow-issue.action-unflag');
+      $this->visit($termPath);
+      $this->assertSession()->elementExists('css', ".{$cssClass}.action-unflag");
       $this->drupalLogout();
 
-      // User B visits the same page: the lazy builder must render the "flag"
-      // link — not User A's "unflag" state — proving the shared cache skeleton
-      // is personalized correctly per user.
+      // User B visits the same page: must see the "flag" link — not User A's
+      // "unflag" state — proving the lazy builder personalizes per user.
       $this->drupalLogin($this->userB);
-      $this->visit($issuePath);
-      $this->assertSession()->elementExists('css', '.flag-follow-issue.action-flag');
+      $this->visit($termPath);
+      $this->assertSession()->elementExists('css', ".{$cssClass}.action-flag");
       $this->drupalLogout();
     }
     finally {
       // Always remove the flag so data is unmodified even on failure.
-      $flagService->unflag($flag, $issue, $this->userA);
+      $flagService->unflag($flag, $term, $this->userA);
     }
   }
 
-  // ---------------------------------------------------------------------------
-  // Committee follow/unfollow state isolation
-  // ---------------------------------------------------------------------------
-
   /**
-   * Each user sees their own follow/unfollow state on a committee page.
-   *
-   * CommitteeFlagLazyBuilder uses the same per-user lazy builder mechanism as
-   * IssueFlagLazyBuilder. This confirms committee flag state is personalized
-   * correctly and not shared across users via the cached page skeleton.
+   * Data provider: issue and committee flag configurations.
    */
-  public function testCommitteeFollowNotLeakedAcrossUsers(): void {
-    $committee = $this->requireTermByVocabulary('committees');
-
-    $this->assertTrue(\Drupal::hasService('flag'), 'Flag module not available.');
-
-    /** @var \Drupal\flag\FlagServiceInterface $flagService */
-    $flagService = \Drupal::service('flag');
-    $flag = $flagService->getFlagById('follow_committee');
-    $this->assertNotNull($flag, 'follow_committee flag not found.');
-
-    $committeePath = $committee->toUrl()->toString();
-
-    $flagService->flag($flag, $committee, $this->userA);
-
-    try {
-      // User A visits the committee page: must see the "unflag" link.
-      $this->drupalLogin($this->userA);
-      $this->visit($committeePath);
-      $this->assertSession()->elementExists('css', '.flag-follow-committee.action-unflag');
-      $this->drupalLogout();
-
-      // User B visits the same page: must see the "flag" link, not User A's
-      // "unflag" state.
-      $this->drupalLogin($this->userB);
-      $this->visit($committeePath);
-      $this->assertSession()->elementExists('css', '.flag-follow-committee.action-flag');
-      $this->drupalLogout();
-    }
-    finally {
-      $flagService->unflag($flag, $committee, $this->userA);
-    }
+  public static function flagStateProvider(): array {
+    return [
+      'issue'     => ['issues', 'follow_issue', 'flag-follow-issue'],
+      'committee' => ['committees', 'follow_committee', 'flag-follow-committee'],
+    ];
   }
 
   // ---------------------------------------------------------------------------
@@ -214,30 +180,52 @@ class NoCachePoisoningTest extends CacheTestBase {
   }
 
   // ---------------------------------------------------------------------------
-  // Anonymous cache not contaminated by authenticated visits
+  // Senator section personalization ("I Want To" block)
   // ---------------------------------------------------------------------------
 
   /**
-   * An authenticated response must not be served to anonymous users.
+   * Each user sees their own district's senator in the "I Want To" block.
    *
-   * If a page's cache contexts incorrectly omit user.roles, an authenticated
-   * response could be stored and returned to anonymous visitors. This test
-   * confirms that after an authenticated user warms the dynamic cache, an
-   * anonymous visitor still receives the correct anonymous response — the
-   * login link, not the authenticated user menu.
+   * WantToLazyBuilder resolves the senator headshot and microsite link from
+   * the current user's field_district assignment. User A's senator must not
+   * appear in User B's rendered response.
    */
-  public function testAuthenticatedContentNotLeakedToAnonymous(): void {
-    // Authenticated user visits first — warms the dynamic cache entry.
+  public function testSenatorSectionNotLeakedAcrossUsers(): void {
+    $this->assertNotNull($this->districtATid, 'Fewer than two district terms found — database may be corrupt.');
+
+    $storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+    $districtA = $storage->load($this->districtATid);
+    $districtB = $storage->load($this->districtBTid);
+    $senatorA = $districtA?->field_senator->entity;
+    $senatorB = $districtB?->field_senator->entity;
+
+    $this->assertNotNull($senatorA, "District {$this->districtATid} has no senator assigned.");
+    $this->assertNotNull($senatorB, "District {$this->districtBTid} has no senator assigned.");
+    $this->assertNotEquals($senatorA->id(), $senatorB->id(), 'Districts A and B share the same senator — cannot test isolation.');
+
+    // Resolve microsite URLs via the same service the lazy builder uses.
+    // The template renders these as href attributes on the senator block link.
+    /** @var \Drupal\nys_senators\Service\Microsites $microsites */
+    $microsites = \Drupal::service('nys_senators.microsites');
+    $urlA = $microsites->getMicrosite($senatorA);
+    $urlB = $microsites->getMicrosite($senatorB);
+
+    $this->assertNotEmpty($urlA, "Senator {$senatorA->label()} (district {$this->districtATid}) has no microsite URL.");
+    $this->assertNotEmpty($urlB, "Senator {$senatorB->label()} (district {$this->districtBTid}) has no microsite URL.");
+
+    // User A sees their own senator's microsite link in the block.
     $this->drupalLogin($this->userA);
     $this->visit('/');
+    $this->assertSession()->responseContains($urlA);
     $this->drupalLogout();
 
-    // Anonymous visitor must receive the anonymous rendering: login link
-    // present, personalised user menu absent. Use the href rather than link
-    // text so the assertion is immune to theme label changes.
+    // User B sees their own senator's link — not User A's — proving the lazy
+    // builder personalizes per user on top of the shared cache entry.
+    $this->drupalLogin($this->userB);
     $this->visit('/');
-    $this->assertSession()->elementExists('css', 'a[href*="/user/login"]');
-    $this->assertSession()->pageTextNotContains('Welcome, NysCacheTestAlpha!');
+    $this->assertSession()->responseNotContains($urlA);
+    $this->assertSession()->responseContains($urlB);
+    $this->drupalLogout();
   }
 
   // ---------------------------------------------------------------------------
@@ -247,22 +235,12 @@ class NoCachePoisoningTest extends CacheTestBase {
   /**
    * The bill vote widget resolves per-user state and does not leak across users.
    *
-   * BillVoteWidgetLazyBuilder is invoked for every request (even dynamic page
-   * cache HITs), resolving each user's personal vote state from the database.
-   * This test confirms that User A's voted-yes state is visible only to User A,
-   * and that User B (who has no vote) sees the neutral "Do you support this
-   * bill?" prompt rather than User A's voted label.
-   *
-   * Test strategy:
-   *  1. Create a vote entity for User A (value = 1 = 'yes') directly via the
-   *     entity API, avoiding any form submission side-effects.
-   *  2. User A visits the bill page → the BillVoteWidgetForm::getVotedLabel()
-   *     method, called inside the lazy builder, detects the existing vote and
-   *     renders the "You are in favor of this bill" label.
-   *  3. User B visits the same page (which returns x-drupal-dynamic-cache: HIT
-   *     for the skeleton, confirming sharing) → the lazy builder resolves User
-   *     B's empty vote state and renders "Do you support this bill?".
-   *  4. Confirm User B's rendered output does NOT contain User A's voted label.
+   * BillVoteWidgetLazyBuilder runs on every request (including dynamic cache
+   * HITs), resolving each user's vote state from the database. User A's
+   * voted-yes label must not appear in User B's response — User B sees the
+   * neutral "Do you support this bill?" prompt. User B's visit returns
+   * x-drupal-dynamic-cache: HIT, confirming skeleton sharing is intact while
+   * per-user state is isolated.
    */
   public function testBillVoteWidgetIsolatedPerUser(): void {
     $node = $this->findSaveableBillNode();
@@ -321,6 +299,33 @@ class NoCachePoisoningTest extends CacheTestBase {
     finally {
       $vote->delete();
     }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Anonymous cache not contaminated by authenticated visits
+  // ---------------------------------------------------------------------------
+
+  /**
+   * An authenticated response must not be served to anonymous users.
+   *
+   * If a page's cache contexts incorrectly omit user.roles, an authenticated
+   * response could be stored and returned to anonymous visitors. This test
+   * confirms that after an authenticated user warms the dynamic cache, an
+   * anonymous visitor still receives the correct anonymous response — the
+   * login link, not the authenticated user menu.
+   */
+  public function testAuthenticatedContentNotLeakedToAnonymous(): void {
+    // Authenticated user visits first — warms the dynamic cache entry.
+    $this->drupalLogin($this->userA);
+    $this->visit('/');
+    $this->drupalLogout();
+
+    // Anonymous visitor must receive the anonymous rendering: login link
+    // present, personalised user menu absent. Use the href rather than link
+    // text so the assertion is immune to theme label changes.
+    $this->visit('/');
+    $this->assertSession()->elementExists('css', 'a[href*="/user/login"]');
+    $this->assertSession()->pageTextNotContains('Welcome, NysCacheTestAlpha!');
   }
 
 }

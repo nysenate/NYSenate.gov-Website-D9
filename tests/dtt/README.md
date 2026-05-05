@@ -11,8 +11,8 @@ The suite is designed to exercise the full cache stack on both local and Pantheo
 ## What these tests ensure
 
 **Anonymous page cache** (`AnonymousCacheHitTest`)
-- All 6 top-level navigation pages return a CDN cache HIT (`cf-cache-status: HIT` on Cloudflare environments, `x-drupal-cache: HIT` on local) after the first request, and each declares `cache-control: max-age=86400, public`. Full coverage is used because a regression in the caching mechanism or max-age configuration would affect all pages simultaneously.
-- All 7 primary content type display pages (article, bill, event, in_the_news, meeting, public_hearing, resolution) return a cache HIT and declare a 24-hour `cache-control: max-age=86400, public` lifetime. Full coverage is warranted because individual blocks or lazy builders on a single content type's template can break caching for that type only without affecting others — as demonstrated by the senator microsite menu block regression (NYS-386).
+- All 6 top-level navigation pages return a CDN cache HIT (`cf-cache-status: HIT` on Cloudflare environments, `x-drupal-cache: HIT` on local) after the first request, and each declares `cache-control: max-age=86400, public`.
+- All 7 primary content type display pages (article, bill, event, in_the_news, meeting, public_hearing, resolution) return a cache HIT and declare a 24-hour `cache-control: max-age=86400, public` lifetime.
 - Editing article, bill, or event nodes does not invalidate top-level pages that those content types do not feed (cross-invalidation negative cases).
 - Editing a petition does not invalidate any top-level page.
 - All content-type edits in these negative cases are submitted via the entity edit form (same mechanism as `CacheMissInvalidationTest`) to ensure CDN BAN dispatch is deterministic and avoid race conditions from synchronous CLI saves.
@@ -26,7 +26,7 @@ The suite is designed to exercise the full cache stack on both local and Pantheo
   - `/legislation` is invalidated by bill edits.
   - `/events` is invalidated by event edits.
   - `/about` is invalidated by landing page node edits and by edits to block_content entities embedded via `field_landing_blocks`.
-- Content type display page invalidation — direct node edit: all 7 primary content type display pages are invalidated when their node is saved.
+- Content type display page invalidation — direct node edit: bill and article display pages are invalidated when their node is saved. bill is tested because BillsHelper runs complex save-time logic; article represents the standard `node:{nid}` tag path shared by all other types.
 - Content type display page invalidation — related entity edit:
   - Article and in_the_news pages are invalidated by senator term edits (via `field_senator_multiref`).
   - Event, meeting, and public_hearing pages are invalidated by committee term edits (via `field_committee`).
@@ -34,12 +34,13 @@ The suite is designed to exercise the full cache stack on both local and Pantheo
 - The homepage hero test exercises the real production code path: it fills the entity subqueue autocomplete and presses "Add item", triggering `HomepageHeroController::homepageHeroAddItem()` which calls `invalidateTags(['views:homepage_hero'])`. The "Add item" button does not invoke the main entity save handler, so the queue contents are not permanently modified.
 
 **Authenticated dynamic page cache** (`AuthenticatedDynamicCacheTest`)
-- A second authenticated visit to each of the 6 top-level pages returns `x-drupal-dynamic-cache: HIT`. The dynamic page cache bin is cleared in `setUp()` to guarantee a cold-cache starting state for every test run.
-- The dynamic cache skeleton is correctly shared across different authenticated users — User A's first visit produces a MISS; User B's first visit to the same page produces a HIT from User A's warmed entry.
+- All assertions use the cross-user pattern: User A warms the dynamic cache skeleton; User B's first visit must return `x-drupal-dynamic-cache: HIT`. This is the correct regression pattern — a per-user cache bug (missing `#create_placeholder => TRUE` on a lazy builder) would cause same-user repeat-visit tests to pass while cross-user tests fail.
+- Verified on two representative top-level pages (/ and /legislation), two representative content type display pages (bill and article), and one senator-microsite content type page (article with `field_senator_multiref`).
 - Any direct entity save on a user account (even with no field changes) busts that user's warmed entries via the `user:{uid}` cache tag.
+- The dynamic page cache bin is cleared in `setUp()` to guarantee a cold-cache starting state for every test run.
 
 **Cache poisoning prevention** (`NoCachePoisoningTest`)
-- Per-user lazy builder output — issue follow/unfollow state, committee follow/unfollow state, and the header user menu welcome message — is personalized correctly per user and never leaked across users via the shared dynamic cache skeleton.
+- Per-user lazy builder output — issue follow/unfollow state, committee follow/unfollow state, the header user menu welcome message, and the district senator link in the "I Want To" block — is personalized correctly per user and never leaked across users via the shared dynamic cache skeleton.
 - An authenticated visit does not cause authenticated content to be served to anonymous visitors.
 
 ## Running in CI (Pantheon multidev)
@@ -73,9 +74,13 @@ The specific test operations that require co-location with the web server's Redi
 
 4. **`$flagService->flag()` and `$flagService->unflag()` in `NoCachePoisoningTest`** — These Drupal service calls in the test process write flag state to the database and trigger cache tag invalidations in Redis. The web server uses those same tag states when rendering the flag UI. The flag state the assertions check is read from the database (reachable via tunnel), but the cache invalidations that make the rendered page reflect fresh flag state are written to Redis from the test process.
 
-The alternative — rewriting as pure black-box HTTP tests with no DTT bootstrap — would sidestep the Redis constraint entirely, but would lose entity creation, controlled test users, database queries for test specimen discovery, service calls for flag operations, and DTT's automatic teardown. The tests would become brittle against whatever live content and session state happen to exist in the environment.
+Two alternatives exist, each with significant trade-offs:
 
-Running on the container is the minimal viable approach. `vendor/bin/phpunit` is available there because `vendor/` is included in the deployed artifact, and `terminus remote:drush -- ev` is the mechanism Pantheon exposes for executing arbitrary code on the container.
+- **Run DTT on a CI VM with a DB snapshot** — this would solve the Redis co-location constraint (test process and web server share the same VM's Redis), but would eliminate Cloudflare from the test path entirely. The cache invalidation tests would degrade to exercising only the Drupal/Redis layer: `saveViaWebRequest()` would still trigger `kernel.terminate`, but `pantheon_advanced_page_cache` would have no Cloudflare to BAN. For a Cloudflare-fronted production site, losing that layer is the more serious regression risk. DB restore time (~2 hours) is a secondary concern.
+
+- **Rewrite as pure black-box HTTP tests with no DTT bootstrap** — this sidesteps the Redis constraint by eliminating all operations that touch Redis from the test process (no `deleteAll()`, no `createUser()`, no service calls). But it loses entity creation, controlled test users, database queries for test specimen discovery, flag operations, and DTT's automatic teardown. Tests become brittle against whatever live content and session state exist in the environment.
+
+Running on the Pantheon container is the only approach that exercises the full production stack — Drupal, Redis, and Cloudflare — without those trade-offs. `vendor/bin/phpunit` is available there because `vendor/` is included in the deployed artifact, and `terminus remote:drush -- ev` is the mechanism Pantheon exposes for executing arbitrary code on the container.
 
 ## Running locally
 

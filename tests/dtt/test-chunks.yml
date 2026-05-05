@@ -10,14 +10,18 @@
 # mid-run. Locally, large single-process runs can be killed (exit 137). Splitting
 # into smaller filter-based chunks keeps peak RSS well under 1 GB per process.
 #
-# CHUNK SIZING (as of the reduced test suite)
-# The suite runs ~30 test cases across 8 chunks (reduced from ~85 cases across
-# 14 chunks). Data providers for HIT and max-age assertions were reduced to
-# 2-3 representative cases each, so all four positive AnonymousCacheHitTest
-# methods now fit in a single chunk. AuthenticatedDynamicCacheTest runs as a
-# single chunk (bill + article providers only). The CacheMissInvalidationTest
-# content type node-edit tests (2 cases) are merged with the related-entity-edit
-# chunk to avoid a near-empty chunk.
+# CHUNK SIZING (current suite)
+# The suite runs ~47 test cases across 7 chunks.
+# AnonymousCacheHitTest positive: 13 cases (6 top-level pages + 7 content types),
+# all pure HTTP GETs — no saves — so memory pressure is low despite the count.
+# AnonymousCacheHitTest negative: 4 cases (article/bill/event/petition non-invalidation).
+# AuthenticatedDynamicCacheTest: 6 cases (2 top-level + 2 content types + 1 senator
+# microsite, all cross-user; plus 1 account-change invalidation).
+# CacheMissInvalidationTest: split across 3 chunks to bound per-process memory;
+# the content type chunk merges node-edit (2 cases) with related-entity-edit
+# (6 cases) to avoid an under-sized chunk.
+# NoCachePoisoningTest: 6 cases (2 flag, 1 user menu, 1 senator section, 1 bill
+# vote widget, 1 anonymous leak).
 #
 # ADDING A TEST
 # - If the new test belongs to a class that runs as a single chunk

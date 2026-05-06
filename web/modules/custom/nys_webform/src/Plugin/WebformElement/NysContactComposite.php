@@ -17,7 +17,7 @@ use Drupal\webform\WebformSubmissionInterface;
  *
  * @WebformElement(
  *   id = "nys_contact_composite",
- *   label = @Translation("NYS Contact Composite"),
+ *   label = @Translation("NYS Contact Information"),
  *   description = @Translation("Collects name, email, and NY address in a reusable composite element."),
  *   category = @Translation("NYS Elements"),
  *   multiline = TRUE,

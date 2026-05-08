@@ -189,8 +189,8 @@ class Request {
   public function get(array|string|null $resource = NULL, array $params = []): ?object {
     // Build the primary URL.
     $url = $this->buildHost();
-    $resource = implode('/', $this->buildPathArray($resource ?? '')) . '/';
-    $extra_path = $this->buildEndpoint() . $resource;
+    $resource = implode('/', $this->buildPathArray($resource ?? ''));
+    $extra_path = $this->buildEndpoint() . ($resource ? $resource . '/' : '');
 
     // Build URL parameters.
     $params += $this->apiKey ? ['key' => $this->apiKey] : [];

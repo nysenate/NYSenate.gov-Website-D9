@@ -8,6 +8,7 @@
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
+use Drupal\entityqueue\Entity\EntitySubqueue;
 
 /**
  * Implements hook_page_attachments().
@@ -23,7 +24,30 @@ function nys_homepage_hero_page_attachments_alter(&$attachments) {
 }
 
 /**
- * Implements  hook_form_FORM_ID_alter().
+ * Implements hook_ENTITY_TYPE_update() for entity_subqueue.
+ *
+ * Invalidates the views:homepage_hero cache tag whenever the homepage_hero
+ * subqueue is saved, regardless of which UI triggered the save (the admin
+ * entityqueue form or the node-tab AJAX buttons at /node/{nid}/entityqueue).
+ *
+ * Two cache layers must be cleared when the queue changes:
+ * 1. The views result cache — the entityqueue relationship plugin uses the
+ *    subqueue as a SQL JOIN but never loads it as a result-row entity, so
+ *    entity_subqueue:homepage_hero is not collected automatically. It is
+ *    declared explicitly in the view's custom_tag cache plugin configuration.
+ * 2. The block render cache and page cache — stored under the custom
+ *    'views:homepage_hero' tag applied by the theme preprocess hook. Nothing
+ *    in Drupal's entity system knows about this tag, so it is invalidated
+ *    explicitly here.
+ */
+function nys_homepage_hero_entity_subqueue_update(EntitySubqueue $entity) {
+  if ($entity->id() === 'homepage_hero') {
+    \Drupal::service('cache_tags.invalidator')->invalidateTags(['views:homepage_hero']);
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
  */
 function nys_homepage_hero_form_entity_subqueue_homepage_hero_edit_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   if (is_array($form['items']['widget']) && array_key_exists('add_more', $form['items']['widget'])) {

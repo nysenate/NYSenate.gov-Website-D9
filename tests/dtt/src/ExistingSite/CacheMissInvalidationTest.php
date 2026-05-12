@@ -15,7 +15,8 @@ use Drupal\user\UserInterface;
  *  - Senator/committee term edits invalidate /senators-committees.
  *  - Bill edits invalidate /legislation.
  *  - Landing page node and embedded block_content edits invalidate /about.
- *  - The homepage_hero entity subqueue invalidates / on queue change.
+ *  - The homepage_hero entity subqueue invalidates / on queue change via the
+ *    node entityqueue tab (/node/{nid}/entityqueue).
  *
  * Content type display pages — node edit (sampled):
  *  - bill and article display pages are invalidated when the node is saved.
@@ -84,48 +85,54 @@ class CacheMissInvalidationTest extends CacheTestBase {
   }
 
   /**
-   * Changing the homepage_hero queue invalidates the homepage.
+   * Changing the homepage_hero queue via the node entityqueue tab invalidates the homepage.
    *
-   * The production trigger is the "Add item" button on the entity subqueue
-   * edit form. nys_homepage_hero_form_entity_subqueue_homepage_hero_edit_form_alter()
-   * registers HomepageHeroController::homepageHeroAddItem() as a #submit
-   * callback on that button, which calls invalidateTags(['views:homepage_hero']).
+   * The production path is /node/{nid}/entityqueue, where the "Add to queue"
+   * AJAX link calls EntityQueueUIController::subqueueAjaxOperation(), which
+   * saves the subqueue entity directly. nys_homepage_hero_entity_subqueue_update()
+   * then invalidates the views:homepage_hero cache tag (block/page cache layer),
+   * while the entity save automatically invalidates entity_subqueue:homepage_hero
+   * (declared in the view's custom_tag cache plugin), busting the views result cache.
    *
-   * Although the button also carries a #ajax key, Drupal's #submit callbacks
-   * run identically for plain HTTP POST requests (Goutte) and AJAX requests —
-   * #ajax only changes what the client receives in response. Pressing the
-   * button via Goutte therefore exercises the real production code path end-to-
-   * end: HTTP POST → Drupal form pipeline → homepageHeroAddItem() →
-   * invalidateTags → kernel.terminate → Fastly BAN → x-cache: MISS.
-   *
-   * The "Add item" button does NOT invoke the main entity save handler, so
-   * the queue contents are NOT permanently modified; this test is side-effect-free.
+   * The queue is cleared before the test via CLI (acceptable for test setup)
+   * and restored afterwards, so this test is idempotent regardless of the
+   * current queue contents.
    */
   public function testHomepageMissOnHomepageHeroQueueChange(): void {
-    $this->assertNotNull(
-      \Drupal::entityTypeManager()->getStorage('entity_subqueue')->load('homepage_hero'),
-      "homepage_hero entity_subqueue not found."
-    );
+    $storage = \Drupal::entityTypeManager()->getStorage('entity_subqueue');
+    $subqueue = $storage->load('homepage_hero');
+    $this->assertNotNull($subqueue, 'homepage_hero entity_subqueue not found.');
+
+    // Save current queue state so we can restore it after the test.
+    $originalItems = $subqueue->get('items')->getValue();
+
+    // Clear the queue so the node tab shows "Add to queue". CLI saves are
+    // acceptable for test setup; the action under test is the web request below.
+    $subqueue->set('items', [])->save();
 
     $node = $this->requireHomepageHeroQueueItem();
 
     $this->warmCache('/');
     $this->assertAnonymousCacheHit('/');
 
-    // Navigate to the entity subqueue edit form and submit the "Add item"
-    // button. The autocomplete field expects "Entity Label (entity_id)" format.
-    // Pressing the button (not the main Save) fires homepageHeroAddItem() and
-    // rebuilds the form without persisting changes to the database.
-    $this->visit('/admin/structure/entityqueue/homepage_hero/homepage_hero');
-    $page = $this->getSession()->getPage();
-    $page->fillField(
-      'items[add_more][new_item][target_id]',
-      $node->label() . ' (' . $node->id() . ')'
+    // Add the node via the node entityqueue tab — the production UI path used
+    // by site admins. The link href contains the CSRF token added by Drupal's
+    // URL generator; Mink follows it as a plain GET, triggering the same entity
+    // save and hook invocation as the AJAX path.
+    $this->visit('/node/' . $node->id() . '/entityqueue');
+    $addLink = $this->getSession()->getPage()->find(
+      'css',
+      'a[href*="/homepage_hero/homepage_hero/' . $node->id() . '/add-item"]'
     );
-    $page->pressButton('Add item');
+    $this->assertNotNull($addLink, 'Add to queue link not found on the node entityqueue tab.');
+    $addLink->click();
 
     $this->assertAnonymousCacheMiss('/');
     $this->assertAnonymousCacheHit('/');
+
+    // Restore the original queue state.
+    $storage->resetCache(['homepage_hero']);
+    $storage->load('homepage_hero')->set('items', $originalItems)->save();
   }
 
   /**

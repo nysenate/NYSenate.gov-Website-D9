@@ -1,3 +1,13 @@
+nys_registration.find_my_senator_kiosk:
+  path: '/find-my-senator/kiosk'
+  defaults:
+    _form: 'Drupal\nys_registration\Form\FindMySenatorForm'
+    _title: 'Find My Senator'
+  requirements:
+    _permission: 'access content'
+  options:
+    no_cache: 'TRUE'
+
 nys_registration.find_my_senator:
   path: '/find-my-senator'
   defaults:

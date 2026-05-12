@@ -1,0 +1,45 @@
+/**
+ * Kiosk page styles for /find-my-senator/kiosk.
+ *
+ * Sizing is intentionally flexible until kiosk dimensions are confirmed.
+ * Adjust font-size, max-width, and iframe dimensions to suit the display.
+ */
+
+body {
+  margin: 0;
+  background: #fff;
+}
+
+.kiosk-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  gap: 2rem;
+}
+
+.kiosk-header {
+  text-align: center;
+}
+
+.kiosk-logo {
+  max-width: 380px;
+  height: auto;
+}
+
+.kiosk-video {
+  width: 100%;
+  max-width: 900px;
+}
+
+.kiosk-video iframe {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  height: auto;
+}
+
+.kiosk-content {
+  width: 100%;
+  max-width: 900px;
+}

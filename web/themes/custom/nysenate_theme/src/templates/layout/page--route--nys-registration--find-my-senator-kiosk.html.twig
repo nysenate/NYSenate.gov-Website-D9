@@ -1,0 +1,40 @@
+{#
+/**
+ * @file
+ * Stripped-down page template for the kiosk Find My Senator display.
+ *
+ * No header, footer, or navigation — only the seal, an optional YouTube
+ * embed, and the Find My Senator form with its results.
+ *
+ * To update the YouTube video, replace VIDEO_ID in the iframe src below.
+ */
+#}
+{{ attach_library('nys_registration/kiosk') }}
+
+<div class="kiosk-page">
+
+  <header class="kiosk-header">
+    <img
+      src="/themes/custom/nysenate_theme/src/assets/nysenate_seal_380x215.png"
+      alt="New York State Senate"
+      class="kiosk-logo"
+    >
+  </header>
+
+  {# YouTube embed #}
+  <div class="kiosk-video">
+    <iframe
+      src="https://www.youtube.com/embed/YpaMRtWFULk?si=07_yed0-zldLakBk"
+      title="New York State Senate"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen
+    ></iframe>
+  </div>
+
+  <main role="main" class="kiosk-content">
+    <div class="system-messages">{{ messages }}</div>
+    {{ page.content }}
+  </main>
+
+</div>

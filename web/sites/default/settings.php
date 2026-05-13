@@ -830,6 +830,10 @@ if (isset($_ENV['PANTHEON_ENVIRONMENT'])) {
       $config['environment_indicator.indicator']['bg_color'] = '#e7131a';
       $config['environment_indicator.indicator']['fg_color'] = '#FFFFFF';
   }
+
+  // Never display PHP errors or warnings to end users on Pantheon.
+  // Warnings are still written to watchdog and the PHP error log.
+  $config['system.logging']['error_level'] = 'hide';
 }
 else {
   // Config split configuration overrides.

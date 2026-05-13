@@ -1,8 +1,10 @@
 # Test chunk definitions for the DTT cache regression suite.
 #
 # This is the single source of truth for how the suite is split into separate
-# PHP processes at runtime. Both run-on-container.sh (Pantheon CI) and
-# .ddev/commands/web/run-cache-tests (local) read this file via PHP/symfony/yaml.
+# PHP processes at runtime. The CI workflow (pantheon-deploy-multidev.yml, via
+# python3) and .ddev/commands/web/run-cache-tests (local, via PHP/symfony/yaml)
+# both read this file. run-on-container.sh does not — chunking is the caller's
+# responsibility; this script just runs PHPUnit with whatever args it receives.
 #
 # WHY CHUNKS EXIST
 # PHPUnit accumulates Mink session state and Redis-unserialized objects across

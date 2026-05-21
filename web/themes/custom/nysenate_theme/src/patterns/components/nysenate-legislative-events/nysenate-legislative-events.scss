@@ -28,7 +28,7 @@
         font-family: $font-sans-bold;
         font-size: 15px;
         line-height: 18px;
-        color: $gen_link;
+        color: $gen_link_hover;
         text-transform: uppercase;
         &:hover {
           color: $gen_link_hover;
@@ -43,6 +43,14 @@
         font-size: 20px;
         line-height: 32px;
         color: $grey08;
+      }
+
+      p a {
+        color: $gen_link_hover;
+        &:hover {
+          color: $gen_link_hover;
+          text-decoration: underline;
+        }
       }
     }
 
@@ -183,6 +191,14 @@
           font-size: 26px;
           line-height: 32px;
           color: $grey08;
+        }
+
+        p a {
+          color: $gen_link_hover;
+          &:hover {
+            color: $gen_link_hover;
+            text-decoration: underline;
+          }
         }
       }
 

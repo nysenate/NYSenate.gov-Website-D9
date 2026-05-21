@@ -24,7 +24,7 @@
             <ul class="c-nav--social u-tablet-plus">
               {% for social in socials %}
                 <li class="{% if loop.first %}first {% endif %}leaf">
-                  <a href="{{ social.url }}" target="_blank" aria-label="Go to {{ social.icon }}">{{ icons.get(social.icon) }}</a>
+                  <a href="{{ social.url }}" target="_blank" aria-label="{{ social.label ?? social.icon }}">{{ icons.get(social.icon) }}</a>
                 </li>
               {% endfor %}
             </ul>
@@ -59,7 +59,7 @@
         </div>
       </section>
       <!--.c-header-bar -->
-      <button id="" class="js-mobile-nav--btn c-block--btn c-nav--toggle icon-replace button--menu" aria-controls="main-site-menu" aria-expanded="false" aria-label="Site Menu"></button>
+      <button id="" class="js-mobile-nav--btn c-block--btn c-nav--toggle icon-replace button--menu" aria-controls="main-site-menu" aria-expanded="false" aria-haspopup="true" aria-label="Site Menu"></button>
       {% if actionbar.type != 'committee' %}
         {% block microsite_hero %}
           {% if microsite_hero %}
@@ -98,12 +98,12 @@
                 %}
               {% endblock %}
               {# {{ drupal_menu('main') }}#}
-              <button class="js-search--toggle u-tablet-plus c-site-search--btn GoogleAnalyticsET-processed icon-replace__search">open and focus search</button>
+              <button class="js-search--toggle u-tablet-plus c-site-search--btn GoogleAnalyticsET-processed icon-replace__search" aria-haspopup="true">open and focus search</button>
               {% if socials %}
                 <ul class="c-nav--social u-mobile-only">
                   {% for social in socials %}
                     <li class="{% if loop.first %}first {% endif %}leaf">
-                      <a href="{{ social.url }}" target="_blank">{{ icons.get(social.icon) }}</a>
+                      <a href="{{ social.url }}" target="_blank" aria-label="{{ social.label ?? social.icon }}">{{ icons.get(social.icon) }}</a>
                     </li>
                   {% endfor %}
                 </ul>

@@ -36,7 +36,7 @@
   {% macro menu_links(items, attributes) %}
       {% import _self as menus %}
       {% if items %}
-        <ul{{ attributes|without('class') }} class="c-nav--list">
+        <ul{{ attributes|without('class') }} class="c-nav--list" role="menu">
           {% for item in items %}
             <!--li class="leaf" {#{ item.attributes|without('class') }#}-->
             <li class="leaf{{ item.below ? ' leaf--has-submenu' }}{{ item.in_active_trail ? ' leaf--active-trail' }}" {{ item.attributes|without('class') }} role="menuitem">

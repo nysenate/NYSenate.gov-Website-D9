@@ -912,6 +912,10 @@ nav ul.c-nav--list {
 
   &:hover svg path {
     fill: $blue01;
+
+    @include breakpoint($bp-under-sm) {
+      fill: $color-white;
+    }
   }
 
   a {
@@ -1331,14 +1335,13 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     position: absolute;
     right: 9%;
     bottom: 35px;
-    color: $orange-text;
+    color: $gen_link_hover;
     text-transform: uppercase;
     font-size: 14px;
     letter-spacing: 0.1em;
     z-index: 1;
     &:hover {
       text-decoration: underline;
-      color: $gen_link_hover;
     }
   }
 

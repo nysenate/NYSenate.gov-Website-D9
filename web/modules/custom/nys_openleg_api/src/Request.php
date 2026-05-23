@@ -189,7 +189,10 @@ class Request {
   public function get(array|string|null $resource = NULL, array $params = []): ?object {
     // Build the primary URL.
     $url = $this->buildHost();
-    $resource = implode('/', $this->buildPathArray($resource ?? '')) . '/';
+
+    // The endpoint will no longer come with a trailing slash.  Add a blank
+    // entry to the top of the resource stack to force a leading slash.
+    $resource = implode('/', array_merge([''], $this->buildPathArray($resource ?? '')));
     $extra_path = $this->buildEndpoint() . $resource;
 
     // Build URL parameters.
@@ -304,9 +307,8 @@ class Request {
       $this->setEndpoint($endpoint);
     }
 
-    // Make sure it ends with a '/', per OpenLeg docs.
-    // @see https://legislation.nysenate.gov/static/docs/html/laws.html#get-a-law-sub-document
-    return implode('/', ($this->buildPathArray($endpoint) ?: [])) . '/';
+    // As of May2026, trailing slashes are no longer standard for OL API.
+    return implode('/', ($this->buildPathArray($endpoint) ?: []));
   }
 
   /**

@@ -44,15 +44,7 @@
       this.jsSearchBox(isMicrositeLandingPage, micrositeMenuClone);
       this.mobileMenu();
       this.handleResponsiveMenu();
-
-      // Add keypress event to close mobile menu.
-      document.addEventListener('keydown', (e) => {
-        if (e.keyCode == 27) {
-          document.body.classList.remove('nav-open');
-          e.currentTarget.setAttribute('aria-expanded', 'false');
-          document.querySelector('button.js-mobile-nav--btn.button--menu').focus();
-        }
-      });
+      this.userMenu();
     },
 
     /**
@@ -80,6 +72,7 @@
       const inSession = document.querySelector('body.in-session');
       const navWrap = document.querySelector('.c-nav--wrap');
       const homepageHero = document.querySelector('.hero--homepage');
+      const desktopMediaQuery = window.matchMedia('(min-width: 768px)');
 
       // Implement dynamic sticky header behaviors for full site.
       let lastScrollTop = 0;
@@ -96,6 +89,11 @@
           if (!isMicrositeLandingPage) {
             // Hide menu.
             navWrap.classList.add('closed');
+
+            // On desktop: prevent focus to hidden (scrolled-away) menu items.
+            if (desktopMediaQuery.matches) {
+              navWrap.setAttribute('inert', '');
+            }
 
             // On frontpage, display actionbar in header when scrolled below
             // fixed actionbar.
@@ -124,6 +122,11 @@
           // Display nav menu in header when scrolling up.
           if (!isMicrositeLandingPage) {
             navWrap.classList.remove('closed');
+
+            // On desktop: restore focusability when menu is visible again.
+            if (desktopMediaQuery.matches) {
+              navWrap.removeAttribute('inert');
+            }
 
             // On frontpage, hide actionbar from header when scrolled above
             // fixed actionbar.
@@ -170,6 +173,22 @@
           searchForms.item(index).setAttribute('inert', '');
         }
 
+        // Extracted close function for reuse (click and ESC).
+        const closeSearch = () => {
+          navWraps.item(index).classList.remove('search-open');
+          searchForms.item(index).classList.remove('open');
+          searchButton.setAttribute('aria-expanded', 'false');
+          searchButton.innerHTML = 'open search';
+          searchForms.item(index).setAttribute('inert', '');
+          if (!isMicrositeLandingPage) {
+            document.body.classList.remove('search-open');
+          }
+          if (micrositeMenuClone) {
+            micrositeMenuClone.classList.remove('expanded-with-search');
+          }
+          searchButton.focus();
+        };
+
         searchButton.addEventListener('click', (clickElem) => {
           let isHeaderSearchButton = clickElem.currentTarget.closest('.c-header-bar');
           navWraps.item(index).classList.toggle('search-open');
@@ -194,6 +213,14 @@
             searchInputs.item(index).focus();
           }
         });
+
+        // Close search overlay when ESC is pressed while focus is within search.
+        searchForms.item(index).addEventListener('keydown', (e) => {
+          if ((e.key === 'Escape' || e.keyCode === 27) && searchForms.item(index).classList.contains('open')) {
+            e.preventDefault();
+            closeSearch();
+          }
+        });
       });
     },
 
@@ -203,24 +230,89 @@
      * @returns void
      */
     mobileMenu: function () {
-      const mobileMenu = document.querySelector('button.js-mobile-nav--btn');
-      const closeMenuButton = document.querySelector('button.js-mobile-nav--btn.c-nav--toggle--close');
+      const hamburgerButton = document.querySelector('button.c-nav--toggle');
+      const closeMenuButton = document.querySelector('button.c-nav--toggle--close');
+      const navMenu = document.getElementById('main-site-menu');
+      const mobileMediaQuery = window.matchMedia('(max-width: 767px)');
 
-      mobileMenu.addEventListener('click', (e) => {
-        document.body.classList.toggle('nav-open');
-        e.currentTarget.setAttribute('aria-expanded', document.body.classList.contains('nav-open') ? 'true' : 'false');
-        if (!document.body.classList.contains('nav-open')) {
-          e.currentTarget.focus();
+      if (!hamburgerButton || !navMenu) return;
+
+      // Returns all currently focusable elements within the nav overlay.
+      const getFocusableElements = () => {
+        return [...navMenu.querySelectorAll(
+          'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        )];
+      };
+
+      const openMenu = () => {
+        document.body.classList.add('nav-open');
+        hamburgerButton.setAttribute('aria-expanded', 'true');
+        navMenu.removeAttribute('inert');
+        const focusable = getFocusableElements();
+        if (focusable.length) focusable[0].focus();
+      };
+
+      const closeMenu = () => {
+        document.body.classList.remove('nav-open');
+        hamburgerButton.setAttribute('aria-expanded', 'false');
+        navMenu.setAttribute('inert', '');
+        hamburgerButton.focus();
+      };
+
+      // Set initial inert state: nav is off-screen on mobile until opened.
+      if (mobileMediaQuery.matches) {
+        navMenu.setAttribute('inert', '');
+      }
+
+      // Update inert state on viewport breakpoint change.
+      mobileMediaQuery.addEventListener('change', (e) => {
+        if (e.matches) {
+          // Switched to mobile: mark nav inert if not open.
+          if (!document.body.classList.contains('nav-open')) {
+            navMenu.setAttribute('inert', '');
+          }
+        } else {
+          // Switched to desktop: nav is always visible, remove mobile inert.
+          navMenu.removeAttribute('inert');
+        }
+      });
+
+      // Focus trap: keep Tab/Shift+Tab within the open mobile nav overlay.
+      navMenu.addEventListener('keydown', (e) => {
+        if (!document.body.classList.contains('nav-open') || e.key !== 'Tab') return;
+
+        const focusable = getFocusableElements();
+        if (!focusable.length) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      });
+
+      hamburgerButton.addEventListener('click', () => {
+        if (document.body.classList.contains('nav-open')) {
+          closeMenu();
+        } else {
+          openMenu();
         }
       });
 
       if (closeMenuButton) {
-        closeMenuButton.addEventListener('click', (e) => {
-          document.body.classList.remove('nav-open');
-          e.currentTarget.setAttribute('aria-expanded', 'false');
-          document.querySelector('button.js-mobile-nav--btn.button--menu').focus();
-        });
+        closeMenuButton.addEventListener('click', () => closeMenu());
       }
+
+      // ESC closes the mobile menu and returns focus to the toggle button.
+      document.addEventListener('keydown', (e) => {
+        if ((e.key === 'Escape' || e.keyCode === 27) && document.body.classList.contains('nav-open')) {
+          closeMenu();
+        }
+      });
     },
 
     /**
@@ -246,6 +338,70 @@
 
       // Listen for breakpoint changes.
       mediaQuery.addEventListener('change', handleBreakpointChange);
+    },
+
+    /**
+     * Implements accessible flyout behavior for the logged-in user menu.
+     *
+     * @returns void
+     */
+    userMenu: function () {
+      const toggleButton = document.querySelector('.c-user-menu__toggle');
+      const panel = document.getElementById('user-menu-dropdown');
+
+      if (!toggleButton || !panel) return;
+
+      const openPanel = () => {
+        panel.hidden = false;
+        toggleButton.setAttribute('aria-expanded', 'true');
+        const first = panel.querySelector('a, button');
+        if (first) first.focus();
+      };
+
+      const closePanel = (returnFocus = true) => {
+        panel.hidden = true;
+        toggleButton.setAttribute('aria-expanded', 'false');
+        if (returnFocus) toggleButton.focus();
+      };
+
+      toggleButton.addEventListener('click', () => {
+        if (toggleButton.getAttribute('aria-expanded') === 'true') {
+          closePanel();
+        } else {
+          openPanel();
+        }
+      });
+
+      // ESC closes the panel and returns focus to the toggle button.
+      document.addEventListener('keydown', (e) => {
+        if ((e.key === 'Escape' || e.keyCode === 27) && toggleButton.getAttribute('aria-expanded') === 'true') {
+          closePanel();
+        }
+      });
+
+      // Close the panel when focus moves outside it.
+      document.addEventListener('focusin', (e) => {
+        if (
+          toggleButton.getAttribute('aria-expanded') === 'true' &&
+          !panel.contains(e.target) &&
+          !toggleButton.contains(e.target)
+        ) {
+          closePanel(false);
+        }
+      });
+
+      // Close the panel when clicking outside it.
+      // Use contains() so clicks on child elements of the toggle button
+      // (text spans, SVG path) don't trigger an immediate close.
+      document.addEventListener('click', (e) => {
+        if (
+          toggleButton.getAttribute('aria-expanded') === 'true' &&
+          !panel.contains(e.target) &&
+          !toggleButton.contains(e.target)
+        ) {
+          closePanel(false);
+        }
+      });
     },
 
     /**

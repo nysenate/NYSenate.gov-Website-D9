@@ -40,6 +40,12 @@ ul.c-login--list {
       }
     }
 
+    // Override base `li { height: 100% }` so items stack in flow instead of
+    // each taking up the full nav overlay height.
+    li {
+      height: auto;
+    }
+
     & > li:first-of-type {
       margin: 0 20px;
     }
@@ -228,6 +234,130 @@ ul.c-login--list {
         a:hover {
           background: $gen_blue_drk;
         }
+      }
+    }
+  }
+}
+
+// Desktop accessible flyout user menu (split-button pattern).
+.c-user-menu.desktop-mode {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+  height: 100%;
+  margin-left: 15px;
+
+  // Hide on phones where the mobile nav overlay handles the user account links
+  // (matches the original u-tablet-plus behavior on the old <ul> element).
+  @include breakpoint($bp-under-sm) {
+    display: none;
+  }
+
+  @include breakpoint($bp-under-md) {
+    margin-left: 20px;
+  }
+
+  // Single toggle button — spans the full "Welcome, Name!" + chevron area.
+  .c-user-menu__toggle {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    // Reset browser default <button> appearance.
+    border: none;
+    // Match text colour of a.c-header--btn__primary (lgt-text).
+    color: $gen_blue_lgt;
+
+    span.c-user-menu--shrunk-dashboard-link {
+      display: none;
+    }
+
+    @include breakpoint($bp-under-lg2) {
+      span.c-user-menu--full-width-dashboard-link {
+        display: none;
+      }
+
+      span.c-user-menu--shrunk-dashboard-link {
+        display: inline;
+      }
+
+      // Pin the "My Stuff" variant to the same fixed width as the dropdown.
+      min-width: 180px;
+    }
+
+    // Turn blue on hover (matching a:hover.c-header--btn__primary) and when open.
+    &:hover,
+    &[aria-expanded="true"] {
+      background-color: $gen_blue_lgt;
+      color: $color-white;
+    }
+
+    // Hide the CSS pseudo-element chevron; we use the inline SVG instead.
+    &.c-header--btn__primary::after {
+      display: none;
+    }
+
+    svg {
+      margin-left: 6px;
+      // Match the right-side spacing the original ::after circle had.
+      margin-right: 4px;
+      transition: transform 0.2s ease;
+    }
+
+    &[aria-expanded="true"] svg {
+      transform: rotate(180deg);
+    }
+  }
+
+  // Dropdown panel — hidden via the HTML `hidden` attribute, shown by JS.
+  .c-user-menu__dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    // Match button width; at the compact breakpoint both are pinned to 180px.
+    width: 100%;
+    min-width: 180px;
+    z-index: 1000;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    &[hidden] {
+      display: none;
+    }
+
+    // Override the global `ul li + li { margin-top: 5px }` rule.
+    li + li {
+      margin-top: 0;
+    }
+
+    li {
+      a {
+        display: block;
+        // Override float: left set by .c-header--btn so <li> heights are correct.
+        float: none;
+        width: 100%;
+        padding: 0 15px 0 20px;
+        color: $grey08;
+        font-family: $font-sans-bold;
+        text-transform: uppercase;
+        background: $greyLight;
+        line-height: 30px;
+        border: solid $grey05;
+        border-width: 0 1px;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+
+      &:first-child a {
+        padding-top: 15px;
+      }
+
+      &:last-child a {
+        padding-bottom: 15px;
+        border-width: 0 1px 1px 1px;
       }
     }
   }

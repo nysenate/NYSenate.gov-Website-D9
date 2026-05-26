@@ -40,7 +40,7 @@
           {% for item in items %}
             <!--li class="leaf" {#{ item.attributes|without('class') }#}-->
             <li class="leaf{{ item.below ? ' leaf--has-submenu' }}{{ item.in_active_trail ? ' leaf--active-trail' }}" {{ item.attributes|without('class') }} role="menuitem">
-              <a href="{{ item.url|render ? item.url : '#' }}"{{ item.in_active_trail ? ' class="is-active"' }} {{ item.below ? 'aria-expanded="false" aria-haspopup="true"'}}>{% if item.title %}{{ item.title }}{% else %}{{ item.text }}{% endif %}</a>
+              <a href="{{ item.url|render ? item.url : '#' }}"{{ item.in_active_trail ? ' class="is-active"' }}{{ item.in_active_trail ? ' aria-current="page"' }} {{ item.below ? 'aria-expanded="false" aria-haspopup="true"'}}>{% if item.title %}{{ item.title }}{% else %}{{ item.text }}{% endif %}</a>
 
                 {% if item.below %}
                   <button class="menu-item-toggle">

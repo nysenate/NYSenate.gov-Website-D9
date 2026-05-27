@@ -45,6 +45,42 @@
           self.carouselAdvance(event, carouselAnimating, self, $(this));
         }, 300)
       );
+
+      // Add arrow-key keyboard support for each carousel instance
+      ['budget', 'law'].forEach(function (mod) {
+        const $carousel = $('#js-carousel-' + mod, context);
+        if ($carousel.length === 0) {
+          return;
+        }
+
+        // Make the carousel track focusable so keyboard users can reach it
+        $carousel.attr('tabindex', '0');
+
+        const $wrap = $carousel.closest('.c-senate-works-container');
+        $wrap.on('keydown.howSenateWorks', function (e) {
+          // Only navigate when the carousel is in mobile slider mode.
+          // On desktop all steps are visible at once; the nav is hidden via
+          // u-mobile-only and shifting left would break the layout.
+          if (!$wrap.find('.c-carousel--nav').is(':visible')) {
+            return;
+          }
+
+          if (e.key === 'ArrowLeft') {
+            const $prevBtn = $wrap.find('.c-carousel--btn.prev');
+            if (!$prevBtn.hasClass('hidden')) {
+              $prevBtn.trigger('click');
+            }
+            e.preventDefault();
+          }
+          else if (e.key === 'ArrowRight') {
+            const $nextBtn = $wrap.find('.c-carousel--btn.next');
+            if (!$nextBtn.hasClass('hidden')) {
+              $nextBtn.trigger('click');
+            }
+            e.preventDefault();
+          }
+        });
+      });
     },
     carouselAdvance: function (e, carouselAnimating, self, item) {
       const PREV_VALUE = 4;

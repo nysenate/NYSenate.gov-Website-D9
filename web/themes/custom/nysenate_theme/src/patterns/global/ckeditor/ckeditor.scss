@@ -1,5 +1,14 @@
 @import '../../global/utils/init';
 
+// WCAG 1.4.1: Inline links in body content must be distinguishable from
+// surrounding text without relying on color alone. Adding underline satisfies
+// this without requiring a 3:1 contrast ratio between link and body text color.
+.ck-content p a,
+.c-news--body .field--name-body p a,
+.text-layout__body p a {
+  text-decoration: underline;
+}
+
 /*.ck-content .link-text,
 .ck-content .c-container--link,
 .ck-content .c-block a,

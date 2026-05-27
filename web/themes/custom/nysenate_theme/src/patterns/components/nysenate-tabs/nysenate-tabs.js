@@ -42,11 +42,11 @@
           const savedButton = $(savedTabId);
           if (savedButton.length > 0) {
             // Remove active from all tabs
-            $('.l-tab-bar button.c-tab').removeClass('active').attr('aria-selected', 'false').attr('aria-expanded', 'false');
+            $('.l-tab-bar button.c-tab').removeClass('active').attr('aria-selected', 'false').attr('tabindex', '-1');
             $('.tabs-content .content').removeClass('active');
             
             // Set active on saved tab
-            savedButton.addClass('active').attr('aria-selected', 'true').attr('aria-expanded', 'true');
+            savedButton.addClass('active').attr('aria-selected', 'true').attr('tabindex', '0');
             const targetPanel = savedButton.val();
             $(targetPanel).addClass('active');
           }
@@ -77,13 +77,36 @@
             const panelId = $(this).val().replace('#', '');
             $(this).attr('aria-controls', panelId);
             
-            // Set proper aria-selected based on active class
+            // Set proper aria-selected and tabindex based on active class
             if ($(this).hasClass('active')) {
-              $(this).attr('aria-selected', 'true');
-              $(this).attr('aria-expanded', 'true');
+              $(this).attr('aria-selected', 'true').attr('tabindex', '0');
             } else {
-              $(this).attr('aria-selected', 'false');
-              $(this).attr('aria-expanded', 'false');
+              $(this).attr('aria-selected', 'false').attr('tabindex', '-1');
+            }
+          });
+
+          // Arrow key navigation between tabs (WAI-ARIA tabs keyboard pattern)
+          tabButton.on('keydown', function(e) {
+            const $allTabs = $(this).closest('.l-tab-bar').find('button.c-tab');
+            const currentIndex = $allTabs.index(this);
+            let newIndex = -1;
+
+            if (e.key === 'ArrowRight') {
+              newIndex = (currentIndex + 1) % $allTabs.length;
+              e.preventDefault();
+            } else if (e.key === 'ArrowLeft') {
+              newIndex = (currentIndex - 1 + $allTabs.length) % $allTabs.length;
+              e.preventDefault();
+            } else if (e.key === 'Home') {
+              newIndex = 0;
+              e.preventDefault();
+            } else if (e.key === 'End') {
+              newIndex = $allTabs.length - 1;
+              e.preventDefault();
+            }
+
+            if (newIndex >= 0) {
+              $allTabs.eq(newIndex).focus().trigger('click');
             }
           });
 
@@ -97,10 +120,10 @@
             saveActiveTab(tabId);
 
             // Remove active state from all buttons
-            tabButton.removeClass('active').attr('aria-selected', 'false').attr('aria-expanded', 'false');
+            tabButton.removeClass('active').attr('aria-selected', 'false').attr('tabindex', '-1');
 
             // Set active state on clicked button
-            $(this).addClass('active').attr('aria-selected', 'true').attr('aria-expanded', 'true');
+            $(this).addClass('active').attr('aria-selected', 'true').attr('tabindex', '0');
 
             // Update content visibility
             tabContent.find('.content').removeClass('active');

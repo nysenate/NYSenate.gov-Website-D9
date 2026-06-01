@@ -23,9 +23,11 @@
   <div{{ attributes.addClass(classes) }}>
     <h2 class="nys-title">Statewide Senate Events Calendar</h2>
     <div id="datepicker">
-      <input type="text" />
+      <label class="visually-hidden" for="events-datepicker-input">Filter events by date</label>
+      <input id="events-datepicker-input" type="text" />
       <div id="container"></div>
     </div>
+    <div id="events-results-announcement" class="visually-hidden" aria-live="polite" aria-atomic="true"></div>
     {{ content }}
   </div>
 {% endif %}

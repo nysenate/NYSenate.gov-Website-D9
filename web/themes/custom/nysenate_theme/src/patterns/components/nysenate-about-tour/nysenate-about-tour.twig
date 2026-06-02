@@ -5,8 +5,12 @@
     <h3 class="nys-subtitle-title">{{ title }}</h3>
   {% endif %}
   {% if carousel or carousel_block %}
-    <section class="carousel__wrapper{{ attributes ? ' ' ~ attributes.class}}" {{- attributes ? attributes|without(class) -}}>
-      <ul class="carousel__list carousel__slick">
+    <section class="carousel__wrapper{{ attributes ? ' ' ~ attributes.class}}"
+             {{- attributes ? attributes|without(class) -}}
+             role="region"
+             aria-roledescription="carousel"
+             aria-label="Capitol tour photos">
+      <div class="carousel__list carousel__slick">
         {% if carousel %}
           {% block carousel_items %}
             {% for item in carousel.list %}
@@ -20,7 +24,7 @@
         {% else %}
           {{ carousel_block|without('field_title') }}
         {% endif %}
-      </ul>
+      </div>
     </section>
   {% endif %}
 

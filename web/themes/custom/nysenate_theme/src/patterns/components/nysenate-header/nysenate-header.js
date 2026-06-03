@@ -7,7 +7,11 @@
       const isFrontpage = document.querySelector('body.path-frontpage');
 
       // Setup references to globally-used elements.
+      // once() ensures this behavior is only initialized once per page load.
+      // All sub-functions attach document-level listeners; without this guard
+      // they would accumulate on every attach() call (e.g. after AJAX).
       const header = once('nys-header-once', '#js-sticky').shift();
+      if (!header) return;
       const actionBar = document.querySelector('.c-actionbar');
       const headerBar = once('nys-header-bar-once', 'section.c-header-bar').shift();
       const senatorHero = document.querySelector('.hero--senator');
@@ -216,7 +220,7 @@
 
         // Close search overlay when ESC is pressed while focus is within search.
         searchForms.item(index).addEventListener('keydown', (e) => {
-          if ((e.key === 'Escape' || e.keyCode === 27) && searchForms.item(index).classList.contains('open')) {
+          if (e.key === 'Escape' && searchForms.item(index).classList.contains('open')) {
             e.preventDefault();
             closeSearch();
           }
@@ -309,7 +313,7 @@
 
       // ESC closes the mobile menu and returns focus to the toggle button.
       document.addEventListener('keydown', (e) => {
-        if ((e.key === 'Escape' || e.keyCode === 27) && document.body.classList.contains('nav-open')) {
+        if (e.key === 'Escape' && document.body.classList.contains('nav-open')) {
           closeMenu();
         }
       });
@@ -374,7 +378,7 @@
 
       // ESC closes the panel and returns focus to the toggle button.
       document.addEventListener('keydown', (e) => {
-        if ((e.key === 'Escape' || e.keyCode === 27) && toggleButton.getAttribute('aria-expanded') === 'true') {
+        if (e.key === 'Escape' && toggleButton.getAttribute('aria-expanded') === 'true') {
           closePanel();
         }
       });

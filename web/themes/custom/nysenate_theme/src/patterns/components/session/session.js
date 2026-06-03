@@ -2,71 +2,51 @@
  * @file
  * Accessibility announcements for legislation load more interactions.
  */
-!((document, Drupal, $) => {
+!((document, Drupal) => {
   'use strict';
 
-  /**
-   * Write a message to the appropriate aria-live region for a given view.
-   *
-   * Priority:
-   * 1. The `.aria-announcement` in a parent `.tabs-content` — this element
-   *    lives OUTSIDE individual tab panels so it is never hidden by tab
-   *    switching.
-   * 2. The `.legislation-results-announcement` that is a preceding sibling of
-   *    the view `<div>` — used when the view is rendered outside a tabs block.
-   *
-   * The clear + 150 ms delay is required for Safari / VoiceOver to fire.
-   */
-  const announce = function ($view, message) {
-    let $el = $view.closest('.tabs-content').find('.aria-announcement').first();
-    if (!$el.length) {
-      $el = $view.prev('.legislation-results-announcement');
-    }
-    if (!$el.length) {
-      return;
-    }
-    $el[0].textContent = '';
-    setTimeout(function () {
-      $el[0].textContent = message;
-    }, 150);
+  const getResultCount = function (view) {
+    return view.querySelectorAll('.view-content .views-infinite-scroll-content-wrapper > div, .view-content .views-row').length;
   };
 
-  const getResultCount = function ($view) {
-    return $view.find('.view-content .views-infinite-scroll-content-wrapper > div, .view-content .views-row').length;
-  };
+  // WeakSet tracks initialized views so the MutationObserver and delegated
+  // click listener are only attached once per element across attach() calls.
+  const initializedViews = new WeakSet();
 
   Drupal.behaviors.sessionA11yAnnouncements = {
     attach: function (context) {
       // Views Infinite Scroll appends rows into the existing view wrapper
       // rather than replacing it, so we initialize only once and rely on a
       // MutationObserver to detect newly appended rows.
-      $('.view-id-upcoming_legislation', context).each(function () {
-        const $view = $(this);
-        if ($view.data('a11yLoadMoreInit')) {
+      context.querySelectorAll('.view-id-upcoming_legislation').forEach(function (view) {
+        if (initializedViews.has(view)) {
           return;
         }
-        $view.data('a11yLoadMoreInit', true);
+        initializedViews.add(view);
 
-        const $resultsContainer = $view.find('.view-content').first();
-        let previousCount = getResultCount($view);
+        const resultsContainer = view.querySelector('.view-content');
+        let previousCount = getResultCount(view);
 
         const loadMoreSelector = '.pager-load-more a, .pager__item.pager-load-more a, a.load-more';
 
-        $view.on('click', loadMoreSelector, function () {
-          previousCount = getResultCount($view);
-          announce($view, 'Loading more legislation results.');
+        // Delegated click: matches the load-more link regardless of DOM depth.
+        view.addEventListener('click', function (e) {
+          if (e.target.closest(loadMoreSelector)) {
+            previousCount = getResultCount(view);
+            Drupal.announce('Loading more legislation results.');
+          }
         });
 
-        if ($resultsContainer.length > 0) {
+        if (resultsContainer) {
           const observer = new MutationObserver(function () {
-            const updatedCount = getResultCount($view);
+            const updatedCount = getResultCount(view);
             if (updatedCount > previousCount) {
-              announce($view, updatedCount + ' legislation results shown.');
+              Drupal.announce(updatedCount + ' legislation results shown.');
               previousCount = updatedCount;
             }
           });
 
-          observer.observe($resultsContainer.get(0), {
+          observer.observe(resultsContainer, {
             childList: true,
             subtree: true,
           });
@@ -74,4 +54,4 @@
       });
     },
   };
-})(document, Drupal, jQuery);
+})(document, Drupal);

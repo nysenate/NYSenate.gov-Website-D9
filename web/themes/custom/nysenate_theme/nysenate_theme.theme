@@ -61,11 +61,17 @@ function nysenate_theme_preprocess_html(&$variables) {
 }
 
 /**
- * Implements hook_preprocess_menu_ID().
+ * Returns accessible labels for social media icon machine names.
+ *
+ * Keys are the menu link title values used in the 'socials' Drupal menu, which
+ * double as icon glyph names in the senate_icons font. If a new platform is
+ * added to that menu its title must be added here (or the fallback ucwords()
+ * label will be used instead).
+ *
+ * @return array<string, string>
  */
-function nysenate_theme_preprocess_menu__socials(&$variables) {
-  $socials = [];
-  $icon_labels = [
+function _nysenate_theme_social_icon_labels(): array {
+  return [
     'facebook'  => 'View Facebook page',
     'twitter'   => 'View Twitter profile',
     'youtube'   => 'View YouTube channel',
@@ -74,6 +80,14 @@ function nysenate_theme_preprocess_menu__socials(&$variables) {
     'linkedin'  => 'View LinkedIn page',
     'pinterest' => 'View Pinterest profile',
   ];
+}
+
+/**
+ * Implements hook_preprocess_menu_ID().
+ */
+function nysenate_theme_preprocess_menu__socials(&$variables) {
+  $socials = [];
+  $icon_labels = _nysenate_theme_social_icon_labels();
 
   foreach ($variables['items'] as $link) {
     $icon = $link['title'];
@@ -4772,15 +4786,7 @@ function nysenate_theme_preprocess_page(&$variables) {
 
   if (isset($menu['#items'])) {
     $socials = [];
-    $icon_labels = [
-      'facebook'  => 'View Facebook page',
-      'twitter'   => 'View Twitter profile',
-      'youtube'   => 'View YouTube channel',
-      'youtube-2' => 'View YouTube channel',
-      'instagram' => 'View Instagram profile',
-      'linkedin'  => 'View LinkedIn page',
-      'pinterest' => 'View Pinterest profile',
-    ];
+    $icon_labels = _nysenate_theme_social_icon_labels();
     foreach ($menu['#items'] as $link) {
       $icon = $link['title'];
       $socials[] = [

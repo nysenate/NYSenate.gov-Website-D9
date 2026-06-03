@@ -7,21 +7,6 @@
   'use strict';
 
   /**
-   * Write a message to the static aria-live region after a short delay.
-   * The clear + 150 ms delay is required for Safari / VoiceOver to fire.
-   */
-  const announce = function (message) {
-    const el = document.getElementById('senators-results-announcement');
-    if (!el) {
-      return;
-    }
-    el.textContent = '';
-    setTimeout(function () {
-      el.textContent = message;
-    }, 150);
-  };
-
-  /**
    * Setup and attach the Senator List behaviors.
    *
    * @type {Drupal~behavior}
@@ -36,7 +21,7 @@
         const isSenatorView = $ctx.hasClass('view-id-senator_and_committee_lists') ||
           $ctx.find('.view-id-senator_and_committee_lists').length > 0;
         if (isSenatorView) {
-          announce('Senator results updated.');
+          Drupal.announce('Senator results updated.');
         }
         return;
       }
@@ -47,7 +32,7 @@
 
       $committeeFilter.add($partyFilter).on('change', function () {
         const $form = $(this).closest('form');
-        announce('Updating senator results.');
+        Drupal.announce('Updating senator results.');
         $form.find('input[type=submit]').trigger('click');
       });
     },

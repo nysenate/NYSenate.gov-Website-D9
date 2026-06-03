@@ -15,8 +15,10 @@
           {% block carousel_items %}
             {% for item in carousel.list %}
               {%
-            include '@rain_theme/carousel/_carousel-item.twig' with {
-              "item": item
+            include '@nysenate_theme/nysenate-carousel/_carousel-item.twig' with {
+              "item": item,
+              "slide_index": loop.index,
+              "slide_total": carousel.list|length
             } only
           %}
             {% endfor %}

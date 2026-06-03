@@ -6,27 +6,6 @@
   'use strict';
 
   /**
-   * Write a message to the static aria-live region after a short delay.
-   * The clear + 150 ms delay is required for Safari / VoiceOver to fire.
-   */
-  const announce = function (message) {
-    const el = document.getElementById('events-results-announcement');
-    if (!el) {
-      return;
-    }
-    el.textContent = '';
-    setTimeout(function () {
-      el.textContent = message;
-    }, 150);
-  };
-
-  const hideCalendarTablesFromAssistiveTech = function () {
-    document.querySelectorAll('.Zebra_DatePicker .dp_daypicker, .Zebra_DatePicker .dp_header, .Zebra_DatePicker .dp_monthpicker, .Zebra_DatePicker .dp_yearpicker, .Zebra_DatePicker .dp_footer').forEach(function (table) {
-      table.setAttribute('aria-hidden', 'true');
-    });
-  };
-
-  /**
    * Setup and attach the Event Calendar behaviors.
    *
    * @type {Drupal~behavior}
@@ -41,7 +20,7 @@
         const isEventsView = $ctx.hasClass('view-id-events') ||
           $ctx.find('.view-id-events').length > 0;
         if (isEventsView) {
-          announce('Event results updated.');
+          Drupal.announce('Event results updated.');
         }
         return;
       }
@@ -57,12 +36,6 @@
         return;
       }
 
-      // Ensure the readonly date picker input has an accessible name.
-      if (!$datePicker.attr('id')) {
-        $datePicker.attr('id', 'events-datepicker-input');
-      }
-      $datePicker.attr('aria-label', 'Filter events by date');
-
       // Setup DOM pointers.
       const dateInput = document.querySelector('.calendar-events-form input.bef-datepicker');
       const formSubmit = document.querySelector('.calendar-events-form input.form-submit');
@@ -72,7 +45,7 @@
       if (exposedForm && !exposedForm.dataset.a11yLiveFilterInit) {
         exposedForm.dataset.a11yLiveFilterInit = 'true';
         exposedForm.addEventListener('change', function () {
-          announce('Updating event results.');
+          Drupal.announce('Updating event results.');
         }, true);
       }
 
@@ -86,12 +59,11 @@
         first_day_of_week: 0,
         format: dateFormat,
         onSelect: function (date, elements) {
-          announce('Updating event results.');
+          Drupal.announce('Updating event results.');
           dateInput.value = !isMonthView ? date : date + '-01';
           formSubmit.click();
         },
         onChange: function () {
-          hideCalendarTablesFromAssistiveTech();
           if (isWeekView) {
             const dayPicker = document.querySelector('.dp_daypicker');
             dayPicker.classList.add('week');
@@ -103,8 +75,6 @@
           }
         }
       });
-
-      hideCalendarTablesFromAssistiveTech();
     }
   };
 })(document, Drupal, jQuery);

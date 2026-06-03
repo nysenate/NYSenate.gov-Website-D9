@@ -53,9 +53,6 @@
           return;
         }
 
-        // Make the carousel track focusable so keyboard users can reach it
-        $carousel.attr('tabindex', '0');
-
         const $wrap = $carousel.closest('.c-senate-works-container');
         $wrap.on('keydown.howSenateWorks', function (e) {
           // Only navigate when the carousel is in mobile slider mode.

@@ -168,7 +168,7 @@
       }
 
       @extend .lgt-bg;
-      @extend .icon-before__presskit;
+      @include icon-before-presskit;
       color: $color-white;
 
       &:hover {
@@ -199,7 +199,7 @@
     font-size: 16px;
     text-decoration: none;
     @extend .lgt-text;
-    @extend .icon-before__circle-pin;
+    @include icon-before-circle-pin;
   }
 }
 
@@ -244,7 +244,7 @@
       padding-left: 20px;
       transition: background-color 0.25s ease;
       @extend .lgt-bg;
-      @extend .icon-before__presskit;
+      @include icon-before-presskit;
 
       &:hover {
         @extend .drk-bg;

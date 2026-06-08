@@ -39,7 +39,7 @@
 
 	a {
 		color: $orange-text;
-		@extend .icon-after__right;
+		@include icon-after-right;
 
 		&::after {
 			margin-top: -3px;
@@ -131,7 +131,7 @@
 		a[title^="Follow"],
 		.flag-action {
 			background-color: $yellow02;
-			@extend .icon-before__plus;
+			@include icon-before-plus;
 			color: #1C1C1C;
 
 			&:hover {
@@ -142,7 +142,7 @@
 		a[title^="Unfollow"],
 		.unflag-action {
 			background-color: $yellow03;
-			@extend .icon-before__x;
+			@include icon-before-x;
 		}
 
 		.flag-wrapper {
@@ -190,7 +190,7 @@
 			left: 0;
 			width: 100%;
 			height: 100%;
-			@extend .icon-replace__x;
+			@include icon-replace-x;
 			background-color: $yellow02;
 			z-index: 1;
 			transition: background-color 0.2s ease;
@@ -217,7 +217,7 @@
 			left: 0;
 			background-color: $yellow02;
 			transition: background-color 0.2s ease;
-			@extend .icon-before__mail;
+			@include icon-before-mail;
 
 			&:hover {
 				background-color: $yellow01;
@@ -514,7 +514,7 @@
 // 			width: 45px;
 // 			background: none;
 // 			@extend .med-text;
-// 			@extend .icon-replace__search;
+// 			@include icon-replace-search;
 
 // 			&:after {
 // 				width: 100%;

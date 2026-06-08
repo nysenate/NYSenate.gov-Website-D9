@@ -7,7 +7,7 @@
 
 .c-block.c-block-legislation-featured .c-block--btn-toggle,
 .c-block-legislation .c-block--btn-toggle {
-  @extend .icon-replace__share;
+  @include icon-replace-share;
   background: transparent;
   border: none;
 }
@@ -325,7 +325,7 @@ a.c-sponsor--dist {
 
 .c-block.c-block-legislation-featured.c-block__collapsed .c-block--btn-toggle,
 .c-block-legislation .c-block--btn-toggle {
-  @extend .icon-replace__plus;
+  @include icon-replace-plus;
   position: absolute;
   right: 0;
   left: auto;

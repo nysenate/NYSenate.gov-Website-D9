@@ -5,6 +5,14 @@
 // Only variables / mixins / settings.
 @import 'utils/init';
 
+// Base style partials - imported here ONCE (not in _init.scss)
+// to prevent duplication across component CSS files.
+@import 'fonts/fonts';
+@import 'forms/forms';
+@import 'base/base';
+@import 'images/images';
+@import 'reading/reading';
+
 // Import utility classes.
 @import 'utils/classes';
 
@@ -609,28 +617,28 @@ label {
   }
 
   &.facebook {
-    @extend .icon-replace__facebook;
+    @include icon-replace-facebook;
   }
 
   &.twitter {
-    @extend .icon-replace__twitter;
+    @include icon-replace-twitter;
   }
 
   &.youtube {
-    @extend .icon-replace__youtube;
+    @include icon-replace-youtube;
   }
 
   &.instagram {
-    @extend .icon-replace__instagram;
+    @include icon-replace-instagram;
   }
 
   &.email {
-    @extend .icon-replace__mail;
+    @include icon-replace-mail;
   }
 }
 
 .c-block .c-view--link {
-  @extend .icon-before__presskit;
+  @include icon-before-presskit;
   @extend .lgt-text;
   margin: 0 0 20px;
   text-transform: uppercase;

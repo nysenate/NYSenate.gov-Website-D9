@@ -25,7 +25,7 @@
 
 .c-chapter-cta {
 	@extend .lgt-text;
-	@extend .icon-after__see-less;
+	@include icon-after-see-less;
 	display: block;
 	margin-top: 5px;
 	font-family: $font-sans;
@@ -40,7 +40,7 @@
 	}
 
 	.c-chapter-cta {
-		@extend .icon-after__see-more;
+		@include icon-after-see-more;
 	}
 }
 

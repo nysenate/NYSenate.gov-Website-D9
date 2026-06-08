@@ -1,0 +1,459 @@
+// -----------------------------------------------------------------------------
+// EXTEND MIXINS
+// -----------------------------------------------------------------------------
+// These mixins replace @extend usage throughout the codebase.
+// Using @include instead of @extend allows components to be compiled
+// independently without importing all base styles.
+//
+// Usage: Replace `@extend .lgt-text;` with `@extend .lgt-text;`
+// -----------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------------
+// COLOR MIXINS (from _colors.scss)
+// -----------------------------------------------------------------------------
+
+@mixin contrast-text {
+  color: $contrast_drk;
+}
+
+@mixin lgt-text {
+  color: $gen_blue_lgt;
+}
+
+@mixin lgt-bg {
+  background-color: $gen_blue_lgt;
+}
+
+@mixin med-text {
+  color: $gen_blue_med;
+}
+
+@mixin med-bg {
+  background-color: $gen_blue_med;
+}
+
+@mixin drk-text {
+  color: $gen_blue_drk;
+}
+
+@mixin drk-bg {
+  background-color: $gen_blue_drk;
+}
+
+@mixin link-text {
+  color: $gen_link;
+  &:hover {
+    color: $gen_link_hover;
+  }
+}
+
+@mixin accent-text {
+  color: $ns_accent;
+}
+
+@mixin accent-bg {
+  background-color: $ns_accent;
+}
+
+@mixin lgt-border {
+  border-color: $gen_blue_lgt;
+}
+
+// -----------------------------------------------------------------------------
+// ICON BASE MIXIN (from _fonts.scss)
+// -----------------------------------------------------------------------------
+
+@mixin icon-base-before {
+  &::before {
+    font-family: 'senate_icons';
+    display: inline-block;
+    vertical-align: middle;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    padding-right: 3px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@mixin icon-base-after {
+  &::after {
+    font-family: 'senate_icons';
+    display: inline-block;
+    vertical-align: middle;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    padding-left: 3px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+// Note: Unlike the original .icon-replace classes, this mixin does NOT set
+// position: relative. That property can conflict with element-specific
+// positioning (e.g., position: fixed on hamburger menu). Elements using
+// icon-replace mixins should set their own positioning as needed.
+@mixin icon-base-replace {
+  overflow: hidden;
+  text-indent: -99999px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  &::after {
+    text-indent: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-family: 'senate_icons';
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    padding-left: 3px;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// ICON BEFORE MIXINS
+// -----------------------------------------------------------------------------
+
+@mixin icon-before-presskit {
+  @include icon-base-before;
+  &::before {
+    content: '\6b';
+  }
+}
+
+@mixin icon-before-check {
+  @include icon-base-before;
+  &::before {
+    content: '\2f';
+  }
+}
+
+@mixin icon-before-x {
+  @include icon-base-before;
+  &::before {
+    content: '\78';
+  }
+}
+
+@mixin icon-before-search {
+  @include icon-base-before;
+  &::before {
+    content: '\6d';
+  }
+}
+
+@mixin icon-before-find-senator {
+  @include icon-base-before;
+  &::before {
+    content: '\24';
+  }
+}
+
+@mixin icon-before-recruit-friends {
+  @include icon-base-before;
+  &::before {
+    content: '\66';
+  }
+}
+
+@mixin icon-before-quotes {
+  @include icon-base-before;
+  &::before {
+    content: '\71';
+  }
+}
+
+@mixin icon-before-petition {
+  @include icon-base-before;
+  &::before {
+    content: '\70';
+  }
+}
+
+@mixin icon-before-mail {
+  @include icon-base-before;
+  &::before {
+    content: '\4e';
+  }
+}
+
+@mixin icon-before-left {
+  @include icon-base-before;
+  &::before {
+    content: '\3c';
+  }
+}
+
+@mixin icon-before-home {
+  @include icon-base-before;
+  &::before {
+    content: '\48';
+  }
+}
+
+@mixin icon-before-error {
+  @include icon-base-before;
+  &::before {
+    content: '\45';
+  }
+}
+
+@mixin icon-before-committee-confirm {
+  @include icon-base-before;
+  &::before {
+    content: '\35';
+  }
+}
+
+@mixin icon-before-comment {
+  @include icon-base-before;
+  &::before {
+    content: '\6a';
+  }
+}
+
+@mixin icon-before-circle-pin {
+  @include icon-base-before;
+  &::before {
+    content: '\32';
+  }
+}
+
+@mixin icon-before-circle-check {
+  @include icon-base-before;
+  &::before {
+    content: '\31';
+  }
+}
+
+@mixin icon-before-arrow {
+  @include icon-base-before;
+  &::before {
+    content: '\72';
+  }
+}
+
+// -----------------------------------------------------------------------------
+// ICON AFTER MIXINS
+// -----------------------------------------------------------------------------
+
+@mixin icon-after-see-more {
+  @include icon-base-after;
+  &::after {
+    content: '\65';
+  }
+}
+
+@mixin icon-after-right {
+  @include icon-base-after;
+  &::after {
+    content: '\3e';
+  }
+}
+
+@mixin icon-after-arrow {
+  @include icon-base-after;
+  &::after {
+    content: '\72';
+  }
+}
+
+// -----------------------------------------------------------------------------
+// ICON REPLACE MIXINS
+// -----------------------------------------------------------------------------
+
+@mixin icon-replace-x {
+  @include icon-base-replace;
+  &::after {
+    content: '\78';
+  }
+}
+
+@mixin icon-replace-search {
+  @include icon-base-replace;
+  &::after {
+    content: '\6d';
+  }
+}
+
+@mixin icon-replace-left {
+  @include icon-base-replace;
+  &::after {
+    content: '\3c';
+  }
+}
+
+@mixin icon-replace-right {
+  @include icon-base-replace;
+  &::after {
+    content: '\3e';
+  }
+}
+
+@mixin icon-replace-plus {
+  @include icon-base-replace;
+  &::after {
+    content: '\2b';
+  }
+}
+
+@mixin icon-replace-hamburger {
+  @include icon-base-replace;
+  &::after {
+    content: '\68';
+  }
+}
+
+@mixin icon-replace-facebook {
+  @include icon-base-replace;
+  &::after {
+    content: '\21';
+  }
+}
+
+@mixin icon-replace-instagram {
+  @include icon-base-replace;
+  &::after {
+    content: '\40';
+  }
+}
+
+@mixin icon-replace-mail {
+  @include icon-base-replace;
+  &::after {
+    content: '\4e';
+  }
+}
+
+@mixin icon-replace-minus {
+  @include icon-base-replace;
+  &::after {
+    content: '\2d';
+  }
+}
+
+@mixin icon-replace-see-less {
+  @include icon-base-replace;
+  &::after {
+    content: '\5e';
+  }
+}
+
+@mixin icon-replace-see-more {
+  @include icon-base-replace;
+  &::after {
+    content: '\65';
+  }
+}
+
+@mixin icon-replace-share {
+  @include icon-base-replace;
+  &::after {
+    content: '\73';
+  }
+}
+
+@mixin icon-replace-twitter {
+  @include icon-base-replace;
+  &::after {
+    content: '\23';
+  }
+}
+
+@mixin icon-replace-twitter-fav {
+  @include icon-base-replace;
+  &::after {
+    content: '\37';
+  }
+}
+
+@mixin icon-replace-twitter-reply {
+  @include icon-base-replace;
+  &::after {
+    content: '\38';
+  }
+}
+
+@mixin icon-replace-twitter-retweet {
+  @include icon-base-replace;
+  &::after {
+    content: '\39';
+  }
+}
+
+@mixin icon-replace-youtube {
+  @include icon-base-replace;
+  &::after {
+    content: '\79';
+  }
+}
+
+// Additional icon-before mixins
+@mixin icon-before-plus {
+  @include icon-base-before;
+  &::before {
+    content: '\2b';
+  }
+}
+
+@mixin icon-before-notification {
+  @include icon-base-before;
+  &::before {
+    content: '\6f';
+  }
+}
+
+@mixin icon-before-bill {
+  @include icon-base-before;
+  &::before {
+    content: '\30';
+  }
+}
+
+// Additional icon-after mixins
+@mixin icon-after-see-less {
+  @include icon-base-after;
+  &::after {
+    content: '\5e';
+  }
+}
+
+@mixin icon-after-down-arrow {
+  @include icon-base-after;
+  &::after {
+    content: '\e601';
+  }
+}
+
+// Bill graph mixins
+@mixin bill-graph-hr {
+  // Add actual styles if needed
+}
+
+@mixin bill-graph-dot {
+  // Add actual styles if needed
+}
+
+// -----------------------------------------------------------------------------
+// LAYOUT MIXINS
+// -----------------------------------------------------------------------------
+
+@mixin l-col {
+  float: left;
+  padding: 0 10px;
+}
+
+@mixin l-col-3 {
+  @include l-col;
+  width: 25%;
+}

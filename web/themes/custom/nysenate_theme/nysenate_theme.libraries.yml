@@ -1,3 +1,11 @@
+# ALL CSS - Single combined file for development (avoids duplicate styles in devtools)
+# To use: Add "nysenate_theme/all-css" to nysenate_theme.info.yml libraries
+# and remove attach_library calls from templates
+all-css:
+  css:
+    theme:
+      dist/css/all.css: {}
+
 about:
   css:
     component:

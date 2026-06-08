@@ -218,12 +218,12 @@
 // colored colors
 .nys-bill-status.nys-bill-status__drk {
   hr {
-    //@extend .bill-graph-hr;
+    //@include bill-graph-hr;
     background-color: rgba(255, 255, 255, 0.4);
   }
 
   li {
-    @extend .bill-graph-dot;
+    @include bill-graph-dot;
     background-color: $grey08;
 
     &.nys-bill-status-passed {

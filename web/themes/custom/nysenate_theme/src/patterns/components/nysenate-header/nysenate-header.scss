@@ -503,7 +503,7 @@ body {
 		position: fixed;
 		height: 40px;
 		width: 40px;
-		@extend .icon-replace__x;
+		@include icon-replace-x;
 
 		&::after {
 			font-size: 24px;
@@ -522,7 +522,7 @@ body {
     top: 0px;
     width: 40px;
     z-index: 10;
-		@extend .icon-replace__x;
+		@include icon-replace-x;
 
     &::after {
       width: 100%;
@@ -546,7 +546,7 @@ body {
     cursor: pointer;
     position: absolute;
     top: 10px;
-    @extend .icon-replace__x;
+    @include icon-replace-x;
 
     &::after {
       top: 4px;
@@ -561,7 +561,7 @@ body {
       left: 20px;
       right: auto;
       float: right;
-      @extend .icon-replace__search;
+      @include icon-replace-search;
 
       &::after {
         width: 100%;
@@ -693,7 +693,7 @@ header {
   background: $color-white;
   border: 0;
   padding: 0;
-	@extend .icon-replace__hamburger;
+	@include icon-replace-hamburger;
 
   @include breakpoint($bp-sm) {
     display: none;
@@ -1241,7 +1241,7 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     font-size: 22px;
     background: transparent;
     @extend .med-text;
-    @extend .icon-replace__search;
+    @include icon-replace-search;
 
     &::after {
       width: 100%;

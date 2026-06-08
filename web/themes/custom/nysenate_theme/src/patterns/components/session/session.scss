@@ -153,7 +153,7 @@
   font-family: $font-sans;
   font-size: 18px;
   @extend .lgt-text;
-  @extend .icon-before__circle-pin;
+  @include icon-before-circle-pin;
 
   @include breakpoint($bp-sm) {
     font-size: 20px;
@@ -1071,7 +1071,7 @@ div.c-meeting-detail--location {
   font-family: $font-sans-bold;
   text-decoration: none;
   @extend .accent-text;
-  @extend .icon-before__presskit;
+  @include icon-before-presskit;
 }
 
 .c-calendar--num {

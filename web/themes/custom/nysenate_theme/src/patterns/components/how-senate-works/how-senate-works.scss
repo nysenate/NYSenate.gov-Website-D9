@@ -19,7 +19,7 @@
 		padding: 23px 0 23px 25px;
 		color: $background-text;
 		background-color: $background-yellow;
-		@extend .icon-before__arrow;
+		@include icon-before-arrow;
 
 		&::before {
 			font-size: 17px;
@@ -88,15 +88,15 @@
 		}
 
 		&.illustration--write {
-			@extend .icon-before__petition;
+			@include icon-before-petition;
 		}
 
 		&.illustration--propose {
-			@extend .icon-before__comment;
+			@include icon-before-comment;
 		}
 
 		&.illustration--committee-votes {
-			@extend .icon-before__committee-confirm;
+			@include icon-before-committee-confirm;
 
 			&::before {
 				left: 0.3em;
@@ -105,7 +105,7 @@
 		}
 
 		&.illustration--floor-votes {
-			@extend .icon-before__home;
+			@include icon-before-home;
 
 			&::before {
 				left: 0.2em;
@@ -114,7 +114,7 @@
 		}
 
 		&.illustration--passed {
-			@extend .icon-before__check;
+			@include icon-before-check;
 		}
 
 		&::before {
@@ -158,12 +158,12 @@
 
 		&.prev {
 			left: 0;
-			@extend .icon-replace__left;
+			@include icon-replace-left;
 		}
 
 		&.next {
 			right: 0;
-			@extend .icon-replace__right;
+			@include icon-replace-right;
 		}
 
     &.hidden {

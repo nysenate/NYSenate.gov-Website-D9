@@ -144,12 +144,19 @@
   height: 45px;
   width: 25px;
   @extend .lgt-text;
-  @extend .icon-replace__see-more;
+  @include icon-replace-see-more;
   z-index: 10;
   pointer-events: none;
 
   &::after {
     font-size: 26px;
+  }
+
+  // Hide on tablet+ when used with .u-mobile-only
+  &.u-mobile-only {
+    @include breakpoint($bp-sm) {
+      display: none;
+    }
   }
 }
 
@@ -177,7 +184,7 @@
   font-family: $font-sans-bold;
   font-size: 12px;
   letter-spacing: 0.1em;
-  @extend .icon-after__arrow;
+  @include icon-after-arrow;
   @extend .link-text;
 
   &::after {
@@ -196,7 +203,7 @@
     top: 4px;
     height: 45px;
     width: 25px;
-    @extend .icon-replace__see-less;
+    @include icon-replace-see-less;
   }
 }
 
@@ -334,7 +341,7 @@
 				font-family: $font-sans-bold;
 				font-size: 16px;
 				line-height: 25px;
-				@extend .icon-after__see-more;
+				@include icon-after-see-more;
 				@extend .lgt-text;
               &:hover {
                 text-decoration: underline;

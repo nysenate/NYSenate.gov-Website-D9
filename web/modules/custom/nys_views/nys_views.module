@@ -32,3 +32,54 @@ function nys_views_views_data(): array {
 
   return $data;
 }
+
+/**
+ * Implements hook_views_data_alter().
+ */
+function nys_views_views_data_alter(array &$data): void {
+  // The webform module exposes webform_status as a filter/sort/argument but
+  // not as a displayable field. Add the missing field handler so it can be
+  // added as a column in Views. NULL means the node inherits the webform
+  // entity's own status rather than overriding it.
+  if (isset($data['node__webform']['webform_status'])) {
+    $data['node__webform']['webform_status']['field'] = [
+      'id' => 'standard',
+    ];
+    $data['node__webform']['webform_status']['filter']['id'] = 'webform_node_status';
+  }
+
+  // Expose webform archive status. Webforms are config entities so this is
+  // not in any DB table — a custom field plugin loads the entity per row.
+  if (isset($data['node__webform'])) {
+    $data['node__webform']['webform_archive_status'] = [
+      'group' => t('Content'),
+      'title' => t('Webform: Archived'),
+      'help' => t('Whether the webform entity is archived.'),
+      'field' => [
+        'id' => 'webform_archive_status',
+        'real field' => 'webform_target_id',
+      ],
+      'filter' => [
+        'id' => 'webform_archive_status',
+        'real field' => 'webform_target_id',
+      ],
+    ];
+
+    // Expose webform entity status (open/closed/scheduled). This reflects the
+    // webform's own setting, distinct from the node-level webform_status
+    // override. Webforms are config entities so a custom plugin loads per row.
+    $data['node__webform']['webform_entity_status'] = [
+      'group' => t('Content'),
+      'title' => t('Webform: Entity status'),
+      'help' => t("The webform entity's own status (open/closed/scheduled), ignoring any node-level override."),
+      'field' => [
+        'id' => 'webform_entity_status',
+        'real field' => 'webform_target_id',
+      ],
+      'filter' => [
+        'id' => 'webform_entity_status',
+        'real field' => 'webform_target_id',
+      ],
+    ];
+  }
+}

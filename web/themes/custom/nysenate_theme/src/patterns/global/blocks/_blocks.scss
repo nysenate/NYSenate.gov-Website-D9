@@ -219,7 +219,7 @@ body {
   left: auto;
   height: 42px;
   width: 42px;
-  @include icon-replace-minus;
+  @extend .icon-replace__minus;
 
   @include breakpoint($bp-sm) {
     padding-left: 0.2em;
@@ -240,7 +240,7 @@ body {
     position: absolute;
     height: 42px;
     width: 42px;
-    @include icon-replace-plus;
+    @extend .icon-replace__plus;
 
     &::after {
       font-size: 26px;
@@ -344,7 +344,7 @@ body {
     padding: 23px 0 23px 25px;
     color: $grey02;
     background-color: #EAEAEA;
-    //@include icon-before-arrow;
+    //@extend .icon-before__arrow;
 
     &::before {
       font-size: 17px;
@@ -398,13 +398,13 @@ body {
   }
 
   &.illustration--write {
-    @include icon-before-petition;
+    @extend .icon-before__petition;
   }
   &.illustration--propose {
-    @include icon-before-comment;
+    @extend .icon-before__comment;
   }
   &.illustration--committee-votes {
-    @include icon-before-committee-confirm;
+    @extend .icon-before__committee-confirm;
 
     &::before {
       left: 0.3em;
@@ -412,7 +412,7 @@ body {
     }
   }
   &.illustration--floor-votes {
-    @include icon-before-home;
+    @extend .icon-before__home;
 
     &::before {
       left: 0.2em;
@@ -420,7 +420,7 @@ body {
     }
   }
   &.illustration--passed {
-    @include icon-before-check;
+    @extend .icon-before__check;
   }
   &::before {
     font-family: $senate-icons;
@@ -527,13 +527,13 @@ p.c-senate-works-step-description {
   .c-senate-works-step-description {
     line-height: 16px;
   }
-  .c-senate-works-container.c-senate-works-container--law {
+  &.c-senate-works-container--law {
     .c-senate-works-step-description {
       font-size: 14px;
       @include font-stack-secondary;
     }
   }
-  .c-senate-works-container.c-senate-works-container--budget {
+  &.c-senate-works-container--budget {
     .c-senate-works-step-description {
       font-size: 13px;
       @include font-stack-secondary;
@@ -634,12 +634,12 @@ p.c-senate-works-step-description {
 
     &.prev {
       left: 0;
-      @include icon-replace-left;
+      @extend .icon-replace__left;
     }
 
     &.next {
       right: 0;
-      @include icon-replace-right;
+      @extend .icon-replace__right;
     }
 
     &.hidden {
@@ -968,19 +968,19 @@ p.c-senate-works-step-description {
       }
 
       .c-block--btn {
-        @include icon-before-find-senator;
+        @extend .icon-before__find-senator;
       }
     }
 
     &.c-want-to--item__explore {
       .c-block--btn {
-        @include icon-before-search;
+        @extend .icon-before__search;
       }
     }
 
     &.c-want-to--item__news {
       .c-block--btn {
-        @include icon-before-presskit;
+        @extend .icon-before__presskit;
       }
     }
   }

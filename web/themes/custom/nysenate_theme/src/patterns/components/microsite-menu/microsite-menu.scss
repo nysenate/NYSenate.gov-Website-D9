@@ -16,7 +16,7 @@
       bottom: 0;
       right: 0;
       left: auto;
-      @include icon-replace-search;
+      @extend .icon-replace__search;
       @extend .med-text;
 
       @include breakpoint($bp-sm) {
@@ -52,7 +52,7 @@
       cursor: pointer;
       position: absolute;
 			top: 0;
-      @include icon-replace-x;
+      @extend .icon-replace__x;
     }
 
     .c-site-search {
@@ -62,7 +62,7 @@
         top: -45px;
         left: auto;
         right: 20px;
-        @include icon-replace-search;
+        @extend .icon-replace__search;
       }
     }
   }

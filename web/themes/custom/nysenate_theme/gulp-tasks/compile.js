@@ -5,7 +5,7 @@
 const { src, dest } = require('gulp');
 
 // Include Our Plugins
-const sass = require('gulp-sass')(require('sass'));
+const sass = require('gulp-sass');
 const prefix = require('gulp-autoprefixer');
 const sourcemaps = require('gulp-sourcemaps');
 const babel = require('gulp-babel');
@@ -26,8 +26,7 @@ module.exports = {
   // Compile Sass.
   compileSass: function() {
     return src(['./src/patterns/**/**/*.scss', './src/vendor/**/*.css'])
-      .pipe(sourcemaps.init())
-      .pipe(sass({ outputStyle: 'expanded' }).on('error', handleError))
+      .pipe(sass({ outputStyle: 'nested' }).on('error', handleError))
       .pipe(
         prefix({
           cascade: false
@@ -39,7 +38,6 @@ module.exports = {
           return path;
         })
       )
-      .pipe(sourcemaps.write('./'))
       .pipe(dest('./dist/css'));
   },
 

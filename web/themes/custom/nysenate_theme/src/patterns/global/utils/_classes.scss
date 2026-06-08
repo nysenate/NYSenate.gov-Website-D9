@@ -1,6 +1,5 @@
-// Generic .container should not constrain width, but .l-row--main should
-// keep its specific max-width values even if it also has .container class.
-.container:not(.l-row--main) {
+// Add max-width.
+.container {
   max-width: unset;
 }
 

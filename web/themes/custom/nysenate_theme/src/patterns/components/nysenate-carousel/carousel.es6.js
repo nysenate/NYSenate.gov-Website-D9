@@ -20,6 +20,17 @@
           const $el = $(this);
           $el.removeAttr('tabindex');
 
+          // Slick.js calls initADA() immediately AFTER firing this 'init'
+          // event (slick.js:1284 trigger → 1288 initADA). initADA sets
+          // tabindex="0" on the active .slick-slide and tabindex="-1" on
+          // others. For image-only carousels there is nothing interactive
+          // inside a slide, so a keyboard focus stop on the slide container
+          // is unhelpful — navigation is provided by the prev/next buttons.
+          // Defer the removal via setTimeout so it runs after initADA().
+          setTimeout(function() {
+            $el.find('.slick-slide').removeAttr('tabindex');
+          }, 0);
+
           // Slick marks boundary arrows (e.g. "Previous" on the first slide)
           // with aria-disabled="true" but never sets tabindex="-1", leaving
           // them reachable by Tab even though pressing them does nothing.
@@ -48,6 +59,10 @@
             syncArrowTabindex(this);
             arrowObserver.observe(this, { attributes: true, attributeFilter: ['aria-disabled'] });
           });
+        })
+        .on('afterChange', function() {
+          // Slick re-adds tabindex to the newly active slide; remove it again.
+          $(this).find('.slick-slide').removeAttr('tabindex');
         })
         .slick({
           infinite: false,

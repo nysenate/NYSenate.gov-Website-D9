@@ -236,7 +236,16 @@
     mobileMenu: function () {
       const hamburgerButton = document.querySelector('button.c-nav--toggle');
       const closeMenuButton = document.querySelector('button.c-nav--toggle--close');
-      const navMenu = document.getElementById('main-site-menu');
+
+      // On regular pages the nav is a standalone <div id="main-site-menu">.
+      // On senator/microsite pages, the same role is filled by .c-nav--wrap
+      // inside the microsite menu block — it has no id by default.
+      // Assign the expected id so aria-controls points to the right element.
+      let navMenu = document.getElementById('main-site-menu');
+      if (!navMenu) {
+        navMenu = document.querySelector('.c-nav--wrap');
+        if (navMenu) navMenu.id = 'main-site-menu';
+      }
       const mobileMediaQuery = window.matchMedia('(max-width: 767px)');
 
       if (!hamburgerButton || !navMenu) return;

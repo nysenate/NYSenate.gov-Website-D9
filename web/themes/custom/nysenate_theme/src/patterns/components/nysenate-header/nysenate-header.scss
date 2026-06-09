@@ -1129,19 +1129,24 @@ a:hover.c-header--btn.c-header--btn__taking_action {
     width: auto;
   }
 
-  &.leaf--active-trail::after {
-    content: '';
-    display: block;
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: -15px;
-    margin: auto;
-    height: 20px;
-    width: 20px;
-    background: $color-white;
-    border: 1px solid $grey05;
-    transform: rotate(45deg);
+  // Diamond pointer arrow below active nav item — desktop only.
+  // On mobile, this pseudo-element renders as a stray visible square
+  // inside the expanded menu overlay.
+  @include breakpoint($bp-sm) {
+    &.leaf--active-trail::after {
+      content: '';
+      display: block;
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: -15px;
+      margin: auto;
+      height: 20px;
+      width: 20px;
+      background: $color-white;
+      border: 1px solid $grey05;
+      transform: rotate(45deg);
+    }
   }
 }
 

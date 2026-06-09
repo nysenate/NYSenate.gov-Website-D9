@@ -953,6 +953,20 @@ display:
         type: none
         options:
           offset: 0
+      sorts:
+        field_honoree_name_value:
+          id: field_honoree_name_value
+          table: node__field_honoree_name
+          field: field_honoree_name_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: standard
+          order: ASC
+          expose:
+            label: ''
+            field_identifier: ''
+          exposed: false
       filters:
         status:
           id: status
@@ -1367,6 +1381,7 @@ display:
         style: false
         row: false
         fields: false
+        sorts: false
         filters: false
         filter_groups: false
         header: false

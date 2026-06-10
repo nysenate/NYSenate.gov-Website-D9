@@ -1,3 +1,4 @@
+@use 'sass:color';
 @import '../../global/utils/init';
 
 .main-menu {
@@ -44,7 +45,7 @@
 
         &:hover,
         &:focus {
-          background: darken($color-blue, 10%);
+          background: color.adjust($color-blue, $lightness: -10%);
         }
       }
 
@@ -59,7 +60,7 @@
       }
 
       &.js-open {
-        background: darken($color-blue, 10%);
+        background: color.adjust($color-blue, $lightness: -10%);
       }
 
       &.menu-item--has-submenu {
@@ -118,7 +119,7 @@
       transition: max-height $transition;
 
       @include breakpoint($bp-sm) {
-        background: darken($color-blue, 10%);
+        background: color.adjust($color-blue, $lightness: -10%);
         position: absolute;
         width: auto;
       }

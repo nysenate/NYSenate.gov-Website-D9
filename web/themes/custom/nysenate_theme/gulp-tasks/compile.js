@@ -27,7 +27,12 @@ module.exports = {
   compileSass: function() {
     return src(['./src/patterns/**/**/*.scss', './src/vendor/**/*.css'])
       .pipe(sourcemaps.init())
-      .pipe(sass({ outputStyle: 'expanded' }).on('error', handleError))
+      .pipe(
+        sass({
+          outputStyle: 'expanded',
+          silenceDeprecations: ['legacy-js-api', 'import', 'global-builtin']
+        }).on('error', handleError)
+      )
       .pipe(
         prefix({
           cascade: false

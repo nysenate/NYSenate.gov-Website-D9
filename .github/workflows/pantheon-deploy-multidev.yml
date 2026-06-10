@@ -78,7 +78,7 @@ jobs:
       - name: Build nysenate_theme Theme Assets
         run: |
           cd ${{ vars.THEME_PATH }}
-          npm install
+          npm install --ignore-scripts
           npm run build
 
       - name: Update NodeJS to version in nys theme via .nvmrc.

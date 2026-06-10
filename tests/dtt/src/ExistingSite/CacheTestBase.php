@@ -172,49 +172,55 @@ abstract class CacheTestBase extends ExistingSiteBase {
   }
 
   /**
-   * Temporary diagnostic override — remove after CI diagnosis is complete.
+   * {@inheritdoc}
    *
-   * @internal
+   * On Pantheon, the site is fronted by Cloudflare Bot Management, which
+   * challenges automated HTTP clients (BrowserKit has no JavaScript execution
+   * capability). The standard OTL flow receives a JS challenge page instead of
+   * Drupal's 302 redirect, so the SSESS session cookie is never delivered to
+   * BrowserKit's jar and login always fails.
+   *
+   * To work around this we bypass the HTTP OTL flow entirely: we write the
+   * session directly to the database and inject the cookie into BrowserKit's
+   * jar. Authentication is infrastructure setup for these tests — what the
+   * suite actually exercises is cache header behavior, which is unaffected.
+   * The anonymous Guzzle client ($anonClient) and all cache-header assertions
+   * still go through Cloudflare unchanged.
    */
-  protected function drupalUserIsLoggedIn(\Drupal\Core\Session\AccountInterface $account): bool {
-    $sessionName = \Drupal::service('session_configuration')->getOptions(\Drupal::request())['name'];
-    $sessionId = $account->sessionId ?? '(null)';
-    fwrite(STDERR, "\n[diag] drupalUserIsLoggedIn: scheme=" . \Drupal::request()->getScheme() . "\n");
-    fwrite(STDERR, "[diag] session name: $sessionName\n");
-    fwrite(STDERR, "[diag] account->sessionId: $sessionId\n");
+  protected function drupalLogin(AccountInterface $account): void {
+    // Generate a raw session ID (43 chars — same length Drupal generates).
+    $rawSessionId = \Drupal\Component\Utility\Crypt::randomBytesBase64(32);
 
-    // Dump all cookies in the BrowserKit jar.
-    try {
-      $jar = $this->getSession()->getDriver()->getClient()->getCookieJar();
-      $allCookies = $jar->all();
-      fwrite(STDERR, "[diag] cookies in jar: " . count($allCookies) . "\n");
-      foreach ($allCookies as $cookie) {
-        fwrite(STDERR, "  " . $cookie->getName() . "=" . substr($cookie->getValue(), 0, 20) . "...\n");
-      }
-    }
-    catch (\Throwable $e) {
-      fwrite(STDERR, "[diag] could not dump cookies: " . $e->getMessage() . "\n");
-    }
+    // Write the session to the database. The sessions table stores the hashed
+    // SID as the primary key; the raw SID goes in the browser cookie.
+    \Drupal::database()->merge('sessions')
+      ->key('sid', \Drupal\Component\Utility\Crypt::hashBase64($rawSessionId))
+      ->fields([
+        'uid'       => $account->id(),
+        'hostname'  => '127.0.0.1',
+        'timestamp' => \Drupal::time()->getRequestTime(),
+        // PHP session-encode format for Symfony's attribute bag.
+        // Symfony stores session attributes under $_SESSION['_sf2_attributes'],
+        // so $session->get('uid') reads from there — NOT from $_SESSION['uid'].
+        'session'   => '_sf2_attributes|' . serialize(['uid' => (string) $account->id()]),
+      ])
+      ->execute();
 
-    if (!isset($account->sessionId)) {
-      fwrite(STDERR, "[diag] sessionId NOT set → looking for SSESS fallback\n");
-      if (str_starts_with($sessionName, 'SESS')) {
-        $ssessName = 'S' . $sessionName;
-        $ssessId = $this->getSession()->getCookie($ssessName);
-        fwrite(STDERR, "[diag] getCookie('$ssessName') = " . ($ssessId ?? '(null)') . "\n");
-        if ($ssessId !== NULL) {
-          $account->sessionId = $ssessId;
-          $result = (bool) \Drupal::service('session_handler.storage')->read($ssessId);
-          fwrite(STDERR, "[diag] session_handler.read(ssessId) = " . ($result ? 'true' : 'false') . "\n");
-          return $result;
-        }
-      }
-      return FALSE;
-    }
+    // Store the raw SID on the account so drupalUserIsLoggedIn() can verify it
+    // via session_handler.storage->read(), which hashes before querying.
+    $account->sessionId = $rawSessionId;
 
-    $result = (bool) \Drupal::service('session_handler.storage')->read($account->sessionId);
-    fwrite(STDERR, "[diag] session_handler.read(sessionId) = " . ($result ? 'true' : 'false') . "\n");
-    return $result;
+    // Inject the session cookie into BrowserKit's jar so all subsequent Mink
+    // requests carry it. BrowserKit sends cookies with no explicit domain to
+    // every request, which is correct for a single-site test session.
+    $cookieName = \Drupal::service('session_configuration')
+      ->getOptions(\Drupal::request())['name'];
+    $this->getSession()->setCookie($cookieName, $rawSessionId);
+
+    $this->assertTrue(
+      $this->drupalUserIsLoggedIn($account),
+      "User {$account->getAccountName()} successfully logged in."
+    );
   }
 
   // ---------------------------------------------------------------------------

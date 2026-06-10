@@ -4,7 +4,7 @@ Automated cache regression tests for NYSenate.gov, built on [Drupal Test Traits]
 
 The suite is designed to exercise the full cache stack on both local and Pantheon environments:
 - **DDEV / VM:** Redis is the page cache backend. `x-drupal-cache` is the authoritative cache status header.
-- **Pantheon (production and multidev):** Cloudflare sits in front of PHP-FPM. `cf-cache-status` (Cloudflare) is the authoritative header — `x-drupal-cache` reflects only what PHP-FPM returned and is stale on subsequent Cloudflare hits. Cache invalidations must also reach Cloudflare via BAN dispatch, which happens in `kernel.terminate` after a real web request. `saveViaWebRequest()` exists for this reason: it submits entity edit forms as real HTTP POSTs so `pantheon_advanced_page_cache` dispatches BAN requests for the invalidated cache tags. Pantheon multidev environments not yet migrated to Cloudflare fall back to `x-cache` (Fastly).
+- **Pantheon (production and multidev):** Cloudflare sits in front of PHP-FPM. `cf-cache-status` (Cloudflare) is the authoritative header — `x-drupal-cache` reflects only what PHP-FPM returned and is stale on subsequent Cloudflare hits. Cache invalidations must also reach Cloudflare via BAN dispatch, which happens in `kernel.terminate` after a real web request. `saveViaWebRequest()` exists for this reason: it submits entity edit forms as real HTTP POSTs so `pantheon_advanced_page_cache` dispatches BAN requests for the invalidated cache tags.
 
 `CacheTestBase::getCacheStatus()` normalises across all environments automatically.
 

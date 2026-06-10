@@ -28,20 +28,19 @@ use weitzman\DrupalTestTraits\ExistingSiteBase;
  *    request — not during a CLI entity save. saveViaWebRequest() exists for
  *    this reason: it submits the entity edit form as a real HTTP POST so that
  *    kernel.terminate fires and pantheon_advanced_page_cache dispatches BAN
- *    requests for the invalidated cache tags. Pantheon multidev environments
- *    not yet migrated to Cloudflare fall back to x-cache (Fastly).
+ *    requests for the invalidated cache tags.
  *
- * getCacheStatus() normalises across both environments automatically.
+ * getCacheStatus() normalises across all environments automatically.
  * assertCacheMissOnSave() encapsulates the canonical warm → HIT → save →
  * MISS → HIT test sequence used throughout CacheMissInvalidationTest.
- *
- * All entity mutations are non-destructive (re-saves with no field changes);
- * all synthetic users are cleaned up in tearDown().
  *
  * DTT_BASE_URL resolution order:
  *  1. Shell / CI environment variable (highest priority).
  *  2. tests/dtt/.env file (copy tests/dtt/.env.example to configure locally).
  *  3. Falls back to https://nysenate.ddev.site (DDEV default).
+ *
+ * All entity mutations are non-destructive (re-saves with no field changes);
+ * all synthetic users are cleaned up in tearDown().
  *
  * @group cache_regression
  */

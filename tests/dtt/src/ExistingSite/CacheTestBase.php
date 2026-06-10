@@ -3,6 +3,7 @@
 namespace Drupal\Tests\nys\ExistingSite;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\node\NodeInterface;
 use Drupal\taxonomy\TermInterface;
 use GuzzleHttp\Client;
@@ -168,6 +169,52 @@ abstract class CacheTestBase extends ExistingSiteBase {
     if (getenv('DTT_BASE_URL') === FALSE || getenv('DTT_BASE_URL') === '') {
       putenv('DTT_BASE_URL=https://nysenate.ddev.site');
     }
+  }
+
+  /**
+   * Temporary diagnostic override — remove after CI diagnosis is complete.
+   *
+   * @internal
+   */
+  protected function drupalUserIsLoggedIn(\Drupal\Core\Session\AccountInterface $account): bool {
+    $sessionName = \Drupal::service('session_configuration')->getOptions(\Drupal::request())['name'];
+    $sessionId = $account->sessionId ?? '(null)';
+    fwrite(STDERR, "\n[diag] drupalUserIsLoggedIn: scheme=" . \Drupal::request()->getScheme() . "\n");
+    fwrite(STDERR, "[diag] session name: $sessionName\n");
+    fwrite(STDERR, "[diag] account->sessionId: $sessionId\n");
+
+    // Dump all cookies in the BrowserKit jar.
+    try {
+      $jar = $this->getSession()->getDriver()->getClient()->getCookieJar();
+      $allCookies = $jar->all();
+      fwrite(STDERR, "[diag] cookies in jar: " . count($allCookies) . "\n");
+      foreach ($allCookies as $cookie) {
+        fwrite(STDERR, "  " . $cookie->getName() . "=" . substr($cookie->getValue(), 0, 20) . "...\n");
+      }
+    }
+    catch (\Throwable $e) {
+      fwrite(STDERR, "[diag] could not dump cookies: " . $e->getMessage() . "\n");
+    }
+
+    if (!isset($account->sessionId)) {
+      fwrite(STDERR, "[diag] sessionId NOT set → looking for SSESS fallback\n");
+      if (str_starts_with($sessionName, 'SESS')) {
+        $ssessName = 'S' . $sessionName;
+        $ssessId = $this->getSession()->getCookie($ssessName);
+        fwrite(STDERR, "[diag] getCookie('$ssessName') = " . ($ssessId ?? '(null)') . "\n");
+        if ($ssessId !== NULL) {
+          $account->sessionId = $ssessId;
+          $result = (bool) \Drupal::service('session_handler.storage')->read($ssessId);
+          fwrite(STDERR, "[diag] session_handler.read(ssessId) = " . ($result ? 'true' : 'false') . "\n");
+          return $result;
+        }
+      }
+      return FALSE;
+    }
+
+    $result = (bool) \Drupal::service('session_handler.storage')->read($account->sessionId);
+    fwrite(STDERR, "[diag] session_handler.read(sessionId) = " . ($result ? 'true' : 'false') . "\n");
+    return $result;
   }
 
   // ---------------------------------------------------------------------------

@@ -32,20 +32,7 @@ regions:
 libraries:
   - nys/global
 
-# This section is used by the contrib module, Component Libraries. It allows you
-# to reference .twig files in your sass/ directory by using the Twig namespace:
-# @rain_theme and @nysenate_theme. As we move to SDC components, we can begin
-# to remove these dependencies.
-# See https://www.drupal.org/project/components for more information.
-components:
-  namespaces:
-    rain_theme:
-      - src/patterns/global
-      - src/patterns/components
-      - src/patterns/pages
-      - src/templates
-    nysenate_theme:
-      - src/patterns/global
-      - src/patterns/components
-      - src/patterns/pages
-      - src/templates
+# NOTE: Twig namespaces (@rain_theme, @nysenate_theme) are inherited from the
+# parent theme (nysenate_theme). Do not re-declare them here, as the paths
+# would be resolved relative to this theme directory where they don't exist,
+# causing Components module to log warnings on every page request.

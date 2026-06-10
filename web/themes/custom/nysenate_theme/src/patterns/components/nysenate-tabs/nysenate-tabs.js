@@ -144,11 +144,17 @@
             $(this).attr('checked', 'checked');
             $(this).parent().addClass('active');
             
-            // For views exposed forms, trigger form submission for BEF auto-submit
+            // For views exposed forms, BEF auto-submit fires on radio change.
+            // ajaxComplete fires after drupalViewsProcessed, so ViewsScrollTop
+            // has queued its animation but JS hasn't rendered a frame yet.
+            // stop(true) kills the queued animation before it starts.
             const $form = $(this).closest('form');
             if ($form.hasClass('views-exposed-form')) {
-              // The radio button change will trigger BEF auto-submit naturally
-              // No need to manually trigger submit
+              const scrollPos = $(window).scrollTop();
+              $(document).one('ajaxComplete', function () {
+                $('html, body').stop(true);
+                $(window).scrollTop(scrollPos);
+              });
             }
           });
         }

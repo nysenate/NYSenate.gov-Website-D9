@@ -45,6 +45,9 @@
 
   .tabs-content .c-event-name {
     color: $grey08;
+    &:hover {
+      text-decoration: underline;
+    }
   }
 
   .pager.pager-load-more {
@@ -101,7 +104,7 @@
       line-height: 12px;
       letter-spacing: 0.1em;
       text-decoration: none;
-      @include icon-after-arrow;
+      @extend .icon-after__arrow;
       @extend .link-text;
 
       &::after {

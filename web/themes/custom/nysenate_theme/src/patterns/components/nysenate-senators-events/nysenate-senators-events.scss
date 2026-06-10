@@ -702,15 +702,15 @@
   line-height: 42px;
   background: $grey06;
   font-size: 16px;
-  @include icon-replace-left;
+  @extend .icon-replace__left;
   @extend .lgt-text;
-  @include icon-before-left;
+  @extend .icon-before__left;
 
   @include breakpoint($bp-sm) {
     text-indent: 0;
     width: auto;
     background: transparent;
-    //@include icon-before-left;
+    //@extend .icon-before__left;
   }
 
   &::before {
@@ -744,12 +744,12 @@
     width: 42px;
     height: 42px;
     padding: 0;
-    @include icon-after-right;
+    @extend .icon-after__right;
 
     @include breakpoint($bp-sm) {
       text-indent: 0;
       width: auto;
-      //@include icon-after-right;
+      //@extend .icon-after__right;
     }
 
     &::before {

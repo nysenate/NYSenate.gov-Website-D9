@@ -425,13 +425,13 @@
         }
 
 				&[href*="intent/tweet"] {
-					@include icon-replace-twitter-reply;
+					@extend .icon-replace__twitter-reply;
 				}
 				&[href*="intent/retweet"] {
-					@include icon-replace-twitter-retweet;
+					@extend .icon-replace__twitter-retweet;
 				}
 				&[href*="intent/favorite"] {
-					@include icon-replace-twitter-fav;
+					@extend .icon-replace__twitter-fav;
 				}
 
         &[href*='intent/favorite'],

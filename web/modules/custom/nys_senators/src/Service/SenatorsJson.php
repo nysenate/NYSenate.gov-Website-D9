@@ -192,7 +192,7 @@ class SenatorsJson {
         "city" => $address->getLocality() ?? '',
         "province" => $admin_area,
         "postal_code" => $address->getPostalCode() ?? '',
-        "country" => $$country,
+        "country" => $country,
         "province_name" => $this->statesList()[$admin_area] ?? '',
         "country_name" => $country_name,
         "fax" => $office->field_fax->value ?? '',

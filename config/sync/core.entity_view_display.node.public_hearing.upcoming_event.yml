@@ -1,8 +1,9 @@
-uuid: 9b5656f3-03da-4660-a73d-04eb4539deb1
+uuid: 1987fdba-15ff-4c4d-9ac6-abe6577c2a6b
 langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_view_mode.node.upcoming_event
     - field.field.node.public_hearing.body
     - field.field.node.public_hearing.field_attachment
     - field.field.node.public_hearing.field_committee
@@ -24,12 +25,15 @@ dependencies:
   module:
     - address
     - datetime_range
-    - link
+    - layout_builder
     - options
     - sdc_display
     - text
     - user
 third_party_settings:
+  layout_builder:
+    enabled: false
+    allow_custom: false
   sdc_display:
     enabled: false
     component:
@@ -41,26 +45,17 @@ third_party_settings:
       dynamic:
         props: {  }
         slots: {  }
-id: node.public_hearing.default
+id: node.public_hearing.upcoming_event
 targetEntityType: node
 bundle: public_hearing
-mode: default
+mode: upcoming_event
 content:
   body:
     type: text_default
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 101
-    region: content
-  field_attachment:
-    type: entity_reference_entity_view
-    label: above
-    settings:
-      view_mode: default
-      link: false
-    third_party_settings: {  }
-    weight: 108
+    weight: 1
     region: content
   field_committee:
     type: entity_reference_label
@@ -68,7 +63,7 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 102
+    weight: 2
     region: content
   field_committee_featured:
     type: boolean
@@ -78,37 +73,30 @@ content:
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    weight: 114
+    weight: 7
     region: content
   field_date_range:
     type: daterange_default
-    label: above
+    label: hidden
     settings:
       timezone_override: ''
-      format_type: html_datetime
+      format_type: time
       from_to: both
       separator: '-'
-    third_party_settings: {  }
-    weight: 103
-    region: content
-  field_event_online_link:
-    type: link
-    label: above
-    settings:
-      trim_length: 80
-      url_only: false
-      url_plain: false
-      rel: ''
-      target: ''
-    third_party_settings: {  }
-    weight: 107
+    third_party_settings:
+      sdc_display:
+        enabled: 0
+        component:
+          machine_name: null
+          show_deprecated: 0
+    weight: 3
     region: content
   field_event_place:
     type: list_default
-    label: above
+    label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 106
+    weight: 6
     region: content
   field_issues:
     type: entity_reference_label
@@ -116,14 +104,14 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 115
+    weight: 8
     region: content
   field_location:
     type: address_default
-    label: above
+    label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 105
+    weight: 5
     region: content
   field_majority_issue_tag:
     type: entity_reference_label
@@ -131,64 +119,32 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 117
+    weight: 9
     region: content
   field_meeting_location:
     type: string
-    label: above
+    label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 104
-    region: content
-  field_transcript:
-    type: entity_reference_label
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    weight: 109
-    region: content
-  field_ustream:
-    type: list_key
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    weight: 116
-    region: content
-  field_video_redirect:
-    type: string
-    label: above
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    weight: 110
-    region: content
-  field_video_status:
-    type: list_default
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    weight: 111
-    region: content
-  field_yt:
-    type: entity_reference_entity_view
-    label: above
-    settings:
-      view_mode: default
-      link: true
-    third_party_settings: {  }
-    weight: 112
+    weight: 4
     region: content
   links:
     settings: {  }
     third_party_settings: {  }
-    weight: 100
+    weight: 0
     region: content
 hidden:
   entity_print_view_epub: true
   entity_print_view_pdf: true
   entity_print_view_word_docx: true
+  field_attachment: true
+  field_event_online_link: true
+  field_transcript: true
+  field_ustream: true
+  field_video_redirect: true
+  field_video_status: true
+  field_yt: true
   langcode: true
   nys_senator_dashboard_path_alias: true
   private_message_link: true

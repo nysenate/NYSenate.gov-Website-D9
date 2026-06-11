@@ -79,6 +79,7 @@ jobs:
         run: |
           cd ${{ vars.THEME_PATH }}
           npm install --ignore-scripts
+          npm rebuild gifsicle jpegtran-bin optipng-bin
           npm run build
 
       - name: Update NodeJS to version in nys theme via .nvmrc.

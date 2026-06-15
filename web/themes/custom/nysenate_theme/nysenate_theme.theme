@@ -1176,6 +1176,38 @@ function nysenate_theme_preprocess_paragraph(&$variables) {
 
 /**
  * Implements hook_preprocess_paragraph__TYPE().
+ *
+ * Provides slide_index (1-based) and slide_total to the slider-item paragraph
+ * template so _carousel-item.twig can render aria-label="N of Total" on each
+ * slide container, satisfying the ARIA carousel pattern requirement that
+ * role="group" + aria-roledescription="slide" elements have an accessible name.
+ */
+function nysenate_theme_preprocess_paragraph__slider_item(&$variables) {
+  /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+  $paragraph = $variables['paragraph'];
+  $parent = $paragraph->getParentEntity();
+  if (!$parent) {
+    return;
+  }
+  $field_name = $paragraph->get('parent_field_name')->value;
+  if (!$parent->hasField($field_name)) {
+    return;
+  }
+  $items = $parent->get($field_name)->getValue();
+  $total = count($items);
+  $delta = 1;
+  foreach ($items as $key => $item) {
+    if ((int) $item['target_id'] === (int) $paragraph->id()) {
+      $delta = $key + 1;
+      break;
+    }
+  }
+  $variables['slide_index'] = $delta;
+  $variables['slide_total'] = $total;
+}
+
+/**
+ * Implements hook_preprocess_paragraph__TYPE().
  */
 function nysenate_theme_preprocess_paragraph__promotional_banners(&$variables) {
   $variables['cta'] = [];

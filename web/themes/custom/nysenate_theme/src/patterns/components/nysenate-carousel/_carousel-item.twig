@@ -1,7 +1,7 @@
 <div class="carousel-item"
      role="group"
      aria-roledescription="slide"
-     {% if slide_index is defined %}aria-label="Slide {{ slide_index }} of {{ slide_total }}"{% endif %}>
+     {% if slide_index is defined %}aria-label="{{ slide_index }} of {{ slide_total }}"{% endif %}>
   <div class="carousel-item__media">
     {%
       include '@nysenate_theme/media/media.twig' with {

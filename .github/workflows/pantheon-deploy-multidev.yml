@@ -238,6 +238,8 @@ jobs:
         # when ev completes normally and 1 when an uncaught exception is thrown,
         # which maps exactly to pass/fail semantics.
         shell: bash --noprofile --norc -o pipefail {0}
+        env:
+          PANTHEON_TEST_UA: ${{ secrets.PANTHEON_TEST_UA }}
         run: |
           SITE="${{ vars.PANTHEON_SITE }}.${{ env.PANTHEON_MULTIDEV }}"
           URL="https://${{ env.PANTHEON_MULTIDEV }}-${{ vars.PANTHEON_SITE }}.pantheonsite.io"
@@ -269,7 +271,7 @@ jobs:
           for i in "${!LABELS[@]}"; do
             echo "=== ${LABELS[$i]} ==="
             terminus remote:drush "$SITE" -- \
-              ev "error_reporting(E_ERROR); passthru('bash /code/tests/dtt/run-on-container.sh $URL --filter $(printf '%q' "${FILTERS[$i]}") 2>&1', \$c); if (\$c !== 0) { throw new \Exception('PHPUnit failed with exit code ' . \$c); }" \
+              ev "error_reporting(E_ERROR); putenv('PANTHEON_TEST_UA=${PANTHEON_TEST_UA}'); passthru('bash /code/tests/dtt/run-on-container.sh $URL --filter $(printf '%q' "${FILTERS[$i]}") 2>&1', \$c); if (\$c !== 0) { throw new \Exception('PHPUnit failed with exit code ' . \$c); }" \
               || OVERALL=$?
           done
           exit $OVERALL

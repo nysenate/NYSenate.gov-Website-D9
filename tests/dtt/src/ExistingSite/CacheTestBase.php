@@ -3,7 +3,6 @@
 namespace Drupal\Tests\nys\ExistingSite;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Session\AccountInterface;
 use Drupal\node\NodeInterface;
 use Drupal\taxonomy\TermInterface;
 use GuzzleHttp\Client;
@@ -117,6 +116,13 @@ abstract class CacheTestBase extends ExistingSiteBase {
 
     parent::setUp();
 
+    // Set the allowlisted UA on the Mink/BrowserKit client so that all
+    // authenticated requests (drupalLogin, saveViaWebRequest, etc.) pass
+    // Cloudflare Bot Management on Pantheon. DrupalTestBrowser::doRequest()
+    // translates HTTP_USER_AGENT → User-Agent header automatically.
+    $this->getSession()->getDriver()->getClient()
+      ->setServerParameter('HTTP_USER_AGENT', $this->pantheonTestUA());
+
     $this->anonClient = new Client([
       'base_uri' => getenv('DTT_BASE_URL'),
       // Never follow redirects — a redirect itself is already a miss signal
@@ -127,6 +133,9 @@ abstract class CacheTestBase extends ExistingSiteBase {
       // Fail fast rather than hanging indefinitely if the server stalls.
       'connect_timeout' => 15,
       'timeout' => 60,
+      // Pantheon has allowlisted this UA in Cloudflare Bot Management so that
+      // anonymous cache-header assertions are not challenged at the CDN edge.
+      'headers' => ['User-Agent' => $this->pantheonTestUA()],
     ]);
   }
 
@@ -172,55 +181,20 @@ abstract class CacheTestBase extends ExistingSiteBase {
   }
 
   /**
-   * {@inheritdoc}
+   * Returns the Cloudflare-allowlisted User-Agent for automated test requests.
    *
-   * On Pantheon, the site is fronted by Cloudflare Bot Management, which
-   * challenges automated HTTP clients (BrowserKit has no JavaScript execution
-   * capability). The standard OTL flow receives a JS challenge page instead of
-   * Drupal's 302 redirect, so the SSESS session cookie is never delivered to
-   * BrowserKit's jar and login always fails.
+   * The value is read from the PANTHEON_TEST_UA environment variable, which
+   * must be set as a GitHub Actions repository secret in CI, or in
+   * tests/dtt/.env for local Pantheon-targeted runs. It is intentionally not
+   * stored in source control — the string is a Bot Management allowlist token
+   * and must be treated as a secret. See tests/dtt/.env.example.
    *
-   * To work around this we bypass the HTTP OTL flow entirely: we write the
-   * session directly to the database and inject the cookie into BrowserKit's
-   * jar. Authentication is infrastructure setup for these tests — what the
-   * suite actually exercises is cache header behavior, which is unaffected.
-   * The anonymous Guzzle client ($anonClient) and all cache-header assertions
-   * still go through Cloudflare unchanged.
+   * On local DDEV environments where PANTHEON_TEST_UA is not set, an empty
+   * string is returned; BrowserKit and Guzzle will send their default UA,
+   * which is fine because there is no Cloudflare layer locally.
    */
-  protected function drupalLogin(AccountInterface $account): void {
-    // Generate a raw session ID (43 chars — same length Drupal generates).
-    $rawSessionId = \Drupal\Component\Utility\Crypt::randomBytesBase64(32);
-
-    // Write the session to the database. The sessions table stores the hashed
-    // SID as the primary key; the raw SID goes in the browser cookie.
-    \Drupal::database()->merge('sessions')
-      ->key('sid', \Drupal\Component\Utility\Crypt::hashBase64($rawSessionId))
-      ->fields([
-        'uid'       => $account->id(),
-        'hostname'  => '127.0.0.1',
-        'timestamp' => \Drupal::time()->getRequestTime(),
-        // PHP session-encode format for Symfony's attribute bag.
-        // Symfony stores session attributes under $_SESSION['_sf2_attributes'],
-        // so $session->get('uid') reads from there — NOT from $_SESSION['uid'].
-        'session'   => '_sf2_attributes|' . serialize(['uid' => (string) $account->id()]),
-      ])
-      ->execute();
-
-    // Store the raw SID on the account so drupalUserIsLoggedIn() can verify it
-    // via session_handler.storage->read(), which hashes before querying.
-    $account->sessionId = $rawSessionId;
-
-    // Inject the session cookie into BrowserKit's jar so all subsequent Mink
-    // requests carry it. BrowserKit sends cookies with no explicit domain to
-    // every request, which is correct for a single-site test session.
-    $cookieName = \Drupal::service('session_configuration')
-      ->getOptions(\Drupal::request())['name'];
-    $this->getSession()->setCookie($cookieName, $rawSessionId);
-
-    $this->assertTrue(
-      $this->drupalUserIsLoggedIn($account),
-      "User {$account->getAccountName()} successfully logged in."
-    );
+  private function pantheonTestUA(): string {
+    return (string) (getenv('PANTHEON_TEST_UA') ?: '');
   }
 
   // ---------------------------------------------------------------------------

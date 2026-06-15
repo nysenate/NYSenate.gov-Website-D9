@@ -834,15 +834,6 @@ if (isset($_ENV['PANTHEON_ENVIRONMENT'])) {
   // Never display PHP errors or warnings to end users on Pantheon.
   // Warnings are still written to watchdog and the PHP error log.
   $config['system.logging']['error_level'] = 'hide';
-
-  // Pantheon is always HTTPS. In CLI context (Drush), $_SERVER['HTTPS'] is not
-  // set because there is no incoming web request — but the site URL and session
-  // cookies are always HTTPS. Setting this ensures that session_configuration
-  // computes the correct 'SSESS<hash>' cookie name in CLI context, matching
-  // the 'SSESS<hash>' cookie that the web server actually sets.
-  if (php_sapi_name() === 'cli') {
-    $_SERVER['HTTPS'] = 'on';
-  }
 }
 else {
   // Config split configuration overrides.

@@ -123,8 +123,19 @@ abstract class CacheTestBase extends ExistingSiteBase {
     // authenticated requests (drupalLogin, saveViaWebRequest, etc.) pass
     // Cloudflare Bot Management on Pantheon. DrupalTestBrowser::doRequest()
     // translates HTTP_USER_AGENT → User-Agent header automatically.
+    $ua = $this->pantheonTestUA();
     $this->getSession()->getDriver()->getClient()
-      ->setServerParameter('HTTP_USER_AGENT', $this->pantheonTestUA());
+      ->setServerParameter('HTTP_USER_AGENT', $ua);
+    // DEBUG: confirm UA token is non-empty and actually set on the BrowserKit
+    // client. Remove once CF form-submission issue is diagnosed.
+    fwrite(STDERR, sprintf(
+      "\n[CacheTestBase] BrowserKit UA set: %s\n",
+      $ua !== '' ? 'YES (len=' . strlen($ua) . ')' : 'NO — PANTHEON_TEST_UA is empty!'
+    ));
+    fwrite(STDERR, sprintf(
+      "[CacheTestBase] BrowserKit server param: %s\n",
+      $this->getSession()->getDriver()->getClient()->getServerParameter('HTTP_USER_AGENT') !== '' ? 'SET' : 'EMPTY'
+    ));
 
     $this->anonClient = new Client([
       'base_uri' => getenv('DTT_BASE_URL'),
@@ -454,7 +465,47 @@ abstract class CacheTestBase extends ExistingSiteBase {
   protected function saveViaWebRequest(EntityInterface $entity): void {
     $path = $entity->toUrl('edit-form')->setAbsolute(FALSE)->toString();
     $this->visit($path);
+
+    // DEBUG: detect CF challenge on the edit form GET before attempting to
+    // submit. A JS challenge page (200 with CF challenge body) would mean
+    // pressButton('Save') submits nothing and no BAN is dispatched.
+    $pageContent  = $this->getSession()->getPage()->getContent();
+    $currentUrl   = $this->getSession()->getCurrentUrl();
+    $cfMitigated  = $this->getSession()->getResponseHeader('cf-mitigated') ?? '(none)';
+    $cfCacheStatus = $this->getSession()->getResponseHeader('cf-cache-status') ?? '(none)';
+    $uaSent       = $this->getSession()->getDriver()->getClient()->getServerParameter('HTTP_USER_AGENT');
+    fwrite(STDERR, sprintf(
+      "\n[saveViaWebRequest] GET %s\n  URL after visit : %s\n  User-Agent sent : %s\n  cf-mitigated    : %s\n  cf-cache-status : %s\n",
+      $path, $currentUrl,
+      $uaSent !== '' ? $uaSent : '(empty — UA token not set!)',
+      $cfMitigated, $cfCacheStatus
+    ));
+    if (str_contains($pageContent, 'challenges.cloudflare.com')) {
+      fwrite(STDERR, "[saveViaWebRequest] WARNING: CF challenge page detected on edit form GET!\n");
+    }
+    else {
+      fwrite(STDERR, "[saveViaWebRequest] Edit form reached Drupal (no CF challenge detected).\n");
+    }
+
     $this->getSession()->getPage()->pressButton('Save');
+
+    // DEBUG: after save, a successful Drupal form submit redirects away from
+    // the edit path. Remaining on /edit or landing on a CF challenge URL
+    // indicates the save did not complete.
+    $urlAfterSave = $this->getSession()->getCurrentUrl();
+    fwrite(STDERR, sprintf(
+      "[saveViaWebRequest] URL after pressButton('Save'): %s\n",
+      $urlAfterSave
+    ));
+    if (str_contains($urlAfterSave, 'challenges.cloudflare.com')) {
+      fwrite(STDERR, "[saveViaWebRequest] WARNING: CF challenge URL after POST — form submission blocked!\n");
+    }
+    elseif (str_contains($urlAfterSave, '/edit')) {
+      fwrite(STDERR, "[saveViaWebRequest] WARNING: Still on edit URL after save — form may have failed (CSRF, validation, or permissions).\n");
+    }
+    else {
+      fwrite(STDERR, "[saveViaWebRequest] Save redirected correctly — BAN should have fired.\n");
+    }
   }
 
   /**

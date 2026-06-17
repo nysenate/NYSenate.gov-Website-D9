@@ -7,6 +7,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\node\NodeInterface;
 use Drupal\taxonomy\TermInterface;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ServerException;
 use Psr\Http\Message\ResponseInterface;
 use weitzman\DrupalTestTraits\ExistingSiteBase;
@@ -200,6 +201,56 @@ abstract class CacheTestBase extends ExistingSiteBase {
   }
 
   /**
+   * Returns the session cookie name for the current DTT_BASE_URL.
+   *
+   * Mirrors SessionConfiguration::getName(): SSESS/SESS prefix + first 32 hex
+   * chars of SHA-256 of the hostname (getHost() with empty basepath for a
+   * root-installed site). Uses DTT_BASE_URL rather than \Drupal::request()
+   * because in CLI context the request host is 'localhost', not the public
+   * Pantheon/DDEV hostname.
+   */
+  private function sessionCookieName(): string {
+    $dttUrl = (string) (getenv('DTT_BASE_URL') ?: 'https://nysenate.ddev.site');
+    $host   = parse_url($dttUrl, PHP_URL_HOST) ?: $dttUrl;
+    $prefix = str_starts_with($dttUrl, 'https://') ? 'SSESS' : 'SESS';
+    return $prefix . substr(hash('sha256', $host), 0, 32);
+  }
+
+  /**
+   * Wraps a single anonymous GET with retry logic for transient errors.
+   *
+   * - 429 Too Many Requests: backs off using the Retry-After header (default
+   *   5 s) then retries, up to 8 attempts.
+   * - 5xx Server Error: retries immediately up to 8 attempts.
+   * - All other exceptions are re-thrown immediately.
+   */
+  private function anonGet(string $path): \Psr\Http\Message\ResponseInterface {
+    $maxAttempts = 8;
+    $lastException = NULL;
+    for ($attempt = 0; $attempt < $maxAttempts; $attempt++) {
+      try {
+        return $this->anonClient->get($path);
+      }
+      catch (ClientException $e) {
+        if ($e->getResponse()->getStatusCode() === 429) {
+          $lastException = $e;
+          $retryAfter = max(1, (int) ($e->getResponse()->getHeaderLine('Retry-After') ?: 5));
+          sleep($retryAfter);
+          continue;
+        }
+        throw $e;
+      }
+      catch (ServerException $e) {
+        $lastException = $e;
+        // Brief pause before retrying on 5xx.
+        usleep(500000);
+        continue;
+      }
+    }
+    throw $lastException ?? new \RuntimeException("anonGet({$path}): failed after {$maxAttempts} attempts");
+  }
+
+  /**
    * {@inheritdoc}
    *
    * On Pantheon, Cloudflare Bot Management intercepts BrowserKit's OTL request
@@ -232,21 +283,34 @@ abstract class CacheTestBase extends ExistingSiteBase {
       ->execute();
 
     $account->sessionId = $rawSessionId;
-
-    // Mirror SessionConfiguration::getUnprefixedName(): hash the hostname
-    // (getHost() + getBasePath(), but Drupal is at root so basepath is empty).
-    // Use DTT_BASE_URL rather than \Drupal::request()->getHost() because in
-    // CLI context the request host is 'localhost', not the public Pantheon host.
-    $dttUrl = (string) (getenv('DTT_BASE_URL') ?: 'https://nysenate.ddev.site');
-    $host = parse_url($dttUrl, PHP_URL_HOST) ?: $dttUrl;
-    $prefix = str_starts_with($dttUrl, 'https://') ? 'SSESS' : 'SESS';
-    $cookieName = $prefix . substr(hash('sha256', $host), 0, 32);
-    $this->getSession()->setCookie($cookieName, $rawSessionId);
+    $this->getSession()->setCookie($this->sessionCookieName(), $rawSessionId);
 
     $this->assertTrue(
       $this->drupalUserIsLoggedIn($account),
       "User {$account->getAccountName()} successfully logged in."
     );
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * Mirrors drupalLogin(): bypasses the HTTP /user/logout flow entirely to
+   * avoid Cloudflare Bot Management challenges on the logout endpoint. Deletes
+   * the session row from the database and clears the session cookie from
+   * BrowserKit's jar directly.
+   */
+  protected function drupalLogout(): void {
+    if ($this->loggedInUser === FALSE) {
+      return;
+    }
+    if (isset($this->loggedInUser->sessionId)) {
+      \Drupal::database()->delete('sessions')
+        ->condition('sid', \Drupal\Component\Utility\Crypt::hashBase64($this->loggedInUser->sessionId))
+        ->execute();
+    }
+    // Clear the session cookie from BrowserKit's jar by setting an empty value.
+    $this->getSession()->setCookie($this->sessionCookieName(), '');
+    $this->loggedInUser = FALSE;
   }
 
   // ---------------------------------------------------------------------------
@@ -266,22 +330,17 @@ abstract class CacheTestBase extends ExistingSiteBase {
    * On local environments the second request is usually an immediate HIT with no sleep.
    */
   protected function warmCache(string $path): void {
-    try {
-      $this->anonClient->get($path);
-    }
-    catch (ServerException $e) {
-      // 5xx on the initial warm request — server under load. Proceed to the
-      // polling loop; the next successful response will prime the cache.
-    }
+    // Initial priming request — ignore errors, the polling loop handles state.
+    try { $this->anonGet($path); } catch (\Exception $e) {}
     for ($attempt = 0; $attempt < 10; $attempt++) {
       try {
-        $response = $this->anonClient->get($path);
+        $response = $this->anonGet($path);
         if ($this->getCacheStatus($response) === 'HIT') {
           return;
         }
       }
-      catch (ServerException $e) {
-        // 5xx during polling — server still under load; keep polling.
+      catch (\Exception $e) {
+        // Any persistent error after anonGet's own retries — keep polling.
       }
       usleep(250000);
     }
@@ -297,22 +356,8 @@ abstract class CacheTestBase extends ExistingSiteBase {
    * false positives in negative test cases.
    */
   protected function assertAnonymousCacheHit(string $path): void {
-    $status = '';
-    for ($attempt = 0; $attempt < 5; $attempt++) {
-      try {
-        $response = $this->anonClient->get($path);
-        $status = $this->getCacheStatus($response);
-        break;
-      }
-      catch (ServerException $e) {
-        // 5xx — server under load; retry with a short pause.
-        if ($attempt < 4) {
-          usleep(500000);
-          continue;
-        }
-        $this->fail("Expected cache HIT on anonymous request to {$path}, but got a 5xx server error after 5 attempts: {$e->getMessage()}");
-      }
-    }
+    $response = $this->anonGet($path);
+    $status   = $this->getCacheStatus($response);
     $this->assertSame('HIT', $status,
       "Expected cache HIT on anonymous request to {$path}, got: {$status}");
   }
@@ -337,15 +382,14 @@ abstract class CacheTestBase extends ExistingSiteBase {
     $status = '';
     for ($attempt = 0; $attempt <= 10; $attempt++) {
       try {
-        $response = $this->anonClient->get($path);
+        $response = $this->anonGet($path);
         $status = $this->getCacheStatus($response);
         if ($status === 'MISS') {
           return;
         }
       }
       catch (ServerException $e) {
-        // 5xx means the origin processed the request (Cloudflare could not
-        // serve from cache), which is effectively a cache MISS.
+        // 5xx — origin processed the request; effectively a MISS.
         return;
       }
       if ($attempt < 10) {

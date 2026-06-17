@@ -308,8 +308,9 @@ abstract class CacheTestBase extends ExistingSiteBase {
         ->condition('sid', \Drupal\Component\Utility\Crypt::hashBase64($this->loggedInUser->sessionId))
         ->execute();
     }
-    // Clear the session cookie from BrowserKit's jar by setting an empty value.
-    $this->getSession()->setCookie($this->sessionCookieName(), '');
+    // Clear all cookies from BrowserKit's jar so no authenticated state bleeds
+    // into subsequent anonymous requests.
+    $this->getSession()->getDriver()->getClient()->getCookieJar()->clear();
     $this->loggedInUser = FALSE;
   }
 

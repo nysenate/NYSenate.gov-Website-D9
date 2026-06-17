@@ -233,12 +233,14 @@ abstract class CacheTestBase extends ExistingSiteBase {
 
     $account->sessionId = $rawSessionId;
 
-    // Mirror SessionConfiguration::getName(): prefix SSESS/SESS + first 32
-    // hex chars of SHA-256 of the base URL. Use DTT_BASE_URL (the actual
-    // public HTTPS URL) so the prefix is correct in CLI context.
+    // Mirror SessionConfiguration::getUnprefixedName(): hash the hostname
+    // (getHost() + getBasePath(), but Drupal is at root so basepath is empty).
+    // Use DTT_BASE_URL rather than \Drupal::request()->getHost() because in
+    // CLI context the request host is 'localhost', not the public Pantheon host.
     $dttUrl = (string) (getenv('DTT_BASE_URL') ?: 'https://nysenate.ddev.site');
+    $host = parse_url($dttUrl, PHP_URL_HOST) ?: $dttUrl;
     $prefix = str_starts_with($dttUrl, 'https://') ? 'SSESS' : 'SESS';
-    $cookieName = $prefix . substr(hash('sha256', $dttUrl), 0, 32);
+    $cookieName = $prefix . substr(hash('sha256', $host), 0, 32);
     $this->getSession()->setCookie($cookieName, $rawSessionId);
 
     $this->assertTrue(

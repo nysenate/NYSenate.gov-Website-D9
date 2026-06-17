@@ -200,6 +200,14 @@ jobs:
       - name: Wake up the multidev (Pantheon envs sleep when idle)
         run: terminus env:wake ${{ vars.PANTHEON_SITE }}.${{ env.PANTHEON_MULTIDEV }}
 
+      - name: Clear Cloudflare and Drupal caches before test run
+        # Ensures every cache test starts from a cold Cloudflare cache whose
+        # surrogate-key index was built by the current deployment. Without this,
+        # warmCache() may poll a stale CF HIT that was stored by a previous
+        # deployment with different cache tags, causing BAN-based invalidations
+        # to miss and assertAnonymousCacheMiss() to see a spurious HIT.
+        run: terminus env:clear-cache ${{ vars.PANTHEON_SITE }}.${{ env.PANTHEON_MULTIDEV }}
+
       - name: Wait for multidev HTTP endpoint to be ready
         # Polls the homepage until it returns a non-5xx status. Handles the
         # gap between workflow completion and the appserver accepting requests.

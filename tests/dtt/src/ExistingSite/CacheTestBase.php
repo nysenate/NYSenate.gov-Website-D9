@@ -284,6 +284,10 @@ abstract class CacheTestBase extends ExistingSiteBase {
 
     $account->sessionId = $rawSessionId;
     $this->getSession()->setCookie($this->sessionCookieName(), $rawSessionId);
+    // Required so drupalLogout() and drupalUserIsLoggedIn() work correctly.
+    // The parent's drupalLogin() normally sets this; since we bypass it, we
+    // must set it ourselves.
+    $this->loggedInUser = $account;
 
     $this->assertTrue(
       $this->drupalUserIsLoggedIn($account),

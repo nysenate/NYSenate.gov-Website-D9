@@ -2,17 +2,18 @@ uuid: 99ae670c-c55a-46fe-a7f8-ced633212985
 langcode: en
 status: true
 dependencies:
+  config:
+    - node.type.promotional_banner
   module:
     - node
 id: promotional_banner
 label: 'Promotional Banner'
 type: 'canonical_entities:node'
-pattern: 'promotional-banners/[node:field_senator_multiref:0:entity:name]/[node:title]'
+pattern: '/promotional-banners/[node:field_senator_multiref:0:entity:name]/[node:title]'
 selection_criteria:
   c661ee8c-62ce-46c5-97ba-b016508340a3:
     id: 'entity_bundle:node'
     negate: false
-    uuid: c661ee8c-62ce-46c5-97ba-b016508340a3
     context_mapping:
       node: node
     bundles:

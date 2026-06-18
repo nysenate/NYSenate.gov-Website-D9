@@ -772,58 +772,73 @@ abstract class CacheTestBase extends ExistingSiteBase {
    * $nodeType referencing a term via $fieldName that passes both entity
    * validation and BrowserKit form saveability, or NULL if none exists.
    *
-   * Iterates nodes of the given type and checks ALL referenced terms per node
-   * (not just the first). Term checks are deduplicated by TID to avoid
-   * redundant form submissions. Using the node-first direction guarantees that
-   * the term we find is actually referenced by a node of the correct type.
+   * Uses a two-phase strategy to keep execution time bounded:
+   *
+   * Phase 1 — one fast DB query collects all distinct term IDs referenced by
+   * published nodes of the given type. No nodes or terms are loaded here.
+   *
+   * Phase 2 — for each distinct TID, the term is loaded and checked: entity
+   * validation first (cheap), then form saveability via BrowserKit (expensive
+   * — one HTTP round-trip per term). Because we work from the complete set of
+   * TIDs used on actual content, form submissions are capped at the number of
+   * unique terms in the field (~63 for senators), regardless of how many nodes
+   * exist. This is far cheaper than iterating nodes without a range cap.
    *
    * @return array{0: \Drupal\node\NodeInterface, 1: \Drupal\taxonomy\TermInterface}|null
    */
   protected function findNodeAndValidTermByField(string $nodeType, string $fieldName): ?array {
-    $ids = \Drupal::entityTypeManager()
-      ->getStorage('node')
-      ->getQuery()
-      ->accessCheck(FALSE)
-      ->condition('type', $nodeType)
-      ->condition('status', 1)
-      ->exists($fieldName)
-      ->sort('changed', 'DESC')
-      ->execute();
+    // Phase 1: collect all distinct term IDs that published nodes of this type
+    // reference via $fieldName. One lightweight DB query — no entity loads.
+    $fieldTable = 'node__' . $fieldName;
+    $targetCol = $fieldName . '_target_id';
+    $query = \Drupal::database()->select($fieldTable, 'f')
+      ->distinct()
+      ->fields('f', [$targetCol])
+      ->condition('f.bundle', $nodeType)
+      ->condition('f.deleted', 0);
+    $query->innerJoin('node_field_data', 'n', 'f.entity_id = n.nid AND f.langcode = n.langcode');
+    $query->condition('n.status', 1);
+    $tids = $query->execute()->fetchCol();
 
-    // Track which TIDs have already been checked so we don't submit the same
-    // term edit form multiple times across different nodes.
-    $checkedTids = [];
-    foreach ($ids as $nid) {
-      $node = \Drupal::entityTypeManager()->getStorage('node')->load($nid);
-      if (!$node || !$node->hasField($fieldName)) {
+    if (empty($tids)) {
+      return NULL;
+    }
+
+    // Phase 2: for each unique TID, check validation then form saveability.
+    // Once we find a saveable term, fetch one referencing node and return.
+    foreach ($tids as $tid) {
+      $term = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load($tid);
+      if (!$term) {
         continue;
       }
-      // Iterate ALL terms referenced on this node, not just the first.
-      // The first term on a node is often broken; later ones on the same node
-      // may be perfectly saveable.
-      foreach ($node->get($fieldName) as $item) {
-        $term = $item->entity ?? NULL;
-        if (!($term instanceof TermInterface)) {
-          continue;
-        }
-        $tid = $term->id();
-        if (isset($checkedTids[$tid])) {
-          // Already tested this senator term via a different node — skip.
-          continue;
-        }
-        $checkedTids[$tid] = TRUE;
-        // Skip terms that fail entity-level constraint validation (broken
-        // field values, missing required data, etc.).
-        if ($term->validate()->count() !== 0) {
-          continue;
-        }
-        // Skip terms whose edit form BrowserKit cannot submit successfully.
-        // Entity validation alone is insufficient: some terms pass PHP
-        // constraint validation but fail Drupal form validation (e.g. broken
-        // entity-reference field values that only surface at form-submit time).
-        if (!$this->termIsSaveableViaForm($term)) {
-          continue;
-        }
+      // Skip terms that fail entity-level constraint validation (broken
+      // field values, missing required data, etc.).
+      if ($term->validate()->count() !== 0) {
+        continue;
+      }
+      // Skip terms whose edit form BrowserKit cannot submit successfully.
+      // Entity validation alone is insufficient: some terms pass PHP
+      // constraint validation but fail Drupal form validation (e.g. broken
+      // entity-reference field values that only surface at form-submit time).
+      if (!$this->termIsSaveableViaForm($term)) {
+        continue;
+      }
+      // Term is saveable. Find any published node of the requested type that
+      // references it.
+      $nids = \Drupal::entityTypeManager()
+        ->getStorage('node')
+        ->getQuery()
+        ->accessCheck(FALSE)
+        ->condition('type', $nodeType)
+        ->condition('status', 1)
+        ->condition($fieldName . '.target_id', $tid)
+        ->range(0, 1)
+        ->execute();
+      if (empty($nids)) {
+        continue;
+      }
+      $node = \Drupal::entityTypeManager()->getStorage('node')->load(reset($nids));
+      if ($node) {
         return [$node, $term];
       }
     }

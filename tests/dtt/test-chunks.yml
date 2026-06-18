@@ -14,9 +14,11 @@
 #
 # CHUNK SIZING (current suite)
 # The suite runs ~47 test cases across 7 chunks.
-# AnonymousCacheHitTest positive: 13 cases (6 top-level pages + 7 content types),
-# all pure HTTP GETs — no saves — so memory pressure is low despite the count.
-# AnonymousCacheHitTest negative: 4 cases (article/bill/event/petition non-invalidation).
+# AnonymousCacheHitTest: 13 cases (6 top-level pages + 7 content types), all
+# pure anonymous HTTP GETs — no admin user, no saves — so memory pressure is
+# low despite the count.
+# AnonymousCacheNonInvalidationTest: 4 cases (article/bill/event/petition
+# non-invalidation). Requires admin user + login per test.
 # AuthenticatedDynamicCacheTest: 6 cases (2 top-level + 2 content types + 1 senator
 # microsite, all cross-user; plus 1 account-change invalidation).
 # CacheMissInvalidationTest: split across 3 chunks to bound per-process memory;
@@ -39,8 +41,24 @@
 
 chunks:
 
-  # TEMPORARY: reduced to only the 2 failing tests while debugging.
-  # Restore the full list once testArticlePage and testInTheNews are fixed.
-  - label: "CacheMissInvalidationTest (failing: article + in_the_news senator edit)"
-    filter: "CacheMissInvalidationTest::(testArticlePage|testInTheNews)"
+  - label: "AnonymousCacheHitTest (positive — HITs and max-age)"
+    filter: "AnonymousCacheHitTest::(testAnonymousCacheHit|testContentTypeDisplayPageCacheHit)"
+
+  - label: "AnonymousCacheNonInvalidationTest (negative — non-invalidation, top-level pages)"
+    filter: "AnonymousCacheNonInvalidationTest"
+
+  - label: "AuthenticatedDynamicCacheTest"
+    filter: "AuthenticatedDynamicCacheTest"
+
+  - label: "CacheMissInvalidationTest (top-level pages — homepage and news)"
+    filter: "CacheMissInvalidationTest::(testHomepage|testNewsAndIssues)"
+
+  - label: "CacheMissInvalidationTest (top-level pages — senators, legislation, events, about)"
+    filter: "CacheMissInvalidationTest::(testSenatorsCommittees|testLegislation|testEvents|testAbout)"
+
+  - label: "CacheMissInvalidationTest (content type display pages)"
+    filter: "CacheMissInvalidationTest::(testContentTypeDisplayPage|testArticlePage|testEventPage|testInTheNews|testMeeting|testPublicHearing|testResolution)"
+
+  - label: "NoCachePoisoningTest"
+    filter: "NoCachePoisoningTest"
 

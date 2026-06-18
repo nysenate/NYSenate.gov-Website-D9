@@ -2,57 +2,19 @@
 
 namespace Drupal\Tests\nys\ExistingSite;
 
-use Drupal\user\UserInterface;
-
 /**
- * Verifies anonymous page cache behavior.
+ * Verifies that anonymous page cache HITs are served correctly.
  *
- * Cache HITs and max-age assertions (exhaustive):
- *  - All six top-level pages verify the global HIT mechanism and that each
- *    declares cache-control: max-age=86400, public.
- *  - All seven primary content types verify the same for content type display
- *    pages.
+ * All six top-level pages and all seven primary content type display pages
+ * must return a cache HIT and declare cache-control: max-age=86400, public
+ * on the second anonymous request.
  *
- * Non-invalidation (negative cases):
- *  - Editing article, bill, event, or petition nodes must not bust unrelated
- *    top-level navigation pages.
- *
- * The complement (cache MISS when the relevant content changes) lives in
- * CacheMissInvalidationTest.
+ * Non-invalidation (negative) cases live in AnonymousCacheNonInvalidationTest.
+ * Cache MISS cases live in CacheMissInvalidationTest.
  *
  * @group cache_regression
  */
 class AnonymousCacheHitTest extends CacheTestBase {
-
-  /**
-   * Administrator user used by the negative-case "does not invalidate" tests.
-   *
-   * @var \Drupal\user\UserInterface|null
-   */
-  protected ?UserInterface $adminUser = NULL;
-
-  /**
-   * {@inheritdoc}
-   *
-   * Creates an admin user and logs in so that saveViaWebRequest() is available
-   * for the negative-case tests. Web-based saves are used (not $entity->save())
-   * to ensure kernel.terminate fires and CDN BANs are dispatched before the
-   * next warmCache() poll, eliminating the race that causes spurious failures
-   * when CLI saves interact with the full test suite's warm-cache state.
-   */
-  protected function setUp(): void {
-    parent::setUp();
-    $this->adminUser = $this->createUser([], NULL, TRUE);
-    $this->drupalLogin($this->adminUser);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function tearDown(): void {
-    $this->drupalLogout();
-    parent::tearDown();
-  }
 
   // ---------------------------------------------------------------------------
   // Cache HITs
@@ -87,77 +49,6 @@ class AnonymousCacheHitTest extends CacheTestBase {
     $this->warmCache($path);
     $this->assertAnonymousCacheHit($path);
     $this->assertCacheControlMaxAge($path, 86400);
-  }
-
-  // ---------------------------------------------------------------------------
-  // Non-invalidation
-  // ---------------------------------------------------------------------------
-
-  /**
-   * An article edit must not invalidate top-level pages that don't display articles.
-   *
-   * Articles feed / and /news-and-issues only.
-   */
-  public function testArticleEditDoesNotInvalidateUnrelatedPages(): void {
-    $article = $this->requireNodeByType('article');
-    $unrelated = ['/senators-committees', '/legislation', '/events', '/about'];
-    foreach ($unrelated as $path) {
-      $this->warmCache($path);
-    }
-    $this->saveViaWebRequest($article);
-    foreach ($unrelated as $path) {
-      $this->assertAnonymousCacheHit($path);
-    }
-  }
-
-  /**
-   * A bill edit must not invalidate top-level pages that don't display bills.
-   *
-   * Bills appear on /legislation only.
-   */
-  public function testBillEditDoesNotInvalidateUnrelatedPages(): void {
-    $bill = $this->requireSaveableBillNode();
-    $unrelated = ['/', '/news-and-issues', '/senators-committees', '/events', '/about'];
-    foreach ($unrelated as $path) {
-      $this->warmCache($path);
-    }
-    $this->saveViaWebRequest($bill);
-    foreach ($unrelated as $path) {
-      $this->assertAnonymousCacheHit($path);
-    }
-  }
-
-  /**
-   * An event edit must not invalidate top-level pages that don't display events.
-   *
-   * Events appear on / and /events only.
-   */
-  public function testEventEditDoesNotInvalidateUnrelatedPages(): void {
-    $event = $this->requireNodeByType('event');
-    $unrelated = ['/news-and-issues', '/senators-committees', '/legislation', '/about'];
-    foreach ($unrelated as $path) {
-      $this->warmCache($path);
-    }
-    $this->saveViaWebRequest($event);
-    foreach ($unrelated as $path) {
-      $this->assertAnonymousCacheHit($path);
-    }
-  }
-
-  /**
-   * A petition edit must not invalidate any top-level page.
-   *
-   * Petitions do not appear on any top-level navigation page.
-   */
-  public function testPetitionEditDoesNotInvalidateAnyTopLevelPage(): void {
-    $petition = $this->requireNodeByType('petition');
-    foreach (self::TOP_LEVEL_PAGES as $path) {
-      $this->warmCache($path);
-    }
-    $this->saveViaWebRequest($petition);
-    foreach (self::TOP_LEVEL_PAGES as $path) {
-      $this->assertAnonymousCacheHit($path);
-    }
   }
 
 }

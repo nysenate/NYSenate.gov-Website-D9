@@ -804,11 +804,8 @@ abstract class CacheTestBase extends ExistingSiteBase {
     $tids = $query->execute()->fetchCol();
 
     if (empty($tids)) {
-      fwrite(STDERR, "[diag:findNodeAndValidTermByField($nodeType.$fieldName)] No TIDs found in DB — field table empty or no published nodes.\n");
       return NULL;
     }
-
-    fwrite(STDERR, "[diag:findNodeAndValidTermByField($nodeType.$fieldName)] Found " . count($tids) . " distinct TIDs: " . implode(', ', $tids) . "\n");
 
     // Phase 2: for each unique TID, check form saveability via BrowserKit.
     // Note: entity validation ($term->validate()) is NOT used as a pre-filter
@@ -819,12 +816,9 @@ abstract class CacheTestBase extends ExistingSiteBase {
     foreach ($tids as $tid) {
       $term = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load($tid);
       if (!$term) {
-        fwrite(STDERR, "[diag:findNodeAndValidTermByField($nodeType.$fieldName)] TID $tid: term NOT FOUND in storage\n");
         continue;
       }
-      $saveable = $this->termIsSaveableViaForm($term);
-      fwrite(STDERR, "[diag:findNodeAndValidTermByField($nodeType.$fieldName)] TID $tid ({$term->label()}): form_saveable=" . ($saveable ? 'YES' : 'NO') . "\n");
-      if (!$saveable) {
+      if (!$this->termIsSaveableViaForm($term)) {
         continue;
       }
       // Term is saveable. Find any published node of the requested type that

@@ -247,8 +247,7 @@ class CacheMissInvalidationTest extends CacheTestBase {
    * Editing a committee term referenced by an event invalidates its display page.
    */
   public function testEventPageMissOnCommitteeEdit(): void {
-    $event = $this->requireNodeByTypeWithField('event', 'field_committee');
-    $committee = $this->requireReferencedTerm($event, 'field_committee');
+    [$event, $committee] = $this->requireNodeByTypeWithSaveableTerm('event', 'field_committee');
     $path = $event->toUrl('canonical')->setAbsolute(FALSE)->toString();
 
     $this->assertCacheMissOnSave($path, $committee);
@@ -268,8 +267,7 @@ class CacheMissInvalidationTest extends CacheTestBase {
    * Editing a committee term referenced by a meeting invalidates its display page.
    */
   public function testMeetingPageMissOnCommitteeEdit(): void {
-    $meeting = $this->requireNodeByTypeWithField('meeting', 'field_committee');
-    $committee = $this->requireReferencedTerm($meeting, 'field_committee');
+    [$meeting, $committee] = $this->requireNodeByTypeWithSaveableTerm('meeting', 'field_committee');
     $path = $meeting->toUrl('canonical')->setAbsolute(FALSE)->toString();
 
     $this->assertCacheMissOnSave($path, $committee);
@@ -279,8 +277,7 @@ class CacheMissInvalidationTest extends CacheTestBase {
    * Editing a committee term referenced by a public hearing invalidates its display page.
    */
   public function testPublicHearingPageMissOnCommitteeEdit(): void {
-    $node = $this->requireNodeByTypeWithField('public_hearing', 'field_committee');
-    $committee = $this->requireReferencedTerm($node, 'field_committee');
+    [$node, $committee] = $this->requireNodeByTypeWithSaveableTerm('public_hearing', 'field_committee');
     $path = $node->toUrl('canonical')->setAbsolute(FALSE)->toString();
 
     $this->assertCacheMissOnSave($path, $committee);
@@ -290,8 +287,7 @@ class CacheMissInvalidationTest extends CacheTestBase {
    * Editing a senator term referenced by a resolution (via field_ol_sponsor) invalidates its display page.
    */
   public function testResolutionPageMissOnSenatorEdit(): void {
-    $resolution = $this->requireNodeByTypeWithField('resolution', 'field_ol_sponsor');
-    $senator = $this->requireReferencedTerm($resolution, 'field_ol_sponsor');
+    [$resolution, $senator] = $this->requireNodeByTypeWithSaveableTerm('resolution', 'field_ol_sponsor');
     $path = $resolution->toUrl('canonical')->setAbsolute(FALSE)->toString();
 
     $this->assertCacheMissOnSave($path, $senator);

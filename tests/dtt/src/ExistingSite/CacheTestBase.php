@@ -123,19 +123,8 @@ abstract class CacheTestBase extends ExistingSiteBase {
     // authenticated requests (drupalLogin, saveViaWebRequest, etc.) pass
     // Cloudflare Bot Management on Pantheon. DrupalTestBrowser::doRequest()
     // translates HTTP_USER_AGENT → User-Agent header automatically.
-    $ua = $this->pantheonTestUA();
     $this->getSession()->getDriver()->getClient()
-      ->setServerParameter('HTTP_USER_AGENT', $ua);
-    // DEBUG: confirm UA token is non-empty and actually set on the BrowserKit
-    // client. Remove once CF form-submission issue is diagnosed.
-    fwrite(STDERR, sprintf(
-      "\n[CacheTestBase] BrowserKit UA set: %s\n",
-      $ua !== '' ? 'YES (len=' . strlen($ua) . ')' : 'NO — PANTHEON_TEST_UA is empty!'
-    ));
-    fwrite(STDERR, sprintf(
-      "[CacheTestBase] BrowserKit server param: %s\n",
-      $this->getSession()->getDriver()->getClient()->getServerParameter('HTTP_USER_AGENT') !== '' ? 'SET' : 'EMPTY'
-    ));
+      ->setServerParameter('HTTP_USER_AGENT', $this->pantheonTestUA());
 
     $this->anonClient = new Client([
       'base_uri' => getenv('DTT_BASE_URL'),
@@ -465,46 +454,45 @@ abstract class CacheTestBase extends ExistingSiteBase {
   protected function saveViaWebRequest(EntityInterface $entity): void {
     $path = $entity->toUrl('edit-form')->setAbsolute(FALSE)->toString();
     $this->visit($path);
-
-    // DEBUG: detect CF challenge on the edit form GET before attempting to
-    // submit. A JS challenge page (200 with CF challenge body) would mean
-    // pressButton('Save') submits nothing and no BAN is dispatched.
-    $pageContent  = $this->getSession()->getPage()->getContent();
-    $currentUrl   = $this->getSession()->getCurrentUrl();
-    $cfMitigated  = $this->getSession()->getResponseHeader('cf-mitigated') ?? '(none)';
-    $cfCacheStatus = $this->getSession()->getResponseHeader('cf-cache-status') ?? '(none)';
-    $uaSent       = $this->getSession()->getDriver()->getClient()->getServerParameter('HTTP_USER_AGENT');
-    fwrite(STDERR, sprintf(
-      "\n[saveViaWebRequest] GET %s\n  URL after visit : %s\n  User-Agent sent : %s\n  cf-mitigated    : %s\n  cf-cache-status : %s\n",
-      $path, $currentUrl,
-      $uaSent !== '' ? $uaSent : '(empty — UA token not set!)',
-      $cfMitigated, $cfCacheStatus
-    ));
-    if (str_contains($pageContent, 'challenges.cloudflare.com')) {
-      fwrite(STDERR, "[saveViaWebRequest] WARNING: CF challenge page detected on edit form GET!\n");
-    }
-    else {
-      fwrite(STDERR, "[saveViaWebRequest] Edit form reached Drupal (no CF challenge detected).\n");
-    }
-
     $this->getSession()->getPage()->pressButton('Save');
-
-    // DEBUG: after save, a successful Drupal form submit redirects away from
-    // the edit path. Remaining on /edit or landing on a CF challenge URL
-    // indicates the save did not complete.
+    // A successful Drupal form save redirects away from the edit path.
+    // Remaining on /edit indicates the form was rejected (broken entity-
+    // reference field, required field BrowserKit could not populate, CSRF
+    // mismatch, etc.) and means no BAN was dispatched to the CDN.
     $urlAfterSave = $this->getSession()->getCurrentUrl();
-    fwrite(STDERR, sprintf(
-      "[saveViaWebRequest] URL after pressButton('Save'): %s\n",
-      $urlAfterSave
-    ));
-    if (str_contains($urlAfterSave, 'challenges.cloudflare.com')) {
-      fwrite(STDERR, "[saveViaWebRequest] WARNING: CF challenge URL after POST — form submission blocked!\n");
+    $this->assertStringNotContainsString(
+      '/edit',
+      $urlAfterSave,
+      "saveViaWebRequest({$path}): Drupal rejected the form submission — still on edit URL ({$urlAfterSave}). "
+      . 'Use findNodeByTypeWithSaveableTerm() / findNodeAndValidTermByField() to select '
+      . 'entities whose edit forms BrowserKit can submit successfully.'
+    );
+  }
+
+  /**
+   * Returns TRUE if $term can be saved via its Drupal edit form through
+   * BrowserKit, FALSE otherwise.
+   *
+   * Some taxonomy terms have broken entity-reference field values or required
+   * fields with widget state that BrowserKit cannot satisfy, causing Drupal to
+   * reject the form submission and redirect back to the edit URL rather than
+   * the term's canonical page. This helper detects that condition so that term
+   * selection helpers can skip unsaveable terms.
+   *
+   * Side-effect: if the term IS saveable, it will have been saved once by this
+   * call (triggering a BAN for its cache tags). Callers that subsequently use
+   * the term in assertCacheMissOnSave() should call warmCache() first, as
+   * assertCacheMissOnSave() already does.
+   */
+  private function termIsSaveableViaForm(TermInterface $term): bool {
+    try {
+      $path = $term->toUrl('edit-form')->setAbsolute(FALSE)->toString();
+      $this->visit($path);
+      $this->getSession()->getPage()->pressButton('Save');
+      return !str_contains($this->getSession()->getCurrentUrl(), '/edit');
     }
-    elseif (str_contains($urlAfterSave, '/edit')) {
-      fwrite(STDERR, "[saveViaWebRequest] WARNING: Still on edit URL after save — form may have failed (CSRF, validation, or permissions).\n");
-    }
-    else {
-      fwrite(STDERR, "[saveViaWebRequest] Save redirected correctly — BAN should have fired.\n");
+    catch (\Exception $e) {
+      return FALSE;
     }
   }
 
@@ -814,12 +802,73 @@ abstract class CacheTestBase extends ExistingSiteBase {
       if (!$term) {
         continue;
       }
-      // Only use terms whose edit form will pass validation.
-      if ($term->validate()->count() === 0) {
+      // Skip terms that fail entity-level constraint validation (broken
+      // field values, missing required data, etc.).
+      if ($term->validate()->count() !== 0) {
+        continue;
+      }
+      // Skip terms whose edit form BrowserKit cannot submit successfully.
+      // Entity validation alone is insufficient: some terms pass PHP
+      // constraint validation but fail Drupal form validation (e.g. broken
+      // entity-reference field values that only surface at form-submit time).
+      if (!$this->termIsSaveableViaForm($term)) {
+        continue;
+      }
+      return [$node, $term];
+    }
+    return NULL;
+  }
+
+  /**
+   * Returns the first [node, term] pair where the node is a published node of
+   * $type with $fieldName populated and the referenced term can be saved via
+   * its Drupal edit form through BrowserKit, or NULL if none is found.
+   *
+   * Unlike findNodeByTypeWithField() which returns only the most recently
+   * changed node, this helper iterates through candidates until it finds a
+   * term whose form submission BrowserKit can complete successfully — skipping
+   * terms with broken field values or required fields that BrowserKit cannot
+   * satisfy.
+   *
+   * @return array{0: \Drupal\node\NodeInterface, 1: \Drupal\taxonomy\TermInterface}|null
+   */
+  protected function findNodeByTypeWithSaveableTerm(string $type, string $fieldName): ?array {
+    $ids = \Drupal::entityTypeManager()
+      ->getStorage('node')
+      ->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('type', $type)
+      ->condition('status', 1)
+      ->exists($fieldName)
+      ->sort('changed', 'DESC')
+      ->range(0, 20)
+      ->execute();
+
+    foreach ($ids as $nid) {
+      $node = \Drupal::entityTypeManager()->getStorage('node')->load($nid);
+      if (!$node) {
+        continue;
+      }
+      $term = $this->findReferencedTerm($node, $fieldName);
+      if (!$term) {
+        continue;
+      }
+      if ($this->termIsSaveableViaForm($term)) {
         return [$node, $term];
       }
     }
     return NULL;
+  }
+
+  /**
+   * Returns the first [node, term] pair where the referenced term can be saved
+   * via its edit form, or fails the test if none is found.
+   *
+   * @return array{0: \Drupal\node\NodeInterface, 1: \Drupal\taxonomy\TermInterface}
+   */
+  protected function requireNodeByTypeWithSaveableTerm(string $type, string $fieldName): array {
+    return $this->findNodeByTypeWithSaveableTerm($type, $fieldName)
+      ?? $this->fail("No published '{$type}' node with a BrowserKit-saveable '{$fieldName}' term found.");
   }
 
   // ---------------------------------------------------------------------------

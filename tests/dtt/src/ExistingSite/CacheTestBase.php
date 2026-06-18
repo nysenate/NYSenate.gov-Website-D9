@@ -481,12 +481,12 @@ abstract class CacheTestBase extends ExistingSiteBase {
    *
    * Side-effect: if the term IS saveable, it will have been saved once by this
    * call (triggering a BAN for its cache tags). Callers that subsequently use
-   * the term in assertCacheMissOnSave() should call warmCache() first, as
+   * the entity in assertCacheMissOnSave() should call warmCache() first, as
    * assertCacheMissOnSave() already does.
    */
-  private function termIsSaveableViaForm(TermInterface $term): bool {
+  private function termIsSaveableViaForm(EntityInterface $entity): bool {
     try {
-      $path = $term->toUrl('edit-form')->setAbsolute(FALSE)->toString();
+      $path = $entity->toUrl('edit-form')->setAbsolute(FALSE)->toString();
       $this->visit($path);
       $this->getSession()->getPage()->pressButton('Save');
       return !str_contains($this->getSession()->getCurrentUrl(), '/edit');
@@ -613,6 +613,54 @@ abstract class CacheTestBase extends ExistingSiteBase {
       return NULL;
     }
     return \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load(reset($ids));
+  }
+
+  /**
+   * Returns the first term in $vocabulary (newest first) whose edit form
+   * BrowserKit can submit successfully, or NULL if none is found.
+   *
+   * Sorts by TID DESC so recently created terms — which are more likely to
+   * have complete field configurations — are tried first.
+   */
+  protected function findSaveableTermByVocabulary(string $vocabulary): ?TermInterface {
+    $ids = \Drupal::entityTypeManager()
+      ->getStorage('taxonomy_term')
+      ->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('vid', $vocabulary)
+      ->sort('tid', 'DESC')
+      ->range(0, 100)
+      ->execute();
+    foreach ($ids as $tid) {
+      $term = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load($tid);
+      if ($term && $this->termIsSaveableViaForm($term)) {
+        return $term;
+      }
+    }
+    return NULL;
+  }
+
+  /**
+   * Returns the most recently changed published node of $type whose edit form
+   * BrowserKit can submit successfully, or NULL if none is found.
+   */
+  protected function findSaveableNodeByType(string $type): ?NodeInterface {
+    $ids = \Drupal::entityTypeManager()
+      ->getStorage('node')
+      ->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('type', $type)
+      ->condition('status', 1)
+      ->sort('changed', 'DESC')
+      ->range(0, 20)
+      ->execute();
+    foreach ($ids as $nid) {
+      $node = \Drupal::entityTypeManager()->getStorage('node')->load($nid);
+      if ($node && $this->termIsSaveableViaForm($node)) {
+        return $node;
+      }
+    }
+    return NULL;
   }
 
   /**
@@ -938,6 +986,23 @@ abstract class CacheTestBase extends ExistingSiteBase {
   protected function requireTermByVocabulary(string $vocabulary): TermInterface {
     return $this->findTermByVocabulary($vocabulary)
       ?? $this->fail("No '{$vocabulary}' taxonomy term found.");
+  }
+
+  /**
+   * Returns the first form-saveable term in $vocabulary, or fails.
+   */
+  protected function requireSaveableTermByVocabulary(string $vocabulary): TermInterface {
+    return $this->findSaveableTermByVocabulary($vocabulary)
+      ?? $this->fail("No form-saveable '{$vocabulary}' taxonomy term found.");
+  }
+
+  /**
+   * Returns the most recently changed published node of $type whose edit form
+   * BrowserKit can submit successfully, or fails.
+   */
+  protected function requireSaveableNodeByType(string $type): NodeInterface {
+    return $this->findSaveableNodeByType($type)
+      ?? $this->fail("No published form-saveable '{$type}' node found.");
   }
 
   /**

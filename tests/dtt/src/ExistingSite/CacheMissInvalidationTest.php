@@ -148,7 +148,7 @@ class CacheMissInvalidationTest extends CacheTestBase {
    * Editing a senator term invalidates /senators-committees.
    */
   public function testSenatorsCommitteesMissOnSenatorEdit(): void {
-    $senator = $this->requireTermByVocabulary('senator');
+    $senator = $this->requireSaveableTermByVocabulary('senator');
 
     $this->assertCacheMissOnSave('/senators-committees', $senator);
   }
@@ -187,9 +187,12 @@ class CacheMissInvalidationTest extends CacheTestBase {
    * specimen); the Drupal node cache tag mechanism is the same for all.
    */
   public function testAboutMissOnLandingPageEdit(): void {
-    $node = $this->requireNodeByAlias('/about');
+    // Use any saveable landing page rather than pinning to /about, which may
+    // have a broken form configuration on some environments.
+    $node = $this->requireSaveableNodeByType('landing');
+    $path = $node->toUrl('canonical')->setAbsolute(FALSE)->toString();
 
-    $this->assertCacheMissOnSave('/about', $node);
+    $this->assertCacheMissOnSave($path, $node);
   }
 
   /**

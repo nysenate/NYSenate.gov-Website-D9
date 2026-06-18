@@ -768,37 +768,53 @@ abstract class CacheTestBase extends ExistingSiteBase {
   }
 
   /**
-   * Returns the first node (of $type) whose referenced term in $fieldName
-   * passes entity validation, or NULL if no such pair exists.
+   * Returns a [node, term] pair where the node is a published node of
+   * $nodeType referencing a term via $fieldName that passes both entity
+   * validation and BrowserKit form saveability, or NULL if none exists.
    *
-   * Some senator terms have stale/broken entity-reference field values that
-   * cause the edit form to reject the submission with a validation error,
-   * preventing the save from firing. This helper skips those broken terms so
-   * that tests can reliably trigger a real web-form save.
-   *
-   * Iterates through published nodes of the given type (most recently changed
-   * first) until it finds one whose referenced term has zero validation errors.
+   * Queries from the vocabulary side first (iterating terms), then finds a
+   * referencing node. This is more reliable than querying from the node side:
+   * a node-first query only discovers terms on the N most recently changed
+   * nodes and silently misses saveable terms that are only referenced by older
+   * content.
    *
    * @return array{0: \Drupal\node\NodeInterface, 1: \Drupal\taxonomy\TermInterface}|null
    */
   protected function findNodeAndValidTermByField(string $nodeType, string $fieldName): ?array {
-    $ids = \Drupal::entityTypeManager()
-      ->getStorage('node')
+    // Query from the vocabulary side first, then find a referencing node.
+    //
+    // Querying nodes first and checking the first tagged term on each is
+    // unreliable: it only discovers terms that happen to appear on the N most
+    // recently changed nodes. Saveable terms on older content are silently
+    // skipped, causing the method to exhaust all candidates and return NULL
+    // even when a valid [node, term] pair exists.
+    //
+    // The reversed strategy — iterate terms in the vocabulary, validate each,
+    // then find any node that references the passing term — is exhaustive over
+    // the full term pool and guaranteed to find a usable pair if one exists.
+    $fieldDefs = \Drupal::service('entity_field.manager')
+      ->getFieldDefinitions('node', $nodeType);
+    $fieldDef = $fieldDefs[$fieldName] ?? NULL;
+    if (!$fieldDef) {
+      return NULL;
+    }
+    $targetBundles = $fieldDef->getSetting('handler_settings')['target_bundles'] ?? [];
+    $vocabulary = reset($targetBundles);
+    if (!$vocabulary) {
+      return NULL;
+    }
+
+    $termIds = \Drupal::entityTypeManager()
+      ->getStorage('taxonomy_term')
       ->getQuery()
       ->accessCheck(FALSE)
-      ->condition('type', $nodeType)
-      ->condition('status', 1)
-      ->exists($fieldName)
+      ->condition('vid', $vocabulary)
       ->sort('changed', 'DESC')
-      ->range(0, 50)
+      ->range(0, 100)
       ->execute();
 
-    foreach ($ids as $nid) {
-      $node = \Drupal::entityTypeManager()->getStorage('node')->load($nid);
-      if (!$node) {
-        continue;
-      }
-      $term = $this->findReferencedTerm($node, $fieldName);
+    foreach ($termIds as $tid) {
+      $term = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load($tid);
       if (!$term) {
         continue;
       }
@@ -814,7 +830,25 @@ abstract class CacheTestBase extends ExistingSiteBase {
       if (!$this->termIsSaveableViaForm($term)) {
         continue;
       }
-      return [$node, $term];
+      // Term is saveable. Find a published node of the requested type that
+      // references it.
+      $nids = \Drupal::entityTypeManager()
+        ->getStorage('node')
+        ->getQuery()
+        ->accessCheck(FALSE)
+        ->condition('type', $nodeType)
+        ->condition('status', 1)
+        ->condition($fieldName . '.target_id', $term->id())
+        ->sort('changed', 'DESC')
+        ->range(0, 1)
+        ->execute();
+      if (empty($nids)) {
+        continue;
+      }
+      $node = \Drupal::entityTypeManager()->getStorage('node')->load(reset($nids));
+      if ($node) {
+        return [$node, $term];
+      }
     }
     return NULL;
   }

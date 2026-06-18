@@ -2,17 +2,21 @@ uuid: ced2e099-58d9-47a9-a0db-d96d3d207bfe
 langcode: en
 status: true
 dependencies:
+  config:
+    - taxonomy.vocabulary.majority_issues
+    - taxonomy.vocabulary.microsite_page_type
+    - taxonomy.vocabulary.nys_counties
+    - taxonomy.vocabulary.prev_ver
   module:
     - taxonomy
 id: default_taxonomy
 label: 'Default Taxonomy'
 type: 'canonical_entities:taxonomy_term'
-pattern: '[term:vocabulary]/[term:name]'
+pattern: '/[term:vocabulary]/[term:name]'
 selection_criteria:
   1febb926-8c91-4fc4-9d4e-a2c2415d0558:
     id: 'entity_bundle:taxonomy_term'
     negate: false
-    uuid: 1febb926-8c91-4fc4-9d4e-a2c2415d0558
     context_mapping:
       taxonomy_term: taxonomy_term
     bundles:

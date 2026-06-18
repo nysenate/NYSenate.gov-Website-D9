@@ -63,6 +63,14 @@ settings:
     family: ' -'
     generational: ' '
     credentials: ', '
+  autocomplete_match: starts_with
+  autocomplete_match_overrides:
+    title: ''
+    given: ''
+    middle: ''
+    family: ''
+    generational: ''
+    credentials: ''
   title_options:
     - '-- --'
     - Mr.
@@ -89,8 +97,10 @@ settings:
     title: false
     generational: false
   widget_layout: inline
+  field_title_display: before
   component_layout: default
   show_component_required_marker: false
+  flag_required_input: false
   credentials_inline: false
   override_format: default
   field_type:

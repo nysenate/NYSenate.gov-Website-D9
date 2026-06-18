@@ -2,17 +2,18 @@ uuid: 5c4c9fb1-e710-44ce-9a36-f82214725db6
 langcode: en
 status: true
 dependencies:
+  config:
+    - node.type.public_hearing
   module:
     - node
 id: public_hearing
 label: 'Public Hearing'
 type: 'canonical_entities:node'
-pattern: 'calendar/public-hearings/[node:field_date_range:start_date:custom:F-d-Y]/[node:title]'
+pattern: '/calendar/public-hearings/[node:field_date_range:start_date:custom:F-d-Y]/[node:title]'
 selection_criteria:
   a26c972f-4ff7-479f-a406-6f89cd947d7e:
     id: 'entity_bundle:node'
     negate: false
-    uuid: a26c972f-4ff7-479f-a406-6f89cd947d7e
     context_mapping:
       node: node
     bundles:

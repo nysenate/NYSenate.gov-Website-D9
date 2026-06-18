@@ -616,54 +616,6 @@ abstract class CacheTestBase extends ExistingSiteBase {
   }
 
   /**
-   * Returns the first term in $vocabulary (newest first) whose edit form
-   * BrowserKit can submit successfully, or NULL if none is found.
-   *
-   * Sorts by TID DESC so recently created terms — which are more likely to
-   * have complete field configurations — are tried first.
-   */
-  protected function findSaveableTermByVocabulary(string $vocabulary): ?TermInterface {
-    $ids = \Drupal::entityTypeManager()
-      ->getStorage('taxonomy_term')
-      ->getQuery()
-      ->accessCheck(FALSE)
-      ->condition('vid', $vocabulary)
-      ->sort('tid', 'DESC')
-      ->range(0, 100)
-      ->execute();
-    foreach ($ids as $tid) {
-      $term = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load($tid);
-      if ($term && $this->termIsSaveableViaForm($term)) {
-        return $term;
-      }
-    }
-    return NULL;
-  }
-
-  /**
-   * Returns the most recently changed published node of $type whose edit form
-   * BrowserKit can submit successfully, or NULL if none is found.
-   */
-  protected function findSaveableNodeByType(string $type): ?NodeInterface {
-    $ids = \Drupal::entityTypeManager()
-      ->getStorage('node')
-      ->getQuery()
-      ->accessCheck(FALSE)
-      ->condition('type', $type)
-      ->condition('status', 1)
-      ->sort('changed', 'DESC')
-      ->range(0, 20)
-      ->execute();
-    foreach ($ids as $nid) {
-      $node = \Drupal::entityTypeManager()->getStorage('node')->load($nid);
-      if ($node && $this->termIsSaveableViaForm($node)) {
-        return $node;
-      }
-    }
-    return NULL;
-  }
-
-  /**
    * Returns the most recently changed published node of a given type that has
    * at least one value in the given field, or NULL if no such node exists.
    *
@@ -822,15 +774,17 @@ abstract class CacheTestBase extends ExistingSiteBase {
    *
    * Uses a two-phase strategy to keep execution time bounded:
    *
-   * Phase 1 — one fast DB query collects all distinct term IDs referenced by
-   * published nodes of the given type. No nodes or terms are loaded here.
+   * Phase 1 — one fast DB query collects the top 20 distinct term IDs (by TID
+   * DESC) referenced by published nodes of the given type. Newest terms first
+   * because recently created terms tend to have complete field configurations.
+   * The cap of 20 keeps DDEV skips fast: if no saveable term is found among
+   * the first 20 candidates the method returns NULL quickly rather than
+   * exhausting the entire field population.
    *
-   * Phase 2 — for each distinct TID, the term is loaded and checked: entity
-   * validation first (cheap), then form saveability via BrowserKit (expensive
-   * — one HTTP round-trip per term). Because we work from the complete set of
-   * TIDs used on actual content, form submissions are capped at the number of
-   * unique terms in the field (~63 for senators), regardless of how many nodes
-   * exist. This is far cheaper than iterating nodes without a range cap.
+   * Phase 2 — for each TID, the term is loaded and checked: form saveability
+   * via BrowserKit (one HTTP round-trip per term). Because we work from
+   * actual content TIDs and stop after 20 candidates, execution is bounded
+   * regardless of how many nodes or terms exist.
    *
    * @return array{0: \Drupal\node\NodeInterface, 1: \Drupal\taxonomy\TermInterface}|null
    */
@@ -847,8 +801,11 @@ abstract class CacheTestBase extends ExistingSiteBase {
     $query->innerJoin('node_field_data', 'n', 'f.entity_id = n.nid AND f.langcode = n.langcode');
     $query->condition('n.status', 1);
     // Check newest TIDs first — recently created terms are more likely to have
-    // complete field configurations and pass form submission.
+    // complete field configurations and pass form submission. Limit to 20 so
+    // that DDEV environments with no saveable terms skip quickly rather than
+    // exhausting the entire field population.
     $query->orderBy('f.' . $targetCol, 'DESC');
+    $query->range(0, 20);
     $tids = $query->execute()->fetchCol();
 
     if (empty($tids)) {
@@ -989,24 +946,7 @@ abstract class CacheTestBase extends ExistingSiteBase {
   }
 
   /**
-   * Returns the first form-saveable term in $vocabulary, or fails.
-   */
-  protected function requireSaveableTermByVocabulary(string $vocabulary): TermInterface {
-    return $this->findSaveableTermByVocabulary($vocabulary)
-      ?? $this->fail("No form-saveable '{$vocabulary}' taxonomy term found.");
-  }
-
-  /**
-   * Returns the most recently changed published node of $type whose edit form
-   * BrowserKit can submit successfully, or fails.
-   */
-  protected function requireSaveableNodeByType(string $type): NodeInterface {
-    return $this->findSaveableNodeByType($type)
-      ?? $this->fail("No published form-saveable '{$type}' node found.");
-  }
-
-  /**
-   * Returns the most recently changed published node of a given type with a
+   * Returns the most recently changed published node with a
    * populated field, or fails.
    */
   protected function requireNodeByTypeWithField(string $type, string $fieldName): NodeInterface {

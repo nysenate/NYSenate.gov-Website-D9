@@ -798,6 +798,9 @@ abstract class CacheTestBase extends ExistingSiteBase {
       ->condition('f.deleted', 0);
     $query->innerJoin('node_field_data', 'n', 'f.entity_id = n.nid AND f.langcode = n.langcode');
     $query->condition('n.status', 1);
+    // Check newest TIDs first — recently created terms are more likely to have
+    // complete field configurations and pass form submission.
+    $query->orderBy('f.' . $targetCol, 'DESC');
     $tids = $query->execute()->fetchCol();
 
     if (empty($tids)) {
@@ -807,27 +810,20 @@ abstract class CacheTestBase extends ExistingSiteBase {
 
     fwrite(STDERR, "[diag:findNodeAndValidTermByField($nodeType.$fieldName)] Found " . count($tids) . " distinct TIDs: " . implode(', ', $tids) . "\n");
 
-    // Phase 2: for each unique TID, check validation then form saveability.
-    // Once we find a saveable term, fetch one referencing node and return.
+    // Phase 2: for each unique TID, check form saveability via BrowserKit.
+    // Note: entity validation ($term->validate()) is NOT used as a pre-filter
+    // here. Diagnostic data showed that senator terms with 1 entity-validation
+    // error are still form-saveable (the error is typically a non-form-required
+    // field added after term creation). Filtering by entity validation would
+    // incorrectly exclude those terms. We rely solely on termIsSaveableViaForm.
     foreach ($tids as $tid) {
       $term = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load($tid);
       if (!$term) {
         fwrite(STDERR, "[diag:findNodeAndValidTermByField($nodeType.$fieldName)] TID $tid: term NOT FOUND in storage\n");
         continue;
       }
-      // Skip terms that fail entity-level constraint validation (broken
-      // field values, missing required data, etc.).
-      $errors = $term->validate();
-      if ($errors->count() !== 0) {
-        fwrite(STDERR, "[diag:findNodeAndValidTermByField($nodeType.$fieldName)] TID $tid ({$term->label()}): entity_validation_errors={$errors->count()}: " . (string) $errors . "\n");
-        continue;
-      }
-      // Skip terms whose edit form BrowserKit cannot submit successfully.
-      // Entity validation alone is insufficient: some terms pass PHP
-      // constraint validation but fail Drupal form validation (e.g. broken
-      // entity-reference field values that only surface at form-submit time).
       $saveable = $this->termIsSaveableViaForm($term);
-      fwrite(STDERR, "[diag:findNodeAndValidTermByField($nodeType.$fieldName)] TID $tid ({$term->label()}): entity_validation=OK, form_saveable=" . ($saveable ? 'YES' : 'NO') . "\n");
+      fwrite(STDERR, "[diag:findNodeAndValidTermByField($nodeType.$fieldName)] TID $tid ({$term->label()}): form_saveable=" . ($saveable ? 'YES' : 'NO') . "\n");
       if (!$saveable) {
         continue;
       }

@@ -801,26 +801,34 @@ abstract class CacheTestBase extends ExistingSiteBase {
     $tids = $query->execute()->fetchCol();
 
     if (empty($tids)) {
+      fwrite(STDERR, "[diag:findNodeAndValidTermByField($nodeType.$fieldName)] No TIDs found in DB — field table empty or no published nodes.\n");
       return NULL;
     }
+
+    fwrite(STDERR, "[diag:findNodeAndValidTermByField($nodeType.$fieldName)] Found " . count($tids) . " distinct TIDs: " . implode(', ', $tids) . "\n");
 
     // Phase 2: for each unique TID, check validation then form saveability.
     // Once we find a saveable term, fetch one referencing node and return.
     foreach ($tids as $tid) {
       $term = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load($tid);
       if (!$term) {
+        fwrite(STDERR, "[diag:findNodeAndValidTermByField($nodeType.$fieldName)] TID $tid: term NOT FOUND in storage\n");
         continue;
       }
       // Skip terms that fail entity-level constraint validation (broken
       // field values, missing required data, etc.).
-      if ($term->validate()->count() !== 0) {
+      $errors = $term->validate();
+      if ($errors->count() !== 0) {
+        fwrite(STDERR, "[diag:findNodeAndValidTermByField($nodeType.$fieldName)] TID $tid ({$term->label()}): entity_validation_errors={$errors->count()}: " . (string) $errors . "\n");
         continue;
       }
       // Skip terms whose edit form BrowserKit cannot submit successfully.
       // Entity validation alone is insufficient: some terms pass PHP
       // constraint validation but fail Drupal form validation (e.g. broken
       // entity-reference field values that only surface at form-submit time).
-      if (!$this->termIsSaveableViaForm($term)) {
+      $saveable = $this->termIsSaveableViaForm($term);
+      fwrite(STDERR, "[diag:findNodeAndValidTermByField($nodeType.$fieldName)] TID $tid ({$term->label()}): entity_validation=OK, form_saveable=" . ($saveable ? 'YES' : 'NO') . "\n");
+      if (!$saveable) {
         continue;
       }
       // Term is saveable. Find any published node of the requested type that

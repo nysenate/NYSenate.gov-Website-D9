@@ -1,4 +1,4 @@
-uuid: 7319b448-03c7-4bd4-9f85-3f21684928a2
+uuid: 5a49f39f-e0a2-470c-a82d-a8b89b090e0d
 langcode: en
 status: open
 dependencies:
@@ -7,21 +7,18 @@ dependencies:
 weight: 0
 open: null
 close: null
-uid: 1
+uid: 327467
 template: false
 archive: false
-id: senator_contact_webform
-title: 'Senator Contact Webform'
-description: 'Microsite Senator Contact Webform'
+id: senator_contact_form_v2
+title: 'Senator Contact Form v2'
+description: ''
 categories: {  }
 elements: |-
-  processed_text:
+  overview:
     '#type': processed_text
-    '#text': |
-      <h3>Send a message to [current-page:senator-name]'s office</h3>
-
-      <p>If you would like to send a message related to legislation or issues, please create an account&nbsp;<a href="/user/login">here</a>.</p>
-    '#format': basic_html
+    '#text': "<h3>Send a message to [current-page:senator-name]'s office</h3>"
+    '#format': full_html
   inquiry_type:
     '#type': radios
     '#title': Inquiry
@@ -31,81 +28,28 @@ elements: |-
       press_inquiry: 'Press Inquiry'
     '#options_display': side_by_side
     '#default_value': general_inquiry
-  flexbox_1:
-    '#type': webform_flexbox
-    first_name:
-      '#type': textfield
-      '#title': 'First name'
-      '#required': true
-    last_name:
-      '#type': textfield
-      '#title': 'Last name'
-      '#minlength': 1
-      '#maxlength': 255
-      '#autocomplete': ''
-      '#required': true
+  contact_information:
+    '#type': nys_contact_composite
+    '#title': 'Contact information'
+    '#phone__title': 'Phone number (Optional)'
+    '#administrative_area__access': false
+  your_message:
+    '#type': processed_text
+    '#text': '<div class="nys-contact-composite__group-label">Your Message</div>'
+    '#format': full_html
   subject:
     '#type': textfield
     '#title': Subject
-    '#minlength': 1
-    '#maxlength': 255
     '#required': true
-  email_body:
+  message:
     '#type': textarea
     '#title': Message
     '#rows': 10
     '#required': true
-    '#wrapper_attributes':
-      class:
-        - form-textarea-wrapper
-      style: 'heigth:auto;'
-  flexbox_02:
-    '#type': webform_flexbox
-    from_email:
-      '#type': textfield
-      '#title': 'Your e-mail address'
-      '#minlength': 2
-      '#maxlength': 255
-      '#required': true
-      '#default_value': '[current-user:mail]'
-    phone:
-      '#type': textfield
-      '#title': 'Phone Number (Optional)'
-      '#minlength': 1
-      '#maxlength': 255
-  address:
-    '#type': textfield
-    '#title': 'Street Address'
-    '#minlength': 1
-    '#maxlength': 255
-    '#required': true
-    '#default_value': '[current-user:field_address:address_line1]'
-  flexbox_03:
-    '#type': webform_flexbox
-    city:
-      '#type': textfield
-      '#title': City
-      '#minlength': 1
-      '#maxlength': 255
-      '#required': true
-      '#default_value': '[current-user:field_address:locality]'
-    zip:
-      '#type': textfield
-      '#title': Zip
-      '#minlength': 1
-      '#maxlength': 5
-      '#required': true
-      '#default_value': '[current-user:field_address:postal_code]'
   tid:
     '#type': hidden
     '#title': tid
     '#default_value': '[current-page:senator-tid]'
-  captcha:
-    '#type': captcha
-  actions:
-    '#type': webform_actions
-    '#title': 'Submit button(s)'
-    '#submit__label': 'Send Message'
 css: ''
 javascript: ''
 settings:
@@ -290,9 +234,9 @@ access:
     users: {  }
     permissions: {  }
 handlers:
-  senator_email:
-    id: nys_senator_email
-    handler_id: senator_email
+  senator_email_v2:
+    id: nys_senator_email_v2
+    handler_id: senator_email_v2
     label: 'Senator Email'
     notes: ''
     status: true
@@ -311,14 +255,14 @@ handlers:
       from_options: {  }
       from_name: _default
       subject: '[webform_submission:values:subject]'
-      body: "Sen. [current-page:senator-name],<br />\r\nYou have received a [webform_submission:values:inquiry_type] from your contact form at&nbsp; [webform_submission:source-url:absolute]:<br />\r\n<br />\r\n[webform_submission:values:email_body]<br />\r\n<br />\r\nName:&nbsp;[webform_submission:values:first_name]&nbsp;[webform_submission:values:last_name]<br />\r\nPhone: [webform_submission:values:phone]<br />\r\nEmail: [webform_submission:values:from_email]<br />\r\nStreet: [webform_submission:values:address]<br />\r\nCity:&nbsp;[webform_submission:values:city]<br />\r\nZip:&nbsp;[webform_submission:values:zip]<br />\r\nSD for postal address: [sd-placeholder]"
+      body: '<p>Sen. [current-page:senator-name],<br>You have received a [webform_submission:values:inquiry_type] from your contact form at&nbsp; [webform_submission:source-url:absolute]:<br><br>[webform_submission:values:message]</p><p>[webform_submission:values:contact_information]</p>'
       excluded_elements: {  }
       ignore_access: 0
       exclude_empty: true
       exclude_empty_checkbox: 0
-      exclude_attachments: false
+      exclude_attachments: 0
       html: true
-      attachments: false
+      attachments: 0
       twig: false
       debug: false
       reply_to: ''

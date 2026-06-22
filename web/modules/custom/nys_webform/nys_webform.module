@@ -1,0 +1,88 @@
+<?php
+
+/**
+ * @file
+ * NYS Webform custom elements and behaviors.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Site\Settings;
+
+/**
+ * Implements hook_webform_submission_form_alter().
+ *
+ * Attaches server-side Emailable validation to every webform automatically,
+ * so individual webforms do not need a handler added manually.
+ */
+function nys_webform_webform_submission_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
+  $form['#validate'][] = 'nys_webform_emailable_validate';
+}
+
+/**
+ * Form validate callback: checks email deliverability via the Emailable API.
+ *
+ * Scans submitted values for a composite element containing an 'email'
+ * sub-key, then falls back to a top-level 'email' field. Fails open if the
+ * API is unreachable so a network hiccup does not block legitimate users.
+ */
+function nys_webform_emailable_validate(array &$form, FormStateInterface $form_state) {
+  $api_key = Settings::get('emailable_private_key');
+  if (empty($api_key)) {
+    return;
+  }
+
+  $email = '';
+  $values = $form_state->getValues();
+  foreach ($values as $value) {
+    if (is_array($value) && array_key_exists('email', $value)) {
+      $email = trim($value['email'] ?? '');
+      break;
+    }
+  }
+  if (empty($email)) {
+    $email = trim($values['email'] ?? '');
+  }
+  if (empty($email)) {
+    return;
+  }
+
+  try {
+    $response = \Drupal::service('http_client')->get('https://api.emailable.com/v1/verify', [
+      'query'   => ['email' => $email, 'api_key' => $api_key],
+      'timeout' => 5,
+    ]);
+    $body = json_decode((string) $response->getBody(), TRUE);
+    if (json_last_error() !== JSON_ERROR_NONE || empty($body['state'])) {
+      \Drupal::logger('nys_webform')->warning('Emailable API returned unexpected response for @email.', ['@email' => $email]);
+      return;
+    }
+    if ($body['state'] !== 'deliverable') {
+      $form_state->setErrorByName(
+        'emailable',
+        t('The email address you entered does not appear to be valid. Please check it and try again.')
+      );
+    }
+  }
+  catch (\GuzzleHttp\Exception\RequestException $e) {
+    \Drupal::logger('nys_webform')->warning('Emailable API request failed: @message', ['@message' => $e->getMessage()]);
+  }
+}
+
+/**
+ * Implements hook_page_attachments().
+ */
+function nys_webform_page_attachments(array &$attachments) {
+  $attachments['#attached']['library'][] = 'nys_webform/contact-composite';
+  $attachments['#attached']['library'][] = 'nys_webform/emailable';
+}
+
+/**
+ * Implements hook_theme().
+ */
+function nys_webform_theme() {
+  return [
+    'webform_composite_nys_contact_composite' => [
+      'render element' => 'elements',
+    ],
+  ];
+}

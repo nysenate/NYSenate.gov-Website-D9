@@ -110,6 +110,10 @@
     {{ content.field_block }}
   </div>
 
+  {% if microsite_type == 'contact' %}
+    {{ content.field_contact_form.0 }}
+  {% endif %}
+
   {% if display_submitted %}
     <footer class="node__meta">
       {{ author_picture }}

@@ -30,9 +30,9 @@ use Drupal\user\UserInterface;
  *
  * Test pattern: warm → HIT → saveViaWebRequest() → MISS → HIT, encapsulated
  * by assertCacheMissOnSave(). saveViaWebRequest() submits the entity edit form
- * as a real HTTP POST so that kernel.terminate fires and Fastly BANs are
- * dispatched before the next poll. CLI saves ($entity->save()) must not be
- * used here.
+ * as a real HTTP POST so that kernel.terminate fires and Cloudflare cache-tag
+ * purges are dispatched before the next poll. CLI saves ($entity->save()) must
+ * not be used here.
  *
  * @group cache_regression
  */

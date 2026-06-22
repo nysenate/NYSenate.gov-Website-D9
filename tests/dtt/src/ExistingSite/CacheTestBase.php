@@ -955,8 +955,8 @@ abstract class CacheTestBase extends ExistingSiteBase {
   }
 
   /**
-   * Returns the first [node, term] pair where the term passes entity
-   * validation (i.e. its edit form will submit successfully), or fails.
+   * Returns the first [node, term] pair where the term's edit form can be
+   * submitted successfully via BrowserKit, or fails.
    *
    * @return array{0: \Drupal\node\NodeInterface, 1: \Drupal\taxonomy\TermInterface}
    */

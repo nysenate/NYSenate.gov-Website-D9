@@ -5,9 +5,10 @@
 # The CI workflow invokes this script once per chunk via terminus:
 #   terminus remote:drush <site>.<env> -- ev "passthru('bash /code/tests/dtt/run-on-container.sh <url> --filter <filter> 2>&1', \$c); if (\$c !== 0) { throw new \\Exception('PHPUnit failed'); }"
 #
-# Chunking and chunk iteration are handled by the CI workflow (which reads
-# tests/dtt/test-chunks.yml) and by .ddev/commands/web/run-cache-tests locally.
-# This script's job is solely to provide a stable, correctly-quoted PHPUnit
+# Chunking and chunk iteration are handled by tests/dtt/run-all-chunks.sh
+# (used by CI and for manual Pantheon runs) and by .ddev/commands/web/run-cache-tests
+# for local DDEV runs. This script's job is solely to provide a stable,
+# correctly-quoted PHPUnit
 # invocation on the container, and to serve as a documented entry point for
 # manual debugging via SSH:
 #   bash /code/tests/dtt/run-on-container.sh https://pr-123-nysenate-2022.pantheonsite.io --filter testFoo

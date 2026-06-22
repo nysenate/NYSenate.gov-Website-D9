@@ -136,7 +136,20 @@ ddev run-cache-tests --all
 
 ### Against a remote environment (Pantheon multidev or staging)
 
-Set `DTT_BASE_URL` to the remote URL in `tests/dtt/.env` or inline, then run the same `vendor/bin/phpunit` command above. See **Why tests run on the container** above for why the full CI run executes on the Pantheon container itself rather than from an external machine.
+`tests/dtt/run-all-chunks.sh` (the same script the CI workflow delegates to) runs the full suite in the same chunked, on-container manner as CI. `PANTHEON_TEST_UA` must be exported before calling it:
+
+```bash
+# Full suite — all chunks, same as CI
+PANTHEON_TEST_UA=<token> bash tests/dtt/run-all-chunks.sh \
+  nysenate-2022.pr-NNN \
+  https://pr-NNN-nysenate-2022.pantheonsite.io
+
+# Single test class or method — call run-on-container.sh directly via Terminus
+terminus remote:drush nysenate-2022.pr-NNN -- \
+  ev "error_reporting(E_ERROR); putenv('PANTHEON_TEST_UA=<token>'); passthru('bash /code/tests/dtt/run-on-container.sh https://pr-NNN-nysenate-2022.pantheonsite.io --filter AnonymousCacheHitTest 2>&1', \$c); if (\$c !== 0) { throw new \Exception('PHPUnit failed with exit code ' . \$c); }"
+```
+
+See **Why tests run on the container** above for why this is the only approach that works reliably for all test classes.
 
 ## Key considerations
 

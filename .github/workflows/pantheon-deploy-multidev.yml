@@ -230,59 +230,15 @@ jobs:
           done
 
       - name: Run cache regression tests on Pantheon container
-        # Each chunk in test-chunks.yml runs in its own terminus call so that
-        # no single SSH session exceeds Pantheon's connection timeout. Chunks
-        # are pre-loaded into arrays before any terminus call is made — if
-        # terminus opened SSH while a while-read loop was still active, it
-        # would consume bytes from the loop's stdin and silently drop chunks.
-        # Using a plain index for-loop avoids this entirely.
-        #
-        # shell: without -e so a failing terminus call doesn't abort the step
-        # before remaining chunks run. Error accumulation is manual via OVERALL.
-        #
-        # exit() inside drush ev is treated as abnormal termination by Drush,
-        # which overrides the exit code to 1 regardless of the value passed.
-        # Instead, we throw an exception on PHPUnit failure — Drush exits 0
-        # when ev completes normally and 1 when an uncaught exception is thrown,
-        # which maps exactly to pass/fail semantics.
-        shell: bash --noprofile --norc -o pipefail {0}
+        # Delegates to tests/dtt/run-all-chunks.sh, which reads test-chunks.yml
+        # and calls run-on-container.sh once per chunk via terminus. See the
+        # script for details on SSH-session-per-chunk and exit code semantics.
         env:
           PANTHEON_TEST_UA: ${{ secrets.PANTHEON_TEST_UA }}
         run: |
-          SITE="${{ vars.PANTHEON_SITE }}.${{ env.PANTHEON_MULTIDEV }}"
-          URL="https://${{ env.PANTHEON_MULTIDEV }}-${{ vars.PANTHEON_SITE }}.pantheonsite.io"
-
-          # Parse test-chunks.yml. Fail immediately if parsing fails so we
-          # never silently report success with zero tests run.
-          CHUNKS=$(python3 -c "
-          import yaml
-          chunks = yaml.safe_load(open('tests/dtt/test-chunks.yml'))['chunks']
-          for c in chunks:
-              print(c['label'] + '\t' + c['filter'])
-          ") || { echo "ERROR: Failed to parse tests/dtt/test-chunks.yml"; exit 1; }
-
-          if [[ -z "$CHUNKS" ]]; then
-            echo "ERROR: test-chunks.yml parsed successfully but contained no chunks"
-            exit 1
-          fi
-
-          # Pre-load into arrays. All stdin reads complete here, before any
-          # terminus/SSH call that might otherwise consume remaining stdin bytes.
-          LABELS=()
-          FILTERS=()
-          while IFS=$'\t' read -r LABEL FILTER; do
-            LABELS+=("$LABEL")
-            FILTERS+=("$FILTER")
-          done <<< "$CHUNKS"
-
-          OVERALL=0
-          for i in "${!LABELS[@]}"; do
-            echo "=== ${LABELS[$i]} ==="
-            terminus remote:drush "$SITE" -- \
-              ev "error_reporting(E_ERROR); putenv('PANTHEON_TEST_UA=${PANTHEON_TEST_UA}'); passthru('bash /code/tests/dtt/run-on-container.sh $URL --filter $(printf '%q' "${FILTERS[$i]}") 2>&1', \$c); if (\$c !== 0) { throw new \Exception('PHPUnit failed with exit code ' . \$c); }" \
-              || OVERALL=$?
-          done
-          exit $OVERALL
+          bash tests/dtt/run-all-chunks.sh \
+            "${{ vars.PANTHEON_SITE }}.${{ env.PANTHEON_MULTIDEV }}" \
+            "https://${{ env.PANTHEON_MULTIDEV }}-${{ vars.PANTHEON_SITE }}.pantheonsite.io"
 
       - name: Add 'cache-tests-passed' label to PR
         if: success()

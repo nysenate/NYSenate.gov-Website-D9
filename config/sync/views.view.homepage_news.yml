@@ -23,6 +23,7 @@ dependencies:
     - entityqueue
     - node
     - user
+    - views_custom_cache_tag
 id: homepage_news
 label: 'Homepage News'
 module: views
@@ -248,8 +249,12 @@ display:
         options:
           perm: 'access content'
       cache:
-        type: tag
-        options: {  }
+        type: custom_tag
+        options:
+          custom_tag: |-
+            node_list:article
+            node_list:in_the_news
+            node_list:video
       empty: {  }
       sorts: {  }
       arguments: {  }
@@ -641,6 +646,13 @@ display:
         type: none
         options:
           offset: 0
+      cache:
+        type: custom_tag
+        options:
+          custom_tag: |-
+            node_list:event
+            node_list:public_hearing
+            node_list:video
       filters:
         status:
           id: status
@@ -766,6 +778,7 @@ display:
           separator: '-'
           hide_empty: false
       defaults:
+        cache: false
         fields: false
         filters: false
         filter_groups: false
@@ -1109,6 +1122,12 @@ display:
           text: view
           output_url_as_text: true
           absolute: false
+      cache:
+        type: custom_tag
+        options:
+          custom_tag: |-
+            node_list:event
+            node_list:public_hearing
       sorts:
         queue:
           id: queue
@@ -1234,6 +1253,7 @@ display:
         groups:
           1: AND
       defaults:
+        cache: false
         title: false
         css_class: false
         relationships: false

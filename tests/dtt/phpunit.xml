@@ -13,8 +13,14 @@
 -->
 <phpunit bootstrap="../../vendor/weitzman/drupal-test-traits/src/bootstrap-fast.php">
     <php>
-        <env name="DTT_BASE_URL" value="http://example.ddev.site"/>
-        <env name="DTT_API_URL" value="http://example.ddev.site:9222"/>
+        <!-- DTT_BASE_URL is resolved at runtime by CacheTestBase::ensureDttBaseUrl():
+               1. Already in environment (CI passthru command, ddev run-cache-tests) → used as-is.
+               2. Read from tests/dtt/.env (copy .env.example and edit) → used for local dev.
+               3. Falls back to https://nysenate.ddev.site.
+             Do NOT blank DTT_BASE_URL here — doing so forces a .env file lookup and
+             prevents CI from passing the value via the environment.
+        -->
+        <env name="DTT_API_URL" value=""/>
         <!-- <env name="DTT_MINK_DRIVER_ARGS" value='["chrome", { "chromeOptions" : { "w3c": false } }, "http://localhost:4444/wd/hub"]'/> -->
         <!--  <env name="DTT_MINK_DRIVER_ARGS" value='["firefox", null, "http://localhost:4444/wd/hub"]'/> -->
         <env name="DTT_API_OPTIONS" value='{"socketTimeout": 360, "domWaitTimeout": 3600000}' />
@@ -46,7 +52,8 @@
             <!-- Assumes tests are namespaced as \Drupal\Tests\custom_foo\ExistingSite. -->
             <directory>./web/modules/custom/*/tests/src/ExistingSite</directory>
             <!--<directory>./web/profiles/custom/*/tests/src/ExistingSite</directory>-->
-            <directory>./web/profiles/contrib/rain_demo/tests/src/ExistingSite</directory>
+            <!-- Site-wide functional/integration tests not tied to a single module. -->
+            <directory>./src/ExistingSite</directory>
         </testsuite>
         <testsuite name="existing-site-javascript">
             <!-- Assumes tests are namespaced as \Drupal\Tests\custom_foo\ExistingSiteJavascript. -->

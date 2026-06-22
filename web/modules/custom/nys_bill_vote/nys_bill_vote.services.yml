@@ -1,4 +1,10 @@
 services:
+  nys_bill_vote.vote_widget_lazy_builder:
+    class: Drupal\nys_bill_vote\BillVoteWidgetLazyBuilder
+    arguments:
+      - '@form_builder'
+    tags:
+      - { name: render.placeholder_renderer_lazy_builder }
   nys_bill_vote.bill_vote:
     class: Drupal\nys_bill_vote\BillVoteHelper
     arguments:

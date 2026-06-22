@@ -1,0 +1,95 @@
+#!/usr/bin/env bash
+
+## Description: Run cache regression tests (DTT ExistingSite) against the local DDEV site.
+## Usage: run-cache-tests [--all] [--filter <TestName>]
+## Example: "ddev run-cache-tests" or "ddev run-cache-tests --filter AnonymousCacheHitTest"
+
+set -euo pipefail
+
+# Resolve project root (two levels up from .ddev/commands/web/).
+PROJECT_ROOT="/var/www/html"
+
+# Default: run only the cache_regression group; --all runs everything.
+GROUP="--group cache_regression"
+FILTER_ARG=""
+
+for arg in "$@"; do
+  case "$arg" in
+    --all)   GROUP="" ;;
+    --filter) shift; FILTER_ARG="--filter $1" ;;
+    --filter=*) FILTER_ARG="--filter ${arg#*=}" ;;
+  esac
+done
+
+# Load .env if present so DTT_BASE_URL can be overridden without re-setting
+# the shell env each time.
+ENV_FILE="${PROJECT_ROOT}/tests/dtt/.env"
+if [[ -f "$ENV_FILE" ]]; then
+  # Export only key=value lines; ignore comments and blanks.
+  set -a
+  # shellcheck disable=SC1090
+  source <(grep -E '^[A-Z_]+=.+' "$ENV_FILE")
+  set +a
+fi
+
+# Default to the DDEV site URL when not already set.
+export DTT_BASE_URL="${DTT_BASE_URL:-https://nysenate.ddev.site}"
+
+echo "Running cache regression tests against: $DTT_BASE_URL"
+
+cd "$PROJECT_ROOT"
+
+# When a --filter is passed, run as a single invocation (the caller wants a
+# specific test, not the full per-class split).
+if [[ -n "$FILTER_ARG" ]]; then
+  # shellcheck disable=SC2086
+  php -d memory_limit=4096M vendor/bin/phpunit \
+    -c tests/dtt/phpunit.xml \
+    --testsuite existing-site \
+    $GROUP \
+    $FILTER_ARG \
+    --testdox \
+    --do-not-cache-result
+  exit $?
+fi
+
+# Default path: run each chunk in a separate PHP process.
+#
+# Chunk definitions live in tests/dtt/test-chunks.yml — the single source of
+# truth for both this command and run-on-container.sh. Edit that file to add,
+# remove, or rebalance chunks; no changes are needed here.
+
+CHUNKS_FILE="${PROJECT_ROOT}/tests/dtt/test-chunks.yml"
+
+# Read label\tfilter pairs from the YAML file.
+mapfile -t CHUNK_LINES < <(php -r "
+  require '${PROJECT_ROOT}/vendor/autoload.php';
+  \$chunks = \Symfony\Component\Yaml\Yaml::parseFile('$CHUNKS_FILE')['chunks'];
+  foreach (\$chunks as \$c) { echo \$c['label'] . \"\t\" . \$c['filter'] . PHP_EOL; }
+")
+
+OVERALL=0
+for line in "${CHUNK_LINES[@]}"; do
+  LABEL="${line%%$'\t'*}"
+  FILTER="${line#*$'\t'}"
+  echo ""
+  echo "=== $LABEL ==="
+  set +e
+  # shellcheck disable=SC2086
+  php -d memory_limit=4096M vendor/bin/phpunit \
+    -c tests/dtt/phpunit.xml \
+    --testsuite existing-site \
+    $GROUP \
+    --filter "$FILTER" \
+    --testdox \
+    --do-not-cache-result
+  STATUS=$?
+  set -e
+  if [[ $STATUS -eq 137 ]]; then
+    echo ""
+    echo "ERROR: PHPUnit was killed (OOM/SIGKILL, exit 137) while running: $LABEL"
+    exit 137
+  fi
+  if [[ $STATUS -ne 0 ]]; then OVERALL=$STATUS; fi
+done
+exit $OVERALL

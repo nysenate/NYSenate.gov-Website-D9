@@ -460,9 +460,9 @@ abstract class CacheTestBase extends ExistingSiteBase {
     // reference field, required field BrowserKit could not populate, CSRF
     // mismatch, etc.) and means no BAN was dispatched to the CDN.
     $urlAfterSave = $this->getSession()->getCurrentUrl();
-    $this->assertStringNotContainsString(
-      '/edit',
-      $urlAfterSave,
+    $this->assertNotSame(
+      $path,
+      (string) parse_url($urlAfterSave, PHP_URL_PATH),
       "saveViaWebRequest({$path}): Drupal rejected the form submission — still on edit URL ({$urlAfterSave}). "
       . 'Use findNodeByTypeWithSaveableTerm() / findNodeAndValidTermByField() to select '
       . 'entities whose edit forms BrowserKit can submit successfully.'
@@ -489,7 +489,8 @@ abstract class CacheTestBase extends ExistingSiteBase {
       $path = $entity->toUrl('edit-form')->setAbsolute(FALSE)->toString();
       $this->visit($path);
       $this->getSession()->getPage()->pressButton('Save');
-      return !str_contains($this->getSession()->getCurrentUrl(), '/edit');
+      $currentPath = (string) parse_url($this->getSession()->getCurrentUrl(), PHP_URL_PATH);
+      return $currentPath !== $path;
     }
     catch (\Exception $e) {
       return FALSE;

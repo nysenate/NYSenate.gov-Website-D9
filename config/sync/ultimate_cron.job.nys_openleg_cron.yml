@@ -1,0 +1,29 @@
+uuid: 3c754ead-0811-48e4-8507-c2672bd3f68d
+langcode: en
+status: true
+dependencies:
+  module:
+    - nys_openleg
+title: 'By the Numbers cache invalidation'
+id: nys_openleg_cron
+weight: 0
+module: nys_openleg
+callback: 'nys_openleg#cron'
+scheduler:
+  id: simple
+  configuration:
+    rules:
+      - '0+@ 0 * * *'
+launcher:
+  id: serial
+  configuration:
+    timeouts:
+      lock_timeout: 3600
+    launcher:
+      thread: 0
+logger:
+  id: database
+  configuration:
+    method: '3'
+    expire: 1209600
+    retain: 1000

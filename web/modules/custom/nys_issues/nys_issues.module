@@ -5,6 +5,63 @@
  * Contains custom code for Issues.
  */
 
+use Drupal\views\ViewExecutable;
+
+/**
+ * Implements hook_views_post_render().
+ *
+ * Override cache metadata for issues_listings view to enable page caching.
+ * The flag_counts sort causes Views to compute max-age: 0, which prevents
+ * page caching. We override this with a custom cache tag that we invalidate
+ * via cron on a 24-hour schedule.
+ *
+ * Cache poisoning note: The follow/unfollow flag button is intentionally NOT
+ * rendered by the Views link_flag field in these displays. Instead, it is
+ * rendered via \Drupal\nys_issues\IssueFlagLazyBuilder (called from
+ * get_issue_card() in the theme) so that user-specific flag state is isolated
+ * inside a lazy-builder placeholder with its own 'user' cache context. This
+ * prevents one authenticated user's follow state from poisoning the shared
+ * cached view output and being served to another user.
+ */
+function nys_issues_views_post_render(ViewExecutable $view, array &$output): void {
+  if ($view->id() !== 'issues_listings') {
+    return;
+  }
+
+  // Only apply to displays that sort by flag_counts (global aggregate).
+  // Per-user flag displays (constituent_dashboard, etc.) already carry the
+  // 'user' cache context and are not page-cacheable regardless.
+  // The most_followed displays no longer contain a link_flag field — the flag
+  // button is deferred to IssueFlagLazyBuilder — so their output is globally
+  // cacheable and safe to share across authenticated users.
+  $flag_aggregate_displays = ['most_followed', 'most_followed_page'];
+  if (!in_array($view->current_display, $flag_aggregate_displays)) {
+    return;
+  }
+
+  // Override the max-age set by the flag_counts sort (which would otherwise
+  // mark the output as uncacheable) and add our custom cache tag so the
+  // entry can be selectively invalidated by cron every 24 hours.
+  // -1 is Cache::PERMANENT — the entry persists until the
+  // 'nys_issues:most_followed' tag is explicitly invalidated by cron.
+  $output['#cache']['max-age'] = -1;
+  $output['#cache']['tags'] = array_merge(
+    $output['#cache']['tags'] ?? [],
+    ['nys_issues:most_followed']
+  );
+}
+
+/**
+ * Implements hook_cron().
+ *
+ * Invalidate the cache tag for issues listings every 24 hours.
+ * Schedule is controlled via Ultimate Cron configuration.
+ */
+function nys_issues_cron(): void {
+  \Drupal::service('cache_tags.invalidator')->invalidateTags(['nys_issues:most_followed']);
+  \Drupal::logger('nys_issues')->info('Issues Most Followed cache invalidated.');
+}
+
 /**
  * Implements hook_theme().
  */

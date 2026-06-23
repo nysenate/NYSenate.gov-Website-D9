@@ -17,6 +17,7 @@ dependencies:
     - options
     - semanticviews
     - user
+    - views_custom_cache_tag
 id: global_promo_banner
 label: 'Global Promo Banner'
 module: views
@@ -100,8 +101,9 @@ display:
         options:
           perm: 'access content'
       cache:
-        type: tag
-        options: {  }
+        type: custom_tag
+        options:
+          custom_tag: 'node_list:promotional_banner'
       empty: {  }
       sorts: {  }
       arguments: {  }
@@ -240,8 +242,6 @@ display:
         - user.permissions
       tags:
         - 'config:entityqueue.entity_queue.global_promo_banner'
-        - entity_field_info
-        - views_data
   global_promo_banner:
     id: global_promo_banner
     display_title: 'Global Promo Banner'
@@ -260,8 +260,6 @@ display:
         - user.permissions
       tags:
         - 'config:entityqueue.entity_queue.global_promo_banner'
-        - entity_field_info
-        - views_data
   senator_microsite_interior_footer:
     id: senator_microsite_interior_footer
     display_title: 'Senator Microsite Footer Blocks'

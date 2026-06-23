@@ -11,6 +11,38 @@ use Drupal\user\UserInterface;
 use Drupal\views\ViewExecutable;
 
 /**
+ * Implements hook_theme().
+ */
+function nys_dashboard_theme($existing, $type, $theme, $path): array {
+  return [
+    'nys_dashboard_user_menu' => [
+      'variables' => [
+        'is_logged' => FALSE,
+        'user_first_name' => 'Guest',
+        'dashboard_link' => '/dashboard',
+        'manage_dashboard_link' => '/dashboard/manage',
+        'edit_account_link' => '/dashboard/edit',
+        'has_senator' => FALSE,
+        'senator_microsite_link' => NULL,
+        'senator_image' => NULL,
+      ],
+      'template' => 'nys-dashboard-user-menu',
+    ],
+    'nys_dashboard_user_menu_mobile' => [
+      'variables' => [
+        'is_logged' => FALSE,
+        'user_first_name' => 'Guest',
+        'dashboard_link' => '/dashboard',
+        'manage_dashboard_link' => '/dashboard/manage',
+        'edit_account_link' => '/dashboard/edit',
+        'senator_microsite_link' => NULL,
+      ],
+      'template' => 'nys-dashboard-user-menu-mobile',
+    ],
+  ];
+}
+
+/**
  * Implements hook_module_implements_alter().
  *
  * Ensure this module's hook_user_login fires last.
@@ -111,13 +143,25 @@ function nys_dashboard_form_views_exposed_form_alter(&$form, FormStateInterface 
  * Implements hook_preprocess_page().
  */
 function nys_dashboard_preprocess_page(&$variables): void {
-  // Setup variables for top nav dashboard menu.
-  $user_storage = \Drupal::entityTypeManager()->getStorage('user');
-  $user = $user_storage->load(\Drupal::currentUser()->id());
-  $variables['user_first_name'] = $user?->field_first_name?->value ?? 'Guest';
-  $variables['dashboard_link'] = '/dashboard';
-  $variables['manage_dashboard_link'] = '/dashboard/manage';
-  $variables['edit_account_link'] = '/dashboard/edit';
+  // Setup variables for top nav dashboard menu using lazy builder.
+  // This ensures per-user content is cached separately and prevents
+  // cache poisoning where one user sees another user's information.
+  $variables['user_menu_data'] = [
+    '#lazy_builder' => [
+      'nys_dashboard.user_menu_lazy_builder:renderUserMenu',
+      [],
+    ],
+    '#create_placeholder' => TRUE,
+  ];
+
+  // Setup mobile menu separately.
+  $variables['user_menu_data_mobile'] = [
+    '#lazy_builder' => [
+      'nys_dashboard.user_menu_lazy_builder:renderUserMenuMobile',
+      [],
+    ],
+    '#create_placeholder' => TRUE,
+  ];
 
   // Attach full width library to dashboard.
   $request_uri = \Drupal::request()->getRequestUri();

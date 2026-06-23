@@ -26,8 +26,21 @@ dependencies:
     - datetime_range
     - link
     - options
+    - sdc_display
     - text
     - user
+third_party_settings:
+  sdc_display:
+    enabled: false
+    component:
+      machine_name: ''
+    mappings:
+      static:
+        props: {  }
+        slots: {  }
+      dynamic:
+        props: {  }
+        slots: {  }
 id: node.public_hearing.default
 targetEntityType: node
 bundle: public_hearing
@@ -177,6 +190,7 @@ hidden:
   entity_print_view_pdf: true
   entity_print_view_word_docx: true
   langcode: true
+  nys_senator_dashboard_path_alias: true
   private_message_link: true
   rabbit_hole__settings: true
   search_api_excerpt: true

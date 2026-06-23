@@ -2,6 +2,8 @@ uuid: 9a0c66fb-36bb-4fef-86d6-0400a13eef54
 langcode: en
 status: true
 dependencies:
+  config:
+    - node.type.landing
   module:
     - node
 _core:
@@ -9,12 +11,11 @@ _core:
 id: landing
 label: 'Landing Page'
 type: 'canonical_entities:node'
-pattern: '[node:title]'
+pattern: '/[node:title]'
 selection_criteria:
   3a14787c-37e4-4b7f-8775-5c86177a4b8c:
     id: 'entity_bundle:node'
     negate: false
-    uuid: 3a14787c-37e4-4b7f-8775-5c86177a4b8c
     context_mapping:
       node: node
     bundles:

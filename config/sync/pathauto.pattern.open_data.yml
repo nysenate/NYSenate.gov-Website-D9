@@ -2,17 +2,18 @@ uuid: bb0dd9cd-7f6b-48ab-9231-fd7a4be30574
 langcode: en
 status: true
 dependencies:
+  config:
+    - node.type.open_data
   module:
     - node
 id: open_data
 label: 'Open Data'
 type: 'canonical_entities:node'
-pattern: 'open-data/[node:title]'
+pattern: '/open-data/[node:title]'
 selection_criteria:
   cf709576-1e1a-46a3-a616-01bb87869ffe:
     id: 'entity_bundle:node'
     negate: false
-    uuid: cf709576-1e1a-46a3-a616-01bb87869ffe
     context_mapping:
       node: node
     bundles:

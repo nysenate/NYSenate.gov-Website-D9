@@ -2,17 +2,18 @@ uuid: 325a938a-ad26-4310-906c-d180ec85b29c
 langcode: en
 status: true
 dependencies:
+  config:
+    - node.type.resolution
   module:
     - node
 id: resolution
 label: Resolution
 type: 'canonical_entities:node'
-pattern: 'legislation/resolutions/[node:field_ol_session]/[node:field_ol_base_print_no]'
+pattern: '/legislation/resolutions/[node:field_ol_session]/[node:field_ol_base_print_no]'
 selection_criteria:
   2dda0de9-a542-47fd-9253-d9ffe9d711a6:
     id: 'entity_bundle:node'
     negate: false
-    uuid: 2dda0de9-a542-47fd-9253-d9ffe9d711a6
     context_mapping:
       node: node
     bundles:

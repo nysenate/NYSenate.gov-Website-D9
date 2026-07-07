@@ -87,13 +87,18 @@
   border: 0;
   background: transparent;
   cursor: pointer;
-  outline: inherit;
+  outline: 0;
   padding: 0;
   position: relative;
   text-align: left;
   width: 100%;
   display: flex;
   justify-content: space-between;
+
+  &:focus-visible {
+    outline: 2px solid $color-blue;
+    outline-offset: 2px;
+  }
 
   &::after {
     display: none;
@@ -127,7 +132,12 @@
   font-weight: normal;
   line-height: 26px;
 
+  &[aria-hidden='true'] {
+    display: none;
+  }
+
   .open & {
+    display: block;
     margin-top: 20px;
     max-height: 9999vh;
   }

@@ -15,7 +15,7 @@
  * @see template_preprocess_details()
  */
 #}
-<div{{ attributes }}>
+<div{{ attributes.without('required', 'aria-required', 'open') }}>
   {%- if title -%}
     {%
       set summary_classes = [

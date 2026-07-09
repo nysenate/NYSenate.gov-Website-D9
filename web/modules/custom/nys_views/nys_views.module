@@ -83,3 +83,46 @@ function nys_views_views_data_alter(array &$data): void {
     ];
   }
 }
+
+/**
+ * Implements hook_form_views_exposed_form_alter().
+ *
+ * ATEN-NYS-392: Add visually-hidden labels to the year text inputs on the
+ * New York State Budget page (WCAG AA 1.3.1 / 4.1.2 – row 13).
+ *
+ * The majority_issues view has three displays used on /new-york-state-budget:
+ *  - meetings  → field_date_range_value (Hearings tab)
+ *  - maj_news  → field_date_value       (News tab)
+ *  - bills     → field_ol_session_value (Budget Bills tab)
+ *
+ * Views renders these exposed filter labels as empty strings, so assistive
+ * technology has no programmatic label for the inputs. Adding '#title' with
+ * '#title_display' => 'invisible' outputs a proper <label> element styled with
+ * the site's visually-hidden utility class.
+ */
+function nys_views_form_views_exposed_form_alter(array &$form, \Drupal\Core\Form\FormStateInterface $form_state, string $form_id): void {
+  /** @var \Drupal\views\ViewExecutable|null $view */
+  $view = $form_state->get('view');
+  if (!$view || $view->id() !== 'majority_issues') {
+    return;
+  }
+
+  // Map display → [form element identifier => accessible label text].
+  $label_map = [
+    'meetings' => ['field_date_range_value' => 'Hearings year'],
+    'maj_news' => ['field_date_value' => 'News year'],
+    'bills'    => ['field_ol_session_value' => 'Session year'],
+  ];
+
+  $display_id = $view->current_display;
+  if (empty($label_map[$display_id])) {
+    return;
+  }
+
+  foreach ($label_map[$display_id] as $element_key => $label) {
+    if (!empty($form[$element_key])) {
+      $form[$element_key]['#title'] = $label;
+      $form[$element_key]['#title_display'] = 'invisible';
+    }
+  }
+}

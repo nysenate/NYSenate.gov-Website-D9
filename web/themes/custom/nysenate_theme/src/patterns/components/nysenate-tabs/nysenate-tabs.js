@@ -61,6 +61,13 @@
         updateAriaAnnouncement();
       }, 200);
 
+      // ATEN-NYS-392 row 14: re-announce after Views AJAX filter submissions
+      // (e.g. budget page year filter). Use a namespaced event so the handler
+      // is replaced rather than duplicated on each Drupal.behaviors.attach call.
+      $(document).off('drupalViewsProcessed.tabsAnnounce').on('drupalViewsProcessed.tabsAnnounce', function() {
+        setTimeout(updateAriaAnnouncement, 100);
+      });
+
       tabContainer.each(function () {
         const tabArrowDown = $(this).find('.c-tab--arrow');
         const tabButton = $(this).find('button.c-tab');

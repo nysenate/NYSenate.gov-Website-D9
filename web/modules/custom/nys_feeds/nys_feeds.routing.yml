@@ -1,0 +1,8 @@
+nys_feeds.feed_factory:
+  path: /nys_feeds/{series}
+  defaults:
+    _controller: '\Drupal\nys_feeds\Controller\FeedFactory::getFeed'
+    _title: 'NYSS Data Feeds'
+    series: ''
+  requirements:
+    _permission: 'access content'

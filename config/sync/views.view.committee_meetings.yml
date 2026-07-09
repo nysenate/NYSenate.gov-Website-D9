@@ -5081,6 +5081,13 @@ display:
             button_text: 'Load More'
             automatically_load_content: false
             initially_load_all_pages: false
+      cache:
+        type: custom_tag
+        options:
+          custom_tag: |-
+            node_list:article
+            node_list:in_the_news
+            node_list:video
       sorts:
         field_date_value:
           id: field_date_value
@@ -5333,10 +5340,6 @@ display:
         filters: false
         filter_groups: false
         header: false
-      cache:
-        type: custom_tag
-        options:
-          custom_tag: "node_list:article\nnode_list:in_the_news\nnode_list:video"
       relationships:
         field_committee:
           id: field_committee
@@ -5901,6 +5904,10 @@ display:
             button_text: 'Load More'
             automatically_load_content: false
             initially_load_all_pages: false
+      cache:
+        type: custom_tag
+        options:
+          custom_tag: 'node_list:meeting'
       arguments:
         tid:
           id: tid
@@ -6093,10 +6100,6 @@ display:
         filters: false
         filter_groups: false
         header: false
-      cache:
-        type: custom_tag
-        options:
-          custom_tag: 'node_list:meeting'
       display_description: ''
       header:
         area:

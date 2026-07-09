@@ -96,7 +96,7 @@
               </a>
 
               <a class="c-event-location" href="{{ item.event_location_url }}" target="_blank">
-                <span class="icon-before__circle-pin"></span>
+                <span class="icon-before__circle-pin" aria-hidden="true"></span>
                 {{ item.event_location_name }}
               </a>
 
@@ -143,8 +143,10 @@
                 <p class="c-bill-update--location">
                     <span> | {{ item.bill_status }}
                       {{ item.bill_resolution_last_status }}
-                  {% if item.bill_committee_link %}
+                  {% if item.bill_committee_link and item.bill_committee_link.url and item.bill_committee_link.text %}
                     <a class="committee-link" href="{{ item.bill_committee_link.url }}">{{ item.bill_committee_link.text }}</a>
+                  {% elseif item.bill_committee_link and item.bill_committee_link.text %}
+                    <span class="committee-link">{{ item.bill_committee_link.text }}</span>
                   {% endif %}
                   </span>
                 </p>

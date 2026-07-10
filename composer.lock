@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b616bc28755ecd4f99f82b2d19317027",
+    "content-hash": "251ec2da9c1f0a3f6fef339d4e9bbc86",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -4991,17 +4991,17 @@
         },
         {
             "name": "drupal/eva",
-            "version": "3.1.1",
+            "version": "3.1.2",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/eva.git",
-                "reference": "3.1.1"
+                "reference": "3.1.2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/eva-3.1.1.zip",
-                "reference": "3.1.1",
-                "shasum": "11df2285cc479033637b9aac2fe65f681e5ed38b"
+                "url": "https://ftp.drupal.org/files/projects/eva-3.1.2.zip",
+                "reference": "3.1.2",
+                "shasum": "12e4f281ac2200290832e4aae417a690fc2ece08"
             },
             "require": {
                 "drupal/core": "^9.5.11 || ^10 || ^11"
@@ -5012,8 +5012,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "3.1.1",
-                    "datestamp": "1732295600",
+                    "version": "3.1.2",
+                    "datestamp": "1783542971",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -12863,37 +12863,29 @@
         },
         {
             "name": "drupal/votingapi",
-            "version": "3.0.0-beta5",
+            "version": "dev-4.0.x",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/votingapi.git",
-                "reference": "8.x-3.0-beta5"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/votingapi-8.x-3.0-beta5.zip",
-                "reference": "8.x-3.0-beta5",
-                "shasum": "28e072167175c6617f15f21c3bba89900f3d0545"
+                "reference": "010514d0b35e4790faef182a466a0acd82016d22"
             },
             "require": {
-                "drupal/core": "^9.2 || ^10"
+                "drupal/core": "^10.3 || ^11"
             },
             "require-dev": {
                 "drupal/token": "^1.5"
             },
             "type": "drupal-module",
             "extra": {
+                "branch-alias": {
+                    "dev-4.0.x": "4.0.x-dev"
+                },
                 "drupal": {
-                    "version": "8.x-3.0-beta5",
-                    "datestamp": "1724557647",
+                    "version": "4.0.x-dev",
+                    "datestamp": "1741652645",
                     "security-coverage": {
                         "status": "not-covered",
-                        "message": "Beta releases are not covered by Drupal security advisories."
-                    }
-                },
-                "drush": {
-                    "services": {
-                        "drush.services.yml": ">=9"
+                        "message": "Dev releases are not covered by Drupal security advisories."
                     }
                 }
             },
@@ -15640,7 +15632,7 @@
             "version": "3.2.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/DataTables/Dist-DataTables-DataTables.git",
+                "url": "git@github.com:DataTables/Dist-DataTables-DataTables.git",
                 "reference": "6dc8eccf208cd4b5e5f450d9eb23674915c035e6"
             },
             "dist": {
@@ -27209,7 +27201,7 @@
         "drupal/ultimate_cron": 15,
         "drupal/views_combine": 15,
         "drupal/views_ical": 15,
-        "drupal/votingapi": 10,
+        "drupal/votingapi": 20,
         "drupal/webform": 5,
         "drupal/webform_analysis": 10
     },

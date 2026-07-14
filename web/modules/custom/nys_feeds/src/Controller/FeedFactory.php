@@ -63,7 +63,7 @@ class FeedFactory extends ControllerBase {
     }
     try {
       /** @var \Drupal\nys_feeds\NysFeedPluginBase $handler */
-      $handler = $this->feedPluginManager->createInstance($series, $this->state->params);
+      $handler = $this->feedPluginManager->createInstance($series);
     }
     catch (\Exception $e) {
       $this->logger->error(

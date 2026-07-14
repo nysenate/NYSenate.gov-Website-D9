@@ -2,7 +2,6 @@
 
 namespace Drupal\nys_feeds\Plugin\NysFeed;
 
-use Drupal\nys_feeds\FeedState;
 use Drupal\nys_feeds\NysFeedPluginBase;
 use Drupal\nys_feeds\Service\NysFeedPluginManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -43,12 +42,15 @@ class FeedList extends NysFeedPluginBase {
   /**
    * {@inheritDoc}
    */
-  public function getFeed(FeedState $state): FeedState {
-    $state->data = [];
+  protected function query(): array {
+    $ret = [];
     foreach ($this->feedManager->getDefinitions() as $definition) {
-      $state->data[$definition['id']] = $definition['label'];
+      $ret[$definition['id']] = [
+        'name' => $definition['label'],
+        'description' => $definition['description'],
+      ];
     }
-    return $state;
+    return $ret;
   }
 
 }

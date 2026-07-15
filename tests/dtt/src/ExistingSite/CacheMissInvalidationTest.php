@@ -294,6 +294,30 @@ class CacheMissInvalidationTest extends CacheTestBase {
   }
 
   // ---------------------------------------------------------------------------
+  // Open Legislation — flush button
+  // ---------------------------------------------------------------------------
+
+  /**
+   * Submitting the "Flush Law Cache" button on the OL config form invalidates
+   * all cached /legislation/laws/* browse pages.
+   *
+   * The button calls cache_tags.invalidator->invalidateTags(['nys_openleg:laws'])
+   * from within a real web request, so pantheon_advanced_page_cache dispatches
+   * a Cloudflare BAN for every page tagged with nys_openleg:laws.
+   */
+  public function testOpenLegBrowsePageMissOnFlushButtonSubmit(): void {
+    $path = '/legislation/laws';
+    $this->warmCache($path);
+    $this->assertAnonymousCacheHit($path);
+
+    $this->visit('/admin/config/nys_openleg_api/browsing');
+    $this->getSession()->getPage()->pressButton('Flush Law Cache');
+
+    $this->assertAnonymousCacheMiss($path);
+    $this->assertAnonymousCacheHit($path);
+  }
+
+  // ---------------------------------------------------------------------------
   // Helpers
   // ---------------------------------------------------------------------------
 

@@ -38,6 +38,17 @@ class ImportResult {
   protected array $exceptions = [];
 
   /**
+   * NIDs of all nodes successfully saved during this import run.
+   *
+   * Used by the Drush command to dispatch targeted Cloudflare BAN requests
+   * after a CLI import, bridging the gap where pantheon_clear_edge_keys() is
+   * not available in CLI PHP context.
+   *
+   * @var int[]
+   */
+  protected array $savedNids = [];
+
+  /**
    * Adds an exception message.
    */
   public function addException(string $message) {
@@ -110,6 +121,28 @@ class ImportResult {
    */
   public function getExceptions(): array {
     return $this->exceptions;
+  }
+
+  /**
+   * Records node IDs saved during a successful processor run.
+   *
+   * @param int[] $nids
+   *   Array of node IDs to add to the saved set.
+   */
+  public function addSavedNids(array $nids): void {
+    foreach ($nids as $nid) {
+      $this->savedNids[(int) $nid] = (int) $nid;
+    }
+  }
+
+  /**
+   * Returns all node IDs saved during this import run.
+   *
+   * @return int[]
+   *   Array of node IDs saved during this import run.
+   */
+  public function getSavedNids(): array {
+    return array_values($this->savedNids);
   }
 
   /**

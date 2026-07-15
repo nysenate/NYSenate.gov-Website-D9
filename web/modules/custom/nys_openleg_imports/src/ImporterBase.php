@@ -207,6 +207,9 @@ abstract class ImporterBase implements ImporterInterface {
 
       if ($success) {
         $this->results->addSuccess();
+        if (isset($processor)) {
+          $this->results->addSavedNids($processor->getSavedNids());
+        }
         $this->logger->notice(" - @name imported successfully.", ['@name' => $item_name]);
       }
       else {

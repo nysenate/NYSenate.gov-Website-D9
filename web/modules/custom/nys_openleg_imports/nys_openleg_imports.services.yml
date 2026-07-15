@@ -1,4 +1,7 @@
 services:
+  nys_openleg_imports.purge_cache_controller:
+    class: Drupal\nys_openleg_imports\Controller\PurgeCacheController
+    arguments: ['@cache_tags.invalidator']
   manager.openleg_importers:
     class: Drupal\nys_openleg_imports\Service\OpenlegImporterManager
     parent: default_plugin_manager

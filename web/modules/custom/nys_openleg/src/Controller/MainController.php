@@ -194,6 +194,10 @@ class MainController extends ControllerBase {
           '#theme' => 'nys_openleg_not_found',
           '#attached' => ['library' => ['nys_openleg/openleg']],
           '#browse_url' => $base_share_path,
+          '#cache' => [
+            'max_age' => 604800,
+            'tags' => ['nys_openleg:laws'],
+          ],
         ];
       }
 
@@ -250,6 +254,13 @@ class MainController extends ControllerBase {
       $ret['#search'] = $this->formBuilder
         ->getForm('Drupal\nys_openleg\Form\SearchForm');
     }
+
+    // Cache for 7 days, keyed by the nys_openleg:laws tag so that the admin
+    // flush button and any future automated purge can invalidate all OL pages.
+    $ret['#cache'] = [
+      'max_age' => 604800,
+      'tags' => ['nys_openleg:laws'],
+    ];
 
     return $ret;
   }

@@ -86,7 +86,7 @@ class FeedFactory extends ControllerBase {
    * @param string $series
    *   The plugin id of the series being requested.
    */
-  public function getFeed(Request $request, string $series = '__list'): JsonResponse {
+  public function getFeed(Request $request, string $series = 'feed_list'): JsonResponse {
     // Start a new feed state.
     $this->state = new FeedState($request->query->all());
 

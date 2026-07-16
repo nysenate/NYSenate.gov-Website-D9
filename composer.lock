@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "251ec2da9c1f0a3f6fef339d4e9bbc86",
+    "content-hash": "d19408dee08f50bfd56781fc01efa1a6",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -3762,16 +3762,16 @@
         },
         {
             "name": "drupal/core",
-            "version": "10.6.12",
+            "version": "10.6.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drupal/core.git",
-                "reference": "87fd33ee009619bcd0a1679d6015c349f74dd977"
+                "reference": "70dfc22c6f1ab2042d225d619c72f36a0429eb93"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/drupal/core/zipball/87fd33ee009619bcd0a1679d6015c349f74dd977",
-                "reference": "87fd33ee009619bcd0a1679d6015c349f74dd977",
+                "url": "https://api.github.com/repos/drupal/core/zipball/70dfc22c6f1ab2042d225d619c72f36a0429eb93",
+                "reference": "70dfc22c6f1ab2042d225d619c72f36a0429eb93",
                 "shasum": ""
             },
             "require": {
@@ -3921,13 +3921,13 @@
             ],
             "description": "Drupal is an open source content management platform powering millions of websites and applications.",
             "support": {
-                "source": "https://github.com/drupal/core/tree/10.6.12"
+                "source": "https://github.com/drupal/core/tree/10.6.13"
             },
-            "time": "2026-06-23T07:23:10+00:00"
+            "time": "2026-07-15T18:02:44+00:00"
         },
         {
             "name": "drupal/core-composer-scaffold",
-            "version": "10.6.12",
+            "version": "10.6.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drupal/core-composer-scaffold.git",
@@ -3971,13 +3971,13 @@
                 "drupal"
             ],
             "support": {
-                "source": "https://github.com/drupal/core-composer-scaffold/tree/10.6.12"
+                "source": "https://github.com/drupal/core-composer-scaffold/tree/10.6.13"
             },
             "time": "2024-08-22T14:31:30+00:00"
         },
         {
             "name": "drupal/core-project-message",
-            "version": "10.6.12",
+            "version": "10.6.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drupal/core-project-message.git",
@@ -4018,16 +4018,16 @@
         },
         {
             "name": "drupal/core-recommended",
-            "version": "10.6.12",
+            "version": "10.6.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drupal/core-recommended.git",
-                "reference": "d11d79225bf6f0ce2f17cd29daf96ec625ec5a63"
+                "reference": "f57eb67b3a50f06fa098e835af808d6d2d55a3c8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/drupal/core-recommended/zipball/d11d79225bf6f0ce2f17cd29daf96ec625ec5a63",
-                "reference": "d11d79225bf6f0ce2f17cd29daf96ec625ec5a63",
+                "url": "https://api.github.com/repos/drupal/core-recommended/zipball/f57eb67b3a50f06fa098e835af808d6d2d55a3c8",
+                "reference": "f57eb67b3a50f06fa098e835af808d6d2d55a3c8",
                 "shasum": ""
             },
             "require": {
@@ -4035,7 +4035,7 @@
                 "composer/semver": "~3.4.4",
                 "doctrine/deprecations": "~1.1.5",
                 "doctrine/lexer": "~2.1.1",
-                "drupal/core": "10.6.12",
+                "drupal/core": "10.6.13",
                 "egulias/email-validator": "~4.0.4",
                 "guzzlehttp/guzzle": "~7.12.1",
                 "guzzlehttp/promises": "~2.5.0",
@@ -4095,9 +4095,9 @@
             ],
             "description": "Core and its dependencies with known-compatible minor versions. Require this project INSTEAD OF drupal/core.",
             "support": {
-                "source": "https://github.com/drupal/core-recommended/tree/10.6.12"
+                "source": "https://github.com/drupal/core-recommended/tree/10.6.13"
             },
-            "time": "2026-06-23T07:23:10+00:00"
+            "time": "2026-07-15T18:02:44+00:00"
         },
         {
             "name": "drupal/crop",
@@ -4868,26 +4868,32 @@
         },
         {
             "name": "drupal/entityqueue",
-            "version": "1.10.0",
+            "version": "1.12.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/entityqueue.git",
-                "reference": "8.x-1.10"
+                "reference": "8.x-1.12"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/entityqueue-8.x-1.10.zip",
-                "reference": "8.x-1.10",
-                "shasum": "ef001f661267af9700e725f36e4fc384c18be345"
+                "url": "https://ftp.drupal.org/files/projects/entityqueue-8.x-1.12.zip",
+                "reference": "8.x-1.12",
+                "shasum": "618b758abf1175bf63f461944c26deb38e408dd0"
             },
             "require": {
-                "drupal/core": "^9 || ^10 || ^11"
+                "drupal/core": "^10.2 || ^11 || ^12"
+            },
+            "require-dev": {
+                "drupal/eca": "*",
+                "drupal/entity_browser": "*",
+                "drupal/inline_entity_form": "*",
+                "drupal/rules": "*"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.10",
-                    "datestamp": "1757318201",
+                    "version": "8.x-1.12",
+                    "datestamp": "1784059695",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -10522,26 +10528,26 @@
         },
         {
             "name": "drupal/simple_image_rotate",
-            "version": "2.3.0-alpha1",
+            "version": "2.3.0-alpha3",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/simple_image_rotate.git",
-                "reference": "2.3.0-alpha1"
+                "reference": "2.3.0-alpha3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/simple_image_rotate-2.3.0-alpha1.zip",
-                "reference": "2.3.0-alpha1",
-                "shasum": "feef5a818d9aabe283d34ff6b352d3a26d992dc3"
+                "url": "https://ftp.drupal.org/files/projects/simple_image_rotate-2.3.0-alpha3.zip",
+                "reference": "2.3.0-alpha3",
+                "shasum": "6f9266dc06ebd24e73988c726ef445e0cb48aefb"
             },
             "require": {
-                "drupal/core": "^8.8 || ^9.5 || ^10"
+                "drupal/core": "^8.8 || ^9.5 || ^10 || ^11"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "2.3.0-alpha1",
-                    "datestamp": "1703368746",
+                    "version": "2.3.0-alpha3",
+                    "datestamp": "1774522358",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Alpha releases are not covered by Drupal security advisories."
@@ -11403,28 +11409,28 @@
         },
         {
             "name": "drupal/turnstile",
-            "version": "1.1.26",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/turnstile.git",
-                "reference": "1.1.26"
+                "reference": "1.2.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/turnstile-1.1.26.zip",
-                "reference": "1.1.26",
-                "shasum": "5172d8058cd4373c42fce6c8f9381955f0a4e0c0"
+                "url": "https://ftp.drupal.org/files/projects/turnstile-1.2.0.zip",
+                "reference": "1.2.0",
+                "shasum": "847f33014ef2f642a6e0e6959d5a1fd75bf28505"
             },
             "require": {
                 "drupal/captcha": "*",
-                "drupal/core": "^9.4 || ^10 || ^11",
+                "drupal/core": "^10.6 || ^11 || ^12",
                 "drupal/key": "^1"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "1.1.26",
-                    "datestamp": "1775049573",
+                    "version": "1.2.0",
+                    "datestamp": "1784133726",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -11872,29 +11878,30 @@
         },
         {
             "name": "drupal/vbo_export",
-            "version": "4.1.5",
+            "version": "4.2.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/vbo_export.git",
-                "reference": "4.1.5"
+                "reference": "4.2.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/vbo_export-4.1.5.zip",
-                "reference": "4.1.5",
-                "shasum": "ac0eaf2798610af22ebcc39ab39833fd340d04b5"
+                "url": "https://ftp.drupal.org/files/projects/vbo_export-4.2.0.zip",
+                "reference": "4.2.0",
+                "shasum": "08cc7cd874f239f8f23d395ac70d367f576a2331"
             },
             "require": {
-                "dompdf/dompdf": "^1.0 | ^2.0",
+                "dompdf/dompdf": "^1.0 | ^2.0 | ^3.0",
                 "drupal/core": "^9.3 || ^10 || ^11",
                 "drupal/views_bulk_operations": "^3.5 || ^4.1 || ^4.2 || ^4.3",
-                "phpoffice/phpspreadsheet": "^2.2"
+                "phpoffice/phpspreadsheet": "^5.0",
+                "phpoffice/phpword": "^1.4"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "4.1.5",
-                    "datestamp": "1732190105",
+                    "version": "4.2.0",
+                    "datestamp": "1783704202",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -12117,17 +12124,17 @@
         },
         {
             "name": "drupal/views_bulk_operations",
-            "version": "4.4.5",
+            "version": "4.4.7",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/views_bulk_operations.git",
-                "reference": "4.4.5"
+                "reference": "4.4.7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/views_bulk_operations-4.4.5.zip",
-                "reference": "4.4.5",
-                "shasum": "0f4a674e79149ad7306209ac90890d9ba6f60d14"
+                "url": "https://ftp.drupal.org/files/projects/views_bulk_operations-4.4.7.zip",
+                "reference": "4.4.7",
+                "shasum": "eacf78c01dba6dabb44a65db8761aabff504f88b"
             },
             "require": {
                 "drupal/core": "^10.3 || ^11"
@@ -12136,10 +12143,10 @@
                 "drush/drush": "<12.5.1"
             },
             "require-dev": {
-                "drupal/coder": "^8.3.16",
+                "drupal/search_api": "^1.35",
                 "drush/drush": "^12 || ^13",
-                "phpstan/phpstan-deprecation-rules": "^2",
-                "phpstan/phpstan-strict-rules": "^2"
+                "phpstan/phpstan-deprecation-rules": "^1",
+                "phpstan/phpstan-strict-rules": "^1"
             },
             "suggest": {
                 "drush/drush": "^12 || ^13"
@@ -12147,8 +12154,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "4.4.5",
-                    "datestamp": "1778674066",
+                    "version": "4.4.7",
+                    "datestamp": "1784189101",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -12797,17 +12804,17 @@
         },
         {
             "name": "drupal/viewsreference",
-            "version": "2.0.0-beta12",
+            "version": "2.0.0-beta13",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/viewsreference.git",
-                "reference": "8.x-2.0-beta12"
+                "reference": "8.x-2.0-beta13"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/viewsreference-8.x-2.0-beta12.zip",
-                "reference": "8.x-2.0-beta12",
-                "shasum": "643eefb27c3f415a50eec75eccbbc287bcc7156a"
+                "url": "https://ftp.drupal.org/files/projects/viewsreference-8.x-2.0-beta13.zip",
+                "reference": "8.x-2.0-beta13",
+                "shasum": "359a8051f7faa5e5a9b568cb0705eb73ff97ce62"
             },
             "require": {
                 "drupal/core": "^10 || ^11 || ^12"
@@ -12821,8 +12828,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-2.0-beta12",
-                    "datestamp": "1776760483",
+                    "version": "8.x-2.0-beta13",
+                    "datestamp": "1783759655",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Beta releases are not covered by Drupal security advisories."
@@ -14368,16 +14375,16 @@
         },
         {
             "name": "guzzlehttp/psr7",
-            "version": "2.12.4",
+            "version": "2.12.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "51e27f9e2b332ab3e72f4520d5ff4f3c68c3577c"
+                "reference": "9365d578a9fd1552ad6ca9c3cb530708526feb09"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/51e27f9e2b332ab3e72f4520d5ff4f3c68c3577c",
-                "reference": "51e27f9e2b332ab3e72f4520d5ff4f3c68c3577c",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/9365d578a9fd1552ad6ca9c3cb530708526feb09",
+                "reference": "9365d578a9fd1552ad6ca9c3cb530708526feb09",
                 "shasum": ""
             },
             "require": {
@@ -14467,7 +14474,7 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/psr7/issues",
-                "source": "https://github.com/guzzle/psr7/tree/2.12.4"
+                "source": "https://github.com/guzzle/psr7/tree/2.12.5"
             },
             "funding": [
                 {
@@ -14483,7 +14490,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-07-08T15:56:20+00:00"
+            "time": "2026-07-13T01:27:20+00:00"
         },
         {
             "name": "halaxa/json-machine",
@@ -15018,16 +15025,16 @@
         },
         {
             "name": "maennchen/zipstream-php",
-            "version": "3.2.1",
+            "version": "3.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/maennchen/ZipStream-PHP.git",
-                "reference": "682f1098a8fddbaf43edac2306a691c7ad508ec5"
+                "reference": "77bebeb4c6c340bb3c11c843b2cffd8bbfde4d5e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/maennchen/ZipStream-PHP/zipball/682f1098a8fddbaf43edac2306a691c7ad508ec5",
-                "reference": "682f1098a8fddbaf43edac2306a691c7ad508ec5",
+                "url": "https://api.github.com/repos/maennchen/ZipStream-PHP/zipball/77bebeb4c6c340bb3c11c843b2cffd8bbfde4d5e",
+                "reference": "77bebeb4c6c340bb3c11c843b2cffd8bbfde4d5e",
                 "shasum": ""
             },
             "require": {
@@ -15084,7 +15091,7 @@
             ],
             "support": {
                 "issues": "https://github.com/maennchen/ZipStream-PHP/issues",
-                "source": "https://github.com/maennchen/ZipStream-PHP/tree/3.2.1"
+                "source": "https://github.com/maennchen/ZipStream-PHP/tree/3.2.2"
             },
             "funding": [
                 {
@@ -15092,7 +15099,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-12-10T09:58:31+00:00"
+            "time": "2026-04-11T18:38:28+00:00"
         },
         {
             "name": "marc-mabe/php-enum",
@@ -16708,24 +16715,77 @@
             "time": "2024-03-15T13:55:21+00:00"
         },
         {
-            "name": "phpoffice/phpspreadsheet",
-            "version": "2.4.2",
+            "name": "phpoffice/math",
+            "version": "0.3.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/PHPOffice/PhpSpreadsheet.git",
-                "reference": "931ad61fb2c229063fc4e7e665fb52b87249cc56"
+                "url": "https://github.com/PHPOffice/Math.git",
+                "reference": "fc31c8f57a7a81f962cbf389fd89f4d9d06fc99a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPOffice/PhpSpreadsheet/zipball/931ad61fb2c229063fc4e7e665fb52b87249cc56",
-                "reference": "931ad61fb2c229063fc4e7e665fb52b87249cc56",
+                "url": "https://api.github.com/repos/PHPOffice/Math/zipball/fc31c8f57a7a81f962cbf389fd89f4d9d06fc99a",
+                "reference": "fc31c8f57a7a81f962cbf389fd89f4d9d06fc99a",
                 "shasum": ""
             },
             "require": {
-                "composer/pcre": "^1 || ^2 || ^3",
+                "ext-dom": "*",
+                "ext-xml": "*",
+                "php": "^7.1|^8.0"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^0.12.88 || ^1.0.0",
+                "phpunit/phpunit": "^7.0 || ^9.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PhpOffice\\Math\\": "src/Math/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Progi1984",
+                    "homepage": "https://lefevre.dev"
+                }
+            ],
+            "description": "Math - Manipulate Math Formula",
+            "homepage": "https://phpoffice.github.io/Math/",
+            "keywords": [
+                "MathML",
+                "officemathml",
+                "php"
+            ],
+            "support": {
+                "issues": "https://github.com/PHPOffice/Math/issues",
+                "source": "https://github.com/PHPOffice/Math/tree/0.3.0"
+            },
+            "time": "2025-05-29T08:31:49+00:00"
+        },
+        {
+            "name": "phpoffice/phpspreadsheet",
+            "version": "5.9.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PHPOffice/PhpSpreadsheet.git",
+                "reference": "05e99ebf61238a70227b4d9cc02d0030d34f6339"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PHPOffice/PhpSpreadsheet/zipball/05e99ebf61238a70227b4d9cc02d0030d34f6339",
+                "reference": "05e99ebf61238a70227b4d9cc02d0030d34f6339",
+                "shasum": ""
+            },
+            "require": {
+                "composer/pcre": "^1||^2||^3",
                 "ext-ctype": "*",
                 "ext-dom": "*",
                 "ext-fileinfo": "*",
+                "ext-filter": "*",
                 "ext-gd": "*",
                 "ext-iconv": "*",
                 "ext-libxml": "*",
@@ -16739,27 +16799,27 @@
                 "maennchen/zipstream-php": "^2.1 || ^3.0",
                 "markbaker/complex": "^3.0",
                 "markbaker/matrix": "^3.0",
-                "php": ">=8.1.0 <8.6.0",
-                "psr/http-client": "^1.0",
-                "psr/http-factory": "^1.0",
+                "php": "^8.2",
                 "psr/simple-cache": "^1.0 || ^2.0 || ^3.0"
             },
             "require-dev": {
                 "dealerdirect/phpcodesniffer-composer-installer": "dev-main",
                 "dompdf/dompdf": "^2.0 || ^3.0",
+                "ext-intl": "*",
                 "friendsofphp/php-cs-fixer": "^3.2",
                 "mitoteam/jpgraph": "^10.5",
                 "mpdf/mpdf": "^8.1.1",
                 "phpcompatibility/php-compatibility": "^9.3",
-                "phpstan/phpstan": "^1.1",
-                "phpstan/phpstan-phpunit": "^1.0",
-                "phpunit/phpunit": "^9.6 || ^10.5",
+                "phpstan/phpstan": "^1.1 || ^2.0",
+                "phpstan/phpstan-deprecation-rules": "^1.0 || ^2.0",
+                "phpstan/phpstan-phpunit": "^1.0 || ^2.0",
+                "phpunit/phpunit": "^10.5 || ^11.0",
                 "squizlabs/php_codesniffer": "^3.7",
                 "tecnickcom/tcpdf": "^6.5"
             },
             "suggest": {
                 "dompdf/dompdf": "Option for rendering PDF with PDF Writer",
-                "ext-intl": "PHP Internationalization Functions, required for NumberFormatter Wizard",
+                "ext-intl": "PHP Internationalization Functions, required for NumberFormat Wizard and StringHelper::setLocale()",
                 "mitoteam/jpgraph": "Option for rendering charts, or including charts with PDF or HTML Writers",
                 "mpdf/mpdf": "Option for rendering PDF with PDF Writer",
                 "tecnickcom/tcpdf": "Option for rendering PDF with PDF Writer"
@@ -16792,6 +16852,9 @@
                 },
                 {
                     "name": "Adrien Crivelli"
+                },
+                {
+                    "name": "Owen Leibman"
                 }
             ],
             "description": "PHPSpreadsheet - Read, Create and Write Spreadsheet documents in PHP - Spreadsheet engine",
@@ -16808,9 +16871,117 @@
             ],
             "support": {
                 "issues": "https://github.com/PHPOffice/PhpSpreadsheet/issues",
-                "source": "https://github.com/PHPOffice/PhpSpreadsheet/tree/2.4.2"
+                "source": "https://github.com/PHPOffice/PhpSpreadsheet/tree/5.9.0"
             },
-            "time": "2025-11-24T15:59:19+00:00"
+            "time": "2026-07-12T19:17:39+00:00"
+        },
+        {
+            "name": "phpoffice/phpword",
+            "version": "1.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PHPOffice/PHPWord.git",
+                "reference": "6d75328229bc93790b37e93741adf70646cea958"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PHPOffice/PHPWord/zipball/6d75328229bc93790b37e93741adf70646cea958",
+                "reference": "6d75328229bc93790b37e93741adf70646cea958",
+                "shasum": ""
+            },
+            "require": {
+                "ext-dom": "*",
+                "ext-gd": "*",
+                "ext-json": "*",
+                "ext-xml": "*",
+                "ext-zip": "*",
+                "php": "^7.1|^8.0",
+                "phpoffice/math": "^0.3"
+            },
+            "require-dev": {
+                "dompdf/dompdf": "^2.0 || ^3.0",
+                "ext-libxml": "*",
+                "friendsofphp/php-cs-fixer": "^3.3",
+                "mpdf/mpdf": "^7.0 || ^8.0",
+                "phpmd/phpmd": "^2.13",
+                "phpstan/phpstan": "^0.12.88 || ^1.0.0",
+                "phpstan/phpstan-phpunit": "^1.0 || ^2.0",
+                "phpunit/phpunit": ">=7.0",
+                "symfony/process": "^4.4 || ^5.0",
+                "tecnickcom/tcpdf": "^6.5"
+            },
+            "suggest": {
+                "dompdf/dompdf": "Allows writing PDF",
+                "ext-xmlwriter": "Allows writing OOXML and ODF",
+                "ext-xsl": "Allows applying XSL style sheet to headers, to main document part, and to footers of an OOXML template"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PhpOffice\\PhpWord\\": "src/PhpWord"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3.0-only"
+            ],
+            "authors": [
+                {
+                    "name": "Mark Baker"
+                },
+                {
+                    "name": "Gabriel Bull",
+                    "email": "me@gabrielbull.com",
+                    "homepage": "http://gabrielbull.com/"
+                },
+                {
+                    "name": "Franck Lefevre",
+                    "homepage": "https://rootslabs.net/blog/"
+                },
+                {
+                    "name": "Ivan Lanin",
+                    "homepage": "http://ivan.lanin.org"
+                },
+                {
+                    "name": "Roman Syroeshko",
+                    "homepage": "http://ru.linkedin.com/pub/roman-syroeshko/34/a53/994/"
+                },
+                {
+                    "name": "Antoine de Troostembergh"
+                }
+            ],
+            "description": "PHPWord - A pure PHP library for reading and writing word processing documents (OOXML, ODF, RTF, HTML, PDF)",
+            "homepage": "https://phpoffice.github.io/PHPWord/",
+            "keywords": [
+                "ISO IEC 29500",
+                "OOXML",
+                "Office Open XML",
+                "OpenDocument",
+                "OpenXML",
+                "PhpOffice",
+                "PhpWord",
+                "Rich Text Format",
+                "WordprocessingML",
+                "doc",
+                "docx",
+                "html",
+                "odf",
+                "odt",
+                "office",
+                "pdf",
+                "php",
+                "reader",
+                "rtf",
+                "template",
+                "template processor",
+                "word",
+                "writer"
+            ],
+            "support": {
+                "issues": "https://github.com/PHPOffice/PHPWord/issues",
+                "source": "https://github.com/PHPOffice/PHPWord/tree/1.4.0"
+            },
+            "time": "2025-06-05T10:32:36+00:00"
         },
         {
             "name": "phpowermove/docblock",
@@ -22624,7 +22795,7 @@
         },
         {
             "name": "drupal/core-dev",
-            "version": "10.6.12",
+            "version": "10.6.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drupal/core-dev.git",
@@ -22674,7 +22845,7 @@
             ],
             "description": "require-dev dependencies from drupal/drupal; use in addition to drupal/core-recommended to run tests from drupal/core.",
             "support": {
-                "source": "https://github.com/drupal/core-dev/tree/10.6.12"
+                "source": "https://github.com/drupal/core-dev/tree/10.6.13"
             },
             "time": "2026-05-20T15:35:08+00:00"
         },
@@ -22937,23 +23108,23 @@
         },
         {
             "name": "google/protobuf",
-            "version": "v4.33.6",
+            "version": "v5.35.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/protocolbuffers/protobuf-php.git",
-                "reference": "84b008c23915ed94536737eae46f41ba3bccfe67"
+                "reference": "55bb4a7d6739b5af0927b96213c1371a3afb7cfb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/protocolbuffers/protobuf-php/zipball/84b008c23915ed94536737eae46f41ba3bccfe67",
-                "reference": "84b008c23915ed94536737eae46f41ba3bccfe67",
+                "url": "https://api.github.com/repos/protocolbuffers/protobuf-php/zipball/55bb4a7d6739b5af0927b96213c1371a3afb7cfb",
+                "reference": "55bb4a7d6739b5af0927b96213c1371a3afb7cfb",
                 "shasum": ""
             },
             "require": {
-                "php": ">=8.1.0"
+                "php": ">=8.2.0"
             },
             "require-dev": {
-                "phpunit/phpunit": ">=10.5.62 <11.0.0"
+                "phpunit/phpunit": ">=11.5.0 <12.0.0"
             },
             "suggest": {
                 "ext-bcmath": "Need to support JSON deserialization"
@@ -22975,9 +23146,9 @@
                 "proto"
             ],
             "support": {
-                "source": "https://github.com/protocolbuffers/protobuf-php/tree/v4.33.6"
+                "source": "https://github.com/protocolbuffers/protobuf-php/tree/v5.35.1"
             },
-            "time": "2026-03-18T17:32:05+00:00"
+            "time": "2026-06-11T21:19:23+00:00"
         },
         {
             "name": "lullabot/mink-selenium2-driver",
@@ -23331,16 +23502,16 @@
         },
         {
             "name": "open-telemetry/api",
-            "version": "1.9.0",
+            "version": "1.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/opentelemetry-php/api.git",
-                "reference": "6f8d237ce2c304ca85f31970f788e7f074d147be"
+                "reference": "7c029c4a6fd457094a20569bf98f93d95e9a7559"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/opentelemetry-php/api/zipball/6f8d237ce2c304ca85f31970f788e7f074d147be",
-                "reference": "6f8d237ce2c304ca85f31970f788e7f074d147be",
+                "url": "https://api.github.com/repos/opentelemetry-php/api/zipball/7c029c4a6fd457094a20569bf98f93d95e9a7559",
+                "reference": "7c029c4a6fd457094a20569bf98f93d95e9a7559",
                 "shasum": ""
             },
             "require": {
@@ -23397,7 +23568,7 @@
                 "issues": "https://github.com/open-telemetry/opentelemetry-php/issues",
                 "source": "https://github.com/open-telemetry/opentelemetry-php"
             },
-            "time": "2026-02-25T13:24:05+00:00"
+            "time": "2026-07-06T12:28:04+00:00"
         },
         {
             "name": "open-telemetry/context",
@@ -23524,20 +23695,20 @@
         },
         {
             "name": "open-telemetry/gen-otlp-protobuf",
-            "version": "1.9.0",
+            "version": "1.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/opentelemetry-php/gen-otlp-protobuf.git",
-                "reference": "a229cf161d42001d64c8f21e8f678581fe1c66b9"
+                "reference": "66f04d0e448ad333033bfc7baae1aa56330be088"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/opentelemetry-php/gen-otlp-protobuf/zipball/a229cf161d42001d64c8f21e8f678581fe1c66b9",
-                "reference": "a229cf161d42001d64c8f21e8f678581fe1c66b9",
+                "url": "https://api.github.com/repos/opentelemetry-php/gen-otlp-protobuf/zipball/66f04d0e448ad333033bfc7baae1aa56330be088",
+                "reference": "66f04d0e448ad333033bfc7baae1aa56330be088",
                 "shasum": ""
             },
             "require": {
-                "google/protobuf": "^3.22 || ^4.0",
+                "google/protobuf": "^3.22 || ^4.0 || ^5.0",
                 "php": "^8.0"
             },
             "suggest": {
@@ -23583,20 +23754,20 @@
                 "issues": "https://github.com/open-telemetry/opentelemetry-php/issues",
                 "source": "https://github.com/open-telemetry/opentelemetry-php"
             },
-            "time": "2025-10-19T06:44:33+00:00"
+            "time": "2026-06-17T12:06:32+00:00"
         },
         {
             "name": "open-telemetry/sdk",
-            "version": "1.14.0",
+            "version": "1.15.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/opentelemetry-php/sdk.git",
-                "reference": "6e3d0ce93e76555dd5e2f1d19443ff45b990e410"
+                "reference": "77e1aa73850154abb86937d52a70883edc3b4547"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/opentelemetry-php/sdk/zipball/6e3d0ce93e76555dd5e2f1d19443ff45b990e410",
-                "reference": "6e3d0ce93e76555dd5e2f1d19443ff45b990e410",
+                "url": "https://api.github.com/repos/opentelemetry-php/sdk/zipball/77e1aa73850154abb86937d52a70883edc3b4547",
+                "reference": "77e1aa73850154abb86937d52a70883edc3b4547",
                 "shasum": ""
             },
             "require": {
@@ -23604,7 +23775,7 @@
                 "nyholm/psr7-server": "^1.1",
                 "open-telemetry/api": "^1.8",
                 "open-telemetry/context": "^1.4",
-                "open-telemetry/sem-conv": "^1.0",
+                "open-telemetry/sem-conv": "^1.38.0",
                 "php": "^8.1",
                 "php-http/discovery": "^1.14",
                 "psr/http-client": "^1.0",
@@ -23627,7 +23798,10 @@
                 "spi": {
                     "OpenTelemetry\\API\\Configuration\\ConfigEnv\\EnvComponentLoader": [
                         "OpenTelemetry\\API\\Instrumentation\\Configuration\\General\\ConfigEnv\\EnvComponentLoaderHttpConfig",
-                        "OpenTelemetry\\API\\Instrumentation\\Configuration\\General\\ConfigEnv\\EnvComponentLoaderPeerConfig"
+                        "OpenTelemetry\\API\\Instrumentation\\Configuration\\General\\ConfigEnv\\EnvComponentLoaderPeerConfig",
+                        "OpenTelemetry\\SDK\\ConfigEnv\\Trace\\SpanSuppressionStrategySemConv",
+                        "OpenTelemetry\\SDK\\ConfigEnv\\Trace\\SpanSuppressionStrategySpanKind",
+                        "OpenTelemetry\\SDK\\ConfigEnv\\Distribution\\DistributionConfigurationSdk"
                     ],
                     "OpenTelemetry\\SDK\\Common\\Configuration\\Resolver\\ResolverInterface": [
                         "OpenTelemetry\\SDK\\Common\\Configuration\\Resolver\\SdkConfigurationResolver"
@@ -23637,7 +23811,7 @@
                     ]
                 },
                 "branch-alias": {
-                    "dev-main": "1.12.x-dev"
+                    "dev-main": "1.14.x-dev"
                 }
             },
             "autoload": {
@@ -23680,7 +23854,7 @@
                 "issues": "https://github.com/open-telemetry/opentelemetry-php/issues",
                 "source": "https://github.com/open-telemetry/opentelemetry-php"
             },
-            "time": "2026-03-21T11:50:01+00:00"
+            "time": "2026-07-14T13:09:54+00:00"
         },
         {
             "name": "open-telemetry/sem-conv",
@@ -27197,10 +27371,12 @@
         "drupal/rabbit_hole": 10,
         "drupal/reroute_email": 5,
         "drupal/sdc_display": 20,
+        "drupal/simple_image_rotate": 15,
         "drupal/site_verify": 15,
         "drupal/ultimate_cron": 15,
         "drupal/views_combine": 15,
         "drupal/views_ical": 15,
+        "drupal/viewsreference": 10,
         "drupal/votingapi": 20,
         "drupal/webform": 5,
         "drupal/webform_analysis": 10

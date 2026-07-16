@@ -2,19 +2,31 @@
 
 namespace Drupal\nys_feeds\Plugin\NysFeed;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\node\Entity\Node;
+use Drupal\nys_feeds\Attribute\NysFeed;
 use Drupal\nys_feeds\NysFeedPluginBase;
+use Drupal\nys_feeds\Traits\DateFormatterTrait;
+use Drupal\nys_feeds\Traits\EntityFormatterTrait;
+use Drupal\nys_feeds\Traits\LocationFormatterTrait;
+use Drupal\nys_feeds\Traits\MediaFieldFormatterTrait;
 
 /**
  * NYS Feeds plugin for sessions.
- *
- * @NysFeed(
- *   id = "sessions",
- *   label = @Translation("Sessions"),
- *   description = @Translation("NYS Feed for Session meetings"),
- * )
  */
+#[NysFeed(
+  label: new TranslatableMarkup("Sessions"),
+  description: new TranslatableMarkup("NYS Feed for Sessions.  Takes a 'date' parameter and returns the next calendar week of sessions."),
+  entity_type: 'node',
+  bundle: 'session',
+  id: "sessions",
+)]
 class Sessions extends NysFeedPluginBase {
+
+  use DateFormatterTrait;
+  use LocationFormatterTrait;
+  use MediaFieldFormatterTrait;
+  use EntityFormatterTrait;
 
   /**
    * Fetches event nodes scheduled to occur on the provided day.
@@ -30,14 +42,11 @@ class Sessions extends NysFeedPluginBase {
       ->format('Y-m-d\TH:i:s');
 
     try {
-      $query = \Drupal::entityQuery('node')
-        ->condition('type', 'session')
+      $query = $this->getQuery()
         ->condition('field_date_range.value', $start, '>=')
-        ->condition('field_date_range.value', $end, '<=')
-        ->accessCheck();
+        ->condition('field_date_range.value', $end, '<=');
       $result = $query->execute();
-      $ret = \Drupal::entityTypeManager()
-        ->getStorage('node')
+      $ret = $this->entityTypeManager->getStorage('node')
         ->loadMultiple($result);
     }
     catch (\Exception) {
@@ -67,17 +76,17 @@ class Sessions extends NysFeedPluginBase {
       'location' => $this->getLocation($data->field_location) +
         ['extra' => $data->field_meeting_location->value ?? ''],
       'field_live_message_status' => $data->field_live_message_status->value ?? '',
+      'field_live_message_override' => $data->field_live_message_override->value ?? '',
     ];
 
     // Add the calendar info.
-    $calendars = $data->field_session_calendars->referencedEntities();
     $ret['calendar'] = [
       'number' => $data->field_calendar_number->value ?? 0,
       'links' => array_map(
         function ($c) {
-          return $c->toUrl()->toString();
+          return $this->getUrl($c);
         },
-        $calendars
+        $data->field_session_calendars->referencedEntities()
       ),
     ];
 
@@ -89,15 +98,14 @@ class Sessions extends NysFeedPluginBase {
     }
 
     // Compile transcript references.
-    $source = $data->field_transcript->referencedEntities();
     $ret['transcripts'] = array_map(
       function ($val) {
         return [
           'name' => $val->label(),
-          'url' => $val->toUrl()->toString(),
+          'url' => $this->getUrl($val),
         ];
       },
-      $source
+      $data->field_transcript->referencedEntities()
     );
 
     // Collect the media fields.
@@ -110,17 +118,7 @@ class Sessions extends NysFeedPluginBase {
    * Does the work associated with normalizing operating parameters.
    */
   protected function resolveParams(): self {
-    // Basic validation of the date.
-    $date = \DateTimeImmutable::createFromFormat(
-      'Ymd', $this->state->params['date'] ?? date('Ymd', time())
-    );
-    if ($date === FALSE) {
-      $date = \DateTimeImmutable::createFromFormat('Ymd', date('Ymd', time()));
-      $this->state->messages[] = "Invalid date parameter (must be YYYYMMDD), using " . $date->format("Ymd");
-      $this->state->code = 400;
-    }
-    $this->state->params['date_obj'] = $date;
-    return $this;
+    return parent::resolveParams()->initDateParam();
   }
 
 }

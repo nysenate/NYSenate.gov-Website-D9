@@ -20,7 +20,7 @@ class NysFeedPluginManager extends DefaultPluginManager {
       $namespaces,
       $module_handler,
       'Drupal\nys_feeds\NysFeedPluginInterface',
-      'Drupal\nys_feeds\Annotation\NysFeed'
+      'Drupal\nys_feeds\Attribute\NysFeed',
     );
     $this->setCacheBackend($cache_backend, 'nys_feeds');
   }

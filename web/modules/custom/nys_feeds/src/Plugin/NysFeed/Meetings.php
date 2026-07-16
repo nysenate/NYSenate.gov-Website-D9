@@ -5,26 +5,24 @@ namespace Drupal\nys_feeds\Plugin\NysFeed;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\node\Entity\Node;
 use Drupal\nys_feeds\Attribute\NysFeed;
+use Drupal\nys_feeds\NysFeedPluginBase;
 use Drupal\nys_feeds\Traits\DateFormatterTrait;
 use Drupal\nys_feeds\Traits\EntityFormatterTrait;
-use Drupal\nys_feeds\Traits\LocationFormatterTrait;
 use Drupal\nys_feeds\Traits\MediaFieldFormatterTrait;
-use Drupal\nys_feeds\NysFeedPluginBase;
 
 /**
- * NYS Feeds plugin for events.
+ * NYS Feeds plugin for committee meetings.
  */
 #[NysFeed(
-  label: new TranslatableMarkup("Events"),
-  description: new TranslatableMarkup("Returns all events for a provided 'date' parameter (YYYYMMDD)."),
+  label: new TranslatableMarkup("Committee Meetings"),
+  description: new TranslatableMarkup("NYS Feed for Committee meetings.  Takes a 'date' parameter (YYYYMMDD)."),
   entity_type: 'node',
-  bundle: 'event',
-  id: "events",
+  bundle: 'meeting',
+  id: "meetings",
 )]
-class Events extends NysFeedPluginBase {
+class Meetings extends NysFeedPluginBase {
 
   use DateFormatterTrait;
-  use LocationFormatterTrait;
   use MediaFieldFormatterTrait;
   use EntityFormatterTrait;
 
@@ -35,7 +33,6 @@ class Events extends NysFeedPluginBase {
    *   Array of results, keyed by node id.  The return may be empty.
    */
   protected function query(): array {
-    // Add the passed date as a query condition.
     $date = $this->state->params['date_obj'];
     $start = $date->setTime(0, 0)->format('Y-m-d\TH:i:s');
     $end = $date->setTime(23, 59, 59)->format('Y-m-d\TH:i:s');
@@ -45,7 +42,8 @@ class Events extends NysFeedPluginBase {
         ->condition('field_date_range.value', $start, '>=')
         ->condition('field_date_range.value', $end, '<=');
       $result = $query->execute();
-      $ret = $this->entityTypeManager->getStorage('node')
+      $ret = \Drupal::entityTypeManager()
+        ->getStorage('node')
         ->loadMultiple($result);
     }
     catch (\Exception) {
@@ -58,31 +56,46 @@ class Events extends NysFeedPluginBase {
    * Transcribes a single event to an array appropriate for JSON delivery.
    */
   protected function transcribeEntry(mixed $data): array {
-    // Only do work on event nodes.
-    if (!(($data instanceof Node) && $data->bundle() == 'event')) {
-      return ['error' => 'Require event nodes, received ' . get_class($data)];
+
+    // Only do work on session nodes.
+    if (!(($data instanceof Node) && $data->bundle() == 'meeting')) {
+      return ['error' => 'Require meeting nodes, received ' . get_class($data)];
     }
 
     // Some basic fields.
     $ret = [
       'id' => $data->id(),
-      'type' => $data->field_event_type->value ?? 'unknown',
       'title' => $data->getTitle() ?? '<No Title>',
       'url' => $this->getUrl($data),
       'date' => $this->formatDate($data->get('field_date_range')->start_date->getTimestamp()),
       'body' => $data->body->value ?? "No description",
-      'senator' => $data->field_senator_multiref->entity->field_ol_shortname->value,
       'updated' => $this->formatDate($data->changed->value),
       'place_type' => $data->field_event_place->value ?? '',
-      'online_link' => $data->field_event_online_link->value ?? '',
-      'majority_issue' => $data->field_majority_issue_tag->value ?? '',
+      'location' => $data->field_meeting_location->value ?? '',
+      'meeting_status' => $data->field_meeting_status->value ?? '',
+      'off_floor' => $data->field_off_floor->value ?? '',
       'committee' => [
         'name' => $data->field_committee?->entity?->label() ?? '',
         'url' => $this->getUrl($data->field_committee?->entity),
       ],
-      'location' => $this->getLocation($data->field_location) +
-        ['extra' => $data->field_meeting_location->value ?? ''],
     ];
+
+    // If this is an online meeting, add the link.
+    if ($link = $data->field_event_online_link->value) {
+      $ret['online_link'] = $link;
+    }
+
+    // Add the agenda info.
+    $ret['agenda'] = array_map(
+      function ($a) {
+        return [
+          'number' => $a->field_ol_year->value . '/' . $a->field_ol_week->value,
+          'title' => $a->label(),
+          'url' => $this->getUrl($a),
+        ];
+      },
+      $data->field_meeting_agenda->referencedEntities()
+    );
 
     // Compile issues.
     /** @var \Drupal\Core\Field\EntityReferenceFieldItemList $issues */
@@ -91,9 +104,38 @@ class Events extends NysFeedPluginBase {
       $ret['issues'] = $this->getReferencedLabels($issues);
     }
 
-    // Media fields.
+    // Compile majority issues.
+    /** @var \Drupal\Core\Field\EntityReferenceFieldItemList $issues */
+    $majority = $data->get('field_majority_issue_tag');
+    if ($majority) {
+      $ret['majority_issues'] = $this->getReferencedLabels($majority);
+    }
+
+    // Add bill info.
+    $ret['bills'] = array_map(
+      function ($a) {
+        return [
+          'name' => $a->label(),
+          'url' => $this->getUrl($a),
+        ];
+      },
+      $data->field_bill->referencedEntities()
+    );
+
+    // Compile transcript references.
+    $source = $data->field_transcript->referencedEntities();
+    $ret['transcripts'] = array_map(
+      function ($val) {
+        return [
+          'name' => $val->label(),
+          'url' => $val->toUrl()->toString(),
+        ];
+      },
+      $source
+    );
+
+    // Collect the media fields.
     $ret += $this->getMediaFields($data);
-    $ret['attachments'] = $data->field_attachment->count();
 
     return $ret;
   }

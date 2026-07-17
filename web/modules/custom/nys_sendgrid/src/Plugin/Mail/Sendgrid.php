@@ -14,7 +14,7 @@ use Drupal\nys_sendgrid\Event\AfterSendEvent;
 use Drupal\nys_sendgrid\Events;
 use Drupal\nys_sendgrid\Helper;
 use Drupal\nys_sendgrid\TemplatesManager;
-use Drupal\reroute_email\Constants\RerouteEmailConstants;
+use Drupal\reroute_email\RerouteEmailHandlerPluginInterface as RerouteEmailConstants;
 use Psr\Log\LoggerInterface;
 use SendGrid\Mail\From;
 use SendGrid\Mail\Mail;

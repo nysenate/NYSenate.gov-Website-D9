@@ -2,7 +2,7 @@
 
 namespace Drupal\nys_sendgrid;
 
-use Drupal\reroute_email\Constants\RerouteEmailConstants;
+use Drupal\reroute_email\RerouteEmailHandlerPluginInterface as RerouteEmailConstants;
 use SendGrid\Mail\Personalization;
 
 /**

@@ -190,7 +190,7 @@
     {% if content.field_location[0]['address_line1']['#value'] %}
       <p class="c-event-address">
         {{ content.field_location[0]['address_line1']['#value']|raw }} {{ content.field_location[0]['address_line2']['#value']|raw }}
-        <br/>{% apply spaceless %}{{ content.field_location[0]['locality']['#value']|raw }}{% endapply %},
+        <br/>{{ content.field_location[0]['locality']['#value']|raw }},
         {{ content.field_location[0]['administrative_area']['#value']|raw }}
         {{ content.field_location[0]['postal_code']['#value'] }}</p>
     {% endif %}

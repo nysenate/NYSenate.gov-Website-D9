@@ -46,11 +46,7 @@ class ConfigForm extends ConfigFormBase {
     // overrides.
     $apikey = $this->configFactory->get('nys_sendgrid.settings')
       ->get('api_key');
-    $apikey_text = $apikey
-        ? "An API key is already saved.  Leave the box blank to keep it, or input a new one to change it."
-        : "<h2><b>No API key has been configured.  The API key is required before attempting to send mail.</b></h2>";
-    $apikey_required = !((boolean) $apikey);
-
+    $apikey_required = !$apikey;
     $base_select = $this->constructTemplateSelect();
 
     $form = [
@@ -63,7 +59,9 @@ class ConfigForm extends ConfigFormBase {
           '#type' => 'password',
           '#required' => $apikey_required,
           '#title' => 'SendGrid API Key',
-          '#description' => $apikey_text,
+          '#description' => $apikey_required
+            ? "An API key is already saved.  Leave the box blank to keep it, or input a new one to change it."
+            : "<h2><b>No API key has been configured.  The API key is required before attempting to send mail.</b></h2>",
           '#default_value' => '',
         ],
       ],
@@ -146,11 +144,11 @@ class ConfigForm extends ConfigFormBase {
     $assigned = $this->localConfig->get('template_assignments') ?: [];
     foreach ($assigned as $t_name => $t_id) {
       $ctrl = array_merge(
-            $base_select, [
-              '#default_value' => $t_id,
-              '#title' => 'Template',
-            ]
-        );
+        $base_select, [
+          '#default_value' => $t_id,
+          '#title' => 'Template',
+        ]
+      );
       $input = [
         '#type' => 'textfield',
         '#default_value' => $t_name,
@@ -189,12 +187,14 @@ class ConfigForm extends ConfigFormBase {
    * @return array
    *   The element, as a Drupal Forms API array.
    */
-  protected function constructTemplateSelect($selected = 0, string $title = '', string $description = ''): array {
+  protected function constructTemplateSelect(string|int $selected = 0, string $title = '', string $description = ''): array {
     $templates = TemplatesManager::getTemplates();
-    $options = [];
-    foreach ($templates as $key => $val) {
-      $options[$key] = $val->getName();
-    }
+    $options = array_map(
+      function ($val) {
+        return $val->getName();
+      },
+      $templates
+    );
 
     return [
       '#type' => 'select',
@@ -203,13 +203,12 @@ class ConfigForm extends ConfigFormBase {
       '#options' => array_merge([0 => 'None'], $options),
       '#default_value' => $selected,
     ];
-
   }
 
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
     $values = $form_state->getValues();
     if (!empty($values['api_key'])) {
       $this->localConfig->set('api_key', Html::escape($values['api_key']));

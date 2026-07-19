@@ -101,8 +101,8 @@ abstract class TemplatesManager {
             \Drupal::logger('nys_sendgrid')
               ->error(
                       "Failed to create a Template from API response", [
-                        '%template' => $val,
-                        '%message' => $e->getMessage(),
+                        '@template' => $val,
+                        '@message' => $e->getMessage(),
                       ]
                   );
           }
@@ -112,7 +112,7 @@ abstract class TemplatesManager {
       else {
         $msg = 'Call to SendGrid templates() failed.';
         \Drupal::logger('nys_sendgrid')
-          ->error($msg, ['%response' => $response->body()]);
+          ->error($msg, ['@response' => $response->body()]);
 
         // Send to slack.
         if (!$slack_sent) {

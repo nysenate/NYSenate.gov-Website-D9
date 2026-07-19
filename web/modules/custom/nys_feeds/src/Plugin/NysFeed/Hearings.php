@@ -29,10 +29,7 @@ class Hearings extends NysFeedPluginBase {
   use EntityFormatterTrait;
 
   /**
-   * Fetches event nodes scheduled to occur on the provided day.
-   *
-   * @return array
-   *   Array of results, keyed by node id.  The return may be empty.
+   * {@inheritDoc}
    */
   protected function query(): array {
     $date = $this->state->params['date_obj'];
@@ -55,7 +52,7 @@ class Hearings extends NysFeedPluginBase {
   }
 
   /**
-   * Transcribes a single event to an array appropriate for JSON delivery.
+   * {@inheritDoc}
    */
   protected function transcribeEntry(mixed $data): array {
 
@@ -122,7 +119,7 @@ class Hearings extends NysFeedPluginBase {
   }
 
   /**
-   * Does the work associated with normalizing operating parameters.
+   * {@inheritDoc}
    */
   protected function resolveParams(): self {
     return parent::resolveParams()->initDateParam();

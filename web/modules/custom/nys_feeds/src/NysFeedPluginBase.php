@@ -123,7 +123,7 @@ abstract class NysFeedPluginBase extends PluginBase implements NysFeedPluginInte
     }
 
     // Detect the parameters and compile the results.
-    $data = $this->resolveParams()->query();
+    $data = $this->query();
 
     foreach ($data as $key => $val) {
       $state->data[$key] = $this->transcribeEntry($val);

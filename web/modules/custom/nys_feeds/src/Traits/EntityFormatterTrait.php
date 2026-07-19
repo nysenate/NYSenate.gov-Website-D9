@@ -13,11 +13,11 @@ trait EntityFormatterTrait {
   /**
    * Retrieve the internal URL for a content entity.
    */
-  protected function getUrl(?ContentEntityInterface $entity = NULL): string {
+  protected function getUrl(?ContentEntityInterface $entity = NULL, $rel = 'canonical', $options = []): string {
     $url = '';
     if ($entity) {
       try {
-        $url = $entity->toUrl()->toString();
+        $url = $entity->toUrl($rel, $options)->toString();
       }
       catch (\Throwable) {
         $url = 'Error rendering URL';

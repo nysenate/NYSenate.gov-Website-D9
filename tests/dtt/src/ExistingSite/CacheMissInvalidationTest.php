@@ -28,39 +28,14 @@ use Drupal\user\UserInterface;
  *  - Event, meeting, and public_hearing pages are invalidated by committee term edits.
  *  - Resolution pages are invalidated by senator term edits via field_ol_sponsor.
  *
- * Test pattern: warm → HIT → saveViaWebRequest() → MISS → HIT, encapsulated
- * by assertCacheMissOnSave(). saveViaWebRequest() submits the entity edit form
- * as a real HTTP POST so that kernel.terminate fires and Cloudflare cache-tag
- * purges are dispatched before the next poll. CLI saves ($entity->save()) must
- * not be used here.
+ * Test pattern: warm → HIT → $entity->save() → MISS → HIT, encapsulated by
+ * assertCacheMissOnSave(). pantheon_advanced_page_cache dispatches CF BANs
+ * synchronously via pantheon_clear_edge_keys(), which is available in CLI PHP
+ * on Pantheon, so direct entity saves dispatch BANs correctly on-container.
  *
  * @group cache_regression
  */
 class CacheMissInvalidationTest extends CacheTestBase {
-
-  /**
-   * Administrator user created for web-form–based entity saves.
-   *
-   * @var \Drupal\user\UserInterface|null
-   */
-  protected ?UserInterface $adminUser = NULL;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp(): void {
-    parent::setUp();
-    $this->adminUser = $this->createUser([], NULL, TRUE);
-    $this->drupalLogin($this->adminUser);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function tearDown(): void {
-    $this->drupalLogout();
-    parent::tearDown();
-  }
 
   // ---------------------------------------------------------------------------
   // Top-level pages
@@ -115,6 +90,13 @@ class CacheMissInvalidationTest extends CacheTestBase {
     $this->warmCache('/');
     $this->assertAnonymousCacheHit('/');
 
+    // This test exercises the production UI path — clicking the "Add to queue"
+    // link on the node entityqueue tab. A real authenticated web request is
+    // required here because the link contains a CSRF token and the action is
+    // specific to the form-based entityqueue UI, not a generic entity save.
+    $adminUser = $this->createUser([], NULL, TRUE);
+    $this->drupalLogin($adminUser);
+
     // Add the node via the node entityqueue tab — the production UI path used
     // by site admins. The link href contains the CSRF token added by Drupal's
     // URL generator; Mink follows it as a plain GET, triggering the same entity
@@ -126,6 +108,8 @@ class CacheMissInvalidationTest extends CacheTestBase {
     );
     $this->assertNotNull($addLink, 'Add to queue link not found on the node entityqueue tab.');
     $addLink->click();
+
+    $this->drupalLogout();
 
     $this->assertAnonymousCacheMiss('/');
     $this->assertAnonymousCacheHit('/');
@@ -237,7 +221,7 @@ class CacheMissInvalidationTest extends CacheTestBase {
    * Editing a senator term referenced by an article invalidates its display page.
    */
   public function testArticlePageMissOnSenatorEdit(): void {
-    [$article, $senator] = $this->requireNodeAndValidTermByField('article', 'field_senator_multiref');
+    [$article, $senator] = $this->requireNodeWithReferencedTerm('article', 'field_senator_multiref');
     $path = $article->toUrl('canonical')->setAbsolute(FALSE)->toString();
 
     $this->assertCacheMissOnSave($path, $senator);
@@ -247,7 +231,7 @@ class CacheMissInvalidationTest extends CacheTestBase {
    * Editing a committee term referenced by an event invalidates its display page.
    */
   public function testEventPageMissOnCommitteeEdit(): void {
-    [$event, $committee] = $this->requireNodeByTypeWithSaveableTerm('event', 'field_committee');
+    [$event, $committee] = $this->requireNodeWithReferencedTerm('event', 'field_committee');
     $path = $event->toUrl('canonical')->setAbsolute(FALSE)->toString();
 
     $this->assertCacheMissOnSave($path, $committee);
@@ -257,7 +241,7 @@ class CacheMissInvalidationTest extends CacheTestBase {
    * Editing a senator term referenced by an in_the_news node invalidates its display page.
    */
   public function testInTheNewsPageMissOnSenatorEdit(): void {
-    [$node, $senator] = $this->requireNodeAndValidTermByField('in_the_news', 'field_senator_multiref');
+    [$node, $senator] = $this->requireNodeWithReferencedTerm('in_the_news', 'field_senator_multiref');
     $path = $node->toUrl('canonical')->setAbsolute(FALSE)->toString();
 
     $this->assertCacheMissOnSave($path, $senator);
@@ -267,7 +251,7 @@ class CacheMissInvalidationTest extends CacheTestBase {
    * Editing a committee term referenced by a meeting invalidates its display page.
    */
   public function testMeetingPageMissOnCommitteeEdit(): void {
-    [$meeting, $committee] = $this->requireNodeByTypeWithSaveableTerm('meeting', 'field_committee');
+    [$meeting, $committee] = $this->requireNodeWithReferencedTerm('meeting', 'field_committee');
     $path = $meeting->toUrl('canonical')->setAbsolute(FALSE)->toString();
 
     $this->assertCacheMissOnSave($path, $committee);
@@ -277,7 +261,7 @@ class CacheMissInvalidationTest extends CacheTestBase {
    * Editing a committee term referenced by a public hearing invalidates its display page.
    */
   public function testPublicHearingPageMissOnCommitteeEdit(): void {
-    [$node, $committee] = $this->requireNodeByTypeWithSaveableTerm('public_hearing', 'field_committee');
+    [$node, $committee] = $this->requireNodeWithReferencedTerm('public_hearing', 'field_committee');
     $path = $node->toUrl('canonical')->setAbsolute(FALSE)->toString();
 
     $this->assertCacheMissOnSave($path, $committee);
@@ -287,7 +271,7 @@ class CacheMissInvalidationTest extends CacheTestBase {
    * Editing a senator term referenced by a resolution (via field_ol_sponsor) invalidates its display page.
    */
   public function testResolutionPageMissOnSenatorEdit(): void {
-    [$resolution, $senator] = $this->requireNodeByTypeWithSaveableTerm('resolution', 'field_ol_sponsor');
+    [$resolution, $senator] = $this->requireNodeWithReferencedTerm('resolution', 'field_ol_sponsor');
     $path = $resolution->toUrl('canonical')->setAbsolute(FALSE)->toString();
 
     $this->assertCacheMissOnSave($path, $senator);
@@ -363,9 +347,10 @@ class CacheMissInvalidationTest extends CacheTestBase {
    *
    * The node:{nid} cache tag invalidation mechanism is identical for all
    * content types — it is provided automatically by Drupal core. bill is
-   * included because BillsHelper runs complex save-time logic whose silent
-   * failure could prevent cache invalidation. article represents the standard
-   * save path for all other types.
+   * included because BillsHelper runs complex save-time logic; a silent
+   * exception there could prevent the save completing and leave the cache
+   * un-invalidated. article represents the standard save path for all other
+   * types.
    */
   public static function representativeContentTypeProvider(): array {
     return [

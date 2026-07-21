@@ -26,12 +26,12 @@ use weitzman\DrupalTestTraits\ExistingSiteBase;
  *  - On Pantheon (production and multidev), Cloudflare sits in front of
  *    PHP-FPM. cf-cache-status (Cloudflare) is the authoritative header;
  *    x-drupal-cache reflects only what PHP-FPM returned and is stale on
- *    subsequent Cloudflare hits. Cache invalidations must also reach Cloudflare
- *    via BAN dispatch, which happens in kernel.terminate after a real web
- *    request — not during a CLI entity save. saveViaWebRequest() exists for
- *    this reason: it submits the entity edit form as a real HTTP POST so that
- *    kernel.terminate fires and pantheon_advanced_page_cache dispatches BAN
- *    requests for the invalidated cache tags.
+ *    subsequent Cloudflare hits. Cache invalidations reach Cloudflare via BAN
+ *    dispatch: pantheon_advanced_page_cache calls pantheon_clear_edge_keys()
+ *    synchronously inside CacheTagsInvalidator::invalidateTags(). That function
+ *    is available in both web-worker and CLI PHP contexts on Pantheon, so a
+ *    direct $entity->save() in the test process dispatches CF BANs correctly
+ *    when the tests run on-container.
  *
  * getCacheStatus() normalises across all environments automatically.
  * assertCacheMissOnSave() encapsulates the canonical warm → HIT → save →
@@ -440,64 +440,6 @@ abstract class CacheTestBase extends ExistingSiteBase {
   }
 
   /**
-   * Saves an entity by submitting its edit form through the DTT browser.
-   *
-   * Submitting via real HTTP POST fires kernel.terminate on the web server,
-   * which causes pantheon_advanced_page_cache to dispatch BAN requests for any
-   * cache tags invalidated by the save. This is required for
-   * assertAnonymousCacheMiss() to observe cf-cache-status: MISS on Pantheon;
-   * CLI saves ($entity->save()) correctly invalidate Redis but never reach the
-   * CDN because kernel.terminate is never fired outside a web request.
-   *
-   * The caller must be logged in (e.g. via drupalLogin()) before calling this.
-   */
-  protected function saveViaWebRequest(EntityInterface $entity): void {
-    $path = $entity->toUrl('edit-form')->setAbsolute(FALSE)->toString();
-    $this->visit($path);
-    $this->getSession()->getPage()->pressButton('Save');
-    // A successful Drupal form save redirects away from the edit path.
-    // Remaining on /edit indicates the form was rejected (broken entity-
-    // reference field, required field BrowserKit could not populate, CSRF
-    // mismatch, etc.) and means no BAN was dispatched to the CDN.
-    $urlAfterSave = $this->getSession()->getCurrentUrl();
-    $this->assertNotSame(
-      $path,
-      (string) parse_url($urlAfterSave, PHP_URL_PATH),
-      "saveViaWebRequest({$path}): Drupal rejected the form submission — still on edit URL ({$urlAfterSave}). "
-      . 'Use findNodeByTypeWithSaveableTerm() / findNodeAndValidTermByField() to select '
-      . 'entities whose edit forms BrowserKit can submit successfully.'
-    );
-  }
-
-  /**
-   * Returns TRUE if $term can be saved via its Drupal edit form through
-   * BrowserKit, FALSE otherwise.
-   *
-   * Some taxonomy terms have broken entity-reference field values or required
-   * fields with widget state that BrowserKit cannot satisfy, causing Drupal to
-   * reject the form submission and redirect back to the edit URL rather than
-   * the term's canonical page. This helper detects that condition so that term
-   * selection helpers can skip unsaveable terms.
-   *
-   * Side-effect: if the term IS saveable, it will have been saved once by this
-   * call (triggering a BAN for its cache tags). Callers that subsequently use
-   * the entity in assertCacheMissOnSave() should call warmCache() first, as
-   * assertCacheMissOnSave() already does.
-   */
-  private function termIsSaveableViaForm(EntityInterface $entity): bool {
-    try {
-      $path = $entity->toUrl('edit-form')->setAbsolute(FALSE)->toString();
-      $this->visit($path);
-      $this->getSession()->getPage()->pressButton('Save');
-      $currentPath = (string) parse_url($this->getSession()->getCurrentUrl(), PHP_URL_PATH);
-      return $currentPath !== $path;
-    }
-    catch (\Exception $e) {
-      return FALSE;
-    }
-  }
-
-  /**
    * Asserts cache-control max-age header on an anonymous request.
    */
   protected function assertCacheControlMaxAge(string $path, int $expectedMaxAge = 86400): void {
@@ -518,15 +460,16 @@ abstract class CacheTestBase extends ExistingSiteBase {
   /**
    * Performs the standard warm → HIT → save → MISS → HIT assertion sequence.
    *
-   * This is the canonical test pattern for cache-miss invalidation: warm the
-   * cache for $path, confirm a HIT, save $entity via a real HTTP POST so that
-   * kernel.terminate fires and CDN BANs are dispatched, then confirm the page
-   * transitions to MISS and back to HIT once re-cached.
+   * Warms the cache for $path, confirms a HIT, saves $entity via the entity
+   * API, then confirms the page transitions to MISS and back to HIT once
+   * re-cached. pantheon_advanced_page_cache dispatches the CF BAN synchronously
+   * inside invalidateTags() via pantheon_clear_edge_keys(), which is available
+   * in CLI PHP on Pantheon, so no web-request wrapper is required.
    */
   protected function assertCacheMissOnSave(string $path, EntityInterface $entity): void {
     $this->warmCache($path);
     $this->assertAnonymousCacheHit($path);
-    $this->saveViaWebRequest($entity);
+    $entity->save();
     $this->assertAnonymousCacheMiss($path);
     $this->assertAnonymousCacheHit($path);
   }
@@ -769,100 +712,13 @@ abstract class CacheTestBase extends ExistingSiteBase {
   }
 
   /**
-   * Returns a [node, term] pair where the node is a published node of
-   * $nodeType referencing a term via $fieldName that passes both entity
-   * validation and BrowserKit form saveability, or NULL if none exists.
-   *
-   * Uses a two-phase strategy to keep execution time bounded:
-   *
-   * Phase 1 — one fast DB query collects the top 20 distinct term IDs (by TID
-   * DESC) referenced by published nodes of the given type. Newest terms first
-   * because recently created terms tend to have complete field configurations.
-   * The cap of 20 keeps DDEV skips fast: if no saveable term is found among
-   * the first 20 candidates the method returns NULL quickly rather than
-   * exhausting the entire field population.
-   *
-   * Phase 2 — for each TID, the term is loaded and checked: form saveability
-   * via BrowserKit (one HTTP round-trip per term). Because we work from
-   * actual content TIDs and stop after 20 candidates, execution is bounded
-   * regardless of how many nodes or terms exist.
+   * Returns a [node, term] pair for the most recently changed published node of
+   * $type that has $fieldName populated with a taxonomy term reference, or NULL
+   * if no such node exists.
    *
    * @return array{0: \Drupal\node\NodeInterface, 1: \Drupal\taxonomy\TermInterface}|null
    */
-  protected function findNodeAndValidTermByField(string $nodeType, string $fieldName): ?array {
-    // Phase 1: collect all distinct term IDs that published nodes of this type
-    // reference via $fieldName. One lightweight DB query — no entity loads.
-    $fieldTable = 'node__' . $fieldName;
-    $targetCol = $fieldName . '_target_id';
-    $query = \Drupal::database()->select($fieldTable, 'f')
-      ->distinct()
-      ->fields('f', [$targetCol])
-      ->condition('f.bundle', $nodeType)
-      ->condition('f.deleted', 0);
-    $query->innerJoin('node_field_data', 'n', 'f.entity_id = n.nid AND f.langcode = n.langcode');
-    $query->condition('n.status', 1);
-    // Check newest TIDs first — recently created terms are more likely to have
-    // complete field configurations and pass form submission. Limit to 20 so
-    // that DDEV environments with no saveable terms skip quickly rather than
-    // exhausting the entire field population.
-    $query->orderBy('f.' . $targetCol, 'DESC');
-    $query->range(0, 20);
-    $tids = $query->execute()->fetchCol();
-
-    if (empty($tids)) {
-      return NULL;
-    }
-
-    // Phase 2: for each unique TID, check form saveability via BrowserKit.
-    // Note: entity validation ($term->validate()) is NOT used as a pre-filter
-    // here. Diagnostic data showed that senator terms with 1 entity-validation
-    // error are still form-saveable (the error is typically a non-form-required
-    // field added after term creation). Filtering by entity validation would
-    // incorrectly exclude those terms. We rely solely on termIsSaveableViaForm.
-    foreach ($tids as $tid) {
-      $term = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load($tid);
-      if (!$term) {
-        continue;
-      }
-      if (!$this->termIsSaveableViaForm($term)) {
-        continue;
-      }
-      // Term is saveable. Find any published node of the requested type that
-      // references it.
-      $nids = \Drupal::entityTypeManager()
-        ->getStorage('node')
-        ->getQuery()
-        ->accessCheck(FALSE)
-        ->condition('type', $nodeType)
-        ->condition('status', 1)
-        ->condition($fieldName . '.target_id', $tid)
-        ->range(0, 1)
-        ->execute();
-      if (empty($nids)) {
-        continue;
-      }
-      $node = \Drupal::entityTypeManager()->getStorage('node')->load(reset($nids));
-      if ($node) {
-        return [$node, $term];
-      }
-    }
-    return NULL;
-  }
-
-  /**
-   * Returns the first [node, term] pair where the node is a published node of
-   * $type with $fieldName populated and the referenced term can be saved via
-   * its Drupal edit form through BrowserKit, or NULL if none is found.
-   *
-   * Unlike findNodeByTypeWithField() which returns only the most recently
-   * changed node, this helper iterates through candidates until it finds a
-   * term whose form submission BrowserKit can complete successfully — skipping
-   * terms with broken field values or required fields that BrowserKit cannot
-   * satisfy.
-   *
-   * @return array{0: \Drupal\node\NodeInterface, 1: \Drupal\taxonomy\TermInterface}|null
-   */
-  protected function findNodeByTypeWithSaveableTerm(string $type, string $fieldName): ?array {
+  protected function findNodeWithReferencedTerm(string $type, string $fieldName): ?array {
     $ids = \Drupal::entityTypeManager()
       ->getStorage('node')
       ->getQuery()
@@ -880,10 +736,7 @@ abstract class CacheTestBase extends ExistingSiteBase {
         continue;
       }
       $term = $this->findReferencedTerm($node, $fieldName);
-      if (!$term) {
-        continue;
-      }
-      if ($this->termIsSaveableViaForm($term)) {
+      if ($term) {
         return [$node, $term];
       }
     }
@@ -891,14 +744,13 @@ abstract class CacheTestBase extends ExistingSiteBase {
   }
 
   /**
-   * Returns the first [node, term] pair where the referenced term can be saved
-   * via its edit form, or fails the test if none is found.
+   * Returns a [node, term] pair or fails the test if none is found.
    *
    * @return array{0: \Drupal\node\NodeInterface, 1: \Drupal\taxonomy\TermInterface}
    */
-  protected function requireNodeByTypeWithSaveableTerm(string $type, string $fieldName): array {
-    return $this->findNodeByTypeWithSaveableTerm($type, $fieldName)
-      ?? $this->fail("No published '{$type}' node with a BrowserKit-saveable '{$fieldName}' term found.");
+  protected function requireNodeWithReferencedTerm(string $type, string $fieldName): array {
+    return $this->findNodeWithReferencedTerm($type, $fieldName)
+      ?? $this->fail("No published '{$type}' node with a '{$fieldName}' taxonomy term found.");
   }
 
   // ---------------------------------------------------------------------------
@@ -955,16 +807,7 @@ abstract class CacheTestBase extends ExistingSiteBase {
       ?? $this->fail("No published '{$type}' node with field '{$fieldName}' populated found.");
   }
 
-  /**
-   * Returns the first [node, term] pair where the term's edit form can be
-   * submitted successfully via BrowserKit, or fails.
-   *
-   * @return array{0: \Drupal\node\NodeInterface, 1: \Drupal\taxonomy\TermInterface}
-   */
-  protected function requireNodeAndValidTermByField(string $nodeType, string $fieldName): array {
-    return $this->findNodeAndValidTermByField($nodeType, $fieldName)
-      ?? $this->fail("No published '{$nodeType}' node with a valid (saveable) '{$fieldName}' term found.");
-  }
+
 
   /**
    * Returns the first published bill node that can be non-destructively saved, or fails.

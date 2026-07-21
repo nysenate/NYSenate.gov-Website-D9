@@ -223,12 +223,17 @@ abstract class CacheTestBase extends ExistingSiteBase {
    * Wraps a single anonymous GET with retry logic for transient errors.
    *
    * - 429 Too Many Requests: backs off using the Retry-After header (default
-   *   5 s) then retries, up to 8 attempts.
+   *   5 s) then retries once. After 2 total 429 responses the exception is
+   *   re-thrown so the caller's outer loop (warmCache, assertAnonymousCacheMiss,
+   *   assertAnonymousCacheHit) can honour the rate-limit at a higher level
+   *   rather than spending up to 4 minutes spinning here.
    * - 5xx Server Error: retries immediately up to 8 attempts.
    * - All other exceptions are re-thrown immediately.
    */
   private function anonGet(string $path): \Psr\Http\Message\ResponseInterface {
     $maxAttempts = 8;
+    $max429 = 2;
+    $count429 = 0;
     $lastException = NULL;
     for ($attempt = 0; $attempt < $maxAttempts; $attempt++) {
       try {
@@ -237,6 +242,9 @@ abstract class CacheTestBase extends ExistingSiteBase {
       catch (ClientException $e) {
         if ($e->getResponse()->getStatusCode() === 429) {
           $lastException = $e;
+          if (++$count429 >= $max429) {
+            break; // Caller handles repeated rate-limiting.
+          }
           $retryAfter = max(1, (int) ($e->getResponse()->getHeaderLine('Retry-After') ?: 5));
           sleep($retryAfter);
           continue;
@@ -362,12 +370,29 @@ abstract class CacheTestBase extends ExistingSiteBase {
    * any operation whose effect they want to test, then call this method.
    * Internally re-warming would mask cache invalidations and produce
    * false positives in negative test cases.
+   *
+   * Retries up to 5 times on 429 Too Many Requests, honouring the
+   * Retry-After header, so that CF rate-limiting on a busy multidev does not
+   * produce a spurious test error rather than a genuine assertion failure.
    */
   protected function assertAnonymousCacheHit(string $path): void {
-    $response = $this->anonGet($path);
-    $status   = $this->getCacheStatus($response);
-    $this->assertSame('HIT', $status,
-      "Expected cache HIT on anonymous request to {$path}, got: {$status}");
+    for ($attempt = 0; $attempt < 5; $attempt++) {
+      try {
+        $response = $this->anonGet($path);
+        $status   = $this->getCacheStatus($response);
+        $this->assertSame('HIT', $status,
+          "Expected cache HIT on anonymous request to {$path}, got: {$status}");
+        return;
+      }
+      catch (ClientException $e) {
+        if ($e->getResponse()->getStatusCode() === 429 && $attempt < 4) {
+          $retryAfter = max(1, (int) ($e->getResponse()->getHeaderLine('Retry-After') ?: 5));
+          sleep($retryAfter);
+          continue;
+        }
+        throw $e;
+      }
+    }
   }
 
   /**
@@ -397,6 +422,17 @@ abstract class CacheTestBase extends ExistingSiteBase {
       catch (ServerException $e) {
         // 5xx — origin processed the request; effectively a MISS.
         return;
+      }
+      catch (ClientException $e) {
+        if ($e->getResponse()->getStatusCode() === 429) {
+          // CF rate-limited this request. Honour Retry-After and continue
+          // polling — the BAN may still land and produce a MISS once the
+          // rate-limit window passes.
+          $retryAfter = max(1, (int) ($e->getResponse()->getHeaderLine('Retry-After') ?: 5));
+          sleep($retryAfter);
+          continue;
+        }
+        throw $e;
       }
       if ($attempt < 10) {
         usleep(500000);

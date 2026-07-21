@@ -29,9 +29,12 @@ use weitzman\DrupalTestTraits\ExistingSiteBase;
  *    subsequent Cloudflare hits. Cache invalidations reach Cloudflare via BAN
  *    dispatch: pantheon_advanced_page_cache calls pantheon_clear_edge_keys()
  *    synchronously inside CacheTagsInvalidator::invalidateTags(). That function
- *    is available in both web-worker and CLI PHP contexts on Pantheon, so a
- *    direct $entity->save() in the test process dispatches CF BANs correctly
- *    when the tests run on-container.
+ *    buffers keys in a static array and flushes them to the Pantheon cache proxy
+ *    via pantheon_clear_edge_keys_shutdown() at PHP process shutdown. In a web
+ *    request (PHP-FPM) the process exits per-response, so BANs fire promptly. In
+ *    this long-running PHPUnit process, saveEntity() explicitly calls
+ *    pantheon_clear_edge_keys_shutdown() after each $entity->save() to dispatch
+ *    the BAN immediately instead of waiting for process exit.
  *
  * getCacheStatus() normalises across all environments automatically.
  * assertCacheMissOnSave() encapsulates the canonical warm → HIT → save →
@@ -370,14 +373,12 @@ abstract class CacheTestBase extends ExistingSiteBase {
   /**
    * Asserts that an anonymous request returns a cache MISS.
    *
-   * All cache invalidations in this suite are triggered by saveViaWebRequest(),
-   * which submits the entity edit form as a real HTTP POST through the full
-   * stack. On Pantheon, PHP-FPM fires kernel.terminate after sending the
-   * response, which causes pantheon_advanced_page_cache to dispatch a BAN for
-   * the invalidated cache tags. There is a short window between the save
-   * completing and Cloudflare processing the BAN, so this method polls until
-   * cf-cache-status: MISS is confirmed — the same race warmCache() handles in
-   * reverse.
+   * Cache invalidations in this suite are triggered by saveEntity(), which
+   * calls $entity->save() and then immediately flushes Pantheon's BAN buffer
+   * via pantheon_clear_edge_keys_shutdown(). There is still a short window
+   * between the BAN dispatch and Cloudflare processing it, so this method
+   * polls until cf-cache-status: MISS is confirmed — the same race warmCache()
+   * handles in reverse.
    *
    * On local environments there is no CDN; getCacheStatus() falls back to
    * x-drupal-cache which reflects the Redis state and returns MISS immediately
@@ -458,18 +459,46 @@ abstract class CacheTestBase extends ExistingSiteBase {
   }
 
   /**
+   * Saves an entity and immediately flushes the Pantheon edge-key BAN buffer.
+   *
+   * On Pantheon, pantheon_advanced_page_cache's CacheTagsInvalidator calls
+   * pantheon_clear_edge_keys() during the save, but that function only buffers
+   * the tags in a PHP static variable and defers the actual HTTP BAN dispatch
+   * to a shutdown function (pantheon_clear_edge_keys_shutdown()). In a web
+   * request (PHP-FPM) the process exits after each response, so the BAN fires
+   * promptly. In this long-running PHPUnit process the shutdown function would
+   * only run after all tests have completed — far too late for per-test
+   * cache-header polls to see a MISS or verify that BANs are correctly scoped.
+   *
+   * This wrapper calls pantheon_clear_edge_keys_shutdown() immediately after
+   * the save, dispatching the accumulated keys synchronously via
+   * pantheon_clear_edge_keys_batch() (a direct HTTP POST to the Pantheon cache
+   * proxy API). On local/DDEV environments the function guard is a no-op and
+   * the save behaves identically to a bare $entity->save().
+   *
+   * Use this method for ALL entity saves inside test methods that exercise the
+   * anonymous CDN cache layer (CacheMissInvalidationTest,
+   * AnonymousCacheNonInvalidationTest, etc.) so that post-save cache-header
+   * assertions reflect actual BAN dispatch rather than an absence of dispatch.
+   */
+  protected function saveEntity(EntityInterface $entity): void {
+    $entity->save();
+    if (function_exists('pantheon_clear_edge_keys_shutdown')) {
+      pantheon_clear_edge_keys_shutdown();
+    }
+  }
+
+  /**
    * Performs the standard warm → HIT → save → MISS → HIT assertion sequence.
    *
-   * Warms the cache for $path, confirms a HIT, saves $entity via the entity
-   * API, then confirms the page transitions to MISS and back to HIT once
-   * re-cached. pantheon_advanced_page_cache dispatches the CF BAN synchronously
-   * inside invalidateTags() via pantheon_clear_edge_keys(), which is available
-   * in CLI PHP on Pantheon, so no web-request wrapper is required.
+   * Warms the cache for $path, confirms a HIT, saves $entity via saveEntity()
+   * (which also flushes the Pantheon edge-key BAN buffer), then confirms the
+   * page transitions to MISS and back to HIT once re-cached.
    */
   protected function assertCacheMissOnSave(string $path, EntityInterface $entity): void {
     $this->warmCache($path);
     $this->assertAnonymousCacheHit($path);
-    $entity->save();
+    $this->saveEntity($entity);
     $this->assertAnonymousCacheMiss($path);
     $this->assertAnonymousCacheHit($path);
   }

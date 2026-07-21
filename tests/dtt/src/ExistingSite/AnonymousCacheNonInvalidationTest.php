@@ -28,7 +28,7 @@ class AnonymousCacheNonInvalidationTest extends CacheTestBase {
     foreach ($unrelated as $path) {
       $this->warmCache($path);
     }
-    $article->save();
+    $this->saveEntity($article);
     foreach ($unrelated as $path) {
       $this->assertAnonymousCacheHit($path);
     }
@@ -45,7 +45,7 @@ class AnonymousCacheNonInvalidationTest extends CacheTestBase {
     foreach ($unrelated as $path) {
       $this->warmCache($path);
     }
-    $bill->save();
+    $this->saveEntity($bill);
     foreach ($unrelated as $path) {
       $this->assertAnonymousCacheHit($path);
     }
@@ -62,7 +62,7 @@ class AnonymousCacheNonInvalidationTest extends CacheTestBase {
     foreach ($unrelated as $path) {
       $this->warmCache($path);
     }
-    $event->save();
+    $this->saveEntity($event);
     foreach ($unrelated as $path) {
       $this->assertAnonymousCacheHit($path);
     }
@@ -78,7 +78,7 @@ class AnonymousCacheNonInvalidationTest extends CacheTestBase {
     foreach (self::TOP_LEVEL_PAGES as $path) {
       $this->warmCache($path);
     }
-    $petition->save();
+    $this->saveEntity($petition);
     foreach (self::TOP_LEVEL_PAGES as $path) {
       $this->assertAnonymousCacheHit($path);
     }

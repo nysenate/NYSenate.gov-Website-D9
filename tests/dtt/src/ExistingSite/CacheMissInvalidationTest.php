@@ -28,10 +28,10 @@ use Drupal\user\UserInterface;
  *  - Event, meeting, and public_hearing pages are invalidated by committee term edits.
  *  - Resolution pages are invalidated by senator term edits via field_ol_sponsor.
  *
- * Test pattern: warm → HIT → $entity->save() → MISS → HIT, encapsulated by
- * assertCacheMissOnSave(). pantheon_advanced_page_cache dispatches CF BANs
- * synchronously via pantheon_clear_edge_keys(), which is available in CLI PHP
- * on Pantheon, so direct entity saves dispatch BANs correctly on-container.
+ * Test pattern: warm → HIT → `saveEntity($entity)` → MISS → HIT, encapsulated by
+ * assertCacheMissOnSave(). saveEntity() calls $entity->save() then immediately
+ * flushes Pantheon's BAN buffer via pantheon_clear_edge_keys_shutdown() so CF
+ * processes the invalidation before the per-test MISS poll begins.
  *
  * @group cache_regression
  */

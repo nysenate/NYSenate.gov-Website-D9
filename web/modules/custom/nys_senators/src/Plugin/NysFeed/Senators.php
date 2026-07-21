@@ -4,10 +4,12 @@ namespace Drupal\nys_senators\Plugin\NysFeed;
 
 use Drupal\address\Repository\CountryRepository;
 use Drupal\address\Repository\SubdivisionRepository;
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldItemList;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\nys_feeds\Attribute\NysFeed;
+use Drupal\nys_feeds\FeedState;
 use Drupal\nys_feeds\NysFeedPluginBase;
 use Drupal\nys_feeds\Traits\EntityFormatterTrait;
 use Drupal\nys_senators\SenatorsHelper;
@@ -29,6 +31,20 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class Senators extends NysFeedPluginBase {
 
   use EntityFormatterTrait;
+
+  /**
+   * Cache key for this plugin.
+   *
+   * @todo Integrate with plugin cache system, once created.
+   */
+  const string NYS_SENATORS_JSON_CACHE_CID = 'nys_feeds:senators';
+
+  /**
+   * Maximum cache age for senators feed, in seconds.
+   *
+   * @todo Integrate with plugin cache system, once created.
+   */
+  const int NYS_SENATORS_JSON_MAX_CACHE_AGE = 7200;
 
   /**
    * NYS Senators Helper service.
@@ -59,24 +75,32 @@ class Senators extends NysFeedPluginBase {
   protected Microsites $themes;
 
   /**
+   * Drupal's Cache Backend service (data bin).
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface
+   */
+  protected CacheBackendInterface $cache;
+
+  /**
    * {@inheritDoc}
    *
    * Adds services: nys_senator Helper, nys_senator Microsites, Address
-   * Country and Subdivision repositories.
+   * Country and Subdivision repositories, Cache Backend (data bin).
    */
-  public function __construct(SenatorsHelper $helper, Microsites $themes, CountryRepository $countryRepo, SubdivisionRepository $stateRepo, EntityTypeManagerInterface $entityTypeManager, array $configuration, $plugin_id, $plugin_definition) {
+  public function __construct(SenatorsHelper $helper, Microsites $themes, CountryRepository $countryRepo, SubdivisionRepository $stateRepo, CacheBackendInterface $cache, EntityTypeManagerInterface $entityTypeManager, array $configuration, $plugin_id, $plugin_definition) {
     parent::__construct($entityTypeManager, $configuration, $plugin_id, $plugin_definition);
     $this->helper = $helper;
     $this->themes = $themes;
     $this->countryRepo = $countryRepo;
     $this->stateRepo = $stateRepo;
+    $this->cache = $cache;
   }
 
   /**
    * {@inheritDoc}
    *
    * Adds services: nys_senator Helper, nys_senator Microsites, Address
-   * Country and Subdivision repositories.
+   * Country and Subdivision repositories, Cache Backend (data bin).
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): static {
     return new static(
@@ -84,10 +108,65 @@ class Senators extends NysFeedPluginBase {
       $container->get('nys_senators.microsites'),
       $container->get('address.country_repository'),
       $container->get('address.subdivision_repository'),
+      $container->get('cache.data'),
       $container->get('entity_type.manager'),
       $configuration,
       $plugin_id,
       $plugin_definition);
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   * Since senators have a low refresh rate, we build/cache the entire feed and
+   * return only the requested names (if applicable).
+   */
+  public function getFeed(?FeedState $state = NULL): FeedState {
+    if ($state) {
+      $this->state = $state;
+      $this->initParams();
+    }
+
+    $feed = $this->compile();
+    $shortnames = array_filter(explode(',', $this->state->params['shortname'] ?? ''));
+
+    $state->data = count($shortnames)
+      ? array_intersect_key($feed, array_flip($shortnames))
+      : $feed;
+    if (!count($state->data)) {
+      $state->messages[] = "No data found";
+    }
+
+    return $state;
+  }
+
+  /**
+   * Retrieves the JSON feed either from cache, or a new compilation.
+   */
+  protected function compile(): array {
+    $feed = $this->cache->get(static::NYS_SENATORS_JSON_CACHE_CID)?->data;
+    if (!$feed) {
+      $feed = $this->buildFeed();
+      $this->cache->set(
+        static::NYS_SENATORS_JSON_CACHE_CID,
+        $feed,
+        time() + static::NYS_SENATORS_JSON_MAX_CACHE_AGE,
+        ['taxonomy_term_list:senator']
+      );
+    }
+    return $feed;
+  }
+
+  /**
+   * Builds a new compilation of the senators feed.
+   */
+  protected function buildFeed(): array {
+    return array_map(
+      function ($v) {
+        return $this->transcribeEntry($v);
+      },
+      $this->helper->getActiveSenators('', 'field_ol_shortname')
+    );
   }
 
   /**

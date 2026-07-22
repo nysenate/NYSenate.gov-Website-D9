@@ -81,42 +81,68 @@ class CacheMissInvalidationTest extends CacheTestBase {
     // Save current queue state so we can restore it after the test.
     $originalItems = $subqueue->get('items')->getValue();
 
-    // Clear the queue so the node tab shows "Add to queue". CLI saves are
-    // acceptable for test setup; the action under test is the web request below.
-    $subqueue->set('items', [])->save();
-
+    // These are initialised before the try block so the finally block can
+    // reference them safely regardless of where an exception occurs.
     $node = $this->requireHomepageHeroQueueItem();
-
-    $this->warmCache('/');
-    $this->assertAnonymousCacheHit('/');
-
-    // This test exercises the production UI path — clicking the "Add to queue"
-    // link on the node entityqueue tab. A real authenticated web request is
-    // required here because the link contains a CSRF token and the action is
-    // specific to the form-based entityqueue UI, not a generic entity save.
     $adminUser = $this->createUser([], NULL, TRUE);
-    $this->drupalLogin($adminUser);
 
-    // Add the node via the node entityqueue tab — the production UI path used
-    // by site admins. The link href contains the CSRF token added by Drupal's
-    // URL generator; Mink follows it as a plain GET, triggering the same entity
-    // save and hook invocation as the AJAX path.
-    $this->visit('/node/' . $node->id() . '/entityqueue');
-    $addLink = $this->getSession()->getPage()->find(
-      'css',
-      'a[href*="/homepage_hero/homepage_hero/' . $node->id() . '/add-item"]'
-    );
-    $this->assertNotNull($addLink, 'Add to queue link not found on the node entityqueue tab.');
-    $addLink->click();
+    // Wrap in try/finally so the queue is always restored, even on test failure.
+    try {
+      // Clear the queue so the node tab shows "Add to queue". CLI saves are
+      // acceptable for test setup; the action under test is the web request below.
+      $subqueue->set('items', [])->save();
 
-    $this->drupalLogout();
+      $this->warmCache('/');
+      $this->assertAnonymousCacheHit('/');
 
-    $this->assertAnonymousCacheMiss('/');
-    $this->assertAnonymousCacheHit('/');
+      // This test exercises the production UI path — clicking the "Add to queue"
+      // link on the node entityqueue tab. A real authenticated web request is
+      // required here because the link contains a CSRF token and the action is
+      // specific to the form-based entityqueue UI, not a generic entity save.
+      $this->drupalLogin($adminUser);
 
-    // Restore the original queue state.
-    $storage->resetCache(['homepage_hero']);
-    $storage->load('homepage_hero')->set('items', $originalItems)->save();
+      // Add the node via the node entityqueue tab — the production UI path used
+      // by site admins. The link href contains the CSRF token added by Drupal's
+      // URL generator; Mink follows it as a plain GET, triggering the same entity
+      // save and hook invocation as the AJAX path.
+      $this->visit('/node/' . $node->id() . '/entityqueue');
+      $addLink = $this->getSession()->getPage()->find(
+        'css',
+        'a[href*="/homepage_hero/homepage_hero/' . $node->id() . '/add-item"]'
+      );
+      $this->assertNotNull($addLink, 'Add to queue link not found on the node entityqueue tab.');
+      $addLink->click();
+
+      $this->drupalLogout();
+
+      $this->assertAnonymousCacheMiss('/');
+      $this->assertAnonymousCacheHit('/');
+    }
+    finally {
+      // Mirror the add: remove the test node via the same web-UI path so that
+      // the same hook/invalidation fires and the page cache is fully busted.
+      // A direct ->save() in the test process does not bust the page cache the
+      // same way the original web-request add did.
+      $this->drupalLogin($adminUser);
+      $this->visit('/node/' . $node->id() . '/entityqueue');
+      $removeLink = $this->getSession()->getPage()->find(
+        'css',
+        'a[href*="/homepage_hero/homepage_hero/' . $node->id() . '/remove-item"]'
+      );
+      if ($removeLink !== NULL) {
+        $removeLink->click();
+      }
+      $this->drupalLogout();
+
+      // Restore any items that existed before the test. The page cache was
+      // already busted by the remove-item web request above, so a direct save
+      // is sufficient here — it clears the cache tags and the next anonymous
+      // request rebuilds the page with the restored content.
+      $storage->resetCache(['homepage_hero']);
+      $this->saveEntity(
+        $storage->load('homepage_hero')->set('items', $originalItems)
+      );
+    }
   }
 
   /**

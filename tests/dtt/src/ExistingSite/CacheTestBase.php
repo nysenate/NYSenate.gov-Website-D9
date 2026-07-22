@@ -329,6 +329,33 @@ abstract class CacheTestBase extends ExistingSiteBase {
     $this->loggedInUser = FALSE;
   }
 
+  /**
+   * {@inheritdoc}
+   *
+   * Retries up to 3 times on HTTP 429 Too Many Requests responses from
+   * Cloudflare. Mink/BrowserKit requests share the same CF rate-limit pool as
+   * the Guzzle anonymous client. Without this guard, tests running after heavy
+   * anonymous traffic (AnonymousCacheHitTest, CacheMissInvalidationTest) can
+   * receive CF 429 error pages instead of Drupal pages, causing all session
+   * and element assertions to fail.
+   *
+   * Sleeps 90 s between retries — long enough for CF’s sliding-window rate
+   * limit to expire before the next attempt.
+   */
+  protected function visit(string $url): void {
+    for ($attempt = 0; $attempt < 3; $attempt++) {
+      parent::visit($url);
+      if ($this->getSession()->getStatusCode() !== 429) {
+        return;
+      }
+      if ($attempt < 2) {
+        sleep(90);
+      }
+    }
+    // All 3 attempts returned 429. Proceed so the next assertion produces a
+    // clear diagnostic failure message rather than a silent retry loop.
+  }
+
   // ---------------------------------------------------------------------------
   // Anonymous cache helpers
   // ---------------------------------------------------------------------------
@@ -367,8 +394,8 @@ abstract class CacheTestBase extends ExistingSiteBase {
           // CF rate-limited this poll. Sleep long enough for the CF sliding
           // window to fully expire before the next attempt. Short sleeps (< the
           // window length) just reset the window with each retry and never
-          // escape the rate limit. Default to 60 s if Retry-After is absent.
-          $retryAfter = max(60, (int) ($e->getResponse()->getHeaderLine('Retry-After') ?: 60));
+          // escape the rate limit. Default to 90 s if Retry-After is absent.
+          $retryAfter = max(90, (int) ($e->getResponse()->getHeaderLine('Retry-After') ?: 90));
           sleep($retryAfter);
           continue;
         }
@@ -390,12 +417,12 @@ abstract class CacheTestBase extends ExistingSiteBase {
    * Internally re-warming would mask cache invalidations and produce
    * false positives in negative test cases.
    *
-   * Retries up to 3 times on 429 Too Many Requests, sleeping at least 60 s
+   * Retries up to 5 times on 429 Too Many Requests, sleeping at least 90 s
    * each time. Fewer retries with a longer sleep lets CF's sliding-window rate
    * limit expire; many short retries reset the window and never escape it.
    */
   protected function assertAnonymousCacheHit(string $path): void {
-    for ($attempt = 0; $attempt < 3; $attempt++) {
+    for ($attempt = 0; $attempt < 5; $attempt++) {
       try {
         $response = $this->anonGet($path);
         $status   = $this->getCacheStatus($response);
@@ -404,8 +431,8 @@ abstract class CacheTestBase extends ExistingSiteBase {
         return;
       }
       catch (ClientException $e) {
-        if ($e->getResponse()->getStatusCode() === 429 && $attempt < 2) {
-          $retryAfter = max(60, (int) ($e->getResponse()->getHeaderLine('Retry-After') ?: 60));
+        if ($e->getResponse()->getStatusCode() === 429 && $attempt < 4) {
+          $retryAfter = max(90, (int) ($e->getResponse()->getHeaderLine('Retry-After') ?: 90));
           sleep($retryAfter);
           continue;
         }
@@ -446,7 +473,7 @@ abstract class CacheTestBase extends ExistingSiteBase {
         if ($e->getResponse()->getStatusCode() === 429) {
           // CF rate-limited this request. Sleep long enough for the sliding
           // window to expire before retrying — short sleeps just extend it.
-          $retryAfter = max(60, (int) ($e->getResponse()->getHeaderLine('Retry-After') ?: 60));
+          $retryAfter = max(90, (int) ($e->getResponse()->getHeaderLine('Retry-After') ?: 90));
           sleep($retryAfter);
           continue;
         }
@@ -510,6 +537,13 @@ abstract class CacheTestBase extends ExistingSiteBase {
         && $response->getStatusCode() < 300
         && str_contains($response->getHeaderLine('cache-control'), 'public');
     }
+    catch (ClientException $e) {
+      // 429: CF is rate-limiting this URL. The page exists and is publicly
+      // accessible — treat it as cacheable rather than discarding the candidate
+      // and firing more requests to other URLs. Other 4xx (404, 403) indicate
+      // the page is missing or access-denied and are correctly filtered out.
+      return $e->getResponse()->getStatusCode() === 429;
+    }
     catch (\Exception $e) {
       return FALSE;
     }
@@ -544,11 +578,11 @@ abstract class CacheTestBase extends ExistingSiteBase {
    * doubling the per-page request count, which can trigger CF rate limits when
    * multiple test classes warm the same URLs back-to-back.
    *
-   * Retries up to 3 times on 429 Too Many Requests, sleeping at least 60 s
+   * Retries up to 5 times on 429 Too Many Requests, sleeping at least 90 s
    * each time — see assertAnonymousCacheHit() for the sliding-window rationale.
    */
   protected function assertAnonymousCacheHitWithMaxAge(string $path, int $expectedMaxAge = 86400): void {
-    for ($attempt = 0; $attempt < 3; $attempt++) {
+    for ($attempt = 0; $attempt < 5; $attempt++) {
       try {
         $response = $this->anonGet($path);
         $status   = $this->getCacheStatus($response);
@@ -568,8 +602,8 @@ abstract class CacheTestBase extends ExistingSiteBase {
         return;
       }
       catch (ClientException $e) {
-        if ($e->getResponse()->getStatusCode() === 429 && $attempt < 2) {
-          $retryAfter = max(60, (int) ($e->getResponse()->getHeaderLine('Retry-After') ?: 60));
+        if ($e->getResponse()->getStatusCode() === 429 && $attempt < 4) {
+          $retryAfter = max(90, (int) ($e->getResponse()->getHeaderLine('Retry-After') ?: 90));
           sleep($retryAfter);
           continue;
         }

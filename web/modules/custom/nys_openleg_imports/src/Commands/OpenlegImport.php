@@ -4,9 +4,7 @@ namespace Drupal\nys_openleg_imports\Commands;
 
 use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\Core\Logger\RfcLogLevel;
-use Drupal\Core\Site\Settings;
 use Drupal\Core\State\State;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Drupal\nys_openleg_api\ConditionalLogger;
 use Drupal\nys_openleg_api\Plugin\OpenlegApi\Response\EmptyList;
 use Drupal\nys_openleg_api\Plugin\OpenlegApi\Response\YearBasedSearchList;
@@ -18,7 +16,6 @@ use Drupal\nys_openleg_imports\Service\OpenlegImporterManager;
 use Drupal\nys_slack\Service\Slack;
 use Drush\Commands\DrushCommands;
 use Drush\Exceptions\CommandFailedException;
-use GuzzleHttp\ClientInterface;
 
 /**
  * Drush command class for nys_openleg_imports.
@@ -85,20 +82,6 @@ class OpenlegImport extends DrushCommands {
   protected Slack $slack;
 
   /**
-   * Guzzle HTTP client for the post-import CDN purge self-call.
-   *
-   * @var \GuzzleHttp\ClientInterface
-   */
-  protected ClientInterface $httpClient;
-
-  /**
-   * The request stack service.
-   *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
-   */
-  protected RequestStack $requestStack;
-
-  /**
    * An importer to be used with this execution.
    *
    * @var \Drupal\nys_openleg_imports\ImporterInterface
@@ -115,7 +98,7 @@ class OpenlegImport extends DrushCommands {
   /**
    * Constructor.
    */
-  public function __construct(Api $api, OpenlegImporterManager $manager, State $state, Slack $slack, LoggerChannelInterface $logChannel, ClientInterface $httpClient, RequestStack $request_stack) {
+  public function __construct(Api $api, OpenlegImporterManager $manager, State $state, Slack $slack, LoggerChannelInterface $logChannel) {
     parent::__construct();
 
     $this->manager = $manager;
@@ -123,8 +106,6 @@ class OpenlegImport extends DrushCommands {
     $this->state = $state;
     $this->openlegLogger = $logChannel;
     $this->slack = $slack;
-    $this->httpClient = $httpClient;
-    $this->requestStack = $request_stack;
   }
 
   /**
@@ -275,67 +256,6 @@ class OpenlegImport extends DrushCommands {
 
     // Release the lock.
     $this->setState('locked', 0);
-
-    // Dispatch Cloudflare BANs for all nodes saved during this import.
-    // CLI saves do not trigger pantheon_clear_edge_keys() because that function
-    // is only available in the web-worker PHP environment. Calling the purge
-    // endpoint (a real HTTP request) bridges that gap.
-    $nids = $result->getSavedNids();
-    if (!empty($nids)) {
-      $this->dispatchCachePurge($nids);
-    }
-  }
-
-  /**
-   * Posts the saved node IDs to the internal CDN purge endpoint.
-   *
-   * This causes pantheon_clear_edge_keys() to fire in web-worker context,
-   * which dispatches a Cloudflare BAN for each affected bill/resolution page.
-   *
-   * Requires $settings['nys_purge_key'] to be set in settings.php on all
-   * environments. If the key is absent the purge is skipped with a warning.
-   *
-   * @param int[] $nids
-   *   Node IDs to purge from the CDN.
-   */
-  protected function dispatchCachePurge(array $nids): void {
-    $purge_key = Settings::get('nys_purge_key', '');
-    if (empty($purge_key)) {
-      $this->openlegLogger->warning(
-        'nys_purge_key is not configured in settings.php; CDN cache purge skipped for @count nodes.',
-        ['@count' => count($nids)]
-      );
-      return;
-    }
-
-    $tags = array_map(static fn(int $nid) => 'node:' . $nid, $nids);
-
-    // Derive the site base URL from the current request. On Pantheon, Drush is
-    // invoked with --uri=https://SITE.pantheonsite.io so getSchemeAndHttpHost()
-    // resolves correctly. On DDEV, --uri is set to https://nysenate.ddev.site.
-    $base_url = $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost();
-    $purge_url = rtrim($base_url, '/') . '/api/internal/cache/purge';
-
-    try {
-      $this->httpClient->request('POST', $purge_url, [
-        'headers' => [
-          'Authorization' => 'Bearer ' . $purge_key,
-          'Content-Type' => 'application/json',
-        ],
-        'json' => ['tags' => $tags],
-        'timeout' => 30,
-      ]);
-      $this->openlegLogger->notice(
-        'CDN cache purged for @count nodes.',
-        ['@count' => count($nids)]
-      );
-    }
-    catch (\Throwable $e) {
-      $this->openlegLogger->warning(
-        'CDN cache purge request failed: @msg',
-        ['@msg' => $e->getMessage()]
-      );
-    }
   }
 
   /**

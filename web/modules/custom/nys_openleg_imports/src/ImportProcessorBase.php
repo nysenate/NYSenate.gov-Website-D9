@@ -187,26 +187,6 @@ abstract class ImportProcessorBase implements ImportProcessorInterface {
   }
 
   /**
-   * Returns the node IDs of all nodes resolved (and saved) during process().
-   *
-   * Only nodes that have a persistent ID (i.e. were successfully saved at least
-   * once) are included. This is used by ImporterBase to collect NIDs for the
-   * post-import CDN purge dispatch.
-   *
-   * @return int[]
-   *   Array of node IDs that were saved.
-   */
-  public function getSavedNids(): array {
-    $nids = [];
-    foreach ($this->nodes as $node) {
-      if ($node && $node->id()) {
-        $nids[] = (int) $node->id();
-      }
-    }
-    return $nids;
-  }
-
-  /**
    * Given an Openleg item response, returns the unique ID.
    */
   abstract public function getId(): string;

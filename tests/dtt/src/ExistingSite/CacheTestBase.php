@@ -364,10 +364,11 @@ abstract class CacheTestBase extends ExistingSiteBase {
       }
       catch (ClientException $e) {
         if ($e->getResponse()->getStatusCode() === 429) {
-          // CF rate-limited this poll. Honour Retry-After before the next
-          // attempt — the primary cause of spurious warmCache failures when a
-          // prior test class generates sustained traffic to the same paths.
-          $retryAfter = max(5, (int) ($e->getResponse()->getHeaderLine('Retry-After') ?: 10));
+          // CF rate-limited this poll. Sleep long enough for the CF sliding
+          // window to fully expire before the next attempt. Short sleeps (< the
+          // window length) just reset the window with each retry and never
+          // escape the rate limit. Default to 60 s if Retry-After is absent.
+          $retryAfter = max(60, (int) ($e->getResponse()->getHeaderLine('Retry-After') ?: 60));
           sleep($retryAfter);
           continue;
         }
@@ -389,12 +390,12 @@ abstract class CacheTestBase extends ExistingSiteBase {
    * Internally re-warming would mask cache invalidations and produce
    * false positives in negative test cases.
    *
-   * Retries up to 5 times on 429 Too Many Requests, honouring the
-   * Retry-After header, so that CF rate-limiting on a busy multidev does not
-   * produce a spurious test error rather than a genuine assertion failure.
+   * Retries up to 3 times on 429 Too Many Requests, sleeping at least 60 s
+   * each time. Fewer retries with a longer sleep lets CF's sliding-window rate
+   * limit expire; many short retries reset the window and never escape it.
    */
   protected function assertAnonymousCacheHit(string $path): void {
-    for ($attempt = 0; $attempt < 5; $attempt++) {
+    for ($attempt = 0; $attempt < 3; $attempt++) {
       try {
         $response = $this->anonGet($path);
         $status   = $this->getCacheStatus($response);
@@ -403,8 +404,8 @@ abstract class CacheTestBase extends ExistingSiteBase {
         return;
       }
       catch (ClientException $e) {
-        if ($e->getResponse()->getStatusCode() === 429 && $attempt < 4) {
-          $retryAfter = max(1, (int) ($e->getResponse()->getHeaderLine('Retry-After') ?: 5));
+        if ($e->getResponse()->getStatusCode() === 429 && $attempt < 2) {
+          $retryAfter = max(60, (int) ($e->getResponse()->getHeaderLine('Retry-After') ?: 60));
           sleep($retryAfter);
           continue;
         }
@@ -443,10 +444,9 @@ abstract class CacheTestBase extends ExistingSiteBase {
       }
       catch (ClientException $e) {
         if ($e->getResponse()->getStatusCode() === 429) {
-          // CF rate-limited this request. Honour Retry-After and continue
-          // polling — the BAN may still land and produce a MISS once the
-          // rate-limit window passes.
-          $retryAfter = max(1, (int) ($e->getResponse()->getHeaderLine('Retry-After') ?: 5));
+          // CF rate-limited this request. Sleep long enough for the sliding
+          // window to expire before retrying — short sleeps just extend it.
+          $retryAfter = max(60, (int) ($e->getResponse()->getHeaderLine('Retry-After') ?: 60));
           sleep($retryAfter);
           continue;
         }
@@ -544,10 +544,11 @@ abstract class CacheTestBase extends ExistingSiteBase {
    * doubling the per-page request count, which can trigger CF rate limits when
    * multiple test classes warm the same URLs back-to-back.
    *
-   * Retries up to 5 times on 429 Too Many Requests, honouring Retry-After.
+   * Retries up to 3 times on 429 Too Many Requests, sleeping at least 60 s
+   * each time — see assertAnonymousCacheHit() for the sliding-window rationale.
    */
   protected function assertAnonymousCacheHitWithMaxAge(string $path, int $expectedMaxAge = 86400): void {
-    for ($attempt = 0; $attempt < 5; $attempt++) {
+    for ($attempt = 0; $attempt < 3; $attempt++) {
       try {
         $response = $this->anonGet($path);
         $status   = $this->getCacheStatus($response);
@@ -567,8 +568,8 @@ abstract class CacheTestBase extends ExistingSiteBase {
         return;
       }
       catch (ClientException $e) {
-        if ($e->getResponse()->getStatusCode() === 429 && $attempt < 4) {
-          $retryAfter = max(1, (int) ($e->getResponse()->getHeaderLine('Retry-After') ?: 5));
+        if ($e->getResponse()->getStatusCode() === 429 && $attempt < 2) {
+          $retryAfter = max(60, (int) ($e->getResponse()->getHeaderLine('Retry-After') ?: 60));
           sleep($retryAfter);
           continue;
         }

@@ -195,7 +195,12 @@ class MainController extends ControllerBase {
           '#attached' => ['library' => ['nys_openleg/openleg']],
           '#browse_url' => $base_share_path,
           '#cache' => [
-            'max_age' => 604800,
+            // Use a short TTL rather than the full 7-day TTL used for
+            // successful pages. The error condition may be a momentary OpenLeg
+            // API disruption rather than a permanently missing law/statute;
+            // a 5-minute cache is enough to absorb bot traffic without
+            // locking in a stale error page for a week if OL recovers quickly.
+            'max_age' => 300,
             'tags' => ['nys_openleg:laws'],
           ],
         ];

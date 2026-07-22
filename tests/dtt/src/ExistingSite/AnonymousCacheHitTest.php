@@ -35,8 +35,9 @@ class AnonymousCacheHitTest extends CacheTestBase {
    */
   public function testAnonymousCacheHit(string $path): void {
     $this->warmCache($path);
-    $this->assertAnonymousCacheHit($path);
-    $this->assertCacheControlMaxAge($path, 604800);
+    // Use the combined method to fold the HIT and max-age checks into a single
+    // request, reducing per-page traffic and avoiding CF rate-limit bursts.
+    $this->assertAnonymousCacheHitWithMaxAge($path, 86400);
   }
 
   /**
@@ -51,8 +52,7 @@ class AnonymousCacheHitTest extends CacheTestBase {
   public function testContentTypeDisplayPageCacheHit(string $type): void {
     $path = $this->requireNodeUrlByType($type);
     $this->warmCache($path);
-    $this->assertAnonymousCacheHit($path);
-    $this->assertCacheControlMaxAge($path, 604800);
+    $this->assertAnonymousCacheHitWithMaxAge($path, 604800);
   }
 
   // ---------------------------------------------------------------------------
@@ -83,8 +83,7 @@ class AnonymousCacheHitTest extends CacheTestBase {
    */
   public function testOpenLegBrowsePageCacheHit(string $path): void {
     $this->warmCache($path);
-    $this->assertAnonymousCacheHit($path);
-    $this->assertCacheControlMaxAge($path, 604800);
+    $this->assertAnonymousCacheHitWithMaxAge($path, 604800);
   }
 
 }

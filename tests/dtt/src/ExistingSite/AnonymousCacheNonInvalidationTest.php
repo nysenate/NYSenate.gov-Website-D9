@@ -2,8 +2,6 @@
 
 namespace Drupal\Tests\nys\ExistingSite;
 
-use Drupal\user\UserInterface;
-
 /**
  * Verifies that edits to certain content types do NOT invalidate unrelated
  * top-level navigation pages.
@@ -20,35 +18,6 @@ use Drupal\user\UserInterface;
 class AnonymousCacheNonInvalidationTest extends CacheTestBase {
 
   /**
-   * Administrator user used to perform the web-request saves.
-   *
-   * Web-based saves are used (not $entity->save()) to ensure kernel.terminate
-   * fires and CDN BANs are dispatched before the next warmCache() poll,
-   * eliminating the race that causes spurious failures when CLI saves interact
-   * with the full test suite's warm-cache state.
-   *
-   * @var \Drupal\user\UserInterface|null
-   */
-  protected ?UserInterface $adminUser = NULL;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp(): void {
-    parent::setUp();
-    $this->adminUser = $this->createUser([], NULL, TRUE);
-    $this->drupalLogin($this->adminUser);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function tearDown(): void {
-    $this->drupalLogout();
-    parent::tearDown();
-  }
-
-  /**
    * An article edit must not invalidate top-level pages that don't display articles.
    *
    * Articles feed / and /news-and-issues only.
@@ -59,7 +28,7 @@ class AnonymousCacheNonInvalidationTest extends CacheTestBase {
     foreach ($unrelated as $path) {
       $this->warmCache($path);
     }
-    $this->saveViaWebRequest($article);
+    $this->saveEntity($article);
     foreach ($unrelated as $path) {
       $this->assertAnonymousCacheHit($path);
     }
@@ -76,7 +45,7 @@ class AnonymousCacheNonInvalidationTest extends CacheTestBase {
     foreach ($unrelated as $path) {
       $this->warmCache($path);
     }
-    $this->saveViaWebRequest($bill);
+    $this->saveEntity($bill);
     foreach ($unrelated as $path) {
       $this->assertAnonymousCacheHit($path);
     }
@@ -93,7 +62,7 @@ class AnonymousCacheNonInvalidationTest extends CacheTestBase {
     foreach ($unrelated as $path) {
       $this->warmCache($path);
     }
-    $this->saveViaWebRequest($event);
+    $this->saveEntity($event);
     foreach ($unrelated as $path) {
       $this->assertAnonymousCacheHit($path);
     }
@@ -109,7 +78,7 @@ class AnonymousCacheNonInvalidationTest extends CacheTestBase {
     foreach (self::TOP_LEVEL_PAGES as $path) {
       $this->warmCache($path);
     }
-    $this->saveViaWebRequest($petition);
+    $this->saveEntity($petition);
     foreach (self::TOP_LEVEL_PAGES as $path) {
       $this->assertAnonymousCacheHit($path);
     }

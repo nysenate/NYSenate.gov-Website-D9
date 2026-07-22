@@ -207,7 +207,20 @@ class CacheMissInvalidationTest extends CacheTestBase {
    * @dataProvider representativeContentTypeProvider
    */
   public function testContentTypeDisplayPageMissOnNodeEdit(string $type): void {
-    $node = ($type === 'bill') ? $this->requireSaveableBillNode() : $this->requireNodeByType($type);
+    $senatorMicrositeTypes = ['article', 'event', 'in_the_news'];
+    if ($type === 'bill') {
+      $node = $this->requireSaveableBillNode();
+    }
+    elseif (in_array($type, $senatorMicrositeTypes, TRUE)) {
+      // Prefer non-senator-microsite nodes for these types. The most-recently-
+      // changed article is also the node returned by testArticlePageMissOnSenatorEdit,
+      // so both tests would hit the same URL and trigger CF rate limits.
+      $node = $this->findNonSenatorNodeByType($type)
+        ?? $this->fail("No published non-senator-tagged '{$type}' node found.");
+    }
+    else {
+      $node = $this->requireNodeByType($type);
+    }
     $path = $node->toUrl('canonical')->setAbsolute(FALSE)->toString();
 
     $this->assertCacheMissOnSave($path, $node);

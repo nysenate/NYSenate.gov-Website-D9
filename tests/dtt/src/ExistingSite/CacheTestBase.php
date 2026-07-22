@@ -348,19 +348,31 @@ abstract class CacheTestBase extends ExistingSiteBase {
   protected function warmCache(string $path): void {
     // Initial priming request — ignore errors, the polling loop handles state.
     try { $this->anonGet($path); } catch (\Exception $e) {}
-    for ($attempt = 0; $attempt < 10; $attempt++) {
+    $maxAttempts = 20;
+    for ($attempt = 0; $attempt < $maxAttempts; $attempt++) {
       try {
         $response = $this->anonGet($path);
         if ($this->getCacheStatus($response) === 'HIT') {
           return;
         }
       }
-      catch (\Exception $e) {
-        // Any persistent error after anonGet's own retries — keep polling.
+      catch (ClientException $e) {
+        if ($e->getResponse()->getStatusCode() === 429) {
+          // CF rate-limited this poll. Honour Retry-After before the next
+          // attempt — the primary cause of spurious warmCache failures when a
+          // prior test class generates sustained traffic to the same paths.
+          $retryAfter = max(5, (int) ($e->getResponse()->getHeaderLine('Retry-After') ?: 10));
+          sleep($retryAfter);
+          continue;
+        }
+        // Non-429 4xx (e.g. 404, 403) — keep polling; the page may be in flux.
       }
-      usleep(250000);
+      catch (\Exception $e) {
+        // Any other persistent error after anonGet's own retries — keep polling.
+      }
+      usleep(500000);
     }
-    $this->fail("warmCache({$path}): cache did not reach HIT after 10 attempts. Check that the page cache backend is running and that the page is actually cacheable.");
+    $this->fail("warmCache({$path}): cache did not reach HIT after {$maxAttempts} attempts. Check that the page cache backend is running and that the page is actually cacheable.");
   }
 
   /**
@@ -474,6 +486,27 @@ abstract class CacheTestBase extends ExistingSiteBase {
       return strtoupper((string) end($parts));
     }
     return strtoupper(trim($response->getHeaderLine('x-drupal-cache')));
+  }
+
+  /**
+   * Returns TRUE if an anonymous GET to $path yields a 2xx response with a
+   * public Cache-Control header, indicating the page is eligible for CDN caching.
+   *
+   * Used by findNodeWithReferencedTerm() to skip candidate nodes whose canonical
+   * pages are not publicly accessible or are configured as non-cacheable
+   * (e.g. senator-microsite pages returned as CF BYPASS, 404s from broken path
+   * aliases, or pages with max-age: 0 due to un-lazy-built form elements).
+   */
+  private function isPageAnonymouslyCacheable(string $path): bool {
+    try {
+      $response = $this->anonClient->get($path);
+      return $response->getStatusCode() >= 200
+        && $response->getStatusCode() < 300
+        && str_contains($response->getHeaderLine('cache-control'), 'public');
+    }
+    catch (\Exception $e) {
+      return FALSE;
+    }
   }
 
   /**
@@ -801,9 +834,18 @@ abstract class CacheTestBase extends ExistingSiteBase {
         continue;
       }
       $term = $this->findReferencedTerm($node, $fieldName);
-      if ($term) {
-        return [$node, $term];
+      if (!$term) {
+        continue;
       }
+      // Verify the canonical page is publicly cacheable. Some nodes have broken
+      // path aliases (404), senator-microsite pages that CF returns as BYPASS,
+      // or embedded forms that suppress public caching — warmCache() would
+      // never reach HIT for any of these.
+      $canonicalPath = $node->toUrl('canonical')->setAbsolute(FALSE)->toString();
+      if (!$this->isPageAnonymouslyCacheable($canonicalPath)) {
+        continue;
+      }
+      return [$node, $term];
     }
     return NULL;
   }

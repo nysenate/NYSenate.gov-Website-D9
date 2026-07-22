@@ -37,7 +37,7 @@ class AnonymousCacheHitTest extends CacheTestBase {
     $this->warmCache($path);
     // Use the combined method to fold the HIT and max-age checks into a single
     // request, reducing per-page traffic and avoiding CF rate-limit bursts.
-    $this->assertAnonymousCacheHitWithMaxAge($path, 86400);
+    $this->assertAnonymousCacheHitWithMaxAge($path, 604800);
   }
 
   /**

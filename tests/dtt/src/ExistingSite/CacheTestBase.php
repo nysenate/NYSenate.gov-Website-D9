@@ -346,8 +346,14 @@ abstract class CacheTestBase extends ExistingSiteBase {
    * On local environments the second request is usually an immediate HIT with no sleep.
    */
   protected function warmCache(string $path): void {
-    // Initial priming request — ignore errors, the polling loop handles state.
-    try { $this->anonGet($path); } catch (\Exception $e) {}
+    // Each iteration serves as both the priming request (triggering rendering
+    // and initiating page cache storage via kernel.terminate) and the HIT poll.
+    // On PHP-FPM environments the cache entry is written after the response is
+    // sent, so a 500 ms sleep between iterations lets kernel.terminate complete
+    // before the next check. For already-warm pages the first iteration returns
+    // HIT immediately, keeping the request count to 1 per call — important for
+    // staying under CF per-URL rate limits when consecutive test classes warm
+    // the same pages.
     $maxAttempts = 20;
     for ($attempt = 0; $attempt < $maxAttempts; $attempt++) {
       try {
@@ -511,6 +517,9 @@ abstract class CacheTestBase extends ExistingSiteBase {
 
   /**
    * Asserts cache-control max-age header on an anonymous request.
+   *
+   * @deprecated Use assertAnonymousCacheHitWithMaxAge() to combine the HIT and
+   *   max-age assertions in a single request and avoid unnecessary round-trips.
    */
   protected function assertCacheControlMaxAge(string $path, int $expectedMaxAge = 86400): void {
     $response = $this->anonClient->get($path);
@@ -525,6 +534,47 @@ abstract class CacheTestBase extends ExistingSiteBase {
       $cacheControl,
       "Expected cache-control to include 'public' for {$path}, got: {$cacheControl}"
     );
+  }
+
+  /**
+   * Asserts cache HIT and public max-age in a single anonymous request.
+   *
+   * Combines assertAnonymousCacheHit() and assertCacheControlMaxAge() into one
+   * round-trip. Use this instead of calling both methods separately to avoid
+   * doubling the per-page request count, which can trigger CF rate limits when
+   * multiple test classes warm the same URLs back-to-back.
+   *
+   * Retries up to 5 times on 429 Too Many Requests, honouring Retry-After.
+   */
+  protected function assertAnonymousCacheHitWithMaxAge(string $path, int $expectedMaxAge = 86400): void {
+    for ($attempt = 0; $attempt < 5; $attempt++) {
+      try {
+        $response = $this->anonGet($path);
+        $status   = $this->getCacheStatus($response);
+        $this->assertSame('HIT', $status,
+          "Expected cache HIT on anonymous request to {$path}, got: {$status}");
+        $cacheControl = $response->getHeaderLine('cache-control');
+        $this->assertStringContainsString(
+          "max-age={$expectedMaxAge}",
+          $cacheControl,
+          "Expected cache-control: max-age={$expectedMaxAge} for {$path}, got: {$cacheControl}"
+        );
+        $this->assertStringContainsString(
+          'public',
+          $cacheControl,
+          "Expected cache-control to include 'public' for {$path}, got: {$cacheControl}"
+        );
+        return;
+      }
+      catch (ClientException $e) {
+        if ($e->getResponse()->getStatusCode() === 429 && $attempt < 4) {
+          $retryAfter = max(1, (int) ($e->getResponse()->getHeaderLine('Retry-After') ?: 5));
+          sleep($retryAfter);
+          continue;
+        }
+        throw $e;
+      }
+    }
   }
 
   /**
@@ -814,10 +864,16 @@ abstract class CacheTestBase extends ExistingSiteBase {
    * $type that has $fieldName populated with a taxonomy term reference, or NULL
    * if no such node exists.
    *
+   * @param string[] $notExistsFields
+   *   Optional list of field names that must NOT exist on the node. Use this to
+   *   exclude senator-microsite nodes from committee-based queries: e.g. passing
+   *   ['field_senator_multiref'] limits results to nodes that are not associated
+   *   with a senator microsite, whose pages are more reliably publicly cacheable.
+   *
    * @return array{0: \Drupal\node\NodeInterface, 1: \Drupal\taxonomy\TermInterface}|null
    */
-  protected function findNodeWithReferencedTerm(string $type, string $fieldName): ?array {
-    $ids = \Drupal::entityTypeManager()
+  protected function findNodeWithReferencedTerm(string $type, string $fieldName, array $notExistsFields = []): ?array {
+    $query = \Drupal::entityTypeManager()
       ->getStorage('node')
       ->getQuery()
       ->accessCheck(FALSE)
@@ -825,8 +881,11 @@ abstract class CacheTestBase extends ExistingSiteBase {
       ->condition('status', 1)
       ->exists($fieldName)
       ->sort('changed', 'DESC')
-      ->range(0, 20)
-      ->execute();
+      ->range(0, 20);
+    foreach ($notExistsFields as $excludeField) {
+      $query->notExists($excludeField);
+    }
+    $ids = $query->execute();
 
     foreach ($ids as $nid) {
       $node = \Drupal::entityTypeManager()->getStorage('node')->load($nid);
@@ -855,8 +914,8 @@ abstract class CacheTestBase extends ExistingSiteBase {
    *
    * @return array{0: \Drupal\node\NodeInterface, 1: \Drupal\taxonomy\TermInterface}
    */
-  protected function requireNodeWithReferencedTerm(string $type, string $fieldName): array {
-    return $this->findNodeWithReferencedTerm($type, $fieldName)
+  protected function requireNodeWithReferencedTerm(string $type, string $fieldName, array $notExistsFields = []): array {
+    return $this->findNodeWithReferencedTerm($type, $fieldName, $notExistsFields)
       ?? $this->fail("No published '{$type}' node with a '{$fieldName}' taxonomy term found.");
   }
 

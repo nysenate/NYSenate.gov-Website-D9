@@ -244,7 +244,9 @@ class CacheMissInvalidationTest extends CacheTestBase {
    * Editing a committee term referenced by an event invalidates its display page.
    */
   public function testEventPageMissOnCommitteeEdit(): void {
-    [$event, $committee] = $this->requireNodeWithReferencedTerm('event', 'field_committee');
+    // Exclude senator-microsite events: those nodes render additional blocks
+    // that can suppress public caching, causing warmCache() to fail to reach HIT.
+    [$event, $committee] = $this->requireNodeWithReferencedTerm('event', 'field_committee', ['field_senator_multiref']);
     $path = $event->toUrl('canonical')->setAbsolute(FALSE)->toString();
 
     $this->assertCacheMissOnSave($path, $committee);
@@ -264,7 +266,8 @@ class CacheMissInvalidationTest extends CacheTestBase {
    * Editing a committee term referenced by a meeting invalidates its display page.
    */
   public function testMeetingPageMissOnCommitteeEdit(): void {
-    [$meeting, $committee] = $this->requireNodeWithReferencedTerm('meeting', 'field_committee');
+    // Exclude senator-microsite meetings for the same reason as events above.
+    [$meeting, $committee] = $this->requireNodeWithReferencedTerm('meeting', 'field_committee', ['field_senator_multiref']);
     $path = $meeting->toUrl('canonical')->setAbsolute(FALSE)->toString();
 
     $this->assertCacheMissOnSave($path, $committee);
@@ -274,7 +277,8 @@ class CacheMissInvalidationTest extends CacheTestBase {
    * Editing a committee term referenced by a public hearing invalidates its display page.
    */
   public function testPublicHearingPageMissOnCommitteeEdit(): void {
-    [$node, $committee] = $this->requireNodeWithReferencedTerm('public_hearing', 'field_committee');
+    // Exclude senator-microsite public hearings for the same reason as events above.
+    [$node, $committee] = $this->requireNodeWithReferencedTerm('public_hearing', 'field_committee', ['field_senator_multiref']);
     $path = $node->toUrl('canonical')->setAbsolute(FALSE)->toString();
 
     $this->assertCacheMissOnSave($path, $committee);

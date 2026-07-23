@@ -20,6 +20,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * NYS Feeds plugin for active senators.
+ *
+ * Just built different.  Senators is a consistent-count domain (maximum of 63,
+ * less if there is an empty seat) with low volatility.  As such:
+ *   - The entire possible result is built and cached,
+ *   - Responses will either be the entire result (unfiltered), or the
+ *     requested subset (filtered by shortname),
+ *   - Base response caching system is overridden in favor of custom caching
+ *     found in ::compile().
  */
 #[NysFeed(
   label: new TranslatableMarkup("Active Senators"),
@@ -31,20 +39,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class Senators extends NysFeedPluginBase {
 
   use EntityFormatterTrait;
-
-  /**
-   * Cache key for this plugin.
-   *
-   * @todo Integrate with plugin cache system, once created.
-   */
-  const string NYS_SENATORS_JSON_CACHE_CID = 'nys_feeds:senators';
-
-  /**
-   * Maximum cache age for senators feed, in seconds.
-   *
-   * @todo Integrate with plugin cache system, once created.
-   */
-  const int NYS_SENATORS_JSON_MAX_CACHE_AGE = 7200;
 
   /**
    * NYS Senators Helper service.
@@ -121,36 +115,39 @@ class Senators extends NysFeedPluginBase {
    * Since senators have a low refresh rate, we build/cache the entire feed and
    * return only the requested names (if applicable).
    */
-  public function getFeed(?FeedState $state = NULL): FeedState {
-    if ($state) {
-      $this->state = $state;
-      $this->initParams();
-    }
+  public function getFeed(): FeedState {
+
+    // Disable response caching.
+    $this->state->setCaching(FALSE);
 
     $feed = $this->compile();
     $shortnames = array_filter(explode(',', $this->state->params['shortname'] ?? ''));
 
-    $state->data = count($shortnames)
-      ? array_intersect_key($feed, array_flip($shortnames))
-      : $feed;
-    if (!count($state->data)) {
-      $state->messages[] = "No data found";
+    $this->state->data = [
+      'senators' => count($shortnames)
+        ? array_intersect_key($feed, array_flip($shortnames))
+        : $feed,
+    ];
+    $this->state->data['count'] = count($this->state->data['senators']);
+
+    if (!count($this->state->data['senators'])) {
+      $this->state->messages[] = "No data found";
     }
 
-    return $state;
+    return $this->state;
   }
 
   /**
    * Retrieves the JSON feed either from cache, or a new compilation.
    */
   protected function compile(): array {
-    $feed = $this->cache->get(static::NYS_SENATORS_JSON_CACHE_CID)?->data;
+    $feed = $this->cache->get($this->cacheId())?->data;
     if (!$feed) {
       $feed = $this->buildFeed();
       $this->cache->set(
-        static::NYS_SENATORS_JSON_CACHE_CID,
+        $this->cacheId(),
         $feed,
-        time() + static::NYS_SENATORS_JSON_MAX_CACHE_AGE,
+        $this->getPluginDefinition()['max_cache_age'] + time(),
         ['taxonomy_term_list:senator']
       );
     }

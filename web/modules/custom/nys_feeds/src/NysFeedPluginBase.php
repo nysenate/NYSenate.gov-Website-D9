@@ -28,7 +28,7 @@ abstract class NysFeedPluginBase extends PluginBase implements NysFeedPluginInte
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     // Initialize the state and URL parameters.
-    $this->state = $configuration['state'] ?? new FeedState();
+    $this->state = $configuration['state'] ?? throw new \InvalidArgumentException('NYS Feed plugin configuration must include a valid FeedState instance.');
     $this->initParams();
   }
 
@@ -112,27 +112,65 @@ abstract class NysFeedPluginBase extends PluginBase implements NysFeedPluginInte
   }
 
   /**
+   * Constructs the cache ID.
+   */
+  protected function cacheId(): string {
+    return 'nys_feeds:' . $this->getPluginId();
+  }
+
+  /**
+   * Builds the cache contexts for the individual plugin.
+   */
+  protected function buildContext(): array {
+    // Try to get the "list" cache tag for the defined entity type.
+    // If this fails, just skip it..?  Not sure this will be important.
+    try {
+      $list_tag = $this->entityTypeManager
+        ->getStorage($this->getPluginDefinition()['entity_type'])
+        ->getEntityType()
+        ->getListCacheTags();
+      $this->state->cache()->addCacheTags($list_tag);
+    }
+    catch (\Throwable) {
+      // I guess we just don't get a list tag...
+    }
+
+    $pre_context = array_filter(
+      array_keys($this->state->params),
+      fn($k) => isset($this->state->params[$k])
+    );
+    $context = array_map(
+      fn($v) => "url.query_args:$v",
+      $pre_context
+    );
+    if (count($context)) {
+      $this->state->cache()->addCacheContexts($context);
+    }
+    return $context;
+  }
+
+  /**
    * {@inheritDoc}
    *
    * Can optionally pass in a new FeedState to start fresh.
    */
-  public function getFeed(?FeedState $state = NULL): FeedState {
-    if ($state) {
-      $this->state = $state;
-      $this->initParams();
-    }
+  public function getFeed(): FeedState {
 
-    // Detect the parameters and compile the results.
+    // Compile the results.  Add each result as a cache dependency.
     $data = $this->query();
-
     foreach ($data as $key => $val) {
-      $state->data[$key] = $this->transcribeEntry($val);
+      $this->state->data[$key] = $this->transcribeEntry($val);
+      if ($this->state->useCache()) {
+        $this->state->cache()->addCacheableDependency($val);
+      }
     }
     if (!count($data)) {
-      $state->messages[] = "No data found";
+      $this->state->messages[] = "No data found";
     }
 
-    return $state;
+    $this->buildContext();
+
+    return $this->state;
   }
 
 }

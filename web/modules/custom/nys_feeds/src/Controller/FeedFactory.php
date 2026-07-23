@@ -2,6 +2,7 @@
 
 namespace Drupal\nys_feeds\Controller;
 
+use Drupal\Core\Cache\CacheableJsonResponse;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Logger\LoggerChannelTrait;
 use Drupal\nys_feeds\FeedState;
@@ -63,7 +64,7 @@ class FeedFactory extends ControllerBase {
     }
     try {
       /** @var \Drupal\nys_feeds\NysFeedPluginBase $handler */
-      $handler = $this->feedPluginManager->createInstance($series);
+      $handler = $this->feedPluginManager->createInstance($series, ['state' => $this->state]);
     }
     catch (\Exception $e) {
       $this->logger->error(
@@ -88,12 +89,12 @@ class FeedFactory extends ControllerBase {
    */
   public function getFeed(Request $request, string $series = 'feed_list'): JsonResponse {
     // Start a new feed state.
-    $this->state = new FeedState($request->query->all());
+    $this->state = new FeedState($request);
 
     // Try to find the requested feed, and let it work.
     /** @var \Drupal\nys_feeds\NysFeedPluginBase $plugin */
     if ($plugin = $this->resolvePlugin($series)) {
-      $plugin->getFeed($this->state);
+      $plugin->getFeed();
     }
 
     // Set up the response structure.
@@ -105,8 +106,17 @@ class FeedFactory extends ControllerBase {
       $ret['messages'] = $this->state->messages;
     }
 
-    // Bye.
-    return new JsonResponse($ret, $this->state->code);
+    // Construct the response, add the cache metadata, and bye.
+    // Use response caching if not disabled by the plugin (default behavior).
+    if ($this->state->useCache()) {
+      $ret = (new CacheableJsonResponse($ret, $this->state->code))
+        ->addCacheableDependency($this->state->cache())
+        ->setMaxAge($plugin->getPluginDefinition()['max_cache_age']);
+    }
+    else {
+      $ret = new JsonResponse($ret, $this->state->code);
+    }
+    return $ret;
   }
 
 }

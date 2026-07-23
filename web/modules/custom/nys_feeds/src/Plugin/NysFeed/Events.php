@@ -19,6 +19,7 @@ use Drupal\nys_feeds\NysFeedPluginBase;
   description: new TranslatableMarkup("Returns all events for a provided 'date' parameter (YYYYMMDD)."),
   entity_type: 'node',
   bundle: 'event',
+  params: ['date' => NULL],
   id: "events",
 )]
 class Events extends NysFeedPluginBase {
@@ -33,7 +34,7 @@ class Events extends NysFeedPluginBase {
    */
   protected function query(): array {
     // Add the passed date as a query condition.
-    $date = $this->state->params['date_obj'];
+    $date = $this->state->vars['date_obj'];
     $start = $date->setTime(0, 0)->format('Y-m-d\TH:i:s');
     $end = $date->setTime(23, 59, 59)->format('Y-m-d\TH:i:s');
 

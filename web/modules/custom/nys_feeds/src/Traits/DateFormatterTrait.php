@@ -60,7 +60,13 @@ trait DateFormatterTrait {
       $this->state->messages[] = "Invalid date parameter (must be YYYYMMDD), using " . $date->format("Ymd");
       $this->state->code = 400;
     }
-    $this->state->params['date_obj'] = $date;
+
+    // Make sure the actual date used is in params, and set the vars entry.
+    // To ensure the url.query_arg cache context works, write the date back
+    // to the request.
+    $this->state->params['date'] = $date->format("Ymd");
+    $this->state->vars['date_obj'] = $date;
+    $this->state->request()->query->set('date', $this->state->params['date']);
 
     return $this;
   }

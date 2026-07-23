@@ -18,6 +18,7 @@ use Drupal\nys_feeds\Traits\MediaFieldFormatterTrait;
   description: new TranslatableMarkup("NYS Feed for Committee meetings.  Takes a 'date' parameter (YYYYMMDD)."),
   entity_type: 'node',
   bundle: 'meeting',
+  params: ['date' => NULL],
   id: "meetings",
 )]
 class Meetings extends NysFeedPluginBase {
@@ -30,7 +31,7 @@ class Meetings extends NysFeedPluginBase {
    * {@inheritDoc}
    */
   protected function query(): array {
-    $date = $this->state->params['date_obj'];
+    $date = $this->state->vars['date_obj'];
     $start = $date->setTime(0, 0)->format('Y-m-d\TH:i:s');
     $end = $date->setTime(23, 59, 59)->format('Y-m-d\TH:i:s');
 

@@ -25,6 +25,8 @@ class NysFeed extends Plugin {
    *   Used with pre-built query functionality.
    * @param string $bundle
    *   Used with pre-built query functionality.
+   * @param int $max_cache_age
+   *   Maximum cache age in seconds, defaults to 7200.
    * @param array $params
    *   An array of query string parameters recognized by the plugin.  Should be
    *   in the form ['param_name' => 'default value', ...].  The default value
@@ -37,6 +39,7 @@ class NysFeed extends Plugin {
     public TranslatableMarkup|string $description = '',
     public string $entity_type = '',
     public string $bundle = '',
+    public int $max_cache_age = 7200,
     public array $params = [],
     mixed ...$base,
   ) {

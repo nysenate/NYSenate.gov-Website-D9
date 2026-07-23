@@ -12,6 +12,6 @@ interface NysFeedPluginInterface extends ContainerFactoryPluginInterface {
   /**
    * Compiles the array-based structure of objects for a single feed request.
    */
-  public function getFeed(FeedState $state): FeedState;
+  public function getFeed(): FeedState;
 
 }

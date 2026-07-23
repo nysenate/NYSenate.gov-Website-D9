@@ -19,6 +19,7 @@ use Drupal\nys_feeds\Traits\MediaFieldFormatterTrait;
   description: new TranslatableMarkup("NYS Feed for Sessions.  Takes a 'date' parameter and returns the next calendar week of sessions."),
   entity_type: 'node',
   bundle: 'session',
+  params: ['date' => NULL],
   id: "sessions",
 )]
 class Sessions extends NysFeedPluginBase {
@@ -32,7 +33,7 @@ class Sessions extends NysFeedPluginBase {
    * {@inheritDoc}
    */
   protected function query(): array {
-    $date = $this->state->params['date_obj'];
+    $date = $this->state->vars['date_obj'];
     $start = $date->setTime(0, 0)->format('Y-m-d\TH:i:s');
     $end = $date->add(new \DateInterval('P7D'))
       ->setTime(23, 59, 59)

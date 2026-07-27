@@ -23,9 +23,9 @@ dependencies:
     - webform
     - webform_views
 id: school_leadership
-label: 'Webform Submissions'
+label: 'Student Webform Submissions'
 module: views
-description: 'Youth Leadership, Educator Recognition'
+description: 'Youth Leadership, Educator Recognition, Grad Certs'
 tag: ''
 base_table: webform_submission
 base_field: sid
@@ -1340,45 +1340,45 @@ display:
           bef:
             general:
               autosubmit: false
+              auto_submit_sort_only: false
+              autosubmit_breakpoint: ''
               autosubmit_exclude_textfield: false
               autosubmit_textfield_delay: 500
+              autosubmit_textfield_minimum_length: 3
               autosubmit_hide: false
               input_required: false
               allow_secondary: false
               secondary_label: 'Advanced options'
               secondary_open: false
               reset_button_always_show: true
-              autosubmit_textfield_minimum_length: 3
-              autosubmit_breakpoint: ''
-              auto_submit_sort_only: false
             filter:
               webform_submission_value:
                 plugin_id: default
                 advanced:
+                  sort_options_method: alphabetical_asc
+                  sort_options_natural: true
                   placeholder_text: ''
                   collapsible: false
                   collapsible_disable_automatic_open: false
+                  open_by_default: false
                   is_secondary: false
                   hide_label: false
                   field_classes: ''
-                  open_by_default: false
-                  sort_options_method: alphabetical_asc
-                  sort_options_natural: true
               field_senator_target_id:
                 plugin_id: default
                 advanced:
                   sort_options: false
+                  sort_options_method: alphabetical_asc
+                  sort_options_natural: true
                   rewrite:
                     filter_rewrite_values: ''
                     filter_rewrite_values_key: false
                   collapsible: false
                   collapsible_disable_automatic_open: false
+                  open_by_default: false
                   is_secondary: false
                   hide_label: false
                   field_classes: ''
-                  open_by_default: false
-                  sort_options_method: alphabetical_asc
-                  sort_options_natural: true
       access:
         type: role
         options:
@@ -3179,10 +3179,10 @@ display:
         default: '0'
       filename: student-leadership.csv
       automatic_download: false
+      export_filesystem: private
       custom_redirect_path: false
       redirect_to_display: none
       include_query_params: false
-      export_filesystem: private
     cache_metadata:
       max-age: -1
       contexts:
@@ -4618,10 +4618,10 @@ display:
         page_1: '0'
       filename: teacher-certificate.csv
       automatic_download: false
+      export_filesystem: private
       custom_redirect_path: false
       redirect_to_display: none
       include_query_params: false
-      export_filesystem: private
     cache_metadata:
       max-age: -1
       contexts:
@@ -5754,10 +5754,10 @@ display:
         page_2: '0'
       filename: grad-certs.csv
       automatic_download: false
+      export_filesystem: private
       custom_redirect_path: false
       redirect_to_display: none
       include_query_params: false
-      export_filesystem: private
     cache_metadata:
       max-age: -1
       contexts:

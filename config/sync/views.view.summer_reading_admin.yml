@@ -1830,6 +1830,68 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
+        field_student_books:
+          id: field_student_books
+          table: paragraph__field_student_books
+          field: field_student_books
+          relationship: field_children
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: '3 Books Read'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: string
+          settings: {  }
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 3
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
       filters:
         contact_form:
           id: contact_form
@@ -1893,7 +1955,7 @@ display:
           value:
             min: ''
             max: ''
-            value: '2025'
+            value: '2026'
             type: date_year
           group: 1
           exposed: false
@@ -1956,10 +2018,10 @@ display:
         default: '0'
       filename: nyread.csv
       automatic_download: false
+      export_filesystem: private
       custom_redirect_path: false
       redirect_to_display: none
       include_query_params: false
-      export_filesystem: private
     cache_metadata:
       max-age: -1
       contexts:
@@ -1972,6 +2034,7 @@ display:
         - 'config:field.storage.contact_message.field_student_parent_name'
         - 'config:field.storage.paragraph.field_grade'
         - 'config:field.storage.paragraph.field_school'
+        - 'config:field.storage.paragraph.field_student_books'
         - 'config:field.storage.paragraph.field_student_name'
         - 'config:field.storage.taxonomy_term.field_senator'
   page_1:
@@ -2830,7 +2893,7 @@ display:
           value:
             min: ''
             max: ''
-            value: '2025'
+            value: '2026'
             type: date_year
           group: 1
           exposed: false

@@ -65,7 +65,7 @@ class Template {
    */
   public function setId(string $id, string $generation): self {
 
-    $expected = ($generation == 'dynamic' && substr($id, 0, 2) == 'd-') ? 34 : 36;
+    $expected = ($generation == 'dynamic' && str_starts_with($id, 'd-')) ? 34 : 36;
     if (strlen($id) != $expected) {
       throw new TypeException("Template ID is malformed");
     }
@@ -123,15 +123,10 @@ class Template {
    * @throws \SendGrid\Mail\TypeException
    */
   public function setGeneration(string $generation): self {
-    switch ($generation) {
-      case 'legacy':
-      case 'dynamic':
-        $this->generation = $generation;
-        break;
-
-      default:
-        throw new TypeException("Generation must be 'legacy' or 'dynamic'");
-    }
+    $this->generation = match ($generation) {
+      'legacy', 'dynamic' => $generation,
+      default => throw new TypeException("Generation must be 'legacy' or 'dynamic'"),
+    };
     return $this;
   }
 

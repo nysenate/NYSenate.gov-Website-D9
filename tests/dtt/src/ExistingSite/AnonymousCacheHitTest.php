@@ -62,7 +62,7 @@ class AnonymousCacheHitTest extends CacheTestBase {
   /**
    * Data provider for the three stable Open Legislation browse paths.
    *
-   * The top-level, a law-type listing, and a specific statute are chosen
+   * The top-level, a Penal Law listing, and a specific section are chosen
    * because they exist on every environment and do not require any database
    * content beyond the module's configuration. The search path is excluded
    * because its route retains no_cache: TRUE.
@@ -70,8 +70,8 @@ class AnonymousCacheHitTest extends CacheTestBase {
   public static function openLegBrowsePageProvider(): array {
     return self::asProvider([
       '/legislation/laws',
-      '/legislation/laws/CONST',
-      '/legislation/laws/CONST/ART1',
+      '/legislation/laws/PEN',
+      '/legislation/laws/PEN/125.10',
     ]);
   }
 

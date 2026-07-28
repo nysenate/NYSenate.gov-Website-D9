@@ -770,7 +770,7 @@ $settings['migrate_node_migrate_type_classic'] = FALSE;
  *      a local development environment, to ensure that
  *      the site settings remain consistent.
  */
-include __DIR__ . "/settings.pantheon.php";
+include \Pantheon\Integrations\Assets::dir() . "/settings.pantheon.php";
 
 $settings['config_sync_directory'] = '../config/sync';
 

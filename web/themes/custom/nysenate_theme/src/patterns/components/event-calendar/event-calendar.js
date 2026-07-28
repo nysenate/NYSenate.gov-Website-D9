@@ -22,6 +22,8 @@
       // Setup DOM pointers.
       const dateInput = document.querySelector('.calendar-events-form input.bef-datepicker');
       const formSubmit = document.querySelector('.calendar-events-form input.form-submit');
+      // jQuery 4 removed $.isArray; restore it for Zebra_DatePicker compatibility.
+      $.isArray = $.isArray || Array.isArray;
       // Initiate Zebra_DatePicker
       // (see: https://github.com/stefangabos/Zebra_Datepicker).
       $datePicker.Zebra_DatePicker({

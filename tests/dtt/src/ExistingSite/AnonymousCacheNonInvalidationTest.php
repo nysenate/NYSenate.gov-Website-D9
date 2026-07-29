@@ -18,6 +18,22 @@ namespace Drupal\Tests\nys\ExistingSite;
 class AnonymousCacheNonInvalidationTest extends CacheTestBase {
 
   /**
+   * Allows CF to finish propagating this test's BAN before the next test starts
+   * warming pages. Without this, a BAN dispatched by saveEntity() may still be
+   * in-flight when the following test warms a page that the BAN will eventually
+   * bust, causing a spurious MISS on the subsequent assertAnonymousCacheHit.
+   *
+   * Only runs on Pantheon where CF BAN propagation is asynchronous; on local
+   * DDEV there is no CDN layer and no sleep is needed.
+   */
+  protected function tearDown(): void {
+    parent::tearDown();
+    if (function_exists('pantheon_clear_edge_keys_shutdown')) {
+      sleep(10);
+    }
+  }
+
+  /**
    * An article edit must not invalidate top-level pages that don't display articles.
    *
    * Articles feed / and /news-and-issues only.

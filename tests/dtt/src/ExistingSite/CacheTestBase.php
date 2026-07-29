@@ -639,13 +639,6 @@ abstract class CacheTestBase extends ExistingSiteBase {
     $entity->save();
     if (function_exists('pantheon_clear_edge_keys_shutdown')) {
       pantheon_clear_edge_keys_shutdown();
-      // CF propagates BAN requests asynchronously — the edge accepts the BAN
-      // immediately but then fans it out across PoPs over the next few seconds.
-      // Without this sleep, the next test can warm a page and get a HIT from a
-      // PoP that hasn't received the BAN yet, then see a spurious MISS when
-      // assertAnonymousCacheHit runs on a PoP that has. Sleeping here makes
-      // each test responsible for settling its own BANs before it returns.
-      sleep(10);
     }
   }
 

@@ -8,51 +8,55 @@
 
       // Setup references to globally-used elements.
       const header = once('nys-header-once', '#js-sticky').shift();
-      const actionBar = document.querySelector('.c-actionbar');
-      const headerBar = once('nys-header-bar-once', 'section.c-header-bar').shift();
-      const senatorHero = document.querySelector('.hero--senator');
-      const micrositeMenu = document.querySelector('.block-content--type-senator-microsite-menu');
 
-      // Setup actionbar clone for homepage.
-      let actionBarClone = null;
-      if (isFrontpage && actionBar) {
-        actionBarClone = actionBar.cloneNode(true);
-        actionBarClone.classList.add('hidden');
-        header.append(actionBarClone);
-      }
+      // Only run one-time setup when header hasn't been initialized yet.
+      if (header) {
+        const actionBar = document.querySelector('.c-actionbar');
+        const headerBar = document.querySelector('section.c-header-bar');
+        const senatorHero = document.querySelector('.hero--senator');
+        const micrositeMenu = document.querySelector('.block-content--type-senator-microsite-menu');
 
-      // Setup senator hero and menu clones for microsite landing pages.
-      let senatorHeroClone = null;
-      let micrositeMenuClone = null;
-      if (isMicrositeLandingPage && senatorHero && micrositeMenu) {
-        senatorHeroClone = senatorHero.cloneNode(true);
-        micrositeMenuClone = micrositeMenu.cloneNode(true);
-        senatorHeroClone.classList.add('l-header__collapsed');
-        headerBar.append(senatorHeroClone, micrositeMenuClone);
-      }
-
-      // Call functions that implement header behaviors.
-      this.stickyHeader(
-        isMicrositeLandingPage,
-        isFrontpage,
-        actionBarClone,
-        headerBar,
-        senatorHero,
-        senatorHeroClone,
-        micrositeMenuClone,
-      );
-      this.jsSearchBox(isMicrositeLandingPage, micrositeMenuClone);
-      this.mobileMenu();
-      this.handleResponsiveMenu();
-
-      // Add keypress event to close mobile menu.
-      document.addEventListener('keydown', (e) => {
-        if (e.keyCode == 27) {
-          document.body.classList.remove('nav-open');
-          e.currentTarget.setAttribute('aria-expanded', 'false');
-          document.querySelector('button.js-mobile-nav--btn.button--menu').focus();
+        // Setup actionbar clone for homepage.
+        let actionBarClone = null;
+        if (isFrontpage && actionBar) {
+          actionBarClone = actionBar.cloneNode(true);
+          actionBarClone.classList.add('hidden');
+          header.append(actionBarClone);
         }
-      });
+
+        // Setup senator hero and menu clones for microsite landing pages.
+        let senatorHeroClone = null;
+        let micrositeMenuClone = null;
+        if (isMicrositeLandingPage && senatorHero && micrositeMenu) {
+          senatorHeroClone = senatorHero.cloneNode(true);
+          micrositeMenuClone = micrositeMenu.cloneNode(true);
+          senatorHeroClone.classList.add('l-header__collapsed');
+          headerBar.append(senatorHeroClone, micrositeMenuClone);
+        }
+
+        // Call functions that implement header behaviors.
+        this.stickyHeader(
+          isMicrositeLandingPage,
+          isFrontpage,
+          actionBarClone,
+          headerBar,
+          senatorHero,
+          senatorHeroClone,
+          micrositeMenuClone,
+        );
+        this.jsSearchBox(isMicrositeLandingPage, micrositeMenuClone);
+        this.mobileMenu();
+        this.handleResponsiveMenu();
+
+        // Add keypress event to close mobile menu.
+        document.addEventListener('keydown', (e) => {
+          if (e.keyCode == 27) {
+            document.body.classList.remove('nav-open');
+            e.currentTarget.setAttribute('aria-expanded', 'false');
+            document.querySelector('button.js-mobile-nav--btn.button--menu').focus();
+          }
+        });
+      }
     },
 
     /**

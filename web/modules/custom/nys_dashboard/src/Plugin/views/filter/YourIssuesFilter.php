@@ -67,6 +67,18 @@ class YourIssuesFilter extends FilterPluginBase {
   /**
    * {@inheritdoc}
    */
+  public function query(): void {
+    $value = is_array($this->value) ? reset($this->value) : $this->value;
+    if ($value === NULL || $value === '' || $value === 'All') {
+      return;
+    }
+    $this->ensureMyTable();
+    $this->query->addWhere($this->options['group'], "$this->tableAlias.$this->realField", $value, '=');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function valueForm(&$form, FormStateInterface $form_state) {
     if ($form_state->get('exposed')) {
       $follow_issue_flag_ids = $this->entityTypeManager

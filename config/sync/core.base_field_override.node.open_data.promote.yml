@@ -1,0 +1,22 @@
+uuid: e0ea88c6-2b75-45e2-973d-b90185b0422e
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.open_data
+id: node.open_data.promote
+field_name: promote
+entity_type: node
+bundle: open_data
+label: 'Promoted to front page'
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 1
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

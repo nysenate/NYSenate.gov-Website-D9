@@ -125,60 +125,60 @@ display:
           bef:
             general:
               autosubmit: true
+              auto_submit_sort_only: false
+              autosubmit_breakpoint: ''
               autosubmit_exclude_textfield: false
               autosubmit_textfield_delay: 500
+              autosubmit_textfield_minimum_length: 3
               autosubmit_hide: true
               input_required: false
               allow_secondary: false
               secondary_label: 'Advanced options'
               secondary_open: false
               reset_button_always_show: false
-              autosubmit_textfield_minimum_length: 3
-              autosubmit_breakpoint: ''
-              auto_submit_sort_only: false
             filter:
               field_date_value:
                 plugin_id: default
                 advanced:
+                  sort_options_method: alphabetical_asc
+                  sort_options_natural: true
                   placeholder_text: ''
                   rewrite:
                     filter_rewrite_values: ''
                     filter_rewrite_values_key: false
                   collapsible: false
                   collapsible_disable_automatic_open: false
+                  open_by_default: false
                   is_secondary: false
                   hide_label: false
                   field_classes: ''
-                  open_by_default: false
-                  sort_options_method: alphabetical_asc
-                  sort_options_natural: true
               field_senator_multiref_target_id:
                 plugin_id: default
                 advanced:
                   sort_options: false
+                  sort_options_method: alphabetical_asc
+                  sort_options_natural: true
                   rewrite:
                     filter_rewrite_values: ''
                     filter_rewrite_values_key: false
                   collapsible: false
                   collapsible_disable_automatic_open: false
+                  open_by_default: false
                   is_secondary: false
                   hide_label: false
                   field_classes: ''
-                  open_by_default: false
-                  sort_options_method: alphabetical_asc
-                  sort_options_natural: true
               title:
                 plugin_id: default
                 advanced:
+                  sort_options_method: alphabetical_asc
+                  sort_options_natural: true
                   placeholder_text: ''
                   collapsible: false
                   collapsible_disable_automatic_open: false
+                  open_by_default: false
                   is_secondary: false
                   hide_label: false
                   field_classes: ''
-                  open_by_default: false
-                  sort_options_method: alphabetical_asc
-                  sort_options_natural: true
       access:
         type: perm
         options:
@@ -496,18 +496,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
-              web_administrator: '0'
-              frontpage_editor: '0'
-              senator: '0'
-              microsite_content_producer: '0'
-              legislative_correspondent: '0'
-              student_programs: '0'
-              constituent: '0'
-              senate_services: '0'
-              student_contest_judge: '0'
-              experimental_content_producer: '0'
             min_placeholder: ''
             max_placeholder: ''
             placeholder: '2022'
@@ -532,8 +520,6 @@ display:
                   value: '2026'
                   type: date
               2:
-              2:
-
                 title: '2025'
                 operator: '='
                 value:
@@ -542,7 +528,6 @@ display:
                   value: '2025'
                   type: date
               3:
-
                 title: '2024'
                 operator: '='
                 value:
@@ -551,7 +536,6 @@ display:
                   value: '2024'
                   type: date
               4:
-
                 title: '2023'
                 operator: '='
                 value:
@@ -560,7 +544,6 @@ display:
                   value: '2023'
                   type: date
               5:
-
                 title: '2022'
                 operator: '='
                 value:
@@ -569,7 +552,6 @@ display:
                   value: '2022'
                   type: date
               6:
-
                 title: '2021'
                 operator: '='
                 value:
@@ -578,7 +560,6 @@ display:
                   value: '2021'
                   type: date
               7:
-
                 title: '2020'
                 operator: '='
                 value:
@@ -587,7 +568,6 @@ display:
                   value: '2020'
                   type: date
               8:
-
                 title: '2019'
                 operator: '='
                 value:
@@ -596,7 +576,6 @@ display:
                   value: '2019'
                   type: date
               9:
-
                 title: '2018'
                 operator: '='
                 value:
@@ -605,7 +584,6 @@ display:
                   value: '2018'
                   type: date
               10:
-
                 title: '2017'
                 operator: '='
                 value:
@@ -614,7 +592,6 @@ display:
                   value: '2017'
                   type: date
               11:
-
                 title: '2016'
                 operator: '='
                 value:
@@ -623,7 +600,6 @@ display:
                   value: '2016'
                   type: date
               12:
-
                 title: '2015'
                 operator: '='
                 value:
@@ -632,7 +608,6 @@ display:
                   value: '2015'
                   type: date
               13:
-
                 title: '2014'
                 operator: '='
                 value:
@@ -641,7 +616,6 @@ display:
                   value: '2014'
                   type: date
               14:
-
                 title: '2013'
                 operator: '='
                 value:
@@ -650,7 +624,6 @@ display:
                   value: '2013'
                   type: date
               15:
-
                 title: '2012'
                 operator: '='
                 value:
@@ -659,7 +632,6 @@ display:
                   value: '2012'
                   type: date
               16:
-
                 title: '2011'
                 operator: '='
                 value:
@@ -668,7 +640,6 @@ display:
                   value: '2011'
                   type: date
               17:
-
                 title: '2010'
                 operator: '='
                 value:
@@ -705,18 +676,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
-              web_administrator: '0'
-              frontpage_editor: '0'
-              senator: '0'
-              microsite_content_producer: '0'
-              legislative_correspondent: '0'
-              student_programs: '0'
-              constituent: '0'
-              senate_services: '0'
-              student_contest_judge: '0'
-              experimental_content_producer: '0'
             placeholder: ''
             autocomplete_filter: 1
             autocomplete_min_chars: '0'
@@ -763,18 +722,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
-              web_administrator: '0'
-              frontpage_editor: '0'
-              senator: '0'
-              microsite_content_producer: '0'
-              legislative_correspondent: '0'
-              student_programs: '0'
-              constituent: '0'
-              senate_services: '0'
-              student_contest_judge: '0'
-              experimental_content_producer: '0'
             reduce: false
           is_grouped: false
           group_info:
@@ -1109,18 +1056,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
-              web_administrator: '0'
-              frontpage_editor: '0'
-              senator: '0'
-              microsite_content_producer: '0'
-              legislative_correspondent: '0'
-              student_programs: '0'
-              constituent: '0'
-              senate_services: '0'
-              student_contest_judge: '0'
-              experimental_content_producer: '0'
             min_placeholder: ''
             max_placeholder: ''
             placeholder: '2022'
@@ -1301,18 +1236,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
-              web_administrator: '0'
-              frontpage_editor: '0'
-              senator: '0'
-              microsite_content_producer: '0'
-              legislative_correspondent: '0'
-              student_programs: '0'
-              constituent: '0'
-              senate_services: '0'
-              student_contest_judge: '0'
-              experimental_content_producer: '0'
             placeholder: ''
             autocomplete_filter: 1
             autocomplete_min_chars: '0'
@@ -1359,18 +1282,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
-              web_administrator: '0'
-              frontpage_editor: '0'
-              senator: '0'
-              microsite_content_producer: '0'
-              legislative_correspondent: '0'
-              student_programs: '0'
-              constituent: '0'
-              senate_services: '0'
-              student_contest_judge: '0'
-              experimental_content_producer: '0'
             reduce: false
           is_grouped: false
           group_info:
@@ -2408,18 +2319,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
-              web_administrator: '0'
-              frontpage_editor: '0'
-              senator: '0'
-              microsite_content_producer: '0'
-              legislative_correspondent: '0'
-              student_programs: '0'
-              constituent: '0'
-              senate_services: '0'
-              student_contest_judge: '0'
-              experimental_content_producer: '0'
             min_placeholder: ''
             max_placeholder: ''
             placeholder: '2022'
@@ -2590,18 +2489,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
-              web_administrator: '0'
-              frontpage_editor: '0'
-              senator: '0'
-              microsite_content_producer: '0'
-              legislative_correspondent: '0'
-              student_programs: '0'
-              constituent: '0'
-              senate_services: '0'
-              student_contest_judge: '0'
-              experimental_content_producer: '0'
             reduce: false
           is_grouped: false
           group_info:
@@ -2649,18 +2536,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
-              web_administrator: '0'
-              frontpage_editor: '0'
-              senator: '0'
-              microsite_content_producer: '0'
-              legislative_correspondent: '0'
-              student_programs: '0'
-              constituent: '0'
-              senate_services: '0'
-              student_contest_judge: '0'
-              experimental_content_producer: '0'
             placeholder: ''
             autocomplete_filter: 1
             autocomplete_min_chars: '0'
@@ -2707,18 +2582,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
-              web_administrator: '0'
-              frontpage_editor: '0'
-              senator: '0'
-              microsite_content_producer: '0'
-              legislative_correspondent: '0'
-              student_programs: '0'
-              constituent: '0'
-              senate_services: '0'
-              student_contest_judge: '0'
-              experimental_content_producer: '0'
             reduce: false
           is_grouped: false
           group_info:
@@ -2761,18 +2624,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
-              web_administrator: '0'
-              frontpage_editor: '0'
-              senator: '0'
-              microsite_content_producer: '0'
-              legislative_correspondent: '0'
-              student_programs: '0'
-              constituent: '0'
-              senate_services: '0'
-              student_contest_judge: '0'
-              experimental_content_producer: '0'
           is_grouped: false
           group_info:
             label: ''
@@ -2905,6 +2756,7 @@ display:
           empty_table: false
           caption: ''
           description: ''
+          class: ''
       row:
         type: fields
       defaults:
@@ -3909,18 +3761,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
-              web_administrator: '0'
-              frontpage_editor: '0'
-              senator: '0'
-              microsite_content_producer: '0'
-              legislative_correspondent: '0'
-              student_programs: '0'
-              constituent: '0'
-              senate_services: '0'
-              student_contest_judge: '0'
-              experimental_content_producer: '0'
             min_placeholder: ''
             max_placeholder: ''
             placeholder: '2022'
@@ -4091,18 +3931,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
-              web_administrator: '0'
-              frontpage_editor: '0'
-              senator: '0'
-              microsite_content_producer: '0'
-              legislative_correspondent: '0'
-              student_programs: '0'
-              constituent: '0'
-              senate_services: '0'
-              student_contest_judge: '0'
-              experimental_content_producer: '0'
             reduce: false
           is_grouped: false
           group_info:
@@ -4150,18 +3978,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
-              web_administrator: '0'
-              frontpage_editor: '0'
-              senator: '0'
-              microsite_content_producer: '0'
-              legislative_correspondent: '0'
-              student_programs: '0'
-              constituent: '0'
-              senate_services: '0'
-              student_contest_judge: '0'
-              experimental_content_producer: '0'
             placeholder: ''
             autocomplete_filter: 1
             autocomplete_min_chars: '0'
@@ -4208,18 +4024,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
-              web_administrator: '0'
-              frontpage_editor: '0'
-              senator: '0'
-              microsite_content_producer: '0'
-              legislative_correspondent: '0'
-              student_programs: '0'
-              constituent: '0'
-              senate_services: '0'
-              student_contest_judge: '0'
-              experimental_content_producer: '0'
             reduce: false
           is_grouped: false
           group_info:
@@ -4262,18 +4066,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
-              web_administrator: '0'
-              frontpage_editor: '0'
-              senator: '0'
-              microsite_content_producer: '0'
-              legislative_correspondent: '0'
-              student_programs: '0'
-              constituent: '0'
-              senate_services: '0'
-              student_contest_judge: '0'
-              experimental_content_producer: '0'
           is_grouped: false
           group_info:
             label: ''
@@ -4406,6 +4198,7 @@ display:
           empty_table: false
           caption: ''
           description: ''
+          class: ''
       row:
         type: fields
       defaults:

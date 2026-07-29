@@ -337,8 +337,11 @@ class CacheMissInvalidationTest extends CacheTestBase {
     $this->warmCache($path);
     $this->assertAnonymousCacheHit($path);
 
+    $adminUser = $this->createUser([], NULL, TRUE);
+    $this->drupalLogin($adminUser);
     $this->visit('/admin/config/nys_openleg_api/browsing');
     $this->getSession()->getPage()->pressButton('Flush Law Cache');
+    $this->drupalLogout();
 
     $this->assertAnonymousCacheMiss($path);
     $this->assertAnonymousCacheHit($path);

@@ -1,26 +1,22 @@
-!((document, Drupal, $) => {
+!((document, Drupal, $, once) => {
   'use strict';
   Drupal.behaviors.nysenateTabs = {
-    attach: function () {
-      const tabContainer = $('.l-tab-bar');
-      const tabLink = $('.c-tab .c-tab-link');
-      const textExpander = $('.text-expander');
-      const loadMore = $('.load-more');
+    attach: function (context) {
       const ariaAnnouncement = $('.aria-announcement');
 
       // Function to update aria announcement with row counts
       const updateAriaAnnouncement = function() {
         const activePanel = $('.tabs-content .content.active');
         const activeTab = $('.l-tab-bar button.c-tab.active');
-        
+
         if (activePanel.length > 0 && activeTab.length > 0) {
           const rowsMessageElement = activePanel.find('.view-header .rows-message')[0];
           const tabName = activeTab.text().trim();
-          
+
           if (rowsMessageElement) {
             const rowsMessage = rowsMessageElement.innerHTML;
             const fullMessage = tabName + ' tab. ' + rowsMessage;
-            
+
             // Clear and reset to force screen reader announcement
             ariaAnnouncement.text('');
             setTimeout(function() {
@@ -44,7 +40,7 @@
             // Remove active from all tabs
             $('.l-tab-bar button.c-tab').removeClass('active').attr('aria-selected', 'false').attr('aria-expanded', 'false');
             $('.tabs-content .content').removeClass('active');
-            
+
             // Set active on saved tab
             savedButton.addClass('active').attr('aria-selected', 'true').attr('aria-expanded', 'true');
             const targetPanel = savedButton.val();
@@ -55,13 +51,14 @@
 
       // Restore active tab on page load
       restoreActiveTab();
-      
+
       // Always announce on page load, after tab restoration and DOM is ready
       setTimeout(function() {
         updateAriaAnnouncement();
       }, 200);
 
-      tabContainer.each(function () {
+      // Guard event binding with once() to prevent stacking on AJAX re-attach.
+      $(once('nysenate-tabs', '.l-tab-bar', context)).each(function () {
         const tabArrowDown = $(this).find('.c-tab--arrow');
         const tabButton = $(this).find('button.c-tab');
         const tabInput = $(this).find('input.form-radio');
@@ -76,7 +73,7 @@
             // Set aria-controls to the panel ID (removing the # from the value)
             const panelId = $(this).val().replace('#', '');
             $(this).attr('aria-controls', panelId);
-            
+
             // Set proper aria-selected based on active class
             if ($(this).hasClass('active')) {
               $(this).attr('aria-selected', 'true');
@@ -135,7 +132,7 @@
 
           tabInput.on('click', function () {
             const tabInputContainer = tabInput.parent();
-            
+
             // Remove active state from all input tabs
             tabInput.removeAttr('checked');
             tabInputContainer.removeClass('active');
@@ -143,7 +140,7 @@
             // Set active state on clicked input
             $(this).attr('checked', 'checked');
             $(this).parent().addClass('active');
-            
+
             // For views exposed forms, BEF auto-submit fires on radio change.
             // ajaxComplete fires after drupalViewsProcessed, so ViewsScrollTop
             // has queued its animation but JS hasn't rendered a frame yet.
@@ -160,30 +157,28 @@
         }
       });
 
-      tabLink.on('click', this.toggleTabDropdown);
+      $(once('nysenate-tablink', '.c-tab .c-tab-link', context)).on('click', this.toggleTabDropdown);
 
       // event for text expander
-      if (textExpander) {
-        textExpander.click(function () {
-          const link = $(this);
-          const expander = link.closest('.item-list').prev();
-          const lineCount = expander.data('linecount');
-          const anchor = expander.prev();
+      $(once('nysenate-expander', '.text-expander', context)).click(function () {
+        const link = $(this);
+        const expander = link.closest('.item-list').prev();
+        const lineCount = expander.data('linecount');
+        const anchor = expander.prev();
 
-          expander.slideToggle(0);
+        expander.slideToggle(0);
 
-          if (expander.is(':hidden')) {
-            $('html,body').animate({ scrollTop: anchor.offset().top - 180 });
-            link.html('View More (' + lineCount + ' Lines)');
-            link.removeClass('expanded');
-          }
-          else {
-            $('html,body').animate({ scrollTop: expander.offset().top - 180 });
-            link.html('View Less');
-            link.addClass('expanded');
-          }
-        });
-      }
+        if (expander.is(':hidden')) {
+          $('html,body').animate({ scrollTop: anchor.offset().top - 180 });
+          link.html('View More (' + lineCount + ' Lines)');
+          link.removeClass('expanded');
+        }
+        else {
+          $('html,body').animate({ scrollTop: expander.offset().top - 180 });
+          link.html('View Less');
+          link.addClass('expanded');
+        }
+      });
     },
     toggleTabDropdown: function (e) {
       e.preventDefault();
@@ -215,4 +210,4 @@
       }
     }
   };
-})(document, Drupal, jQuery);
+})(document, Drupal, jQuery, once);

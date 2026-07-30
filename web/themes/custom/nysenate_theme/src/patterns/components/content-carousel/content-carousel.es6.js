@@ -12,6 +12,9 @@
    *
    * @type {Drupal~behavior}
    */
+  // jQuery 4 removed $.type; restore it for Slick compatibility.
+  $.type = $.type || function(obj) { if (obj === null) return 'null'; if (obj === undefined) return 'undefined'; if (Array.isArray(obj)) return 'array'; return typeof obj; };
+
   Drupal.behaviors.contentCarousel = {
     attach: function (context) {
       // We want to only have the slick carousel trigger once or we will

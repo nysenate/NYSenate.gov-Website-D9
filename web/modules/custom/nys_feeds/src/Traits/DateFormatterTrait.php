@@ -50,25 +50,30 @@ trait DateFormatterTrait {
    *
    * Depends on the using class to own a FeedState property.
    */
-  protected function initDateParam(): static {
-    // Basic validation of the date.
-    $date = \DateTimeImmutable::createFromFormat(
-      'Ymd', $this->state->params['date'] ?? date('Ymd', time())
-    );
+  protected function initDateParam(): void {
+    $today = date('Ymd', time());
+    // Basic validation of the date.  If none, use today and save it.
+    $param = $this->resolvedParams['date'] ?? '';
+    if (!$param) {
+      $param = $this->resolvedParams['date'] = $today;
+      $this->output->messages[] = "Using date: $today";
+    }
+
+    // Try the date.  If it fails, use today, save it, and set an error.
+    $date = \DateTimeImmutable::createFromFormat('Ymd', $param);
     if ($date === FALSE) {
-      $date = \DateTimeImmutable::createFromFormat('Ymd', date('Ymd', time()));
-      $this->state->messages[] = "Invalid date parameter (must be YYYYMMDD), using " . $date->format("Ymd");
-      $this->state->code = 400;
+      $date = \DateTimeImmutable::createFromFormat('Ymd', $today);
+      $this->resolvedParams['date'] = $today;
+      $this->output->messages[] = "Invalid date parameter (must be YYYYMMDD), using " . $date->format("Ymd");
+      $this->output->statusCode = 400;
     }
 
     // Make sure the actual date used is in params, and set the vars entry.
     // To ensure the url.query_arg cache context works, write the date back
     // to the request.
-    $this->state->params['date'] = $date->format("Ymd");
-    $this->state->vars['date_obj'] = $date;
-    $this->state->request()->query->set('date', $this->state->params['date']);
-
-    return $this;
+    $this->input->vars['date'] = $date->format("Ymd");
+    $this->input->vars['date_obj'] = $date;
+    $this->input->request()->query->set('date', $this->input->vars['date']);
   }
 
   /**

@@ -2,6 +2,7 @@
 
 namespace Drupal\nys_feeds\Plugin\NysFeed;
 
+use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\node\Entity\Node;
 use Drupal\nys_feeds\Attribute\NysFeed;
@@ -32,25 +33,14 @@ class Sessions extends NysFeedPluginBase {
   /**
    * {@inheritDoc}
    */
-  protected function query(): array {
-    $date = $this->state->vars['date_obj'];
+  protected function alterQuery(QueryInterface $query): void {
+    $date = $this->input->vars['date_obj'];
     $start = $date->setTime(0, 0)->format('Y-m-d\TH:i:s');
     $end = $date->add(new \DateInterval('P7D'))
       ->setTime(23, 59, 59)
       ->format('Y-m-d\TH:i:s');
-
-    try {
-      $query = $this->getQuery()
-        ->condition('field_date_range.value', $start, '>=')
-        ->condition('field_date_range.value', $end, '<=');
-      $result = $query->execute();
-      $ret = $this->entityTypeManager->getStorage('node')
-        ->loadMultiple($result);
-    }
-    catch (\Exception) {
-      $ret = [];
-    }
-    return $ret;
+    $query->condition('field_date_range.value', $start, '>=')
+      ->condition('field_date_range.value', $end, '<=');
   }
 
   /**
@@ -73,8 +63,8 @@ class Sessions extends NysFeedPluginBase {
       'place_type' => $data->field_event_place->value ?? '',
       'location' => $this->getLocation($data->field_location) +
         ['extra' => $data->field_meeting_location->value ?? ''],
-      'field_live_message_status' => $data->field_live_message_status->value ?? '',
-      'field_live_message_override' => $data->field_live_message_override->value ?? '',
+      'message_status' => $data->field_live_message_status->value ?? '',
+      'message_override' => $data->field_live_message_override->value ?? '',
     ];
 
     // Add the calendar info.
@@ -115,8 +105,8 @@ class Sessions extends NysFeedPluginBase {
   /**
    * {@inheritDoc}
    */
-  protected function resolveParams(): self {
-    return parent::resolveParams()->initDateParam();
+  protected function resolveParams(): void {
+    $this->initDateParam();
   }
 
 }

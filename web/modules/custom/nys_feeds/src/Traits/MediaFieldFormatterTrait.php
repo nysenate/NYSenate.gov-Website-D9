@@ -30,7 +30,7 @@ trait MediaFieldFormatterTrait {
         $field = NULL;
       }
       if ($field) {
-        $ret[$key] = $val->value ?? '';
+        $ret[$key] = $field->value ?? '';
       }
     }
     return $ret;

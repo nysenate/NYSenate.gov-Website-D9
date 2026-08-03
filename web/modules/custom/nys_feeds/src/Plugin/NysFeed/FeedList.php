@@ -52,10 +52,13 @@ class FeedList extends NysFeedPluginBase {
   protected function query(): array {
     $ret = [];
     foreach ($this->feedManager->getDefinitions() as $definition) {
-      $ret[$definition['id']] = [
-        'name' => $definition['label'],
-        'description' => $definition['description'],
-      ];
+      if (!$definition['private']) {
+        $ret[$definition['id']] = [
+          'name' => $definition['label'],
+          'description' => $definition['description'],
+          'parameters' => implode(',', array_keys($definition['params'])),
+        ];
+      }
     }
     return $ret;
   }

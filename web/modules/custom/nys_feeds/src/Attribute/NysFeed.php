@@ -25,8 +25,13 @@ class NysFeed extends Plugin {
    *   Used with pre-built query functionality.
    * @param string $bundle
    *   Used with pre-built query functionality.
+   * @param bool $cacheable
+   *   Indicates if caching metadata will be attached to the response.  Also,
+   *   JsonResponse vs. CacheableJsonResponse.
    * @param int $max_cache_age
    *   Maximum cache age in seconds, defaults to 7200.
+   * @param bool $private
+   *   Indicates if the feed should be omitted from the public list of feeds.
    * @param array $params
    *   An array of query string parameters recognized by the plugin.  Should be
    *   in the form ['param_name' => 'default value', ...].  The default value
@@ -39,7 +44,9 @@ class NysFeed extends Plugin {
     public TranslatableMarkup|string $description = '',
     public string $entity_type = '',
     public string $bundle = '',
+    public bool $cacheable = TRUE,
     public int $max_cache_age = 7200,
+    public bool $private = FALSE,
     public array $params = [],
     mixed ...$base,
   ) {

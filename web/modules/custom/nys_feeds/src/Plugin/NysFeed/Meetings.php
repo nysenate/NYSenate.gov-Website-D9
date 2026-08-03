@@ -2,6 +2,7 @@
 
 namespace Drupal\nys_feeds\Plugin\NysFeed;
 
+use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\node\Entity\Node;
 use Drupal\nys_feeds\Attribute\NysFeed;
@@ -30,32 +31,19 @@ class Meetings extends NysFeedPluginBase {
   /**
    * {@inheritDoc}
    */
-  protected function query(): array {
-    $date = $this->state->vars['date_obj'];
+  protected function alterQuery(QueryInterface $query): void {
+    $date = $this->input->vars['date_obj'];
     $start = $date->setTime(0, 0)->format('Y-m-d\TH:i:s');
     $end = $date->setTime(23, 59, 59)->format('Y-m-d\TH:i:s');
-
-    try {
-      $query = $this->getQuery()
-        ->condition('field_date_range.value', $start, '>=')
-        ->condition('field_date_range.value', $end, '<=');
-      $result = $query->execute();
-      $ret = \Drupal::entityTypeManager()
-        ->getStorage('node')
-        ->loadMultiple($result);
-    }
-    catch (\Exception) {
-      $ret = [];
-    }
-    return $ret;
+    $query->condition('field_date_range.value', $start, '>=')
+      ->condition('field_date_range.value', $end, '<=');
   }
 
   /**
    * {@inheritDoc}
    */
   protected function transcribeEntry(mixed $data): array {
-
-    // Only do work on session nodes.
+    // Only do work on meeting nodes.
     if (!(($data instanceof Node) && $data->bundle() == 'meeting')) {
       return ['error' => 'Require meeting nodes, received ' . get_class($data)];
     }
@@ -141,8 +129,8 @@ class Meetings extends NysFeedPluginBase {
   /**
    * {@inheritDoc}
    */
-  protected function resolveParams(): self {
-    return parent::resolveParams()->initDateParam();
+  protected function resolveParams(): void {
+    $this->initDateParam();
   }
 
 }

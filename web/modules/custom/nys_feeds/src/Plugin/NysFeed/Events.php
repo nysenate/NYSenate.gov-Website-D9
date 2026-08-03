@@ -2,6 +2,7 @@
 
 namespace Drupal\nys_feeds\Plugin\NysFeed;
 
+use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\node\Entity\Node;
 use Drupal\nys_feeds\Attribute\NysFeed;
@@ -32,24 +33,13 @@ class Events extends NysFeedPluginBase {
   /**
    * {@inheritDoc}
    */
-  protected function query(): array {
+  protected function alterQuery(QueryInterface $query): void {
     // Add the passed date as a query condition.
-    $date = $this->state->vars['date_obj'];
+    $date = $this->input->vars['date_obj'];
     $start = $date->setTime(0, 0)->format('Y-m-d\TH:i:s');
     $end = $date->setTime(23, 59, 59)->format('Y-m-d\TH:i:s');
-
-    try {
-      $query = $this->getQuery()
-        ->condition('field_date_range.value', $start, '>=')
-        ->condition('field_date_range.value', $end, '<=');
-      $result = $query->execute();
-      $ret = $this->entityTypeManager->getStorage('node')
-        ->loadMultiple($result);
-    }
-    catch (\Exception) {
-      $ret = [];
-    }
-    return $ret;
+    $query->condition('field_date_range.value', $start, '>=')
+      ->condition('field_date_range.value', $end, '<=');
   }
 
   /**
@@ -69,7 +59,7 @@ class Events extends NysFeedPluginBase {
       'url' => $this->getUrl($data),
       'date' => $this->formatDate($data->get('field_date_range')->start_date->getTimestamp()),
       'body' => $data->body->value ?? "No description",
-      'senator' => $data->field_senator_multiref->entity->field_ol_shortname->value,
+      'senator' => $data->field_senator_multiref->entity?->field_ol_shortname->value,
       'updated' => $this->formatDate($data->changed->value),
       'place_type' => $data->field_event_place->value ?? '',
       'online_link' => $data->field_event_online_link->value ?? '',
@@ -99,8 +89,8 @@ class Events extends NysFeedPluginBase {
   /**
    * {@inheritDoc}
    */
-  protected function resolveParams(): self {
-    return parent::resolveParams()->initDateParam();
+  protected function resolveParams(): void {
+    $this->initDateParam();
   }
 
 }

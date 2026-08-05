@@ -127,6 +127,7 @@ abstract class NysFeedPluginBase extends PluginBase implements NysFeedPluginInte
    *
    * Leverages the definition's entity_type and bundle properties.
    *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   protected function getQuery(): QueryInterface {
@@ -134,7 +135,7 @@ abstract class NysFeedPluginBase extends PluginBase implements NysFeedPluginInte
     $bundle = $this->getPluginDefinition()['bundle'];
     $bundle_field = $this->entityTypeManager->getDefinition($type)
       ->getKey('bundle');
-    $query = \Drupal::entityQuery($type)
+    $query = $this->entityTypeManager->getStorage($type)->getQuery()
       ->condition($bundle_field, $bundle, '=')
       ->condition('status', 1)
       ->accessCheck();
@@ -238,7 +239,7 @@ abstract class NysFeedPluginBase extends PluginBase implements NysFeedPluginInte
    */
   public function getResponse(FeedOutput $output): JsonResponse {
     if ($this->useCache()) {
-      $cache_age = ($this->getPluginDefinition()['cache_age']) ?? 0;
+      $cache_age = ($this->getPluginDefinition()['max_cache_age']) ?? 0;
       $ret = (new CacheableJsonResponse($output->asArray()))
         ->addCacheableDependency($this->cache)
         ->setMaxAge($cache_age);
@@ -260,27 +261,10 @@ abstract class NysFeedPluginBase extends PluginBase implements NysFeedPluginInte
   }
 
   /**
-   * Builds the response.
-   */
-  public function buildResponse(FeedOutput $output): JsonResponse {
-    // Construct the response, add the cache metadata, and bye.
-    // Use response caching if not disabled by the plugin (default behavior).
-    if ($this->useCache()) {
-      $ret = (new CacheableJsonResponse($output->asArray(), $this->statusCode))
-        ->addCacheableDependency($this->cache)
-        ->setMaxAge($this->getPluginDefinition()['max_cache_age']);
-    }
-    else {
-      $ret = new JsonResponse($output->asArray(), $this->statusCode);
-    }
-    return $ret;
-  }
-
-  /**
    * Wrapper around the 'cacheable' configuration attribute.
    */
   public function useCache(): bool {
-    return (bool) ($this->getPluginDefinition()['cacheable'] ?? TRUE);
+    return (bool) (($this->getPluginDefinition()['cacheable']) ?? TRUE);
   }
 
 }

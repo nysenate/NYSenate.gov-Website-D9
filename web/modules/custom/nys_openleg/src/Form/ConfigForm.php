@@ -2,6 +2,7 @@
 
 namespace Drupal\nys_openleg\Form;
 
+use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\ConfigFormBase;
@@ -30,10 +31,18 @@ class ConfigForm extends ConfigFormBase {
   protected Config $localConfig;
 
   /**
+   * The cache tags invalidator service.
+   *
+   * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface
+   */
+  protected CacheTagsInvalidatorInterface $cacheTagsInvalidator;
+
+  /**
    * {@inheritdoc}
    */
-  public function __construct(ConfigFactoryInterface $config_factory, RouteBuilder $builder) {
+  public function __construct(ConfigFactoryInterface $config_factory, RouteBuilder $builder, CacheTagsInvalidatorInterface $cache_tags_invalidator) {
     $this->builder = $builder;
+    $this->cacheTagsInvalidator = $cache_tags_invalidator;
     parent::__construct($config_factory);
 
     $this->localConfig = $this->config('nys_openleg_api.settings');
@@ -45,7 +54,8 @@ class ConfigForm extends ConfigFormBase {
   public static function create(ContainerInterface $container): static {
     return new static(
       $container->get('config.factory'),
-      $container->get('router.builder')
+      $container->get('router.builder'),
+      $container->get('cache_tags.invalidator')
     );
   }
 
@@ -72,6 +82,14 @@ class ConfigForm extends ConfigFormBase {
       '#title' => 'Suppress Search?',
       '#description' => $this->t('If checked, the search box will -not- be rendered while browsing laws.'),
       '#default_value' => $this->localConfig->get('suppress_search'),
+    ];
+
+    $form['flush_laws_cache'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Flush Law Cache'),
+      '#submit' => ['::flushLawsCache'],
+      '#limit_validation_errors' => [],
+      '#weight' => 10,
     ];
 
     return parent::buildForm($form, $form_state);
@@ -102,6 +120,18 @@ class ConfigForm extends ConfigFormBase {
     }
 
     parent::submitForm($form, $form_state);
+  }
+
+  /**
+   * Submit handler for the Flush Law Cache button.
+   *
+   * Invalidates the nys_openleg:laws cache tag, which causes
+   * pantheon_advanced_page_cache to dispatch a Cloudflare BAN for every
+   * /legislation/laws/* page tagged with it.
+   */
+  public function flushLawsCache(array &$form, FormStateInterface $form_state): void {
+    $this->cacheTagsInvalidator->invalidateTags(['nys_openleg:laws']);
+    $this->messenger()->addStatus($this->t('Laws of New York CDN cache has been flushed.'));
   }
 
   /**

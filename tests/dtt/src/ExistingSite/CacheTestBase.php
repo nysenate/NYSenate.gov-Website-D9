@@ -26,12 +26,15 @@ use weitzman\DrupalTestTraits\ExistingSiteBase;
  *  - On Pantheon (production and multidev), Cloudflare sits in front of
  *    PHP-FPM. cf-cache-status (Cloudflare) is the authoritative header;
  *    x-drupal-cache reflects only what PHP-FPM returned and is stale on
- *    subsequent Cloudflare hits. Cache invalidations must also reach Cloudflare
- *    via BAN dispatch, which happens in kernel.terminate after a real web
- *    request — not during a CLI entity save. saveViaWebRequest() exists for
- *    this reason: it submits the entity edit form as a real HTTP POST so that
- *    kernel.terminate fires and pantheon_advanced_page_cache dispatches BAN
- *    requests for the invalidated cache tags.
+ *    subsequent Cloudflare hits. Cache invalidations reach Cloudflare via BAN
+ *    dispatch: pantheon_advanced_page_cache calls pantheon_clear_edge_keys()
+ *    synchronously inside CacheTagsInvalidator::invalidateTags(). That function
+ *    buffers keys in a static array and flushes them to the Pantheon cache proxy
+ *    via pantheon_clear_edge_keys_shutdown() at PHP process shutdown. In a web
+ *    request (PHP-FPM) the process exits per-response, so BANs fire promptly. In
+ *    this long-running PHPUnit process, saveEntity() explicitly calls
+ *    pantheon_clear_edge_keys_shutdown() after each $entity->save() to dispatch
+ *    the BAN immediately instead of waiting for process exit.
  *
  * getCacheStatus() normalises across all environments automatically.
  * assertCacheMissOnSave() encapsulates the canonical warm → HIT → save →
@@ -220,12 +223,17 @@ abstract class CacheTestBase extends ExistingSiteBase {
    * Wraps a single anonymous GET with retry logic for transient errors.
    *
    * - 429 Too Many Requests: backs off using the Retry-After header (default
-   *   5 s) then retries, up to 8 attempts.
+   *   5 s) then retries once. After 2 total 429 responses the exception is
+   *   re-thrown so the caller's outer loop (warmCache, assertAnonymousCacheMiss,
+   *   assertAnonymousCacheHit) can honour the rate-limit at a higher level
+   *   rather than spending up to 4 minutes spinning here.
    * - 5xx Server Error: retries immediately up to 8 attempts.
    * - All other exceptions are re-thrown immediately.
    */
   private function anonGet(string $path): \Psr\Http\Message\ResponseInterface {
     $maxAttempts = 8;
+    $max429 = 2;
+    $count429 = 0;
     $lastException = NULL;
     for ($attempt = 0; $attempt < $maxAttempts; $attempt++) {
       try {
@@ -234,6 +242,9 @@ abstract class CacheTestBase extends ExistingSiteBase {
       catch (ClientException $e) {
         if ($e->getResponse()->getStatusCode() === 429) {
           $lastException = $e;
+          if (++$count429 >= $max429) {
+            break; // Caller handles repeated rate-limiting.
+          }
           $retryAfter = max(1, (int) ($e->getResponse()->getHeaderLine('Retry-After') ?: 5));
           sleep($retryAfter);
           continue;
@@ -318,6 +329,33 @@ abstract class CacheTestBase extends ExistingSiteBase {
     $this->loggedInUser = FALSE;
   }
 
+  /**
+   * {@inheritdoc}
+   *
+   * Retries up to 3 times on HTTP 429 Too Many Requests responses from
+   * Cloudflare. Mink/BrowserKit requests share the same CF rate-limit pool as
+   * the Guzzle anonymous client. Without this guard, tests running after heavy
+   * anonymous traffic (AnonymousCacheHitTest, CacheMissInvalidationTest) can
+   * receive CF 429 error pages instead of Drupal pages, causing all session
+   * and element assertions to fail.
+   *
+   * Sleeps 90 s between retries — long enough for CF’s sliding-window rate
+   * limit to expire before the next attempt.
+   */
+  protected function visit(string $url): void {
+    for ($attempt = 0; $attempt < 3; $attempt++) {
+      parent::visit($url);
+      if ($this->getSession()->getStatusCode() !== 429) {
+        return;
+      }
+      if ($attempt < 2) {
+        sleep(90);
+      }
+    }
+    // All 3 attempts returned 429. Proceed so the next assertion produces a
+    // clear diagnostic failure message rather than a silent retry loop.
+  }
+
   // ---------------------------------------------------------------------------
   // Anonymous cache helpers
   // ---------------------------------------------------------------------------
@@ -335,21 +373,40 @@ abstract class CacheTestBase extends ExistingSiteBase {
    * On local environments the second request is usually an immediate HIT with no sleep.
    */
   protected function warmCache(string $path): void {
-    // Initial priming request — ignore errors, the polling loop handles state.
-    try { $this->anonGet($path); } catch (\Exception $e) {}
-    for ($attempt = 0; $attempt < 10; $attempt++) {
+    // Each iteration serves as both the priming request (triggering rendering
+    // and initiating page cache storage via kernel.terminate) and the HIT poll.
+    // On PHP-FPM environments the cache entry is written after the response is
+    // sent, so a 500 ms sleep between iterations lets kernel.terminate complete
+    // before the next check. For already-warm pages the first iteration returns
+    // HIT immediately, keeping the request count to 1 per call — important for
+    // staying under CF per-URL rate limits when consecutive test classes warm
+    // the same pages.
+    $maxAttempts = 20;
+    for ($attempt = 0; $attempt < $maxAttempts; $attempt++) {
       try {
         $response = $this->anonGet($path);
         if ($this->getCacheStatus($response) === 'HIT') {
           return;
         }
       }
-      catch (\Exception $e) {
-        // Any persistent error after anonGet's own retries — keep polling.
+      catch (ClientException $e) {
+        if ($e->getResponse()->getStatusCode() === 429) {
+          // CF rate-limited this poll. Sleep long enough for the CF sliding
+          // window to fully expire before the next attempt. Short sleeps (< the
+          // window length) just reset the window with each retry and never
+          // escape the rate limit. Default to 90 s if Retry-After is absent.
+          $retryAfter = max(90, (int) ($e->getResponse()->getHeaderLine('Retry-After') ?: 90));
+          sleep($retryAfter);
+          continue;
+        }
+        // Non-429 4xx (e.g. 404, 403) — keep polling; the page may be in flux.
       }
-      usleep(250000);
+      catch (\Exception $e) {
+        // Any other persistent error after anonGet's own retries — keep polling.
+      }
+      usleep(500000);
     }
-    $this->fail("warmCache({$path}): cache did not reach HIT after 10 attempts. Check that the page cache backend is running and that the page is actually cacheable.");
+    $this->fail("warmCache({$path}): cache did not reach HIT after {$maxAttempts} attempts. Check that the page cache backend is running and that the page is actually cacheable.");
   }
 
   /**
@@ -359,25 +416,40 @@ abstract class CacheTestBase extends ExistingSiteBase {
    * any operation whose effect they want to test, then call this method.
    * Internally re-warming would mask cache invalidations and produce
    * false positives in negative test cases.
+   *
+   * Retries up to 5 times on 429 Too Many Requests, sleeping at least 90 s
+   * each time. Fewer retries with a longer sleep lets CF's sliding-window rate
+   * limit expire; many short retries reset the window and never escape it.
    */
   protected function assertAnonymousCacheHit(string $path): void {
-    $response = $this->anonGet($path);
-    $status   = $this->getCacheStatus($response);
-    $this->assertSame('HIT', $status,
-      "Expected cache HIT on anonymous request to {$path}, got: {$status}");
+    for ($attempt = 0; $attempt < 5; $attempt++) {
+      try {
+        $response = $this->anonGet($path);
+        $status   = $this->getCacheStatus($response);
+        $this->assertSame('HIT', $status,
+          "Expected cache HIT on anonymous request to {$path}, got: {$status}");
+        return;
+      }
+      catch (ClientException $e) {
+        if ($e->getResponse()->getStatusCode() === 429 && $attempt < 4) {
+          $retryAfter = max(90, (int) ($e->getResponse()->getHeaderLine('Retry-After') ?: 90));
+          sleep($retryAfter);
+          continue;
+        }
+        throw $e;
+      }
+    }
   }
 
   /**
    * Asserts that an anonymous request returns a cache MISS.
    *
-   * All cache invalidations in this suite are triggered by saveViaWebRequest(),
-   * which submits the entity edit form as a real HTTP POST through the full
-   * stack. On Pantheon, PHP-FPM fires kernel.terminate after sending the
-   * response, which causes pantheon_advanced_page_cache to dispatch a BAN for
-   * the invalidated cache tags. There is a short window between the save
-   * completing and Cloudflare processing the BAN, so this method polls until
-   * cf-cache-status: MISS is confirmed — the same race warmCache() handles in
-   * reverse.
+   * Cache invalidations in this suite are triggered by saveEntity(), which
+   * calls $entity->save() and then immediately flushes Pantheon's BAN buffer
+   * via pantheon_clear_edge_keys_shutdown(). There is still a short window
+   * between the BAN dispatch and Cloudflare processing it, so this method
+   * polls until cf-cache-status: MISS is confirmed — the same race warmCache()
+   * handles in reverse.
    *
    * On local environments there is no CDN; getCacheStatus() falls back to
    * x-drupal-cache which reflects the Redis state and returns MISS immediately
@@ -396,6 +468,16 @@ abstract class CacheTestBase extends ExistingSiteBase {
       catch (ServerException $e) {
         // 5xx — origin processed the request; effectively a MISS.
         return;
+      }
+      catch (ClientException $e) {
+        if ($e->getResponse()->getStatusCode() === 429) {
+          // CF rate-limited this request. Sleep long enough for the sliding
+          // window to expire before retrying — short sleeps just extend it.
+          $retryAfter = max(90, (int) ($e->getResponse()->getHeaderLine('Retry-After') ?: 90));
+          sleep($retryAfter);
+          continue;
+        }
+        throw $e;
       }
       if ($attempt < 10) {
         usleep(500000);
@@ -440,57 +522,27 @@ abstract class CacheTestBase extends ExistingSiteBase {
   }
 
   /**
-   * Saves an entity by submitting its edit form through the DTT browser.
+   * Returns TRUE if an anonymous GET to $path yields a 2xx response with a
+   * public Cache-Control header, indicating the page is eligible for CDN caching.
    *
-   * Submitting via real HTTP POST fires kernel.terminate on the web server,
-   * which causes pantheon_advanced_page_cache to dispatch BAN requests for any
-   * cache tags invalidated by the save. This is required for
-   * assertAnonymousCacheMiss() to observe cf-cache-status: MISS on Pantheon;
-   * CLI saves ($entity->save()) correctly invalidate Redis but never reach the
-   * CDN because kernel.terminate is never fired outside a web request.
-   *
-   * The caller must be logged in (e.g. via drupalLogin()) before calling this.
+   * Used by findNodeWithReferencedTerm() to skip candidate nodes whose canonical
+   * pages are not publicly accessible or are configured as non-cacheable
+   * (e.g. senator-microsite pages returned as CF BYPASS, 404s from broken path
+   * aliases, or pages with max-age: 0 due to un-lazy-built form elements).
    */
-  protected function saveViaWebRequest(EntityInterface $entity): void {
-    $path = $entity->toUrl('edit-form')->setAbsolute(FALSE)->toString();
-    $this->visit($path);
-    $this->getSession()->getPage()->pressButton('Save');
-    // A successful Drupal form save redirects away from the edit path.
-    // Remaining on /edit indicates the form was rejected (broken entity-
-    // reference field, required field BrowserKit could not populate, CSRF
-    // mismatch, etc.) and means no BAN was dispatched to the CDN.
-    $urlAfterSave = $this->getSession()->getCurrentUrl();
-    $this->assertNotSame(
-      $path,
-      (string) parse_url($urlAfterSave, PHP_URL_PATH),
-      "saveViaWebRequest({$path}): Drupal rejected the form submission — still on edit URL ({$urlAfterSave}). "
-      . 'Use findNodeByTypeWithSaveableTerm() / findNodeAndValidTermByField() to select '
-      . 'entities whose edit forms BrowserKit can submit successfully.'
-    );
-  }
-
-  /**
-   * Returns TRUE if $term can be saved via its Drupal edit form through
-   * BrowserKit, FALSE otherwise.
-   *
-   * Some taxonomy terms have broken entity-reference field values or required
-   * fields with widget state that BrowserKit cannot satisfy, causing Drupal to
-   * reject the form submission and redirect back to the edit URL rather than
-   * the term's canonical page. This helper detects that condition so that term
-   * selection helpers can skip unsaveable terms.
-   *
-   * Side-effect: if the term IS saveable, it will have been saved once by this
-   * call (triggering a BAN for its cache tags). Callers that subsequently use
-   * the entity in assertCacheMissOnSave() should call warmCache() first, as
-   * assertCacheMissOnSave() already does.
-   */
-  private function termIsSaveableViaForm(EntityInterface $entity): bool {
+  private function isPageAnonymouslyCacheable(string $path): bool {
     try {
-      $path = $entity->toUrl('edit-form')->setAbsolute(FALSE)->toString();
-      $this->visit($path);
-      $this->getSession()->getPage()->pressButton('Save');
-      $currentPath = (string) parse_url($this->getSession()->getCurrentUrl(), PHP_URL_PATH);
-      return $currentPath !== $path;
+      $response = $this->anonClient->get($path);
+      return $response->getStatusCode() >= 200
+        && $response->getStatusCode() < 300
+        && str_contains($response->getHeaderLine('cache-control'), 'public');
+    }
+    catch (ClientException $e) {
+      // 429: CF is rate-limiting this URL. The page exists and is publicly
+      // accessible — treat it as cacheable rather than discarding the candidate
+      // and firing more requests to other URLs. Other 4xx (404, 403) indicate
+      // the page is missing or access-denied and are correctly filtered out.
+      return $e->getResponse()->getStatusCode() === 429;
     }
     catch (\Exception $e) {
       return FALSE;
@@ -499,6 +551,9 @@ abstract class CacheTestBase extends ExistingSiteBase {
 
   /**
    * Asserts cache-control max-age header on an anonymous request.
+   *
+   * @deprecated Use assertAnonymousCacheHitWithMaxAge() to combine the HIT and
+   *   max-age assertions in a single request and avoid unnecessary round-trips.
    */
   protected function assertCacheControlMaxAge(string $path, int $expectedMaxAge = 86400): void {
     $response = $this->anonClient->get($path);
@@ -516,17 +571,88 @@ abstract class CacheTestBase extends ExistingSiteBase {
   }
 
   /**
+   * Asserts cache HIT and public max-age in a single anonymous request.
+   *
+   * Combines assertAnonymousCacheHit() and assertCacheControlMaxAge() into one
+   * round-trip. Use this instead of calling both methods separately to avoid
+   * doubling the per-page request count, which can trigger CF rate limits when
+   * multiple test classes warm the same URLs back-to-back.
+   *
+   * Retries up to 5 times on 429 Too Many Requests, sleeping at least 90 s
+   * each time — see assertAnonymousCacheHit() for the sliding-window rationale.
+   */
+  protected function assertAnonymousCacheHitWithMaxAge(string $path, int $expectedMaxAge = 86400): void {
+    for ($attempt = 0; $attempt < 5; $attempt++) {
+      try {
+        $response = $this->anonGet($path);
+        $status   = $this->getCacheStatus($response);
+        $this->assertSame('HIT', $status,
+          "Expected cache HIT on anonymous request to {$path}, got: {$status}");
+        $cacheControl = $response->getHeaderLine('cache-control');
+        $this->assertStringContainsString(
+          "max-age={$expectedMaxAge}",
+          $cacheControl,
+          "Expected cache-control: max-age={$expectedMaxAge} for {$path}, got: {$cacheControl}"
+        );
+        $this->assertStringContainsString(
+          'public',
+          $cacheControl,
+          "Expected cache-control to include 'public' for {$path}, got: {$cacheControl}"
+        );
+        return;
+      }
+      catch (ClientException $e) {
+        if ($e->getResponse()->getStatusCode() === 429 && $attempt < 4) {
+          $retryAfter = max(90, (int) ($e->getResponse()->getHeaderLine('Retry-After') ?: 90));
+          sleep($retryAfter);
+          continue;
+        }
+        throw $e;
+      }
+    }
+  }
+
+  /**
+   * Saves an entity and immediately flushes the Pantheon edge-key BAN buffer.
+   *
+   * On Pantheon, pantheon_advanced_page_cache's CacheTagsInvalidator calls
+   * pantheon_clear_edge_keys() during the save, but that function only buffers
+   * the tags in a PHP static variable and defers the actual HTTP BAN dispatch
+   * to a shutdown function (pantheon_clear_edge_keys_shutdown()). In a web
+   * request (PHP-FPM) the process exits after each response, so the BAN fires
+   * promptly. In this long-running PHPUnit process the shutdown function would
+   * only run after all tests have completed — far too late for per-test
+   * cache-header polls to see a MISS or verify that BANs are correctly scoped.
+   *
+   * This wrapper calls pantheon_clear_edge_keys_shutdown() immediately after
+   * the save, dispatching the accumulated keys synchronously via
+   * pantheon_clear_edge_keys_batch() (a direct HTTP POST to the Pantheon cache
+   * proxy API). On local/DDEV environments the function guard is a no-op and
+   * the save behaves identically to a bare $entity->save().
+   *
+   * Use this method for ALL entity saves inside test methods that exercise the
+   * anonymous CDN cache layer (CacheMissInvalidationTest,
+   * AnonymousCacheNonInvalidationTest, etc.) so that post-save cache-header
+   * assertions reflect actual BAN dispatch rather than an absence of dispatch.
+   */
+  protected function saveEntity(EntityInterface $entity): void {
+    $entity->save();
+    if (function_exists('pantheon_clear_edge_keys_shutdown')) {
+      pantheon_clear_edge_keys_shutdown();
+    }
+  }
+
+  /**
    * Performs the standard warm → HIT → save → MISS → HIT assertion sequence.
    *
-   * This is the canonical test pattern for cache-miss invalidation: warm the
-   * cache for $path, confirm a HIT, save $entity via a real HTTP POST so that
-   * kernel.terminate fires and CDN BANs are dispatched, then confirm the page
-   * transitions to MISS and back to HIT once re-cached.
+   * Warms the cache for $path, confirms a HIT, saves $entity via saveEntity()
+   * (which also flushes the Pantheon edge-key BAN buffer), then confirms the
+   * page transitions to MISS and back to HIT once re-cached.
    */
   protected function assertCacheMissOnSave(string $path, EntityInterface $entity): void {
     $this->warmCache($path);
     $this->assertAnonymousCacheHit($path);
-    $this->saveViaWebRequest($entity);
+    $this->saveEntity($entity);
     $this->assertAnonymousCacheMiss($path);
     $this->assertAnonymousCacheHit($path);
   }
@@ -769,101 +895,20 @@ abstract class CacheTestBase extends ExistingSiteBase {
   }
 
   /**
-   * Returns a [node, term] pair where the node is a published node of
-   * $nodeType referencing a term via $fieldName that passes both entity
-   * validation and BrowserKit form saveability, or NULL if none exists.
+   * Returns a [node, term] pair for the most recently changed published node of
+   * $type that has $fieldName populated with a taxonomy term reference, or NULL
+   * if no such node exists.
    *
-   * Uses a two-phase strategy to keep execution time bounded:
-   *
-   * Phase 1 — one fast DB query collects the top 20 distinct term IDs (by TID
-   * DESC) referenced by published nodes of the given type. Newest terms first
-   * because recently created terms tend to have complete field configurations.
-   * The cap of 20 keeps DDEV skips fast: if no saveable term is found among
-   * the first 20 candidates the method returns NULL quickly rather than
-   * exhausting the entire field population.
-   *
-   * Phase 2 — for each TID, the term is loaded and checked: form saveability
-   * via BrowserKit (one HTTP round-trip per term). Because we work from
-   * actual content TIDs and stop after 20 candidates, execution is bounded
-   * regardless of how many nodes or terms exist.
+   * @param string[] $notExistsFields
+   *   Optional list of field names that must NOT exist on the node. Use this to
+   *   exclude senator-microsite nodes from committee-based queries: e.g. passing
+   *   ['field_senator_multiref'] limits results to nodes that are not associated
+   *   with a senator microsite, whose pages are more reliably publicly cacheable.
    *
    * @return array{0: \Drupal\node\NodeInterface, 1: \Drupal\taxonomy\TermInterface}|null
    */
-  protected function findNodeAndValidTermByField(string $nodeType, string $fieldName): ?array {
-    // Phase 1: collect all distinct term IDs that published nodes of this type
-    // reference via $fieldName. One lightweight DB query — no entity loads.
-    $fieldTable = 'node__' . $fieldName;
-    $targetCol = $fieldName . '_target_id';
-    $query = \Drupal::database()->select($fieldTable, 'f')
-      ->distinct()
-      ->fields('f', [$targetCol])
-      ->condition('f.bundle', $nodeType)
-      ->condition('f.deleted', 0);
-    $query->innerJoin('node_field_data', 'n', 'f.entity_id = n.nid AND f.langcode = n.langcode');
-    $query->condition('n.status', 1);
-    // Check newest TIDs first — recently created terms are more likely to have
-    // complete field configurations and pass form submission. Limit to 20 so
-    // that DDEV environments with no saveable terms skip quickly rather than
-    // exhausting the entire field population.
-    $query->orderBy('f.' . $targetCol, 'DESC');
-    $query->range(0, 20);
-    $tids = $query->execute()->fetchCol();
-
-    if (empty($tids)) {
-      return NULL;
-    }
-
-    // Phase 2: for each unique TID, check form saveability via BrowserKit.
-    // Note: entity validation ($term->validate()) is NOT used as a pre-filter
-    // here. Diagnostic data showed that senator terms with 1 entity-validation
-    // error are still form-saveable (the error is typically a non-form-required
-    // field added after term creation). Filtering by entity validation would
-    // incorrectly exclude those terms. We rely solely on termIsSaveableViaForm.
-    foreach ($tids as $tid) {
-      $term = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load($tid);
-      if (!$term) {
-        continue;
-      }
-      if (!$this->termIsSaveableViaForm($term)) {
-        continue;
-      }
-      // Term is saveable. Find any published node of the requested type that
-      // references it.
-      $nids = \Drupal::entityTypeManager()
-        ->getStorage('node')
-        ->getQuery()
-        ->accessCheck(FALSE)
-        ->condition('type', $nodeType)
-        ->condition('status', 1)
-        ->condition($fieldName . '.target_id', $tid)
-        ->range(0, 1)
-        ->execute();
-      if (empty($nids)) {
-        continue;
-      }
-      $node = \Drupal::entityTypeManager()->getStorage('node')->load(reset($nids));
-      if ($node) {
-        return [$node, $term];
-      }
-    }
-    return NULL;
-  }
-
-  /**
-   * Returns the first [node, term] pair where the node is a published node of
-   * $type with $fieldName populated and the referenced term can be saved via
-   * its Drupal edit form through BrowserKit, or NULL if none is found.
-   *
-   * Unlike findNodeByTypeWithField() which returns only the most recently
-   * changed node, this helper iterates through candidates until it finds a
-   * term whose form submission BrowserKit can complete successfully — skipping
-   * terms with broken field values or required fields that BrowserKit cannot
-   * satisfy.
-   *
-   * @return array{0: \Drupal\node\NodeInterface, 1: \Drupal\taxonomy\TermInterface}|null
-   */
-  protected function findNodeByTypeWithSaveableTerm(string $type, string $fieldName): ?array {
-    $ids = \Drupal::entityTypeManager()
+  protected function findNodeWithReferencedTerm(string $type, string $fieldName, array $notExistsFields = []): ?array {
+    $query = \Drupal::entityTypeManager()
       ->getStorage('node')
       ->getQuery()
       ->accessCheck(FALSE)
@@ -871,8 +916,11 @@ abstract class CacheTestBase extends ExistingSiteBase {
       ->condition('status', 1)
       ->exists($fieldName)
       ->sort('changed', 'DESC')
-      ->range(0, 20)
-      ->execute();
+      ->range(0, 20);
+    foreach ($notExistsFields as $excludeField) {
+      $query->notExists($excludeField);
+    }
+    $ids = $query->execute();
 
     foreach ($ids as $nid) {
       $node = \Drupal::entityTypeManager()->getStorage('node')->load($nid);
@@ -883,22 +931,27 @@ abstract class CacheTestBase extends ExistingSiteBase {
       if (!$term) {
         continue;
       }
-      if ($this->termIsSaveableViaForm($term)) {
-        return [$node, $term];
+      // Verify the canonical page is publicly cacheable. Some nodes have broken
+      // path aliases (404), senator-microsite pages that CF returns as BYPASS,
+      // or embedded forms that suppress public caching — warmCache() would
+      // never reach HIT for any of these.
+      $canonicalPath = $node->toUrl('canonical')->setAbsolute(FALSE)->toString();
+      if (!$this->isPageAnonymouslyCacheable($canonicalPath)) {
+        continue;
       }
+      return [$node, $term];
     }
     return NULL;
   }
 
   /**
-   * Returns the first [node, term] pair where the referenced term can be saved
-   * via its edit form, or fails the test if none is found.
+   * Returns a [node, term] pair or fails the test if none is found.
    *
    * @return array{0: \Drupal\node\NodeInterface, 1: \Drupal\taxonomy\TermInterface}
    */
-  protected function requireNodeByTypeWithSaveableTerm(string $type, string $fieldName): array {
-    return $this->findNodeByTypeWithSaveableTerm($type, $fieldName)
-      ?? $this->fail("No published '{$type}' node with a BrowserKit-saveable '{$fieldName}' term found.");
+  protected function requireNodeWithReferencedTerm(string $type, string $fieldName, array $notExistsFields = []): array {
+    return $this->findNodeWithReferencedTerm($type, $fieldName, $notExistsFields)
+      ?? $this->fail("No published '{$type}' node with a '{$fieldName}' taxonomy term found.");
   }
 
   // ---------------------------------------------------------------------------
@@ -955,16 +1008,7 @@ abstract class CacheTestBase extends ExistingSiteBase {
       ?? $this->fail("No published '{$type}' node with field '{$fieldName}' populated found.");
   }
 
-  /**
-   * Returns the first [node, term] pair where the term's edit form can be
-   * submitted successfully via BrowserKit, or fails.
-   *
-   * @return array{0: \Drupal\node\NodeInterface, 1: \Drupal\taxonomy\TermInterface}
-   */
-  protected function requireNodeAndValidTermByField(string $nodeType, string $fieldName): array {
-    return $this->findNodeAndValidTermByField($nodeType, $fieldName)
-      ?? $this->fail("No published '{$nodeType}' node with a valid (saveable) '{$fieldName}' term found.");
-  }
+
 
   /**
    * Returns the first published bill node that can be non-destructively saved, or fails.

@@ -185,6 +185,7 @@ event-calendar:
       dist/css/zebra.css: {}
   dependencies:
     - nysenate_theme/zebra-datepicker
+    - core/drupal.announce
   js:
     dist/js/event-calendar.js: {}
 event-card:
@@ -616,6 +617,7 @@ nysenate-senator-list:
       dist/css/nysenate-senator-list.css: {}
   dependencies:
     - core/jquery
+    - core/drupal.announce
   js:
     dist/js/nysenate-senator-list.js: {}
 nysenate-senators-events:
@@ -760,6 +762,11 @@ session:
   css:
     component:
       dist/css/session.css: {}
+  dependencies:
+    - core/drupal
+    - core/drupal.announce
+  js:
+    dist/js/session.js: {}
 sidebar:
   css:
     component:

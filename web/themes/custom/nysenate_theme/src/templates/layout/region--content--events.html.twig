@@ -23,8 +23,9 @@
   <div{{ attributes.addClass(classes) }}>
     <h2 class="nys-title">Statewide Senate Events Calendar</h2>
     <div id="datepicker">
-      <input type="text" />
-      <div id="container"></div>
+      <label class="visually-hidden" for="events-datepicker-input">Filter events by date</label>
+      <input id="events-datepicker-input" type="text" />
+      <div id="container" aria-hidden="true"></div>
     </div>
     {{ content }}
   </div>

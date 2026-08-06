@@ -190,18 +190,12 @@ abstract class NysFeedPluginBase extends PluginBase implements NysFeedPluginInte
    */
   protected function buildContext(): void {
     if ($this->useCache()) {
-      // Try to get the "list" cache tag for the defined entity type.
-      // If this fails, just skip it (we can rely on the dependencies).
-      try {
-        $list_tag = $this->entityTypeManager
-          ->getStorage($this->getPluginDefinition()['entity_type'])
-          ->getEntityType()
-          ->getListCacheTags();
-        $this->cache->addCacheTags($list_tag);
-      }
-      catch (\Throwable) {
-      }
+      // Add the bundle-specific entity list tag.
+      $def = $this->getPluginDefinition();
+      $list_tag = $def['entity_type'] . '_list:' . $def[`bundle`];
+      $this->cache->addCacheTags([$list_tag]);
 
+      // Add the query string contexts.
       $context = array_map(
         fn($v) => "url.query_args:$v",
         array_keys($this->getCacheParams())

@@ -16,15 +16,6 @@
  */
 #}
 <div{{ attributes.without('required', 'aria-required', 'open') }}>
-  {%- if title -%}
-    {%
-      set summary_classes = [
-        required ? 'js-form-required',
-        required ? 'form-required',
-      ]
-    %}
-    <summary{{ summary_attributes.addClass(summary_classes) }}>{{ title }}</summary>
-  {%- endif -%}
   <div class="details-wrapper">
     {% if errors %}
       <div class="form-item--error-message">

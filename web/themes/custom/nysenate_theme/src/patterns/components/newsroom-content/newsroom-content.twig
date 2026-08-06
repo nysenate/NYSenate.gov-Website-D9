@@ -89,7 +89,7 @@
                         <h3 class="c-event-name">{{ content.event_name }}</h3>
                       </a>
                       <a class="c-event-location" href="{{ content.location.link }}" target="_blank">
-                        <span class="icon-before__circle-pin" aria-hidden="true"></span>
+                        <span class="icon-before__circle-pin" aria-hidden="true"></span><span class="visually-hidden">Event location: </span>
                         <span>{{ content.location.name }}</span>
                       </a>
                       {% if content.address %}

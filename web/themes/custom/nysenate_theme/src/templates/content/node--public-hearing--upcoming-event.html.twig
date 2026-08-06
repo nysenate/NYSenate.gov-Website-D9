@@ -109,7 +109,7 @@
 
           {% elseif content.field_location[0]['organization']['#value'] %}
           <a class="c-event-location" href="http://maps.google.com/?q=172 State Street+Albany, New York%2C+12247" target="_blank">
-              <span class="icon-before__circle-pin"></span>
+              <span class="icon-before__circle-pin" aria-hidden="true"></span><span class="visually-hidden">Event location: </span>
               {{ content.field_location[0]['organization']['#value']|raw }}
             </a>
           {% endif %}
@@ -117,7 +117,7 @@
 
         {% if content.field_event_place[0]['#markup'] == "In Albany" %}
         <a class="c-event-location" href="http://maps.google.com/?q=172 State Street+Albany, New York%2C+12247" target="_blank">
-          <span class="icon-before__circle-pin"></span>
+          <span class="icon-before__circle-pin" aria-hidden="true"></span><span class="visually-hidden">Event location: </span>
           {{ content.field_location[0]['organization']['#value']|raw }}
         </a>
         <p class="c-event-address">

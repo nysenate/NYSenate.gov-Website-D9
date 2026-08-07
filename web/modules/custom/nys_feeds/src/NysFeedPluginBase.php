@@ -192,7 +192,7 @@ abstract class NysFeedPluginBase extends PluginBase implements NysFeedPluginInte
     if ($this->useCache()) {
       // Add the bundle-specific entity list tag.
       $def = $this->getPluginDefinition();
-      $list_tag = $def['entity_type'] . '_list:' . $def[`bundle`];
+      $list_tag = $def['entity_type'] . '_list:' . $def['bundle'];
       $this->cache->addCacheTags([$list_tag]);
 
       // Add the query string contexts.

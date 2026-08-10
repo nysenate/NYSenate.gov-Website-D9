@@ -27,7 +27,7 @@ class PasswordResetForm extends ProfileForm {
   /**
    * {@inheritDoc}
    */
-  public function __construct(EntityRepositoryInterface $entity_repository, LanguageManagerInterface $language_manager, ModuleHandlerInterface $moduleHandler, EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL, TimeInterface $time = NULL) {
+  public function __construct(EntityRepositoryInterface $entity_repository, LanguageManagerInterface $language_manager, ModuleHandlerInterface $moduleHandler, ?EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL, ?TimeInterface $time = NULL) {
     $user = \Drupal::entityTypeManager()->getStorage('user')
       ->load(\Drupal::currentUser()->id());
     $this->setEntity($user);
@@ -113,7 +113,7 @@ class PasswordResetForm extends ProfileForm {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
     $form_state->setRedirectUrl(Url::fromUserInput('/dashboard/edit'));
 
     parent::submitForm($form, $form_state);

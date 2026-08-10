@@ -1,0 +1,90 @@
+<?php
+
+/**
+ * @file
+ * Install hooks for nys_issue_migration.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function nys_issue_migration_schema(): array {
+  $schema['nys_issue_migration_log'] = [
+    'description' => 'Persistent audit log for the NYS issue tag consolidation migration.',
+    'fields' => [
+      'id' => [
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'Primary key.',
+      ],
+      'stage' => [
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Migration stage: create-terms, content, followers, delete.',
+      ],
+      'tid' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Source taxonomy term ID (0 for canonical term creation entries).',
+      ],
+      'name' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Source or canonical term name.',
+      ],
+      'action' => [
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Action taken or would-take.',
+      ],
+      'target_tid' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'description' => 'Canonical target term ID, if applicable.',
+      ],
+      'target_name' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+        'description' => 'Canonical target term name, if applicable.',
+      ],
+      'detail' => [
+        'type' => 'varchar',
+        'length' => 512,
+        'not null' => FALSE,
+        'description' => 'Optional detail string (counts, node IDs, etc.).',
+      ],
+      'is_dry_run' => [
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => '1 if this was a dry-run entry, 0 if committed.',
+      ],
+      'created' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Unix timestamp of the log entry.',
+      ],
+    ],
+    'primary key' => ['id'],
+    'indexes' => [
+      'tid' => ['tid'],
+      'stage_action' => ['stage', 'action'],
+      'created' => ['created'],
+      'is_dry_run' => ['is_dry_run'],
+    ],
+  ];
+  return $schema;
+}

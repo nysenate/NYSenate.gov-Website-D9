@@ -1,0 +1,82 @@
+uuid: 0bc21f7b-04ac-466c-9282-88bb08fa864b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_featured_legislation
+    - paragraphs.paragraphs_type.featured_legislation
+    - taxonomy.vocabulary.senator
+  module:
+    - entity_reference_revisions
+id: taxonomy_term.senator.field_featured_legislation
+field_name: field_featured_legislation
+entity_type: taxonomy_term
+bundle: senator
+label: 'Featured Legislation'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      featured_legislation: featured_legislation
+    negate: 0
+    target_bundles_drag_drop:
+      accordion_item:
+        weight: 19
+        enabled: false
+      agenda_bills:
+        weight: 20
+        enabled: false
+      calendar:
+        weight: 21
+        enabled: false
+      card:
+        weight: 22
+        enabled: false
+      carousel:
+        weight: 23
+        enabled: false
+      committee_featured_legislation:
+        weight: 24
+        enabled: false
+      featured_legislation:
+        weight: 25
+        enabled: true
+      gallery_item:
+        weight: 26
+        enabled: false
+      members:
+        weight: 27
+        enabled: false
+      misc_legislative_group_members:
+        weight: 28
+        enabled: false
+      office_contacts:
+        weight: 29
+        enabled: false
+      office_locations:
+        weight: 30
+        enabled: false
+      quick_facts:
+        weight: 31
+        enabled: false
+      quote:
+        weight: 32
+        enabled: false
+      slider_item:
+        weight: 33
+        enabled: false
+      steps:
+        weight: 34
+        enabled: false
+      summer_reading:
+        weight: 35
+        enabled: false
+      votes:
+        weight: 36
+        enabled: false
+field_type: entity_reference_revisions

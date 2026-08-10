@@ -11,6 +11,7 @@ dependencies:
     - field.field.taxonomy_term.senator.field_email
     - field.field.taxonomy_term.senator.field_email_auto_reply_text
     - field.field.taxonomy_term.senator.field_facebook_url
+    - field.field.taxonomy_term.senator.field_featured_legislation
     - field.field.taxonomy_term.senator.field_image_hero
     - field.field.taxonomy_term.senator.field_inactive_senator_message
     - field.field.taxonomy_term.senator.field_instagram_url
@@ -313,6 +314,24 @@ content:
     settings:
       size: 60
       placeholder: ''
+    third_party_settings: {  }
+  field_featured_legislation:
+    type: paragraphs
+    weight: 101
+    region: content
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: open
+      closed_mode: summary
+      autocollapse: none
+      closed_mode_threshold: 0
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: ''
+      features:
+        collapse_edit_all: collapse_edit_all
+        duplicate: duplicate
     third_party_settings: {  }
   field_image_hero:
     type: media_library_widget

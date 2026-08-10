@@ -1,0 +1,6 @@
+services:
+  nys_issue_migration.commands:
+    class: \Drupal\nys_issue_migration\Commands\IssueTagMigrateCommands
+    arguments: ['@database', '@entity_type.manager', '@uuid']
+    tags:
+      - { name: drush.command }

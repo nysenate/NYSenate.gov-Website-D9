@@ -1,0 +1,11 @@
+--- a/src/Plugin/views/field/Combine.php
++++ b/src/Plugin/views/field/Combine.php
+@@ -25,7 +25,7 @@
+   /**
+    * {@inheritdoc}
+    */
+-  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
++  public function init(ViewExecutable $view, DisplayPluginBase $display, ?array &$options = NULL) {
+     parent::init($view, $display, $options);
+     $this->options['exclude'] = 1;
+   }

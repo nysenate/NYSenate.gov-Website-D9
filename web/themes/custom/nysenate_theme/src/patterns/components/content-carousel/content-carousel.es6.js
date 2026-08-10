@@ -4,8 +4,16 @@
  */
 /* eslint-disable max-len */
 
-!((document, Drupal, $) => {
+!((document, Drupal, $, once) => {
   'use strict';
+
+  // jQuery 4 removed $.type; restore it for Slick compatibility.
+  $.type = $.type || function(obj) {
+    if (obj === null) return 'null';
+    if (obj === undefined) return 'undefined';
+    if (Array.isArray(obj)) return 'array';
+    return typeof obj;
+  };
 
   /**
    * Setup and attach the Carousel behaviors.
@@ -16,7 +24,7 @@
     attach: function (context) {
       // We want to only have the slick carousel trigger once or we will
       // have a lot of pagers being appended on ajax trigger.
-      $('.content-carousel', context).once('contentCarousel').each(function () {
+      $(once('contentCarousel', '.content-carousel', context)).each(function () {
         const $parentContainer = $(this);
         const $list = $('.content-carousel__list', $parentContainer);
         let $nav = $(this).closest('.content-carousel').find('.slick-pager');
@@ -51,4 +59,4 @@
       });
     }
   };
-})(document, Drupal, jQuery);
+})(document, Drupal, jQuery, once);

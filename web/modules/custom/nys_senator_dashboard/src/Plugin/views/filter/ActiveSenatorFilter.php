@@ -54,6 +54,18 @@ class ActiveSenatorFilter extends FilterPluginBase implements ContainerFactoryPl
   /**
    * {@inheritdoc}
    */
+  public function query(): void {
+    $value = is_array($this->value) ? reset($this->value) : $this->value;
+    if ($value === NULL || $value === '' || $value === 'All') {
+      return;
+    }
+    $this->ensureMyTable();
+    $this->query->addWhere($this->options['group'], "$this->tableAlias.$this->realField", $value, '=');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function buildExposedForm(&$form, FormStateInterface $form_state): void {
     $senator = $this->managedSenatorsHandler->getActiveSenator(FALSE);
     if (empty($senator)) {

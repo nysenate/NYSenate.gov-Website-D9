@@ -5,6 +5,7 @@ namespace Drupal\nys_comment\Plugin\Action;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Action\ActionBase;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Action to ban the comments author.
@@ -20,7 +21,7 @@ class BanUserCommentsAction extends ActionBase {
   /**
    * {@inheritdoc}
    */
-  public function execute($entity = NULL) {
+  public function execute($entity = NULL): TranslatableMarkup {
     if ($entity) {
       $user = $entity->uid->entity;
       $user->field_user_banned_comments = 1;
@@ -33,7 +34,7 @@ class BanUserCommentsAction extends ActionBase {
   /**
    * {@inheritdoc}
    */
-  public function access($object, AccountInterface $account = NULL, $return_as_object = FALSE) {
+  public function access($object, ?AccountInterface $account = NULL, $return_as_object = FALSE): AccessResult {
     if ($account->hasPermission('administer comments')) {
       return AccessResult::allowed();
     }

@@ -170,11 +170,11 @@ if (isset($_ENV['PANTHEON_ROLLING_TMP']) && isset($_ENV['PANTHEON_DEPLOYMENT_IDE
 
 /**
  * Install the Pantheon Service Provider to hook Pantheon services into
- * Drupal 8. This service provider handles operations such as clearing the
+ * Drupal 11. This service provider handles operations such as clearing the
  * Pantheon edge cache whenever the Drupal cache is rebuilt.
  */
 if (isset($_ENV['PANTHEON_ENVIRONMENT'])) {
-  $GLOBALS['conf']['container_service_providers']['PantheonServiceProvider'] = '\Pantheon\Internal\PantheonServiceProvider';
+  $GLOBALS['conf']['container_service_providers']['PantheonServiceProvider'] = '\Pantheon\Internal\PantheonServiceProvider11';
 }
 
 /**

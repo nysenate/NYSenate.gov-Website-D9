@@ -1,0 +1,22 @@
+uuid: 920a9702-75aa-425e-a28c-0911eee42c78
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.student_program
+id: node.student_program.promote
+field_name: promote
+entity_type: node
+bundle: student_program
+label: 'Promoted to front page'
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 1
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

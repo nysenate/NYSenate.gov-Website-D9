@@ -29,7 +29,7 @@
         "bower-asset/colorbox": "^1.6",
         "composer/installers": "^1.2",
         "cweagans/composer-patches": "^1.7.0",
-        "dompdf/dompdf": "^2.0",
+        "dompdf/dompdf": "^3.0",
         "drupal/action": "^0.2",
         "drupal/address": "^2.0",
         "drupal/address_map_link": "^2.0",
@@ -57,9 +57,9 @@
         "drupal/contact_block": "^2.0",
         "drupal/contact_storage": "^1.4",
         "drupal/contextual_range_filter": "^3.0",
-        "drupal/core-composer-scaffold": "^10",
-        "drupal/core-project-message": "^10",
-        "drupal/core-recommended": "^10",
+        "drupal/core-composer-scaffold": "^11.4.4",
+        "drupal/core-project-message": "^11.4.4",
+        "drupal/core-recommended": "^11.4.4",
         "drupal/csv_serialization": "^3.0 || ^4.0",
         "drupal/ctools": "^4.1",
         "drupal/diff": "^2.1",
@@ -88,8 +88,8 @@
         "drupal/fullcalendar_view": "^5.1",
         "drupal/geocoder": "^3.25 || ^4.0",
         "drupal/geolocation": "^3.7",
-        "drupal/gin": "^4.1",
-        "drupal/gin_toolbar": "^2.1",
+        "drupal/gin": "^4.1 || ^5.0",
+        "drupal/gin_toolbar": "^2.1 || ^3.0",
         "drupal/google_analytics": "^3.1 || ^4.0.0",
         "drupal/google_tag": "^2.0",
         "drupal/honeypot": "^2.2",
@@ -123,7 +123,6 @@
         "drupal/paragraphs_features": "^2.2",
         "drupal/password_policy": "^4.0",
         "drupal/pathauto": "~1.0",
-        "drupal/permissions_filter": "^1.2 || ^1.6",
         "drupal/prepopulate": "^2.3",
         "drupal/private_message": "3.0.x-dev@dev",
         "drupal/queue_ui": "^3.1",
@@ -151,12 +150,10 @@
         "drupal/term_merge_manager": "^2.0",
         "drupal/tfa": "^1.7",
         "drupal/token": "~1.0",
-        "drupal/transliterate_filenames": "^2.0",
         "drupal/turnstile": "^1.2",
         "drupal/twig_field_value": "~1.0 || ~2.0",
         "drupal/twig_tweak": "^3.2",
         "drupal/twig_vardumper": "^3.2",
-        "drupal/twitter_api_block": "^4.0",
         "drupal/twitter_block": "^4.0",
         "drupal/ultimate_cron": "^2.0@alpha",
         "drupal/upgrade_status": "^4.3",
@@ -190,7 +187,7 @@
         "npm-asset/datatables.net-dt": "^3.2",
         "npm-asset/jquery-colorbox": "^1.6",
         "oomphinc/composer-installers-extender": "^2.0",
-        "pantheon-systems/drupal-integrations": "^9.0",
+        "pantheon-systems/drupal-integrations": "^11",
         "politsin/jquery-ui-touch-punch": "^1.0",
         "sendgrid/php-http-client": "^3.10.6",
         "sendgrid/sendgrid": "^7.11",
@@ -198,7 +195,7 @@
         "webflo/drupal-finder": "^1.0.0"
     },
     "require-dev": {
-        "drupal/core-dev": "^10",
+        "drupal/core-dev": "^11.4.4",
         "drupal/devel": "^5.5",
         "drush-ops/behat-drush-endpoint": "^9.4.1",
         "mglaman/phpstan-drupal": "^1.2",
@@ -207,7 +204,6 @@
         "phpstan/extension-installer": "^1.3",
         "phpstan/phpstan": "^1.10",
         "phpstan/phpstan-deprecation-rules": "^1.1",
-        "symfony/var-dumper": "^6.0",
         "vlucas/phpdotenv": "^2.4",
         "weitzman/drupal-test-traits": "^2.0"
     },
@@ -220,22 +216,23 @@
         "discard-changes": true,
         "sort-packages": true,
         "platform": {
-            "php": "8.3"
+            "php": "8.4"
         },
         "allow-plugins": {
             "composer/installers": true,
             "cweagans/composer-patches": true,
-            "drupal/core-composer-scaffold": true,
-            "oomphinc/composer-installers-extender": true,
             "dealerdirect/phpcodesniffer-composer-installer": true,
-            "phpro/grumphp-shim": true,
-            "phpro/grumphp": true,
-            "php-http/discovery": true,
-            "topfloor/composer-cleanup-vcs-dirs": true,
-            "mglaman/composer-drupal-lenient": true,
+            "drupal/core-composer-scaffold": true,
             "drupal/core-project-message": true,
+            "mglaman/composer-drupal-lenient": true,
+            "oomphinc/composer-installers-extender": true,
+            "php-http/discovery": true,
+            "phpro/grumphp": true,
+            "phpro/grumphp-shim": true,
             "phpstan/extension-installer": true,
-            "tbachert/spi": true
+            "symfony/runtime": true,
+            "tbachert/spi": true,
+            "topfloor/composer-cleanup-vcs-dirs": true
         }
     },
     "autoload": {
@@ -295,18 +292,17 @@
         },
         "patches": {
             "drupal/core": {
-                "2983456 - Expose triggering update of media metadata + thumbnail to end users": "https://www.drupal.org/files/issues/2024-07-09/2983456-10.3.1-159_0.patch",
-                "2827921 - Exception thrown by responsive srcset images when the image is not yet in the file system (such as with Stage File Proxy)": "https://www.drupal.org/files/issues/2021-09-03/responsive_image-remove_missing_response_image_width_exception-2827921-22.patch",
-                "1671190 - Use <button /> form element type instead of <input type='submit'/>": "https://www.drupal.org/files/issues/2022-01-07/1671190-92.patch",
+                "2983456 - Expose triggering update of media metadata + thumbnail to end users": "https://www.drupal.org/files/issues/2026-05-21/2983456-183-11.3.x.patch",
+                "2827921 - Exception thrown by responsive srcset images when the image is not yet in the file system (such as with Stage File Proxy)": "https://www.drupal.org/files/issues/2026-01-22/responsive_image-remove_missing_response_image_width_exception.patch",
+                "1671190 - Use <button /> form element type instead of <input type='submit'/>": "https://www.drupal.org/files/issues/2025-12-24/1671190-143.patch",
                 "2868014 - [PP-1] Views Date Filter Datetime Granularity Option": "https://www.drupal.org/files/issues/2025-07-22/2868014-141.patch",
                 "2993688 - Views relationships with multi-valued entity reference fields invalidate Distinct query option": "https://www.drupal.org/files/issues/2022-06-16/2993688-99.patch",
                 "2701575 - : TypeError: Drupal\\Core\\Routing\\RequestContext::fromRequest() https://www.drupal.org/project/drupal/issues/2701575": "https://www.drupal.org/files/issues/2022-02-28/2701575-14.patch",
                 "3202896 - Don't display OEmbed error to anonymous visitors when resource stops being available: https://www.drupal.org/project/drupal/issues/3202896": "https://www.drupal.org/files/issues/2022-02-23/issue-3202896-6.patch",
-                "2769407 - Views UI should offer a 'Treat NULL values as FALSE' on boolean field": "https://www.drupal.org/files/issues/2024-06-26/2769407_views_ui_null_option-10.3.x-90.patch",
-                "2741877 - Nested modals don't work - fixed focal point preview modal": "https://www.drupal.org/files/issues/2024-06-20/drupal-core--2024-06-20--2741877--mr-8105.patch",
+                "2769407 - Views UI should offer a 'Treat NULL values as FALSE' on boolean field": "https://www.drupal.org/files/issues/2026-01-19/2769407-D11.3.x-116.patch",
+                "2741877 - Nested modals don't work - fixed focal point preview modal": "https://www.drupal.org/files/issues/2026-05-26/drupal-2741877-nested-modals-176-d11.3-2.patch",
                 "3049216 - ajax error": "https://www.drupal.org/files/issues/2023-01-31/3049216-21_0.patch",
-                "3315678 - strnatcasecmp(): Passing null to parameter #2 ($string2) of type string is deprecated": "https://www.drupal.org/files/issues/2023-01-30/categorizing_plugin_error-3315678-16.patch",
-                "3359511 - [regression] missing menu active trail since Drupal 9.5.9": "https://www.drupal.org/files/issues/2025-01-14/3359511-103.patch"
+                "3315678 - strnatcasecmp(): Passing null to parameter #2 ($string2) of type string is deprecated": "https://www.drupal.org/files/issues/2023-01-30/categorizing_plugin_error-3315678-16.patch"
             },
             "drupal/inline_entity_form": {
                 "3099844 - Required fields make an optional IEF (erroneously) required": "https://www.drupal.org/files/issues/2024-02-01/inline_entity_form-required_fields_optional_ief-3099844-35.patch"
@@ -321,7 +317,11 @@
                 "3296053-Use Tokens checkbox not saving": "https://www.drupal.org/files/issues/2022-11-25/3296053-2.patch"
             },
             "drupal/contextual_range_filter": {
-                "3187789 - Search API Views compatibility" : "https://www.drupal.org/files/issues/2023-05-18/3187789-Add-Search-API-filter-support.patch"
+                "3187789 - Search API Views compatibility" : "https://www.drupal.org/files/issues/2023-05-18/3187789-Add-Search-API-filter-support.patch",
+                "PHP 8.4 implicit nullable deprecation in DateRange::init()": "patches/contextual_range_filter-php84-nullable.patch"
+            },
+            "drupal/views_combine": {
+                "PHP 8.4 implicit nullable deprecation in Combine::init()": "patches/views_combine-php84-nullable.patch"
             },
             "drupal/field_group": {
                 "3205504 - Add support for #description_display":"https://git.drupalcode.org/project/field_group/-/merge_requests/56.patch"
@@ -342,11 +342,12 @@
             "drupal/entity_print": {
                 "Possibility to alter http headers when we generate PDF": "https://www.drupal.org/files/issues/2021-08-17/entity_print-3202847-4.patch"
             },
-            "drupal/other_view_filter": {
-                "3433752 - Automated Drupal 11 compatibility fixes": "https://www.drupal.org/files/issues/2024-03-24/other_view_filter.8.x-1.3.rector.patch"
-            },
             "drupal/fancy_file_delete": {
-                "3610936 - executeMultiple return type incompatibility with VBO 4.4.7+": "https://www.drupal.org/files/issues/2026-07-16/fancy_file_delete-vbo-executemultiple-return-type-3610936.patch"
+                "3610936 - executeMultiple return type incompatibility with VBO 4.4.7+": "https://www.drupal.org/files/issues/2026-07-16/fancy_file_delete-vbo-executemultiple-return-type-3610936.patch",
+                "3554965 - PHP 8.4 - Implicitly nullable via default value null deprecation": "https://www.drupal.org/files/issues/2026-03-09/3554965-3.patch"
+            },
+            "drupal/other_view_filter": {
+                "Nullable type warnings after PHP 8.4 upgrade": "https://www.drupal.org/files/issues/2026-01-23/other_view_filter-3569319-nullable-warning-2.patch"
             }
         }
     }

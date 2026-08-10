@@ -22,7 +22,7 @@
       bottom: 0;
       font-size: 15px;
       line-height: 18px;
-      color: $orange01;
+      color: $gen_link_hover;
       text-transform: uppercase;
       text-decoration: none;
 
@@ -243,7 +243,7 @@
           font-family: "Proxima Nova SemiBold";
           font-size: 15px;
           line-height: 18px;
-          color: $orange01;
+          color: $gen_link_hover;
           text-transform: uppercase;
         }
       }
@@ -254,6 +254,14 @@
           font-size: 20px;
           line-height: 32px;
           color: $grey02;
+        }
+
+        p a {
+          color: $gen_link_hover;
+          &:hover {
+            color: $gen_link_hover;
+            text-decoration: underline;
+          }
         }
       }
 
@@ -471,6 +479,14 @@
             font-size: 26px;
             line-height: 32px;
             color: $grey02;
+          }
+
+          p a {
+            color: $gen_link_hover;
+            &:hover {
+              color: $gen_link_hover;
+              text-decoration: underline;
+            }
           }
         }
 

@@ -1,5 +1,18 @@
 @import '../../global/utils/init';
 
+// WCAG 1.4.1: Inline links in body content must be distinguishable from
+// surrounding text without relying on color alone. Adding underline satisfies
+// this without requiring a 3:1 contrast ratio between link and body text color.
+.ck-content p a:not([class]),
+.c-news--body .field--name-body p a:not([class]),
+.text-layout__body p a:not([class]),
+.c-block p a:not([class]) {
+  text-decoration: underline;
+  &:hover {
+    text-decoration: none;
+  }
+}
+
 /*.ck-content .link-text,
 .ck-content .c-container--link,
 .ck-content .c-block a,
@@ -96,7 +109,7 @@ a.nys-btn--blue {
   align-items: center;
   justify-content: center;
   padding: 20px 10px;
-  background: $blue03;
+  background: $cont_blue_lgt; // changed from $blue03 (#04a9c5, 2.8:1) for WCAG AA
   color: $color-white;
   text-align: center;
   text-transform: uppercase;
@@ -172,21 +185,11 @@ a.c-btn--small-blue {
     }
   }
 
-  .c-map--btn {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    padding: 0;
-    background: transparent;
-    border: none;
-  }
 }
+
 
 @include breakpoint($bp-sm) {
   .c-block--about-map {
-    .c-map--btn,
     .nys-btn--gold {
       display: none;
     }

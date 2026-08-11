@@ -41,6 +41,36 @@
         }, 300)
       );
 
+      // Arrow-key navigation for mobile slider mode.
+      // Matches the keydown pattern used in how-senate-works.es6.js — the
+      // handler lives on the container so it receives bubbled events from
+      // both the nav buttons and any focusable content inside carousel items.
+      const $qfContainer = $('#js-carousel-about-stats', context)
+        .closest('.c-stats--container');
+      const $qfNav = carouselNavBtn.closest('.c-carousel--nav');
+      if ($qfContainer.length > 0) {
+        $qfContainer.on('keydown.quickFacts', function (e) {
+          // Only handle arrow keys when the mobile nav buttons are visible.
+          if (!$qfNav.is(':visible')) {
+            return;
+          }
+          if (e.key === 'ArrowLeft') {
+            const $prevBtn = carouselNavBtn.filter('.prev');
+            if (!$prevBtn.hasClass('hidden')) {
+              $prevBtn.trigger('click');
+            }
+            e.preventDefault();
+          }
+          else if (e.key === 'ArrowRight') {
+            const $nextBtn = carouselNavBtn.filter('.next');
+            if (!$nextBtn.hasClass('hidden')) {
+              $nextBtn.trigger('click');
+            }
+            e.preventDefault();
+          }
+        });
+      }
+
       $('.c-senate-quick-facts__button').click(function (event) {
 
         const tabNumber = `#panel${$(this).data('tab')}`;

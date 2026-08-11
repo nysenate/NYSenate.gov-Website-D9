@@ -1,6 +1,8 @@
 {{ attach_library('nysenate_theme/nysenate-header-user-menu') }}
-<nav aria-label="dashboard">
-  <ul class="c-login--list u-tablet-plus{{ mobile_mode ? ' mobile-mode' : ' desktop-mode'}}">
+
+{% if mobile_mode %}
+  {# Mobile: flat list rendered inline inside the mobile nav overlay. #}
+  <ul class="c-login--list mobile-mode">
     <li>
       <a class="c-header--btn c-header--btn__primary" href="{{ dashboard_link }}">
         <span class="c-user-menu--full-width-dashboard-link">Welcome, {{ user_first_name }}!</span>
@@ -25,4 +27,38 @@
       <a class="c-header--btn" href="/user/logout">Logout</a>
     </li>
   </ul>
-</nav>
+
+{% else %}
+  {# Desktop: accessible disclosure button flyout pattern. #}
+  <div class="c-user-menu desktop-mode">
+    <button
+      class="c-user-menu__toggle c-header--btn c-header--btn__primary"
+      aria-expanded="false"
+      aria-controls="user-menu-dropdown">
+      <span class="c-user-menu--full-width-dashboard-link">Welcome, {{ user_first_name }}!</span>
+      <span class="c-user-menu--shrunk-dashboard-link">My Stuff</span>
+      <svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10 7">
+        <path d="M1 1.5 L5 5.5 L9 1.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <ul id="user-menu-dropdown" class="c-user-menu__dropdown" hidden>
+      {% if senator_microsite_link %}
+      <li class="c-login--my-senator">
+        <a class="c-header--btn" href="{{ senator_microsite_link }}">My Senator</a>
+      </li>
+      {% endif %}
+      <li class="c-login--dashboard">
+        <a class="c-header--btn" href="{{ dashboard_link }}">My Dashboard</a>
+      </li>
+      <li class="c-login--manage">
+        <a class="c-header--btn" href="{{ manage_dashboard_link }}">Manage Dashboard</a>
+      </li>
+      <li class="c-login--edit">
+        <a class="c-header--btn" href="{{ edit_account_link }}">Edit Account</a>
+      </li>
+      <li class="c-login--logout">
+        <a class="c-header--btn" href="/user/logout">Logout</a>
+      </li>
+    </ul>
+  </div>
+{% endif %}

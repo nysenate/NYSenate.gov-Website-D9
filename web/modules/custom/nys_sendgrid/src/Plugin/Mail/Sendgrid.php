@@ -3,6 +3,7 @@
 namespace Drupal\nys_sendgrid\Plugin\Mail;
 
 use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Config\ImmutableConfig;
 use Drupal\Core\Extension\ModuleHandler;
 use Drupal\Core\Logger\LoggerChannelTrait;
 use Drupal\Core\Mail\MailInterface;
@@ -94,21 +95,21 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
    *
    * @var \Drupal\Core\Config\ImmutableConfig
    */
-  protected $localConfig;
+  protected ImmutableConfig $localConfig;
 
   /**
    * The system.site config object.
    *
    * @var \Drupal\Core\Config\ImmutableConfig
    */
-  protected $siteConfig;
+  protected ImmutableConfig $siteConfig;
 
   /**
    * The reroute_email.settings config object.
    *
    * @var \Drupal\Core\Config\ImmutableConfig
    */
-  protected $rerouteConfig;
+  protected ImmutableConfig $rerouteConfig;
 
   /**
    * Event Dispatcher service.
@@ -149,7 +150,7 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): static {
     return new static(
       $container->get('nys_sendgrid_client'),
       $container->get('module_handler'),
@@ -207,7 +208,7 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
         ->applyTemplate();
     }
     catch (\Throwable $e) {
-      $this->failSending('Sendgrid Mail object failed to validate.', ['message' => $e->getMessage()]);
+      $this->failSending('Sendgrid Mail object failed to validate.', ['@message' => $e->getMessage()]);
     }
 
     // Make sure the modified object is saved to the message.
@@ -279,9 +280,9 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
         }
         catch (\Throwable $e) {
           $this->failSending(
-            'Email failed while assigning template (id=%id, actual=%actual)', [
-              'message' => $e->getMessage(),
-              '%actual' => $actual,
+            'Email failed while assigning template (id=@id, actual=@actual)', [
+              '@message' => $e->getMessage(),
+              '@actual' => $actual,
             ]
           );
         }
@@ -298,8 +299,8 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
    * @param array $vars
    *   The variables to attach to the log message.
    */
-  protected function failSending(string $message = '', array $vars = []) {
-    $vars += ['%id' => $this->message['id'] ?? '-no id-'];
+  protected function failSending(string $message = '', array $vars = []): void {
+    $vars += ['@id' => $this->message['id'] ?? '-no id-'];
     $this->localLogger->error($message, $vars);
     $this->messenger()
       ->addError($this->t('Unable to send e-mail. Contact the site administrator if the problem persists.'));
@@ -375,10 +376,10 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
         }
         catch (\Throwable $e) {
           $this->failSending(
-            'Email failed while validating categories (id=%id)', [
-              'message' => $e->getMessage(),
-              'add' => $add,
-              'categories' => $categories,
+            'Email failed while validating categories (id=@id)', [
+              '@message' => $e->getMessage(),
+              '@add' => $add,
+              '@categories' => $categories,
             ]
           );
         }
@@ -429,10 +430,10 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
       }
       catch (\Throwable $e) {
         $this->failSending(
-          'Email failed while validating body (id=%id, ct=%ct)', [
-            '%message' => $e->getMessage(),
-            '%body' => $body,
-            '%ct' => $content_type,
+          'Email failed while validating body (id=@id, ct=@ct)', [
+            '@message' => $e->getMessage(),
+            '@body' => $body,
+            '@ct' => $content_type,
           ]
         );
       }
@@ -455,9 +456,9 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
       }
       catch (\Throwable $e) {
         $this->failSending(
-          'Email failed while validating subject (id=%id, subj=%subj)', [
-            'message' => $e->getMessage(),
-            '%subj' => $subject,
+          'Email failed while validating subject (id=@id, subj=@subj)', [
+            '@message' => $e->getMessage(),
+            '@subj' => $subject,
           ]
         );
       }
@@ -513,9 +514,9 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
         }
         catch (\Throwable $e) {
           $this->failSending(
-            'Email failed during rerouting attempt. (id=%id, dest=%dest)', [
-              'message' => $e->getMessage(),
-              '%dest' => $dest,
+            'Email failed during rerouting attempt. (id=@id, dest=@dest)', [
+              '@message' => $e->getMessage(),
+              '@dest' => $dest,
             ]
           );
         }
@@ -553,9 +554,9 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
       }
       catch (\Throwable $e) {
         $this->failSending(
-          'Email failed due to poorly-formed "To" address (id=%id, addr=%addr)', [
-            'message' => $e->getMessage(),
-            '%addr' => $to_addr,
+          'Email failed due to poorly-formed "To" address (id=@id, addr=@addr)', [
+            '@message' => $e->getMessage(),
+            '@addr' => $to_addr,
           ]
         );
       }
@@ -584,9 +585,9 @@ class Sendgrid implements MailInterface, ContainerFactoryPluginInterface {
       }
       catch (\Throwable $e) {
         $this->failSending(
-          'Email failed due to poorly-formed "From" address (id=%id, addr=%addr)', [
-            'message' => $e->getMessage(),
-            '%addr' => $from_email,
+          'Email failed due to poorly-formed "From" address (id=@id, addr=@addr)', [
+            '@message' => $e->getMessage(),
+            '@addr' => $from_email,
           ]
         );
       }

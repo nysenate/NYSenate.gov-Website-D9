@@ -41,6 +41,8 @@
 
 
 {% include '@nysenate_theme/nysenate-carousel/_carousel-item.twig' with {
-  "image": content.field_media
+  "image": content.field_media,
+  "slide_index": slide_index,
+  "slide_total": slide_total
 } only %}
 

@@ -13,17 +13,17 @@
 # into smaller filter-based chunks keeps peak RSS well under 1 GB per process.
 #
 # CHUNK SIZING (current suite)
-# The suite runs ~47 test cases across 7 chunks.
-# AnonymousCacheHitTest: 13 cases (6 top-level pages + 7 content types), all
-# pure anonymous HTTP GETs — no admin user, no saves — so memory pressure is
-# low despite the count.
+# The suite runs ~51 test cases across 7 chunks.
+# AnonymousCacheHitTest: 16 cases (6 top-level pages + 7 content types + 3 OpenLeg
+# browse pages), all pure anonymous HTTP GETs — no admin user, no saves — so
+# memory pressure is low despite the count.
 # AnonymousCacheNonInvalidationTest: 4 cases (article/bill/event/petition
 # non-invalidation). Requires admin user + login per test.
 # AuthenticatedDynamicCacheTest: 6 cases (2 top-level + 2 content types + 1 senator
 # microsite, all cross-user; plus 1 account-change invalidation).
 # CacheMissInvalidationTest: split across 3 chunks to bound per-process memory;
 # the content type chunk merges node-edit (2 cases) with related-entity-edit
-# (6 cases) to avoid an under-sized chunk.
+# (6 cases) and the OpenLeg flush test (1 case) to avoid an under-sized chunk.
 # NoCachePoisoningTest: 6 cases (2 flag, 1 user menu, 1 senator section, 1 bill
 # vote widget, 1 anonymous leak).
 #
@@ -42,7 +42,7 @@
 chunks:
 
   - label: "AnonymousCacheHitTest (positive — HITs and max-age)"
-    filter: "AnonymousCacheHitTest::(testAnonymousCacheHit|testContentTypeDisplayPageCacheHit)"
+    filter: "AnonymousCacheHitTest::(testAnonymousCacheHit|testContentTypeDisplayPageCacheHit|testOpenLegBrowsePageCacheHit)"
 
   - label: "AnonymousCacheNonInvalidationTest (negative — non-invalidation, top-level pages)"
     filter: "AnonymousCacheNonInvalidationTest"
@@ -56,8 +56,8 @@ chunks:
   - label: "CacheMissInvalidationTest (top-level pages — senators, legislation, events, about)"
     filter: "CacheMissInvalidationTest::(testSenatorsCommittees|testLegislation|testEvents|testAbout)"
 
-  - label: "CacheMissInvalidationTest (content type display pages)"
-    filter: "CacheMissInvalidationTest::(testContentTypeDisplayPage|testArticlePage|testEventPage|testInTheNews|testMeeting|testPublicHearing|testResolution)"
+  - label: "CacheMissInvalidationTest (content type display pages + OpenLeg flush)"
+    filter: "CacheMissInvalidationTest::(testContentTypeDisplayPage|testArticlePage|testEventPage|testInTheNews|testMeeting|testPublicHearing|testResolution|testOpenLegBrowsePage)"
 
   - label: "NoCachePoisoningTest"
     filter: "NoCachePoisoningTest"

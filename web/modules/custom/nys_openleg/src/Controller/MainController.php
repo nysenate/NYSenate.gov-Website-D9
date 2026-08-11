@@ -194,6 +194,15 @@ class MainController extends ControllerBase {
           '#theme' => 'nys_openleg_not_found',
           '#attached' => ['library' => ['nys_openleg/openleg']],
           '#browse_url' => $base_share_path,
+          '#cache' => [
+            // Use a short TTL rather than the full 7-day TTL used for
+            // successful pages. The error condition may be a momentary OpenLeg
+            // API disruption rather than a permanently missing law/statute;
+            // a 5-minute cache is enough to absorb bot traffic without
+            // locking in a stale error page for a week if OL recovers quickly.
+            'max_age' => 300,
+            'tags' => ['nys_openleg:laws'],
+          ],
         ];
       }
 
@@ -250,6 +259,13 @@ class MainController extends ControllerBase {
       $ret['#search'] = $this->formBuilder
         ->getForm('Drupal\nys_openleg\Form\SearchForm');
     }
+
+    // Cache for 7 days, keyed by the nys_openleg:laws tag so that the admin
+    // flush button and any future automated purge can invalidate all OL pages.
+    $ret['#cache'] = [
+      'max_age' => 604800,
+      'tags' => ['nys_openleg:laws'],
+    ];
 
     return $ret;
   }

@@ -5,23 +5,36 @@
     <h3 class="nys-subtitle-title">{{ title }}</h3>
   {% endif %}
   {% if carousel or carousel_block %}
-    <section class="carousel__wrapper{{ attributes ? ' ' ~ attributes.class}}" {{- attributes ? attributes|without(class) -}}>
-      <ul class="carousel__list carousel__slick">
-        {% if carousel %}
+    {% if carousel %}
+      {# Pattern-library path: items provided directly as data. Wrap in a
+         Slick-initialized list so carousel.es6.js can pick them up. #}
+      <section class="carousel__wrapper{{ attributes ? ' ' ~ attributes.class}}"
+               {{- attributes ? attributes|without(class) -}}
+               role="region"
+               aria-roledescription="carousel"
+               aria-label="Capitol tour photos">
+        <div class="carousel__list carousel__slick">
           {% block carousel_items %}
             {% for item in carousel.list %}
               {%
-            include '@rain_theme/carousel/_carousel-item.twig' with {
-              "item": item
-            } only
-          %}
+                include '@nysenate_theme/nysenate-carousel/_carousel-item.twig' with {
+                  "item": item,
+                  "slide_index": loop.index,
+                  "slide_total": carousel.list|length
+                } only
+              %}
             {% endfor %}
           {% endblock %}
-        {% else %}
-          {{ carousel_block|without('field_title') }}
-        {% endif %}
-      </ul>
-    </section>
+        </div>
+      </section>
+    {% else %}
+      {# Drupal block path: the block template (block-content--slider.html.twig)
+         already wraps items in carousel.twig → .carousel__list.carousel__slick.
+         Rendering carousel_block directly here avoids a redundant outer Slick
+         wrapper that would treat the whole block as a single "slide" and add
+         a spurious tabindex="0" focus stop on the block container. #}
+      {{ carousel_block|without('field_title') }}
+    {% endif %}
   {% endif %}
 
   {% if description %}

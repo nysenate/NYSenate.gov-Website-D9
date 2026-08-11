@@ -57,6 +57,9 @@ class DynamicRouting implements ContainerInjectionInterface {
         'title' => 'Search',
         'method' => 'search',
         'vars' => ['search_term' => ''],
+        // Search results must never be cached — results depend on the
+        // search_term query parameter supplied by the user.
+        'no_cache' => TRUE,
       ],
     ];
 
@@ -76,7 +79,8 @@ class DynamicRouting implements ContainerInjectionInterface {
         $this_path .= '/{' . $var_key . '}';
       }
 
-      $route = new Route($this_path, $defaults, $permit, ['no_cache' => 'TRUE']);
+      $options = isset($val['no_cache']) ? ['no_cache' => 'TRUE'] : [];
+      $route = new Route($this_path, $defaults, $permit, $options);
       $route_collection->add('nys_openleg.' . $key, $route);
     }
 

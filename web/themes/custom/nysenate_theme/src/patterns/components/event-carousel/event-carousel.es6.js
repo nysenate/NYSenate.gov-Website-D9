@@ -4,7 +4,7 @@
  */
 /* eslint-disable max-len */
 
-!((document, Drupal, $) => {
+!((document, Drupal, $, once) => {
   'use strict';
 
   // jQuery 4 removed $.type; restore it for Slick compatibility.
@@ -24,7 +24,7 @@
     attach: function (context) {
       // We want to only have the slick carousel trigger once or we will
       // have a lot of pagers being appended on ajax trigger.
-      $('.event-carousel', context).once('eventCarousel').each(function () {
+      $(once('eventCarousel', '.event-carousel', context)).each(function () {
         const $parentContainer = $(this);
         const $list = $('.event-carousel__list', $parentContainer);
         let $nav = $(this).closest('.event-carousel').find('.slick-pager');
@@ -59,4 +59,4 @@
       });
     }
   };
-})(document, Drupal, jQuery);
+})(document, Drupal, jQuery, once);

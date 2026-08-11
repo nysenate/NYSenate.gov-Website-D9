@@ -65,7 +65,7 @@ class AfterFormatSubscriber implements EventSubscriberInterface {
   /**
    * Listens for nys_sendgrid.after.format event.
    */
-  public function afterFormat(AfterFormatEvent $event) {
+  public function afterFormat(AfterFormatEvent $event): void {
 
     // Only act if there is a valid Sendgrid\Mail object.
     $sgm = $event->message['params']['sendgrid_mail'] ?? NULL;
@@ -110,7 +110,7 @@ class AfterFormatSubscriber implements EventSubscriberInterface {
   /**
    * Enables Sendgrid's sandbox mode for a message.
    */
-  protected function enableSandbox(AfterFormatEvent $event) {
+  protected function enableSandbox(AfterFormatEvent $event): void {
     $sgm = $this->getMail($event);
     try {
       $sgm->enableSandBoxMode();
@@ -122,7 +122,7 @@ class AfterFormatSubscriber implements EventSubscriberInterface {
       // If sandbox was desired and could not be set, cancel the email.
       $event->message['send'] = FALSE;
       $m = $this->t('SendGrid sandbox could not be engaged; email cancelled.');
-      $this->logger->error($m, ['%message' => $e->getMessage()]);
+      $this->logger->error($m, ['@message' => $e->getMessage()]);
       $this->messenger()->addError($m);
     }
   }
@@ -130,7 +130,7 @@ class AfterFormatSubscriber implements EventSubscriberInterface {
   /**
    * Adds the site URL token to a Personalization.
    */
-  protected function addSubstitutionSiteUrl(AfterFormatEvent $event, string $url) {
+  protected function addSubstitutionSiteUrl(AfterFormatEvent $event, string $url): void {
     // @todo Revisit the need for this after refactoring Sendgrid's templates.
     try {
       foreach (($this->getMail($event)->getPersonalizations() ?? []) as $person) {
@@ -139,14 +139,14 @@ class AfterFormatSubscriber implements EventSubscriberInterface {
       }
     }
     catch (\Throwable $e) {
-      $this->logger->error("Could not add site URL substitutions", ['%message' => $e->getMessage()]);
+      $this->logger->error("Could not add site URL substitutions", ['@message' => $e->getMessage()]);
     }
   }
 
   /**
    * Adds substitution tokens for the body and subject.
    */
-  protected function addSubstitutionBodySubject(AfterFormatEvent $event) {
+  protected function addSubstitutionBodySubject(AfterFormatEvent $event): void {
     $sgm = $this->getMail($event);
 
     // Find the "proper" content.  The first HTML content is preferred,
@@ -182,14 +182,14 @@ class AfterFormatSubscriber implements EventSubscriberInterface {
       }
     }
     catch (\Throwable $e) {
-      $this->logger->error("Could not add body/subject substitutions", ['%message' => $e->getMessage()]);
+      $this->logger->error("Could not add body/subject substitutions", ['@message' => $e->getMessage()]);
     }
   }
 
   /**
    * Adds tracking options to a Mail object.
    */
-  protected function addTracking(AfterFormatEvent $event) {
+  protected function addTracking(AfterFormatEvent $event): void {
     try {
       // Google Analytics Tracking.
       $g_analytics = new Ganalytics();
@@ -224,7 +224,7 @@ class AfterFormatSubscriber implements EventSubscriberInterface {
       $this->getMail($event)->setTrackingSettings($alert_tracking);
     }
     catch (\Throwable $e) {
-      $this->logger->error("Could not add tracking options", ['%message' => $e->getMessage()]);
+      $this->logger->error("Could not add tracking options", ['@message' => $e->getMessage()]);
     }
   }
 

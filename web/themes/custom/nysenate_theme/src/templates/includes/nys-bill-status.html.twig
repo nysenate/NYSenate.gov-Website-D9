@@ -1,6 +1,16 @@
 {%- set top_class = ['nys-bill-status'] -%}
 {%- if is_small -%}{%- set top_class = top_class|merge(['nys-bill-status__sml']) -%}{%- endif -%}
 {%- if is_featured -%}{%- set top_class = top_class|merge(['nys-bill-status__drk']) -%}{%- endif -%}
+{%- set current_status = '' -%}
+{%- for i in 0..5 -%}
+  {%- for j in 0..1 -%}
+    {%- if positions[i][j] and positions[i][j].pass -%}
+      {%- set current_status = positions[i][j].text -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endfor -%}
+<figure class="nys-bill-status-figure">
+  {%- if current_status %}<figcaption class="visually-hidden">{{ 'Bill status: '|t }}{{ current_status }}</figcaption>{% endif %}
 <ul class="{{ top_class|join(' ') }}" aria-hidden="true">
   <hr/>
   {%- for i in 0..5 -%}
@@ -30,3 +40,4 @@
   {%- endfor %}
   <li class="nys-justify-spacer"></li>
 </ul>
+</figure>

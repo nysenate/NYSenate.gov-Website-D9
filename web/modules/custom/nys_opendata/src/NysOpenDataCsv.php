@@ -24,6 +24,7 @@ class NysOpenDataCsv {
     'scrollY' => 400,
     'scrollX' => TRUE,
     'searching' => FALSE,
+    'ordering' => FALSE,
   ];
 
   /**

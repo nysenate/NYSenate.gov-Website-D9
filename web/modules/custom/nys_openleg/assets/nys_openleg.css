@@ -94,9 +94,8 @@
   line-height: 1em;
   letter-spacing: 0.05em;
   padding: 7px 0;
-  color: #444;
-  border-bottom: 2px solid #0078a0;
-  color: #0078a0;
+  color: #006e93;
+  border-bottom: 2px solid #006e93;
 }
 
 .nys-openleg-result-item-link:hover {
@@ -108,7 +107,7 @@
   display: inline-block;
   font-weight: bold;
   vertical-align: middle;
-  color: #0078a0;
+  color: #006e93;
 }
 
 .nys-openleg-result-item-description {
@@ -117,7 +116,7 @@
   font-size: 20px;
   font-family: "Adelle Light", serif;
   vertical-align: middle;
-  color: #0078a0;
+  color: #006e93;
 }
 
 .nys-openleg-result-text {
@@ -329,6 +328,16 @@
   font-weight: 400;
 }
 
+/* When search-title is a <button>, strip browser button defaults */
+button.search-title {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+}
+
 .nys-openleg-statute-search-container .search-title {
   text-align: center;
   margin-right: 0.7em;
@@ -350,7 +359,8 @@ form#nys-openleg-search-form.open {
   border-bottom: 1px solid #777;
 }
 
-form#nys-openleg-search-form h3.search-title::before {
+form#nys-openleg-search-form h3.search-title::before,
+form#nys-openleg-search-form button.search-title::before {
   content: '\00a0\3e';
   font-family: senate_icons;
   font-size: 16pt;
@@ -363,7 +373,8 @@ form#nys-openleg-search-form h3.search-title::before {
   transition: transform .2s ease, margin-top .1s ease;
 }
 
-form#nys-openleg-search-form.open h3.search-title::before {
+form#nys-openleg-search-form.open h3.search-title::before,
+form#nys-openleg-search-form.open button.search-title::before {
   transform: rotate(90deg);
   margin-top: -0.5em;
 }

@@ -1,0 +1,13 @@
+--- a/src/Plugin/Field/FieldFormatter/ViewsReferenceFieldFormatter.php
++++ b/src/Plugin/Field/FieldFormatter/ViewsReferenceFieldFormatter.php
+@@ -159,8 +159,10 @@ class ViewsReferenceFieldFormatter extends FormatterBase implements ContainerFac
+         }
+         else {
+           // We should always add the cache metadata.
+-          $elements[$delta]['contents']['#cache'] = $render_array['#cache'];
++          if (is_array($render_array)) {
++            $elements[$delta]['contents']['#cache'] = $render_array['#cache'];
++          }
+         }
+       }
+

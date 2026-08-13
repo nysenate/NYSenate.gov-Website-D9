@@ -166,7 +166,7 @@
      */
     jsSearchBox: function (isMicrositeLandingPage, micrositeMenuClone) {
       const searchButtons = document.querySelectorAll('button.js-search--toggle');
-      const searchForms = document.querySelectorAll('div.u-tablet-plus form.nys-searchglobal-form');
+      const searchForms = document.querySelectorAll('div.u-tablet-plus form.c-site-search, div.u-tablet-plus form.nys-searchglobal-form, div.u-tablet-plus form.nys-global-search-form');
       const searchInputs = document.querySelectorAll('div.u-tablet-plus input.c-site-search--box');
       const navWraps = document.querySelectorAll('.c-nav--wrap');
 

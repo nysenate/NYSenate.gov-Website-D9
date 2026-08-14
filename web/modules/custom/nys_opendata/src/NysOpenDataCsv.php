@@ -111,7 +111,7 @@ class NysOpenDataCsv {
     }
     foreach ($file as $line) {
       $output = [];
-      foreach (str_getcsv($line) as $field) {
+      foreach (str_getcsv($line, escape: '\\') as $field) {
         // Detect field and format.
         // Need to remove commas for proper numeric detection.
         $number_check = str_replace(',', '', $field);
@@ -294,7 +294,9 @@ class NysOpenDataCsv {
 
         // Parse each part as a CSV line.
         foreach (['data', 'extra', 'header'] as $val) {
-          $this->{$val} = array_map('str_getcsv', $this->{$val});
+          $this->{$val} = array_map(function ($v) {
+            return str_getcsv($v, escape: '\\');
+          }, $this->{$val});
         }
 
         // Get the header row.

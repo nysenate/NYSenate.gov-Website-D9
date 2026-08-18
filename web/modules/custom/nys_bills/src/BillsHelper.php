@@ -32,35 +32,35 @@ class BillsHelper {
   /**
    * Defines a prefix for cache entries related to this class.
    */
-  const CACHE_BIN_PREFIX = 'nys_bills';
+  const string CACHE_BIN_PREFIX = 'nys_bills';
 
   /**
    * Default object for database service.
    *
    * @var \Drupal\Core\Database\Connection
    */
-  protected $connection;
+  protected Connection $connection;
 
   /**
    * The entity type manager service.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityTypeManager;
+  protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
    * The CacheBackend Interface.
    *
    * @var \Drupal\Core\Cache\CacheBackendInterface
    */
-  protected $cache;
+  protected CacheBackendInterface $cache;
 
   /**
    * The Senators Helper.
    *
    * @var \Drupal\nys_senators\SenatorsHelper
    */
-  protected $senatorsHelper;
+  protected SenatorsHelper $senatorsHelper;
 
   /**
    * A preconfigured logger channel for 'nys_bills'.
@@ -178,8 +178,8 @@ class BillsHelper {
   public function buildAlias(NodeInterface $node): string {
     $version = strtoupper($node->field_ol_version->value ?? '') ?: 'original';
     return $this->isBill($node)
-        ? $this->buildActiveAlias($node) . '/amendment/' . $version
-        : '';
+      ? $this->buildActiveAlias($node) . '/amendment/' . $version
+      : '';
   }
 
   /**
@@ -209,7 +209,6 @@ class BillsHelper {
     }
 
     return $bills;
-
   }
 
   /**
@@ -232,13 +231,13 @@ class BillsHelper {
 
     // Generate the key to be used.
     return implode(
-          ':', [
-            'versions',
-            $node_type,
-            $session,
-            $base_print,
-          ]
-      );
+      ':', [
+        'versions',
+        $node_type,
+        $session,
+        $base_print,
+      ]
+    );
   }
 
   /**
@@ -263,10 +262,10 @@ class BillsHelper {
     if (is_null($ret) && $cid) {
       $ret = [];
       if ($node->hasField('field_ol_base_print_no')
-            && !$node->get('field_ol_base_print_no')->isEmpty()
-            && $node->hasField('field_ol_session')
-            && !$node->get('field_ol_session')->isEmpty()
-        ) {
+        && !$node->get('field_ol_base_print_no')->isEmpty()
+        && $node->hasField('field_ol_session')
+        && !$node->get('field_ol_session')->isEmpty()
+      ) {
         $base_print = $node->field_ol_base_print_no->value;
         $session = $node->field_ol_session->value;
 
@@ -299,11 +298,11 @@ class BillsHelper {
   public function loadBillByTitle(string $print_num): ?NodeInterface {
     try {
       $nodes = $this->getStorage()->loadByProperties(
-            [
-              'type' => ['bill', 'resolution'],
-              'title' => $print_num,
-            ]
-        );
+        [
+          'type' => ['bill', 'resolution'],
+          'title' => $print_num,
+        ]
+      );
       /**
        * @var \Drupal\node\NodeInterface|NULL $ret
        */
@@ -323,22 +322,20 @@ class BillsHelper {
    */
   public function clearBillVersionsCache(NodeInterface $node): void {
     if ($this->isBill($node)) {
-
       // Clear the version lookup cache.
       $this->removeCache($this->generateBillVersionCacheKey($node));
 
       // Clear the node cache for all versions.
       // E.g., if S100B gets updated, S100 and S100A are also invalidated.
       $tags = array_map(
-            function ($nid) {
-                return "node:$nid";
-            },
-            array_keys($this->getBillVersions($node))
-        );
+        function ($nid) {
+          return "node:$nid";
+        },
+        array_keys($this->getBillVersions($node))
+      );
       if (count($tags)) {
         $this->cache->invalidateMultiple($tags);
       }
-
     }
   }
 
@@ -354,8 +351,8 @@ class BillsHelper {
    */
   public function formatFullBillTitle(NodeInterface $node): string {
     return $this->isBill($node)
-        ? ucfirst($node->field_ol_chamber->value) . ' ' . ucfirst($node->bundle()) . ' ' . $node->label()
-        : '';
+      ? ucfirst($node->field_ol_chamber->value) . ' ' . ucfirst($node->bundle()) . ' ' . $node->label()
+      : '';
   }
 
   /**
@@ -365,16 +362,16 @@ class BillsHelper {
    */
   public function formatTitle(NodeInterface $node, string $version = '', string $separator = '-'): string {
     if ($node->hasField('field_ol_base_print_no')
-          && !$node->get('field_ol_base_print_no')->isEmpty()
-          && $node->hasField('field_ol_session')
-          && !$node->get('field_ol_session')->isEmpty()
-      ) {
+      && !$node->get('field_ol_base_print_no')->isEmpty()
+      && $node->hasField('field_ol_session')
+      && !$node->get('field_ol_session')->isEmpty()
+    ) {
       $title = $this->formatTitleParts(
-            $node->field_ol_session->value,
-            $node->field_ol_base_print_no->value,
-            $version,
-            $separator
-        );
+        $node->field_ol_session->value,
+        $node->field_ol_base_print_no->value,
+        $version,
+        $separator
+      );
     }
     return $title ?? '';
   }
@@ -382,14 +379,14 @@ class BillsHelper {
   /**
    * Resolve Amendment Sponsors.
    */
-  public function resolveAmendmentSponsors($amendment, $chamber) {
+  public function resolveAmendmentSponsors($amendment, $chamber): array {
     $ret = [];
     $cycle = ['co', 'multi'];
     foreach ($cycle as $type) {
       $ret[$type] = [];
-      $propname = "field_ol_{$type}_sponsor_names";
+      $prop_name = "field_ol_{$type}_sponsor_names";
 
-      $sponsors = json_decode($amendment->{$propname}->value) ?? [];
+      $sponsors = json_decode(($amendment->{$prop_name}->value) ?? '') ?? [];
       foreach ($sponsors as $one_sponsor) {
         switch ($chamber) {
           case 'senate':
@@ -414,7 +411,6 @@ class BillsHelper {
     }
 
     return $ret;
-
   }
 
   /**
@@ -594,7 +590,7 @@ class BillsHelper {
    * @param int|array $nids
    *   Node IDs to load.
    */
-  public function getBillMetadata($nids) {
+  public function getBillMetadata(int|array $nids): array {
     $ret = [];
 
     if (is_numeric($nids)) {
@@ -625,13 +621,25 @@ class BillsHelper {
    * @param int $tid
    *   The tid of the taxonomy term.
    */
-  public function loadBillsFromTid($tid) {
-    $query = $this->entityTypeManager->getStorage('node')
-      ->getQuery()
-      ->accessCheck(FALSE)
-      ->condition('type', 'bill')
-      ->condition('field_bill_multi_session_root', [$tid], 'IN');
-    $result = $query->execute();
+  public function loadBillsFromTid(int $tid): array {
+    try {
+      $query = $this->entityTypeManager->getStorage('node')
+        ->getQuery()
+        ->accessCheck(FALSE)
+        ->condition('type', 'bill')
+        ->condition('field_bill_multi_session_root', [$tid], 'IN');
+      $result = $query->execute();
+    }
+    catch (\Throwable $e) {
+      $this->log->error(
+        "Failed to query bills from multi-session root @tid",
+        [
+          '@msg' => $e->getMessage(),
+          '@tid' => $tid,
+        ]
+      );
+      $result = [];
+    }
 
     return $result;
   }
@@ -639,44 +647,57 @@ class BillsHelper {
   /**
    * Helper function to return previous versions of a bill.
    *
-   * @param string $prev_vers_session
+   * @param string $previous_session
    *   OL Session.
-   * @param string $prev_vers_print_no
+   * @param string $previous_print
    *   Print Number.
    *
    * @return array
    *   Array of query results.
    */
-  public function getPrevVersions($prev_vers_session, $prev_vers_print_no) {
+  public function getPrevVersions(string $previous_session, string $previous_print): array {
     // We're using drupal_html_class() ensure that parameters have no spaces in
     // them.
     $cid = 'nysenate_bill_prev_versions_' .
-        str_replace(' ', '', $prev_vers_session) . '-' .
-        str_replace(' ', '', $prev_vers_print_no);
+      str_replace(' ', '', $previous_session) . '-' .
+      str_replace(' ', '', $previous_print);
     if ($cache = $this->cache->get($cid)) {
       return $cache->data;
     }
 
-    $query = $this->entityTypeManager->getStorage('node')
-      ->getQuery()
-      ->accessCheck(FALSE)
-      ->condition('type', ['bill', 'resolution'], 'IN')
-      ->condition('field_ol_session.value', $prev_vers_session)
-      ->condition('field_ol_print_no.value', $prev_vers_print_no)
-      ->range(0, 1);
-    $prev_vers_result = $query->execute();
+    try {
+      $query = $this->entityTypeManager->getStorage('node')
+        ->getQuery()
+        ->accessCheck(FALSE)
+        ->condition('type', ['bill', 'resolution'], 'IN')
+        ->condition('field_ol_session.value', $previous_session)
+        ->condition('field_ol_print_no.value', $previous_print)
+        ->range(0, 1);
+      $prev_version_result = $query->execute();
 
-    // Cache data for later use.
-    $cache_ttl = $this->configFactory
-      ->get('nys_config.settings')
-      ->get('nys_access_permissions_prev_query_ttl');
-    if (empty($cache_ttl)) {
-      $cache_ttl = '+24 hours';
+      // This is under the try{} so cache is only set if there is no error.
+      $cache_ttl = $this->configFactory
+        ->get('nys_config.settings')
+        ->get('nys_access_permissions_prev_query_ttl');
+      if (empty($cache_ttl)) {
+        $cache_ttl = '+24 hours';
+      }
+      $expire_timestamp = strtotime($cache_ttl, time());
+      $this->cache->set($cid, $prev_version_result, $expire_timestamp);
     }
-    $expire_timestamp = strtotime($cache_ttl, time());
-    $this->cache->set($cid, $prev_vers_result, $expire_timestamp);
+    catch (\Throwable $e) {
+      $this->log->error(
+        "Failed to query previous versions for {@sess}/{@print}",
+        [
+          '@sess' => $previous_session,
+          '@print' => $previous_print,
+          '@msg' => $e->getMessage(),
+        ]
+      );
+      $prev_version_result = [];
+    }
 
-    return $prev_vers_result;
+    return $prev_version_result;
   }
 
   /**
@@ -685,7 +706,7 @@ class BillsHelper {
    * @param int $nid
    *   The Node id.
    */
-  public function getOppositeChamberPrevVersions($nid) {
+  public function getOppositeChamberPrevVersions(int $nid): array {
     $related_metadata = [];
 
     // Get the multi-session root TID for the "same as" bill.
@@ -704,14 +725,14 @@ class BillsHelper {
 
       // Load all bills associated with this bill's taxonomy root.
       $related_metadata = array_filter(
-            $metadata, function ($v) {
-                return $v->print_num === $v->base_print_num;
-            }
-        );
+        $metadata,
+        function ($v) {
+          return $v->print_num === $v->base_print_num;
+        }
+      );
     }
 
     return $related_metadata;
-
   }
 
   /**
@@ -720,12 +741,21 @@ class BillsHelper {
    * @param array $amended_versions
    *   The bill amended versions.
    */
-  public function findsFeaturedLegislationQuote(array $amended_versions) {
+  public function findsFeaturedLegislationQuote(array $amended_versions): array {
     $amendments = [];
     // Loop over amendments, and finds featured legislation quote, if it exists.
     foreach ($amended_versions as $title => $nid) {
-      $node = $this->entityTypeManager->getStorage('node')->load($nid);
-      $amendments[$title]['node'] = $node;
+      try {
+        $node = $this->entityTypeManager->getStorage('node')->load($nid);
+        $amendments[$title]['node'] = $node;
+      }
+      catch (\Throwable $e) {
+        $this->log->error(
+          "Failed to load amendment quote for @title",
+          ['@title' => $title, '@nid' => $nid, '@msg' => $e->getMessage()]
+        );
+        $amendments[$title]['node'] = NULL;
+      }
       // @todo Query for quotes.
     }
 
@@ -756,7 +786,6 @@ class BillsHelper {
    * @todo This should not be here.  Maybe nys_bill_notifications?
    */
   public function subscribeToBill(NodeInterface $bill, mixed $user = NULL, ?EntityInterface $source = NULL): ?SubscriptionInterface {
-
     // Resolve the $user down to a User object, either existing or new.
     if (is_string($user)) {
       $resolved_user = UsersHelper::resolveUser(0);
@@ -910,7 +939,6 @@ class BillsHelper {
         $remote_votes = [];
         foreach ($remote_array as $remote) {
           $remote_votes[$remote['name']] = $remote;
-
         }
 
         // Set up the type label; special for committee votes.
@@ -1003,7 +1031,6 @@ class BillsHelper {
    *   it is generalized, nys_subscriptions.
    */
   public function findSubscription(ContentEntityBase $bill, mixed $user_or_email = NULL, bool $create = FALSE): ?SubscriptionInterface {
-
     try {
       $storage = $this->entityTypeManager->getStorage('subscription');
     }

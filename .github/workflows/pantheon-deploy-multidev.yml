@@ -29,6 +29,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ vars.PHP_VERSION }}
+          extensions: gmp
 
       - name: Add the Pantheon SSH Key for the CI user
         uses: webfactory/ssh-agent@v0.7.0

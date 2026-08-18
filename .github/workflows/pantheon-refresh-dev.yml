@@ -13,6 +13,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ vars.PHP_VERSION }}
+          extensions: gmp
 
       - name: Add SSH Key
         uses: webfactory/ssh-agent@v0.8.0

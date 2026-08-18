@@ -167,14 +167,16 @@
     jsSearchBox: function (isMicrositeLandingPage, micrositeMenuClone) {
       const searchButtons = document.querySelectorAll('button.js-search--toggle');
       const searchForms = document.querySelectorAll('div.u-tablet-plus form.c-site-search, div.u-tablet-plus form.nys-searchglobal-form, div.u-tablet-plus form.nys-global-search-form');
+      // Use the container so inert covers siblings like .c-site-search--link outside the form.
+      const searchContainers = Array.from(searchForms).map(f => f.closest('.c-site-search--container') || f);
       const searchInputs = document.querySelectorAll('div.u-tablet-plus input.c-site-search--box');
       const navWraps = document.querySelectorAll('.c-nav--wrap');
 
       // Implement expandable search button in header for full site.
       searchButtons.forEach((searchButton, index) => {
-        // Set initial inert state on closed search forms
+        // Set initial inert state on closed search containers
         if (!searchForms.item(index).classList.contains('open')) {
-          searchForms.item(index).setAttribute('inert', '');
+          searchContainers[index].setAttribute('inert', '');
         }
 
         // Extracted close function for reuse (click and ESC).
@@ -183,7 +185,7 @@
           searchForms.item(index).classList.remove('open');
           searchButton.setAttribute('aria-expanded', 'false');
           searchButton.innerHTML = 'open search';
-          searchForms.item(index).setAttribute('inert', '');
+          searchContainers[index].setAttribute('inert', '');
           if (!isMicrositeLandingPage) {
             document.body.classList.remove('search-open');
           }
@@ -200,11 +202,11 @@
           clickElem.currentTarget.setAttribute('aria-expanded', searchForms.item(index).classList.contains('open') ? 'true' : 'false');
           clickElem.currentTarget.innerHTML = (searchForms.item(index).classList.contains('open') ? 'close' : 'open') + ' search';
           
-          // Toggle inert attribute to prevent keyboard navigation when closed
+          // Toggle inert on the container to cover form and sibling .c-site-search--link.
           if (searchForms.item(index).classList.contains('open')) {
-            searchForms.item(index).removeAttribute('inert');
+            searchContainers[index].removeAttribute('inert');
           } else {
-            searchForms.item(index).setAttribute('inert', '');
+            searchContainers[index].setAttribute('inert', '');
           }
           
           if (!isMicrositeLandingPage) {

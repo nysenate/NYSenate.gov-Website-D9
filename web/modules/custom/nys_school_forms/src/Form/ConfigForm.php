@@ -3,6 +3,7 @@
 namespace Drupal\nys_school_forms\Form;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -22,7 +23,7 @@ class ConfigForm extends ConfigFormBase {
    */
   protected EntityTypeManagerInterface $entityTypeManager;
 
-  public function __construct(ConfigFactoryInterface $config_factory, EntityTypeManagerInterface $entityTypeManager, $typedConfigManager = NULL) {
+  public function __construct(ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typedConfigManager, EntityTypeManagerInterface $entityTypeManager) {
     $this->entityTypeManager = $entityTypeManager;
     parent::__construct($config_factory, $typedConfigManager);
   }
@@ -31,7 +32,7 @@ class ConfigForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container): static {
-    return new static($container->get('config.factory'), $container->get('entity_type.manager'));
+    return new static($container->get('config.factory'), $container->get('config.typed'), $container->get('entity_type.manager'));
   }
 
   /**

@@ -3,13 +3,14 @@
 # Run PHPUnit cache regression tests on the Pantheon appserver container.
 #
 # The CI workflow invokes this script once per chunk via terminus:
-#   terminus remote:drush <site>.<env> -- ev "passthru('bash /code/tests/dtt/run-on-container.sh <url> --filter <filter> 2>&1', \$c); if (\$c !== 0) { throw new \\Exception('PHPUnit failed'); }"
+#   terminus remote:drush <site>.<env> -- ev "putenv('PANTHEON_TEST_UA=...'); pcntl_exec('/bin/bash', ['/code/tests/dtt/run-on-container.sh', '<url>', '--filter', '<filter']);"
+# pcntl_exec() replaces the drush process (freeing its Drupal bootstrap memory)
+# before this script runs, so only one Drupal bootstrap is resident at a time.
 #
 # Chunking and chunk iteration are handled by tests/dtt/run-all-chunks.sh
 # (used by CI and for manual Pantheon runs) and by .ddev/commands/web/run-cache-tests
-# for local DDEV runs. This script's job is solely to provide a stable,
-# correctly-quoted PHPUnit
-# invocation on the container, and to serve as a documented entry point for
+# for local DDEV runs. This script's sole job is to provide a stable, correctly-quoted
+# PHPUnit invocation on the container and to serve as a documented entry point for
 # manual debugging via SSH:
 #   bash /code/tests/dtt/run-on-container.sh https://pr-123-nysenate-2022.pantheonsite.io --filter testFoo
 #

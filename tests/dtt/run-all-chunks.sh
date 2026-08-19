@@ -56,15 +56,15 @@ while IFS=$'\t' read -r LABEL FILTER; do
   FILTERS+=("$FILTER")
 done <<< "$CHUNKS"
 
-# exit() inside drush ev is treated as abnormal termination by Drush, which
-# overrides the exit code to 1 regardless of the value passed. Throwing an
-# exception instead maps pass/fail cleanly: Drush exits 0 on normal completion
-# and 1 on an uncaught exception.
+# pcntl_exec() replaces the drush process image with bash, freeing drush's
+# Drupal bootstrap memory before PHPUnit starts its own. passthru() kept both
+# bootstraps resident simultaneously, pushing combined RSS over the 9 GB cgroup
+# limit. If pcntl_exec fails the fallback throw maps to drush exit 1.
 OVERALL=0
 for i in "${!LABELS[@]}"; do
   echo "=== ${LABELS[$i]} ==="
   terminus remote:drush "$SITE" -- \
-    ev "error_reporting(E_ERROR); putenv('PANTHEON_TEST_UA=${PANTHEON_TEST_UA}'); passthru('bash /code/tests/dtt/run-on-container.sh $URL --filter $(printf '%q' "${FILTERS[$i]}") 2>&1', \$c); if (\$c !== 0) { throw new \Exception('PHPUnit failed with exit code ' . \$c); }" \
+    ev "error_reporting(E_ERROR); putenv('PANTHEON_TEST_UA=${PANTHEON_TEST_UA}'); if (!pcntl_exec('/bin/bash', ['/code/tests/dtt/run-on-container.sh', '${URL}', '--filter', '${FILTERS[$i]}'])) { throw new \Exception('pcntl_exec failed'); }" \
     || OVERALL=$?
 done
 exit $OVERALL

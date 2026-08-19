@@ -20,7 +20,7 @@ class ConfigForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    $instance = new static($container->get('config.factory'));
+    $instance = new static($container->get('config.factory'), $container->get('config.typed'));
     return $instance;
   }
 

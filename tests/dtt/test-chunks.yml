@@ -8,15 +8,18 @@
 #
 # WHY CHUNKS EXIST
 # PHPUnit accumulates Mink session state and Redis-unserialized objects across
-# tests in a single process. On Pantheon's 2 GB PHP limit this exhausts memory
+# tests in a single process. On Pantheon's 4 GB PHP limit this exhausts memory
 # mid-run. Locally, large single-process runs can be killed (exit 137). Splitting
 # into smaller filter-based chunks keeps peak RSS well under 1 GB per process.
 #
 # CHUNK SIZING (current suite)
-# The suite runs ~51 test cases across 7 chunks.
-# AnonymousCacheHitTest: 16 cases (6 top-level pages + 7 content types + 3 OpenLeg
-# browse pages), all pure anonymous HTTP GETs — no admin user, no saves — so
-# memory pressure is low despite the count.
+# The suite runs ~51 test cases across 8 chunks.
+# AnonymousCacheHitTest is split into two chunks because the D11 Drupal bootstrap
+# is significantly heavier in memory. All 16 cases in one process was exhausting
+# Pantheon's 4 GB PHP limit even though the tests are pure anonymous HTTP GETs.
+#   Chunk 1: testAnonymousCacheHit — 6 cases (top-level pages only).
+#   Chunk 2: testContentTypeDisplayPageCacheHit|testOpenLegBrowsePageCacheHit
+#            — 7 + 3 = 10 cases; requireNodeUrlByType() accumulates more state.
 # AnonymousCacheNonInvalidationTest: 4 cases (article/bill/event/petition
 # non-invalidation). Requires admin user + login per test.
 # AuthenticatedDynamicCacheTest: 6 cases (2 top-level + 2 content types + 1 senator
@@ -41,8 +44,11 @@
 
 chunks:
 
-  - label: "AnonymousCacheHitTest (positive — HITs and max-age)"
-    filter: "AnonymousCacheHitTest::(testAnonymousCacheHit|testContentTypeDisplayPageCacheHit|testOpenLegBrowsePageCacheHit)"
+  - label: "AnonymousCacheHitTest (top-level pages)"
+    filter: "AnonymousCacheHitTest::testAnonymousCacheHit"
+
+  - label: "AnonymousCacheHitTest (content type display pages + OpenLeg browse)"
+    filter: "AnonymousCacheHitTest::(testContentTypeDisplayPageCacheHit|testOpenLegBrowsePageCacheHit)"
 
   - label: "AnonymousCacheNonInvalidationTest (negative — non-invalidation, top-level pages)"
     filter: "AnonymousCacheNonInvalidationTest"

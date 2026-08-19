@@ -5,7 +5,7 @@
 # Reads tests/dtt/test-chunks.yml and calls run-on-container.sh once per chunk
 # via a separate `terminus remote:drush` invocation. One SSH session per chunk
 # prevents Pantheon's connection timeout from aborting a long-running suite and
-# keeps peak PHP memory per process well under the container's 4 GB limit.
+# keeps peak PHP memory per process well within the container's available RAM.
 #
 # This script runs on the local machine (or CI runner) — not on the container.
 # PANTHEON_TEST_UA must be exported in the environment before calling this

@@ -28,7 +28,7 @@ cd /code
 
 export DTT_BASE_URL
 
-exec php -d memory_limit=16384M vendor/bin/phpunit \
+exec php -d opcache.enable_cli=1 -d memory_limit=16384M vendor/bin/phpunit \
   -c tests/dtt/phpunit.xml \
   --testsuite existing-site \
   --group cache_regression \

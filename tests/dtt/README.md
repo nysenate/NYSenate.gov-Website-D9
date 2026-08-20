@@ -135,8 +135,10 @@ PANTHEON_TEST_UA=<token> bash tests/dtt/run-all-chunks.sh \
 
 # Single test class or method — call run-on-container.sh directly via Terminus
 terminus remote:drush nysenate-2022.pr-NNN -- \
-  ev "error_reporting(E_ERROR); putenv('PANTHEON_TEST_UA=<token>'); passthru('bash /code/tests/dtt/run-on-container.sh https://pr-NNN-nysenate-2022.pantheonsite.io --filter AnonymousCacheHitTest 2>&1', \$c); if (\$c !== 0) { throw new \Exception('PHPUnit failed with exit code ' . \$c); }"
+  ev "error_reporting(E_ERROR); putenv('PANTHEON_TEST_UA=<token>'); passthru('/code/tests/dtt/run-on-container.sh https://pr-NNN-nysenate-2022.pantheonsite.io --filter AnonymousCacheHitTest', \$c); if (\$c !== 0) exit(\$c);"
 ```
+
+**Prefer PR multidevs over `dev`.** The `dev` environment serves production-volume traffic and may have cold caches, making pages significantly slower to respond. `warmCache()` allows up to 20 × 60-second attempts per page — on a cold or busy environment this can push individual chunks past Pantheon's 10-minute SSH idle timeout, killing the connection mid-test. PR multidevs are dedicated and consistently faster.
 
 See **Why tests run on the container** above for why this is the only approach that works reliably for all test classes.
 

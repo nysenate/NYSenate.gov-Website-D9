@@ -65,7 +65,7 @@ OVERALL=0
 for i in "${!LABELS[@]}"; do
   echo "=== ${LABELS[$i]} ==="
   terminus remote:drush "$SITE" -- \
-    ev "error_reporting(E_ERROR); putenv('PANTHEON_TEST_UA=${PANTHEON_TEST_UA}'); passthru('/code/tests/dtt/run-on-container.sh ${URL} --filter ${FILTERS[$i]}');" \
+    ev "error_reporting(E_ERROR); putenv('PANTHEON_TEST_UA=${PANTHEON_TEST_UA}'); passthru('/code/tests/dtt/run-on-container.sh ${URL} --filter ' . escapeshellarg('${FILTERS[$i]}'), \$c); if (\$c !== 0) exit(\$c);" \
     || OVERALL=$?
 done
 exit $OVERALL

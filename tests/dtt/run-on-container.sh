@@ -3,9 +3,15 @@
 # Run PHPUnit cache regression tests on the Pantheon appserver container.
 #
 # The CI workflow invokes this script once per chunk via terminus:
-#   terminus remote:drush <site>.<env> -- ev "putenv('PANTHEON_TEST_UA=...'); pcntl_exec('/bin/bash', ['/code/tests/dtt/run-on-container.sh', '<url>', '--filter', '<filter']);"
-# pcntl_exec() replaces the drush process (freeing its Drupal bootstrap memory)
-# before this script runs, so only one Drupal bootstrap is resident at a time.
+#   terminus remote:drush <site>.<env> -- ev "putenv('PANTHEON_TEST_UA=...'); putenv('DTT_BASE_URL=...'); passthru('/code/tests/dtt/run-on-container.sh <url> --filter <filter>');"
+#
+# Key PHP flags used here:
+#   -d newrelic.enabled=0       Disable New Relic instrumentation. Without this, the New Relic
+#                               PHP extension hooks into every function call across the entire
+#                               Drupal 11 codebase and fills the 9 GB container cgroup with its
+#                               transaction trace buffer, triggering SIGKILL (exit 137).
+#   -d opcache.enable_cli=1     Enable OPcache for the CLI process (speeds up class loading).
+#   -d memory_limit=512M        Generous ceiling; tests use ~40 MB in practice.
 #
 # Chunking and chunk iteration are handled by tests/dtt/run-all-chunks.sh
 # (used by CI and for manual Pantheon runs) and by .ddev/commands/web/run-cache-tests
@@ -29,7 +35,7 @@ cd /code
 
 export DTT_BASE_URL
 
-exec php -d opcache.enable_cli=1 -d memory_limit=16384M vendor/bin/phpunit \
+exec php -d newrelic.enabled=0 -d opcache.enable_cli=1 -d memory_limit=512M vendor/bin/phpunit \
   -c tests/dtt/phpunit.xml \
   --testsuite existing-site \
   --group cache_regression \

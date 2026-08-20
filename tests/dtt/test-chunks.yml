@@ -7,19 +7,23 @@
 # responsibility; this script just runs PHPUnit with whatever args it receives.
 #
 # WHY CHUNKS EXIST
-# PHPUnit accumulates Mink session state and Redis-unserialized objects across
-# tests in a single process. The Drupal 11 bootstrap is memory-intensive; running
-# the whole suite in one process risks exhausting the PHP memory limit.
-# Splitting into smaller filter-based chunks keeps peak RSS manageable per process.
+# Each chunk runs as a separate terminus SSH session. This serves two purposes:
+#   1. SSH timeout safety: a single long-running session risks being cut off by
+#      Pantheon mid-suite; capping each session to one chunk bounds the risk.
+#   2. CI visibility: each chunk produces independent pass/fail output, making
+#      it easy to identify failing test classes without a monolithic log.
+# Memory is not a constraint: with New Relic disabled (-d newrelic.enabled=0 in
+# run-on-container.sh) the entire suite uses ~40 MB. The prior SIGKILL (exit 137)
+# was caused by New Relic's PHP instrumentation filling the 9 GB container cgroup,
+# not by Drupal or test heap size.
 #
 # CHUNK SIZING (current suite)
 # The suite runs ~51 test cases across 8 chunks.
-# AnonymousCacheHitTest is split into two chunks because the D11 Drupal bootstrap
-# is significantly heavier in memory. All 16 cases in one process was exhausting
-# Pantheon's PHP memory limit even though the tests are pure anonymous HTTP GETs.
+# AnonymousCacheHitTest is split into two chunks for historical reasons (the split
+# predates the New Relic diagnosis). It can be recombined without issue.
 #   Chunk 1: testAnonymousCacheHit — 6 cases (top-level pages only).
 #   Chunk 2: testContentTypeDisplayPageCacheHit|testOpenLegBrowsePageCacheHit
-#            — 7 + 3 = 10 cases; requireNodeUrlByType() accumulates more state.
+#            — 7 + 3 = 10 cases.
 # AnonymousCacheNonInvalidationTest: 4 cases (article/bill/event/petition
 # non-invalidation). Requires admin user + login per test.
 # AuthenticatedDynamicCacheTest: 6 cases (2 top-level + 2 content types + 1 senator

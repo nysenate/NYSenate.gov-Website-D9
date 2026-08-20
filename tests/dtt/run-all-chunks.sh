@@ -63,9 +63,11 @@ done <<< "$CHUNKS"
 # -d newrelic.enabled=0 in run-on-container.sh — not process replacement here.
 OVERALL=0
 for i in "${!LABELS[@]}"; do
+  echo
   echo "=== ${LABELS[$i]} ==="
   terminus remote:drush "$SITE" -- \
-    ev "error_reporting(E_ERROR); putenv('PANTHEON_TEST_UA=${PANTHEON_TEST_UA}'); passthru('/code/tests/dtt/run-on-container.sh ${URL} --filter ${FILTERS[$i]}');" \
+    ev "error_reporting(E_ERROR); putenv('PANTHEON_TEST_UA=${PANTHEON_TEST_UA}'); passthru('/code/tests/dtt/run-on-container.sh ${URL} --filter ' . escapeshellarg('${FILTERS[$i]}'), \$c); if (\$c !== 0) exit(\$c);" \
+    2>&1 | sed "s|${PANTHEON_TEST_UA}|[REDACTED]|g" \
     || OVERALL=$?
 done
 exit $OVERALL

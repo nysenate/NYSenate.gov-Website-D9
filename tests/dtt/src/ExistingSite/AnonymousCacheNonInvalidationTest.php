@@ -34,6 +34,19 @@ class AnonymousCacheNonInvalidationTest extends CacheTestBase {
   }
 
   /**
+   * Sleeps briefly after warming pages so re-cached responses propagate to all
+   * CF edge nodes before the save. Without this, warmCache() may confirm HIT
+   * on one edge while another edge still holds a stale pre-BAN response; when
+   * that edge later receives a pending BAN (from a prior test's save), it
+   * briefly returns MISS and the non-invalidation assertion fails spuriously.
+   */
+  private function settleCdnAfterWarm(): void {
+    if (function_exists('pantheon_clear_edge_keys_shutdown')) {
+      sleep(5);
+    }
+  }
+
+  /**
    * An article edit must not invalidate top-level pages that don't display articles.
    *
    * Articles feed / and /news-and-issues only.
@@ -44,6 +57,7 @@ class AnonymousCacheNonInvalidationTest extends CacheTestBase {
     foreach ($unrelated as $path) {
       $this->warmCache($path);
     }
+    $this->settleCdnAfterWarm();
     $this->saveEntity($article);
     foreach ($unrelated as $path) {
       $this->assertAnonymousCacheHit($path);
@@ -61,6 +75,7 @@ class AnonymousCacheNonInvalidationTest extends CacheTestBase {
     foreach ($unrelated as $path) {
       $this->warmCache($path);
     }
+    $this->settleCdnAfterWarm();
     $this->saveEntity($bill);
     foreach ($unrelated as $path) {
       $this->assertAnonymousCacheHit($path);
@@ -78,6 +93,7 @@ class AnonymousCacheNonInvalidationTest extends CacheTestBase {
     foreach ($unrelated as $path) {
       $this->warmCache($path);
     }
+    $this->settleCdnAfterWarm();
     $this->saveEntity($event);
     foreach ($unrelated as $path) {
       $this->assertAnonymousCacheHit($path);
@@ -94,6 +110,7 @@ class AnonymousCacheNonInvalidationTest extends CacheTestBase {
     foreach (self::TOP_LEVEL_PAGES as $path) {
       $this->warmCache($path);
     }
+    $this->settleCdnAfterWarm();
     $this->saveEntity($petition);
     foreach (self::TOP_LEVEL_PAGES as $path) {
       $this->assertAnonymousCacheHit($path);

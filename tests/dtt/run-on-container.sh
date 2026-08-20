@@ -40,5 +40,6 @@ exec php -d newrelic.enabled=0 -d opcache.enable_cli=1 -d memory_limit=512M vend
   --testsuite existing-site \
   --group cache_regression \
   --testdox \
+  --colors=never \
   --do-not-cache-result \
   "$@"

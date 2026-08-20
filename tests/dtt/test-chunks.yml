@@ -18,14 +18,16 @@
 # not by Drupal or test heap size.
 #
 # CHUNK SIZING (current suite)
-# The suite runs ~51 test cases across 8 chunks.
+# The suite runs ~51 test cases across 9 chunks.
 # AnonymousCacheHitTest is split into two chunks for historical reasons (the split
 # predates the New Relic diagnosis). It can be recombined without issue.
 #   Chunk 1: testAnonymousCacheHit — 6 cases (top-level pages only).
 #   Chunk 2: testContentTypeDisplayPageCacheHit|testOpenLegBrowsePageCacheHit
 #            — 7 + 3 = 10 cases.
-# AnonymousCacheNonInvalidationTest: 4 cases (article/bill/event/petition
-# non-invalidation). Requires admin user + login per test.
+# AnonymousCacheNonInvalidationTest is split into two chunks to keep each SSH
+# session under Pantheon's 10-minute idle timeout on slower environments (dev).
+#   Chunk 1: article + bill non-invalidation (2 cases).
+#   Chunk 2: event + petition non-invalidation (2 cases).
 # AuthenticatedDynamicCacheTest: 6 cases (2 top-level + 2 content types + 1 senator
 # microsite, all cross-user; plus 1 account-change invalidation).
 # CacheMissInvalidationTest: split across 3 chunks to bound per-process memory;
@@ -37,8 +39,9 @@
 # ADDING A TEST
 # - If the new test belongs to a class that runs as a single chunk
 #   (AuthenticatedDynamicCacheTest or NoCachePoisoningTest), no change is needed.
-# - If the new test is in a split class (AnonymousCacheHitTest or
-#   CacheMissInvalidationTest), add the method name to the relevant filter below.
+# - If the new test is in a split class (AnonymousCacheHitTest,
+#   AnonymousCacheNonInvalidationTest, or CacheMissInvalidationTest), add the
+#   method name to the relevant filter below.
 # - If you add a new test class, add a new chunk entry at the end.
 #
 # FILTER SYNTAX
@@ -54,8 +57,11 @@ chunks:
   - label: "AnonymousCacheHitTest (content type display pages + OpenLeg browse)"
     filter: "AnonymousCacheHitTest::(testContentTypeDisplayPageCacheHit|testOpenLegBrowsePageCacheHit)"
 
-  - label: "AnonymousCacheNonInvalidationTest (negative — non-invalidation, top-level pages)"
-    filter: "AnonymousCacheNonInvalidationTest"
+  - label: "AnonymousCacheNonInvalidationTest (article + bill)"
+    filter: "AnonymousCacheNonInvalidationTest::(testArticleEditDoesNotInvalidateUnrelatedPages|testBillEditDoesNotInvalidateUnrelatedPages)"
+
+  - label: "AnonymousCacheNonInvalidationTest (event + petition)"
+    filter: "AnonymousCacheNonInvalidationTest::(testEventEditDoesNotInvalidateUnrelatedPages|testPetitionEditDoesNotInvalidateAnyTopLevelPage)"
 
   - label: "AuthenticatedDynamicCacheTest"
     filter: "AuthenticatedDynamicCacheTest"

@@ -29,9 +29,9 @@
 }
 
 @media #{$tablet} {
-	.c-senators-committees-header {
-		padding-bottom: 40px;
-
+	.c-block.c-senators-committees-header {
+		padding-bottom: 0;
+		margin-bottom: 20px;
 		p {
 			margin-bottom: 40px;
 			line-height: 32px;
@@ -48,6 +48,11 @@
 				font-size: 17px;
 				line-height: 17px;
 			}
+		}
+	}
+	.landing-page--senators {
+		.field--name-field-landing-blocks > .field__item {
+			margin-bottom: 0;
 		}
 	}
 }

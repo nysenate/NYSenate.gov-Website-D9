@@ -2,7 +2,8 @@
 #
 # Run all cache regression test chunks against a Pantheon multidev via Terminus.
 #
-# Reads tests/dtt/test-chunks.yml and calls run-on-container.sh once per chunk
+#
+# Reads test-chunks.yml and calls run-on-container.sh once per chunk
 # via a separate `terminus remote:drush` invocation. One SSH session per chunk
 # prevents Pantheon's connection timeout from aborting a long-running suite and
 # keeps peak PHP memory per process well within the container's available RAM.
@@ -56,15 +57,15 @@ while IFS=$'\t' read -r LABEL FILTER; do
   FILTERS+=("$FILTER")
 done <<< "$CHUNKS"
 
-# pcntl_exec() replaces the drush process image with bash, freeing drush's
-# Drupal bootstrap memory before PHPUnit starts its own. passthru() kept both
-# bootstraps resident simultaneously, pushing combined RSS over the 9 GB cgroup
-# limit. If pcntl_exec fails the fallback throw maps to drush exit 1.
+# New Relic is the root cause of the prior SIGKILL (exit 137): its PHP
+# extension instruments every function call in the Drupal codebase and fills
+# the 9 GB container cgroup with transaction trace data. The fix is
+# -d newrelic.enabled=0 in run-on-container.sh — not process replacement here.
 OVERALL=0
 for i in "${!LABELS[@]}"; do
   echo "=== ${LABELS[$i]} ==="
   terminus remote:drush "$SITE" -- \
-    ev "error_reporting(E_ERROR); putenv('PANTHEON_TEST_UA=${PANTHEON_TEST_UA}'); if (!pcntl_exec('/bin/bash', ['/code/tests/dtt/run-on-container.sh', '${URL}', '--filter', '${FILTERS[$i]}'])) { throw new \Exception('pcntl_exec failed'); }" \
+    ev "error_reporting(E_ERROR); putenv('PANTHEON_TEST_UA=${PANTHEON_TEST_UA}'); passthru('/code/tests/dtt/run-on-container.sh ${URL} --filter ${FILTERS[$i]}');" \
     || OVERALL=$?
 done
 exit $OVERALL

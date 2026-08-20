@@ -2,10 +2,11 @@
 #
 # Run all cache regression test chunks against a Pantheon multidev via Terminus.
 #
-# Reads tests/dtt/test-chunks.yml and calls run-on-container.sh once per chunk
+#
+# Reads test-chunks.yml and calls run-on-container.sh once per chunk
 # via a separate `terminus remote:drush` invocation. One SSH session per chunk
 # prevents Pantheon's connection timeout from aborting a long-running suite and
-# keeps peak PHP memory per process well under the container's 2 GB limit.
+# keeps peak PHP memory per process well within the container's available RAM.
 #
 # This script runs on the local machine (or CI runner) — not on the container.
 # PANTHEON_TEST_UA must be exported in the environment before calling this
@@ -56,15 +57,15 @@ while IFS=$'\t' read -r LABEL FILTER; do
   FILTERS+=("$FILTER")
 done <<< "$CHUNKS"
 
-# exit() inside drush ev is treated as abnormal termination by Drush, which
-# overrides the exit code to 1 regardless of the value passed. Throwing an
-# exception instead maps pass/fail cleanly: Drush exits 0 on normal completion
-# and 1 on an uncaught exception.
+# New Relic is the root cause of the prior SIGKILL (exit 137): its PHP
+# extension instruments every function call in the Drupal codebase and fills
+# the 9 GB container cgroup with transaction trace data. The fix is
+# -d newrelic.enabled=0 in run-on-container.sh — not process replacement here.
 OVERALL=0
 for i in "${!LABELS[@]}"; do
   echo "=== ${LABELS[$i]} ==="
   terminus remote:drush "$SITE" -- \
-    ev "error_reporting(E_ERROR); putenv('PANTHEON_TEST_UA=${PANTHEON_TEST_UA}'); passthru('bash /code/tests/dtt/run-on-container.sh $URL --filter $(printf '%q' "${FILTERS[$i]}") 2>&1', \$c); if (\$c !== 0) { throw new \Exception('PHPUnit failed with exit code ' . \$c); }" \
+    ev "error_reporting(E_ERROR); putenv('PANTHEON_TEST_UA=${PANTHEON_TEST_UA}'); passthru('/code/tests/dtt/run-on-container.sh ${URL} --filter ${FILTERS[$i]}');" \
     || OVERALL=$?
 done
 exit $OVERALL

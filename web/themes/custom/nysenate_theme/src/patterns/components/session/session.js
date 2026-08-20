@@ -29,7 +29,10 @@
       // (you cannot query-select yourself), which is the case when Views
       // Infinite Scroll calls attachBehaviors after appending rows. That is
       // intentional — the MutationObserver is already watching at that point.
-      context.querySelectorAll('.view-id-upcoming_legislation').forEach(function (view) {
+      //
+      // ATEN-NYS-392 row 20: extend to .view-id-events (events/week page) so
+      // load-more AJAX results are announced to screen readers there too.
+      context.querySelectorAll('.view-id-upcoming_legislation, .view-id-events').forEach(function (view) {
         if (initializedViews.has(view)) {
           return;
         }
@@ -58,7 +61,8 @@
             // Load More link from the DOM, preventing focus from dropping
             // to <body> and triggering VoiceOver's page-title announcement.
             focusHolder.focus({ preventScroll: true });
-            Drupal.announce('Loading more legislation results.');
+            const isEvents = view.classList.contains('view-id-events');
+            Drupal.announce(isEvents ? 'Loading more events.' : 'Loading more legislation results.');
           }
         });
 
@@ -73,7 +77,10 @@
                 firstNewRow.setAttribute('tabindex', '-1');
                 firstNewRow.focus({ preventScroll: true });
               }
-              Drupal.announce(updatedCount + ' legislation results now shown.');
+              const isEvents = view.classList.contains('view-id-events');
+              Drupal.announce(isEvents
+                ? updatedCount + ' events now shown.'
+                : updatedCount + ' legislation results now shown.');
               previousCount = updatedCount;
             }
           });

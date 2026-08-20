@@ -44,12 +44,11 @@
       // Identify the matching element.
       const $content = $accordion.find('#' + $toggle.attr('aria-controls'));
 
-      // all matching elements
-      const $contents = $accordions.find('#' + $toggle.attr('aria-controls'));
-
       if (!$accordion.hasClass('open')) {
+        // Close all other accordions before opening this one.
         $toggles.attr('aria-expanded', 'false');
-        $contents.attr('aria-hidden', 'true');
+        $accordions.removeClass('open');
+        $accordions.find('.nysenate-accordion__content').attr('aria-hidden', 'true');
         self.changeAllTexts($headings);
 
         self.changeCurrentTexts($heading, 'open');

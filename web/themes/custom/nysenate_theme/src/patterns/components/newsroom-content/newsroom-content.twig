@@ -22,8 +22,8 @@
       <ul class="cal-nav-list">
         {% for panel in panels %}
           <li>
-            <input type="radio" name="language" value="#panel{{ loop.index }}" {% if loop.first %} checked="checked" {% endif %}>
-            <label class="c-tab-link {{ panel.tab_modifier_class }}">{{ panel.tab_text }}</label>
+            <input type="radio" name="language" id="cal-tab-{{ loop.index }}" value="#panel{{ loop.index }}" {% if loop.first %} checked="checked" {% endif %}>
+            <label class="c-tab-link {{ panel.tab_modifier_class }}" for="cal-tab-{{ loop.index }}">{{ panel.tab_text }}</label>
           </li>
         {% endfor %}
       </ul>
@@ -33,8 +33,8 @@
       <div class="c-tab--arrow u-mobile-only"></div>
       {% for panel in panels %}
         <div class="c-tab {% if loop.first %}active{% endif %}">
-          <input type="radio" name="language" value="#panel{{ loop.index }}" {% if loop.first %} checked="checked" {% endif %}>
-          <label class="c-tab-link">{{ panel.tab_text }}</label>
+          <input type="radio" name="language" id="tab-{{ loop.index }}" value="#panel{{ loop.index }}" {% if loop.first %} checked="checked" {% endif %}>
+          <label class="c-tab-link" for="tab-{{ loop.index }}">{{ panel.tab_text }}</label>
         </div>
       {% endfor %}
     </div>
@@ -89,7 +89,7 @@
                         <h3 class="c-event-name">{{ content.event_name }}</h3>
                       </a>
                       <a class="c-event-location" href="{{ content.location.link }}" target="_blank">
-                        <span class="icon-before__circle-pin"></span>
+                        <span class="icon-before__circle-pin" aria-hidden="true"></span><span class="visually-hidden">Event location: </span>
                         <span>{{ content.location.name }}</span>
                       </a>
                       {% if content.address %}

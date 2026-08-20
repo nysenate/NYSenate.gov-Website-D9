@@ -46,7 +46,7 @@
   <a class="c-event-location"
       href="http://maps.google.com/?q={{ fields.field_location_address_line1.content }}+{{ fields.field_location_administrative_area.content }}%2C+{{ fields.field_location_postal_code.content }}"
       target="_blank">
-    <span class="icon-before__circle-pin"></span>{{ fields.field_location_organization.content }}
+    <span class="icon-before__circle-pin" aria-hidden="true"></span><span class="visually-hidden">Event location: </span>{{ fields.field_location_organization.content }}
   </a>
 {% endif %}
 
@@ -54,43 +54,43 @@
   {% if fields.type.content|striptags|trim == 'Public Hearing' %}
     {% if fields.field_event_online_link.content %}
       <a class="c-event-location" href="{{ fields.field_event_online_link.content }}">
-        <span class="icon-before__circle-pin"></span><span>Online Hearing</span>
+        <span class="icon-before__circle-pin" aria-hidden="true"></span><span class="visually-hidden">Event location: </span><span>Online Hearing</span>
       </a>
     {% else %}
       <div class="c-event-location">
-        <span class="icon-before__circle-pin"></span>
+        <span class="icon-before__circle-pin" aria-hidden="true"></span><span class="visually-hidden">Event location: </span>
         <span>Online Hearing</span>
       </div>
     {% endif %}
   {% elseif fields.type.content|striptags|trim == 'Meeting' %}
     {% if fields.field_event_online_link.content %}
       <a class="c-event-location" href="{{ fields.field_event_online_link.content }}">
-        <span class="icon-before__circle-pin"></span><span>Online Meeting</span>
+        <span class="icon-before__circle-pin" aria-hidden="true"></span><span class="visually-hidden">Event location: </span><span>Online Meeting</span>
       </a>
     {% else %}
       <div class="c-event-location">
-        <span class="icon-before__circle-pin"></span>
+        <span class="icon-before__circle-pin" aria-hidden="true"></span><span class="visually-hidden">Event location: </span>
         <span>Online Meeting</span>
       </div>
     {% endif %}
   {% elseif fields.type.content|striptags|trim == 'Event' %}
     <a class="c-event-location" href="{{ fields.field_event_online_link.content }}">
-      <span class="icon-before__circle-pin"></span><span>Online Event</span>
+      <span class="icon-before__circle-pin" aria-hidden="true"></span><span class="visually-hidden">Event location: </span><span>Online Event</span>
     </a>
   {% endif %}
 {% elseif fields.field_event_place.content|striptags|trim == 'teleconference' %}
   <a class="c-event-location" href="{{ url }}">
-    <span class="icon-before__circle-pin"></span>
+    <span class="icon-before__circle-pin" aria-hidden="true"></span><span class="visually-hidden">Event location: </span>
     <span>Teleconference Event</span>
   </a>
 {% elseif fields.field_event_place.content|striptags|trim == 'cap' %}
   <a class="c-event-location" href="https://www.google.com/maps/place/New+York+State+Capitol/@42.652602,-73.757388,17z/data=!3m1!4b1!4m2!3m1!1s0x89de0a3aa5dc0b2b:0x72aed557f8df2510" title="NYS Capitol Building" target="_blank" >
-    <span class="icon-before__circle-pin"></span>
+    <span class="icon-before__circle-pin" aria-hidden="true"></span><span class="visually-hidden">Event location: </span>
     <span>NYS Capitol Building</span>
   </a>
 {% elseif fields.field_event_place.content|striptags|trim == 'lob' %}
   <a class="c-event-location" href="https://www.google.com/maps/place/Legislative+Office+Building/@42.6526202,-73.7614498,17z/data=!3m1!4b1!4m5!3m4!1s0x89de0a24d3a304b5:0x1012cb31c839dfe9!8m2!3d42.6526202!4d-73.7592611?hl=en" title="Legislative Office Building" target="_blank" >
-    <span class="icon-before__circle-pin"></span>
+    <span class="icon-before__circle-pin" aria-hidden="true"></span><span class="visually-hidden">Event location: </span>
     <span>Legislative Office Building</span>
   </a>
 {% endif %}

@@ -2,6 +2,7 @@
 
 namespace Drupal\nys_issue_migration\Commands;
 
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drush\Commands\DrushCommands;
 
@@ -10,10 +11,18 @@ use Drush\Commands\DrushCommands;
  *
  * Pass 2 of the canonical terms setup: pass 1
  * (CanonicalTermsImportCommands) creates the terms themselves; this reads
- * back a CSV of tid -> related tids (built externally against the
- * name/tid export) and writes field_related_issue. Kept as a separate
- * command/CSV rather than folded into pass 1, since it depends on tids
- * that only exist after pass 1 has run.
+ * back a CSV of term name -> related term names and writes
+ * field_related_issue, resolving every name against whatever tids the
+ * current environment actually assigned. Kept as a separate command/CSV
+ * rather than folded into pass 1, since it depends on terms that only
+ * exist after pass 1 has run.
+ *
+ * Deliberately name-based, not tid-based: taxonomy term ids are
+ * auto-increment values specific to each database, so a CSV built with
+ * one environment's tids (e.g. local) will not line up with another's
+ * (e.g. a fresh multidev) - the same term name can land on a different
+ * tid depending on how many other terms already existed in that
+ * database. Resolving by name is portable across every environment.
  *
  * Usage:
  *   drush global-issues-import-related                  # dry-run
@@ -39,13 +48,13 @@ class CanonicalTermsRelatedImportCommands extends DrushCommands {
   /**
    * Import field_related_issue values for global_issues terms from a CSV.
    *
-   * Expects columns: tid, field_related_issue, name. field_related_issue
-   * is a comma-separated list of related term tids. The name column is
-   * used only to sanity-check against the term's current name - a
-   * mismatch usually means the tid no longer refers to the term the CSV
-   * was built against (e.g. terms were deleted and re-created since the
-   * name/tid export), and the row is skipped rather than guessed at.
-   * Runs as a dry-run by default; pass --commit to write.
+   * Expects columns: tid, field_related_issue, name. The tid column is
+   * informational only (whatever tid the term happened to have on the
+   * environment the CSV was generated on) and is not used for lookups -
+   * both the row's own term and every related term are resolved by name
+   * against the current environment's global_issues vocabulary, since
+   * tids are not portable across databases. Runs as a dry-run by
+   * default; pass --commit to write.
    *
    * @command global-issues-import-related
    * @option csv Path to the CSV, relative to the project root or absolute. Defaults to migration-data/issue-tags/pass2-field-related-issue-update.csv.
@@ -74,39 +83,34 @@ class CanonicalTermsRelatedImportCommands extends DrushCommands {
 
     $rows = $this->parseCsv($csv_path);
     $storage = $this->entityTypeManager->getStorage('taxonomy_term');
+    $nameToTid = $this->buildNameToTidMap($storage);
 
-    $counts = ['updated' => 0, 'name_mismatch' => 0, 'tid_not_found' => 0, 'invalid_related_tid' => 0];
+    $counts = ['updated' => 0, 'name_not_found' => 0, 'invalid_related_name' => 0];
 
     foreach ($rows as $row) {
-      $tid = trim($row['tid'] ?? '');
       $csv_name = trim($row['name'] ?? '');
-      if ($tid === '') {
+      if ($csv_name === '') {
         continue;
       }
 
+      $tid = $nameToTid[strtolower($csv_name)] ?? NULL;
+      if (!$tid) {
+        $counts['name_not_found']++;
+        $this->io()->text("  SKIP (\"{$csv_name}\" not found in " . self::VOCABULARY . ')');
+        continue;
+      }
       $term = $storage->load($tid);
-      if (!$term || $term->bundle() !== self::VOCABULARY) {
-        $counts['tid_not_found']++;
-        $this->io()->text("  SKIP (tid {$tid} not found in " . self::VOCABULARY . "): {$csv_name}");
-        continue;
-      }
 
-      if ($term->getName() !== $csv_name) {
-        $counts['name_mismatch']++;
-        $this->io()->text("  SKIP (tid {$tid} name mismatch - CSV says \"{$csv_name}\", term is \"{$term->getName()}\")");
-        continue;
-      }
-
-      $related_tids = array_values(array_filter(array_map('trim', explode(',', $row['field_related_issue'] ?? ''))));
+      $related_names = array_values(array_filter(array_map('trim', explode(',', $row['field_related_issue'] ?? ''))));
       $valid_tids = [];
-      foreach ($related_tids as $related_tid) {
-        $related_term = $storage->load($related_tid);
-        if ($related_term && $related_term->bundle() === self::VOCABULARY) {
+      foreach ($related_names as $related_name) {
+        $related_tid = $nameToTid[strtolower($related_name)] ?? NULL;
+        if ($related_tid) {
           $valid_tids[] = $related_tid;
         }
         else {
-          $counts['invalid_related_tid']++;
-          $this->io()->text("  WARNING (tid {$tid} \"{$csv_name}\"): related tid {$related_tid} not found in " . self::VOCABULARY . ', skipping that reference');
+          $counts['invalid_related_name']++;
+          $this->io()->text("  WARNING (\"{$csv_name}\"): related term \"{$related_name}\" not found in " . self::VOCABULARY . ', skipping that reference');
         }
       }
 
@@ -124,9 +128,8 @@ class CanonicalTermsRelatedImportCommands extends DrushCommands {
       ['Metric', 'Count'],
       [
         ['Terms updated', number_format($counts['updated'])],
-        ['Skipped: tid not found', number_format($counts['tid_not_found'])],
-        ['Skipped: name mismatch', number_format($counts['name_mismatch'])],
-        ['Related tid references dropped (invalid)', number_format($counts['invalid_related_tid'])],
+        ['Skipped: name not found in vocabulary', number_format($counts['name_not_found'])],
+        ['Related name references dropped (invalid)', number_format($counts['invalid_related_name'])],
       ]
     );
 
@@ -136,6 +139,28 @@ class CanonicalTermsRelatedImportCommands extends DrushCommands {
     else {
       $this->io()->success(sprintf('Updated field_related_issue on %d canonical terms.', $counts['updated']));
     }
+  }
+
+  /**
+   * Builds a lowercased term name => tid map for the global_issues vocabulary.
+   *
+   * @param \Drupal\Core\Entity\EntityStorageInterface $storage
+   *   The taxonomy term storage.
+   *
+   * @return array<string, int>
+   *   Lowercased term name keyed to tid.
+   */
+  protected function buildNameToTidMap(EntityStorageInterface $storage): array {
+    $ids = $storage->getQuery()
+      ->condition('vid', self::VOCABULARY)
+      ->accessCheck(FALSE)
+      ->execute();
+
+    $map = [];
+    foreach ($storage->loadMultiple($ids) as $term) {
+      $map[strtolower($term->getName())] = (int) $term->id();
+    }
+    return $map;
   }
 
   /**

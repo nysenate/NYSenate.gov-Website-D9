@@ -1,0 +1,140 @@
+@use 'partials' as *;
+@use 'partials/phosphor-fill';
+
+.c-event-featured-story {
+  overflow: hidden;
+  padding-bottom: 40px;
+
+  .l-left {
+    width: 100%;
+
+    img {
+      width: 380px;
+      height: 215px;
+    }
+  }
+
+  .c-title,
+  .c-container--title {
+    font-family: var(--nys-ff-sans);
+    font-size: 14px;
+    font-weight: normal;
+    text-transform: uppercase;
+    position: relative;
+    padding-bottom: 20px;
+    padding-top: 20px;
+    margin: 0;
+
+    // The icon comes from ContentTypeBuilder as "<i>.ph-fill</i> Label" -
+    // markup already has the separating space, this just sizes/aligns it.
+    .ph-fill {
+      font-size: 16px;
+      vertical-align: -1px;
+    }
+  }
+
+  .c-story-name {
+    font-family: var(--nys-ff-serif);
+    font-size: 24px;
+    margin: 0 0 25px 0;
+    line-height: 120%;
+    padding-top: 16px;
+    max-width: 440px;
+    color: var(--nys-color-grey08);
+    font-weight: var(--nys-fw-normal);
+
+    a {
+      color: var(--nys-color-grey08);
+      text-decoration: none;
+      font-weight: var(--nys-fw-normal);
+    }
+  }
+
+  .c-story--date {
+    color: var(--nys-color-blue);
+    margin-bottom: 3px;
+    text-transform: uppercase;
+  }
+
+  .c-featured-story-issue-tag {
+    color: var(--nys-color-link);
+    font-family: var(--nys-ff-sans-bold);
+    font-size: 12px;
+
+    a {
+      text-transform: uppercase;
+      font-family: var(--nys-ff-sans-bold);
+      font-size: 12px;
+      line-height: 1em;
+      letter-spacing: 0.05em;
+      text-decoration: none;
+      color: var(--nys-color-link);
+
+      &:hover {
+        color: var(--nys-color-link);
+        text-decoration: underline;
+      }
+    }
+  }
+
+  @include bp-min(sm) {
+    .c-story-name {
+      font-size: 26px;
+    }
+
+    .l-left {
+      width: 50%;
+    }
+
+    .l-right {
+      width: 340px;
+      float: right;
+    }
+
+    .story-container {
+      display: flex;
+      gap: 40px;
+    }
+  }
+}
+
+// Two-column list layout when this card is used as a Views row (e.g. a
+// grid of featured stories rather than a single hero card).
+.node--view-mode-featured-content {
+  grid-column: 1 / span 2;
+}
+
+@include bp-min(sm) {
+  .view-display-id-block_1 {
+    .view-content {
+      @include grid(2, 40px);
+
+      .views-row {
+        border-bottom: 1px solid var(--nys-color-grey05);
+      }
+
+      .c-event-featured-story {
+        .c-container--header__top-border {
+          display: none;
+        }
+
+        .story-container {
+          display: block;
+
+          .l-left {
+            width: 100%;
+          }
+
+          .l-right {
+            width: 100%;
+            float: none;
+          }
+
+          .c-story--date {
+            margin-top: 24px;
+          }
+        }
+      }
+    }
+  }
+}

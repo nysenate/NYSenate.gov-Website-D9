@@ -4,7 +4,7 @@ status: true
 dependencies:
   config:
     - field.storage.taxonomy_term.field_featured_legislation
-    - paragraphs.paragraphs_type.featured_legislation
+    - paragraphs.paragraphs_type.issue_featured_legislation
     - taxonomy.vocabulary.senator
   module:
     - entity_reference_revisions
@@ -22,7 +22,7 @@ settings:
   handler: 'default:paragraph'
   handler_settings:
     target_bundles:
-      featured_legislation: featured_legislation
+      issue_featured_legislation: issue_featured_legislation
     negate: 0
     target_bundles_drag_drop:
       accordion_item:
@@ -45,10 +45,13 @@ settings:
         enabled: false
       featured_legislation:
         weight: 25
-        enabled: true
+        enabled: false
       gallery_item:
         weight: 26
         enabled: false
+      issue_featured_legislation:
+        weight: 28
+        enabled: true
       members:
         weight: 27
         enabled: false

@@ -5,6 +5,7 @@ dependencies:
   config:
     - field.field.node.landing.field_block_instance
     - field.field.node.landing.field_date
+    - field.field.node.landing.field_global_issues
     - field.field.node.landing.field_issues
     - field.field.node.landing.field_landing_blocks
     - field.field.node.landing.field_meta_tags
@@ -85,6 +86,16 @@ content:
     weight: 2
     region: content
     settings: {  }
+    third_party_settings: {  }
+  field_global_issues:
+    type: entity_reference_autocomplete_tags
+    weight: 3
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
   field_group_jumpnav:
     weight: 14

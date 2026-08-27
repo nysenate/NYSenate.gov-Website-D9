@@ -14,8 +14,6 @@ dependencies:
     - field.storage.node.field_upload_type
     - image.style.thumbnail
     - node.type.student_submission
-    - user.role.administrator
-    - user.role.student_programs
   module:
     - better_exposed_filters
     - colorbox
@@ -30,9 +28,9 @@ dependencies:
     - views_data_export
     - views_year_filter
 id: manage_student_submissions
-label: 'Manage student submissions(ED, TK)'
+label: 'Manage student submissions'
 module: views
-description: 'Earth Day, Thanksgiving'
+description: ''
 tag: ''
 base_table: node_field_data
 base_field: nid
@@ -1034,11 +1032,9 @@ display:
                   open_by_default: false
                   field_classes: ''
       access:
-        type: role
+        type: perm
         options:
-          role:
-            administrator: administrator
-            student_programs: student_programs
+          perm: 'access content'
       cache:
         type: tag
         options: {  }
@@ -1631,7 +1627,7 @@ display:
         - url
         - url.query_args
         - 'user.node_grants:view'
-        - user.roles
+        - user.permissions
       tags:
         - 'config:field.storage.node.field_file_submission'
         - 'config:field.storage.node.field_form_type'
@@ -2463,7 +2459,7 @@ display:
         - request_format
         - url
         - 'user.node_grants:view'
-        - user.roles
+        - user.permissions
       tags:
         - 'config:field.storage.node.field_file_submission'
         - 'config:field.storage.node.field_form_type'
@@ -2626,7 +2622,7 @@ display:
         - url
         - url.query_args
         - 'user.node_grants:view'
-        - user.roles
+        - user.permissions
       tags:
         - 'config:field.storage.node.field_file_submission'
         - 'config:field.storage.node.field_form_type'

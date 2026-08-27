@@ -1,0 +1,29 @@
+uuid: e1a5a94c-1aba-449e-9f18-2e8d4e364bb4
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_global_issues
+    - node.type.webform
+    - taxonomy.vocabulary.global_issues
+id: node.webform.field_global_issues
+field_name: field_global_issues
+entity_type: node
+bundle: webform
+label: 'Global Issues'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      global_issues: global_issues
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

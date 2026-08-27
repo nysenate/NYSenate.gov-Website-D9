@@ -1,0 +1,57 @@
+{#
+/**
+ * @file
+ * Bill status as a labeled expandable list, in place of the old unlabeled
+ * dots graph. `current` is always visible; expanding reveals what's still
+ * ahead and what's already happened.
+ *
+ * Available variables:
+ * - past: array of milestone labels already reached.
+ * - current: the current milestone label, or NULL.
+ * - future: array of milestone labels not yet reached.
+ * - committee_link: rendered link to the bill's current committee, or
+ *   NULL. Lives in the expanded panel rather than on the summary text -
+ *   a link there would fight with <summary>'s native click-to-toggle.
+ * - status_class: modifier suffix (introduced/committee/floor/passed/dead).
+ */
+#}
+{% import 'nys:icons' as icons %}
+{% if past or future %}
+  <details class="c-bill-milestones c-bill-milestones--{{ status_class }}" name="bill-milestones">
+    <summary class="c-bill-milestones__current">
+      <span>{{ current }}</span>
+      <span class="c-bill-milestones__toggle" aria-hidden="true">{{ icons.inline('accordion-arrow') }}</span>
+    </summary>
+    <div class="c-bill-milestones__panel">
+      {% if committee_link %}
+        <div class="c-bill-milestones__committee">
+          {{ 'Referred to:'|t }} {{ committee_link }}
+        </div>
+      {% endif %}
+      {% if future %}
+        <div class="c-bill-milestones__section c-bill-milestones__section--future">
+          <div class="c-bill-milestones__section-label">{{ 'Still to come'|t }}</div>
+          <ul class="c-bill-milestones__list">
+            {% for step in future %}
+              <li>{{ step }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+      {% if past %}
+        <div class="c-bill-milestones__section c-bill-milestones__section--past">
+          <div class="c-bill-milestones__section-label">{{ 'Already happened'|t }}</div>
+          <ul class="c-bill-milestones__list">
+            {% for step in past %}
+              <li>{{ step }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+    </div>
+  </details>
+{% else %}
+  <span class="c-bill-milestones c-bill-milestones--{{ status_class }}">
+    <span class="c-bill-milestones__current c-bill-milestones__current--static">{{ current }}</span>
+  </span>
+{% endif %}

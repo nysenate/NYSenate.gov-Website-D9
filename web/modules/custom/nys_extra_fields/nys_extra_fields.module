@@ -1,0 +1,94 @@
+<?php
+
+/**
+ * @file
+ * Contains custom module logic for NYS Extra Fields.
+ */
+
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\node\NodeInterface;
+
+/**
+ * Implements hook_entity_extra_field_info().
+ *
+ * @return array
+ *   An array of extra field information.
+ */
+function nys_extra_fields_entity_extra_field_info(): array {
+  $extra = [];
+
+  $entity_type_manager = \Drupal::entityTypeManager();
+  try {
+    $node_types = $entity_type_manager->getStorage('node_type')->loadMultiple();
+  }
+  catch (\Throwable) {
+    $node_types = [];
+  }
+
+  // Add the content type field to all node content types.
+  foreach ($node_types as $bundle => $type) {
+    $extra['node'][$bundle]['display']['nys_content_type'] = [
+      'label' => t('Content Type'),
+      'description' => t("Displays the node's content type as a string."),
+      'weight' => 10,
+      'visible' => FALSE,
+    ];
+    $extra['node'][$bundle]['display']['nys_canonical_url'] = [
+      'label' => t('Canonical URL'),
+      'description' => t("The node's own canonical URL, for use as an SDC component prop."),
+      'weight' => 11,
+      'visible' => FALSE,
+    ];
+    // Only meaningful on bundles with field_yt (no field_image_main) - the
+    // component itself checks emptiness at render time (see hook_entity_view
+    // below), this is just the display-picker entry.
+    $extra['node'][$bundle]['display']['nys_video_thumbnail'] = [
+      'label' => t('Video Thumbnail (safe, read-only)'),
+      'description' => t("The video media entity's existing thumbnail image, read without forcing a metadata refresh/save (unlike enforceMetadataUpdate()). Only produces output on bundles with field_yt."),
+      'weight' => 12,
+      'visible' => FALSE,
+    ];
+  }
+
+  return $extra;
+}
+
+/**
+ * Implements hook_entity_view().
+ */
+function nys_extra_fields_entity_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display): void {
+  // Only process if the entity is a node.
+  if ($entity instanceof NodeInterface) {
+    if ($display->getComponent('nys_content_type')) {
+      $extra_field_builder = \Drupal::service('nys_extra_fields.content_type_builder');
+      $build['nys_content_type'] = $extra_field_builder->buildContentType($entity);
+    }
+
+    if ($display->getComponent('nys_canonical_url')) {
+      try {
+        $build['nys_canonical_url'] = ['#markup' => $entity->toUrl()->toString()];
+      }
+      catch (\Throwable) {
+        $build['nys_canonical_url'] = ['#markup' => ''];
+      }
+    }
+
+    if ($display->getComponent('nys_video_thumbnail')) {
+      $build['nys_video_thumbnail'] = [];
+      if ($entity->hasField('field_yt') && !$entity->get('field_yt')->isEmpty()) {
+        $video = \Drupal::entityTypeManager()->getStorage('media')->load($entity->get('field_yt')->target_id);
+        // Read the media's already-stored thumbnail as-is - deliberately NOT
+        // calling enforceMetadataUpdate()/save() here, which forces a live
+        // oEmbed re-fetch and throws a fatal TypeError on PHP 8.4 for any
+        // broken/deleted video (see nysenate_theme.theme:1580-1590, flagged
+        // as a known issue - this extra field avoids that pattern entirely).
+        if ($video && !$video->get('thumbnail')->isEmpty()) {
+          $build['nys_video_thumbnail'] = \Drupal::entityTypeManager()
+            ->getViewBuilder('media')
+            ->view($video, 'thumbnail');
+        }
+      }
+    }
+  }
+}

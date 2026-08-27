@@ -32,7 +32,7 @@ class IssueFlagLazyBuilder implements TrustedCallbackInterface {
    * {@inheritdoc}
    */
   public static function trustedCallbacks(): array {
-    return ['renderFlagLink', 'renderActionbarFlagLink'];
+    return ['renderFlagLink', 'renderActionbarFlagLink', 'renderGlobalIssueActionbarFlagLink'];
   }
 
   /**
@@ -88,6 +88,44 @@ class IssueFlagLazyBuilder implements TrustedCallbackInterface {
     }
 
     $build = $this->flagLinkBuilder->build($entity_type_id, $entity_id, 'follow_issue', 'default');
+    $build['#cache']['contexts'][] = 'user';
+
+    return $build;
+  }
+
+  /**
+   * Renders the follow/unfollow flag link for the global_issues actionbar.
+   *
+   * Same as renderActionbarFlagLink(), but against the follow_global_issue
+   * flag - global_issues terms aren't in follow_issue's allowed bundles
+   * (issues, majority_issues), so the two flags can't be shared.
+   *
+   * @param string $entity_type_id
+   *   The entity type ID (e.g. 'taxonomy_term').
+   * @param int|string $entity_id
+   *   The entity ID of the global_issues term.
+   *
+   * @return array
+   *   A render array for the flag link or anonymous login link.
+   */
+  public function renderGlobalIssueActionbarFlagLink(string $entity_type_id, int|string $entity_id): array {
+    if ($this->currentUser->isAnonymous()) {
+      return [
+        '#type' => 'html_tag',
+        '#tag' => 'a',
+        '#value' => 'follow this issue',
+        '#attributes' => [
+          'href' => '/user/login',
+          'class' => ['icon-before__issue-follow'],
+          'title' => 'follow this issue',
+        ],
+        '#cache' => [
+          'contexts' => ['user.roles:anonymous'],
+        ],
+      ];
+    }
+
+    $build = $this->flagLinkBuilder->build($entity_type_id, $entity_id, 'follow_global_issue', 'default');
     $build['#cache']['contexts'][] = 'user';
 
     return $build;

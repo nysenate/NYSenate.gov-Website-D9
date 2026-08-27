@@ -1,0 +1,145 @@
+@use 'partials' as *;
+@use 'partials/phosphor-fill';
+
+.c-news-card {
+  display: flex;
+  gap: 14px;
+  padding: 16px;
+  margin-block-end: 12px;
+  background-color: var(--nys-color-white);
+  border: 1px solid var(--nys-color-alto);
+  border-radius: 4px;
+
+  &:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  }
+}
+
+.c-news-card__image {
+  flex-shrink: 0;
+  width: 96px;
+  height: 96px;
+  overflow: hidden;
+  border-radius: 3px;
+  background-color: var(--nys-color-gray-lt);
+
+  // Drupal wraps field_image_main's <img> in a .field div with no
+  // explicit height (no custom field template strips it, unlike
+  // field_issues), so percentage height on the img can't resolve against
+  // it - the browser falls back to the image's intrinsic aspect ratio at
+  // the resolved width, producing a non-square 96x64 box instead of the
+  // intended 96x96 crop. Fixed pixel dimensions sidestep that entirely.
+  img {
+    display: block;
+    width: 96px;
+    height: 96px;
+    object-fit: cover;
+  }
+}
+
+.c-news-card__body {
+  min-width: 0;
+}
+
+.c-news-card__type {
+  font-family: var(--nys-ff-sans);
+  font-size: rem(11px);
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--nys-color-gold);
+  margin-block-end: 4px;
+
+  // The icon comes from ContentTypeBuilder as "<i>.ph-fill</i> Label" -
+  // markup already has the separating space, this just sizes/aligns it.
+  .ph-fill {
+    font-size: rem(13px);
+    vertical-align: -1px;
+  }
+}
+
+.c-news-card__title {
+  margin: 0 0 6px;
+  font-family: var(--nys-ff-serif);
+  font-size: rem(16px);
+  font-weight: 600;
+  line-height: 1.3;
+
+  a {
+    color: var(--nys-color-black-2);
+    text-decoration: none;
+
+    &:hover {
+      color: var(--nys-color-button-blue);
+    }
+  }
+}
+
+.c-news-card__blurb {
+  margin: 0 0 8px;
+  font-family: var(--nys-ff-sans);
+  font-size: rem(13.5px);
+  line-height: 1.5;
+  color: var(--nys-color-tundora);
+}
+
+.c-news-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  margin-block-end: 6px;
+  font-family: var(--nys-ff-sans);
+  font-size: rem(12px);
+  color: var(--nys-color-grey-accessible);
+
+  // Drupal's default field.html.twig wraps rendered field output in a
+  // block-level .field div, with each value in a block-level .field__item
+  // inside it - both need to be forced back to inline here.
+  .field,
+  .field__item {
+    display: inline;
+  }
+
+  span {
+    white-space: nowrap;
+  }
+
+  span + span::before {
+    content: '|';
+    margin-inline-end: 10px;
+    color: var(--nys-color-alto);
+  }
+
+  a {
+    color: var(--nys-color-button-blue);
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.c-news-card__issues {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 4px;
+  font-family: var(--nys-ff-sans);
+  font-size: rem(12px);
+
+  strong {
+    flex-shrink: 0;
+    color: var(--nys-color-black-2);
+  }
+
+  a {
+    color: var(--nys-color-button-blue);
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

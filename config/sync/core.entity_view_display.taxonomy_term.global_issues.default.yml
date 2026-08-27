@@ -1,0 +1,42 @@
+uuid: d32cd73c-4b05-4eab-aee1-6f7aaa7273e0
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.global_issues.field_keywords
+    - field.field.taxonomy_term.global_issues.field_related_issue
+    - taxonomy.vocabulary.global_issues
+  module:
+    - text
+id: taxonomy_term.global_issues.default
+targetEntityType: taxonomy_term
+bundle: global_issues
+mode: default
+content:
+  description:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_keywords:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+      link_rel: canonical
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_related_issue:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 13
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true

@@ -1,0 +1,31 @@
+{#
+/**
+ * @file
+ * Theme override for the field_global_issues taxonomy reference field.
+ *
+ * Renders issue tags as a comma-joined inline list with no wrapper divs,
+ * so consuming markup (e.g. c-news-card__issues) doesn't need to fight
+ * the default field.html.twig .field/.field__item block-level wrappers.
+ *
+ * Still builds the standard field--name-/field--type-/field--label- classes
+ * (normally added by classy's field.html.twig, which this replaces), so
+ * any CSS scoped to those classes keeps working.
+ *
+ * @see template_preprocess_field()
+ */
+#}
+{%
+  set classes = [
+    'field',
+    'field--name-' ~ field_name|clean_class,
+    'field--type-' ~ field_type|clean_class,
+    'field--label-' ~ label_display,
+  ]
+%}
+{% if items %}
+  <span{{ attributes.addClass(classes) }}>
+    {% for item in items %}
+      {{ item.content }}{% if not loop.last %}, {% endif %}
+    {% endfor %}
+  </span>
+{% endif %}

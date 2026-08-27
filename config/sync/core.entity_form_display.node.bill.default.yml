@@ -6,6 +6,7 @@ dependencies:
     - field.field.node.bill.field_bill_multi_session_root
     - field.field.node.bill.field_bill_no_issue_tags
     - field.field.node.bill.field_comments
+    - field.field.node.bill.field_global_issues
     - field.field.node.bill.field_issues
     - field.field.node.bill.field_majority_issue_tag
     - field.field.node.bill.field_metatags
@@ -46,6 +47,8 @@ dependencies:
     - field.field.node.bill.field_ol_summary
     - field.field.node.bill.field_ol_version
     - field.field.node.bill.field_ol_votes
+    - field.field.node.bill.field_passed_assembly_current
+    - field.field.node.bill.field_passed_senate_current
     - field.field.node.bill.rabbit_hole__settings
     - node.type.bill
   module:
@@ -88,6 +91,16 @@ content:
     weight: 51
     region: content
     settings: {  }
+    third_party_settings: {  }
+  field_global_issues:
+    type: entity_reference_autocomplete_tags
+    weight: 0
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
   field_issues:
     type: entity_reference_autocomplete_tags
@@ -454,6 +467,8 @@ content:
     settings: {  }
     third_party_settings: {  }
 hidden:
+  field_passed_assembly_current: true
+  field_passed_senate_current: true
   langcode: true
   promote: true
   publish_on: true

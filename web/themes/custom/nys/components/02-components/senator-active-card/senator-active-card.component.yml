@@ -1,0 +1,31 @@
+$schema: https://git.drupalcode.org/project/sdc/-/raw/1.x/src/metadata.schema.json
+name: Senator Active Card
+description: Sidebar row for "Senators active on this issue" - headshot, name/party/district, and a link to their bills on this issue.
+props:
+  type: object
+  required: [name, count]
+  properties:
+    headshot:
+      type: string
+      description: Rendered senator headshot image markup, if any.
+    name:
+      type: string
+      description: Rendered senator name/link markup.
+    party:
+      type: string
+      description: Comma-joined party abbreviation(s), e.g. "D" or "D, WF" for fusion-endorsed senators.
+    district:
+      type: string
+      description: Pre-formatted district text, e.g. "4th Senate District".
+    count:
+      type: string
+      description: Number of bills (or count_unit items) associated with this senator on this issue.
+    count_unit_singular:
+      type: string
+      description: 'Unit label for a count of 1, e.g. "bill". Defaults to "bill".'
+    count_unit_plural:
+      type: string
+      description: 'Unit label for a count other than 1, e.g. "bills". Defaults to "bills".'
+    url:
+      type: string
+      description: Link to this senator's bills on this issue (search/legislation), or wherever count should link to. Optional - if omitted, the count renders as plain text instead of a link.

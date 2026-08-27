@@ -294,7 +294,7 @@ class NysOpenDataCsv {
 
         // Parse each part as a CSV line.
         foreach (['data', 'extra', 'header'] as $val) {
-          $this->{$val} = array_map('str_getcsv', $this->{$val});
+          $this->{$val} = array_map(fn ($line) => str_getcsv($line, ',', '"', '\\'), $this->{$val});
         }
 
         // Get the header row.

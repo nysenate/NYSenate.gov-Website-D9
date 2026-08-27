@@ -1,0 +1,153 @@
+uuid: f7fa312d-fd88-4188-8a86-3bc8181437cb
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.issue_news_card
+    - field.field.node.article.body
+    - field.field.node.article.field_accessible_sitewide
+    - field.field.node.article.field_article_author
+    - field.field.node.article.field_associated_senators
+    - field.field.node.article.field_attachment
+    - field.field.node.article.field_bills
+    - field.field.node.article.field_category
+    - field.field.node.article.field_committee
+    - field.field.node.article.field_committee_featured
+    - field.field.node.article.field_date
+    - field.field.node.article.field_global_issues
+    - field.field.node.article.field_image_caption
+    - field.field.node.article.field_image_hero
+    - field.field.node.article.field_image_main
+    - field.field.node.article.field_issues
+    - field.field.node.article.field_layout_components
+    - field.field.node.article.field_majority_issue_tag
+    - field.field.node.article.field_senator_multiref
+    - field.field.node.article.field_social_image
+    - field.field.node.article.field_social_teaser
+    - field.field.node.article.field_subtitle
+    - field.field.node.article.rabbit_hole__settings
+    - image.style.my_dashboard_teaser_268_x_180
+    - node.type.article
+  module:
+    - datetime
+    - media
+    - sdc_display
+    - user
+third_party_settings:
+  sdc_display:
+    enabled: true
+    component:
+      machine_name: 'nys:issue-news-card'
+      show_deprecated: null
+    mappings:
+      static:
+        props:
+          title: 'Title not found'
+          url: /
+          image: ''
+          issues: ''
+          date: ''
+          content_type: ''
+          blurb: ''
+          senator: ''
+      dynamic:
+        props:
+          title: title
+          url: nys_canonical_url
+          image: field_image_main
+          issues: field_global_issues
+          date: field_date
+          content_type: nys_content_type
+          blurb: field_subtitle
+          senator: field_senator_multiref
+id: node.article.issue_news_card
+targetEntityType: node
+bundle: article
+mode: issue_news_card
+content:
+  field_date:
+    type: datetime_custom
+    label: hidden
+    settings:
+      timezone_override: ''
+      date_format: 'F j, Y'
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_global_issues:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_image_main:
+    type: media_thumbnail
+    label: hidden
+    settings:
+      image_link: ''
+      image_style: my_dashboard_teaser_268_x_180
+      image_loading:
+        attribute: lazy
+    third_party_settings:
+      sdc_display:
+        enabled: 0
+        component:
+          machine_name: null
+          show_deprecated: 0
+    weight: 1
+    region: content
+  field_senator_multiref:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  field_subtitle:
+    type: basic_string
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+  nys_canonical_url:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  nys_content_type:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 3
+    region: content
+hidden:
+  body: true
+  field_accessible_sitewide: true
+  field_article_author: true
+  field_associated_senators: true
+  field_attachment: true
+  field_bills: true
+  field_category: true
+  field_committee: true
+  field_committee_featured: true
+  field_image_caption: true
+  field_image_hero: true
+  field_issues: true
+  field_layout_components: true
+  field_majority_issue_tag: true
+  field_social_image: true
+  field_social_teaser: true
+  langcode: true
+  nys_senator_dashboard_path_alias: true
+  nys_video_thumbnail: true
+  private_message_link: true
+  rabbit_hole__settings: true
+  search_api_excerpt: true

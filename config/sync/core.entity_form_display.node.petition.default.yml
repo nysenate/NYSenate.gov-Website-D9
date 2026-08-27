@@ -8,6 +8,7 @@ dependencies:
     - field.field.node.petition.field_date
     - field.field.node.petition.field_expiration_date
     - field.field.node.petition.field_featured
+    - field.field.node.petition.field_global_issues
     - field.field.node.petition.field_image_main
     - field.field.node.petition.field_issues
     - field.field.node.petition.field_last_notified
@@ -69,6 +70,16 @@ content:
     region: content
     settings:
       display_label: true
+    third_party_settings: {  }
+  field_global_issues:
+    type: entity_reference_autocomplete_tags
+    weight: 5
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
   field_image_main:
     type: media_library_widget

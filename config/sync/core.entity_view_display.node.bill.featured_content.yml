@@ -7,6 +7,7 @@ dependencies:
     - field.field.node.bill.field_bill_multi_session_root
     - field.field.node.bill.field_bill_no_issue_tags
     - field.field.node.bill.field_comments
+    - field.field.node.bill.field_global_issues
     - field.field.node.bill.field_issues
     - field.field.node.bill.field_majority_issue_tag
     - field.field.node.bill.field_metatags
@@ -47,6 +48,8 @@ dependencies:
     - field.field.node.bill.field_ol_summary
     - field.field.node.bill.field_ol_version
     - field.field.node.bill.field_ol_votes
+    - field.field.node.bill.field_passed_assembly_current
+    - field.field.node.bill.field_passed_senate_current
     - field.field.node.bill.rabbit_hole__settings
     - node.type.bill
   module:
@@ -73,6 +76,7 @@ hidden:
   field_bill_multi_session_root: true
   field_bill_no_issue_tags: true
   field_comments: true
+  field_global_issues: true
   field_issues: true
   field_majority_issue_tag: true
   field_metatags: true
@@ -113,7 +117,18 @@ hidden:
   field_ol_summary: true
   field_ol_version: true
   field_ol_votes: true
+  field_passed_assembly_current: true
+  field_passed_senate_current: true
   langcode: true
+  nys_canonical_url: true
+  nys_content_type: true
+  nys_senator_dashboard_bill_action_links: true
+  nys_senator_dashboard_district_flag_count_follow_this_bill: true
+  nys_senator_dashboard_flag_count_follow_this_bill: true
+  nys_senator_dashboard_path_alias: true
+  nys_senator_dashboard_vote_totals: true
+  nys_senator_dashboard_vote_totals_district_breakdown: true
+  nys_video_thumbnail: true
   private_message_link: true
   rabbit_hole__settings: true
   search_api_excerpt: true

@@ -10,6 +10,7 @@ dependencies:
     - field.field.node.webform.field_committee
     - field.field.node.webform.field_date
     - field.field.node.webform.field_expiration_date
+    - field.field.node.webform.field_global_issues
     - field.field.node.webform.field_image_main
     - field.field.node.webform.field_issues
     - field.field.node.webform.field_last_notified
@@ -44,13 +45,13 @@ content:
     third_party_settings: {  }
   created:
     type: datetime_timestamp
-    weight: 16
+    weight: 17
     region: content
     settings: {  }
     third_party_settings: {  }
   field_accessible_sitewide:
     type: boolean_checkbox
-    weight: 10
+    weight: 11
     region: content
     settings:
       display_label: true
@@ -73,7 +74,7 @@ content:
     third_party_settings: {  }
   field_committee:
     type: options_select
-    weight: 9
+    weight: 10
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -85,9 +86,19 @@ content:
     third_party_settings: {  }
   field_expiration_date:
     type: datetime_default
-    weight: 13
+    weight: 14
     region: content
     settings: {  }
+    third_party_settings: {  }
+  field_global_issues:
+    type: entity_reference_autocomplete_tags
+    weight: 8
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
   field_image_main:
     type: media_library_widget
@@ -98,7 +109,7 @@ content:
     third_party_settings: {  }
   field_issues:
     type: entity_reference_autocomplete_tags
-    weight: 8
+    weight: 9
     region: content
     settings:
       match_operator: CONTAINS
@@ -108,7 +119,7 @@ content:
     third_party_settings: {  }
   field_last_notified:
     type: datetime_default
-    weight: 14
+    weight: 15
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -128,25 +139,25 @@ content:
     third_party_settings: {  }
   path:
     type: path
-    weight: 17
+    weight: 18
     region: content
     settings: {  }
     third_party_settings: {  }
   rabbit_hole__settings:
     type: rabbit_hole_default
-    weight: 100
+    weight: 21
     region: content
     settings:
       advanced: true
     third_party_settings: {  }
   simple_sitemap:
-    weight: 11
+    weight: 12
     region: content
     settings: {  }
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    weight: 21
+    weight: 20
     region: content
     settings:
       display_label: true
@@ -161,7 +172,7 @@ content:
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 15
+    weight: 16
     region: content
     settings:
       match_operator: CONTAINS
@@ -170,13 +181,13 @@ content:
       placeholder: ''
     third_party_settings: {  }
   url_redirects:
-    weight: 20
+    weight: 19
     region: content
     settings: {  }
     third_party_settings: {  }
   webform:
     type: webform_entity_reference_autocomplete
-    weight: 12
+    weight: 13
     region: content
     settings:
       match_limit: 10

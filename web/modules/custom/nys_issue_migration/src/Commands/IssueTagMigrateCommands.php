@@ -2,6 +2,7 @@
 
 namespace Drupal\nys_issue_migration\Commands;
 
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Uuid\UuidInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -16,7 +17,7 @@ use Drush\Commands\DrushCommands;
  *   drush issue-tag-migrate --stage=create-terms --commit  # write
  *   drush issue-tag-migrate --stage=content --commit
  *   drush issue-tag-migrate --stage=followers --commit
- *   drush issue-tag-migrate --stage=delete --commit
+ *   drush issue-tag-migrate --stage=delete --commit.
  */
 class IssueTagMigrateCommands extends DrushCommands {
 
@@ -25,8 +26,8 @@ class IssueTagMigrateCommands extends DrushCommands {
   const FOLLOW_ISSUE_FLAG = 'follow_issue';
   const BATCH_SIZE = 500;
   const VALID_STAGES = ['create-terms', 'content', 'followers', 'delete'];
-  const DEFAULT_MAIN_CSV = 'sites/default/files/issue-tags/tag_classification_final_2026-08-06.csv';
-  const DEFAULT_TERMS_CSV = 'sites/default/files/issue-tags/terms_to_create.csv';
+  const DEFAULT_MAIN_CSV = 'migration-data/issue-tags/tag_classification_final_2026-08-06.csv';
+  const DEFAULT_TERMS_CSV = 'migration-data/issue-tags/terms_to_create.csv';
 
   /**
    * Constructs the IssueTagMigrateCommands object.
@@ -37,11 +38,14 @@ class IssueTagMigrateCommands extends DrushCommands {
    *   The entity type manager.
    * @param \Drupal\Component\Uuid\UuidInterface $uuid
    *   The UUID generator.
+   * @param \Drupal\Component\Datetime\TimeInterface $time
+   *   The time service.
    */
   public function __construct(
     protected Connection $db,
     protected EntityTypeManagerInterface $entityTypeManager,
     protected UuidInterface $uuid,
+    protected TimeInterface $time,
   ) {
     parent::__construct();
   }
@@ -68,16 +72,18 @@ class IssueTagMigrateCommands extends DrushCommands {
    * @usage drush issue-tag-migrate --stage=delete --commit
    *   Delete source taxonomy terms.
    */
-  public function migrate(array $options = [
-    'stage'     => NULL,
-    'commit'    => FALSE,
-    'csv'       => NULL,
-    'terms-csv' => NULL,
-  ]): void {
+  public function migrate(
+    array $options = [
+      'stage'     => NULL,
+      'commit'    => FALSE,
+      'csv'       => NULL,
+      'terms-csv' => NULL,
+    ],
+  ): void {
     $stage = $options['stage'];
     $commit = (bool) $options['commit'];
-    $csvPath = $options['csv'] ?: (DRUPAL_ROOT . '/' . self::DEFAULT_MAIN_CSV);
-    $termsCsvPath = $options['terms-csv'] ?: (DRUPAL_ROOT . '/' . self::DEFAULT_TERMS_CSV);
+    $csvPath = $options['csv'] ?: (dirname(DRUPAL_ROOT) . '/' . self::DEFAULT_MAIN_CSV);
+    $termsCsvPath = $options['terms-csv'] ?: (dirname(DRUPAL_ROOT) . '/' . self::DEFAULT_TERMS_CSV);
 
     if (!$stage || !in_array($stage, self::VALID_STAGES)) {
       throw new \InvalidArgumentException(sprintf(
@@ -121,12 +127,8 @@ class IssueTagMigrateCommands extends DrushCommands {
     }
   }
 
-  // ---------------------------------------------------------------------------
-  // Stage 1: Create new canonical terms
-  // ---------------------------------------------------------------------------
-
   /**
-   * Creates canonical taxonomy terms from terms_to_create.csv.
+   * Stage 1: creates canonical taxonomy terms from terms_to_create.csv.
    *
    * These are terms with no existing tid in the vocabulary. Rows in the main
    * CSV whose canonical_tid is blank will resolve to these newly created terms
@@ -185,12 +187,8 @@ class IssueTagMigrateCommands extends DrushCommands {
     }
   }
 
-  // ---------------------------------------------------------------------------
-  // Stage 2: Migrate node field_issues references
-  // ---------------------------------------------------------------------------
-
   /**
-   * Re-tags nodes from source tids to canonical tids.
+   * Stage 2: re-tags nodes from source tids to canonical tids.
    *
    * Only processes merge_to_canonical rows. already_canonical and delete rows
    * are excluded by the disposition filter — not by runtime checks.
@@ -204,10 +202,11 @@ class IssueTagMigrateCommands extends DrushCommands {
     $mergeRows = array_filter($rows, fn($r) => $r['final_disposition'] === 'merge_to_canonical');
 
     // Build the stage-1 log map before processing. Needed for the ~211 rows
-    // whose canonical_tid was blank at CSV generation time (they target terms
-    // from terms_to_create.csv). Pre-flight checks every distinct canonical_term
-    // name referenced by those rows against the map — catches partial creation
-    // (e.g. 7 of 8 terms created) just as hard as zero creation.
+    // whose canonical_tid was blank at CSV generation time (they target
+    // terms from terms_to_create.csv). Pre-flight checks every distinct
+    // canonical_term name referenced by those rows against the map -
+    // catches partial creation (e.g. 7 of 8 terms created) just as hard as
+    // zero creation.
     $createdTermMap = $this->buildCreatedTermMap();
     $blankTidRows = array_filter($mergeRows, fn($r) => trim($r['canonical_tid'] ?? '') === '');
     if (!empty($blankTidRows)) {
@@ -249,9 +248,10 @@ class IssueTagMigrateCommands extends DrushCommands {
 
       $canonicalTid = $this->resolveCanonicalTidForRow($row, $createdTermMap);
       if (!$canonicalTid) {
-        // Pre-flight should have caught this. Reaching here means a row has a
-        // blank canonical_tid with a blank or unrecognised canonical_term —
-        // a malformed CSV row. Throw rather than skip to avoid silent data loss.
+        // Pre-flight should have caught this. Reaching here means a row has
+        // a blank canonical_tid with a blank or unrecognised canonical_term
+        // - a malformed CSV row. Throw rather than skip to avoid silent
+        // data loss.
         throw new \RuntimeException(sprintf(
           'tid %d (%s): canonical_tid could not be resolved and was not caught by pre-flight. canonical_term="%s". Check the CSV for malformed rows.',
           $sourceTid,
@@ -373,23 +373,23 @@ class IssueTagMigrateCommands extends DrushCommands {
     }
   }
 
-  // ---------------------------------------------------------------------------
-  // Stage 3: Migrate follow_issue flaggings
-  // ---------------------------------------------------------------------------
-
   /**
-   * Migrates follow_issue flaggings from source tids to canonical tids.
+   * Stage 3: migrates follow_issue flaggings to canonical tids.
    *
-   * Only processes merge_to_canonical rows. For each flagging on a source tid:
-   * - If the user already follows the canonical term: remove source flagging only.
-   * - If not: create a new flagging on the canonical tid, then remove the source.
+   * Only processes merge_to_canonical rows. For each flagging on a source
+   * tid:
+   * - If the user already follows the canonical term: remove source
+   *   flagging only.
+   * - If not: create a new flagging on the canonical tid, then remove the
+   *   source.
    */
   private function stageFollowers(array $rows, bool $commit): void {
     $mergeRows = array_filter($rows, fn($r) => $r['final_disposition'] === 'merge_to_canonical');
-    $requestTime = \Drupal::time()->getRequestTime();
+    $requestTime = $this->time->getRequestTime();
 
-    // Same dependency check as stageContent: verify every distinct canonical_term
-    // referenced by blank-canonical_tid rows is in the created-term map.
+    // Same dependency check as stageContent: verify every distinct
+    // canonical_term referenced by blank-canonical_tid rows is in the
+    // created-term map.
     $createdTermMap = $this->buildCreatedTermMap();
     $blankTidRows = array_filter($mergeRows, fn($r) => trim($r['canonical_tid'] ?? '') === '');
     if (!empty($blankTidRows)) {
@@ -515,9 +515,10 @@ class IssueTagMigrateCommands extends DrushCommands {
       $this->io()->note('Run with --commit to migrate flaggings.');
     }
     else {
-      // Sync flag_counts for all canonical tids and remove stale source entries.
-      // Direct flagging inserts bypass the Flag API, which normally maintains
-      // this cached count table — so we must update it ourselves.
+      // Sync flag_counts for all canonical tids and remove stale source
+      // entries. Direct flagging inserts bypass the Flag API, which
+      // normally maintains this cached count table - so we must update it
+      // ourselves.
       $this->syncFlagCounts($rows, $createdTermMap);
       $this->verificationReport($rows, $beforeCounts, 'followers', $createdTermMap);
       $this->io()->success(sprintf(
@@ -528,12 +529,8 @@ class IssueTagMigrateCommands extends DrushCommands {
     }
   }
 
-  // ---------------------------------------------------------------------------
-  // Stage 4: Delete source terms
-  // ---------------------------------------------------------------------------
-
   /**
-   * Deletes source taxonomy terms.
+   * Stage 4: deletes source taxonomy terms.
    *
    * Hard filter: already_canonical rows are never touched — excluded by
    * disposition column, not by any runtime name or tid check.
@@ -593,11 +590,20 @@ class IssueTagMigrateCommands extends DrushCommands {
       ['Category', 'Count'],
       [
         ['merge_to_canonical — will delete (refs already migrated)', number_format($manifestMerge['to_delete'])],
-        ['merge_to_canonical — SKIPPED (still has node refs, run content first)', number_format($manifestMerge['skipped_refs'])],
+        [
+          'merge_to_canonical — SKIPPED (still has node refs, run content first)',
+          number_format($manifestMerge['skipped_refs']),
+        ],
         ['merge_to_canonical — not in DB (already deleted)', number_format($manifestMerge['not_found'])],
-        ['delete-disposition — will delete (refs/flaggings will be dropped)', number_format($manifestDelete['to_delete'])],
+        [
+          'delete-disposition — will delete (refs/flaggings will be dropped)',
+          number_format($manifestDelete['to_delete']),
+        ],
         ['delete-disposition — not in DB (already deleted)', number_format($manifestDelete['not_found'])],
-        ['already_canonical — excluded (hard filter, never touched)', number_format(count(array_filter($rows, fn($r) => $r['final_disposition'] === 'already_canonical')))],
+        [
+          'already_canonical — excluded (hard filter, never touched)',
+          number_format(count(array_filter($rows, fn($r) => $r['final_disposition'] === 'already_canonical'))),
+        ],
       ]
     );
 
@@ -701,11 +707,12 @@ class IssueTagMigrateCommands extends DrushCommands {
       }
     }
 
-    // Remove flag_counts rows for every deleted term. delete-disposition terms
-    // had their flaggings dropped above but flag_counts is a separate table the
-    // Flag API maintains — direct flagging deletes don't touch it automatically.
-    // merge_to_canonical terms should have been cleaned by syncFlagCounts() in
-    // the followers stage, but we include them here for idempotency.
+    // Remove flag_counts rows for every deleted term. delete-disposition
+    // terms had their flaggings dropped above but flag_counts is a
+    // separate table the Flag API maintains - direct flagging deletes
+    // don't touch it automatically. merge_to_canonical terms should have
+    // been cleaned by syncFlagCounts() in the followers stage, but we
+    // include them here for idempotency.
     foreach (array_chunk($deletedTids, 500) as $chunk) {
       $this->db->delete('flag_counts')
         ->condition('flag_id', self::FOLLOW_ISSUE_FLAG)
@@ -727,10 +734,6 @@ class IssueTagMigrateCommands extends DrushCommands {
 
     $this->io()->success(sprintf('Deleted %s source taxonomy terms.', number_format($counts['deleted'])));
   }
-
-  // ---------------------------------------------------------------------------
-  // Helpers
-  // ---------------------------------------------------------------------------
 
   /**
    * Resolves the canonical tid for a CSV row.
@@ -774,7 +777,8 @@ class IssueTagMigrateCommands extends DrushCommands {
    * Returns an empty array if stage 1 --commit has not been run yet, which
    * causes the pre-flight check in stageContent/stageFollowers to throw.
    *
-   * @return array<string, int> Keyed by canonical term name, value is the tid.
+   * @return array<string, int>
+   *   Keyed by canonical term name, value is the tid.
    */
   private function buildCreatedTermMap(): array {
     $rows = $this->db->select(self::LOG_TABLE, 'l')
@@ -834,8 +838,9 @@ class IssueTagMigrateCommands extends DrushCommands {
   /**
    * Outputs a before/after verification table for all canonical terms.
    *
-   * Required after every --commit run. Shows exactly where nodes and followers
-   * landed so discrepancies are visible immediately rather than found by chance.
+   * Required after every --commit run. Shows exactly where nodes and
+   * followers landed so discrepancies are visible immediately rather than
+   * found by chance.
    */
   private function verificationReport(array $rows, array $beforeCounts, string $stage, array $createdTermMap): void {
     $this->io()->section("Verification Report — after $stage");
@@ -870,17 +875,6 @@ class IssueTagMigrateCommands extends DrushCommands {
   /**
    * Syncs the flag_counts table after direct flagging table writes.
    *
-   * The Flag module maintains flag_counts as a cached aggregate. Our direct
-   * INSERT/DELETE on the flagging table bypasses the Flag API, so flag_counts
-   * must be updated explicitly after every followers --commit run.
-   *
-   * For merge_to_canonical canonical targets: recalculates the live count
-   * from the flagging table and upserts into flag_counts.
-   * For source tids (now 0 flaggings): deletes their flag_counts rows.
-   */
-  /**
-   * Syncs the flag_counts table after direct flagging table writes.
-   *
    * Called from stageFollowers --commit. The Flag module maintains flag_counts
    * as a cached aggregate written through its API; our direct INSERT/DELETE on
    * the flagging table bypasses that, so we must update the cache ourselves.
@@ -894,11 +888,16 @@ class IssueTagMigrateCommands extends DrushCommands {
    * intact at this stage. stageDelete handles their flag_counts cleanup inline
    * when it drops those flaggings.
    *
-   * @param int[] $extraTidsToRemove Additional tids whose flag_counts rows
+   * @param array $rows
+   *   All parsed CSV rows.
+   * @param array $createdTermMap
+   *   Canonical term name => tid, from buildCreatedTermMap().
+   * @param int[] $extraTidsToRemove
+   *   Additional tids whose flag_counts rows
    *   should be removed (used by stageDelete for delete-disposition terms).
    */
   private function syncFlagCounts(array $rows, array $createdTermMap, array $extraTidsToRemove = []): void {
-    $requestTime = \Drupal::time()->getRequestTime();
+    $requestTime = $this->time->getRequestTime();
 
     $sourceTids = [];
     $canonicalTids = [];
@@ -1008,7 +1007,7 @@ class IssueTagMigrateCommands extends DrushCommands {
         'target_name' => $targetName ? substr($targetName, 0, 255) : NULL,
         'detail'      => $detail ? substr($detail, 0, 512) : NULL,
         'is_dry_run'  => (int) $isDryRun,
-        'created'     => \Drupal::time()->getRequestTime(),
+        'created'     => $this->time->getRequestTime(),
       ])
       ->execute();
   }

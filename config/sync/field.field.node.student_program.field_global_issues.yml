@@ -1,0 +1,29 @@
+uuid: d83d7f66-43c7-451e-a5bc-d380f44cf910
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_global_issues
+    - node.type.student_program
+    - taxonomy.vocabulary.global_issues
+id: node.student_program.field_global_issues
+field_name: field_global_issues
+entity_type: node
+bundle: student_program
+label: 'Global Issues'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      global_issues: global_issues
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

@@ -1168,9 +1168,10 @@ display:
         type: none
         options: {  }
       cache:
-        type: custom_tag
+        type: time
         options:
-          custom_tag: 'taxonomy_term_list:issues'
+          results_lifespan: 86400
+          output_lifespan: 86400
       sorts:
         count:
           id: count

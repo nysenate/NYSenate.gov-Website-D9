@@ -1,0 +1,113 @@
+{{ attach_library('nys/issues') }}
+
+{% set featured_news_output = drupal_view('news_by_issue', 'featured_news', term.id())|render %}
+{% set senators_mentioned_output = drupal_view('news_by_issue', 'senators_mentioned', term.id())|render %}
+
+<div class="c-issue-hero">
+  <div class="c-issue-hero__eyebrow">{{ 'Issue Focus · 2025–2026 Session'|t }}</div>
+
+  <h1 class="c-issue-hero__title">{{ name }}</h1>
+
+  {% if term.description.value %}
+    <div class="c-issue-hero__description">{{ content.description }}</div>
+  {% endif %}
+
+  <div class="c-issue-hero__stats">
+    <div class="c-issue-hero__stat">
+      <span class="c-issue-hero__stat-num">{{ hero_stats.bill_count }}</span>
+      <span class="c-issue-hero__stat-label">{{ 'Sponsored Bills'|t }}</span>
+    </div>
+    <div class="c-issue-hero__stat">
+      <span class="c-issue-hero__stat-num">{{ hero_stats.sponsor_count }}</span>
+      <span class="c-issue-hero__stat-label">{{ 'Senators sponsoring'|t }}</span>
+    </div>
+    <div class="c-issue-hero__stat">
+      <span class="c-issue-hero__stat-num">{{ hero_stats.passed_senate_count }}</span>
+      <span class="c-issue-hero__stat-label">{{ 'Passed Senate'|t }}</span>
+    </div>
+    {% if flag_count %}
+      <div class="c-issue-hero__stat">
+        <span class="c-issue-hero__stat-num">{{ flag_count }}</span>
+        <span class="c-issue-hero__stat-label">{{ 'Constituents following'|t }}</span>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% if content.field_related_issue %}
+  <div class="c-issue-related">
+    <div class="c-issue-related__label">{{ 'Related issues'|t }}</div>
+    <div class="c-issue-related__tags">
+      {% for key, item in content.field_related_issue %}
+        {% if key|first != '#' %}
+          {{ item }}
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}
+
+<div class="c-issue-main">
+  <div class="c-issue-main__primary">
+    <div class="c-issue-section-header">
+      <h2>{{ 'Active Legislation — 2025–2026 Session'|t }}</h2>
+    </div>
+    {{ drupal_view('featured_legislative_issues', 'list', term.id()) }}
+  </div>
+
+  <aside class="c-issue-main__sidebar">
+    {% if contact_your_senator %}
+      <div class="c-issue-contact-card">
+        <div class="c-sidebar-header-box">
+          <h3 class="c-sidebar-header-box__title">{{ contact_your_senator.title }}</h3>
+        </div>
+        <div class="c-issue-contact-card__body">
+          {% include "@nysenate_theme/contact-your-senator/contact-your-senator.twig" with {
+            logged_in: contact_your_senator.logged_in,
+            title: contact_your_senator.title,
+            link: contact_your_senator.link,
+            senator_image: contact_your_senator.senator_image,
+            with_modal: true,
+          } only %}
+        </div>
+      </div>
+    {% endif %}
+
+    <div class="c-sidebar-header-box">
+      <h3 class="c-sidebar-header-box__title">{{ 'Senators Active on this Issue'|t }}</h3>
+      <p class="c-sidebar-header-box__subtitle">{{ 'By Bills Sponsored this Session'|t }}</p>
+    </div>
+    {{ drupal_view('featured_legislative_issues', 'active_senators', term.id()) }}
+  </aside>
+</div>
+
+{% if featured_news_output|striptags|trim %}
+  <div class="c-issue-featured-news">
+    <div class="c-issue-section-header">
+      <h2>{{ 'Featured News — 2025–2026 Session'|t }}</h2>
+    </div>
+    <div class="view-wrapper-container">
+      {{ featured_news_output }}
+    </div>
+  </div>
+{% endif %}
+
+{% set has_senators_mentioned = senators_mentioned_output|striptags|trim %}
+<div class="c-issue-main{{ has_senators_mentioned ? '' : ' c-issue-main--no-sidebar' }}">
+  <div class="c-issue-main__primary">
+    <div class="c-issue-section-header">
+      <h2>{{ 'What Senators are Saying — 2025–2026 Session'|t }}</h2>
+    </div>
+    {{ drupal_view('news_by_issue', 'recent_news', term.id()) }}
+  </div>
+
+  {% if has_senators_mentioned %}
+    <aside class="c-issue-main__sidebar">
+      <div class="c-sidebar-header-box">
+        <h3 class="c-sidebar-header-box__title">{{ 'Senators Talking About this Issue'|t }}</h3>
+        <p class="c-sidebar-header-box__subtitle">{{ 'By News Coverage'|t }}</p>
+      </div>
+      {{ senators_mentioned_output }}
+    </aside>
+  {% endif %}
+</div>

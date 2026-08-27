@@ -1,6 +1,26 @@
 services:
   nys_issue_migration.commands:
     class: \Drupal\nys_issue_migration\Commands\IssueTagMigrateCommands
-    arguments: ['@database', '@entity_type.manager', '@uuid']
+    arguments: ['@database', '@entity_type.manager', '@uuid', '@datetime.time']
+    tags:
+      - { name: drush.command }
+  nys_issue_migration.canonical_terms_import_commands:
+    class: \Drupal\nys_issue_migration\Commands\CanonicalTermsImportCommands
+    arguments: ['@entity_type.manager']
+    tags:
+      - { name: drush.command }
+  nys_issue_migration.canonical_terms_related_import_commands:
+    class: \Drupal\nys_issue_migration\Commands\CanonicalTermsRelatedImportCommands
+    arguments: ['@entity_type.manager']
+    tags:
+      - { name: drush.command }
+  nys_issue_migration.global_issues_followers_commands:
+    class: \Drupal\nys_issue_migration\Commands\GlobalIssuesFollowersCommands
+    arguments: ['@database', '@entity_type.manager', '@uuid', '@datetime.time']
+    tags:
+      - { name: drush.command }
+  nys_issue_migration.global_issues_tag_content_commands:
+    class: \Drupal\nys_issue_migration\Commands\GlobalIssuesTagContentCommands
+    arguments: ['@database', '@entity_type.manager']
     tags:
       - { name: drush.command }

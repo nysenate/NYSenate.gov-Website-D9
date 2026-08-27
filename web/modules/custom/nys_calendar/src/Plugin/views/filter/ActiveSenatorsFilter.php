@@ -84,7 +84,10 @@ class ActiveSenatorsFilter extends FilterPluginBase {
     if (!empty($active_senators_tids)) {
       $active_senators = $taxonomy_storage->loadMultiple($active_senators_tids);
       foreach ($active_senators as $senator) {
-        $options[$senator->id()] = $senator->label();
+        $name = $senator->hasField('field_senator_name') ? $senator->get('field_senator_name')->first() : NULL;
+        $family = $name?->family;
+        $given = $name?->given;
+        $options[$senator->id()] = ($family && $given) ? "$family, $given" : $senator->label();
       }
     }
     $form['value'] = [

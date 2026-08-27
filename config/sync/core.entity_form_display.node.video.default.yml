@@ -7,6 +7,7 @@ dependencies:
     - field.field.node.video.field_accessible_sitewide
     - field.field.node.video.field_committee
     - field.field.node.video.field_date
+    - field.field.node.video.field_global_issues
     - field.field.node.video.field_hide_feed
     - field.field.node.video.field_issues
     - field.field.node.video.field_recorded_date
@@ -59,6 +60,16 @@ content:
     weight: 4
     region: content
     settings: {  }
+    third_party_settings: {  }
+  field_global_issues:
+    type: entity_reference_autocomplete_tags
+    weight: 7
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
   field_hide_feed:
     type: boolean_checkbox

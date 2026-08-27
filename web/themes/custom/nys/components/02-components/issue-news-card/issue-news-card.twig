@@ -1,0 +1,29 @@
+<article class="c-news-card">
+  <div class="c-news-card__body">
+    {% if content_type %}
+      <div class="c-news-card__type">{{ content_type }}</div>
+    {% endif %}
+    <h3 class="c-news-card__title">
+      <a href="{{ url }}">{{ title }}</a>
+    </h3>
+    {% if blurb %}
+      <p class="c-news-card__blurb">{{ blurb }}</p>
+    {% endif %}
+    {% if date or senator %}
+      <div class="c-news-card__meta">
+        {% if date %}
+          <span>{{ date }}</span>
+        {% endif %}
+        {% if senator %}
+          <span>{{ 'By Senator'|t }} {{ senator }}</span>
+        {% endif %}
+      </div>
+    {% endif %}
+    {% if issues %}
+      <div class="c-news-card__issues"><strong>{{ 'Issues:'|t }}</strong> {{ issues }}</div>
+    {% endif %}
+  </div>
+  {% if image %}
+    <div class="c-news-card__image">{{ image }}</div>
+  {% endif %}
+</article>

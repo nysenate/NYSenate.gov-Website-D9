@@ -1,0 +1,23 @@
+<div class="c-senator-active-card">
+  <div class="c-senator-active-card__headshot">
+    {{ headshot }}
+  </div>
+  <div class="c-senator-active-card__info">
+    <div class="c-senator-active-card__name">{{ name }}</div>
+    {% if party or district %}
+      <div class="c-senator-active-card__meta">
+        {%- if party %}({{ party }}){% endif -%}
+        {%- if party and district %} {% endif -%}
+        {%- if district %}{{ district }}{% endif -%}
+      </div>
+    {% endif %}
+  </div>
+  <div class="c-senator-active-card__count">
+    {% set count_text = count ~ ' ' ~ (count == 1 ? (count_unit_singular|default('bill'|t)) : (count_unit_plural|default('bills'|t))) %}
+    {% if url %}
+      <a href="{{ url }}">{{ count_text }}</a>
+    {% else %}
+      {{ count_text }}
+    {% endif %}
+  </div>
+</div>

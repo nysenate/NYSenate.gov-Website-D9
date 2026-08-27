@@ -2,11 +2,15 @@
 
 namespace Drupal\nys_config\Form;
 
+use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
+use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Config\TypedConfigManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\file\Entity\File;
+use Drupal\file\FileRepositoryInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -17,11 +21,44 @@ class ConfigForm extends ConfigFormBase {
   use StringTranslationTrait;
 
   /**
+   * Constructs the ConfigForm object.
+   *
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The config factory.
+   * @param \Drupal\Core\Config\TypedConfigManagerInterface $typedConfigManager
+   *   The typed config manager.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
+   *   The entity type manager.
+   * @param \Drupal\Core\File\FileSystemInterface $fileSystem
+   *   The file system service.
+   * @param \Drupal\file\FileRepositoryInterface $fileRepository
+   *   The file repository service.
+   * @param \Drupal\Core\Cache\CacheTagsInvalidatorInterface $cacheTagsInvalidator
+   *   The cache tags invalidator.
+   */
+  public function __construct(
+    ConfigFactoryInterface $config_factory,
+    TypedConfigManagerInterface $typedConfigManager,
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected FileSystemInterface $fileSystem,
+    protected FileRepositoryInterface $fileRepository,
+    protected CacheTagsInvalidatorInterface $cacheTagsInvalidator,
+  ) {
+    parent::__construct($config_factory, $typedConfigManager);
+  }
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    $instance = new static($container->get('config.factory'));
-    return $instance;
+    return new static(
+      $container->get('config.factory'),
+      $container->get('config.typed'),
+      $container->get('entity_type.manager'),
+      $container->get('file_system'),
+      $container->get('file.repository'),
+      $container->get('cache_tags.invalidator'),
+    );
   }
 
   /**
@@ -52,7 +89,7 @@ class ConfigForm extends ConfigFormBase {
      */
     $form['governor'] = [
       '#type' => 'fieldset',
-      '#title' => t('Current Governor'),
+      '#title' => $this->t('Current Governor'),
       '#description' => $this->t("Variations for displaying the current governor's name."),
     ];
 
@@ -261,9 +298,7 @@ class ConfigForm extends ConfigFormBase {
     $config->save();
 
     // Clear the cache.
-    \Drupal::service('cache_tags.invalidator')->invalidateTags(['views:events']);
-    \Drupal::service('cache_tags.invalidator')->invalidateTags(['views:homepage_hero']);
-    \Drupal::service('cache_tags.invalidator')->invalidateTags(['node:homepage']);
+    $this->cacheTagsInvalidator->invalidateTags(['views:events', 'views:homepage_hero', 'node:homepage']);
 
     parent::submitForm($form, $form_state);
   }
@@ -272,18 +307,16 @@ class ConfigForm extends ConfigFormBase {
    * Process the upload file.
    */
   public function processUploadFile($entity, $directory = 'public://pdfs/') {
-    $file = File::load($entity[0]);
+    $file = $this->entityTypeManager->getStorage('file')->load($entity[0]);
     if (!empty($file)) {
-      $initial_path = \Drupal::service('file_system')->realpath($file->getFileUri());
+      $initial_path = $this->fileSystem->realpath($file->getFileUri());
       $file_destination = $directory . $file->getFilename();
 
       // Make sure that the directory is created.
-      $file_system = \Drupal::service('file_system');
-      $file_system->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY);
+      $this->fileSystem->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY);
 
       if (file_exists($initial_path)) {
-        $file_repository = \Drupal::service('file.repository');
-        $file_repository->move($file, $file_destination);
+        $this->fileRepository->move($file, $file_destination);
 
         $file->setFileUri($file_destination);
       }

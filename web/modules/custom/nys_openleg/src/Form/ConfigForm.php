@@ -5,6 +5,7 @@ namespace Drupal\nys_openleg\Form;
 use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\ProxyClass\Routing\RouteBuilder;
@@ -40,10 +41,10 @@ class ConfigForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function __construct(ConfigFactoryInterface $config_factory, RouteBuilder $builder, CacheTagsInvalidatorInterface $cache_tags_invalidator) {
+  public function __construct(ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typedConfigManager, RouteBuilder $builder, CacheTagsInvalidatorInterface $cache_tags_invalidator) {
     $this->builder = $builder;
     $this->cacheTagsInvalidator = $cache_tags_invalidator;
-    parent::__construct($config_factory);
+    parent::__construct($config_factory, $typedConfigManager);
 
     $this->localConfig = $this->config('nys_openleg_api.settings');
   }
@@ -54,6 +55,7 @@ class ConfigForm extends ConfigFormBase {
   public static function create(ContainerInterface $container): static {
     return new static(
       $container->get('config.factory'),
+      $container->get('config.typed'),
       $container->get('router.builder'),
       $container->get('cache_tags.invalidator')
     );

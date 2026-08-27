@@ -16,19 +16,19 @@ use Drupal\nys_openleg_api\Request;
 class StatuteHelper {
 
   // Constants for sort order of OpenLeg result sets.
-  const SORT_BY_CODE = 1;
+  const int SORT_BY_CODE = 1;
 
-  const SORT_BY_NAME = 2;
+  const int SORT_BY_NAME = 2;
 
   // Default URL for statutes.  Can be configured.
-  const DEFAULT_LANDING_URL = '/legislation/laws';
+  const string DEFAULT_LANDING_URL = '/legislation/laws';
 
   /**
    * Translates the official law type code into a friendly name.
    *
    * As of 2022, there is no canonical source for these names.
    */
-  const LAW_TYPE_NAMES = [
+  const array LAW_TYPE_NAMES = [
     'CONSOLIDATED' => 'Consolidated Laws of New York',
     'UNCONSOLIDATED' => 'Unconsolidated Laws of New York',
     'COURT_ACTS' => 'Court Acts of New York',
@@ -228,7 +228,7 @@ class StatuteHelper {
    *
    * @see templates/nys-openleg-result-item.html.twig
    */
-  public static function breadcrumbs(string $law_type = '', array $parents = NULL): array {
+  public static function breadcrumbs(string $law_type = '', ?array $parents = NULL): array {
     $ret = [];
     if ($type_name = (self::LAW_TYPE_NAMES[$law_type] ?? '')) {
       $base_url = static::baseUrl();

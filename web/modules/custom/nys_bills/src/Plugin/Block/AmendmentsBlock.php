@@ -4,11 +4,15 @@ namespace Drupal\nys_bills\Plugin\Block;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Block\BlockBase;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Routing\CurrentRouteMatch;
+use Drupal\Core\State\State;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\node\Entity\Node;
+use Drupal\nys_bills\BillsHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -29,21 +33,28 @@ class AmendmentsBlock extends BlockBase implements ContainerFactoryPluginInterfa
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityTypeManager;
+  protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
    * Current route.
    *
    * @var \Drupal\Core\Routing\CurrentRouteMatch
    */
-  protected $routeMatch;
+  protected CurrentRouteMatch $routeMatch;
 
   /**
    * Bills Helper.
    *
    * @var \Drupal\nys_bills\BillsHelper
    */
-  protected $billsHelper;
+  protected BillsHelper $billsHelper;
+
+  /**
+   * Drupal's State service.
+   *
+   * @var \Drupal\Core\State\State
+   */
+  protected State $state;
 
   /**
    * {@inheritdoc}
@@ -58,6 +69,7 @@ class AmendmentsBlock extends BlockBase implements ContainerFactoryPluginInterfa
     $instance->entityTypeManager = $container->get('entity_type.manager');
     $instance->routeMatch = $container->get('current_route_match');
     $instance->billsHelper = $container->get('nys_bill.bills_helper');
+    $instance->state = $container->get('state');
 
     return $instance;
   }
@@ -78,12 +90,14 @@ class AmendmentsBlock extends BlockBase implements ContainerFactoryPluginInterfa
       $amendments = $this->billsHelper->findsFeaturedLegislationQuote($amended_versions_result);
 
       foreach ($amendments as $key => $item) {
-        $amendments[$key]['sponsors_array'] =
-          $this->billsHelper->resolveAmendmentSponsors($item['node'], $node->field_ol_chamber->value);
+        if ($item['node']) {
+          $amendments[$key]['sponsors_array'] =
+            $this->billsHelper->resolveAmendmentSponsors($item['node'], $node->field_ol_chamber->value);
+        }
       }
 
       // Check for values in the Same As field for opposite chamber versions.
-      $same_as = json_decode($node->field_ol_same_as->value);
+      $same_as = json_decode($node->field_ol_same_as->value ?? '');
 
       // Check status values for the bill and potential committee.
       $last_status = $node->field_ol_last_status->value;
@@ -127,10 +141,16 @@ class AmendmentsBlock extends BlockBase implements ContainerFactoryPluginInterfa
             $bill_prev_versions = reset($bill_prev_versions);
             $billid->nid = $bill_prev_versions;
 
-            $bill = \Drupal::entityTypeManager()
-              ->getStorage('node')->load($bill_prev_versions);
+            $bill = $this->entityTypeManager->getStorage('node')
+              ->load($bill_prev_versions);
             if ($bill) {
-              $billid->url = $bill->toUrl()->toString();
+              try {
+                $url = $bill->toUrl()->toString();
+              }
+              catch (\Throwable) {
+                $url = '';
+              }
+              $billid->url = $url;
             }
 
           }
@@ -204,7 +224,7 @@ class AmendmentsBlock extends BlockBase implements ContainerFactoryPluginInterfa
           'same_as' => $same_as,
           'prev_vers' => $prev_vers,
           'prev_vers_pre' => $prev_vers_pre,
-          'ol_base_url' => \Drupal::state()->get('openleg_base_url', 'https://legislation.nysenate.gov'),
+          'ol_base_url' => $this->state->get('openleg_base_url', 'https://legislation.nysenate.gov'),
           'version' => '',
         ],
       ];

@@ -5,6 +5,7 @@ namespace Drupal\nys_subscriptions\Form;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\ImmutableConfig;
+use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\nys_subscriptions\SubscriptionQueue;
@@ -40,8 +41,8 @@ class SubscriptionSettingsForm extends ConfigFormBase {
    *
    * Creates local copies of the module's config.
    */
-  public function __construct(ConfigFactoryInterface $config_factory) {
-    parent::__construct($config_factory);
+  public function __construct(ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typedConfigManager) {
+    parent::__construct($config_factory, $typedConfigManager);
     $this->localConfig = $this->config('nys_subscriptions.settings');
     $this->siteSettings = $this->config('system.site');
     $this->immutableConfig = $this->configFactory->get('nys_subscriptions.settings');

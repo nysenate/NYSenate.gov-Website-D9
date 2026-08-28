@@ -24,3 +24,8 @@ services:
     arguments: ['@database', '@entity_type.manager']
     tags:
       - { name: drush.command }
+  nys_issue_migration.featured_legislation_import_commands:
+    class: \Drupal\nys_issue_migration\Commands\FeaturedLegislationImportCommands
+    arguments: ['@entity_type.manager', '@nys_bill.bills_helper']
+    tags:
+      - { name: drush.command }

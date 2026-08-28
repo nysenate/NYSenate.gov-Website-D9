@@ -163,17 +163,25 @@ class BillClassifierCommands extends DrushCommands {
    * @command bill-classifier:classify-batch
    * @option limit Number of bills to classify.
    * @option session The bill session year to sample from.
+   * @option nids Comma-separated bill node ids to classify, bypassing
+   *   diverse-batch selection entirely - e.g. bills that were just
+   *   manually featured and need a global_issues tag now rather than
+   *   waiting to land in a future random batch. Ignores the
+   *   already-tagged skip, so it also works to re-classify specific bills.
    * @option commit Write results to field_global_issues. Without this
    *   flag, only reports what would happen.
    * @usage drush bill-classifier:classify-batch --limit=250
    *   Report what a 250-bill diverse batch would classify to.
    * @usage drush bill-classifier:classify-batch --limit=250 --commit
    *   Classify and write field_global_issues for 250 bills.
+   * @usage drush bill-classifier:classify-batch --nids=123,456 --commit
+   *   Classify and write field_global_issues for specific bills.
    */
   public function classifyBatch(
     array $options = [
       'limit' => 250,
       'session' => 2025,
+      'nids' => NULL,
       'commit' => FALSE,
     ],
   ): void {
@@ -181,7 +189,12 @@ class BillClassifierCommands extends DrushCommands {
     $session = (int) $options['session'];
     $commit = (bool) $options['commit'];
 
-    $nids = $this->buildDiverseNids($limit, $session);
+    if (!empty($options['nids'])) {
+      $nids = array_map('intval', explode(',', $options['nids']));
+    }
+    else {
+      $nids = $this->buildDiverseNids($limit, $session);
+    }
     if (!$nids) {
       $this->io()->warning("No untagged bills found for session $session.");
       return;

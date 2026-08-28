@@ -204,11 +204,11 @@ class BillClassifierCommands extends DrushCommands {
       return;
     }
 
-    $bills = $this->entityTypeManager->getStorage('node')->loadMultiple($nids);
+    $nodeStorage = $this->entityTypeManager->getStorage('node');
+    $bills = $nodeStorage->loadMultiple($nids);
 
     $counts = ['processed' => 0, 'tagged' => 0, 'empty' => 0, 'errors' => 0];
     $byIssue = [];
-    $touchedNids = [];
 
     foreach ($bills as $nid => $bill) {
       $counts['processed']++;
@@ -245,7 +245,24 @@ class BillClassifierCommands extends DrushCommands {
         if ($tids) {
           try {
             $this->writeGlobalIssues($bill, $tids);
-            $touchedNids[] = $nid;
+            // Cleared immediately, not batched for the end of the run -
+            // writeGlobalIssues() is raw SQL, so nothing else marks this
+            // bill's cached entity stale. Batching this until after the
+            // loop meant an abrupt kill (e.g. the connection-loss case
+            // below, or the process just being terminated outright) could
+            // leave every bill written so far with a stale cached copy -
+            // happened for real: a 1000-bill run that got killed
+            // externally left ~950 correctly-written bills invisible via
+            // the entity API until a manual `drush cr`. resetCache() is
+            // the one that actually matters for that - entity storage's
+            // own persistent cache is keyed by id, not by the 'node:ID'
+            // cache tag (confirmed against core: setPersistentCache()
+            // tags its entries only with 'entity_field_info', not a
+            // per-entity tag), so Cache::invalidateTags() alone doesn't
+            // touch it. invalidateTags() is still worth calling alongside
+            // it, for render/page/block caches that do use that tag.
+            $nodeStorage->resetCache([$nid]);
+            Cache::invalidateTags(['node:' . $nid]);
           }
           catch (\Exception $e) {
             // A dead DB connection won't recover mid-request - stop here
@@ -253,9 +270,6 @@ class BillClassifierCommands extends DrushCommands {
             // crash uncaught). Safe to just re-run the command: already-
             // tagged bills are excluded from selection automatically.
             $this->io()->error("Bill $nid: database write failed (" . $e->getMessage() . '). Stopping - already-tagged bills are skipped automatically, so it\'s safe to re-run this command to pick up where it left off.');
-            if ($touchedNids) {
-              Cache::invalidateTags(array_map(static fn (int $n) => 'node:' . $n, $touchedNids));
-            }
             $this->reportResults($counts, $byIssue, $commit);
             return;
           }
@@ -265,10 +279,6 @@ class BillClassifierCommands extends DrushCommands {
       if ($counts['processed'] % 25 === 0) {
         $this->io()->text("  Processed {$counts['processed']}/{$limit}...");
       }
-    }
-
-    if ($commit && $touchedNids) {
-      Cache::invalidateTags(array_map(static fn (int $n) => 'node:' . $n, $touchedNids));
     }
 
     $this->reportResults($counts, $byIssue, $commit);

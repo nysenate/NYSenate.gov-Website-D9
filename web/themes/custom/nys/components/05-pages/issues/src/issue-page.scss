@@ -6,6 +6,12 @@
   padding: 0;
 }
 
+// Shared readable-content width for every section on this page, so the
+// hero, related-issues strip, main two-column rows, and featured news all
+// line up to the same edge on wide screens instead of some staying boxed
+// while others stretch to the viewport width.
+$issue-page-max-width: 1500px;
+
 // ---------------------------------------------------------------------------
 // Hero
 // ---------------------------------------------------------------------------
@@ -14,7 +20,7 @@
   background-color: var(--nys-color-darker-blue);
   color: var(--nys-color-white);
   margin: 0 auto;
-  max-width: 1500px;
+  max-width: $issue-page-max-width;
   padding: 48px 24px 40px;
 
   @include bp-min(tablet) {
@@ -105,6 +111,8 @@
 // ---------------------------------------------------------------------------
 
 .c-issue-related {
+  max-width: $issue-page-max-width;
+  margin-inline: auto;
   padding: 24px 20px;
   border-bottom: 1px solid var(--nys-color-dash-grey-1);
 
@@ -168,6 +176,8 @@
 // ---------------------------------------------------------------------------
 
 .c-issue-main {
+  max-width: $issue-page-max-width;
+  margin-inline: auto;
   padding: 24px 20px 48px;
 
   @include bp-min(tablet) {
@@ -200,16 +210,34 @@
 // column) between the two-column rows, styled as its own distinct
 // highlighted block rather than blending into the surrounding page.
 .c-issue-featured-news {
-  padding: 24px 20px;
+  // .c-issue-main/.c-issue-related cap at $issue-page-max-width on their
+  // outer (padded) box, so their actual content edge sits inset from
+  // that by their own padding (60px at desktop) on each side - here
+  // there's no outer max-width to lean on (the background band needs to
+  // stay full-bleed), so the padding-inline floor matches those sections'
+  // padding exactly, and the capped-width target is pre-shrunk by that
+  // same 60px per side, so the content edges line up at every width.
+  $content-width: $issue-page-max-width - (60px * 2);
+
+  // Padding-inline uses max() rather than a fixed value so the background
+  // band can stay full-bleed (spanning the viewport) while the content
+  // inside still caps out at $content-width on wide screens - the calc()
+  // term is 0 or negative until the viewport exceeds that width plus
+  // double the breakpoint's own padding, so max() falls back to the fixed
+  // padding on anything smaller.
+  padding-block: 24px;
+  padding-inline: max(20px, calc((100% - #{$content-width}) / 2));
   margin-block-end: 8px;
   background-color: var(--nys-color-gray-lt);
 
   @include bp-min(tablet) {
-    padding: 32px 40px;
+    padding-block: 32px;
+    padding-inline: max(40px, calc((100% - #{$content-width}) / 2));
   }
 
   @include bp-min(desktop) {
-    padding: 32px 60px;
+    padding-block: 32px;
+    padding-inline: max(60px, calc((100% - #{$content-width}) / 2));
   }
 
   .c-issue-section-header {

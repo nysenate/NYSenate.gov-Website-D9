@@ -3,6 +3,12 @@
 
 .c-news-card {
   display: flex;
+  // Without this, the row's cross-axis default (stretch) leaves the fixed-
+  // size image sitting wherever a taller body (e.g. from a long, wrapping
+  // title) happens to push the row's height - pinning both to the top
+  // keeps the image anchored top-right at a consistent position no
+  // matter how many lines the title runs to.
+  align-items: flex-start;
   gap: 14px;
   padding: 16px;
   margin-block-end: 12px;
@@ -38,17 +44,55 @@
 }
 
 .c-news-card__body {
+  // Without flex-grow, the body only claims as much width as its content
+  // needs - on cards with a short title/blurb that's less than the row's
+  // full width, leaving the image sitting at the edge of the content
+  // instead of flush against the card's right side, and shifting per-card
+  // depending on how much text each one happens to have.
+  flex: 1 1 auto;
   min-width: 0;
 }
 
 .c-news-card__type {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
   font-family: var(--nys-ff-sans);
-  font-size: rem(11px);
-  font-weight: 700;
-  letter-spacing: 0.6px;
-  text-transform: uppercase;
-  color: var(--nys-color-gold);
   margin-block-end: 4px;
+
+  // The date prop is raw field render output - Drupal's default
+  // field.html.twig wraps it in a block-level .field div, which (nested
+  // inside the inline <span> here) forces it onto its own line instead of
+  // sitting next to the content-type label. Force it back to inline.
+  .field,
+  .field__item {
+    display: inline;
+  }
+
+  span:first-child {
+    font-size: rem(11px);
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: var(--nys-color-gold);
+  }
+
+  // The date, when present, follows the content-type label with a "|"
+  // separator - same convention as .c-news-card__footer's senator/issues
+  // divider, scoped to adjacent spans so it only appears when both exist.
+  span + span {
+    font-size: rem(12px);
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: normal;
+    color: var(--nys-color-grey-accessible);
+  }
+
+  span + span::before {
+    content: '|';
+    margin-inline: 8px;
+    color: var(--nys-color-alto);
+  }
 
   // The icon comes from ContentTypeBuilder as "<i>.ph-fill</i> Label" -
   // markup already has the separating space, this just sizes/aligns it.
@@ -83,63 +127,143 @@
   color: var(--nys-color-tundora);
 }
 
-.c-news-card__meta {
-  display: flex;
-  flex-wrap: wrap;
+// Footer divider matches .c-bill-teaser__footer (the aye/nay vote-widget
+// row on the bill cards just above this one on the issues page) - senator
+// byline sits to the left, issue pills grid to the right.
+.c-news-card__footer {
+  display: grid;
+  // Fixed 1/3-2/3 split (rather than sizing to content) so the divider
+  // border on .c-news-card__senator--divided lands at the same spot on
+  // every card, regardless of byline width or how many issue pills follow.
+  grid-template-columns: 1fr 2fr;
   align-items: center;
-  gap: 4px 10px;
-  margin-block-end: 6px;
+  gap: 12px;
+  margin-block-start: 12px;
+  padding-block-start: 12px;
+  border-block-start: 1px solid var(--nys-color-light-gray);
+}
+
+.c-news-card__senator {
+  min-width: 0;
+}
+
+// Only shown when issues are also present (see issue-news-card.twig) - a
+// divider between the senator byline and the issue pills reads more
+// cleanly than right-justifying the pills, which drifted around
+// depending on how many pills there were and how wide the byline was.
+.c-news-card__senator--divided {
+  padding-inline-end: 12px;
+  border-inline-end: 1px solid var(--nys-color-light-gray);
+}
+
+.c-news-card__issues {
+  justify-self: start;
   font-family: var(--nys-ff-sans);
   font-size: rem(12px);
-  color: var(--nys-color-grey-accessible);
 
-  // Drupal's default field.html.twig wraps rendered field output in a
-  // block-level .field div, with each value in a block-level .field__item
-  // inside it - both need to be forced back to inline here.
-  .field,
+  // No senator byline to share the row with - use the full footer width
+  // instead of being boxed into the narrower 1/3 column.
+  &--full {
+    grid-column: 1 / -1;
+  }
+
+  // field_global_issues renders as Drupal's standard multi-value field
+  // markup (a .field wrapper, one .field__item per term) - both need to
+  // become flex containers/items themselves so the pills wrap and space
+  // out, left-aligned after the senator divider.
+  .field {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 6px;
+  }
+
   .field__item {
-    display: inline;
+    display: inline-flex;
   }
 
-  span {
-    white-space: nowrap;
-  }
-
-  span + span::before {
-    content: '|';
-    margin-inline-end: 10px;
-    color: var(--nys-color-alto);
-  }
-
+  // Pill styling matches .c-issue-related__tags a (the related-issues tags
+  // just below the hero), scaled down slightly for this card's tighter
+  // context.
   a {
-    color: var(--nys-color-button-blue);
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background-color: var(--nys-color-gray-lt);
+    border: 1px solid var(--nys-color-alto);
+    font-weight: 600;
+    color: var(--nys-color-darker-blue);
     text-decoration: none;
+    white-space: nowrap;
+    transition: background-color 0.15s, border-color 0.15s, color 0.15s;
 
     &:hover {
-      text-decoration: underline;
+      background-color: var(--nys-color-darker-blue);
+      border-color: var(--nys-color-darker-blue);
+      color: var(--nys-color-white);
     }
   }
 }
 
-.c-news-card__issues {
+// Compact senator byline (headshot, name, district) rendered via the
+// taxonomy_term.senator.news_byline view mode - see
+// taxonomy-term--senator--news-byline.html.twig.
+.c-news-byline {
   display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0 4px;
+  align-items: center;
+  gap: 8px;
+}
+
+.c-news-byline__photo {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  overflow: hidden;
+  border-radius: 50%;
+  background-color: var(--nys-color-gray-lt);
+
+  img {
+    display: block;
+    width: 32px;
+    height: 32px;
+    object-fit: cover;
+  }
+}
+
+.c-news-byline__info {
+  // Needed for .c-news-byline__name's text-overflow: ellipsis to actually
+  // engage - flex items default to min-width: auto (content-based), which
+  // otherwise overrides the parent's available width and blocks shrinking.
+  min-width: 0;
+  flex: 1 1 auto;
   font-family: var(--nys-ff-sans);
-  font-size: rem(12px);
+  line-height: 1.3;
+}
 
-  strong {
-    flex-shrink: 0;
-    color: var(--nys-color-black-2);
+.c-news-byline__name {
+  font-size: rem(12.5px);
+  font-weight: 700;
+  color: var(--nys-color-black-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  // {{ name }} on a taxonomy term renders through the "name" pseudo-field
+  // (Drupal's default field.html.twig wraps it in a block-level .field
+  // div) - same issue as .c-news-card__type's date field, forces
+  // .c-news-byline__party onto its own line unless flattened to inline.
+  .field {
+    display: inline;
   }
+}
 
-  a {
-    color: var(--nys-color-button-blue);
-    text-decoration: none;
+.c-news-byline__party {
+  font-weight: 400;
+  color: var(--nys-color-grey-accessible);
+}
 
-    &:hover {
-      text-decoration: underline;
-    }
-  }
+.c-news-byline__district {
+  font-size: rem(11px);
+  color: var(--nys-color-grey-accessible);
 }

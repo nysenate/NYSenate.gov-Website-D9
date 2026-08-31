@@ -3,9 +3,10 @@
  * @file
  * Theme override for the field_global_issues taxonomy reference field.
  *
- * Renders issue tags as a comma-joined inline list with no wrapper divs,
- * so consuming markup (e.g. c-news-card__issues) doesn't need to fight
- * the default field.html.twig .field/.field__item block-level wrappers.
+ * Renders issue tags as a bare inline list with no wrapper divs and no
+ * separator - spacing between pills comes from CSS gap (e.g.
+ * c-news-card__issues), so consuming markup doesn't need to fight the
+ * default field.html.twig .field/.field__item block-level wrappers.
  *
  * Still builds the standard field--name-/field--type-/field--label- classes
  * (normally added by classy's field.html.twig, which this replaces), so
@@ -25,7 +26,7 @@
 {% if items %}
   <span{{ attributes.addClass(classes) }}>
     {% for item in items %}
-      {{ item.content }}{% if not loop.last %}, {% endif %}
+      {{ item.content }}
     {% endfor %}
   </span>
 {% endif %}

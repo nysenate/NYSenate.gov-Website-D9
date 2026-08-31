@@ -56,23 +56,49 @@
     text-transform: uppercase;
   }
 
+  // Pill styling matches .c-news-card__issues on the issue-news-card
+  // component (the Recent News cards on the issues taxonomy page) - same
+  // oval-tag treatment as the related-issues tags below the hero.
   .c-featured-story-issue-tag {
-    color: var(--nys-color-link);
-    font-family: var(--nys-ff-sans-bold);
+    font-family: var(--nys-ff-sans);
     font-size: 12px;
+    margin-top: 8px;
 
+    // field_global_issues renders as Drupal's standard multi-value field
+    // markup (a .field wrapper, one .field__item per term) - both need to
+    // become flex containers/items themselves so the pills wrap and space
+    // out instead of stacking as block-level items.
+    .field {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .field__item {
+      display: inline-flex;
+    }
+
+    // Amber tint instead of the news-card's gray pill - this card's own
+    // background is the same gray, so a gray pill on it disappears.
+    // Reuses the .c-bill-status-box--committee palette (issue-page.scss)
+    // for consistency with the rest of the issues page.
     a {
-      text-transform: uppercase;
-      font-family: var(--nys-ff-sans-bold);
-      font-size: 12px;
-      line-height: 1em;
-      letter-spacing: 0.05em;
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background-color: #fef3e2;
+      border: 1px solid rgba(138, 85, 0, 0.2);
+      font-weight: 600;
+      color: #8a5500;
       text-decoration: none;
-      color: var(--nys-color-link);
+      white-space: nowrap;
+      transition: background-color 0.15s, border-color 0.15s, color 0.15s;
 
       &:hover {
-        color: var(--nys-color-link);
-        text-decoration: underline;
+        background-color: #8a5500;
+        border-color: #8a5500;
+        color: var(--nys-color-white);
       }
     }
   }

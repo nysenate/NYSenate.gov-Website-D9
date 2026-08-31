@@ -1,7 +1,14 @@
 <article class="c-news-card">
   <div class="c-news-card__body">
-    {% if content_type %}
-      <div class="c-news-card__type">{{ content_type }}</div>
+    {% if content_type or date %}
+      <div class="c-news-card__type">
+        {%- if content_type -%}
+          <span>{{ content_type }}</span>
+        {%- endif -%}
+        {%- if date -%}
+          <span>{{ date }}</span>
+        {%- endif -%}
+      </div>
     {% endif %}
     <h3 class="c-news-card__title">
       <a href="{{ url }}">{{ title }}</a>
@@ -9,18 +16,15 @@
     {% if blurb %}
       <p class="c-news-card__blurb">{{ blurb }}</p>
     {% endif %}
-    {% if date or senator %}
-      <div class="c-news-card__meta">
-        {% if date %}
-          <span>{{ date }}</span>
-        {% endif %}
+    {% if senator or issues %}
+      <div class="c-news-card__footer">
         {% if senator %}
-          <span>{{ 'By Senator'|t }} {{ senator }}</span>
+          <div class="c-news-card__senator{% if issues %} c-news-card__senator--divided{% endif %}">{{ senator }}</div>
+        {% endif %}
+        {% if issues %}
+          <div class="c-news-card__issues{% if not senator %} c-news-card__issues--full{% endif %}">{{ issues }}</div>
         {% endif %}
       </div>
-    {% endif %}
-    {% if issues %}
-      <div class="c-news-card__issues"><strong>{{ 'Issues:'|t }}</strong> {{ issues }}</div>
     {% endif %}
   </div>
   {% if image %}

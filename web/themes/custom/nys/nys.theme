@@ -115,8 +115,56 @@ function nys_preprocess_taxonomy_term__global_issues(&$variables) {
 
   $variables['hero_stats'] = nys_global_issue_hero_stats((int) $variables['term']->id());
 
+  $variables['related_issue_bills'] = [];
+  if ($variables['term']->hasField('field_related_issue') && !$variables['term']->get('field_related_issue')->isEmpty()) {
+    foreach ($variables['term']->get('field_related_issue')->referencedEntities() as $related_term) {
+      $variables['related_issue_bills'][] = [
+        'name' => $related_term->label(),
+        'count' => nys_global_issue_bill_count((int) $related_term->id()),
+        'url' => Url::fromUserInput('/search/legislation', [
+          'query' => [
+            'type' => 'bill',
+            'session_year' => 2025,
+            'issue' => $related_term->id(),
+            'status' => 'all',
+            'sponsor' => 'all',
+            'committee' => 'all',
+          ],
+        ])->toString(),
+      ];
+    }
+  }
+
   $variables['#cache']['tags'][] = 'taxonomy_term_list:global_issues';
   $variables['#cache']['tags'][] = 'node_list:bill';
+}
+
+/**
+ * Counts published, current-session bills tagged with a global_issues term.
+ *
+ * Used by the "Related Issues" sidebar box on the /global-issues page,
+ * which needs just the bill count (not the sponsor/passed-senate counts
+ * nys_global_issue_hero_stats() also computes) for each of the current
+ * term's related issues. This isn't a materialized/cached number - it's a
+ * live count on every render, invalidated by the node_list:bill cache tag
+ * whenever a bill is saved, so there's no separate process needed to keep
+ * it "up to date."
+ *
+ * @param int $term_id
+ *   The global_issues taxonomy term ID.
+ *
+ * @return int
+ *   The bill count.
+ */
+function nys_global_issue_bill_count(int $term_id): int {
+  return (int) \Drupal::entityQuery('node')
+    ->accessCheck(FALSE)
+    ->condition('type', 'bill')
+    ->condition('status', 1)
+    ->condition('field_ol_session', 2025)
+    ->condition('field_global_issues', $term_id)
+    ->count()
+    ->execute();
 }
 
 /**
@@ -229,4 +277,59 @@ function nys_preprocess_views_view_fields(&$variables) {
       }
     }
   }
+}
+
+/**
+ * Implements hook_preprocess_taxonomy_term__TAXONOMY().
+ *
+ * Provides the pre-formatted district and party strings for the compact
+ * news-byline view mode (taxonomy-term--senator--news-byline.html.twig),
+ * used on the issues page's Recent News cards. District isn't a direct
+ * field on the senator term - it lives on the separate "districts"
+ * vocabulary, which references back to the senator via field_senator, so
+ * it has to be resolved with a reverse lookup rather than a plain field
+ * formatter (same reason field_district_number is pulled via a Views
+ * relationship elsewhere on this page, not a formatter). Party uses the
+ * same raw-abbreviation-values approach as
+ * nys_preprocess_views_view_fields()'s senator_parties (e.g. "D", "WF"
+ * for a fusion-endorsed senator), joined here since this view mode has no
+ * views row to attach a separate field to.
+ */
+function nys_preprocess_taxonomy_term__senator(&$variables) {
+  if (($variables['elements']['#view_mode'] ?? NULL) !== 'news_byline') {
+    return;
+  }
+
+  $variables['party'] = '';
+  if ($variables['term']->hasField('field_party') && !$variables['term']->get('field_party')->isEmpty()) {
+    $parties = array_map(static fn (array $item) => $item['value'], $variables['term']->get('field_party')->getValue());
+    $variables['party'] = implode(', ', $parties);
+  }
+
+  $variables['district'] = '';
+  $districts = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadByProperties([
+    'vid' => 'districts',
+    'field_senator' => $variables['term']->id(),
+  ]);
+  $district_term = $districts ? reset($districts) : NULL;
+  if (!$district_term || !$district_term->hasField('field_district_number') || $district_term->get('field_district_number')->isEmpty()) {
+    return;
+  }
+
+  $number = (int) $district_term->get('field_district_number')->value;
+  $last_two = $number % 100;
+  $last_one = $number % 10;
+  if ($last_two >= 11 && $last_two <= 13) {
+    $suffix = 'th';
+  }
+  else {
+    $suffix = match ($last_one) {
+      1 => 'st',
+      2 => 'nd',
+      3 => 'rd',
+      default => 'th',
+    };
+  }
+
+  $variables['district'] = $number . $suffix . ' Senate District';
 }

@@ -50,7 +50,7 @@
 <div class="c-issue-main">
   <div class="c-issue-main__primary">
     <div class="c-issue-section-header">
-      <h2>{{ 'Active Legislation — 2025–2026 Session'|t }}</h2>
+      <h2>{{ 'Featured Legislation — 2025–2026 Session'|t }}</h2>
     </div>
     {{ drupal_view('featured_legislative_issues', 'list', term.id()) }}
   </div>
@@ -78,6 +78,24 @@
       <p class="c-sidebar-header-box__subtitle">{{ 'By Bills Sponsored this Session'|t }}</p>
     </div>
     {{ drupal_view('featured_legislative_issues', 'active_senators', term.id()) }}
+
+    {% if related_issue_bills %}
+      <div class="c-issue-related-bills">
+        <div class="c-sidebar-header-box">
+          <h3 class="c-sidebar-header-box__title">{{ 'Related Issues'|t }}</h3>
+        </div>
+        <ul class="c-issue-related-bills__list">
+          {% for item in related_issue_bills %}
+            <li class="c-issue-related-bills__item">
+              <a href="{{ item.url }}">
+                <span class="c-issue-related-bills__name">{{ item.name }}</span>
+                <span class="c-issue-related-bills__count">{{ item.count }} {{ item.count == 1 ? 'bill'|t : 'bills'|t }}</span>
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
   </aside>
 </div>
 

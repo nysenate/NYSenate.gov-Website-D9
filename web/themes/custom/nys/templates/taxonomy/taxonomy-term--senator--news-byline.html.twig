@@ -1,0 +1,27 @@
+{#
+/**
+ * @file
+ * Compact senator byline for the issues page's Recent News cards -
+ * headshot, name, party, district. party and district are precomputed in
+ * nys_preprocess_taxonomy_term__senator() (news_byline view mode only) -
+ * party for consistency with the raw-abbreviation-values convention used
+ * elsewhere on this page, district since it isn't a direct field on this
+ * term.
+ *
+ * @see nys_preprocess_taxonomy_term__senator()
+ */
+#}
+<div class="c-news-byline">
+  {% if content.field_member_headshot %}
+    <div class="c-news-byline__photo">{{ content.field_member_headshot }}</div>
+  {% endif %}
+  <div class="c-news-byline__info">
+    <div class="c-news-byline__name">
+      {{ name }}
+      {%- if party %} <span class="c-news-byline__party">({{ party }})</span>{% endif -%}
+    </div>
+    {% if district %}
+      <div class="c-news-byline__district">{{ district }}</div>
+    {% endif %}
+  </div>
+</div>

@@ -7,7 +7,20 @@ dependencies:
     - field.field.taxonomy_term.global_issues.field_related_issue
     - taxonomy.vocabulary.global_issues
   module:
+    - sdc_display
     - text
+third_party_settings:
+  sdc_display:
+    enabled: false
+    component:
+      machine_name: ''
+    mappings:
+      static:
+        props: {  }
+        slots: {  }
+      dynamic:
+        props: {  }
+        slots: {  }
 id: taxonomy_term.global_issues.default
 targetEntityType: taxonomy_term
 bundle: global_issues

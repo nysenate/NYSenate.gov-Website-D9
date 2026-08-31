@@ -77,10 +77,11 @@ content:
     weight: 1
     region: content
   field_senator_multiref:
-    type: entity_reference_label
+    type: entity_reference_entity_view
     label: hidden
     settings:
-      link: true
+      view_mode: news_byline
+      link: false
     third_party_settings: {  }
     weight: 5
     region: content

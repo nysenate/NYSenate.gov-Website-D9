@@ -14,18 +14,35 @@
       <a href="{{ url }}">{{ title }}</a>
     </h3>
     {% if blurb %}
-      <p class="c-news-card__blurb">{{ blurb }}</p>
+      {# The body field's "Summary or trimmed" formatter preserves whatever
+         markup (bold, headings, lists...) happened to be in the first bit
+         of the article - striptags normalizes that down to plain text so
+         it always matches this card's own compact type, regardless of
+         what the author's original formatting looked like. The replace
+         first inserts a space at adjacent tag boundaries (e.g.
+         "</h2><p>"), so stripping the tags doesn't run words from
+         separate elements together with no space between them. #}
+      <div class="c-news-card__blurb">{{ blurb|replace({'><': '> <'})|striptags|trim }}</div>
     {% endif %}
-    {% if senator or issues %}
-      <div class="c-news-card__footer">
+    <div class="c-news-card__footer">
+      <div class="c-news-card__senator{% if issues %} c-news-card__senator--divided{% endif %}">
         {% if senator %}
-          <div class="c-news-card__senator{% if issues %} c-news-card__senator--divided{% endif %}">{{ senator }}</div>
-        {% endif %}
-        {% if issues %}
-          <div class="c-news-card__issues{% if not senator %} c-news-card__issues--full{% endif %}">{{ issues }}</div>
+          {{ senator }}
+        {% else %}
+          <div class="c-news-byline c-news-byline--placeholder">
+            <div class="c-news-byline__photo">
+              <img src="/themes/custom/nys/images/nysenate-seal.png" width="32" height="32" alt="" loading="lazy">
+            </div>
+            <div class="c-news-byline__info">
+              <div class="c-news-byline__name">{{ 'The New York State Senate'|t }}</div>
+            </div>
+          </div>
         {% endif %}
       </div>
-    {% endif %}
+      {% if issues %}
+        <div class="c-news-card__issues">{{ issues }}</div>
+      {% endif %}
+    </div>
   </div>
   {% if image %}
     <div class="c-news-card__image">{{ image }}</div>

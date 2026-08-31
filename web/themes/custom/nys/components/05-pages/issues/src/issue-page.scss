@@ -6,6 +6,21 @@
   padding: 0;
 }
 
+// The site-wide Tabs block (local tasks) has no margin of its own and
+// was sitting flush against the page edge/hero on this page. Scoped to
+// .page--global_issues rather than .path-issues (used elsewhere in this
+// file) - .path-issues doesn't match anything on this route anymore
+// (leftover from before the /issues page moved to the taxonomy-term
+// architecture), while .page--global_issues is the body class Drupal
+// actually adds here.
+.page--global_issues #block-nys-tabs {
+  margin: 16px 24px;
+
+  @include bp-min(tablet) {
+    margin: 20px 60px;
+  }
+}
+
 // Shared readable-content width for every section on this page, so the
 // hero, related-issues strip, main two-column rows, and featured news all
 // line up to the same edge on wide screens instead of some staying boxed
@@ -32,11 +47,15 @@ $issue-page-max-width: 1500px;
   }
 }
 
+// White rather than the accessible gold - that shade is dark enough that
+// it fails contrast against this hero's own dark blue background (the
+// opposite problem from why it needed to get darker everywhere else).
+// Weight carries the emphasis gold used to instead.
 .c-issue-hero__eyebrow {
-  color: var(--nys-color-gold);
+  color: var(--nys-color-white);
   font-family: var(--nys-ff-sans);
   font-size: rem(12px);
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: 1.5px;
   text-transform: uppercase;
   margin-block-end: 12px;
@@ -72,14 +91,23 @@ $issue-page-max-width: 1500px;
   }
 }
 
+// A lighter blue panel of its own, rather than sharing the hero's dark
+// blue background - white-on-dark-blue for the eyebrow/title above this
+// is fine, but with 4 stats it was reading as a lot of plain white text.
+// The lighter surface also means the accessible gold (too dark to read
+// on the hero's dark blue) works again for the labels here.
 .c-issue-hero__stats {
   display: flex;
   flex-wrap: wrap;
   gap: 24px;
   margin-block-start: 32px;
+  padding: 20px 24px;
+  background-color: #E8F1F6;
+  border-radius: 6px;
 
   @include bp-min(tablet) {
     gap: 40px;
+    padding: 24px 32px;
   }
 }
 
@@ -89,8 +117,19 @@ $issue-page-max-width: 1500px;
   gap: 4px;
 }
 
+// Divider between each stat - half the spacing (matching the parent's
+// gap) sits before the line, half (this padding) sits after it.
+.c-issue-hero__stat + .c-issue-hero__stat {
+  padding-inline-start: 24px;
+  border-inline-start: 1px solid rgba(0, 77, 113, 0.15);
+
+  @include bp-min(tablet) {
+    padding-inline-start: 40px;
+  }
+}
+
 .c-issue-hero__stat-num {
-  color: var(--nys-color-white);
+  color: var(--nys-color-darker-blue);
   font-family: var(--nys-ff-serif);
   font-size: rem(36px);
   font-weight: 350;
@@ -98,10 +137,10 @@ $issue-page-max-width: 1500px;
 }
 
 .c-issue-hero__stat-label {
-  color: var(--nys-color-gold);
+  color: var(--nys-color-gold-accessible);
   font-family: var(--nys-ff-sans);
   font-size: rem(12px);
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.5px;
   text-transform: uppercase;
 }
@@ -110,21 +149,28 @@ $issue-page-max-width: 1500px;
 // Related issues
 // ---------------------------------------------------------------------------
 
+// Horizontal padding matches .c-issue-hero exactly (same values, same
+// breakpoints) so this strip's content lines up with the hero's above
+// it - vertical padding is its own, much smaller value, since this strip
+// is just a line of tags, not the full hero content block. Light yellow
+// background reuses the same tint as the "committee" status pill/
+// featured-legislation issue tags elsewhere on this page.
 .c-issue-related {
   max-width: $issue-page-max-width;
   margin-inline: auto;
-  padding: 24px 20px;
+  padding: 10px 24px;
+  background-color: #FEF3E2;
   border-bottom: 1px solid var(--nys-color-dash-grey-1);
 
   @include bp-min(tablet) {
-    padding: 24px 40px;
+    padding: 10px 60px;
     display: flex;
     align-items: baseline;
     gap: 24px;
   }
 
-  @include bp-min(desktop) {
-    padding-inline: 60px;
+  @include bp-min(lg) {
+    padding: 10px 150px;
   }
 }
 
@@ -241,7 +287,7 @@ $issue-page-max-width: 1500px;
   }
 
   .c-issue-section-header {
-    border-block-end-color: var(--nys-color-gold);
+    border-block-end-color: var(--nys-color-gold-accessible);
   }
 }
 
@@ -507,7 +553,7 @@ $issue-page-max-width: 1500px;
 
   &:hover {
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-    border-inline-start-color: var(--nys-color-gold);
+    border-inline-start-color: var(--nys-color-gold-accessible);
   }
 
   &--floor {
@@ -774,7 +820,7 @@ details.c-bill-milestones > summary.c-bill-milestones__current {
   display: inline-flex;
   width: 22px;
   height: 22px;
-  color: var(--nys-color-gold);
+  color: var(--nys-color-gold-accessible);
 
   svg {
     width: 100%;

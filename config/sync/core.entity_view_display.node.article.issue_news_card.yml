@@ -32,6 +32,7 @@ dependencies:
     - datetime
     - media
     - sdc_display
+    - text
     - user
 third_party_settings:
   sdc_display:
@@ -58,13 +59,26 @@ third_party_settings:
           issues: field_global_issues
           date: field_date
           content_type: nys_content_type
-          blurb: field_subtitle
+          blurb: body
           senator: field_senator_multiref
 id: node.article.issue_news_card
 targetEntityType: node
 bundle: article
 mode: issue_news_card
 content:
+  body:
+    type: text_summary_or_trimmed
+    label: hidden
+    settings:
+      trim_length: 300
+    third_party_settings:
+      sdc_display:
+        enabled: 0
+        component:
+          machine_name: null
+          show_deprecated: 0
+    weight: 5
+    region: content
   field_date:
     type: datetime_custom
     label: hidden
@@ -107,13 +121,6 @@ content:
     third_party_settings: {  }
     weight: 5
     region: content
-  field_subtitle:
-    type: basic_string
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
-    weight: 5
-    region: content
   links:
     settings: {  }
     third_party_settings: {  }
@@ -130,7 +137,6 @@ content:
     weight: 3
     region: content
 hidden:
-  body: true
   field_accessible_sitewide: true
   field_article_author: true
   field_associated_senators: true
@@ -146,6 +152,7 @@ hidden:
   field_majority_issue_tag: true
   field_social_image: true
   field_social_teaser: true
+  field_subtitle: true
   langcode: true
   nys_senator_dashboard_path_alias: true
   nys_video_thumbnail: true

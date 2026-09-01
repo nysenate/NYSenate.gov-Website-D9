@@ -37,7 +37,7 @@ class BillVoteWidgetSimple extends FieldPluginBase {
     return [
       '#lazy_builder' => [
         'nys_bill_vote.vote_widget_lazy_builder:renderVoteWidget',
-        [(int) $nid, TRUE, TRUE],
+        [(int) $nid, TRUE, FALSE],
       ],
       '#create_placeholder' => TRUE,
     ];

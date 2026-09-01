@@ -1002,12 +1002,19 @@ details.c-bill-milestones > summary.c-bill-milestones__current {
 // markup/classes come from nysenate_theme/src/templates/forms/
 // form--nys-bill-vote-widget.html.twig - a site-wide shared template, so
 // this overrides via CSS scoped to this card rather than templating it).
-.c-bill-teaser__vote {
+// .view-featured-legislative-issues prefix bumps every rule in this
+// block's specificity above nysenate_theme's bill-vote-widget.css (e.g.
+// ".nys-bill-vote-form .c-block--btn { background-color: #004d71; }") -
+// that rule turned out to be the actual source of the vote-widget's blue
+// background, not anything in all.css (which isn't even loaded on this
+// page - the real file is bill-vote-widget.css, loaded after this one).
+.view-featured-legislative-issues .c-bill-teaser__vote {
   .nys-bill-vote {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
     gap: 10px;
+    background: none;
   }
 
   .c-bill-polling--cta {
@@ -1016,10 +1023,15 @@ details.c-bill-milestones > summary.c-bill-milestones__current {
     font-weight: 600;
     color: var(--nys-color-black-2);
     margin: 0;
+    padding-left: 0;
   }
 
   .button-wrapper {
     display: flex;
+    // Was fine unwrapped with just Aye/Nay - now that Subscribe merges
+    // into this same row too, 3 buttons need to be able to wrap on
+    // narrow cards instead of overflowing.
+    flex-wrap: wrap;
     gap: 8px;
     flex-shrink: 0;
   }
@@ -1029,7 +1041,8 @@ details.c-bill-milestones > summary.c-bill-milestones__current {
   // (e.g. ".nys-bill-vote-form .c-block--btn"), which tie in specificity
   // with a plainer selector and could win on load order alone.
   .nys-bill-vote-form .nys-bill-vote-yes,
-  .nys-bill-vote-form .nys-bill-vote-no {
+  .nys-bill-vote-form .nys-bill-vote-no,
+  .nys-bill-vote-form .nys-subscribe-button {
     display: inline-flex;
     align-items: center;
     gap: 5px;
@@ -1046,13 +1059,56 @@ details.c-bill-milestones > summary.c-bill-milestones__current {
     transition: background-color 0.15s;
   }
 
+  // .c-block--btn qualifier added (matching how nysenate_theme's own
+  // compiled CSS targets this exact button) to definitively out-specify
+  // its .c-block--btn background-color rules - unlike Aye/Nay, this
+  // button doesn't also carry a .c-half-btn class, which was apparently
+  // enough to tip which rule won on specificity/order alone.
+  .nys-bill-vote-form .c-block--btn.nys-subscribe-button {
+    background-color: var(--nys-color-gray-lt);
+    color: var(--nys-color-darker-blue);
+
+    // Bell glyph from the senate_icons font - matches the subscribe icon
+    // used elsewhere on the site (nysenate_theme's own
+    // .nys-bill-vote-form .c-block--btn.nys-subscribe-button::before rule),
+    // rather than a generic envelope character.
+    &::before {
+      content: '\6f';
+      font-family: 'senate_icons';
+      display: inline-block;
+      font-style: normal;
+      font-weight: normal;
+      font-variant: normal;
+      text-transform: none;
+      font-size: rem(15px);
+    }
+
+    &:hover {
+      background-color: var(--nys-color-alto);
+    }
+  }
+
+  // "Already subscribed" state (subscribeAjaxSubmit swaps the button out
+  // for this) - the shared form's own <hr /> divider doesn't fit this
+  // compact card context.
+  .subscribe_result {
+    font-family: var(--nys-ff-sans);
+    font-size: rem(11px);
+    font-weight: 700;
+    color: var(--nys-color-darker-blue);
+  }
+
+  hr {
+    display: none;
+  }
+
   .nys-bill-vote-form .nys-bill-vote-yes {
     background-color: #e3f5ec;
     color: #1a5a35;
 
     &::before {
       content: '\2713';
-      font-size: rem(11px);
+      font-size: rem(15px);
     }
 
     &:hover {
@@ -1066,7 +1122,7 @@ details.c-bill-milestones > summary.c-bill-milestones__current {
 
     &::before {
       content: '\2715';
-      font-size: rem(11px);
+      font-size: rem(15px);
     }
 
     &:hover {

@@ -148,7 +148,11 @@ jobs:
   # vendor/bin/phpunit is already present on the container — it was deployed
   # by the deploy_multidev job — so no Composer install is needed here.
   #
-  # To run the same tests locally:
+  # Runs most, but not all, chunks from tests/dtt/test-chunks.yml — chunks
+  # marked `ci: false` (AnonymousCacheNonInvalidationTest) are skipped here due
+  # to an unresolved CDN BAN propagation race; see tests/dtt/README.md.
+  #
+  # To run the full local suite (including the chunks skipped here):
   #   ddev run-cache-tests
   # ---------------------------------------------------------------------------
   run_cache_tests:

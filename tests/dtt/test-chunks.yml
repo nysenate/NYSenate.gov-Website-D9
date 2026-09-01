@@ -2,9 +2,10 @@
 #
 # This is the single source of truth for how the suite is split into separate
 # PHP processes at runtime. The CI workflow (pantheon-deploy-multidev.yml, via
-# python3) and .ddev/commands/web/run-cache-tests (local, via PHP/symfony/yaml)
-# both read this file. run-on-container.sh does not — chunking is the caller's
-# responsibility; this script just runs PHPUnit with whatever args it receives.
+# tests/dtt/run-all-chunks.sh) and .ddev/commands/web/run-cache-tests (local,
+# via PHP/symfony/yaml) both read this file. run-on-container.sh does not —
+# chunking is the caller's responsibility; this script just runs PHPUnit with
+# whatever args it receives.
 #
 # WHY CHUNKS EXIST
 # Each chunk runs as a separate terminus SSH session. This serves two purposes:
@@ -17,6 +18,16 @@
 # was caused by New Relic's PHP instrumentation filling the 9 GB container cgroup,
 # not by Drupal or test heap size.
 #
+# THE 'ci' FLAG
+# A chunk defaults to running in both local and CI. Set `ci: false` to run a
+# chunk locally only (tests/dtt/run-all-chunks.sh skips it; the local runner
+# does not, so local coverage is unaffected). This exists solely for
+# AnonymousCacheNonInvalidationTest — see CHUNK SIZING below and the "Anonymous
+# cache non-invalidation" section of tests/dtt/README.md for the full
+# rationale. Do not use this flag to skip a chunk for any other reason (e.g.
+# speeding up CI) without equally strong justification, since it creates a
+# real gap between what CI verifies and what the local suite verifies.
+#
 # CHUNK SIZING (current suite)
 # The suite runs ~51 test cases across 9 chunks.
 # AnonymousCacheHitTest is split into two chunks for historical reasons (the split
@@ -26,6 +37,15 @@
 #            — 7 + 3 = 10 cases.
 # AnonymousCacheNonInvalidationTest is split into two chunks to keep each SSH
 # session under Pantheon's 10-minute idle timeout on slower environments (dev).
+# Both chunks are marked `ci: false`: on Pantheon multidev, Cloudflare's BAN
+# dispatch for a save is asynchronous and has no observable "propagation
+# complete" signal, so a later test's HIT assertion on an unrelated page can
+# race a still-propagating BAN from an earlier test's *correct* invalidation.
+# Multiple rounds of increasingly targeted fixes (fixed sleeps, tolerant
+# retries, an active settle-before-assert step) reduced but did not eliminate
+# the flake rate. These tests remain fully enabled for local DDEV runs, where
+# there is no CDN layer and the race cannot occur — run them there for
+# coverage of this behavior. See tests/dtt/README.md for the detailed history.
 #   Chunk 1: article + bill non-invalidation (2 cases).
 #   Chunk 2: event + petition non-invalidation (2 cases).
 # AuthenticatedDynamicCacheTest: 6 cases (2 top-level + 2 content types + 1 senator
@@ -59,9 +79,11 @@ chunks:
 
   - label: "AnonymousCacheNonInvalidationTest (article + bill)"
     filter: "AnonymousCacheNonInvalidationTest::(testArticleEditDoesNotInvalidateUnrelatedPages|testBillEditDoesNotInvalidateUnrelatedPages)"
+    ci: false
 
   - label: "AnonymousCacheNonInvalidationTest (event + petition)"
     filter: "AnonymousCacheNonInvalidationTest::(testEventEditDoesNotInvalidateUnrelatedPages|testPetitionEditDoesNotInvalidateAnyTopLevelPage)"
+    ci: false
 
   - label: "AuthenticatedDynamicCacheTest"
     filter: "AuthenticatedDynamicCacheTest"
@@ -77,4 +99,3 @@ chunks:
 
   - label: "NoCachePoisoningTest"
     filter: "NoCachePoisoningTest"
-

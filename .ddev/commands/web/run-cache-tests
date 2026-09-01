@@ -56,8 +56,13 @@ fi
 # Default path: run each chunk in a separate PHP process.
 #
 # Chunk definitions live in tests/dtt/test-chunks.yml — the single source of
-# truth for both this command and run-on-container.sh. Edit that file to add,
-# remove, or rebalance chunks; no changes are needed here.
+# truth for both this command and tests/dtt/run-all-chunks.sh (CI). Edit that
+# file to add, remove, or rebalance chunks; no changes are needed here.
+#
+# Unlike run-all-chunks.sh, this command runs every chunk regardless of the
+# `ci` flag — chunks marked `ci: false` are excluded from the Pantheon CI run
+# but are fully valid (and reliable) locally, since there's no CDN here to
+# race against. See test-chunks.yml for why.
 
 CHUNKS_FILE="${PROJECT_ROOT}/tests/dtt/test-chunks.yml"
 

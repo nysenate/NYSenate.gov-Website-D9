@@ -20,6 +20,9 @@ The suite is designed to exercise the full cache stack on both local and Pantheo
 - Editing a bill node does not invalidate top-level pages that bills do not feed (e.g. /, /news-and-issues, /events, /senators-committees, /about).
 - Editing an event node does not invalidate top-level pages that events do not feed (e.g. /news-and-issues, /legislation, /senators-committees, /about).
 - Editing a petition does not invalidate any top-level page.
+- This class's tests run back-to-back in one process, and one test's save can *correctly* invalidate a page (e.g. an event edit invalidates `/events`) that a later, unrelated test then checks; Cloudflare's BAN for that earlier, correct invalidation is dispatched asynchronously and can still be propagating when the later test starts, producing a spurious MISS unrelated to the entity that test saves. `setUp()` calls `settleCachePages()` before every test to actively wait out any such leftover propagation (warm to HIT, wait, re-check with a bare request, repeat until a gap passes with no flip back to MISS) before that test's own warm → save → assert sequence begins. This keeps the actual assertion (`assertAnonymousCacheHit()`) strict — it still fails immediately on the first MISS — so a genuine over-invalidation bug introduced by that test's own save is still caught.
+
+
 
 **Cache invalidation** (`CacheMissInvalidationTest`)
 - All invalidation tests follow the canonical `assertCacheMissOnSave($path, $entity)` sequence: warm cache → assert HIT → `saveEntity($entity)` (save + flush Pantheon BAN buffer) → assert MISS → assert HIT (re-cached).

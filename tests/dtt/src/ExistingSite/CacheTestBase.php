@@ -442,6 +442,52 @@ abstract class CacheTestBase extends ExistingSiteBase {
   }
 
   /**
+   * Blocks until a set of pages have no BAN still propagating across the CDN.
+   *
+   * Used only by AnonymousCacheNonInvalidationTest. That suite runs several
+   * tests back-to-back in the same PHP process, and some of those tests'
+   * saves *correctly* invalidate a page (e.g. an event edit invalidates
+   * /events) that a *later* test then asserts is still a HIT (because that
+   * later test's own save doesn't touch it). Cloudflare's BAN dispatch for
+   * the earlier, correct invalidation is asynchronous —
+   * pantheon_clear_edge_keys_shutdown() returns as soon as the BAN request is
+   * accepted, not once every edge node has processed it — so it can still be
+   * propagating when the next test starts, producing a MISS that has nothing
+   * to do with the entity that next test saves.
+   *
+   * Rather than guessing a fixed sleep duration, this actively detects
+   * whether a page's cache state is still in flux: warm it to a HIT, wait a
+   * gap, then re-check with a bare request. If it's still HIT after the gap,
+   * no BAN landed during that window and the page is considered settled. If
+   * it flipped to MISS, a pending BAN just arrived — re-warm and repeat.
+   * Bounded by $maxRounds so a genuinely broken page still fails fast via the
+   * caller's own warmCache()/assertAnonymousCacheHit() rather than hanging
+   * here indefinitely.
+   *
+   * Call this before a test's own warm → save → assert sequence, not after,
+   * so that the final assertion can stay strict (assertAnonymousCacheHit())
+   * and keep its ability to catch a genuine over-invalidation bug introduced
+   * by *this* test's own save.
+   */
+  protected function settleCachePages(array $paths, int $recheckAfterSeconds = 5, int $maxRounds = 6): void {
+    foreach ($paths as $path) {
+      for ($round = 0; $round < $maxRounds; $round++) {
+        $this->warmCache($path);
+        sleep($recheckAfterSeconds);
+        try {
+          $response = $this->anonGet($path);
+          if ($this->getCacheStatus($response) === 'HIT') {
+            break;
+          }
+        }
+        catch (\Exception $e) {
+          // Treat as unsettled and let the next round's warmCache() recover.
+        }
+      }
+    }
+  }
+
+  /**
    * Asserts that an anonymous request returns a cache MISS.
    *
    * Cache invalidations in this suite are triggered by saveEntity(), which

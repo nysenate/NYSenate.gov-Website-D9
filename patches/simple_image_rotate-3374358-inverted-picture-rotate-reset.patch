@@ -1,0 +1,47 @@
+--- a/simple_image_rotate.module
++++ b/simple_image_rotate.module
+@@ -5,6 +5,7 @@
+  * This is the Simple Image Rotate module for rotating uploaded image files.
+  */
+ 
++use Drupal\Component\Utility\NestedArray;
+ use Drupal\Core\Render\Markup;
+ use Drupal\field\Entity\FieldConfig;
+ use Drupal\Core\Form\FormStateInterface;
+@@ -116,11 +117,18 @@
+ function simple_image_rotate_widget_process($element, FormStateInterface $form_state) {
+ 
+   if (isset($element['#files']) && count($element['#files']) > 0) {
++    // Preserve the previously submitted rotation instead of always
++    // resetting it to 0, otherwise a rotated image reverts to its
++    // original orientation when another image is added to the field.
++    $data = NestedArray::getValue($form_state->getValues(), $element['#parents']);
++    $degrees = !empty($data['rotate']) ? $data['rotate'] : 0;
++
+     $element['rotate_button'] = [
+       '#markup' => Markup::create(sprintf('<button class="button button--secondary rotate-icon">%s</button>', t('Rotate image clockwise'))),
+       '#weight' => $element['#weight'],
+       '#theme_wrappers' => ['container']
+     ];
++    $element['rotate']['#value'] = $degrees;
+   }
+   return $element;
+ }
+--- a/js/simple_image_rotate.js
++++ b/js/simple_image_rotate.js
+@@ -18,6 +18,15 @@
+   Drupal.behaviors.rotateImage = {
+     attach: function (context) {
+       once('rotate-image', $(context).find('.rotate-icon')).forEach(function (element) {
++        // Restore rotation to what it was in case this form has already
++        // been submitted before (e.g. in case of a form validation error
++        // or adding another image to the field).
++        $('.rotate-icon').each(function () {
++          var degrees = $(this).closest('.image-widget').find('.rotate').val();
++          if (degrees) {
++            $(this).closest('.image-widget').find('img').addClass('rotate-' + degrees);
++          }
++        });
+         $(element).on('click', function (e) {
+           // Prevent default click on rotate icon
+           e.preventDefault();

@@ -468,9 +468,18 @@ abstract class CacheTestBase extends ExistingSiteBase {
    * so that the final assertion can stay strict (assertAnonymousCacheHit())
    * and keep its ability to catch a genuine over-invalidation bug introduced
    * by *this* test's own save.
+   *
+   * On local/DDEV there is no CDN layer and no asynchronous BAN to wait out —
+   * x-drupal-cache reflects Redis state immediately — so the wait/re-check
+   * loop is skipped entirely and this just warms each page once.
    */
   protected function settleCachePages(array $paths, int $recheckAfterSeconds = 5, int $maxRounds = 6): void {
+    $isPantheon = function_exists('pantheon_clear_edge_keys_shutdown');
     foreach ($paths as $path) {
+      if (!$isPantheon) {
+        $this->warmCache($path);
+        continue;
+      }
       for ($round = 0; $round < $maxRounds; $round++) {
         $this->warmCache($path);
         sleep($recheckAfterSeconds);

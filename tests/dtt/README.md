@@ -68,6 +68,8 @@ terminus remote:drush nysenate-2022.pr-NNN -- \
 
 Pass/fail status for each test class is visible directly on the PR via the `run_cache_tests` job.
 
+**Automatic retry on failure.** The whole `run-all-chunks.sh` invocation (all CI-enabled chunks) is wrapped in [`nick-fields/retry`](https://github.com/nick-fields/retry), retrying once (`max_attempts: 2`) if any chunk fails. This exists because CDN BAN propagation is asynchronous with no completion signal (see "Anonymous cache non-invalidation" above), so an occasional failure is a timing race rather than a regression. All saves in this suite are non-destructive, so a full rerun is safe and a genuine regression will still fail on the retry.
+
 ### Why tests run on the container
 
 The `$anonClient->get()` assertions are pure HTTP and would work from any external machine. The constraint is on the other side: **DTT bootstraps a full Drupal instance inside the test process**, and that Drupal instance connects to the same Pantheon-managed Redis the web server uses — for cache bin operations (`deleteAll()`), entity saves that write cache-tag checksums, flag state writes, and DTT's teardown deletions. Pantheon's Redis is only reachable from within the container network; there is no supported SSH tunnel from an external CI VM.

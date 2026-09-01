@@ -501,10 +501,16 @@ abstract class CacheTestBase extends ExistingSiteBase {
    *
    * Cache invalidations in this suite are triggered by saveEntity(), which
    * calls $entity->save() and then immediately flushes Pantheon's BAN buffer
-   * via pantheon_clear_edge_keys_shutdown(). There is still a short window
-   * between the BAN dispatch and Cloudflare processing it, so this method
-   * polls until cf-cache-status: MISS is confirmed — the same race warmCache()
-   * handles in reverse.
+   * via pantheon_clear_edge_keys_shutdown(). There is still a window between
+   * the BAN dispatch and Cloudflare processing it on the specific edge this
+   * request happens to land on — the same asynchronous, unbounded propagation
+   * gap documented at length on settleCachePages() and in
+   * tests/dtt/README.md. This method polls until cf-cache-status: MISS is
+   * confirmed, the same race warmCache() handles in reverse. The polling
+   * window (~45 s) is deliberately generous: an earlier, much shorter window
+   * (~5 s) was observed to intermittently fail in CI on pages that were
+   * genuinely invalidated correctly — the BAN had simply not finished
+   * propagating yet.
    *
    * On local environments there is no CDN; getCacheStatus() falls back to
    * x-drupal-cache which reflects the Redis state and returns MISS immediately
@@ -512,7 +518,8 @@ abstract class CacheTestBase extends ExistingSiteBase {
    */
   protected function assertAnonymousCacheMiss(string $path): void {
     $status = '';
-    for ($attempt = 0; $attempt <= 10; $attempt++) {
+    $maxAttempts = 45;
+    for ($attempt = 0; $attempt <= $maxAttempts; $attempt++) {
       try {
         $response = $this->anonGet($path);
         $status = $this->getCacheStatus($response);
@@ -534,8 +541,8 @@ abstract class CacheTestBase extends ExistingSiteBase {
         }
         throw $e;
       }
-      if ($attempt < 10) {
-        usleep(500000);
+      if ($attempt < $maxAttempts) {
+        sleep(1);
       }
     }
     $this->assertSame('MISS', $status,

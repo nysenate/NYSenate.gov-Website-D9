@@ -238,12 +238,24 @@ jobs:
         # Delegates to tests/dtt/run-all-chunks.sh, which reads test-chunks.yml
         # and calls run-on-container.sh once per chunk via terminus. See the
         # script for details on SSH-session-per-chunk and exit code semantics.
+        #
+        # Wrapped in a retry: Cloudflare's Pantheon-multidev BAN dispatch is
+        # asynchronous with no observable "propagation complete" signal (see
+        # tests/dtt/README.md), so an occasional cache assertion can fail on a
+        # timing race rather than a real regression. All entity saves in this
+        # suite are non-destructive re-saves, so a full rerun re-exercises real
+        # cache invalidation behavior from scratch and is safe to repeat — a
+        # genuine regression will fail again on the retry too.
+        uses: nick-fields/retry@v3
         env:
           PANTHEON_TEST_UA: ${{ secrets.PANTHEON_TEST_UA }}
-        run: |
-          bash tests/dtt/run-all-chunks.sh \
-            "${{ vars.PANTHEON_SITE }}.${{ env.PANTHEON_MULTIDEV }}" \
-            "https://${{ env.PANTHEON_MULTIDEV }}-${{ vars.PANTHEON_SITE }}.pantheonsite.io"
+        with:
+          timeout_minutes: 45
+          max_attempts: 2
+          command: |
+            bash tests/dtt/run-all-chunks.sh \
+              "${{ vars.PANTHEON_SITE }}.${{ env.PANTHEON_MULTIDEV }}" \
+              "https://${{ env.PANTHEON_MULTIDEV }}-${{ vars.PANTHEON_SITE }}.pantheonsite.io"
 
       - name: Add 'cache-tests-passed' label to PR
         if: success()

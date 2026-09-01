@@ -121,22 +121,42 @@ function nys_preprocess_taxonomy_term__global_issues(&$variables) {
       $variables['related_issue_bills'][] = [
         'name' => $related_term->label(),
         'count' => nys_global_issue_bill_count((int) $related_term->id()),
-        'url' => Url::fromUserInput('/search/legislation', [
-          'query' => [
-            'type' => 'bill',
-            'session_year' => 2025,
-            'issue' => $related_term->id(),
-            'status' => 'all',
-            'sponsor' => 'all',
-            'committee' => 'all',
-          ],
-        ])->toString(),
+        'url' => nys_global_issue_search_url((int) $related_term->id()),
       ];
     }
   }
 
+  $variables['all_bills_url'] = nys_global_issue_search_url((int) $variables['term']->id());
+
   $variables['#cache']['tags'][] = 'taxonomy_term_list:global_issues';
   $variables['#cache']['tags'][] = 'node_list:bill';
+}
+
+/**
+ * Builds the /search/legislation URL for a global_issues term's bills.
+ *
+ * Shared by the "Related Issues" sidebar box (per related term) and the
+ * "See all related bills" link on the Featured Legislation header (for
+ * the current term) - same session/issue/status/sponsor/committee query
+ * shape either way.
+ *
+ * @param int $term_id
+ *   The global_issues taxonomy term ID.
+ *
+ * @return string
+ *   The search URL.
+ */
+function nys_global_issue_search_url(int $term_id): string {
+  return Url::fromUserInput('/search/legislation', [
+    'query' => [
+      'type' => 'bill',
+      'session_year' => 2025,
+      'issue' => $term_id,
+      'status' => 'all',
+      'sponsor' => 'all',
+      'committee' => 'all',
+    ],
+  ])->toString();
 }
 
 /**

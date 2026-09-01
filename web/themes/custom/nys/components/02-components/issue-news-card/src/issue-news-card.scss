@@ -2,13 +2,24 @@
 @use 'partials/phosphor-fill';
 
 .c-news-card {
-  display: flex;
+  display: grid;
+  // Fixed 96px column for the image, always reserved whether or not a
+  // given card actually has one. This turned out to be the real cause of
+  // the footer's 1fr/2fr divider landing in a different place card to
+  // card: with the old flex layout, .c-news-card__body only got the
+  // extra ~110px (image width + gap) back on cards that had NO image -
+  // so its available width, and everything computed as a proportion of
+  // it (like the footer grid), genuinely differed between "has image"
+  // and "no image" cards. A fixed second track means the image's space
+  // is reserved either way, so the body's width - and the footer split
+  // inside it - is identical on every card regardless of image presence.
+  grid-template-columns: 1fr 96px;
   // Without this, the row's cross-axis default (stretch) leaves the fixed-
   // size image sitting wherever a taller body (e.g. from a long, wrapping
   // title) happens to push the row's height - pinning both to the top
   // keeps the image anchored top-right at a consistent position no
   // matter how many lines the title runs to.
-  align-items: flex-start;
+  align-items: start;
   gap: 14px;
   padding: 16px;
   margin-block-end: 12px;
@@ -22,7 +33,6 @@
 }
 
 .c-news-card__image {
-  flex-shrink: 0;
   width: 96px;
   height: 96px;
   overflow: hidden;
@@ -44,12 +54,6 @@
 }
 
 .c-news-card__body {
-  // Without flex-grow, the body only claims as much width as its content
-  // needs - on cards with a short title/blurb that's less than the row's
-  // full width, leaving the image sitting at the edge of the content
-  // instead of flush against the card's right side, and shifting per-card
-  // depending on how much text each one happens to have.
-  flex: 1 1 auto;
   min-width: 0;
 }
 
@@ -138,16 +142,22 @@
   // Fixed 1/3-2/3 split (rather than sizing to content) so the divider
   // border on .c-news-card__senator--divided lands at the same spot on
   // every card, regardless of byline width or how many issue pills follow.
-  grid-template-columns: 1fr 2fr;
+  // minmax(0, ...) on the tracks themselves (not min-width: 0 on the
+  // items) is what actually enforces that - a plain 1fr/2fr track still
+  // has an implicit content-based minimum size (the CSS Grid spec's
+  // "automatic minimum size"), and since the issue pills use
+  // white-space: nowrap, a card with a long issue name would push that
+  // column wider than its proportional share, shrinking the senator
+  // column to compensate. min-width: 0 on the grid items alone wasn't
+  // enough to stop this - each nested flex layer (.field's flex-wrap)
+  // computes its own automatic minimum independently, so the override
+  // needs to happen at the track level to be authoritative.
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
   align-items: center;
   gap: 12px;
   margin-block-start: 12px;
   padding-block-start: 12px;
   border-block-start: 1px solid var(--nys-color-light-gray);
-}
-
-.c-news-card__senator {
-  min-width: 0;
 }
 
 // Only shown when issues are also present (see issue-news-card.twig) - a

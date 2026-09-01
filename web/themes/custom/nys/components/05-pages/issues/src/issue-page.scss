@@ -291,7 +291,15 @@ $issue-page-max-width: 1500px;
   }
 }
 
+// display: flex only matters when a section header has the optional
+// __link (Featured Legislation's "See all related bills") - headers with
+// just an h2 (Featured News, What Senators are Saying) are unaffected.
 .c-issue-section-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 16px;
   border-block-end: 2px solid var(--nys-color-darker-blue);
   padding-block-end: 10px;
   margin-block-end: 16px;
@@ -302,6 +310,37 @@ $issue-page-max-width: 1500px;
     font-weight: 600;
     color: var(--nys-color-darker-blue);
     margin: 0;
+  }
+}
+
+// Matches the sitewide "title bar" link convention (e.g.
+// .upcoming-events-link in nysenate_theme's nysenate-upcoming-events.scss,
+// also reused for the homepage calendar/legislative-events panes) -
+// uppercase, gold-accessible color (the same family as that convention's
+// own $gen_link_hover: #805314), arrow icon via the senate_icons font
+// (already loaded sitewide through nysenate_theme as nys's base theme).
+.c-issue-section-header__link {
+  flex-shrink: 0;
+  font-family: var(--nys-ff-sans);
+  font-size: rem(13px);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--nys-color-gold-accessible);
+  text-decoration: none;
+
+  &::after {
+    content: '\72';
+    font-family: 'senate_icons';
+    display: inline-block;
+    vertical-align: middle;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    padding-left: 3px;
+    margin-top: -2px;
+    font-size: rem(15px);
   }
 }
 
@@ -1078,15 +1117,27 @@ details.c-bill-milestones > summary.c-bill-milestones__current {
     padding: 0;
     border: none;
 
+    // nysenate_theme has a sitewide `label { font-size: 0.8rem;
+    // line-height: 1.5; display: block; ... }` rule that "Sponsor" and
+    // "Current Status" (real <label> elements) pick up automatically -
+    // <legend> is a different element, so it never inherited any of that
+    // and was falling back to the browser's own default legend styling.
+    // Matching those values explicitly here (font-weight/color were
+    // already matched via .fieldset-legend below).
     legend {
       padding: 0;
       margin-block-end: rem(8px);
+      font-size: 0.8rem;
+      line-height: 1.5;
+      display: block;
     }
 
     .fieldset-legend {
       font-family: var(--nys-ff-sans);
       font-weight: 700;
       color: var(--nys-color-black-2);
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
 
     .fieldset-wrapper {

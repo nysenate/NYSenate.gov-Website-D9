@@ -51,6 +51,9 @@
   <div class="c-issue-main__primary">
     <div class="c-issue-section-header">
       <h2>{{ 'Featured Legislation — 2025–2026 Session'|t }}</h2>
+      {% if all_bills_url %}
+        <a href="{{ all_bills_url }}" class="c-issue-section-header__link">{{ 'View all related bills'|t }}</a>
+      {% endif %}
     </div>
     {{ drupal_view('featured_legislative_issues', 'list', term.id()) }}
   </div>

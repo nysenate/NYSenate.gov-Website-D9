@@ -17,12 +17,12 @@
 
       dropdownToggle.on('click', function () {
         const dropdownContent = $(this).find('.add-to-calendar__dropdown');
+        const isExpanded = $(this).attr('aria-expanded') === 'true';
 
         $(this).toggleClass('active');
+        $(this).attr('aria-expanded', isExpanded ? 'false' : 'true');
 
-        dropdownContent.attr('aria-expanded', function(index, attr) {
-          return attr === 'true' ? 'false' : 'true';
-        });
+        dropdownContent.attr('aria-expanded', isExpanded ? 'false' : 'true');
         dropdownContent.toggleClass('active');
       });
     }

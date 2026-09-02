@@ -26,7 +26,7 @@
 
 <div class="nys-senator">
   <div class="nys-senator--thumb">
-		<a href="{{ senator_link }}">
+		<a href="{{ senator_link }}" aria-label="{{ content.field_senator_name|render|striptags|trim }}">
       {{ content.field_member_headshot }}
     </a>
 

@@ -38,9 +38,10 @@
  * @ingroup themeable
  */
 #}
-{% embed '@rain_theme/accordion/_accordion-item.twig' with {
+{% embed '@nysenate_theme/accordion/_accordion-item.twig' with {
   "item": {
-    "heading": content.field_title
+    "heading": content.field_title,
+    "accordion_instance": paragraph.id()
   },
   "content": content
 } only %}

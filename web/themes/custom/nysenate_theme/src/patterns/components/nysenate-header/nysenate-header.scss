@@ -838,6 +838,14 @@ nav ul.c-nav--list {
   @extend .med-text;
 }
 
+// On mobile the nav is rendered on a palette-colored background; keep text
+// white so it has sufficient contrast regardless of the senator palette.
+@include breakpoint($bp-under-sm) {
+  .c-nav--wrap .c-nav nav ul.c-nav--list li a:hover {
+    color: $color-white;
+  }
+}
+
 .c-site-search--btn, .search__submit {
   cursor: pointer;
   position: absolute;

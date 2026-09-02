@@ -35,10 +35,15 @@ CHUNKS_FILE="${SCRIPT_DIR}/test-chunks.yml"
 
 # Parse test-chunks.yml. Fail immediately if parsing fails so we never
 # silently report success with zero tests run.
+#
+# Chunks marked `ci: false` are local-DDEV-only (see test-chunks.yml for why)
+# and are skipped here.
 CHUNKS=$(python3 -c "
 import yaml
 chunks = yaml.safe_load(open('${CHUNKS_FILE}'))['chunks']
 for c in chunks:
+    if c.get('ci', True) is False:
+        continue
     print(c['label'] + '\t' + c['filter'])
 ") || { echo "ERROR: Failed to parse ${CHUNKS_FILE}"; exit 1; }
 

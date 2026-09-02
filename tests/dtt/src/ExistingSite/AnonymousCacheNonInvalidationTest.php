@@ -13,37 +13,23 @@ namespace Drupal\Tests\nys\ExistingSite;
  * edit) lives in CacheMissInvalidationTest.
  * The anonymous cache HIT and max-age assertions live in AnonymousCacheHitTest.
  *
+ * Tests in this class run back-to-back in the same process, and one test's
+ * save can *correctly* invalidate a page (e.g. an event edit invalidates
+ * /events) that a later, unrelated test then checks — the asynchronous
+ * Cloudflare BAN for that earlier, correct invalidation can still be
+ * propagating when the later test starts. setUp() calls settleCachePages()
+ * to actively wait out any such leftover propagation before each test's own
+ * warm → save → assert sequence, so the final assertion can stay a strict
+ * assertAnonymousCacheHit() and keep its ability to catch a genuine
+ * over-invalidation bug introduced by that test's own save.
+ *
  * @group cache_regression
  */
 class AnonymousCacheNonInvalidationTest extends CacheTestBase {
 
-  /**
-   * Allows CF to finish propagating this test's BAN before the next test starts
-   * warming pages. Without this, a BAN dispatched by saveEntity() may still be
-   * in-flight when the following test warms a page that the BAN will eventually
-   * bust, causing a spurious MISS on the subsequent assertAnonymousCacheHit.
-   *
-   * Only runs on Pantheon where CF BAN propagation is asynchronous; on local
-   * DDEV there is no CDN layer and no sleep is needed.
-   */
-  protected function tearDown(): void {
-    parent::tearDown();
-    if (function_exists('pantheon_clear_edge_keys_shutdown')) {
-      sleep(10);
-    }
-  }
-
-  /**
-   * Sleeps briefly after warming pages so re-cached responses propagate to all
-   * CF edge nodes before the save. Without this, warmCache() may confirm HIT
-   * on one edge while another edge still holds a stale pre-BAN response; when
-   * that edge later receives a pending BAN (from a prior test's save), it
-   * briefly returns MISS and the non-invalidation assertion fails spuriously.
-   */
-  private function settleCdnAfterWarm(): void {
-    if (function_exists('pantheon_clear_edge_keys_shutdown')) {
-      sleep(5);
-    }
+  protected function setUp(): void {
+    parent::setUp();
+    $this->settleCachePages(self::TOP_LEVEL_PAGES);
   }
 
   /**
@@ -57,7 +43,6 @@ class AnonymousCacheNonInvalidationTest extends CacheTestBase {
     foreach ($unrelated as $path) {
       $this->warmCache($path);
     }
-    $this->settleCdnAfterWarm();
     $this->saveEntity($article);
     foreach ($unrelated as $path) {
       $this->assertAnonymousCacheHit($path);
@@ -75,7 +60,6 @@ class AnonymousCacheNonInvalidationTest extends CacheTestBase {
     foreach ($unrelated as $path) {
       $this->warmCache($path);
     }
-    $this->settleCdnAfterWarm();
     $this->saveEntity($bill);
     foreach ($unrelated as $path) {
       $this->assertAnonymousCacheHit($path);
@@ -93,7 +77,6 @@ class AnonymousCacheNonInvalidationTest extends CacheTestBase {
     foreach ($unrelated as $path) {
       $this->warmCache($path);
     }
-    $this->settleCdnAfterWarm();
     $this->saveEntity($event);
     foreach ($unrelated as $path) {
       $this->assertAnonymousCacheHit($path);
@@ -110,7 +93,6 @@ class AnonymousCacheNonInvalidationTest extends CacheTestBase {
     foreach (self::TOP_LEVEL_PAGES as $path) {
       $this->warmCache($path);
     }
-    $this->settleCdnAfterWarm();
     $this->saveEntity($petition);
     foreach (self::TOP_LEVEL_PAGES as $path) {
       $this->assertAnonymousCacheHit($path);

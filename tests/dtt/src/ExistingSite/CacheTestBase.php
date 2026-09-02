@@ -442,14 +442,75 @@ abstract class CacheTestBase extends ExistingSiteBase {
   }
 
   /**
+   * Blocks until a set of pages have no BAN still propagating across the CDN.
+   *
+   * Used only by AnonymousCacheNonInvalidationTest. That suite runs several
+   * tests back-to-back in the same PHP process, and some of those tests'
+   * saves *correctly* invalidate a page (e.g. an event edit invalidates
+   * /events) that a *later* test then asserts is still a HIT (because that
+   * later test's own save doesn't touch it). Cloudflare's BAN dispatch for
+   * the earlier, correct invalidation is asynchronous —
+   * pantheon_clear_edge_keys_shutdown() returns as soon as the BAN request is
+   * accepted, not once every edge node has processed it — so it can still be
+   * propagating when the next test starts, producing a MISS that has nothing
+   * to do with the entity that next test saves.
+   *
+   * Rather than guessing a fixed sleep duration, this actively detects
+   * whether a page's cache state is still in flux: warm it to a HIT, wait a
+   * gap, then re-check with a bare request. If it's still HIT after the gap,
+   * no BAN landed during that window and the page is considered settled. If
+   * it flipped to MISS, a pending BAN just arrived — re-warm and repeat.
+   * Bounded by $maxRounds so a genuinely broken page still fails fast via the
+   * caller's own warmCache()/assertAnonymousCacheHit() rather than hanging
+   * here indefinitely.
+   *
+   * Call this before a test's own warm → save → assert sequence, not after,
+   * so that the final assertion can stay strict (assertAnonymousCacheHit())
+   * and keep its ability to catch a genuine over-invalidation bug introduced
+   * by *this* test's own save.
+   *
+   * On local/DDEV there is no CDN layer and no asynchronous BAN to wait out —
+   * x-drupal-cache reflects Redis state immediately — so the wait/re-check
+   * loop is skipped entirely and this just warms each page once.
+   */
+  protected function settleCachePages(array $paths, int $recheckAfterSeconds = 5, int $maxRounds = 6): void {
+    $isPantheon = function_exists('pantheon_clear_edge_keys_shutdown');
+    foreach ($paths as $path) {
+      if (!$isPantheon) {
+        $this->warmCache($path);
+        continue;
+      }
+      for ($round = 0; $round < $maxRounds; $round++) {
+        $this->warmCache($path);
+        sleep($recheckAfterSeconds);
+        try {
+          $response = $this->anonGet($path);
+          if ($this->getCacheStatus($response) === 'HIT') {
+            break;
+          }
+        }
+        catch (\Exception $e) {
+          // Treat as unsettled and let the next round's warmCache() recover.
+        }
+      }
+    }
+  }
+
+  /**
    * Asserts that an anonymous request returns a cache MISS.
    *
    * Cache invalidations in this suite are triggered by saveEntity(), which
    * calls $entity->save() and then immediately flushes Pantheon's BAN buffer
-   * via pantheon_clear_edge_keys_shutdown(). There is still a short window
-   * between the BAN dispatch and Cloudflare processing it, so this method
-   * polls until cf-cache-status: MISS is confirmed — the same race warmCache()
-   * handles in reverse.
+   * via pantheon_clear_edge_keys_shutdown(). There is still a window between
+   * the BAN dispatch and Cloudflare processing it on the specific edge this
+   * request happens to land on — the same asynchronous, unbounded propagation
+   * gap documented at length on settleCachePages() and in
+   * tests/dtt/README.md. This method polls until cf-cache-status: MISS is
+   * confirmed, the same race warmCache() handles in reverse. The polling
+   * window (~45 s) is deliberately generous: an earlier, much shorter window
+   * (~5 s) was observed to intermittently fail in CI on pages that were
+   * genuinely invalidated correctly — the BAN had simply not finished
+   * propagating yet.
    *
    * On local environments there is no CDN; getCacheStatus() falls back to
    * x-drupal-cache which reflects the Redis state and returns MISS immediately
@@ -457,7 +518,8 @@ abstract class CacheTestBase extends ExistingSiteBase {
    */
   protected function assertAnonymousCacheMiss(string $path): void {
     $status = '';
-    for ($attempt = 0; $attempt <= 10; $attempt++) {
+    $maxAttempts = 45;
+    for ($attempt = 0; $attempt <= $maxAttempts; $attempt++) {
       try {
         $response = $this->anonGet($path);
         $status = $this->getCacheStatus($response);
@@ -479,8 +541,8 @@ abstract class CacheTestBase extends ExistingSiteBase {
         }
         throw $e;
       }
-      if ($attempt < 10) {
-        usleep(500000);
+      if ($attempt < $maxAttempts) {
+        sleep(1);
       }
     }
     $this->assertSame('MISS', $status,

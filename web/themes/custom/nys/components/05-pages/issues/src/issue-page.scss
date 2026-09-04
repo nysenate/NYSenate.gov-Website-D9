@@ -1,0 +1,1237 @@
+@use 'partials' as *;
+
+// Reset the nysenate_theme single-column constraint so the hero can be full-width.
+.path-issues .l-row--main {
+  max-width: none;
+  padding: 0;
+}
+
+// The site-wide Tabs block (local tasks) has no margin of its own and
+// was sitting flush against the page edge/hero on this page. Scoped to
+// .page--global_issues rather than .path-issues (used elsewhere in this
+// file) - .path-issues doesn't match anything on this route anymore
+// (leftover from before the /issues page moved to the taxonomy-term
+// architecture), while .page--global_issues is the body class Drupal
+// actually adds here.
+.page--global_issues #block-nys-tabs {
+  margin: 16px 24px;
+
+  @include bp-min(tablet) {
+    margin: 20px 60px;
+  }
+}
+
+// Shared readable-content width for every section on this page, so the
+// hero, related-issues strip, main two-column rows, and featured news all
+// line up to the same edge on wide screens instead of some staying boxed
+// while others stretch to the viewport width.
+$issue-page-max-width: 1500px;
+
+// ---------------------------------------------------------------------------
+// Hero
+// ---------------------------------------------------------------------------
+
+.c-issue-hero {
+  background-color: var(--nys-color-darker-blue);
+  color: var(--nys-color-white);
+  margin: 0 auto;
+  max-width: $issue-page-max-width;
+  padding: 48px 24px 40px;
+
+  @include bp-min(tablet) {
+    padding: 80px 60px 40px;
+  }
+
+  @include bp-min(lg) {
+    padding: 40px 150px 40px;
+  }
+}
+
+// White rather than the accessible gold - that shade is dark enough that
+// it fails contrast against this hero's own dark blue background (the
+// opposite problem from why it needed to get darker everywhere else).
+// Weight carries the emphasis gold used to instead.
+.c-issue-hero__eyebrow {
+  color: var(--nys-color-white);
+  font-family: var(--nys-ff-sans);
+  font-size: rem(12px);
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-block-end: 12px;
+}
+
+.c-issue-hero__title {
+  color: var(--nys-color-white);
+  font-family: var(--nys-ff-serif);
+  font-size: rem(32px);
+  font-weight: 350;
+  line-height: 1.2;
+  margin: 0 0 16px;
+
+  @include bp-min(tablet) {
+    font-size: rem(40px);
+  }
+
+  @include bp-min(desktop) {
+    font-size: rem(48px);
+  }
+}
+
+.c-issue-hero__description p {
+  color: var(--nys-color-white);
+  font-size: rem(16px);
+  line-height: 1.6;
+  margin: 0 0 32px;
+  max-width: 720px;
+
+  // Strip margin from the rendered field's inner paragraph.
+  p {
+    margin: 0;
+  }
+}
+
+// A lighter blue panel of its own, rather than sharing the hero's dark
+// blue background - white-on-dark-blue for the eyebrow/title above this
+// is fine, but with 4 stats it was reading as a lot of plain white text.
+// The lighter surface also means the accessible gold (too dark to read
+// on the hero's dark blue) works again for the labels here.
+.c-issue-hero__stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-block-start: 32px;
+  padding: 20px 24px;
+  background-color: #E8F1F6;
+  border-radius: 6px;
+
+  @include bp-min(tablet) {
+    gap: 40px;
+    padding: 24px 32px;
+  }
+}
+
+.c-issue-hero__stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+// Divider between each stat - half the spacing (matching the parent's
+// gap) sits before the line, half (this padding) sits after it.
+.c-issue-hero__stat + .c-issue-hero__stat {
+  padding-inline-start: 24px;
+  border-inline-start: 1px solid rgba(0, 77, 113, 0.15);
+
+  @include bp-min(tablet) {
+    padding-inline-start: 40px;
+  }
+}
+
+.c-issue-hero__stat-num {
+  color: var(--nys-color-darker-blue);
+  font-family: var(--nys-ff-serif);
+  font-size: rem(36px);
+  font-weight: 350;
+  line-height: 1;
+}
+
+.c-issue-hero__stat-label {
+  color: var(--nys-color-gold-accessible);
+  font-family: var(--nys-ff-sans);
+  font-size: rem(12px);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+// ---------------------------------------------------------------------------
+// Related issues
+// ---------------------------------------------------------------------------
+
+// Horizontal padding matches .c-issue-hero exactly (same values, same
+// breakpoints) so this strip's content lines up with the hero's above
+// it - vertical padding is its own, much smaller value, since this strip
+// is just a line of tags, not the full hero content block. Light yellow
+// background reuses the same tint as the "committee" status pill/
+// featured-legislation issue tags elsewhere on this page.
+.c-issue-related {
+  max-width: $issue-page-max-width;
+  margin-inline: auto;
+  padding: 10px 24px;
+  background-color: #FEF3E2;
+  border-bottom: 1px solid var(--nys-color-dash-grey-1);
+
+  @include bp-min(tablet) {
+    padding: 10px 60px;
+    display: flex;
+    align-items: baseline;
+    gap: 24px;
+  }
+
+  @include bp-min(lg) {
+    padding: 10px 150px;
+  }
+}
+
+.c-issue-related__label {
+  color: var(--nys-color-black-2);
+  font-family: var(--nys-ff-sans);
+  font-size: rem(12px);
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  margin-block-end: 12px;
+
+  @include bp-min(tablet) {
+    margin-block-end: 0;
+  }
+}
+
+.c-issue-related__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+
+  a {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background-color: var(--nys-color-gray-lt);
+    border: 1px solid var(--nys-color-alto);
+    font-family: var(--nys-ff-sans);
+    font-size: rem(12.5px);
+    font-weight: 600;
+    color: var(--nys-color-darker-blue);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+
+    &:hover {
+      background-color: var(--nys-color-darker-blue);
+      border-color: var(--nys-color-darker-blue);
+      color: var(--nys-color-white);
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Main layout (bill list + sidebar)
+// ---------------------------------------------------------------------------
+
+.c-issue-main {
+  max-width: $issue-page-max-width;
+  margin-inline: auto;
+  padding: 24px 20px 48px;
+
+  @include bp-min(tablet) {
+    padding: 32px 40px 56px;
+  }
+
+  @include bp-min(desktop) {
+    padding-inline: 60px;
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    align-items: start;
+    gap: 40px;
+  }
+}
+
+// When there's no sidebar content (e.g. no senators mentioned in news
+// for this issue yet), the primary column should take the full row
+// instead of leaving an empty 320px gap where the sidebar would go.
+.c-issue-main--no-sidebar {
+  @include bp-min(desktop) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.c-issue-main__primary {
+  min-width: 0;
+}
+
+// Featured News - a full-width section (not confined to the primary
+// column) between the two-column rows, styled as its own distinct
+// highlighted block rather than blending into the surrounding page.
+.c-issue-featured-news {
+  // .c-issue-main/.c-issue-related cap at $issue-page-max-width on their
+  // outer (padded) box, so their actual content edge sits inset from
+  // that by their own padding (60px at desktop) on each side - here
+  // there's no outer max-width to lean on (the background band needs to
+  // stay full-bleed), so the padding-inline floor matches those sections'
+  // padding exactly, and the capped-width target is pre-shrunk by that
+  // same 60px per side, so the content edges line up at every width.
+  $content-width: $issue-page-max-width - (60px * 2);
+
+  // Padding-inline uses max() rather than a fixed value so the background
+  // band can stay full-bleed (spanning the viewport) while the content
+  // inside still caps out at $content-width on wide screens - the calc()
+  // term is 0 or negative until the viewport exceeds that width plus
+  // double the breakpoint's own padding, so max() falls back to the fixed
+  // padding on anything smaller.
+  padding-block: 24px;
+  padding-inline: max(20px, calc((100% - #{$content-width}) / 2));
+  margin-block-end: 8px;
+  background-color: var(--nys-color-gray-lt);
+
+  @include bp-min(tablet) {
+    padding-block: 32px;
+    padding-inline: max(40px, calc((100% - #{$content-width}) / 2));
+  }
+
+  @include bp-min(desktop) {
+    padding-block: 32px;
+    padding-inline: max(60px, calc((100% - #{$content-width}) / 2));
+  }
+
+  .c-issue-section-header {
+    border-block-end-color: var(--nys-color-gold-accessible);
+  }
+}
+
+// display: flex only matters when a section header has the optional
+// __link (Featured Legislation's "See all related bills") - headers with
+// just an h2 (Featured News, What Senators are Saying) are unaffected.
+.c-issue-section-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  border-block-end: 2px solid var(--nys-color-darker-blue);
+  padding-block-end: 10px;
+  margin-block-end: 16px;
+
+  h2 {
+    font-family: var(--nys-ff-serif);
+    font-size: rem(20px);
+    font-weight: 600;
+    color: var(--nys-color-darker-blue);
+    margin: 0;
+  }
+}
+
+// Matches the sitewide "title bar" link convention (e.g.
+// .upcoming-events-link in nysenate_theme's nysenate-upcoming-events.scss,
+// also reused for the homepage calendar/legislative-events panes) -
+// uppercase, gold-accessible color (the same family as that convention's
+// own $gen_link_hover: #805314), arrow icon via the senate_icons font
+// (already loaded sitewide through nysenate_theme as nys's base theme).
+.c-issue-section-header__link {
+  flex-shrink: 0;
+  font-family: var(--nys-ff-sans);
+  font-size: rem(13px);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--nys-color-gold-accessible);
+  text-decoration: none;
+
+  &::after {
+    content: '\72';
+    font-family: 'senate_icons';
+    display: inline-block;
+    vertical-align: middle;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    padding-left: 3px;
+    margin-top: -2px;
+    font-size: rem(15px);
+  }
+}
+
+.c-issue-main__sidebar {
+  min-width: 0;
+}
+
+// Standard sidebar section header - blue background, white text. Pair
+// with a following box (e.g. .view-display-id-active_senators) rounded
+// on the bottom only, so the two read as one connected block.
+.c-sidebar-header-box {
+  padding: 12px 14px;
+  border-radius: 4px 4px 0 0;
+  background-color: var(--nys-color-button-blue);
+}
+
+.c-sidebar-header-box__title {
+  margin: 0;
+  font-family: var(--nys-ff-sans);
+  font-size: rem(15px);
+  font-weight: 700;
+  color: var(--nys-color-white);
+}
+
+.c-sidebar-header-box__subtitle {
+  margin: 4px 0 0;
+  font-family: var(--nys-ff-sans);
+  font-size: rem(11px);
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--nys-color-white);
+}
+
+// The included @nysenate_theme/contact-your-senator component's own SCSS
+// scopes its default look under ".c-block .c-issue--contact-btn" - since
+// we're not wrapping it in .c-block here, none of that applies, and it
+// renders unstyled except for a site-wide ".c-block--btn" base rule (from
+// nysenate_theme's global.css - absolute positioning, dark theme, meant for
+// a different card context) that the anonymous-state button also happens
+// to carry. Reset and restyle from scratch rather than fighting either.
+.c-issue-contact-card {
+  background-color: var(--nys-color-white);
+  border: 1px solid var(--nys-color-alto);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-block-end: 24px;
+
+  // The card's own heading now comes from .c-sidebar-header-box above
+  // this - the included component's own eyebrow label (same title text)
+  // would otherwise duplicate it.
+  .eyebrow {
+    display: none;
+  }
+}
+
+.c-issue-contact-card__body {
+  padding: 20px;
+
+  p {
+    font-family: var(--nys-ff-sans);
+    font-size: rem(13px);
+    line-height: 1.5;
+    color: var(--nys-color-tundora);
+    margin: 0 0 16px;
+  }
+
+  .c-issue--contact-btn {
+    position: static;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    height: auto;
+    margin: 0;
+    padding: 11px 16px;
+    border: 1.5px solid var(--nys-color-darker-blue);
+    border-radius: 3px;
+    background-color: transparent;
+    color: var(--nys-color-darker-blue);
+    font-family: var(--nys-ff-sans);
+    font-size: rem(13px);
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    line-height: 1.3;
+    text-transform: uppercase;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.15s, color 0.15s;
+
+    &::before {
+      display: none;
+    }
+
+    span {
+      display: inline;
+      width: auto;
+      color: inherit;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    &:hover,
+    &:focus {
+      background-color: var(--nys-color-darker-blue);
+      color: var(--nys-color-white);
+    }
+  }
+
+  .nys-senator--thumb {
+    position: relative;
+    flex-shrink: 0;
+    display: block;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    overflow: hidden;
+
+    // nysenate_theme global.css has its own, differently-sized
+    // .nys-senator--thumb component (46px, different markup shape)
+    // that we're reusing this class name against, including a
+    // ".nys-senator--thumb img { min-height: 46px; width: auto; }"
+    // rule. Percentage/absolute-positioned sizing kept losing fights
+    // against that (min-height clamps regardless of height:100%; and
+    // top+bottom+height all set at once is over-constrained for a
+    // replaced element, which zeroed height out entirely on the next
+    // attempt) - fixed pixel dimensions directly on the img sidesteps
+    // all of that: no percentages, no containing-block math, just a
+    // hard 36x36 box that object-fit crops into.
+    img {
+      display: block !important;
+      position: static !important;
+      width: 36px !important;
+      height: 36px !important;
+      min-width: 0 !important;
+      min-height: 0 !important;
+      max-width: none !important;
+      max-height: none !important;
+      object-fit: cover !important;
+      border-radius: 50%;
+    }
+  }
+}
+
+// "Related Issues" sidebar box - each related issue term links to a
+// pre-filtered /search/legislation results page for that issue's bills.
+// Matches .c-issue-contact-card's white/border/rounded shell.
+.c-issue-related-bills {
+  background-color: var(--nys-color-white);
+  border: 1px solid var(--nys-color-alto);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-block-start: 24px;
+  margin-block-end: 24px;
+}
+
+.c-issue-related-bills__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.c-issue-related-bills__item {
+  border-block-end: 1px solid var(--nys-color-light-gray);
+
+  &:last-child {
+    border-block-end: none;
+  }
+
+  a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 16px;
+    font-family: var(--nys-ff-sans);
+    font-size: rem(13px);
+    color: var(--nys-color-black-2);
+    text-decoration: none;
+    transition: background-color 0.15s;
+
+    &:hover {
+      background-color: var(--nys-color-gray-lt);
+
+      .c-issue-related-bills__name {
+        color: var(--nys-color-button-blue);
+      }
+    }
+  }
+}
+
+.c-issue-related-bills__name {
+  min-width: 0;
+  font-weight: 600;
+}
+
+// Plain "x bills" text link, matching .c-senator-active-card__count in
+// the "Senators Active on this Issue" box just above this one, rather
+// than a pill badge.
+.c-issue-related-bills__count {
+  flex-shrink: 0;
+  font-size: rem(12px);
+  font-weight: 700;
+  color: var(--nys-color-button-blue);
+  white-space: nowrap;
+}
+
+.c-issue-session-box {
+  background-color: var(--nys-color-gray-lt);
+  border: 1px solid var(--nys-color-alto);
+  padding: 16px;
+  margin-block-end: 24px;
+  color: var(--nys-color-tundora);
+  p {
+    font-family: var(--nys-ff-sans);
+    font-size: rem(13px);
+    line-height: 1.2;
+  }
+
+  strong {
+    display: block;
+    color: var(--nys-color-black-2);
+    margin-block-end: 4px;
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Bill teaser card
+//
+// Deliberately lighter/fresher than the navy dashboard styling this view
+// mode (my_dashboard_teaser) normally carries elsewhere on the site.
+// ---------------------------------------------------------------------------
+
+.c-bill-teaser {
+  background-color: var(--nys-color-white);
+  border: 1px solid var(--nys-color-alto);
+  border-inline-start: 4px solid var(--nys-color-darker-blue);
+  padding: 20px 24px;
+  margin-block-end: 16px;
+  transition: box-shadow 0.15s, border-inline-start-color 0.15s;
+
+  &:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    border-inline-start-color: var(--nys-color-gold-accessible);
+  }
+
+  &--floor {
+    border-inline-start-color: var(--nys-color-button-blue);
+  }
+
+  &--passed {
+    border-inline-start-color: #2d7a4f;
+  }
+
+  &--dead {
+    border-inline-start-color: var(--nys-color-dash-grey-1);
+  }
+}
+
+.c-bill-teaser__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-block-end: 8px;
+}
+
+.c-bill-teaser__top-left {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-width: 0;
+}
+
+.c-bill-teaser__badge {
+  font-family: var(--nys-ff-sans);
+  font-size: rem(11px);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: inherit;
+}
+
+// ---------------------------------------------------------------------------
+// Bill status milestones (past/current/future expandable list)
+//
+// Replaces the old unlabeled-dots status graph. `current` renders as a
+// pill matching the status badge above; expanding it (native <details>,
+// no JS) reveals what's still ahead and what's already happened.
+// ---------------------------------------------------------------------------
+
+// Wraps the status pill (.c-bill-milestones, below) and the last-status
+// date together so they read as one box - the border/background live here
+// rather than on the pill itself, since the pill also needs to render
+// borderless/backgroundless as the <summary> of a native <details>, where
+// fighting a pre-existing VBO reset for those specific properties isn't
+// worth it twice over (see the note further down for the one property that
+// still needs it).
+.c-bill-status-box {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  padding: 8px 14px;
+  border-radius: 3px;
+  border: 1px solid rgba(0, 77, 113, 0.15);
+  background-color: rgba(0, 77, 113, 0.05);
+  color: var(--nys-color-black-2);
+
+  &--committee {
+    background-color: #fef3e2;
+    border-color: rgba(138, 85, 0, 0.2);
+    color: #8a5500;
+  }
+
+  &--floor {
+    background-color: #e3edf8;
+    border-color: rgba(26, 74, 122, 0.2);
+    color: #1a4a7a;
+  }
+
+  &--passed {
+    background-color: #e3f5ec;
+    border-color: rgba(26, 90, 53, 0.2);
+    color: #1a5a35;
+  }
+
+  &--dead {
+    background-color: var(--nys-color-light-gray);
+    border-color: var(--nys-color-alto);
+    color: var(--nys-color-grey-accessible);
+  }
+}
+
+.c-bill-status-box__date {
+  font-size: rem(10.5px);
+  font-weight: 500;
+  opacity: 0.8;
+  padding-inline-start: 8px;
+  border-inline-start: 1px solid currentColor;
+}
+
+.c-bill-milestones {
+  position: relative;
+  margin: 0;
+}
+
+.c-bill-milestones__current {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--nys-ff-sans);
+  font-size: rem(11px);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: inherit;
+}
+
+// A pre-existing generic reset (.view-content details summary { cursor: text }
+// in components/00-base/src/views.scss, written for the VBO "select all"
+// UI) has higher specificity than the plain-class rule above and silently
+// wins inside any view output. Re-declare here at matching specificity so
+// this component's own cursor/marker-hiding actually take effect. (padding/
+// border/width aren't fought here since this pill no longer sets its own -
+// the wrapper above owns them, and its reset values already match ours.)
+details.c-bill-milestones > summary.c-bill-milestones__current {
+  cursor: pointer;
+  list-style: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  &::-webkit-details-marker {
+    display: none;
+  }
+}
+
+.c-bill-milestones__toggle {
+  display: inline-flex;
+  flex-shrink: 0;
+  width: 9px;
+  height: 9px;
+  transition: transform 0.15s;
+
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  details[open] & {
+    transform: rotate(180deg);
+  }
+}
+
+// Floats above the card's own content instead of pushing it down when
+// expanded - anchored to .c-bill-milestones (position: relative above).
+.c-bill-milestones__panel {
+  position: absolute;
+  top: calc(100% + 6px);
+  inset-inline-end: 0;
+  z-index: 20;
+  min-width: 220px;
+  max-width: 280px;
+  background-color: var(--nys-color-white);
+  border: 1px solid var(--nys-color-alto);
+  border-radius: 4px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  padding: 12px 14px;
+}
+
+.c-bill-milestones__committee {
+  padding-block-end: 8px;
+  margin-block-end: 6px;
+  border-block-end: 1px solid var(--nys-color-light-gray);
+  font-family: var(--nys-ff-sans);
+  font-size: rem(11px);
+  color: var(--nys-color-grey-accessible);
+
+  a {
+    color: var(--nys-color-button-blue);
+    font-weight: 700;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.c-bill-milestones__section {
+  padding-block: 6px;
+
+  & + & {
+    border-block-start: 1px solid var(--nys-color-light-gray);
+  }
+}
+
+.c-bill-milestones__section-label {
+  font-family: var(--nys-ff-sans);
+  font-size: rem(10px);
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  margin-block-end: 4px;
+
+  .c-bill-milestones__section--future & {
+    color: var(--nys-color-button-blue);
+  }
+
+  .c-bill-milestones__section--past & {
+    color: #1a5a35;
+  }
+}
+
+.c-bill-milestones__list {
+  list-style: none;
+  font-family: var(--nys-ff-sans);
+  font-size: rem(12.5px);
+  color: var(--nys-color-tundora);
+
+  li {
+    position: relative;
+    padding-block: 2px;
+    padding-inline-start: 14px;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset-inline-start: 0;
+      top: 10px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+  }
+
+  .c-bill-milestones__section--future & li::before {
+    background-color: var(--nys-color-button-blue);
+  }
+
+  .c-bill-milestones__section--past & li::before {
+    background-color: #1a5a35;
+  }
+}
+
+.c-bill-teaser__title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--nys-ff-serif);
+  font-size: rem(18px);
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--nys-color-black-2);
+  text-decoration: none;
+
+  &:hover {
+    color: var(--nys-color-button-blue);
+  }
+}
+
+.c-bill-teaser__title-icon {
+  flex-shrink: 0;
+  display: inline-flex;
+  width: 22px;
+  height: 22px;
+  color: var(--nys-color-gold-accessible);
+
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  svg path {
+    fill: currentColor;
+  }
+}
+
+.c-bill-teaser__description {
+  font-family: var(--nys-ff-serif);
+  font-size: rem(16px);
+  line-height: 1.55;
+  color: var(--nys-color-tundora);
+  margin-block-end: 10px;
+  font-weight: 600;
+}
+
+.c-bill-teaser__quote {
+  position: relative;
+  background-color: var(--nys-color-gray-lt);
+  padding: 16px 18px 16px 50px;
+  margin: 0 0 10px;
+  font-family: var(--nys-ff-serif);
+  font-style: italic;
+  font-size: rem(19px);
+  line-height: 1.5;
+  color: var(--nys-color-tundora);
+
+  cite {
+    font-style: normal;
+
+    // Some sponsor terms render their name field through a site-wide
+    // override (taxonomy-term--senator--microsite-link.html.twig) that
+    // wraps the link in a block-level `.field` div instead of a bare <a>.
+    // Force it inline so it doesn't break the "Sponsored by ... (D) ..."
+    // sentence onto its own line.
+    .field {
+      display: inline;
+    }
+
+    a {
+      color: var(--nys-color-button-blue);
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+.c-bill-teaser__cite {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--nys-ff-sans);
+  font-size: rem(12px);
+  font-weight: 600;
+  color: var(--nys-color-grey-accessible);
+  margin-block-start: 8px;
+}
+
+.c-bill-teaser__headshot {
+  flex-shrink: 0;
+  display: block;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+
+  // Hide the admin-only contextual "edit" pencil Drupal attaches to the
+  // rendered media entity - at this size it just covers the whole photo.
+  .contextual {
+    display: none !important;
+  }
+
+  // Drupal's rendered media output nests the <img> inside one or more
+  // wrapper divs at an unpredictable depth - force every descendant to fill
+  // the fixed-size box so the crop is driven by object-fit, not by
+  // whichever wrapper level the image's native aspect ratio leaks through.
+  * {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  img {
+    object-fit: cover;
+  }
+}
+
+.c-bill-teaser__quote-icon {
+  position: absolute;
+  top: 16px;
+  inset-inline-start: 16px;
+  width: 26px;
+  height: 26px;
+  line-height: 0;
+
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.c-bill-teaser__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  font-family: var(--nys-ff-sans);
+  font-size: rem(12.5px);
+  color: var(--nys-color-grey-accessible);
+  margin-block-end: 14px;
+
+  a {
+    color: var(--nys-color-button-blue);
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  span + span::before {
+    content: '·';
+    margin-inline-end: 10px;
+    color: var(--nys-color-alto);
+  }
+}
+
+.c-bill-teaser__footer {
+  padding-block-start: 12px;
+  border-block-start: 1px solid var(--nys-color-light-gray);
+}
+
+// Restyles the nys_bill_vote module's shared vote-widget form (its own
+// markup/classes come from nysenate_theme/src/templates/forms/
+// form--nys-bill-vote-widget.html.twig - a site-wide shared template, so
+// this overrides via CSS scoped to this card rather than templating it).
+// .view-featured-legislative-issues prefix bumps every rule in this
+// block's specificity above nysenate_theme's bill-vote-widget.css (e.g.
+// ".nys-bill-vote-form .c-block--btn { background-color: #004d71; }") -
+// that rule turned out to be the actual source of the vote-widget's blue
+// background, not anything in all.css (which isn't even loaded on this
+// page - the real file is bill-vote-widget.css, loaded after this one).
+.view-featured-legislative-issues .c-bill-teaser__vote {
+  .nys-bill-vote {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    background: none;
+  }
+
+  .c-bill-polling--cta {
+    font-family: var(--nys-ff-sans);
+    font-size: rem(13px);
+    font-weight: 600;
+    color: var(--nys-color-black-2);
+    margin: 0;
+    padding-left: 0;
+  }
+
+  .button-wrapper {
+    display: flex;
+    // Was fine unwrapped with just Aye/Nay - now that Subscribe merges
+    // into this same row too, 3 buttons need to be able to wrap on
+    // narrow cards instead of overflowing.
+    flex-wrap: wrap;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  // Extra .nys-bill-vote-form qualifier (present in the actual markup)
+  // keeps this ahead of the shared module's own 2-class button rules
+  // (e.g. ".nys-bill-vote-form .c-block--btn"), which tie in specificity
+  // with a plainer selector and could win on load order alone.
+  .nys-bill-vote-form .nys-bill-vote-yes,
+  .nys-bill-vote-form .nys-bill-vote-no,
+  .nys-bill-vote-form .nys-subscribe-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-family: var(--nys-ff-sans);
+    font-size: rem(11px);
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 6px 11px;
+    border-radius: 2px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.15s;
+  }
+
+  // .c-block--btn qualifier added (matching how nysenate_theme's own
+  // compiled CSS targets this exact button) to definitively out-specify
+  // its .c-block--btn background-color rules - unlike Aye/Nay, this
+  // button doesn't also carry a .c-half-btn class, which was apparently
+  // enough to tip which rule won on specificity/order alone.
+  .nys-bill-vote-form .c-block--btn.nys-subscribe-button {
+    background-color: var(--nys-color-gray-lt);
+    color: var(--nys-color-darker-blue);
+
+    // Bell glyph from the senate_icons font - matches the subscribe icon
+    // used elsewhere on the site (nysenate_theme's own
+    // .nys-bill-vote-form .c-block--btn.nys-subscribe-button::before rule),
+    // rather than a generic envelope character.
+    &::before {
+      content: '\6f';
+      font-family: 'senate_icons';
+      display: inline-block;
+      font-style: normal;
+      font-weight: normal;
+      font-variant: normal;
+      text-transform: none;
+      font-size: rem(15px);
+    }
+
+    &:hover {
+      background-color: var(--nys-color-alto);
+    }
+  }
+
+  // "Already subscribed" state (subscribeAjaxSubmit swaps the button out
+  // for this) - the shared form's own <hr /> divider doesn't fit this
+  // compact card context.
+  .subscribe_result {
+    font-family: var(--nys-ff-sans);
+    font-size: rem(11px);
+    font-weight: 700;
+    color: var(--nys-color-darker-blue);
+  }
+
+  hr {
+    display: none;
+  }
+
+  .nys-bill-vote-form .nys-bill-vote-yes {
+    background-color: #e3f5ec;
+    color: #1a5a35;
+
+    &::before {
+      content: '\2713';
+      font-size: rem(15px);
+    }
+
+    &:hover {
+      background-color: #c9ecd9;
+    }
+  }
+
+  .nys-bill-vote-form .nys-bill-vote-no {
+    background-color: #fbe4e1;
+    color: #a3261a;
+
+    &::before {
+      content: '\2715';
+      font-size: rem(15px);
+    }
+
+    &:hover {
+      background-color: #f6cec8;
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Active Legislation exposed filters
+// ---------------------------------------------------------------------------
+
+// The actual layout container isn't the <form> itself - Views wraps the
+// exposed items in a child <div class="form--inline clearfix">, and a
+// sitewide rule (.view-filters .form--inline { display: flex; gap: 20px;
+// }) targets that div directly, squeezing all 4 items (2 selects, the
+// milestones fieldset, and the submit button) into one unwrapped flex
+// row. Target that same inner div, scoped by this form's ID so it wins
+// on specificity, and lay the three filters out as a fixed 3-column grid
+// - each gets equal, predictable room - with the submit button on its
+// own full-width row below.
+#views-exposed-form-featured-legislative-issues-list .form--inline {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: start;
+  gap: rem(16px) rem(32px);
+  margin-block-end: rem(24px);
+
+  .form-item {
+    float: none;
+    margin: 0;
+  }
+
+  label {
+    font-family: var(--nys-ff-sans);
+    font-weight: 700;
+    color: var(--nys-color-black-2);
+  }
+
+  .js-form-type-select {
+    .form-select {
+      width: 100%;
+    }
+  }
+
+  fieldset {
+    margin: 0;
+    padding: 0;
+    border: none;
+
+    // nysenate_theme has a sitewide `label { font-size: 0.8rem;
+    // line-height: 1.5; display: block; ... }` rule that "Sponsor" and
+    // "Current Status" (real <label> elements) pick up automatically -
+    // <legend> is a different element, so it never inherited any of that
+    // and was falling back to the browser's own default legend styling.
+    // Matching those values explicitly here (font-weight/color were
+    // already matched via .fieldset-legend below).
+    legend {
+      padding: 0;
+      margin-block-end: rem(8px);
+      font-size: 0.8rem;
+      line-height: 1.5;
+      display: block;
+    }
+
+    .fieldset-legend {
+      font-family: var(--nys-ff-sans);
+      font-weight: 700;
+      color: var(--nys-color-black-2);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .fieldset-wrapper {
+      padding: 0;
+    }
+  }
+
+  // Plain block flow - each checkbox stacks on its own line instead of
+  // sitting side by side.
+  .form-checkboxes {
+    display: block;
+  }
+
+  .form-type-checkbox {
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    margin-block-end: rem(6px);
+    padding: 0;
+
+    input[type='checkbox'] {
+      flex-shrink: 0;
+      margin: 0;
+    }
+
+    label {
+      padding-left: 1.5rem;
+      font-weight: 400;
+      color: var(--nys-color-tundora);
+    }
+  }
+
+  .form-actions {
+    grid-column: 1 / -1;
+    margin: 0;
+
+    input[name='op'][value='Reset'] {
+      margin-left: rem(20px);
+    }
+  }
+}

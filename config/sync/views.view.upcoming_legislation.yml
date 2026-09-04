@@ -1240,11 +1240,12 @@ display:
         options:
           offset: 0
       cache:
-        type: custom_tag
+        type: time
         options:
-          custom_tag: |-
-            node_list:bill
-            node_list:session
+          results_lifespan: 60
+          results_lifespan_custom: 0
+          output_lifespan: 300
+          output_lifespan_custom: 0
       sorts: {  }
       arguments:
         nid:

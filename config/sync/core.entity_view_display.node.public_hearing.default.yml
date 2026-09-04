@@ -10,6 +10,7 @@ dependencies:
     - field.field.node.public_hearing.field_date_range
     - field.field.node.public_hearing.field_event_online_link
     - field.field.node.public_hearing.field_event_place
+    - field.field.node.public_hearing.field_global_issues
     - field.field.node.public_hearing.field_issues
     - field.field.node.public_hearing.field_location
     - field.field.node.public_hearing.field_majority_issue_tag
@@ -189,8 +190,12 @@ hidden:
   entity_print_view_epub: true
   entity_print_view_pdf: true
   entity_print_view_word_docx: true
+  field_global_issues: true
   langcode: true
+  nys_canonical_url: true
+  nys_content_type: true
   nys_senator_dashboard_path_alias: true
+  nys_video_thumbnail: true
   private_message_link: true
   rabbit_hole__settings: true
   search_api_excerpt: true

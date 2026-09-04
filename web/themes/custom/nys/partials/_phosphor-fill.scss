@@ -1,0 +1,41 @@
+// Minimal Phosphor "fill" icon font subset, for components that show a
+// content-type icon (nys_extra_fields ContentTypeBuilder). Reuses the font
+// files already shipped by the nysenate_theme base theme rather than
+// porting the whole icon font - only opt in from components that need it,
+// since @font-face isn't deduplicated across separately-compiled component
+// CSS bundles.
+//
+// Full icon set / codepoints: nysenate_theme/src/patterns/global/fonts/_phosphor.scss
+
+@font-face {
+  font-family: 'Phosphor-Fill';
+  src:
+    url('/themes/custom/nysenate_theme/dist/fonts/Phosphor-Fill.woff') format('woff'),
+    url('/themes/custom/nysenate_theme/dist/fonts/Phosphor-Fill.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+.ph-fill {
+  font-family: 'Phosphor-Fill' !important;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.ph-fill.ph-article:before {
+  content: '\e984';
+}
+
+.ph-fill.ph-newspaper-clipping:before {
+  content: '\ec0e';
+}
+
+.ph-fill.ph-video-camera:before {
+  content: '\edb3';
+}

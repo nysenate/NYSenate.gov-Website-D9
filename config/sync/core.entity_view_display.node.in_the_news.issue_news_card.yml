@@ -1,0 +1,135 @@
+uuid: e21e24fb-ec32-4029-b8bb-8c60d8ca6bf5
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.issue_news_card
+    - field.field.node.in_the_news.body
+    - field.field.node.in_the_news.field_accessible_sitewide
+    - field.field.node.in_the_news.field_article_author
+    - field.field.node.in_the_news.field_attachment
+    - field.field.node.in_the_news.field_committee
+    - field.field.node.in_the_news.field_committee_featured
+    - field.field.node.in_the_news.field_date
+    - field.field.node.in_the_news.field_featured
+    - field.field.node.in_the_news.field_global_issues
+    - field.field.node.in_the_news.field_image_hero
+    - field.field.node.in_the_news.field_image_main
+    - field.field.node.in_the_news.field_issues
+    - field.field.node.in_the_news.field_publication_source_date
+    - field.field.node.in_the_news.field_publication_source_url
+    - field.field.node.in_the_news.field_publication_title
+    - field.field.node.in_the_news.field_senator_multiref
+    - field.field.node.in_the_news.field_subhead
+    - field.field.node.in_the_news.rabbit_hole__settings
+    - node.type.in_the_news
+  module:
+    - datetime
+    - sdc_display
+    - user
+third_party_settings:
+  sdc_display:
+    enabled: true
+    component:
+      machine_name: 'nys:issue-news-card'
+      show_deprecated: null
+    mappings:
+      static:
+        props:
+          title: 'Title not found'
+          url: /
+          image: ''
+          issues: ''
+          date: ''
+          content_type: ''
+      dynamic:
+        props:
+          title: title
+          url: nys_canonical_url
+          image: field_image_main
+          issues: field_global_issues
+          date: field_date
+          content_type: nys_content_type
+          blurb: field_subhead
+          senator: field_senator_multiref
+id: node.in_the_news.issue_news_card
+targetEntityType: node
+bundle: in_the_news
+mode: issue_news_card
+content:
+  field_date:
+    type: datetime_custom
+    label: hidden
+    settings:
+      timezone_override: ''
+      date_format: 'F j, Y'
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_global_issues:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_image_main:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_senator_multiref:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: news_byline
+      link: false
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  field_subhead:
+    type: basic_string
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+  nys_canonical_url:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  nys_content_type:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 3
+    region: content
+hidden:
+  body: true
+  field_accessible_sitewide: true
+  field_article_author: true
+  field_attachment: true
+  field_committee: true
+  field_committee_featured: true
+  field_featured: true
+  field_image_hero: true
+  field_issues: true
+  field_publication_source_date: true
+  field_publication_source_url: true
+  field_publication_title: true
+  langcode: true
+  nys_senator_dashboard_path_alias: true
+  nys_video_thumbnail: true
+  private_message_link: true
+  rabbit_hole__settings: true
+  search_api_excerpt: true

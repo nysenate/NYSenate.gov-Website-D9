@@ -1,0 +1,9 @@
+name: 'NYS Issue Tag Migration'
+type: module
+description: 'One-time migration to consolidate ~10,000 issue taxonomy tags into ~75 canonical terms.'
+core_version_requirement: ^11
+package: 'NYSenate Custom'
+dependencies:
+  - drupal:taxonomy
+  - drupal:flag
+  - nys_bills:nys_bills

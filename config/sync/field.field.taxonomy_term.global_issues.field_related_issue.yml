@@ -1,0 +1,28 @@
+uuid: 568786b4-8006-4313-989b-122d76687776
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_related_issue
+    - taxonomy.vocabulary.global_issues
+id: taxonomy_term.global_issues.field_related_issue
+field_name: field_related_issue
+entity_type: taxonomy_term
+bundle: global_issues
+label: 'Related Issues'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      global_issues: global_issues
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

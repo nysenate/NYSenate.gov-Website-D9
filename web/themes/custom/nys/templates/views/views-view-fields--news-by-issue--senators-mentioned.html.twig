@@ -1,0 +1,46 @@
+{#
+/**
+ * @file
+ * Single senator row for the "Senators Mentioned" sidebar block
+ * (news_by_issue:senators_mentioned). One row per distinct senator,
+ * aggregated (grouped) by the view - a proper Views replacement for
+ * nysenate_theme's old "Senators Talking About this Issue" component
+ * (raw SQL + manual cache, no cache tags).
+ *
+ * District/party formatting matches
+ * views-view-fields--featured-legislative-issues--active-senators.html.twig
+ * exactly, so both sidebar cards look identical.
+ *
+ * No url - there's no "browse news by senator" destination to link the
+ * count to, so it renders as plain text instead of a link.
+ *
+ * @see components/02-components/senator-active-card
+ */
+#}
+{% set district_num = fields.field_district_number.content|render|striptags|trim %}
+{% set district_text = '' %}
+{% if district_num %}
+  {% set last_two = district_num % 100 %}
+  {% set last_one = district_num % 10 %}
+  {% if last_two >= 11 and last_two <= 13 %}
+    {% set ordinal_suffix = 'th' %}
+  {% elseif last_one == 1 %}
+    {% set ordinal_suffix = 'st' %}
+  {% elseif last_one == 2 %}
+    {% set ordinal_suffix = 'nd' %}
+  {% elseif last_one == 3 %}
+    {% set ordinal_suffix = 'rd' %}
+  {% else %}
+    {% set ordinal_suffix = 'th' %}
+  {% endif %}
+  {% set district_text = district_num ~ ordinal_suffix ~ ' Senate District' %}
+{% endif %}
+{% include 'nys:senator-active-card' with {
+  headshot: fields.field_member_headshot.content,
+  name: fields.field_senator_multiref.content,
+  party: senator_parties|default([])|join(', '),
+  district: district_text,
+  count: fields.nid.content|render|striptags|trim,
+  count_unit_singular: 'mention'|t,
+  count_unit_plural: 'mentions'|t,
+} only %}

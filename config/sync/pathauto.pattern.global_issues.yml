@@ -1,0 +1,23 @@
+uuid: cca79e6c-8835-4c8d-9468-b0c0e35bbe40
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.global_issues
+  module:
+    - taxonomy
+id: global_issues
+label: 'Global Issues'
+type: 'canonical_entities:taxonomy_term'
+pattern: '/global-issues/[term:name]'
+selection_criteria:
+  520bfc95-ef95-40e7-9f14-34c7dd418ed3:
+    id: 'entity_bundle:taxonomy_term'
+    negate: false
+    context_mapping:
+      taxonomy_term: taxonomy_term
+    bundles:
+      global_issues: global_issues
+selection_logic: and
+weight: -5
+relationships: {  }

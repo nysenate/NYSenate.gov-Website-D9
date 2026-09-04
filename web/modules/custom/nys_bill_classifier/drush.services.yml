@@ -1,0 +1,6 @@
+services:
+  nys_bill_classifier.commands:
+    class: \Drupal\nys_bill_classifier\Commands\BillClassifierCommands
+    arguments: ['@nys_bill_classifier.classifier', '@entity_type.manager', '@database', '@nys_bill.bills_helper']
+    tags:
+      - { name: drush.command }

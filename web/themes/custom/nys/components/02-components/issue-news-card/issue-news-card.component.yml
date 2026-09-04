@@ -1,0 +1,31 @@
+$schema: https://git.drupalcode.org/project/sdc/-/raw/1.x/src/metadata.schema.json
+name: Issue News Card
+description: News/article card for the issues taxonomy page's Recent News listing. Mirrors nysenate-my-dashboard-teaser's structure (type label, title, blurb, meta row, issues), styled for the lighter issues-page design.
+props:
+  type: object
+  required: [title, url]
+  properties:
+    title:
+      type: string
+      description: The title of the content.
+    url:
+      type: string
+      description: The URL of the content.
+    image:
+      type: string
+      description: Rendered image field markup, if any.
+    issues:
+      type: string
+      description: Rendered issue tags field markup, if any.
+    date:
+      type: string
+      description: Formatted date string.
+    content_type:
+      type: string
+      description: Human-readable content type label (from nys_content_type).
+    blurb:
+      type: string
+      description: Short description/summary text (subtitle, subhead, or trimmed body, depending on bundle).
+    senator:
+      type: string
+      description: Rendered "by senator" field markup, if any.

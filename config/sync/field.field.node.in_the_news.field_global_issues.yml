@@ -1,0 +1,29 @@
+uuid: 2d7c7658-2dd6-4660-a29d-977bad9f8be2
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_global_issues
+    - node.type.in_the_news
+    - taxonomy.vocabulary.global_issues
+id: node.in_the_news.field_global_issues
+field_name: field_global_issues
+entity_type: node
+bundle: in_the_news
+label: 'Global Issues'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      global_issues: global_issues
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

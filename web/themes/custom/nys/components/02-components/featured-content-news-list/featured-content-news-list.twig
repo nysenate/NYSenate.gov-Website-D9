@@ -1,0 +1,27 @@
+<article class="node--view-mode-featured-content">
+  <div class="c-block c-event-featured-story">
+    {% if content_type %}
+      <h3 class="c-container--title">{{ content_type }}</h3>
+
+      <div class="c-title"></div>
+    {% endif %}
+
+    <div class="story-container">
+
+      <div class="l-left">
+        {{ image }}
+      </div>
+      <div class="l-right">
+        {% if date %}
+          <div class="c-story--date med-text">{{ date }}</div>
+        {% endif %}
+        <h3 class="c-story-name">
+          <a href="{{ url }}">{{ title }}</a>
+        </h3>
+        {% if issues %}
+          <div class="c-featured-story-issue-tag">{{ issues }}</div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</article>

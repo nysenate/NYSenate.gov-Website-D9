@@ -11,6 +11,7 @@ dependencies:
     - field.field.taxonomy_term.senator.field_email
     - field.field.taxonomy_term.senator.field_email_auto_reply_text
     - field.field.taxonomy_term.senator.field_facebook_url
+    - field.field.taxonomy_term.senator.field_featured_legislation
     - field.field.taxonomy_term.senator.field_image_hero
     - field.field.taxonomy_term.senator.field_inactive_senator_message
     - field.field.taxonomy_term.senator.field_instagram_url
@@ -38,6 +39,7 @@ dependencies:
     - field.field.taxonomy_term.senator.rabbit_hole__settings
     - taxonomy.vocabulary.senator
   module:
+    - entity_reference_revisions
     - nys_senators
     - text
 id: taxonomy_term.senator.default
@@ -65,6 +67,15 @@ content:
     settings: {  }
     third_party_settings: {  }
     weight: 2
+    region: content
+  field_featured_legislation:
+    type: entity_reference_revisions_entity_view
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 4
     region: content
   field_senator_name:
     type: microsite_link

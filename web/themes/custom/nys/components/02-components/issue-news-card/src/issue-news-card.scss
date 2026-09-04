@@ -1,0 +1,299 @@
+@use 'partials' as *;
+@use 'partials/phosphor-fill';
+
+.c-news-card {
+  display: grid;
+  // Fixed 96px column for the image, always reserved whether or not a
+  // given card actually has one. This turned out to be the real cause of
+  // the footer's 1fr/2fr divider landing in a different place card to
+  // card: with the old flex layout, .c-news-card__body only got the
+  // extra ~110px (image width + gap) back on cards that had NO image -
+  // so its available width, and everything computed as a proportion of
+  // it (like the footer grid), genuinely differed between "has image"
+  // and "no image" cards. A fixed second track means the image's space
+  // is reserved either way, so the body's width - and the footer split
+  // inside it - is identical on every card regardless of image presence.
+  grid-template-columns: 1fr 96px;
+  // Without this, the row's cross-axis default (stretch) leaves the fixed-
+  // size image sitting wherever a taller body (e.g. from a long, wrapping
+  // title) happens to push the row's height - pinning both to the top
+  // keeps the image anchored top-right at a consistent position no
+  // matter how many lines the title runs to.
+  align-items: start;
+  gap: 14px;
+  padding: 16px;
+  margin-block-end: 12px;
+  background-color: var(--nys-color-white);
+  border: 1px solid var(--nys-color-alto);
+  border-radius: 4px;
+
+  &:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  }
+}
+
+.c-news-card__image {
+  width: 96px;
+  height: 96px;
+  overflow: hidden;
+  border-radius: 3px;
+  background-color: var(--nys-color-gray-lt);
+
+  // Drupal wraps field_image_main's <img> in a .field div with no
+  // explicit height (no custom field template strips it, unlike
+  // field_issues), so percentage height on the img can't resolve against
+  // it - the browser falls back to the image's intrinsic aspect ratio at
+  // the resolved width, producing a non-square 96x64 box instead of the
+  // intended 96x96 crop. Fixed pixel dimensions sidestep that entirely.
+  img {
+    display: block;
+    width: 96px;
+    height: 96px;
+    object-fit: cover;
+  }
+}
+
+.c-news-card__body {
+  min-width: 0;
+}
+
+.c-news-card__type {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  font-family: var(--nys-ff-sans);
+  margin-block-end: 4px;
+
+  // The date prop is raw field render output - Drupal's default
+  // field.html.twig wraps it in a block-level .field div, which (nested
+  // inside the inline <span> here) forces it onto its own line instead of
+  // sitting next to the content-type label. Force it back to inline.
+  .field,
+  .field__item {
+    display: inline;
+  }
+
+  span:first-child {
+    font-size: rem(11px);
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: var(--nys-color-gold-accessible);
+  }
+
+  // The date, when present, follows the content-type label with a "|"
+  // separator - same convention as .c-news-card__footer's senator/issues
+  // divider, scoped to adjacent spans so it only appears when both exist.
+  span + span {
+    font-size: rem(12px);
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: normal;
+    color: var(--nys-color-grey-accessible);
+  }
+
+  span + span::before {
+    content: '|';
+    margin-inline: 8px;
+    color: var(--nys-color-alto);
+  }
+
+  // The icon comes from ContentTypeBuilder as "<i>.ph-fill</i> Label" -
+  // markup already has the separating space, this just sizes/aligns it.
+  .ph-fill {
+    font-size: rem(13px);
+    vertical-align: -1px;
+  }
+}
+
+.c-news-card__title {
+  margin: 0 0 6px;
+  font-family: var(--nys-ff-serif);
+  font-size: rem(16px);
+  font-weight: 600;
+  line-height: 1.3;
+
+  a {
+    color: var(--nys-color-black-2);
+    text-decoration: none;
+
+    &:hover {
+      color: var(--nys-color-button-blue);
+    }
+  }
+}
+
+// Plain text only - issue-news-card.twig strips all markup from blurb
+// (bold, headings, etc. that may be in the first bit of an article's
+// body), so there's no nested markup here to need overriding.
+.c-news-card__blurb {
+  margin: 0 0 8px;
+  font-family: var(--nys-ff-sans);
+  font-size: rem(13.5px);
+  line-height: 1.5;
+  color: var(--nys-color-tundora);
+}
+
+// Footer divider matches .c-bill-teaser__footer (the aye/nay vote-widget
+// row on the bill cards just above this one on the issues page) - senator
+// byline sits to the left, issue pills grid to the right.
+.c-news-card__footer {
+  display: grid;
+  // Fixed 1/3-2/3 split (rather than sizing to content) so the divider
+  // border on .c-news-card__senator--divided lands at the same spot on
+  // every card, regardless of byline width or how many issue pills follow.
+  // minmax(0, ...) on the tracks themselves (not min-width: 0 on the
+  // items) is what actually enforces that - a plain 1fr/2fr track still
+  // has an implicit content-based minimum size (the CSS Grid spec's
+  // "automatic minimum size"), and since the issue pills use
+  // white-space: nowrap, a card with a long issue name would push that
+  // column wider than its proportional share, shrinking the senator
+  // column to compensate. min-width: 0 on the grid items alone wasn't
+  // enough to stop this - each nested flex layer (.field's flex-wrap)
+  // computes its own automatic minimum independently, so the override
+  // needs to happen at the track level to be authoritative.
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  align-items: center;
+  gap: 12px;
+  margin-block-start: 12px;
+  padding-block-start: 12px;
+  border-block-start: 1px solid var(--nys-color-light-gray);
+}
+
+// Only shown when issues are also present (see issue-news-card.twig) - a
+// divider between the senator byline and the issue pills reads more
+// cleanly than right-justifying the pills, which drifted around
+// depending on how many pills there were and how wide the byline was.
+.c-news-card__senator--divided {
+  padding-inline-end: 12px;
+  border-inline-end: 1px solid var(--nys-color-light-gray);
+}
+
+.c-news-card__issues {
+  // Explicit, rather than relying on grid auto-placement - without a
+  // senator div in the row to occupy column 1, an auto-placed item would
+  // fall into column 1 itself, starting at the far left instead of the
+  // same fixed spot every other card's pills start from.
+  grid-column: 2;
+  justify-self: start;
+  font-family: var(--nys-ff-sans);
+  font-size: rem(12px);
+
+  // field_global_issues renders as Drupal's standard multi-value field
+  // markup (a .field wrapper, one .field__item per term) - both need to
+  // become flex containers/items themselves so the pills wrap and space
+  // out, left-aligned after the senator divider.
+  .field {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 6px;
+  }
+
+  .field__item {
+    display: inline-flex;
+  }
+
+  // Pill styling matches .c-issue-related__tags a (the related-issues tags
+  // just below the hero), scaled down slightly for this card's tighter
+  // context.
+  a {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background-color: var(--nys-color-gray-lt);
+    border: 1px solid var(--nys-color-alto);
+    font-weight: 600;
+    color: var(--nys-color-darker-blue);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+
+    &:hover {
+      background-color: var(--nys-color-darker-blue);
+      border-color: var(--nys-color-darker-blue);
+      color: var(--nys-color-white);
+    }
+  }
+}
+
+// Compact senator byline (headshot, name, district) rendered via the
+// taxonomy_term.senator.news_byline view mode - see
+// taxonomy-term--senator--news-byline.html.twig.
+.c-news-byline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.c-news-byline__photo {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  overflow: hidden;
+  border-radius: 50%;
+  background-color: var(--nys-color-gray-lt);
+
+  img {
+    display: block;
+    width: 32px;
+    height: 32px;
+    object-fit: cover;
+  }
+}
+
+// Fallback byline shown on news cards with no tagged senator - the seal
+// is a logo, not a cropped headshot, so it's sized down and centered
+// (object-fit: contain within a smaller box) rather than being cropped
+// to fill the circle like .c-news-byline__photo's default photo treatment.
+.c-news-byline--placeholder .c-news-byline__photo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--nys-color-white);
+  border: 1px solid var(--nys-color-light-gray);
+
+  img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+  }
+}
+
+.c-news-byline__info {
+  // Needed for .c-news-byline__name's text-overflow: ellipsis to actually
+  // engage - flex items default to min-width: auto (content-based), which
+  // otherwise overrides the parent's available width and blocks shrinking.
+  min-width: 0;
+  flex: 1 1 auto;
+  font-family: var(--nys-ff-sans);
+  line-height: 1.3;
+}
+
+.c-news-byline__name {
+  font-size: rem(12.5px);
+  font-weight: 700;
+  color: var(--nys-color-black-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  // {{ name }} on a taxonomy term renders through the "name" pseudo-field
+  // (Drupal's default field.html.twig wraps it in a block-level .field
+  // div) - same issue as .c-news-card__type's date field, forces
+  // .c-news-byline__party onto its own line unless flattened to inline.
+  .field {
+    display: inline;
+  }
+}
+
+.c-news-byline__party {
+  font-weight: 400;
+  color: var(--nys-color-grey-accessible);
+}
+
+.c-news-byline__district {
+  font-size: rem(11px);
+  color: var(--nys-color-grey-accessible);
+}

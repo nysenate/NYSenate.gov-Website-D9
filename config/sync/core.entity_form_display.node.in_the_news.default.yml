@@ -12,6 +12,7 @@ dependencies:
     - field.field.node.in_the_news.field_committee_featured
     - field.field.node.in_the_news.field_date
     - field.field.node.in_the_news.field_featured
+    - field.field.node.in_the_news.field_global_issues
     - field.field.node.in_the_news.field_image_hero
     - field.field.node.in_the_news.field_image_main
     - field.field.node.in_the_news.field_issues
@@ -85,6 +86,7 @@ third_party_settings:
         required_fields: true
     group_discoverability:
       children:
+        - field_global_issues
         - field_issues
         - group_promotion_and_visibility
       label: Discoverability
@@ -106,7 +108,7 @@ third_party_settings:
       label: 'Promotion and Visibility'
       region: content
       parent_name: group_discoverability
-      weight: 10
+      weight: 12
       format_type: tabs
       format_settings:
         classes: ''
@@ -237,9 +239,19 @@ content:
     settings:
       display_label: true
     third_party_settings: {  }
+  field_global_issues:
+    type: entity_reference_autocomplete_tags
+    weight: 10
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
   field_image_hero:
     type: media_library_widget
-    weight: 5
+    weight: 6
     region: content
     settings:
       media_types: {  }
@@ -253,7 +265,7 @@ content:
     third_party_settings: {  }
   field_issues:
     type: entity_reference_autocomplete_tags
-    weight: 9
+    weight: 11
     region: content
     settings:
       match_operator: CONTAINS

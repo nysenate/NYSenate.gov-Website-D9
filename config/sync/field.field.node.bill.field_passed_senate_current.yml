@@ -1,0 +1,21 @@
+uuid: c4292166-fb32-4556-afee-605174dd1ae5
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_passed_senate_current
+    - node.type.bill
+id: node.bill.field_passed_senate_current
+field_name: field_passed_senate_current
+entity_type: node
+bundle: bill
+label: 'Passed Senate (current cycle)'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  on_label: 'Yes'
+  off_label: 'No'
+field_type: boolean

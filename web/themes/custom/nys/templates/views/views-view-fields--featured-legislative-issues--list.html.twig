@@ -1,0 +1,103 @@
+{#
+/**
+ * @file
+ * Bill teaser card for the "Featured Legislation" block display of the
+ * featured_legislative_issues view. Fields row style - the entity-render
+ * (Content) row style couldn't reach the featured_legislation paragraph's
+ * quote field, since that data lives on the view's relationship, not on the
+ * bill node itself.
+ */
+#}
+{% import 'nys:icons' as icons %}
+{%
+  set status_map = {
+    'INTRODUCED': 'introduced',
+    'IN_ASSEMBLY_COMM': 'committee',
+    'IN_SENATE_COMM': 'committee',
+    'ASSEMBLY_FLOOR': 'floor',
+    'SENATE_FLOOR': 'floor',
+    'PASSED_ASSEMBLY': 'passed',
+    'PASSED_SENATE': 'passed',
+    'DELIVERED_TO_GOV': 'passed',
+    'POCKET_APPROVAL': 'passed',
+    'SIGNED_BY_GOV': 'passed',
+    'STRICKEN': 'dead',
+    'VETOED': 'dead',
+    'LOST': 'dead',
+  }
+%}
+{% set node = row._entity %}
+{% set status_value = node.field_ol_last_status.value %}
+{% set status_class = status_map[status_value]|default('introduced') %}
+{% set chamber_label = node.field_ol_chamber.value|capitalize %}
+{% set print_no = node.field_ol_print_no.value %}
+{% set url = path('entity.node.canonical', {'node': node.id}) %}
+
+<article class="c-bill-teaser c-bill-teaser--{{ status_class }}">
+  <div class="c-bill-teaser__top">
+    <div class="c-bill-teaser__top-left">
+      {% if print_no %}
+        <a href="{{ url }}" class="c-bill-teaser__title">
+          <span class="c-bill-teaser__title-icon" aria-hidden="true">{{ icons.inline('gavel') }}</span>
+          {{ chamber_label }} Bill {{ print_no }}
+        </a>
+      {% endif %}
+    </div>
+    <div class="c-bill-status-box c-bill-status-box--{{ status_class }}">
+      {% if fields.bill_milestones.content %}
+        {{ fields.bill_milestones.content }}
+      {% elseif fields.field_ol_last_status.content %}
+        <span class="c-bill-teaser__badge">{{ fields.field_ol_last_status.content }}</span>
+      {% endif %}
+      {% if fields.bill_last_status_date.content %}
+        <span class="c-bill-status-box__date">{{ fields.bill_last_status_date.content }}</span>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if fields.field_ol_name.content %}
+    <div class="c-bill-teaser__description">{{ fields.field_ol_name.content }}</div>
+  {% endif %}
+
+  {% if fields.field_featured_quote.content %}
+    <blockquote class="c-bill-teaser__quote">
+      <span class="c-bill-teaser__quote-icon" aria-hidden="true">{{ icons.inline('quote') }}</span>
+      {{ fields.field_featured_quote.content }}
+      {% if fields.field_ol_sponsor.content %}
+        <div class="c-bill-teaser__cite">
+          {% if fields.field_member_headshot.content %}
+            <span class="c-bill-teaser__headshot">{{ fields.field_member_headshot.content }}</span>
+          {% endif %}
+          {% set party_text = fields.field_party.content|striptags|trim %}
+          <cite>
+            Sponsored by {{ fields.field_ol_sponsor.content }}
+            {%- if party_text %} ({{ party_text }}){% endif -%}
+            {% set district_num = fields.field_district_number.content|striptags|trim %}
+            {% if district_num %}
+              {% set last_two = district_num % 100 %}
+              {% set last_one = district_num % 10 %}
+              {% if last_two >= 11 and last_two <= 13 %}
+                {% set ordinal_suffix = 'th' %}
+              {% elseif last_one == 1 %}
+                {% set ordinal_suffix = 'st' %}
+              {% elseif last_one == 2 %}
+                {% set ordinal_suffix = 'nd' %}
+              {% elseif last_one == 3 %}
+                {% set ordinal_suffix = 'rd' %}
+              {% else %}
+                {% set ordinal_suffix = 'th' %}
+              {% endif %}
+              {{ district_num }}{{ ordinal_suffix }} Senate District
+            {% endif %}
+          </cite>
+        </div>
+      {% endif %}
+    </blockquote>
+  {% endif %}
+
+  {% if fields.bill_vote_widget_simple.content %}
+    <div class="c-bill-teaser__footer">
+      <div class="c-bill-teaser__vote">{{ fields.bill_vote_widget_simple.content }}</div>
+    </div>
+  {% endif %}
+</article>

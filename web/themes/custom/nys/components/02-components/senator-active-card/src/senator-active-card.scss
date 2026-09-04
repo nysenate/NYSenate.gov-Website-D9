@@ -1,0 +1,113 @@
+@use 'partials' as *;
+
+// Wrapper styling for the two sidebar "senator card" view blocks -
+// featured_legislative_issues:active_senators and
+// news_by_issue:senators_mentioned - scoped to these specific
+// view/displays so it doesn't affect any other view using these cards.
+// The header lives just above this, in the parent
+// taxonomy-term--global-issues.html.twig (see .c-sidebar-header-box in
+// issue-page.scss) - rounded only on the bottom here so the two still
+// read as one connected block.
+.view-display-id-active_senators,
+.view-display-id-senators_mentioned {
+  border-radius: 0 0 4px 4px;
+  overflow: hidden;
+  border: 1px solid var(--nys-color-alto);
+  border-top: none;
+}
+
+.view-display-id-active_senators .view-content,
+.view-display-id-senators_mentioned .view-content {
+  background-color: var(--nys-color-gray-lt);
+  padding: 4px 14px;
+}
+
+.c-senator-active-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--nys-color-alto);
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  .views-row:nth-child(even) & {
+    background-color: rgba(255, 255, 255, 0.5);
+    margin: 0 -14px;
+    padding-inline: 14px;
+  }
+}
+
+.c-senator-active-card__headshot {
+  position: relative;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: var(--nys-color-gray-lt);
+
+  // Percentage-based sizing (height:100% etc.) kept losing fights
+  // against various global img/legacy-component rules elsewhere on
+  // this page (see issue-page.scss's .nys-senator--thumb for the full
+  // story) - fixed pixel dimensions directly on the img sidesteps all
+  // of that: no percentages, no containing-block math, just a hard
+  // 44x44 box that object-fit crops into.
+  img {
+    display: block !important;
+    position: static !important;
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    max-width: none !important;
+    max-height: none !important;
+    object-fit: cover !important;
+    border-radius: 50%;
+  }
+}
+
+.c-senator-active-card__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.c-senator-active-card__name {
+  font-family: var(--nys-ff-sans);
+  font-size: rem(13.5px);
+  font-weight: 700;
+
+  a {
+    color: var(--nys-color-black-2);
+    text-decoration: none;
+
+    &:hover {
+      color: var(--nys-color-button-blue);
+    }
+  }
+}
+
+.c-senator-active-card__meta {
+  font-family: var(--nys-ff-sans);
+  font-size: rem(12px);
+  color: var(--nys-color-grey-accessible);
+}
+
+.c-senator-active-card__count {
+  flex-shrink: 0;
+
+  a {
+    font-family: var(--nys-ff-sans);
+    font-size: rem(12px);
+    font-weight: 700;
+    color: var(--nys-color-button-blue);
+    text-decoration: none;
+    white-space: nowrap;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

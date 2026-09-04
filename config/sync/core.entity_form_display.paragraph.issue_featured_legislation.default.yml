@@ -1,0 +1,34 @@
+uuid: 993ba74a-622c-4504-90d5-7e15bab04d89
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.issue_featured_legislation.field_featured_bill
+    - field.field.paragraph.issue_featured_legislation.field_featured_quote
+    - paragraphs.paragraphs_type.issue_featured_legislation
+id: paragraph.issue_featured_legislation.default
+targetEntityType: paragraph
+bundle: issue_featured_legislation
+mode: default
+content:
+  field_featured_bill:
+    type: entity_reference_autocomplete
+    weight: 0
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_featured_quote:
+    type: string_textfield
+    weight: 2
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

@@ -34,6 +34,23 @@ function nys_views_views_data(): array {
 }
 
 /**
+ * Implements hook_theme().
+ */
+function nys_views_theme($existing, $type, $theme, $path): array {
+  return [
+    'nys_bill_milestones' => [
+      'variables' => [
+        'past' => [],
+        'current' => NULL,
+        'future' => [],
+        'committee_link' => NULL,
+        'status_class' => '',
+      ],
+    ],
+  ];
+}
+
+/**
  * Implements hook_views_data_alter().
  */
 function nys_views_views_data_alter(array &$data): void {
@@ -79,6 +96,84 @@ function nys_views_views_data_alter(array &$data): void {
       'filter' => [
         'id' => 'webform_entity_status',
         'real field' => 'webform_target_id',
+      ],
+    ];
+  }
+
+  // Reuse nys_calendar's ActiveSenatorsFilter (already registered for
+  // field_senator_multiref) on field_ol_sponsor too - the plugin's
+  // query() uses $this->tableAlias/$this->realField generically, so it
+  // isn't tied to one field. Gives bill-sponsor exposed filters a
+  // dropdown of active senators only, instead of the default
+  // taxonomy_index_tid filter's full unfiltered term list.
+  if (isset($data['node__field_ol_sponsor'])) {
+    $data['node__field_ol_sponsor']['active_senators_filter'] = [
+      'title' => t('Active senators (sponsor)'),
+      'filter' => [
+        'title' => t('Active senators (sponsor)'),
+        'help' => t('Custom NYS filter to filter on active senators referenced via field_ol_sponsor.'),
+        'group' => t('Content'),
+        'field' => 'field_ol_sponsor_target_id',
+        'id' => 'active_senators_filter',
+      ],
+    ];
+  }
+
+  // Expose the bill vote widget (simple mode) as a Views field. It's a
+  // Manage-Display pseudo-field (hook_entity_extra_field_info() in
+  // nys_bill_vote.module), not a real Field API field, so it never shows up
+  // in the normal "Add fields" list on its own.
+  if (isset($data['node_field_data'])) {
+    $data['node_field_data']['bill_vote_widget_simple'] = [
+      'group' => t('Content'),
+      'title' => t('Bill: Vote widget (simple)'),
+      'help' => t('Renders the simple aye/nay vote widget for a bill node.'),
+      'field' => [
+        'id' => 'bill_vote_widget_simple',
+        'real field' => 'nid',
+      ],
+    ];
+
+    // Expose bill status milestones (past/current/future) as a Views field.
+    // Reuses BillsHelper::calculateMilestones() - the same service the old
+    // unlabeled-dots status graph uses - as a labeled expandable list
+    // instead. Not a real field, so it needs the same custom-plugin
+    // treatment as the vote widget above.
+    $data['node_field_data']['bill_milestones'] = [
+      'group' => t('Content'),
+      'title' => t('Bill: Status milestones'),
+      'help' => t('Renders the bill status history as a past/current/future expandable list.'),
+      'field' => [
+        'id' => 'bill_milestones',
+        'real field' => 'nid',
+      ],
+    ];
+
+    // Bill: Last status date, with a fallback for field_ol_last_status_date
+    // being frequently empty due to a long-standing bill import bug. Falls
+    // back to the current status's own action date from the same raw
+    // history JSON BillsHelper already parses for the milestones above.
+    $data['node_field_data']['bill_last_status_date'] = [
+      'group' => t('Content'),
+      'title' => t('Bill: Last status date (with fallback)'),
+      'help' => t('field_ol_last_status_date, or the current status action date from field_ol_all_statuses if that field is empty.'),
+      'field' => [
+        'id' => 'bill_last_status_date',
+        'real field' => 'nid',
+      ],
+    ];
+
+    // Combined checkbox filter for the bill current-cycle status
+    // milestones - replaces 7 separate exposed boolean filters with one
+    // "Status Milestones" widget. Not tied to any single field's own
+    // table, so it needs a pseudo-field entry the same as the handlers
+    // above.
+    $data['node_field_data']['bill_current_cycle_milestones'] = [
+      'group' => t('Content'),
+      'title' => t('Bill: Current-cycle status milestones'),
+      'help' => t('Combined checkbox filter for the bill current-cycle status flags (passed Senate, passed Assembly, on floor, delivered, signed, vetoed, passed chamber of origin).'),
+      'filter' => [
+        'id' => 'bill_current_cycle_milestones',
       ],
     ];
   }

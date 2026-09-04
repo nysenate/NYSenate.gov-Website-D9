@@ -16,6 +16,12 @@
   --nys-color-admin-blue: #0C5C7F;
   --nys-color-button-blue: #2B6A90;
   --nys-color-gold: #F1AF58;
+  // Accessible (WCAG-contrast-passing) variant of gold, for use as text/
+  // border color - the base --nys-color-gold is too light to pass as a
+  // foreground color on white. Doesn't replace --nys-color-gold itself,
+  // since that's still used as a solid background elsewhere (post-it.scss)
+  // where the light shade is fine.
+  --nys-color-gold-accessible: #7A5219;
 
   // Grayscale
   --nys-color-tundora: #464646;

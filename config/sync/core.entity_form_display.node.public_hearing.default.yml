@@ -11,6 +11,7 @@ dependencies:
     - field.field.node.public_hearing.field_date_range
     - field.field.node.public_hearing.field_event_online_link
     - field.field.node.public_hearing.field_event_place
+    - field.field.node.public_hearing.field_global_issues
     - field.field.node.public_hearing.field_issues
     - field.field.node.public_hearing.field_location
     - field.field.node.public_hearing.field_majority_issue_tag
@@ -70,6 +71,7 @@ third_party_settings:
     group_discoverability:
       children:
         - field_committee_featured
+        - field_global_issues
         - field_issues
         - field_majority_issue_tag
       label: Discoverability
@@ -189,9 +191,19 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-  field_issues:
+  field_global_issues:
     type: entity_reference_autocomplete_tags
     weight: 13
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_issues:
+    type: entity_reference_autocomplete_tags
+    weight: 14
     region: content
     settings:
       match_operator: CONTAINS
@@ -226,7 +238,7 @@ content:
             selector: ''
   field_majority_issue_tag:
     type: options_select
-    weight: 14
+    weight: 15
     region: content
     settings: {  }
     third_party_settings: {  }

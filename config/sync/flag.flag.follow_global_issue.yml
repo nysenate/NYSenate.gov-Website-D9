@@ -1,0 +1,33 @@
+uuid: df9496e0-0086-4be2-9125-6f70fdea4fac
+langcode: en
+status: true
+dependencies:
+  module:
+    - taxonomy
+id: follow_global_issue
+label: 'Follow Issue'
+bundles:
+  - global_issues
+entity_type: taxonomy_term
+global: false
+flag_short: 'Follow This Issue'
+flag_long: 'Follow this issue'
+flag_message: 'Following this Issue'
+unflag_short: 'Unfollow This Issue'
+unflag_long: 'Unfollow this issue'
+unflag_message: 'Not following this issue'
+unflag_denied_text: ''
+weight: 0
+flag_type: 'entity:taxonomy_term'
+link_type: ajax_link
+flagTypeConfig:
+  show_in_links:
+    full: full
+  show_as_field: true
+  show_on_form: false
+  show_contextual_link: true
+  extra_permissions: {  }
+  access_author: ''
+linkTypeConfig:
+  flag_confirmation: null
+  unflag_confirmation: null

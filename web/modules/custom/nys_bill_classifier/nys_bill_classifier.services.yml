@@ -1,0 +1,14 @@
+services:
+  logger.channel.nys_bill_classifier:
+    parent: logger.channel_base
+    arguments: ['nys_bill_classifier']
+  nys_bill_classifier.classifier:
+    class: Drupal\nys_bill_classifier\Service\BillClassifierService
+    arguments:
+      - '@http_client'
+      - '@entity_type.manager'
+      - '@key.repository'
+      - '@database'
+      - '@nys_bill.bills_helper'
+      - '@config.factory'
+      - '@logger.channel.nys_bill_classifier'

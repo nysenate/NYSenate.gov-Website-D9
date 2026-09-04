@@ -9,6 +9,7 @@ dependencies:
     - field.field.node.honoree.field_attachment
     - field.field.node.honoree.field_date
     - field.field.node.honoree.field_featured
+    - field.field.node.honoree.field_global_issues
     - field.field.node.honoree.field_honoree_contact_email
     - field.field.node.honoree.field_honoree_contact_name
     - field.field.node.honoree.field_honoree_military_branch
@@ -59,7 +60,7 @@ third_party_settings:
       label: 'Administrative Fields'
       region: content
       parent_name: ''
-      weight: 9
+      weight: 10
       format_type: fieldset
       format_settings:
         classes: 'group-admin field-group-fieldset'
@@ -74,7 +75,7 @@ mode: default
 content:
   body:
     type: text_textarea_with_summary
-    weight: 12
+    weight: 13
     region: content
     settings:
       rows: 9
@@ -84,7 +85,7 @@ content:
     third_party_settings: {  }
   created:
     type: datetime_timestamp
-    weight: 14
+    weight: 13
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -116,10 +117,28 @@ content:
     third_party_settings: {  }
   field_featured:
     type: boolean_checkbox
-    weight: 8
+    weight: 9
     region: content
     settings:
       display_label: true
+    third_party_settings: {  }
+  field_global_issues:
+    type: inline_entity_form_complex
+    weight: 7
+    region: content
+    settings:
+      form_mode: default
+      override_labels: false
+      label_singular: ''
+      label_plural: ''
+      allow_new: true
+      allow_existing: true
+      match_operator: CONTAINS
+      allow_duplicate: false
+      collapsible: true
+      collapsed: true
+      revision: false
+      removed_reference: optional
     third_party_settings: {  }
   field_honoree_contact_email:
     type: email_default
@@ -203,7 +222,7 @@ content:
     third_party_settings: {  }
   field_honoree_video:
     type: entity_reference_autocomplete
-    weight: 26
+    weight: 14
     region: content
     settings:
       match_operator: CONTAINS
@@ -220,7 +239,7 @@ content:
     third_party_settings: {  }
   field_issues:
     type: inline_entity_form_complex
-    weight: 7
+    weight: 8
     region: content
     settings:
       form_mode: default
@@ -234,6 +253,7 @@ content:
       collapsible: true
       collapsed: true
       revision: false
+      removed_reference: optional
     third_party_settings: {  }
   field_profile_status:
     type: options_buttons
@@ -263,25 +283,25 @@ content:
     third_party_settings: {  }
   path:
     type: path
-    weight: 16
+    weight: 15
     region: content
     settings: {  }
     third_party_settings: {  }
   rabbit_hole__settings:
     type: rabbit_hole_default
-    weight: 100
+    weight: 17
     region: content
     settings:
       advanced: true
     third_party_settings: {  }
   simple_sitemap:
-    weight: 10
+    weight: 11
     region: content
     settings: {  }
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    weight: 13
+    weight: 12
     region: content
     settings:
       display_label: true
@@ -296,7 +316,7 @@ content:
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 15
+    weight: 14
     region: content
     settings:
       match_operator: CONTAINS
@@ -305,7 +325,7 @@ content:
       placeholder: ''
     third_party_settings: {  }
   url_redirects:
-    weight: 17
+    weight: 16
     region: content
     settings: {  }
     third_party_settings: {  }

@@ -1,0 +1,5 @@
+services:
+  nys_views.milestones_filter_input_subscriber:
+    class: Drupal\nys_views\EventSubscriber\MilestonesFilterInputSubscriber
+    tags:
+      - { name: 'event_subscriber' }

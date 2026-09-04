@@ -7,6 +7,7 @@ dependencies:
     - field.field.node.session.body
     - field.field.node.session.field_calendar_number
     - field.field.node.session.field_date_range
+    - field.field.node.session.field_global_issues
     - field.field.node.session.field_issues
     - field.field.node.session.field_live_message_override
     - field.field.node.session.field_live_message_status
@@ -52,6 +53,7 @@ third_party_settings:
         - body
         - field_calendar_number
         - field_session_calendars
+        - field_global_issues
         - field_issues
       label: Details
       region: content
@@ -132,6 +134,16 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_global_issues:
+    type: entity_reference_autocomplete_tags
+    weight: 9
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
   field_issues:
     type: entity_reference_autocomplete_tags
     weight: 10
@@ -144,7 +156,7 @@ content:
     third_party_settings: {  }
   field_live_message_override:
     type: string_textarea
-    weight: 37
+    weight: 43
     region: content
     settings:
       rows: 5
@@ -152,7 +164,7 @@ content:
     third_party_settings: {  }
   field_live_message_status:
     type: options_select
-    weight: 36
+    weight: 42
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -173,7 +185,7 @@ content:
     third_party_settings: {  }
   field_session_calendars:
     type: entity_reference_autocomplete
-    weight: 9
+    weight: 8
     region: content
     settings:
       match_operator: CONTAINS
@@ -183,7 +195,7 @@ content:
     third_party_settings: {  }
   field_transcript:
     type: entity_reference_autocomplete_tags
-    weight: 38
+    weight: 44
     region: content
     settings:
       match_operator: CONTAINS
@@ -203,13 +215,13 @@ content:
     third_party_settings: {  }
   field_ustream:
     type: options_select
-    weight: 34
+    weight: 40
     region: content
     settings: {  }
     third_party_settings: {  }
   field_video_redirect:
     type: string_textfield
-    weight: 33
+    weight: 39
     region: content
     settings:
       size: 60
@@ -217,13 +229,13 @@ content:
     third_party_settings: {  }
   field_video_status:
     type: options_select
-    weight: 32
+    weight: 38
     region: content
     settings: {  }
     third_party_settings: {  }
   field_yt:
     type: inline_entity_form_simple
-    weight: 35
+    weight: 41
     region: content
     settings:
       form_mode: inline_entity

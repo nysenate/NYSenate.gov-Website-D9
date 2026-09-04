@@ -155,6 +155,10 @@ class Bills extends ImportProcessorBase {
         }
       }
 
+      // Add the current-cycle status flags derived from the same milestone
+      // history.
+      $values += $this->deriveCurrentCycleFields($result);
+
       // Add program info, if it exists.
       if (!empty($result->programInfo)) {
         $values['field_ol_program_info'] = $result->programInfo->name;
@@ -298,6 +302,63 @@ class Bills extends ImportProcessorBase {
 
     // Set the new paragraph references.
     $node->set('field_ol_votes', $new_votes);
+  }
+
+  /**
+   * Derives current-cycle status flags from a bill's milestone history.
+   *
+   * These mirror what \Drupal\nys_bills\Milestones::getFromNode() already
+   * computes for the bill-status graph, materialized here as real fields
+   * so Views can filter on them directly instead of decoding
+   * field_ol_all_statuses per row. Each flag reflects whether that
+   * milestone was reached at ANY point this cycle, not just whether it
+   * matches the bill's current status - a bill that passed the Senate and
+   * has since moved into Assembly committee still reports
+   * field_passed_senate_current as TRUE. Also refreshes
+   * field_ol_last_status_date, which is occasionally stale on bills that
+   * haven't been re-synced recently.
+   *
+   * Bills only; resolutions have no milestone-based status tracking (see
+   * Milestones::setNode()), so this is only called from the bill branch
+   * of self::transcribeToNode().
+   *
+   * @param object $result
+   *   The bill result object from the Open Legislation API response, as
+   *   returned by $this->item->result().
+   *
+   * @return array
+   *   Field values keyed by field machine name, ready to merge into the
+   *   $values array built in self::transcribeToNode().
+   */
+  protected function deriveCurrentCycleFields(object $result): array {
+    $type_to_field = [
+      'PASSED_SENATE' => 'field_passed_senate_current',
+      'PASSED_ASSEMBLY' => 'field_passed_assembly_current',
+    ];
+
+    $values = array_fill_keys(array_values($type_to_field), FALSE);
+    $current_stage_date = NULL;
+    $milestones = $result->milestones->items ?? [];
+
+    foreach ($milestones as $milestone) {
+      if (isset($type_to_field[$milestone->statusType])) {
+        $values[$type_to_field[$milestone->statusType]] = TRUE;
+      }
+
+      // field_ol_last_status_date is occasionally stale on bills that
+      // haven't been re-synced recently - take the date from whichever
+      // milestone matches the bill's current status, preferring the last
+      // (most recent) match in case a status recurs after a recommittal.
+      if ($milestone->statusType === $result->status->statusType && !empty($milestone->actionDate)) {
+        $current_stage_date = $milestone->actionDate;
+      }
+    }
+
+    if ($current_stage_date !== NULL) {
+      $values['field_ol_last_status_date'] = $current_stage_date;
+    }
+
+    return $values;
   }
 
 }

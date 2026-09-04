@@ -1,0 +1,166 @@
+@use 'partials' as *;
+@use 'partials/phosphor-fill';
+
+.c-event-featured-story {
+  overflow: hidden;
+  padding-bottom: 40px;
+
+  .l-left {
+    width: 100%;
+
+    img {
+      width: 380px;
+      height: 215px;
+    }
+  }
+
+  .c-title,
+  .c-container--title {
+    font-family: var(--nys-ff-sans);
+    font-size: 14px;
+    font-weight: normal;
+    text-transform: uppercase;
+    position: relative;
+    padding-bottom: 20px;
+    padding-top: 20px;
+    margin: 0;
+
+    // The icon comes from ContentTypeBuilder as "<i>.ph-fill</i> Label" -
+    // markup already has the separating space, this just sizes/aligns it.
+    .ph-fill {
+      font-size: 16px;
+      vertical-align: -1px;
+    }
+  }
+
+  .c-story-name {
+    font-family: var(--nys-ff-serif);
+    font-size: 24px;
+    margin: 0 0 25px 0;
+    line-height: 120%;
+    padding-top: 16px;
+    max-width: 440px;
+    color: var(--nys-color-grey08);
+    font-weight: var(--nys-fw-normal);
+
+    a {
+      color: var(--nys-color-grey08);
+      text-decoration: none;
+      font-weight: var(--nys-fw-normal);
+    }
+  }
+
+  .c-story--date {
+    color: var(--nys-color-blue);
+    margin-bottom: 3px;
+    text-transform: uppercase;
+  }
+
+  // Pill styling matches .c-news-card__issues on the issue-news-card
+  // component (the Recent News cards on the issues taxonomy page) - same
+  // oval-tag treatment as the related-issues tags below the hero.
+  .c-featured-story-issue-tag {
+    font-family: var(--nys-ff-sans);
+    font-size: 12px;
+    margin-top: 8px;
+
+    // field_global_issues renders as Drupal's standard multi-value field
+    // markup (a .field wrapper, one .field__item per term) - both need to
+    // become flex containers/items themselves so the pills wrap and space
+    // out instead of stacking as block-level items.
+    .field {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .field__item {
+      display: inline-flex;
+    }
+
+    // Amber tint instead of the news-card's gray pill - this card's own
+    // background is the same gray, so a gray pill on it disappears.
+    // Reuses the .c-bill-status-box--committee palette (issue-page.scss)
+    // for consistency with the rest of the issues page.
+    a {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background-color: #fef3e2;
+      border: 1px solid rgba(138, 85, 0, 0.2);
+      font-weight: 600;
+      color: #8a5500;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+
+      &:hover {
+        background-color: #8a5500;
+        border-color: #8a5500;
+        color: var(--nys-color-white);
+      }
+    }
+  }
+
+  @include bp-min(sm) {
+    .c-story-name {
+      font-size: 26px;
+    }
+
+    .l-left {
+      width: 50%;
+    }
+
+    .l-right {
+      width: 340px;
+      float: right;
+    }
+
+    .story-container {
+      display: flex;
+      gap: 40px;
+    }
+  }
+}
+
+// Two-column list layout when this card is used as a Views row (e.g. a
+// grid of featured stories rather than a single hero card).
+.node--view-mode-featured-content {
+  grid-column: 1 / span 2;
+}
+
+@include bp-min(sm) {
+  .view-display-id-block_1 {
+    .view-content {
+      @include grid(2, 40px);
+
+      .views-row {
+        border-bottom: 1px solid var(--nys-color-grey05);
+      }
+
+      .c-event-featured-story {
+        .c-container--header__top-border {
+          display: none;
+        }
+
+        .story-container {
+          display: block;
+
+          .l-left {
+            width: 100%;
+          }
+
+          .l-right {
+            width: 100%;
+            float: none;
+          }
+
+          .c-story--date {
+            margin-top: 24px;
+          }
+        }
+      }
+    }
+  }
+}

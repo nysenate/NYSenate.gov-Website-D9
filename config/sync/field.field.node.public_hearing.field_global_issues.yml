@@ -1,0 +1,29 @@
+uuid: e57a5a58-bd72-47e4-8d29-389ee12277d9
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_global_issues
+    - node.type.public_hearing
+    - taxonomy.vocabulary.global_issues
+id: node.public_hearing.field_global_issues
+field_name: field_global_issues
+entity_type: node
+bundle: public_hearing
+label: 'Global Issues'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      global_issues: global_issues
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

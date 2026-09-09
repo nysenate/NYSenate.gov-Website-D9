@@ -9,10 +9,16 @@ services:
     class: Drupal\nys_bill_notifications\Service\BillTestManager
     parent: default_plugin_manager
     arguments: ['@logger.channel.bill_notifications']
+  # Built directly (not via nys_subscriptions.queue_manager's queueFactory()
+  # factory method) to avoid a circular service reference: this service is
+  # also collected back into that manager via the subscription_queue tag
+  # (service_collector -> addQueue()), so using the manager as a factory
+  # here would require it to exist before it's finished building. Arguments
+  # mirror exactly what queueFactory() itself passes to the SubscriptionQueue
+  # constructor - see SubscriptionQueueManager::queueFactory().
   bill_notifications.queue:
     class: Drupal\nys_subscriptions\SubscriptionQueue
-    factory: ['@nys_subscriptions.queue_manager', 'queueFactory']
-    arguments: ['bill_notifications', 'Changes registered on a subscribed bill']
+    arguments: ['bill_notifications', 'Changes registered on a subscribed bill', '@database', '@event_dispatcher', '@plugin.manager.mail', '@language_manager']
     tags:
       - { name: subscription_queue }
   bill_notifications.event_subscriber:

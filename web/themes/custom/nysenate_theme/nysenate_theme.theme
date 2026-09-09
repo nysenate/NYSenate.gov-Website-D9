@@ -3149,6 +3149,24 @@ function nysenate_theme_preprocess_taxonomy_term__senator__senators_involved(&$v
   $term = $variables['term'];
   $variables['district'] = get_senator_district($term->id());
 
+  $senator_name = trim(($term->field_senator_name->title ?? '') . ' ' . ($term->field_senator_name->given ?? '') . ' ' . ($term->field_senator_name->family ?? ''));
+  $headshot_alt = 'Photo of ' . $senator_name;
+  $set_headshot_alt = function (&$element) use (&$set_headshot_alt, $headshot_alt) {
+    if (!is_array($element)) {
+      return;
+    }
+    if (isset($element['#uri']) || isset($element['#item'])) {
+      $element['#alt'] = $headshot_alt;
+      $element['#attributes']['alt'] = $headshot_alt;
+    }
+    foreach ($element as &$child) {
+      if (is_array($child)) {
+        $set_headshot_alt($child);
+      }
+    }
+  };
+  $set_headshot_alt($variables['content']['field_member_headshot']);
+
   $senator_link = \Drupal::service('nys_senators.microsites')
     ->getMicrosite($term);
   $variables['senator_link'] = $senator_link;

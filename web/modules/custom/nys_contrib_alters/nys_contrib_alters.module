@@ -5,6 +5,10 @@
  * Provides alterations for Drupal contrib modules.
  */
 
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\node\NodeInterface;
+
 /**
  * Implements hook_form_FORM_ID_alter().
  */
@@ -94,4 +98,22 @@ function nys_contrib_alters_page_attachments(array &$attachments) {
  */
 function nys_contrib_alters_preprocess_webform_analysis_component(&$variables) {
   $variables['data']['#attributes']['class'][] = 'field-multiple-table';
+}
+
+/**
+ * Implements hook_node_access().
+ *
+ * Grants view access to unpublished open_data nodes for any user with the
+ * "view unpublished open_data content" permission, regardless of
+ * authorship - core only has a "view own unpublished content" permission,
+ * with no per-bundle equivalent. This applies whether the node is
+ * accessed via its canonical path or a path alias, since aliases resolve
+ * to the same route/access check before rendering.
+ */
+function nys_contrib_alters_node_access(NodeInterface $node, $op, AccountInterface $account) {
+  if ($op === 'view' && $node->bundle() === 'open_data' && !$node->isPublished()) {
+    return AccessResult::allowedIfHasPermission($account, 'view unpublished open_data content')
+      ->addCacheableDependency($node);
+  }
+  return AccessResult::neutral();
 }

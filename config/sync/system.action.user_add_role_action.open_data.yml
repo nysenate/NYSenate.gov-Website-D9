@@ -1,0 +1,14 @@
+uuid: dd8ef7f1-3600-49a1-887c-57ea5b36d6ef
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.open_data
+  module:
+    - user
+id: user_add_role_action.open_data
+label: 'Add the Open Data Reviewer role to the selected user(s)'
+type: user
+plugin: user_add_role_action
+configuration:
+  rid: open_data

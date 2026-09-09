@@ -1,0 +1,14 @@
+uuid: f45b6a12-bd94-4b8a-a0ba-8c78d5f31498
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.open_data
+  module:
+    - user
+id: user_remove_role_action.open_data
+label: 'Remove the Open Data Reviewer role from the selected user(s)'
+type: user
+plugin: user_remove_role_action
+configuration:
+  rid: open_data

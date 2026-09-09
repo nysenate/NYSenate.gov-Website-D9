@@ -67,6 +67,7 @@
         {% endif %}
         {% if article.positions and article.title != "Resolution" %}
           {% include '@nysenate_theme/src/templates/includes/nys-bill-status.html.twig' with {positions: article.positions, is_small: true} only %}
+          <span class="visually-hidden">{{ 'Bill status: '|t }}{% for group in article.positions %}{% for position in group %}{% if position %}{{ position.text }}; {% endif %}{% endfor %}{% endfor %}</span>
         {% endif %}
         {% if article.author %}
           <div class="author">

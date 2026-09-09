@@ -845,7 +845,7 @@ else {
   $config['environment_indicator.indicator']['fg_color'] = '#FFFFFF';
 
   // By default, disable Pantheon server/core search index for local environments.
-  $config['search_api.server.pantheon_solr8']['status'] = FALSE;
+  $config['search_api.server.pantheon_search']['status'] = FALSE;
   $config['search_api.index.core_search']['status'] = FALSE;
 
   // Automatically generated include for settings managed by ddev.
@@ -853,12 +853,12 @@ else {
     include $app_root . '/' . $site_path . '/settings.ddev.php';
 
     // Local solr search - enable for DDEV.
-    $config['search_api.server.pantheon_solr8']['status'] = TRUE;
+    $config['search_api.server.pantheon_search']['status'] = TRUE;
     $config['search_api.index.core_search']['status'] = TRUE;
 
     // Local solr search Pantheon config overrides.
-    $config['search_api.server.pantheon_solr8']['backend_config']['connector'] = 'standard';
-    $config['search_api.server.pantheon_solr8']['backend_config']['connector_config'] = [
+    $config['search_api.server.pantheon_search']['backend_config']['connector'] = 'standard';
+    $config['search_api.server.pantheon_search']['backend_config']['connector_config'] = [
       'scheme' => 'http',
       'host' => 'solr',
       'port' => 8983,

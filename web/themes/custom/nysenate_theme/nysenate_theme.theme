@@ -2034,6 +2034,13 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
           if ($entity->hasField('field_ol_all_statuses') && !$entity->get('field_ol_all_statuses')->isEmpty()) {
             $positions = nysenate_bill_positions($entity);
           }
+          // Reuse the same field/formatter that already displays bill status
+          // elsewhere, rather than inferring it from the milestone graph.
+          $status_text = '';
+          if ($entity->hasField('field_ol_last_status') && !$entity->get('field_ol_last_status')->isEmpty()) {
+            $status_build = $entity->get('field_ol_last_status')->view(['label' => 'hidden']);
+            $status_text = trim(strip_tags((string) \Drupal::service('renderer')->renderInIsolation($status_build)));
+          }
           if ($entity->hasField('field_ol_name') && !$entity->get('field_ol_name')->isEmpty()) {
             $bill_description = $entity->field_ol_name->first()->value;
           }
@@ -2092,6 +2099,7 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
             ],
             'date' => $date,
             'issue_type' => $senator_link,
+            'status_text' => $status_text,
           ];
         }
       }

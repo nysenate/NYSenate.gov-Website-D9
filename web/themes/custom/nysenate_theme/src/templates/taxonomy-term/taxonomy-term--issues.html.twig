@@ -98,33 +98,33 @@
             { name: 'Legislation', value: 'legislation' },
             { name: 'Events', value: 'events' }
           ] %}
-          <div class="l-tab-bar" role="tablist">
+          <div class="l-tab-bar" role="tablist" aria-label="{{ (name[0]['#context']['value'] ~ ' Updates')|t }}">
             <div class="c-tab--arrow u-mobile-only"></div>
             {% for key, tab in tabs %}
               {% set safe_name = tab.value|lower|preg_replace('/[^-_0-9a-z]/', '-') %}
               {% set is_first = key == 0 %}
               <button class="c-tab{{ is_first ? ' active' : '' }}"
                 type="button"
+                role="tab"
                 name="{{ safe_name }}"
                 value="#panel{{ key + 1 }}"
                 id="tab--{{ safe_name }}"
-                aria-haspopup="true"
                 aria-selected="{{ is_first ? 'true' : 'false' }}"
-                aria-expanded="{{ is_first ? 'true' : 'false' }}"
-                aria-controls="panel{{ key + 1 }}">
+                aria-controls="panel{{ key + 1 }}"
+                tabindex="{{ is_first ? '0' : '-1' }}">
                 {{ tab.name|t }}
               </button>
             {% endfor %}
           </div>
           <div class="tabs-content">
             <div class="aria-announcement visually-hidden" aria-atomic="true" aria-live="polite" tabindex="0"> </div>
-            <div class="panel-pane pane-views pane-news-by-issue content active" id="panel1" role="tabpanel">
+            <div class="panel-pane pane-views pane-news-by-issue content active" id="panel1" role="tabpanel" aria-labelledby="tab--news" tabindex="0">
               {{ news }}
             </div>
-            <div class="panel-pane pane-views pane-news-by-issue content" id="panel2" role="tabpanel">
+            <div class="panel-pane pane-views pane-news-by-issue content" id="panel2" role="tabpanel" aria-labelledby="tab--legislation" tabindex="-1">
               {{ news_by_bill }}
             </div>
-            <div class="panel-pane pane-views pane-news-by-issue content" id="panel3" role="tabpanel">
+            <div class="panel-pane pane-views pane-news-by-issue content" id="panel3" role="tabpanel" aria-labelledby="tab--events" tabindex="-1">
               {{ meeting_by_issue }}
             </div>
           </div>

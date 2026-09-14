@@ -16,17 +16,22 @@
         if (activePanel.length > 0 && activeTab.length > 0) {
           const rowsMessageElement = activePanel.find('.view-header .rows-message')[0];
           const tabName = activeTab.text().trim();
-          
-          if (rowsMessageElement) {
-            const rowsMessage = rowsMessageElement.innerHTML;
-            const fullMessage = tabName + ' tab. ' + rowsMessage;
-            
-            // Clear and reset to force screen reader announcement
-            ariaAnnouncement.text('');
-            setTimeout(function() {
-              ariaAnnouncement.text(fullMessage);
-            }, 50);
-          }
+          const rowsMessage = rowsMessageElement
+            ? $(rowsMessageElement).text().trim()
+            : activePanel.find('.view-content .views-row').length + ' results.';
+          const filters = activePanel.find('.views-exposed-form input, .views-exposed-form select').filter(function() {
+            return $(this).val();
+          }).map(function() {
+            return $(this).val();
+          }).get();
+          const filterMessage = filters.length > 0 ? ' Filter: ' + filters.join(', ') + '.' : '';
+          const fullMessage = tabName + ' tab. ' + rowsMessage + filterMessage;
+
+          // Clear and reset to force screen reader announcement.
+          ariaAnnouncement.text('');
+          setTimeout(function() {
+            ariaAnnouncement.text(fullMessage);
+          }, 50);
         }
       };
 
@@ -60,6 +65,13 @@
       setTimeout(function() {
         updateAriaAnnouncement();
       }, 200);
+
+      // ATEN-NYS-392 row 14: re-announce after Views AJAX filter submissions
+      // (e.g. budget page year filter). Use a namespaced event so the handler
+      // is replaced rather than duplicated on each Drupal.behaviors.attach call.
+      $(document).off('drupalViewsProcessed.tabsAnnounce').on('drupalViewsProcessed.tabsAnnounce', function() {
+        setTimeout(updateAriaAnnouncement, 100);
+      });
 
       tabContainer.each(function () {
         const tabArrowDown = $(this).find('.c-tab--arrow');

@@ -67,6 +67,20 @@
         {% endif %}
         {% if article.positions and article.title != "Resolution" %}
           {% include '@nysenate_theme/src/templates/includes/nys-bill-status.html.twig' with {positions: article.positions, is_small: true} only %}
+          {# Skip when a visible status is already shown (e.g. article.issue_type.text) to avoid duplicate announcements. #}
+          {% if not article.issue_type.text %}
+            {% set current_status_text = article.status_text|default('') %}
+            {% if not current_status_text %}
+              {% for group in article.positions %}
+                {% for position in group %}
+                  {% if position and position.pass %}
+                    {% set current_status_text = position.text %}
+                  {% endif %}
+                {% endfor %}
+              {% endfor %}
+            {% endif %}
+            <span class="visually-hidden">{{ 'Bill status: '|t }}{{ current_status_text }}</span>
+          {% endif %}
         {% endif %}
         {% if article.author %}
           <div class="author">

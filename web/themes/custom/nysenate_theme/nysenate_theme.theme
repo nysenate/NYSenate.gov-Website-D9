@@ -2034,6 +2034,13 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
           if ($entity->hasField('field_ol_all_statuses') && !$entity->get('field_ol_all_statuses')->isEmpty()) {
             $positions = nysenate_bill_positions($entity);
           }
+          // Reuse the same field/formatter that already displays bill status
+          // elsewhere, rather than inferring it from the milestone graph.
+          $status_text = '';
+          if ($entity->hasField('field_ol_last_status') && !$entity->get('field_ol_last_status')->isEmpty()) {
+            $status_build = $entity->get('field_ol_last_status')->view(['label' => 'hidden']);
+            $status_text = trim(strip_tags((string) \Drupal::service('renderer')->renderInIsolation($status_build)));
+          }
           if ($entity->hasField('field_ol_name') && !$entity->get('field_ol_name')->isEmpty()) {
             $bill_description = $entity->field_ol_name->first()->value;
           }
@@ -2092,6 +2099,7 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
             ],
             'date' => $date,
             'issue_type' => $senator_link,
+            'status_text' => $status_text,
           ];
         }
       }
@@ -3148,6 +3156,24 @@ function nysenate_theme_preprocess_taxonomy_term__senator__senator_profile(&$var
 function nysenate_theme_preprocess_taxonomy_term__senator__senators_involved(&$variables) {
   $term = $variables['term'];
   $variables['district'] = get_senator_district($term->id());
+
+  $senator_name = trim(($term->field_senator_name->title ?? '') . ' ' . ($term->field_senator_name->given ?? '') . ' ' . ($term->field_senator_name->family ?? ''));
+  $headshot_alt = 'Photo of ' . $senator_name;
+  $set_headshot_alt = function (&$element) use (&$set_headshot_alt, $headshot_alt) {
+    if (!is_array($element)) {
+      return;
+    }
+    if (isset($element['#uri']) || isset($element['#item'])) {
+      $element['#alt'] = $headshot_alt;
+      $element['#attributes']['alt'] = $headshot_alt;
+    }
+    foreach ($element as &$child) {
+      if (is_array($child)) {
+        $set_headshot_alt($child);
+      }
+    }
+  };
+  $set_headshot_alt($variables['content']['field_member_headshot']);
 
   $senator_link = \Drupal::service('nys_senators.microsites')
     ->getMicrosite($term);

@@ -61,9 +61,9 @@
           Share this bill
         </h3>
         <ul>
-          <li><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u={{active_amend_url}}" class="c-detail--social-item bill">{{ icons.get('facebook') }}</a></li>
-          <li><a target="_blank" class="c-detail--social-item bill" href="https://twitter.com/intent/tweet?text={{ bill_title }} Via: @nysenate: {{ active_amend_url }}">{{ icons.get('twitter') }}</a></li>
-          <li class="email"><a href="mailto:?&subject=From NYSenate.gov: {{ bill_title }}&body=Check out this bill: {{ bill_title  }}: < {{active_amend_url}} >." class="c-detail--social-item bill">{{ icons.get('envelope') }}</a></li>
+          <li><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u={{active_amend_url}}" class="c-detail--social-item bill"><span class="visually-hidden">{{ 'Share on Facebook'|t }}</span>{{ icons.get('facebook') }}</a></li>
+          <li><a target="_blank" class="c-detail--social-item bill" href="https://twitter.com/intent/tweet?text={{ bill_title }} Via: @nysenate: {{ active_amend_url }}"><span class="visually-hidden">{{ 'Share on X (Twitter)'|t }}</span>{{ icons.get('twitter') }}</a></li>
+          <li class="email"><a href="mailto:?&subject=From NYSenate.gov: {{ bill_title }}&body=Check out this bill: {{ bill_title  }}: < {{active_amend_url}} >." class="c-detail--social-item bill"><span class="visually-hidden">{{ 'Share via Email'|t }}</span>{{ icons.get('envelope') }}</a></li>
         </ul>
       </div>
 

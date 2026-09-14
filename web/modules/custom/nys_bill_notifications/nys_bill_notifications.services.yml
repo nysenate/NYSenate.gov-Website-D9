@@ -11,10 +11,8 @@ services:
     arguments: ['@logger.channel.bill_notifications']
   bill_notifications.queue:
     class: Drupal\nys_subscriptions\SubscriptionQueue
-    factory: ['@nys_subscriptions.queue_manager', 'queueFactory']
-    arguments: ['bill_notifications', 'Changes registered on a subscribed bill']
     tags:
-      - { name: subscription_queue }
+      - { name: subscription_queue, queue_name: 'bill_notifications', queue_subject: 'Changes registered on a subscribed bill' }
   bill_notifications.event_subscriber:
     class: Drupal\nys_bill_notifications\EventSubscriber\NysSubscriptionsEventSubscriber
     arguments: ['@config.factory', '@slack_messaging', '@entity_type.manager']

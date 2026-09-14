@@ -25,17 +25,17 @@ class SubscriptionQueue extends DatabaseQueue implements SubscriptionQueueInterf
    *
    * This is the fallback default for nys_subscriptions.settings.max_runtime.
    */
-  const MAX_RUNTIME_DEFAULT = 240;
+  const int MAX_RUNTIME_DEFAULT = 240;
 
   /**
    * The maximum recipients per queue item.
    */
-  const MAX_RECIPIENTS_DEFAULT = 1000;
+  const int MAX_RECIPIENTS_DEFAULT = 1000;
 
   /**
    * A default subject line, if not populated by service config.
    */
-  const DEFAULT_SUBJECT = 'Automated Notification';
+  const string DEFAULT_SUBJECT = 'Automated Notification';
 
   /**
    * A logger channel.
@@ -135,7 +135,6 @@ class SubscriptionQueue extends DatabaseQueue implements SubscriptionQueueInterf
    *   suppressed entities by type and ID.
    */
   public function process(int $time_limit = 0): QueueProcessResult {
-
     $result = new QueueProcessResult();
     $fails = [];
 
@@ -156,11 +155,11 @@ class SubscriptionQueue extends DatabaseQueue implements SubscriptionQueueInterf
         $one_result = NULL;
         $this->logger
           ->warning(
-                  "Exception while processing item @id", [
-                    '@id' => $item->item_id ?? 'No ID found',
-                    '@msg' => $e->getMessage(),
-                  ]
-              );
+            "Exception while processing item @id", [
+              '@id' => $item->item_id ?? 'No ID found',
+              '@msg' => $e->getMessage(),
+            ]
+          );
       }
 
       // If processing was successful, delete the queue item.
@@ -206,7 +205,7 @@ class SubscriptionQueue extends DatabaseQueue implements SubscriptionQueueInterf
   /**
    * Sets the subject, with a default, if necessary.
    */
-  public function setSubject(string $subject = self::DEFAULT_SUBJECT) {
+  public function setSubject(string $subject = self::DEFAULT_SUBJECT): void {
     $this->subject = $subject ?: self::DEFAULT_SUBJECT;
   }
 

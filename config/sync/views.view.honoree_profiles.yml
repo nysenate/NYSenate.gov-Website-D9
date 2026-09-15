@@ -114,7 +114,7 @@ display:
         type: bef
         options:
           submit_button: Apply
-          reset_button: false
+          reset_button: true
           reset_button_label: Reset
           exposed_sorts_label: 'Sort by'
           expose_sort_order: true
@@ -124,13 +124,13 @@ display:
           text_input_required_format: full_html
           bef:
             general:
-              autosubmit: true
+              autosubmit: false
               auto_submit_sort_only: false
               autosubmit_breakpoint: ''
               autosubmit_exclude_textfield: false
               autosubmit_textfield_delay: 500
               autosubmit_textfield_minimum_length: 3
-              autosubmit_hide: true
+              autosubmit_hide: false
               input_required: false
               allow_secondary: false
               secondary_label: 'Advanced options'
@@ -792,6 +792,16 @@ display:
           empty: false
           content: "<h2>Veterans' Hall of Fame Honorees</h2>"
           tokenize: false
+        result:
+          id: result
+          table: views
+          field: result
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: result
+          empty: false
+          content: '<div class="rows-message">Showing @start - @end of @total results.</div>'
       display_extenders: {  }
       block_description: 'All Veterans List'
     cache_metadata:

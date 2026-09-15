@@ -170,7 +170,7 @@
 
           tabInput.on('click', function () {
             const tabInputContainer = tabInput.parent();
-            
+
             // Remove active state from all input tabs
             tabInput.removeAttr('checked');
             tabInputContainer.removeClass('active');
@@ -178,7 +178,18 @@
             // Set active state on clicked input
             $(this).attr('checked', 'checked');
             $(this).parent().addClass('active');
-            
+
+            // Switching tabs swaps the content panel below, which a label
+            // change alone doesn't convey; announce it to screen readers.
+            const announcement = $(this).closest('.l-tab-bar').parent().find('.aria-announcement');
+            if (announcement.length) {
+              const label = $(this).parent().find('label.c-tab-link').text().trim();
+              announcement.text('');
+              setTimeout(function () {
+                announcement.text(label + ' selected.');
+              }, 50);
+            }
+
             // For views exposed forms, BEF auto-submit fires on radio change.
             // ajaxComplete fires after drupalViewsProcessed, so ViewsScrollTop
             // has queued its animation but JS hasn't rendered a frame yet.
@@ -250,4 +261,45 @@
       }
     }
   };
+
+  /**
+   * Announces BEF-filtered view result counts/filters to screen readers.
+   *
+   * Relies on a persistent `.aria-announcement` live region living in the
+   * `.block-views` wrapper (outside the view's own markup, which Views AJAX
+   * replaces wholesale) and a "Global: Result summary" header area
+   * rendering `.rows-message` inside the view.
+   */
+  Drupal.behaviors.befLiveRegion = {
+    attach: function (context) {
+      const announceBlock = function (announcement) {
+        const $block = $(announcement).closest('.block-views');
+        const countMessage = $block.find('.rows-message').first().text().trim();
+        const filters = $block.find('.views-exposed-form input, .views-exposed-form select').filter(function () {
+          const type = $(this).attr('type');
+          const val = $(this).val();
+          return val && val !== 'All' && type !== 'submit' && type !== 'hidden';
+        }).map(function () {
+          return $(this).val();
+        }).get();
+        const filterMessage = filters.length > 0 ? ' Filters: ' + filters.join(', ') + '.' : '';
+        const message = (countMessage || '') + filterMessage;
+
+        // Clear and reset to force screen reader announcement.
+        $(announcement).text('');
+        setTimeout(function () {
+          $(announcement).text(message);
+        }, 50);
+      };
+
+      once('bef-live-region', '.block-views .aria-announcement', context);
+
+      $(document).off('drupalViewsProcessed.befLiveRegion').on('drupalViewsProcessed.befLiveRegion', function () {
+        $('.block-views .aria-announcement').each(function () {
+          announceBlock(this);
+        });
+      });
+    }
+  };
 })(document, Drupal, jQuery);
+

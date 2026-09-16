@@ -183,7 +183,7 @@
             // change alone doesn't convey; announce it to screen readers.
             const announcement = $(this).closest('.l-tab-bar').parent().find('.aria-announcement');
             if (announcement.length) {
-              const label = $(this).parent().find('label.c-tab-link').text().trim();
+              const label = $(this).parent().find('label.c-tab-link').text().replace(/\s+/g, ' ').trim();
               announcement.text('');
               setTimeout(function () {
                 announcement.text(label + ' selected.');

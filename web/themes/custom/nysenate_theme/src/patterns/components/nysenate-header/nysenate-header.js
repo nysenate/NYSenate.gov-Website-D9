@@ -247,7 +247,10 @@
      */
     mobileMenu: function () {
       const hamburgerButton = document.querySelector('button.c-nav--toggle');
-      const closeMenuButton = document.querySelector('button.c-nav--toggle--close');
+      // The microsite menu's close button is duplicated into the inert
+      // .c-header-bar clone too (see attach() above) - skip it, same as
+      // navMenu below, or the click/focus handler binds to the wrong copy.
+      const closeMenuButton = [...document.querySelectorAll('button.c-nav--toggle--close')].find((el) => !el.closest('.c-header-bar'));
 
       // On regular pages the nav is a standalone <div id="main-site-menu">.
       // On senator/microsite pages, the same role is filled by .c-nav--wrap
@@ -270,10 +273,15 @@
       if (!hamburgerButton || !navMenu) return;
 
       // Returns all currently focusable elements within the nav overlay.
+      // Markup includes responsive-only nodes (e.g. .u-tablet-plus, hidden
+      // via display:none on mobile) that querySelectorAll still matches;
+      // excluding them here keeps "last" pointing at the actual last
+      // tabbable item, otherwise Tab from the true last visible item skips
+      // past the (unrecognized-as-last) hidden node and out of the trap.
       const getFocusableElements = () => {
         return [...navMenu.querySelectorAll(
           'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
-        )];
+        )].filter((el) => el.getClientRects().length > 0 && getComputedStyle(el).visibility !== 'hidden');
       };
 
       const openMenu = () => {

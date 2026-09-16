@@ -4,24 +4,20 @@
 
 <!-- Amendment Tabs -->
 {% if content.amendments|length > 1 %}
+<div class="l-row">
   <div class="c-bill--amendment-details c-bill-section">
     <div id="amendment-details"></div>
     <h2 class="c-detail--subhead c-detail--section-title">Bill Amendments</h2>
 
-    <dl class="l-tab-bar">
+    <div class="l-tab-bar" role="tablist" aria-label="Bill amendment versions">
       {% for title, amendment_url in content.amended_versions_tab_data %}
         {% set version = title|replace({ (content.session_year ~ '-' ~ content.base_print_no) : ''}) %}
         {% set is_active_version = (version == content.bill_wrapper.field_ol_active_version.value) %}
         {% set is_active_tab = content.bill_wrapper.label() == title %}
 
-        <dd class="c-tab {{ is_active_tab ? 'active' : '' }}"  data-version="{{ title }}" data-target="{{ amendment_url }}">
-          {% set amendment_tab_id = 'amendment-tab-' ~ loop.index %}
-          <input class="c-tab-link form-radio" type="radio" id="{{ amendment_tab_id }}" name="{{ version is empty ? "Original" : version }}" value="#{{ title }}">
-          <label class="c-tab-link" for="{{ amendment_tab_id }}">{{ version is empty ? "Original" : version }}
-            {{ is_active_version ? " (Active) " : "" }}</label>
-        </dd>
+        <button type="button" class="c-tab{{ is_active_tab ? ' active' : '' }}" role="tab" id="tab-{{ title }}" value="#{{ title }}" data-version="{{ title }}" data-target="{{ amendment_url }}" aria-selected="{{ is_active_tab ? 'true' : 'false' }}" aria-controls="{{ title }}" tabindex="{{ is_active_tab ? '0' : '-1' }}">{{ version is empty ? "Original" : version }}{{ is_active_version ? " (Active) " : "" }}</button>
       {% endfor %}
-    </dl>
+    </div>
     <div class="aria-announcement visually-hidden" aria-atomic="true" aria-live="polite" tabindex="0"> </div>
   </div>
 {% endif %}
@@ -30,7 +26,7 @@
   {% for amendment in content.amendments %}
     {% set node_wrapper = amendment.node %}
     {% set is_active_version = node_wrapper.field_ol_is_active_version.value %}
-    <div class="bill-amendment-detail content {{ content.bill_wrapper.label() == node_wrapper.label() ? ' active' : '' }}" data-version="{{ node_wrapper.label() }}" id="{{ node_wrapper.label() }}">
+    <div class="bill-amendment-detail content {{ content.bill_wrapper.label() == node_wrapper.label() ? ' active' : '' }}" data-version="{{ node_wrapper.label() }}" id="{{ node_wrapper.label() }}" role="tabpanel" aria-labelledby="tab-{{ node_wrapper.label() }}" tabindex="0">
       <!-- Amendment Details -->
       <!-- Quote Block -->
       {# @todo Quote block #}
@@ -244,3 +240,6 @@
     </div>
   {% endfor %}
 </div>
+{% if content.amendments|length > 1 %}
+</div>
+{% endif %}

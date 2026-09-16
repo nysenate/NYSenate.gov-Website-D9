@@ -141,6 +141,14 @@
             tabContent.find('.content').removeClass('active');
             tabContent.find(targetPanel).addClass('active');
 
+            // Bill amendment version tabs: update the URL to the selected
+            // amendment's permalink (no navigation, content is pre-rendered).
+            const versionUrl = $(this).data('target');
+            const versionLabel = $(this).data('version');
+            if (versionUrl && versionLabel) {
+              history.pushState({}, 'NY State Senate Bill ' + versionLabel, versionUrl);
+            }
+
             // Update aria announcement with new content row counts
             setTimeout(updateAriaAnnouncement, 50);
 

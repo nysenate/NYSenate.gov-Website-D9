@@ -18,7 +18,6 @@
         <button type="button" class="c-tab{{ is_active_tab ? ' active' : '' }}" role="tab" id="tab-{{ title }}" value="#{{ title }}" data-version="{{ title }}" data-target="{{ amendment_url }}" aria-selected="{{ is_active_tab ? 'true' : 'false' }}" aria-controls="{{ title }}" tabindex="{{ is_active_tab ? '0' : '-1' }}">{{ version is empty ? "Original" : version }}{{ is_active_version ? " (Active) " : "" }}</button>
       {% endfor %}
     </div>
-    <div class="aria-announcement visually-hidden" aria-atomic="true" aria-live="polite" tabindex="0"> </div>
   </div>
 {% endif %}
 

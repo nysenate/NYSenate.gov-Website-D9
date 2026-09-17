@@ -186,7 +186,18 @@ display:
       cache:
         type: tag
         options: {  }
-      empty: {  }
+      empty:
+        area_text_custom:
+          id: area_text_custom
+          table: views
+          field: area_text_custom
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text_custom
+          empty: true
+          content: '<p>No honorees match your current filters. Try adjusting or clearing your selections.</p>'
+          tokenize: false
       sorts:
         created:
           id: created

@@ -6,7 +6,6 @@
       const tabLink = $('.c-tab .c-tab-link');
       const textExpander = $('.text-expander');
       const loadMore = $('.load-more');
-      const ariaAnnouncement = $('.aria-announcement');
 
       // Function to update aria announcement with row counts
       const updateAriaAnnouncement = function() {
@@ -19,19 +18,19 @@
           const rowsMessage = rowsMessageElement
             ? $(rowsMessageElement).text().trim()
             : activePanel.find('.view-content .views-row').length + ' results.';
-          const filters = activePanel.find('.views-exposed-form input, .views-exposed-form select').filter(function() {
-            return $(this).val();
+          const $exposedForm = activePanel.find('.views-exposed-form');
+          // For selects, use the selected OPTION TEXT (a label like "2022"),
+          // not its value attribute, which is often an opaque target ID.
+          const filters = $exposedForm.find('input, select').filter(function() {
+            const type = $(this).attr('type');
+            return $(this).val() && type !== 'submit' && type !== 'hidden';
           }).map(function() {
-            return $(this).val();
+            return $(this).is('select') ? $(this).find('option:selected').first().text().trim() : $(this).val();
           }).get();
           const filterMessage = filters.length > 0 ? ' Filter: ' + filters.join(', ') + '.' : '';
           const fullMessage = tabName + ' tab. ' + rowsMessage + filterMessage;
 
-          // Clear and reset to force screen reader announcement.
-          ariaAnnouncement.text('');
-          setTimeout(function() {
-            ariaAnnouncement.text(fullMessage);
-          }, 50);
+          Drupal.announce(fullMessage);
         }
       };
 
@@ -67,9 +66,15 @@
       }, 200);
 
       // ATEN-NYS-392 row 14: re-announce after Views AJAX filter submissions
-      // (e.g. budget page year filter). Use a namespaced event so the handler
-      // is replaced rather than duplicated on each Drupal.behaviors.attach call.
-      $(document).off('drupalViewsProcessed.tabsAnnounce').on('drupalViewsProcessed.tabsAnnounce', function() {
+      // (e.g. budget page year filter). 'drupalViewsProcessed' is not a real
+      // Drupal/Views event (it never fires), so use jQuery's ajaxComplete,
+      // filtered to the Views AJAX endpoint, as the actual completion signal.
+      // Namespaced so the handler is replaced rather than duplicated on each
+      // Drupal.behaviors.attach call.
+      $(document).off('ajaxComplete.tabsAnnounce').on('ajaxComplete.tabsAnnounce', function (event, xhr, ajaxSettings) {
+        if (!ajaxSettings.url || ajaxSettings.url.indexOf('/views/ajax') === -1) {
+          return;
+        }
         setTimeout(updateAriaAnnouncement, 100);
       });
 
@@ -189,13 +194,9 @@
 
             // Switching tabs swaps the content panel below, which a label
             // change alone doesn't convey; announce it to screen readers.
-            const announcement = $(this).closest('.l-tab-bar').parent().find('.aria-announcement');
-            if (announcement.length) {
-              const label = $(this).parent().find('label.c-tab-link').text().replace(/\s+/g, ' ').trim();
-              announcement.text('');
-              setTimeout(function () {
-                announcement.text(label + ' selected.');
-              }, 50);
+            const label = $(this).parent().find('label.c-tab-link').text().replace(/\s+/g, ' ').trim();
+            if (label) {
+              Drupal.announce(label + ' selected.');
             }
 
             // For views exposed forms, BEF auto-submit fires on radio change.
@@ -271,40 +272,101 @@
   };
 
   /**
-   * Announces BEF-filtered view result counts/filters to screen readers.
+   * Shows "count + applied filter labels" beneath BEF exposed filter bars,
+   * and announces the same to screen readers on Views AJAX updates.
    *
-   * Relies on a persistent `.aria-announcement` live region living in the
-   * `.block-views` wrapper (outside the view's own markup, which Views AJAX
-   * replaces wholesale) and a "Global: Result summary" header area
-   * rendering `.rows-message` inside the view.
+   * Uses Drupal core's Drupal.announce() (core/misc/announce.js) rather than
+   * a bespoke live region, since core already provides and manages one.
    */
   Drupal.behaviors.befLiveRegion = {
     attach: function (context) {
-      const announceBlock = function (announcement) {
-        const $block = $(announcement).closest('.block-views');
-        const countMessage = $block.find('.rows-message').first().text().trim();
-        const filters = $block.find('.views-exposed-form input, .views-exposed-form select').filter(function () {
-          const type = $(this).attr('type');
-          const val = $(this).val();
-          return val && val !== 'All' && type !== 'submit' && type !== 'hidden';
-        }).map(function () {
-          return $(this).val();
-        }).get();
-        const filterMessage = filters.length > 0 ? ' Filters: ' + filters.join(', ') + '.' : '';
-        const message = (countMessage || '') + filterMessage;
+      // Build "Label: selected value" pairs, using each field's associated
+      // <label> text and (for selects) the chosen OPTION TEXT rather than
+      // its value attribute, which is often an opaque target ID.
+      const buildFilterSummary = function ($form) {
+        const parts = [];
+        $form.find('select, input[type=text], input[type=search]').each(function () {
+          const $field = $(this);
+          const label = $form.find('label[for="' + $field.attr('id') + '"]').first().text().trim();
+          let value;
 
-        // Clear and reset to force screen reader announcement.
-        $(announcement).text('');
-        setTimeout(function () {
-          $(announcement).text(message);
-        }, 50);
+          if ($field.is('select')) {
+            value = $field.find('option:selected').first().text().trim();
+            if (!value || /^(-\s*any\s*-|all|-\s*none\s*-)$/i.test(value)) {
+              return;
+            }
+          }
+          else {
+            value = $field.val();
+            if (!value) {
+              return;
+            }
+          }
+
+          parts.push(label ? label + ': ' + value : value);
+        });
+
+        return parts.length > 0 ? 'Filtered by ' + parts.join(', ') + '.' : '';
       };
 
-      once('bef-live-region', '.block-views .aria-announcement', context);
+      // Updates (or creates) the visible summary directly beneath the
+      // exposed filter form, and returns the combined message.
+      const updateVisibleSummary = function (form) {
+        const $form = $(form);
+        const $block = $form.closest('.block-views');
+        if (!$block.length) {
+          return null;
+        }
 
-      $(document).off('drupalViewsProcessed.befLiveRegion').on('drupalViewsProcessed.befLiveRegion', function () {
-        $('.block-views .aria-announcement').each(function () {
-          announceBlock(this);
+        // The "result" header area hides itself when there are 0 rows
+        // (`empty: false` in the view config), so fall back to a computed
+        // count in that case rather than showing filters with no count.
+        let countMessage = $block.find('.rows-message').first().text().trim();
+        if (!countMessage) {
+          const rowCount = $block.find('.views-row').length;
+          countMessage = rowCount + ' result' + (rowCount !== 1 ? 's' : '') + '.';
+        }
+        // Its count is now folded into the summary below the filter bar, so
+        // remove the original header copy instead of showing it twice.
+        $block.find('.rows-message').first().remove();
+        const filterMessage = buildFilterSummary($form);
+        const message = [countMessage, filterMessage].filter(Boolean).join(' ');
+
+        let $summary = $block.find('.active-filters-summary');
+        if (!$summary.length) {
+          $summary = $('<div class="active-filters-summary"></div>');
+          $form.after($summary);
+        }
+        else {
+          // Views AJAX re-inserts the exposed form; keep the summary directly
+          // beneath it rather than wherever it ended up in the DOM.
+          $summary.insertAfter($form);
+        }
+        $summary.text(message);
+
+        return message;
+      };
+
+      // Show the summary on initial load and after every Views AJAX refresh
+      // (Drupal re-attaches behaviors to the replaced exposed form either
+      // way, so a single `once()` here covers both cases).
+      once('active-filters-summary', '.block-views .views-exposed-form', context).forEach(function (form) {
+        updateVisibleSummary(form);
+      });
+
+      // Screen readers: only announce on an actual filter change, not on
+      // initial page load. 'drupalViewsProcessed' is not a real Drupal/Views
+      // event (it never fires), so jQuery's ajaxComplete, filtered to the
+      // Views AJAX endpoint, is the real completion signal.
+      $(document).off('ajaxComplete.befLiveRegion').on('ajaxComplete.befLiveRegion', function (event, xhr, ajaxSettings) {
+        if (!ajaxSettings.url || ajaxSettings.url.indexOf('/views/ajax') === -1) {
+          return;
+        }
+        $('.block-views .views-exposed-form').each(function () {
+          const message = updateVisibleSummary(this);
+          if (message) {
+            Drupal.announce(message);
+          }
         });
       });
     }

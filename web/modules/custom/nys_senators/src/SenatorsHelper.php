@@ -110,7 +110,7 @@ class SenatorsHelper {
    */
   protected function generateMicrositeUrl(string $name): string {
     return $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost() .
-        '/senators/' . strtolower(str_replace([' ', '.'], ['-', ''], $name));
+      '/senators/' . strtolower(str_replace([' ', '.'], ['-', ''], $name));
   }
 
   /**
@@ -166,11 +166,11 @@ class SenatorsHelper {
     try {
       $ret = $this->getStorage()
         ->loadByProperties(
-                [
-                  'field_ol_member_id' => $member_id,
-                  'vid' => 'senator',
-                ]
-            );
+          [
+            'field_ol_member_id' => $member_id,
+            'vid' => 'senator',
+          ]
+        );
     }
     catch (\Throwable) {
       $ret = [];
@@ -226,8 +226,8 @@ class SenatorsHelper {
   public function hasMicroSiteInactive(array $nodes): bool {
     foreach ($nodes as $node) {
       if ($node->hasField('field_microsite_page_type')
-            && !$node->get('field_microsite_page_type')->isEmpty()
-        ) {
+        && !$node->get('field_microsite_page_type')->isEmpty()
+      ) {
         $tid = $node->field_microsite_page_type->getValue()[0]['target_id'] ?? '';
         try {
           $micrositeTerm = $this->entityTypeManager->getStorage('taxonomy_term')
@@ -245,16 +245,40 @@ class SenatorsHelper {
   }
 
   /**
-   * Loads all active senator terms.
+   * Loads all active senator terms, indexed by term id (usually).
+   *
+   * @param string $shortname
+   *   A comma-delimited list of OL shortname values.  If provided, only
+   *   matching senators will be included.  This input is whitelisted to
+   *   only ASCII characters from 32-127.  It will be ignored if invalid
+   *   characters are detected.
+   * @param string $key_field
+   *   If provided, the return array will be reorganized such that the keys
+   *   will come from the named field (e.g., field_ol_shortname)
    */
-  public function getActiveSenators(): array {
+  public function getActiveSenators(string $shortname = '', $key_field = ''): array {
+    $props = ['field_active_senator' => 1, 'vid' => 'senator'];
+    if ($shortname && !preg_match('/[^\x20-\x7E]/', $shortname)) {
+      $props['field_ol_shortname'] = explode(',', $shortname);
+    }
     try {
       $ret = $this->getStorage()
-        ->loadByProperties(['field_active_senator' => 1, 'vid' => 'senator']);
+        ->loadByProperties($props);
     }
     catch (\Throwable) {
       $ret = [];
     }
+
+    if ($key_field) {
+      $names = array_map(
+        function ($v) use ($key_field) {
+          return $v->$key_field->value ?? '';
+        },
+        $ret
+      );
+      $ret = array_combine($names, $ret);
+    }
+
     return $ret;
   }
 
@@ -277,17 +301,17 @@ class SenatorsHelper {
     if (!is_object($district)) {
       $loaded = $this->getStorage()
         ->loadByProperties(
-                [
-                  'field_district_number' => $district,
-                  'vid' => 'districts',
-                ]
-            );
+          [
+            'field_district_number' => $district,
+            'vid' => 'districts',
+          ]
+        );
       $district = current($loaded);
     }
 
     return $district && property_exists($district, 'field_senator')
-        ? $this->getStorage()->load($district->field_senator->target_id)
-        : NULL;
+      ? $this->getStorage()->load($district->field_senator->target_id)
+      : NULL;
   }
 
   /**
@@ -301,11 +325,11 @@ class SenatorsHelper {
     try {
       $loaded = $this->getStorage()
         ->loadByProperties(
-                [
-                  'field_senator' => $senator->id(),
-                  'vid' => 'districts',
-                ]
-            );
+          [
+            'field_senator' => $senator->id(),
+            'vid' => 'districts',
+          ]
+        );
     }
     catch (\Throwable) {
       $loaded = [];
@@ -342,7 +366,6 @@ class SenatorsHelper {
       $parties[$val['value']] = $allowed[$val['value']] ?? 'unknown';
     }
     return $parties;
-
   }
 
   /**
@@ -355,17 +378,18 @@ class SenatorsHelper {
    */
   public static function sortByName(array &$senators, bool $last_first = TRUE): void {
     usort(
-          $senators, function ($a, $b) use ($last_first) {
-            foreach (['a', 'b'] as $var) {
-                $first = ${$var}->field_senator_name->given ?? '';
-                $last = ${$var}->field_senator_name->family ?? '';
-                ${$var} = $last_first
-                ? $last . ' ' . $first
-                : $first . ' ' . $last;
-            }
-              return $a == $b ? 0 : ($a < $b ? -1 : 0);
-          }
-      );
+      $senators,
+      function ($a, $b) use ($last_first) {
+        foreach (['a', 'b'] as $var) {
+          $first = ${$var}->field_senator_name->given ?? '';
+          $last = ${$var}->field_senator_name->family ?? '';
+          ${$var} = $last_first
+            ? $last . ' ' . $first
+            : $first . ' ' . $last;
+        }
+        return $a == $b ? 0 : ($a < $b ? -1 : 0);
+      }
+    );
   }
 
   /**

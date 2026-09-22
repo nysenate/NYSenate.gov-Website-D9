@@ -1,0 +1,15 @@
+{% if issues or majority_issue %}
+    <ul class="nys-associated-topics">
+        ISSUE:
+        {% if majority_issue %}
+            <li>{{ majority_issue }}</li>
+        {% endif %}
+        {% if issues %}
+            {% for key, item in issues %}
+                {% if key|first != '#' %}
+                    <li>{{ item }}</li>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    </ul>
+{% endif %}

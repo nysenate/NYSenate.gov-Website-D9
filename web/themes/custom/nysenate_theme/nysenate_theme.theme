@@ -452,11 +452,13 @@ function nysenate_theme_preprocess_block_content__microsite_hero(&$variables) {
   ];
 
   // Social links.
+  $social_icon_labels = _nysenate_theme_social_icon_labels();
   $socials = [];
   if (!empty($senator->field_facebook_url->value)) {
     $socials[] = [
       'name' => 'facebook',
       'url' => $senator->field_facebook_url->value,
+      'label' => $social_icon_labels['facebook'],
     ];
   }
 
@@ -464,6 +466,7 @@ function nysenate_theme_preprocess_block_content__microsite_hero(&$variables) {
     $socials[] = [
       'name' => 'twitter',
       'url' => $senator->field_twitter_url->value,
+      'label' => $social_icon_labels['twitter'],
     ];
   }
 
@@ -471,6 +474,7 @@ function nysenate_theme_preprocess_block_content__microsite_hero(&$variables) {
     $socials[] = [
       'name' => 'youtube-2',
       'url' => $senator->field_youtube_url->value,
+      'label' => $social_icon_labels['youtube-2'],
     ];
   }
 
@@ -478,6 +482,7 @@ function nysenate_theme_preprocess_block_content__microsite_hero(&$variables) {
     $socials[] = [
       'name' => 'instagram',
       'url' => $senator->field_instagram_url->value,
+      'label' => $social_icon_labels['instagram'],
     ];
   }
 
@@ -2034,6 +2039,13 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
           if ($entity->hasField('field_ol_all_statuses') && !$entity->get('field_ol_all_statuses')->isEmpty()) {
             $positions = nysenate_bill_positions($entity);
           }
+          // Reuse the same field/formatter that already displays bill status
+          // elsewhere, rather than inferring it from the milestone graph.
+          $status_text = '';
+          if ($entity->hasField('field_ol_last_status') && !$entity->get('field_ol_last_status')->isEmpty()) {
+            $status_build = $entity->get('field_ol_last_status')->view(['label' => 'hidden']);
+            $status_text = trim(strip_tags((string) \Drupal::service('renderer')->renderInIsolation($status_build)));
+          }
           if ($entity->hasField('field_ol_name') && !$entity->get('field_ol_name')->isEmpty()) {
             $bill_description = $entity->field_ol_name->first()->value;
           }
@@ -2092,6 +2104,7 @@ function nysenate_theme_preprocess_views_view_unformatted(&$variables) {
             ],
             'date' => $date,
             'issue_type' => $senator_link,
+            'status_text' => $status_text,
           ];
         }
       }
@@ -3024,6 +3037,30 @@ function nysenate_theme_preprocess_taxonomy_term__districts(&$variables) {
 }
 
 /**
+ * Builds a "Title Given Family" string from a senator term's name field.
+ */
+function _nysenate_theme_senator_full_name($term): string {
+  return trim(($term->field_senator_name->title ?? '') . ' ' . ($term->field_senator_name->given ?? '') . ' ' . ($term->field_senator_name->family ?? ''));
+}
+
+/**
+ * Recursively sets a descriptive alt on a rendered headshot media field,
+ * overriding whatever (possibly empty or generic) alt text is stored on the
+ * underlying media asset.
+ */
+function _nysenate_theme_set_headshot_alt(array &$element, string $alt): void {
+  if (isset($element['#uri']) || isset($element['#item'])) {
+    $element['#alt'] = $alt;
+    $element['#attributes']['alt'] = $alt;
+  }
+  foreach ($element as &$child) {
+    if (is_array($child)) {
+      _nysenate_theme_set_headshot_alt($child, $alt);
+    }
+  }
+}
+
+/**
  * Implements hook_preprocess_taxonomy_term__TAXONOMY().
  */
 function nysenate_theme_preprocess_taxonomy_term__senator__agenda_senator_sponsors(&$variables) {
@@ -3032,6 +3069,11 @@ function nysenate_theme_preprocess_taxonomy_term__senator__agenda_senator_sponso
   $senator_link = \Drupal::service('nys_senators.microsites')
     ->getMicrosite($term);
   $variables['senator_link'] = $senator_link;
+
+  if (!empty($variables['content']['field_member_headshot'])) {
+    $alt = 'Photo of ' . _nysenate_theme_senator_full_name($term);
+    _nysenate_theme_set_headshot_alt($variables['content']['field_member_headshot'], $alt);
+  }
 }
 
 /**
@@ -3053,6 +3095,11 @@ function nysenate_theme_preprocess_taxonomy_term__senator__sponsor_list(&$variab
   $senator_link = \Drupal::service('nys_senators.microsites')
     ->getMicrosite($term);
   $variables['senator_link'] = $senator_link;
+
+  if (!empty($variables['content']['field_member_headshot'])) {
+    $alt = 'Photo of ' . _nysenate_theme_senator_full_name($term);
+    _nysenate_theme_set_headshot_alt($variables['content']['field_member_headshot'], $alt);
+  }
 }
 
 /**
@@ -3093,6 +3140,11 @@ function nysenate_theme_preprocess_taxonomy_term__senator__sponsor_list_bill_det
   $senator_link = \Drupal::service('nys_senators.microsites')
     ->getMicrosite($term);
   $variables['senator_link'] = $senator_link;
+
+  if (!empty($variables['content']['field_member_headshot'])) {
+    $alt = 'Photo of ' . _nysenate_theme_senator_full_name($term);
+    _nysenate_theme_set_headshot_alt($variables['content']['field_member_headshot'], $alt);
+  }
 }
 
 /**
@@ -3148,6 +3200,24 @@ function nysenate_theme_preprocess_taxonomy_term__senator__senator_profile(&$var
 function nysenate_theme_preprocess_taxonomy_term__senator__senators_involved(&$variables) {
   $term = $variables['term'];
   $variables['district'] = get_senator_district($term->id());
+
+  $senator_name = trim(($term->field_senator_name->title ?? '') . ' ' . ($term->field_senator_name->given ?? '') . ' ' . ($term->field_senator_name->family ?? ''));
+  $headshot_alt = 'Photo of ' . $senator_name;
+  $set_headshot_alt = function (&$element) use (&$set_headshot_alt, $headshot_alt) {
+    if (!is_array($element)) {
+      return;
+    }
+    if (isset($element['#uri']) || isset($element['#item'])) {
+      $element['#alt'] = $headshot_alt;
+      $element['#attributes']['alt'] = $headshot_alt;
+    }
+    foreach ($element as &$child) {
+      if (is_array($child)) {
+        $set_headshot_alt($child);
+      }
+    }
+  };
+  $set_headshot_alt($variables['content']['field_member_headshot']);
 
   $senator_link = \Drupal::service('nys_senators.microsites')
     ->getMicrosite($term);

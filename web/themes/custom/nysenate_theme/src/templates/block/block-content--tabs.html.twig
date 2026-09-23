@@ -55,7 +55,6 @@
         {% endfor %}
       </div>
       <div class="tabs-content">
-        <div class="aria-announcement visually-hidden" aria-atomic="true" aria-live="polite"> </div>
         {% for key in content.field_tab_names|keys %}
           {% if key matches '/^\\d+$/' and content.field_block_views[key] %}
             {% set tab_safe_name = content.field_tab_names[key]['#context']['value']|lower|preg_replace('/[^-_0-9a-z]/', '-') %}

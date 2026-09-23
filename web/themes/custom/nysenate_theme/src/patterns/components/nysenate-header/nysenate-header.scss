@@ -844,6 +844,14 @@ nav ul.c-nav--list {
   .c-nav--wrap .c-nav nav ul.c-nav--list li a:hover {
     color: $color-white;
   }
+
+  // Logged-in dashboard/account links (mobile) sit on the same
+  // palette-colored background; without this they fall back to the
+  // palette's .link-text hover color, which matches the background
+  // (invisible on hover).
+  .c-nav--wrap .c-nav nav ul.c-login--list.mobile-mode li a:hover {
+    color: $color-white;
+  }
 }
 
 .c-site-search--btn, .search__submit {

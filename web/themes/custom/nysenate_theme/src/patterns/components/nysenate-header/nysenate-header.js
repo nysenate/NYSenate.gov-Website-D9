@@ -32,6 +32,11 @@
         senatorHeroClone = senatorHero.cloneNode(true);
         micrositeMenuClone = micrositeMenu.cloneNode(true);
         senatorHeroClone.classList.add('l-header__collapsed');
+        // Clones are visually collapsed (height: 0, overflow: hidden) until
+        // scrolled into their "expanded" state; keep them out of the tab
+        // order until then so focus isn't lost inside clipped content.
+        senatorHeroClone.setAttribute('inert', '');
+        micrositeMenuClone.setAttribute('inert', '');
         headerBar.append(senatorHeroClone, micrositeMenuClone);
       }
 
@@ -111,7 +116,9 @@
           else {
             if (self.isScrolledBelowElement(senatorHero)) {
               senatorHeroClone.classList.add('expanded');
+              senatorHeroClone.removeAttribute('inert');
               micrositeMenuClone.classList.remove('expanded');
+              micrositeMenuClone.setAttribute('inert', '');
             }
           }
         }
@@ -144,11 +151,14 @@
             // Display menu when scrolling up.
             if (self.isScrolledBelowElement(senatorHero)) {
               micrositeMenuClone.classList.add('expanded');
+              micrositeMenuClone.removeAttribute('inert');
             }
             // Hide menu and hero when scrolled above fixed versions.
             else {
               senatorHeroClone.classList.remove('expanded');
+              senatorHeroClone.setAttribute('inert', '');
               micrositeMenuClone.classList.remove('expanded');
+              micrositeMenuClone.setAttribute('inert', '');
             }
           }
         }
@@ -237,32 +247,48 @@
      */
     mobileMenu: function () {
       const hamburgerButton = document.querySelector('button.c-nav--toggle');
-      const closeMenuButton = document.querySelector('button.c-nav--toggle--close');
+      // The microsite menu's close button is duplicated into the inert
+      // .c-header-bar clone too (see attach() above) - skip it, same as
+      // navMenu below, or the click/focus handler binds to the wrong copy.
+      const closeMenuButton = [...document.querySelectorAll('button.c-nav--toggle--close')].find((el) => !el.closest('.c-header-bar'));
 
       // On regular pages the nav is a standalone <div id="main-site-menu">.
       // On senator/microsite pages, the same role is filled by .c-nav--wrap
-      // inside the microsite menu block — it has no id by default.
+      // inside the microsite menu block — it has no id by default. That
+      // block is also duplicated as a JS-generated clone inside
+      // .c-header-bar (see attach() above) for the sticky-scroll effect, so
+      // a plain querySelector('.c-nav--wrap') can match that inert clone
+      // instead of the real, interactive instance. Explicitly skip clones.
       // Assign the expected id so aria-controls points to the right element.
       let navMenu = document.getElementById('main-site-menu');
       if (!navMenu) {
-        navMenu = document.querySelector('.c-nav--wrap');
+        navMenu = [...document.querySelectorAll('.c-nav--wrap')].find((el) => !el.closest('.c-header-bar'));
         if (navMenu) navMenu.id = 'main-site-menu';
       }
+      // Real (non-clone) senator hero content sits outside the nav overlay
+      // but before it in the DOM; trap focus in the menu by inerting it too.
+      const heroSenator = document.querySelector('.hero--senator:not(.l-header__collapsed)');
       const mobileMediaQuery = window.matchMedia('(max-width: 767px)');
 
       if (!hamburgerButton || !navMenu) return;
 
       // Returns all currently focusable elements within the nav overlay.
+      // Markup includes responsive-only nodes (e.g. .u-tablet-plus, hidden
+      // via display:none on mobile) that querySelectorAll still matches;
+      // excluding them here keeps "last" pointing at the actual last
+      // tabbable item, otherwise Tab from the true last visible item skips
+      // past the (unrecognized-as-last) hidden node and out of the trap.
       const getFocusableElements = () => {
         return [...navMenu.querySelectorAll(
           'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
-        )];
+        )].filter((el) => el.getClientRects().length > 0 && getComputedStyle(el).visibility !== 'hidden');
       };
 
       const openMenu = () => {
         document.body.classList.add('nav-open');
         hamburgerButton.setAttribute('aria-expanded', 'true');
         navMenu.removeAttribute('inert');
+        if (heroSenator) heroSenator.setAttribute('inert', '');
         const focusable = getFocusableElements();
         if (focusable.length) focusable[0].focus();
       };
@@ -271,6 +297,7 @@
         document.body.classList.remove('nav-open');
         hamburgerButton.setAttribute('aria-expanded', 'false');
         navMenu.setAttribute('inert', '');
+        if (heroSenator) heroSenator.removeAttribute('inert');
         hamburgerButton.focus();
       };
 

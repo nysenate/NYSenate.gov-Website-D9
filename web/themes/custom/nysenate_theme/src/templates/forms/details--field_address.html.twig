@@ -16,6 +16,9 @@
  */
 #}
 <div{{ attributes.without('required', 'aria-required', 'open') }}>
+  {%- if title -%}
+    <div class="details-title{% if required %} js-form-required form-required{% endif %}">{{ title }}</div>
+  {%- endif -%}
   <div class="details-wrapper">
     {% if errors %}
       <div class="form-item--error-message">

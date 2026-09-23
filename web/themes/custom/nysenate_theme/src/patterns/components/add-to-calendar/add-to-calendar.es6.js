@@ -17,7 +17,7 @@
 
       dropdownToggle.off('click.addToCalendar keydown.addToCalendar');
       dropdownToggle.on('click.addToCalendar', function () {
-        const dropdownContent = $(this).find('.add-to-calendar__dropdown');
+        const dropdownContent = $(this).siblings('.add-to-calendar__dropdown');
         const isExpanded = $(this).attr('aria-expanded') === 'true';
 
         $(this).toggleClass('active');
@@ -29,7 +29,7 @@
 
       dropdownToggle.on('keydown.addToCalendar', function (event) {
         if (event.key === 'Escape' && $(this).attr('aria-expanded') === 'true') {
-          const dropdownContent = $(this).find('.add-to-calendar__dropdown');
+          const dropdownContent = $(this).siblings('.add-to-calendar__dropdown');
 
           event.preventDefault();
           $(this).removeClass('active').attr('aria-expanded', 'false').focus();

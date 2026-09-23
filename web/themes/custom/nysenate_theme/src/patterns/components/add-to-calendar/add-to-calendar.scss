@@ -3,6 +3,7 @@
 
 .add-to-calendar {
   margin-top: 20px;
+  position: relative;
 
   &__container {
     display: inline-block;
@@ -43,7 +44,7 @@
     width: 200px;
     position: absolute;
     left: 0px;
-    top: 22px;
+    top: calc(100% - 2px);
     background-color: $color-white;
     text-align: left;
     display: none;

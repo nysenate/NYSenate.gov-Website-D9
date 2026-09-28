@@ -3,3 +3,27 @@ form.node-student-submission-container-form .field--name-field-file-submission .
 form.node-student-submission-container-form .field--name-field-image-submission .message--status {
   display: none;
 }
+
+form.node-student-submission-container-form .field--name-field-student-submissions .tabledrag-hide {
+  display: none !important;
+}
+
+.ui-dialog[aria-describedby="submission-confirmation-modal"] .ui-dialog-titlebar-close .ui-icon.ui-icon-closethick {
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  margin: 0;
+  transform: none !important;
+}
+
+.ui-dialog[aria-describedby="submission-confirmation-modal"] .ui-widget-content.ui-dialog-buttonpane .button {
+  color: var(--nys-color-white, #fff);
+  background-color: var(--nys-color-button-blue, #2b6a90);
+  border-color: var(--nys-color-button-blue, #2b6a90) !important;
+}
+
+.ui-dialog[aria-describedby="submission-confirmation-modal"] .ui-widget-content.ui-dialog-buttonpane .button:hover,
+.ui-dialog[aria-describedby="submission-confirmation-modal"] .ui-widget-content.ui-dialog-buttonpane .button:focus-visible {
+  color: var(--nys-color-button-blue, #2b6a90) !important;
+  background-color: var(--nys-color-white, #fff) !important;
+  border-color: var(--nys-color-button-blue, #2b6a90) !important;
+}

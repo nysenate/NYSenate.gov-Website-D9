@@ -13,7 +13,13 @@ for (const route of routes) {
     expect(response, `${route.path} did not return a response`).not.toBeNull();
     expect(response?.status(), `${route.path} returned an error status`).toBeLessThan(400);
 
-    const results = await new AxeBuilder({ page }).withTags(wcagTags).analyze();
+    const axeBuilder = new AxeBuilder({ page }).withTags(wcagTags);
+    if ('axeExclusions' in route) {
+      for (const selector of route.axeExclusions) {
+        axeBuilder.exclude(selector);
+      }
+    }
+    const results = await axeBuilder.analyze();
 
     await assertNoAxeViolations(results, testInfo);
   });

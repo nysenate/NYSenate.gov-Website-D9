@@ -5,6 +5,7 @@ export const routes = [
   { name: 'News and issues', path: '/news-and-issues' },
   { name: 'Senators and committees', path: '/senators-committees' },
   { name: 'Events', path: '/events' },
-  { name: 'About', path: '/about' },
+  // YouTube controls its embedded markup; the iframe title is asserted separately.
+  { name: 'About', path: '/about', axeExclusions: ['iframe.media-oembed-content'] },
   { name: 'Open data', path: '/open-data' },
 ] as const;

@@ -1,10 +1,12 @@
 # Accessibility tests
 
 Playwright and Axe test representative rendered Drupal pages for WCAG 2.0, 2.1,
-and 2.2 Level A and AA violations. Every test is a strict pass/fail check: any
-Axe violation fails that route or UI-state test. There is no baseline, suppression
-list, or violation threshold. The suite runs automatically only in pull request
-CI after the PR's Pantheon multidev has been deployed.
+and 2.2 Level A and AA violations. Every test is a strict pass/fail check for
+in-scope content. The About route excludes only the third-party YouTube oEmbed
+iframe from Axe because its internal player markup is vendor-controlled; a
+separate test asserts that the iframe is visible and has a descriptive title.
+There is no baseline or violation threshold. The suite runs automatically only
+in pull request CI after the PR's Pantheon multidev has been deployed.
 
 Existing violations will fail CI until fixed. This is intentional: the gate
 reports current accessibility debt directly rather than treating it as accepted.

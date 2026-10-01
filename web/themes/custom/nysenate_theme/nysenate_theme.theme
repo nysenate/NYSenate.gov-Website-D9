@@ -5402,9 +5402,20 @@ function nysenate_theme_preprocess_node__landing__about(&$variables) {
             ];
           }
           elseif ($block['#block_content']->field_title->value == 'Senate Seal') {
+            $description = $block['field_body_left'][0];
+            if (str_contains($description['#text'] ?? '', 'c-seal--img')) {
+              $document = Html::load($description['#text']);
+              foreach ($document->getElementsByTagName('img') as $image) {
+                if (str_contains($image->getAttribute('class'), 'c-seal--img') && !$image->hasAttribute('alt')) {
+                  $image->setAttribute('alt', 'New York State Senate seal');
+                }
+              }
+              $description['#text'] = Html::serialize($document);
+            }
+
             $variables['senate_seal'] = [
               'title' => $block['#block_content']->field_title->value,
-              'description' => $block['field_body_left'][0],
+              'description' => $description,
               'media' => FALSE,
             ];
             $variables['sticky_nav']['sections'][] = [

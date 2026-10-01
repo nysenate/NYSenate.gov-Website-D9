@@ -15,6 +15,16 @@
   }
 }
 
+// Result count + applied filter labels, injected by nysenate-tabs.js
+// (befLiveRegion) directly beneath a BEF exposed filter bar.
+.active-filters-summary {
+  margin: 10px 0 20px;
+  font-size: 14px;
+  font-style: italic;
+  color: $grey08;
+}
+
+
 .c-tab-block--title {
   font-family: $font-serif-semibold;
   font-weight: $font-weight-normal;
@@ -129,6 +139,14 @@
       position: absolute;
       width: 100%;
       height: 100%;
+
+      // opacity: 0 hides the browser's native focus ring along with the
+      // input itself; restore a visible indicator on the label when the
+      // radio receives keyboard focus.
+      &:focus-visible + .c-tab-link {
+        outline: 2px solid $color-blue;
+        outline-offset: -2px;
+      }
     }
 
     &.active {
@@ -349,7 +367,7 @@
 		.pager-next {
 		 	margin: 0;
 
-		 	> a {
+		 	> a, > button.text-expander {
 		 		display: block;
 				padding: 15px 0;
 				width: 100%;
@@ -357,6 +375,9 @@
 				font-family: $font-sans-bold;
 				font-size: 16px;
 				line-height: 25px;
+				border: 0;
+				background: transparent;
+				cursor: pointer;
 				@extend .icon-after__see-more;
 				@extend .lgt-text;
               &:hover {
@@ -518,12 +539,16 @@
       margin: 1.75em 0 0 0;
       list-style: none;
 
-      a {
+      a, button.text-expander {
         font-family: $font-sans-bold;
         font-size: 14px;
         color: $blue03;
         padding: 5px 0;
         display: block;
+        border: 0;
+        background: transparent;
+        width: 100%;
+        cursor: pointer;
       }
 
       &.pager-load-more-empty {

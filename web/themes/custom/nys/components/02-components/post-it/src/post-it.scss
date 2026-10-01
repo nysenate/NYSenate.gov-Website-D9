@@ -61,6 +61,9 @@
   color: currentColor;
 
   &:hover {
+    // Override any inherited link-hover color to maintain sufficient contrast
+    // on the gold background (#F1AF58). Black (#000) gives 11:1 contrast.
+    color: #000;
     .c-post-it__label {
       text-decoration-color: transparent;
     }

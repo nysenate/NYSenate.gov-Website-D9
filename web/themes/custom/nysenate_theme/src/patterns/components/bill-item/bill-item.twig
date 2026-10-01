@@ -56,8 +56,10 @@
               <p class="c-bill-update--location">
                 <span>
                   {{ bill.update_location }}
-                  {% if bill.committee_link %}
+                  {% if bill.committee_link and bill.committee_link.url and bill.committee_link.text %}
                     <a class="committee-link" href="{{ bill.committee_link.url }}">{{ bill.committee_link.text }}</a>
+                  {% elseif bill.committee_link and bill.committee_link.text %}
+                    <span class="committee-link">{{ bill.committee_link.text }}</span>
                   {% endif %}
                 </span>
               </p>
@@ -74,9 +76,11 @@
               <span>
                 {{ bill.update_location }}
               </span>
-                {% if bill.committee_link %}
-                    <a class="committee-link"
-                       href="{{ bill.committee_link.url }}">{{ bill.committee_link.text }}</a>
+                {% if bill.committee_link and bill.committee_link.url and bill.committee_link.text %}
+                  <a class="committee-link"
+                     href="{{ bill.committee_link.url }}">{{ bill.committee_link.text }}</a>
+                {% elseif bill.committee_link and bill.committee_link.text %}
+                  <span class="committee-link">{{ bill.committee_link.text }}</span>
                 {% endif %}
             </p>
           {% endif %}

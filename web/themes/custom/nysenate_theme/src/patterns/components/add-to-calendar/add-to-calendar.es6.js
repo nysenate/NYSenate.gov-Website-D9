@@ -15,15 +15,26 @@
     attach: function() {
       const dropdownToggle = $('.add-to-calendar__container');
 
-      dropdownToggle.on('click', function () {
-        const dropdownContent = $(this).find('.add-to-calendar__dropdown');
+      dropdownToggle.off('click.addToCalendar keydown.addToCalendar');
+      dropdownToggle.on('click.addToCalendar', function () {
+        const dropdownContent = $(this).siblings('.add-to-calendar__dropdown');
+        const isExpanded = $(this).attr('aria-expanded') === 'true';
 
         $(this).toggleClass('active');
+        $(this).attr('aria-expanded', isExpanded ? 'false' : 'true');
 
-        dropdownContent.attr('aria-expanded', function(index, attr) {
-          return attr === 'true' ? 'false' : 'true';
-        });
+        dropdownContent.attr('aria-expanded', isExpanded ? 'false' : 'true');
         dropdownContent.toggleClass('active');
+      });
+
+      dropdownToggle.on('keydown.addToCalendar', function (event) {
+        if (event.key === 'Escape' && $(this).attr('aria-expanded') === 'true') {
+          const dropdownContent = $(this).siblings('.add-to-calendar__dropdown');
+
+          event.preventDefault();
+          $(this).removeClass('active').attr('aria-expanded', 'false').focus();
+          dropdownContent.removeClass('active').attr('aria-expanded', 'false');
+        }
       });
     }
   };

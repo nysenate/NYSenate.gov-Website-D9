@@ -8761,17 +8761,17 @@
         },
         {
             "name": "drupal/pantheon_advanced_page_cache",
-            "version": "2.4.0",
+            "version": "2.4.1",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/pantheon_advanced_page_cache.git",
-                "reference": "2.4.0"
+                "reference": "2.4.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/pantheon_advanced_page_cache-2.4.0.zip",
-                "reference": "2.4.0",
-                "shasum": "910024eefab0111371e8d1f53db957ba43145cc4"
+                "url": "https://ftp.drupal.org/files/projects/pantheon_advanced_page_cache-2.4.1.zip",
+                "reference": "2.4.1",
+                "shasum": "abcc7e5f0c3a306f19c47b7f1557a932533d7906"
             },
             "require": {
                 "drupal/core": "^10 || ^11",
@@ -8793,8 +8793,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "2.4.0",
-                    "datestamp": "1782503467",
+                    "version": "2.4.1",
+                    "datestamp": "1788291954",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -11066,27 +11066,27 @@
         },
         {
             "name": "drupal/term_merge",
-            "version": "2.0.0",
+            "version": "2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/term_merge.git",
-                "reference": "2.0.0"
+                "reference": "2.0.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/term_merge-2.0.0.zip",
-                "reference": "2.0.0",
-                "shasum": "44bb8665801826934ade2fca2e191fd5d581b2d1"
+                "url": "https://ftp.drupal.org/files/projects/term_merge-2.0.1.zip",
+                "reference": "2.0.1",
+                "shasum": "9860ee3e52898eafc2e1b3b557ef4a5c1441de6d"
             },
             "require": {
                 "drupal/core": "^9 || ^10 || ^11",
-                "drupal/term_reference_change": "*"
+                "drupal/term_reference_change": "^2.0@beta"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "2.0.0",
-                    "datestamp": "1752105248",
+                    "version": "2.0.1",
+                    "datestamp": "1791188397",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -11099,38 +11099,53 @@
             ],
             "authors": [
                 {
-                    "name": "legolasbo",
-                    "homepage": "https://www.drupal.org/u/legolasbo"
+                    "name": "Chris Jansen (legolasbo)",
+                    "homepage": "https://www.drupal.org/u/legolasbo",
+                    "role": "Maintainer"
                 },
                 {
-                    "name": "daniel_j",
-                    "homepage": "https://www.drupal.org/u/daniel_j"
+                    "name": "Daniel Johnson (daniel_j)",
+                    "homepage": "https://www.drupal.org/u/daniel_j",
+                    "role": "Maintainer"
                 },
                 {
-                    "name": "daniel_j",
-                    "homepage": "https://www.drupal.org/user/970952"
+                    "name": "bucefal91",
+                    "homepage": "https://www.drupal.org/u/bucefal91",
+                    "role": "Maintainer"
                 },
                 {
                     "name": "eli",
-                    "homepage": "https://www.drupal.org/user/49774"
+                    "homepage": "https://www.drupal.org/u/eli",
+                    "role": "Maintainer"
                 },
                 {
                     "name": "g.i.joe",
-                    "homepage": "https://www.drupal.org/user/111415"
-                },
-                {
-                    "name": "legolasbo",
-                    "homepage": "https://www.drupal.org/user/2480548"
+                    "homepage": "https://www.drupal.org/u/gijoe",
+                    "role": "Maintainer"
                 },
                 {
                     "name": "nylin",
-                    "homepage": "https://www.drupal.org/user/816040"
+                    "homepage": "https://www.drupal.org/user/816040",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "Alexander Ross (bleen)",
+                    "homepage": "https://www.drupal.org/user/bleen",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "Viktor Holovachek (AstonVictor)",
+                    "homepage": "https://www.drupal.org/u/astonvictor",
+                    "role": "Maintainer"
                 }
             ],
             "description": "Allows users to merge taxonomy terms in the same vocabulary together.",
             "homepage": "https://www.drupal.org/project/term_merge",
+            "keywords": [
+                "Drupal"
+            ],
             "support": {
-                "source": "https://git.drupal.org/project/term_merge.git",
+                "source": "https://git.drupalcode.org/project/term_merge",
                 "issues": "https://www.drupal.org/project/issues/term_merge"
             }
         },
@@ -25415,16 +25430,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "11.5.56",
+            "version": "11.5.57",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "5f83edffa6967c3db468d48a695ec7bcb02e9256"
+                "reference": "36b75bf56a8535623f5b3e24b27ea1823759da1a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/5f83edffa6967c3db468d48a695ec7bcb02e9256",
-                "reference": "5f83edffa6967c3db468d48a695ec7bcb02e9256",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/36b75bf56a8535623f5b3e24b27ea1823759da1a",
+                "reference": "36b75bf56a8535623f5b3e24b27ea1823759da1a",
                 "shasum": ""
             },
             "require": {
@@ -25434,7 +25449,7 @@
                 "ext-libxml": "*",
                 "ext-mbstring": "*",
                 "ext-xmlwriter": "*",
-                "myclabs/deep-copy": "^1.13.4",
+                "myclabs/deep-copy": "^1.14.0",
                 "phar-io/manifest": "^2.0.4",
                 "phar-io/version": "^3.2.1",
                 "php": ">=8.2",
@@ -25497,7 +25512,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/11.5.56"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/11.5.57"
             },
             "funding": [
                 {
@@ -25505,7 +25520,7 @@
                     "type": "other"
                 }
             ],
-            "time": "2026-07-06T14:52:39+00:00"
+            "time": "2026-10-05T05:47:54+00:00"
         },
         {
             "name": "ramsey/collection",

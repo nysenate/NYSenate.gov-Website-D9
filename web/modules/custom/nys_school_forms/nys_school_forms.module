@@ -269,8 +269,10 @@ function _nys_school_forms_validate_ss_container_form(array &$form, FormStateInt
  *
  * If a school's address is changed, send it back through SAGE.
  *
- * Rename the file in the field_file_submission field of a student_submission
- * node during node creation or update.
+ * Renames the files in the field_file_submission and field_image_submission
+ * fields of a student_submission node during node creation or update, using
+ * a sanitized, standardized filename (no spaces or special characters, so
+ * the resulting file URL never needs percent-encoding).
  */
 function nys_school_forms_entity_presave(EntityInterface $entity): void {
   $entity_type = $entity->getEntityTypeId() . ':' . $entity->bundle();
@@ -308,29 +310,40 @@ function nys_school_forms_entity_presave(EntityInterface $entity): void {
     $student_name = $entity->field_student_name->value ?? 'Student';
     $current_year = date('Y');
     $form_type = _nys_school_forms_get_form_type('label');
-    if (
-      $entity->hasField('field_file_submission')
-      && !$entity->field_file_submission->isEmpty()
-    ) {
-      $file = File::load($entity->field_file_submission->target_id);
-      if ($file) {
-        $new_filename = "$student_name's $form_type $current_year submission.pdf";
-        $original_uri = $file->getFileUri();
-        $file_directory = dirname($original_uri);
-        $new_uri = $file_directory . '/' . $new_filename;
-        // Use FileExists::Rename to ensure unique filename in filesystem.
-        $final_uri = \Drupal::service('file_system')
-          ->move($original_uri, $new_uri, FileExists::Rename);
-        if ($final_uri) {
-          $file->setFilename($new_filename);
-          $file->setFileUri($final_uri);
-          try {
-            $file->save();
-          }
-          catch (\Exception $e) {
-            \Drupal::logger('nys_school_forms')
-              ->error('Failed to save file: @message', ['@message' => $e->getMessage()]);
-          }
+    $submission_fields = ['field_file_submission', 'field_image_submission'];
+    foreach ($submission_fields as $field_name) {
+      if (
+        !$entity->hasField($field_name)
+        || $entity->get($field_name)->isEmpty()
+      ) {
+        continue;
+      }
+      $file = File::load($entity->get($field_name)->target_id);
+      if (!$file) {
+        continue;
+      }
+      $extension = pathinfo($file->getFilename(), PATHINFO_EXTENSION) ?: 'pdf';
+      $new_filename = _nys_school_forms_build_submission_filename(
+        (string) $student_name,
+        (string) $form_type,
+        $current_year,
+        $extension
+      );
+      $original_uri = $file->getFileUri();
+      $file_directory = dirname($original_uri);
+      $new_uri = $file_directory . '/' . $new_filename;
+      // Use FileExists::Rename to ensure unique filename in filesystem.
+      $final_uri = \Drupal::service('file_system')
+        ->move($original_uri, $new_uri, FileExists::Rename);
+      if ($final_uri) {
+        $file->setFilename($new_filename);
+        $file->setFileUri($final_uri);
+        try {
+          $file->save();
+        }
+        catch (\Exception $e) {
+          \Drupal::logger('nys_school_forms')
+            ->error('Failed to save file: @message', ['@message' => $e->getMessage()]);
         }
       }
     }
@@ -378,6 +391,20 @@ function _nys_school_forms_get_form_type(string $string_type = 'machine_name'): 
     }
   }
   return $form_type_label ?? $form_type_value;
+}
+
+/**
+ * Builds a sanitized, standardized filename for a student submission upload.
+ *
+ * Strips spaces and special characters so the resulting file URL never
+ * needs percent-encoding, while keeping the filename human-readable and
+ * searchable (student name, form type, year).
+ */
+function _nys_school_forms_build_submission_filename(string $student_name, string $form_type, string $year, string $extension): string {
+  $slug = strtolower(trim("$student_name $form_type $year submission"));
+  $slug = preg_replace('/[^a-z0-9]+/', '-', $slug);
+  $slug = trim((string) $slug, '-');
+  return "$slug.$extension";
 }
 
 /**

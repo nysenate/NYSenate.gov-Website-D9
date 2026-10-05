@@ -27,12 +27,15 @@
         dropdownContent.toggleClass('active');
       });
 
-      dropdownToggle.on('keydown.addToCalendar', function (event) {
-        if (event.key === 'Escape' && $(this).attr('aria-expanded') === 'true') {
-          const dropdownContent = $(this).siblings('.add-to-calendar__dropdown');
+      const calendar = dropdownToggle.parent('.add-to-calendar');
+      calendar.off('keydown.addToCalendar');
+      calendar.on('keydown.addToCalendar', function (event) {
+        const toggle = $(this).children('.add-to-calendar__container');
+        if (event.key === 'Escape' && toggle.attr('aria-expanded') === 'true') {
+          const dropdownContent = toggle.siblings('.add-to-calendar__dropdown');
 
           event.preventDefault();
-          $(this).removeClass('active').attr('aria-expanded', 'false').focus();
+          toggle.removeClass('active').attr('aria-expanded', 'false').focus();
           dropdownContent.removeClass('active').attr('aria-expanded', 'false');
         }
       });

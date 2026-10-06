@@ -1,3 +1,16 @@
 html .toolbar .toolbar-bar #toolbar-item-administration-tray .toolbar-logo {
   padding: var(--gin-spacing-xs);
 }
+
+/**
+ * Workaround for an open Gin bug (Gin 5.0.15 / Drupal 11.4.8): Claro's
+ * min-height on this container and Gin's percentage-padding aspect-ratio box
+ * both apply under content-box sizing, so they add together instead of one
+ * overriding the other - producing severely stretched Media Library preview
+ * thumbnails. Remove once fixed upstream.
+ *
+ * @see https://git.drupalcode.org/project/gin/-/work_items/3598621
+ */
+.media-library-item--grid .media-library-item__preview {
+  min-height: 0!important;
+}

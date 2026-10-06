@@ -281,6 +281,8 @@ jobs:
     needs: [deploy_multidev, run_cache_tests]
     if: always() && needs.deploy_multidev.result == 'success'
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
     env:
       BASE_URL: https://pr-${{ github.event.pull_request.number }}-${{ vars.PANTHEON_SITE }}.pantheonsite.io
       PANTHEON_TEST_UA: ${{ secrets.PANTHEON_TEST_UA }}
@@ -289,6 +291,22 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+
+      - name: Remove 'accessibility-tests-passed' label if present (will be re-added on success)
+        uses: actions/github-script@v7
+        with:
+          script: |
+            try {
+              await github.rest.issues.removeLabel({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                name: 'accessibility-tests-passed'
+              });
+            } catch (e) {
+              if (e.status !== 404) throw e;
+              // 404 means the label wasn't present — that's fine
+            }
 
       - name: Wait for multidev HTTP endpoint to be ready
         run: |
@@ -332,6 +350,18 @@ jobs:
             ${{ env.TEST_PATH }}/playwright-report/
             ${{ env.TEST_PATH }}/test-results/
           retention-days: 30
+
+      - name: Add 'accessibility-tests-passed' label to PR
+        if: success()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              labels: ['accessibility-tests-passed']
+            });
 
   # ---------------------------------------------------------------------------
   # Slack notification — always runs after deploy and tests so a single

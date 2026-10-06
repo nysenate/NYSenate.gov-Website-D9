@@ -17,7 +17,7 @@
   </a>
   {% if location %}
     <a class="c-event-location" href="{{ url_location }}" target="_blank">
-      <span class="icon-before__circle-pin"></span>{{ location }}
+      <span class="icon-before__circle-pin" aria-hidden="true"></span><span class="visually-hidden">Event location: </span>{{ location }}
     </a>
   {% endif %}
 

@@ -4,7 +4,7 @@ namespace Drupal\nys_feeds\Plugin\NysFeed;
 
 use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\node\Entity\Node;
+use Drupal\node\NodeInterface;
 use Drupal\nys_feeds\Attribute\NysFeed;
 use Drupal\nys_feeds\Traits\DateFormatterTrait;
 use Drupal\nys_feeds\Traits\EntityFormatterTrait;
@@ -47,7 +47,7 @@ class Events extends NysFeedPluginBase {
    */
   protected function transcribeEntry(mixed $data): array {
     // Only do work on event nodes.
-    if (!(($data instanceof Node) && $data->bundle() == 'event')) {
+    if (!(($data instanceof NodeInterface) && $data->bundle() == 'event')) {
       return ['error' => 'Require event nodes, received ' . get_class($data)];
     }
 

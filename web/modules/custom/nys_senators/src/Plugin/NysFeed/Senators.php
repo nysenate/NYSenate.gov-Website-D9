@@ -2,11 +2,11 @@
 
 namespace Drupal\nys_senators\Plugin\NysFeed;
 
-use Drupal\address\Repository\CountryRepository;
-use Drupal\address\Repository\SubdivisionRepository;
+use CommerceGuys\Addressing\Country\CountryRepositoryInterface;
+use CommerceGuys\Addressing\Subdivision\SubdivisionRepositoryInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Field\FieldItemList;
+use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\nys_feeds\Attribute\NysFeed;
 use Drupal\nys_feeds\FeedOutput;
@@ -14,7 +14,7 @@ use Drupal\nys_feeds\NysFeedPluginBase;
 use Drupal\nys_feeds\Traits\EntityFormatterTrait;
 use Drupal\nys_senators\SenatorsHelper;
 use Drupal\nys_senators\Service\Microsites;
-use Drupal\paragraphs\Entity\Paragraph;
+use Drupal\paragraphs\ParagraphInterface;
 use Drupal\taxonomy\Entity\Term;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -52,16 +52,16 @@ class Senators extends NysFeedPluginBase {
   /**
    * Address module Country repository.
    *
-   * @var \Drupal\address\Repository\CountryRepository|mixed
+   * @var \CommerceGuys\Addressing\Country\CountryRepositoryInterface
    */
-  protected mixed $countryRepo;
+  protected CountryRepositoryInterface $countryRepo;
 
   /**
    * Address module Subdivision repository.
    *
-   * @var \Drupal\address\Repository\SubdivisionRepository
+   * @var \CommerceGuys\Addressing\Subdivision\SubdivisionRepositoryInterface
    */
-  protected SubdivisionRepository $stateRepo;
+  protected SubdivisionRepositoryInterface $stateRepo;
 
   /**
    * NYS Senators Microsites service.
@@ -83,7 +83,7 @@ class Senators extends NysFeedPluginBase {
    * Adds services: nys_senator Helper, nys_senator Microsites, Address
    * Country and Subdivision repositories, Cache Backend (data bin).
    */
-  public function __construct(SenatorsHelper $helper, Microsites $themes, CountryRepository $countryRepo, SubdivisionRepository $stateRepo, CacheBackendInterface $cache, EntityTypeManagerInterface $entityTypeManager, array $configuration, $plugin_id, $plugin_definition) {
+  public function __construct(SenatorsHelper $helper, Microsites $themes, CountryRepositoryInterface $countryRepo, SubdivisionRepositoryInterface $stateRepo, CacheBackendInterface $cache, EntityTypeManagerInterface $entityTypeManager, array $configuration, $plugin_id, $plugin_definition) {
     parent::__construct($entityTypeManager, $configuration, $plugin_id, $plugin_definition);
     $this->helper = $helper;
     $this->themes = $themes;
@@ -267,35 +267,9 @@ class Senators extends NysFeedPluginBase {
   }
 
   /**
-   * Calculates the ordinal suffix for a number.
-   *
-   * E.g., to make "2" look like "2nd".
-   */
-  protected function ordinalSuffix(int $number): string {
-    // Check if number is zero.
-    if ($number === 0) {
-      $os = '';
-    }
-    // Check for 11, 12, 13.
-    elseif (in_array($number % 100, [11, 12, 13])) {
-      $os = 'th';
-    }
-    else {
-      $os = match ($number % 10) {
-        1 => 'st',
-        2 => 'nd',
-        3 => 'rd',
-        default => 'th',
-      };
-    }
-
-    return $os;
-  }
-
-  /**
    * Flattens a FieldItemList array.
    */
-  protected function getFlatValue(FieldItemList $list): array {
+  protected function getFlatValue(FieldItemListInterface $list): array {
     return array_map(
       function ($v) {
         return $v['value'];
@@ -306,7 +280,7 @@ class Senators extends NysFeedPluginBase {
   /**
    * Transcribes an office field entry to a JSON-suitable array.
    */
-  protected function transcribeOffice(Paragraph $office): array {
+  protected function transcribeOffice(ParagraphInterface $office): array {
     try {
       /** @var \Drupal\address\Plugin\Field\FieldType\AddressItem $address */
       $address = $office->field_office_address->first();

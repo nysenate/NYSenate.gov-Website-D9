@@ -37,4 +37,32 @@ trait EntityFormatterTrait {
     ));
   }
 
+  /**
+   * Calculates the ordinal suffix for a number.
+   *
+   * E.g., to make "2" look like "2nd".  This is here because it is only used
+   * with entity fields for now.  Reorganize this to somewhere reasonable if
+   * usage is expanded, or if more utility functions are added.
+   */
+  protected function ordinalSuffix(int $number): string {
+    // Check if number is zero.
+    if ($number === 0) {
+      $os = '';
+    }
+    // Check for 11, 12, 13.
+    elseif (in_array($number % 100, [11, 12, 13])) {
+      $os = 'th';
+    }
+    else {
+      $os = match ($number % 10) {
+        1 => 'st',
+        2 => 'nd',
+        3 => 'rd',
+        default => 'th',
+      };
+    }
+
+    return $os;
+  }
+
 }

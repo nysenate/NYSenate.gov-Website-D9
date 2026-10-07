@@ -4,7 +4,7 @@ namespace Drupal\nys_feeds\Plugin\NysFeed;
 
 use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\node\Entity\Node;
+use Drupal\node\NodeInterface;
 use Drupal\nys_feeds\Attribute\NysFeed;
 use Drupal\nys_feeds\NysFeedPluginBase;
 use Drupal\nys_feeds\Traits\DateFormatterTrait;
@@ -44,7 +44,7 @@ class Meetings extends NysFeedPluginBase {
    */
   protected function transcribeEntry(mixed $data): array {
     // Only do work on meeting nodes.
-    if (!(($data instanceof Node) && $data->bundle() == 'meeting')) {
+    if (!(($data instanceof NodeInterface) && $data->bundle() == 'meeting')) {
       return ['error' => 'Require meeting nodes, received ' . get_class($data)];
     }
 
@@ -91,7 +91,7 @@ class Meetings extends NysFeedPluginBase {
     }
 
     // Compile majority issues.
-    /** @var \Drupal\Core\Field\EntityReferenceFieldItemList $issues */
+    /** @var \Drupal\Core\Field\EntityReferenceFieldItemList $majority */
     $majority = $data->get('field_majority_issue_tag');
     if ($majority) {
       $ret['majority_issues'] = $this->getReferencedLabels($majority);
@@ -112,9 +112,15 @@ class Meetings extends NysFeedPluginBase {
     $source = $data->field_transcript->referencedEntities();
     $ret['transcripts'] = array_map(
       function ($val) {
+        try {
+          $url = $val->toUrl()->toString();
+        }
+        catch (\Throwable) {
+          $url = '<error>';
+        }
         return [
           'name' => $val->label(),
-          'url' => $val->toUrl()->toString(),
+          'url' => $url,
         ];
       },
       $source

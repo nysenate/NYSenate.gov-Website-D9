@@ -4,7 +4,7 @@ namespace Drupal\nys_feeds\Plugin\NysFeed;
 
 use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\node\Entity\Node;
+use Drupal\node\NodeInterface;
 use Drupal\nys_feeds\Attribute\NysFeed;
 use Drupal\nys_feeds\NysFeedPluginBase;
 use Drupal\nys_feeds\Traits\DateFormatterTrait;
@@ -48,7 +48,7 @@ class Sessions extends NysFeedPluginBase {
    */
   protected function transcribeEntry(mixed $data): array {
     // Only do work on session nodes.
-    if (!(($data instanceof Node) && $data->bundle() == 'session')) {
+    if (!(($data instanceof NodeInterface) && $data->bundle() == 'session')) {
       return ['error' => 'Require session nodes, received ' . get_class($data)];
     }
 
@@ -88,9 +88,15 @@ class Sessions extends NysFeedPluginBase {
     // Compile transcript references.
     $ret['transcripts'] = array_map(
       function ($val) {
+        try {
+          $url = $val->toUrl()->toString();
+        }
+        catch (\Throwable) {
+          $url = '<error>';
+        }
         return [
           'name' => $val->label(),
-          'url' => $this->getUrl($val),
+          'url' => $url,
         ];
       },
       $data->field_transcript->referencedEntities()

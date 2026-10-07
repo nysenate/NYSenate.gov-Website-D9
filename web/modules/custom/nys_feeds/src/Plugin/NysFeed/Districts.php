@@ -8,7 +8,7 @@ use Drupal\nys_feeds\Attribute\NysFeed;
 use Drupal\nys_feeds\Traits\DateFormatterTrait;
 use Drupal\nys_feeds\Traits\EntityFormatterTrait;
 use Drupal\nys_feeds\NysFeedPluginBase;
-use Drupal\taxonomy\Entity\Term;
+use Drupal\taxonomy\TermInterface;
 
 /**
  * NYS Feeds plugin for districts.
@@ -41,19 +41,24 @@ class Districts extends NysFeedPluginBase {
    */
   protected function transcribeEntry(mixed $data): array {
     // Only do work on district terms.
-    if (!(($data instanceof Term) && $data->bundle() == 'districts')) {
+    if (!(($data instanceof TermInterface) && $data->bundle() == 'districts')) {
       return ['error' => 'Require district taxonomy terms, received ' . get_class($data)];
     }
 
     // Some basic fields.
+    $district = $data->field_district_number->value ?? '<error>';
     return [
       'id' => $data->id(),
       'title' => $data->label() ?? '<No Description>',
-      'district_number' => $data->field_district_number->value ?? '<error>',
+      'number' => $district,
+      'ordinal' => $this->ordinalSuffix((int) $district),
       'url' => $this->getUrl($data),
       'body' => $data->body->value ?? "No description",
       'locality' => $data->field_subheading->value ?? '',
-      'senator' => $data->field_senator->entity?->field_ol_shortname->value ?? 'empty seat',
+      'senator' => [
+        'shortname' => strtolower($data->field_senator->entity?->field_ol_shortname->value ?? 'empty seat'),
+        'member_id' => $data->field_senator->entity?->field_ol_member_id->value ?? -1,
+      ],
       'updated' => $this->formatDate($data->changed->value),
       'map_url' => $data->field_map_url->value ?? '',
     ];

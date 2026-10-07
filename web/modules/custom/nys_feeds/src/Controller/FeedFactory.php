@@ -70,8 +70,8 @@ class FeedFactory extends ControllerBase {
       $definition = [];
     }
     if (($definition['private'] ?? '') !== FALSE) {
-      $this->statusCode = 404;
-      $this->messages[] = 'Feed not found; returning list of available feeds';
+      $this->statusCode = 301;
+      $this->messages[] = 'Feed not found; redirecting to feed "feed_list"';
       $series = 'feed_list';
     }
     return $this->feedPluginManager->createInstance($series);

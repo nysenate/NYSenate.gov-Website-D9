@@ -54,7 +54,7 @@
             <ul class="c-senator-hero--social">
               {% for social in socials %}
                 <li class="{% if loop.first %}first {% endif %}leaf c-senator-hero--social-item {{ social.name }}">
-                  <a href="{{ social.url }}" target="_blank"%}">{{ icons.get(social.name) }}</a>
+                  <a href="{{ social.url }}" target="_blank">{{ icons.get(social.name) }}</a>
                 </li>
               {% endfor %}
             </ul>

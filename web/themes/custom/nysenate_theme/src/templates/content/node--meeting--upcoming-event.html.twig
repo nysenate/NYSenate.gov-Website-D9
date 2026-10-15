@@ -97,7 +97,7 @@
 
         {% elseif content.field_event_place[0]['#markup'] == "Capitol Building" %}
           <a class="c-event-location" href="http://maps.google.com/?q=172 State Street+Albany, New York%2C+12247" target="_blank">
-            <span class="icon-before__circle-pin"></span>New York State Capitol Building
+            <span class="icon-before__circle-pin" aria-hidden="true"></span><span class="visually-hidden">Event location: </span>New York State Capitol Building
           </a>
           <p class="c-event-address">
             {% if content.field_meeting_location[0]['#context']['value'] %}
@@ -108,7 +108,7 @@
 
         {% elseif content.field_event_place[0]['#markup'] == "LOB" %}
           <a class="c-event-location" href="http://maps.google.com/?q=172 State Street+Albany, New York%2C+12247" target="_blank">
-            <span class="icon-before__circle-pin"></span>New York State Capitol Building
+            <span class="icon-before__circle-pin" aria-hidden="true"></span><span class="visually-hidden">Event location: </span>New York State Capitol Building
           </a>
           <p class="c-event-address">
             {% if content.field_meeting_location[0]['#context']['value'] %}

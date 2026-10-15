@@ -270,11 +270,105 @@ jobs:
             });
 
   # ---------------------------------------------------------------------------
+  # Accessibility regression tests
+  #
+  # Runs Playwright and Axe on the GitHub runner against the public Pantheon
+  # multidev deployed for this pull request. These are black-box browser tests
+  # and do not need access to Pantheon's internal Redis or Drupal runtime. Run
+  # them after cache tests because their GET requests can warm page/CDN caches.
+  # ---------------------------------------------------------------------------
+  run_accessibility_tests:
+    needs: [deploy_multidev, run_cache_tests]
+    if: always() && needs.deploy_multidev.result == 'success'
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    env:
+      BASE_URL: https://pr-${{ github.event.pull_request.number }}-${{ vars.PANTHEON_SITE }}.pantheonsite.io
+      PANTHEON_TEST_UA: ${{ secrets.PANTHEON_TEST_UA }}
+      TEST_PATH: tests/accessibility
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Remove 'accessibility-tests-passed' label if present (will be re-added on success)
+        uses: actions/github-script@v7
+        with:
+          script: |
+            try {
+              await github.rest.issues.removeLabel({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                name: 'accessibility-tests-passed'
+              });
+            } catch (e) {
+              if (e.status !== 404) throw e;
+              // 404 means the label wasn't present — that's fine
+            }
+
+      - name: Wait for multidev HTTP endpoint to be ready
+        run: |
+          echo "Polling $BASE_URL..."
+          curl --fail --silent --show-error \
+            --retry 40 \
+            --retry-all-errors \
+            --retry-delay 30 \
+            --retry-max-time 1200 \
+            --connect-timeout 10 \
+            --max-time 30 \
+            --user-agent "$PANTHEON_TEST_UA" \
+            "$BASE_URL/" \
+            --output /dev/null
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '${{ env.TEST_PATH }}/.nvmrc'
+          cache: npm
+          cache-dependency-path: '${{ env.TEST_PATH }}/package-lock.json'
+
+      - name: Install accessibility test dependencies
+        working-directory: ${{ env.TEST_PATH }}
+        run: npm ci
+
+      - name: Install Chromium and system dependencies
+        working-directory: ${{ env.TEST_PATH }}
+        run: npx playwright install --with-deps chromium
+
+      - name: Run accessibility regression tests
+        working-directory: ${{ env.TEST_PATH }}
+        run: npm test
+
+      - name: Upload accessibility test report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: accessibility-report
+          path: |
+            ${{ env.TEST_PATH }}/playwright-report/
+            ${{ env.TEST_PATH }}/test-results/
+          retention-days: 30
+
+      - name: Add 'accessibility-tests-passed' label to PR
+        if: success()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              labels: ['accessibility-tests-passed']
+            });
+
+  # ---------------------------------------------------------------------------
   # Slack notification — always runs after deploy and tests so a single
   # post per PR reports the outcome of both.
   # ---------------------------------------------------------------------------
   notify:
-    needs: [deploy_multidev, run_cache_tests]
+    needs: [deploy_multidev, run_cache_tests, run_accessibility_tests]
     runs-on: ubuntu-latest
     if: always() && needs.deploy_multidev.result != 'skipped'
     steps:
@@ -282,6 +376,6 @@ jobs:
         uses: slackapi/slack-github-action@v1.24.0
         with:
           channel-id: '${{ vars.SLACK_CHANNEL }}'
-          slack-message: "@${{ github.actor }} PR #${{ github.event.pull_request.number }}: ${{ github.event.pull_request.html_url }}\nDeploy: ${{ needs.deploy_multidev.result }}\nCache tests: ${{ needs.run_cache_tests.result }}\nPantheon: https://pr-${{ github.event.pull_request.number }}-${{ vars.PANTHEON_SITE }}.pantheonsite.io"
+          slack-message: "@${{ github.actor }} PR #${{ github.event.pull_request.number }}: ${{ github.event.pull_request.html_url }}\nDeploy: ${{ needs.deploy_multidev.result }}\nCache tests: ${{ needs.run_cache_tests.result }}\nAccessibility tests: ${{ needs.run_accessibility_tests.result }}\nPantheon: https://pr-${{ github.event.pull_request.number }}-${{ vars.PANTHEON_SITE }}.pantheonsite.io"
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}

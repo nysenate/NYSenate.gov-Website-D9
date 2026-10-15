@@ -21,7 +21,7 @@
       <div class="c-featured-story-issue-tag">
         <ul>
         {% for tag in tags %}
-          <li><a class="c-story-link" href="{{ tag.url }}">{{ tag.text }}</a></li>{% if not loop.last %}, {% endif %}
+          <li><a class="c-story-link" href="{{ tag.url }}">{{ tag.text }}</a>{% if not loop.last %}, {% endif %}</li>
         {% endfor %}
         </ul>
       </div>

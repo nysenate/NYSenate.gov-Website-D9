@@ -5,6 +5,7 @@ namespace Drupal\nys_openleg\Form;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Markup;
 use Drupal\nys_openleg\StatuteHelper;
 
 /**
@@ -30,9 +31,13 @@ class SearchForm extends FormBase {
     $search_term = (string) ($form_state->getBuildInfo()['args'][0] ?? '');
 
     return [
-      'title' => ['#markup' => '<h3 tabindex="0" class="search-title">Search OpenLegislation Statutes</h3>'],
+      'title' => ['#markup' => Markup::create('<h3 class="search-title-heading"><button id="openleg-search-toggle" type="button" class="search-title" aria-controls="edit-search-form-container" aria-expanded="false">Search OpenLegislation Statutes</button></h3>')],
       'search_form_container' => [
         '#type' => 'container',
+        '#attributes' => [
+          'id' => 'edit-search-form-container',
+          'aria-labelledby' => 'openleg-search-toggle',
+        ],
         'search_term' => [
           '#type' => 'textfield',
           '#title' => 'Search Term',

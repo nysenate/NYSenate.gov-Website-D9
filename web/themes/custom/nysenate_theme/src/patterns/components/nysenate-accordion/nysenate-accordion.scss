@@ -127,7 +127,12 @@
   line-height: 26px;
   background-color: $color-white;
 
+  &[aria-hidden='true'] {
+    display: none;
+  }
+
   .open & {
+    display: block;
     max-height: 9999vh;
     border-bottom: 1px solid #b0b0b0;
 

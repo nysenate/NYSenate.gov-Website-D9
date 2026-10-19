@@ -11,8 +11,11 @@ The suite is designed to exercise the full cache stack on both local and Pantheo
 ## What these tests ensure
 
 **Anonymous page cache** (`AnonymousCacheHitTest`)
-- All 6 top-level navigation pages return a CDN cache HIT (`cf-cache-status: HIT` on Cloudflare environments, `x-drupal-cache: HIT` on local) after the first request, and each declares `cache-control: max-age=86400, public`.
-- All 7 primary content type display pages (article, bill, event, in_the_news, meeting, public_hearing, resolution) return a cache HIT and declare a 24-hour `cache-control: max-age=86400, public` lifetime.
+- All 6 top-level navigation pages return a CDN cache HIT (`cf-cache-status: HIT` on Cloudflare environments, `x-drupal-cache: HIT` on local) after the first request, and each declares `cache-control: max-age=2592000, public`.
+- All 7 primary content type display pages (article, bill, event, in_the_news, meeting, public_hearing, resolution) return a cache HIT and declare a 30-day `cache-control: max-age=2592000, public` lifetime.
+- Successful OpenLeg browse responses retain their seven-day `max-age=604800`; temporary upstream errors use `max-age=300`. The existing `cache_control_override` subscriber lowers the HTTP lifetime from bubbled metadata. No separate `s-maxage` or browser/CDN split is introduced: both use the public `max-age`, subject to platform rules. Dependencies may lower these ceilings. Tags, normal deployment invalidation, purges and eviction still apply.
+
+Never run mutation-based DTT tests against production.
 
 **Anonymous cache non-invalidation** (`AnonymousCacheNonInvalidationTest`) — **local DDEV only, excluded from Pantheon CI; see below**
 - All saves use `saveEntity()` so Cloudflare BANs are genuinely dispatched before the HIT assertions run — the tests verify that the BAN was correctly scoped, not merely that no BAN occurred.
@@ -50,6 +53,12 @@ The suite is designed to exercise the full cache stack on both local and Pantheo
 **Cache poisoning prevention** (`NoCachePoisoningTest`)
 - Per-user lazy builder output — issue follow/unfollow state, committee follow/unfollow state, the header user menu welcome message, and the district senator link in the "I Want To" block — is personalized correctly per user and never leaked across users via the shared dynamic cache skeleton.
 - An authenticated visit does not cause authenticated content to be served to anonymous visitors.
+
+## Detail pagination redirects
+
+The `senator_microsite_content:article_footer` display uses a bounded four-item selection without paging; its newsroom link is unchanged. Article, in-the-news, event and honoree full templates share this footer.
+
+The `nys_senators` redirect subscriber runs at request priority 31, after access-aware routing (32) and before Redirect's route normalizer (30). Anonymous GET/HEAD canonical node requests for those four bundles with any `page` value receive a cacheable local 301 when the footer pager is retired. Entity paths go directly to the canonical alias. Other query parameters survive except `destination`, which is dropped to prevent redirect-target overrides. Listings, search, other bundles, denied access, authenticated users and unsafe methods are excluded.
 
 ## Running in CI (Pantheon multidev)
 

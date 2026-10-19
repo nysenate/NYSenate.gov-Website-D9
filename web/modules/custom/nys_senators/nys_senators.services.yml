@@ -1,4 +1,9 @@
 services:
+  nys_senators.detail_pagination_redirect:
+    class: Drupal\nys_senators\EventSubscriber\DetailPaginationRedirectSubscriber
+    arguments: ['@current_user', '@config.factory']
+    tags:
+      - { name: event_subscriber }
   nys_senators.senators_helper:
     class: Drupal\nys_senators\SenatorsHelper
     arguments:

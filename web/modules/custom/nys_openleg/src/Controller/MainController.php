@@ -200,7 +200,7 @@ class MainController extends ControllerBase {
             // API disruption rather than a permanently missing law/statute;
             // a 5-minute cache is enough to absorb bot traffic without
             // locking in a stale error page for a week if OL recovers quickly.
-            'max_age' => 300,
+            'max-age' => 300,
             'tags' => ['nys_openleg:laws'],
           ],
         ];
@@ -263,7 +263,7 @@ class MainController extends ControllerBase {
     // Cache for 7 days, keyed by the nys_openleg:laws tag so that the admin
     // flush button and any future automated purge can invalidate all OL pages.
     $ret['#cache'] = [
-      'max_age' => 604800,
+      'max-age' => 604800,
       'tags' => ['nys_openleg:laws'],
     ];
 

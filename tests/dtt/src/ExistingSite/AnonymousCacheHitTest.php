@@ -6,7 +6,7 @@ namespace Drupal\Tests\nys\ExistingSite;
  * Verifies that anonymous page cache HITs are served correctly.
  *
  * All six top-level pages and all seven primary content type display pages
- * must return a cache HIT and declare cache-control: max-age=604800, public
+ * must return a cache HIT and declare cache-control: max-age=2592000, public
  * on the second anonymous request.
  *
  * Open Legislation browse pages (top-level, by-type, and by-statute) are also
@@ -25,8 +25,7 @@ class AnonymousCacheHitTest extends CacheTestBase {
   // ---------------------------------------------------------------------------
 
   /**
-   * All six top-level pages return a cache HIT and declare a 7-day public
-   * cache lifetime on the second anonymous request.
+   * Top-level pages return cache HITs with a 30-day public lifetime.
    *
    * The max-age assertion is folded in here rather than standing
    * alone because both properties are observable in the same warm GET request.
@@ -37,12 +36,11 @@ class AnonymousCacheHitTest extends CacheTestBase {
     $this->warmCache($path);
     // Use the combined method to fold the HIT and max-age checks into a single
     // request, reducing per-page traffic and avoiding CF rate-limit bursts.
-    $this->assertAnonymousCacheHitWithMaxAge($path, 604800);
+    $this->assertAnonymousCacheHitWithMaxAge($path, 2592000);
   }
 
   /**
-   * All seven content type display pages return a cache HIT and declare a
-   * 7-day public cache lifetime on the second anonymous request.
+   * Content display pages return cache HITs with a 30-day public lifetime.
    *
    * The max-age assertion is folded in here because both
    * properties are observable in the same warm GET request.
@@ -52,7 +50,7 @@ class AnonymousCacheHitTest extends CacheTestBase {
   public function testContentTypeDisplayPageCacheHit(string $type): void {
     $path = $this->requireNodeUrlByType($type);
     $this->warmCache($path);
-    $this->assertAnonymousCacheHitWithMaxAge($path, 604800);
+    $this->assertAnonymousCacheHitWithMaxAge($path, 2592000);
   }
 
   // ---------------------------------------------------------------------------
@@ -76,8 +74,7 @@ class AnonymousCacheHitTest extends CacheTestBase {
   }
 
   /**
-   * Open Legislation browse pages return a cache HIT with a 7-day public
-   * cache lifetime on the second anonymous request.
+   * OpenLeg browse pages return cache HITs with a seven-day public lifetime.
    *
    * @dataProvider openLegBrowsePageProvider
    */

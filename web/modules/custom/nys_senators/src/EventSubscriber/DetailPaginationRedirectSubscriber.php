@@ -7,9 +7,13 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Routing\LocalRedirectResponse;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\node\NodeInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Routing\Exception\InvalidParameterException;
+use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 /**
  * Retires detail pagination after routing and access checks, before rendering.
@@ -22,6 +26,7 @@ final class DetailPaginationRedirectSubscriber implements EventSubscriberInterfa
   public function __construct(
     protected AccountProxyInterface $currentUser,
     protected ConfigFactoryInterface $configFactory,
+    protected LoggerInterface $logger,
   ) {}
 
   /**
@@ -55,7 +60,16 @@ final class DetailPaginationRedirectSubscriber implements EventSubscriberInterfa
     // Keep unrelated queries on the canonical URL, without target overrides.
     $query = $request->query->all();
     unset($query['page'], $query['destination']);
-    $url = $node->toUrl('canonical', ['query' => $query, 'absolute' => FALSE])->toString(TRUE);
+    try {
+      $url = $node->toUrl('canonical', ['query' => $query, 'absolute' => FALSE])->toString(TRUE);
+    }
+    catch (InvalidParameterException | MissingMandatoryParametersException | RouteNotFoundException $exception) {
+      $this->logger->error('Unable to generate a canonical URL for node @nid: @message', [
+        '@nid' => $node->id(),
+        '@message' => $exception->getMessage(),
+      ]);
+      return;
+    }
 
     // Track dependencies and URL variation so cached redirects stay valid.
     $performance = $this->configFactory->get('system.performance');

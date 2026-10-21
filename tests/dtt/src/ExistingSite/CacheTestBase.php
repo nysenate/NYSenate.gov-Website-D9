@@ -614,15 +614,15 @@ abstract class CacheTestBase extends ExistingSiteBase {
   /**
    * Asserts cache-control max-age header on an anonymous request.
    *
-   * @deprecated Use assertAnonymousCacheHitWithMaxAge() to combine the HIT and
-   *   max-age assertions in a single request and avoid unnecessary round-trips.
+   * @deprecated Use assertAnonymousCacheHitWithCacheControl() to combine the
+   *   HIT and max-age assertions in a single request.
    */
-  protected function assertCacheControlMaxAge(string $path, int $expectedMaxAge = 86400): void {
+  protected function assertCacheControlMaxAge(string $path, int $expectedMaxAge = 300): void {
     $response = $this->anonClient->get($path);
     $cacheControl = $response->getHeaderLine('cache-control');
-    $this->assertStringContainsString(
-      "max-age={$expectedMaxAge}",
-      $cacheControl,
+    $this->assertSame(
+      $expectedMaxAge,
+      $this->cacheControlDirectiveValue($cacheControl, 'max-age'),
       "Expected cache-control: max-age={$expectedMaxAge} for {$path}, got: {$cacheControl}"
     );
     $this->assertStringContainsString(
@@ -643,7 +643,13 @@ abstract class CacheTestBase extends ExistingSiteBase {
    * Retries up to 5 times on 429 Too Many Requests, sleeping at least 90 s
    * each time — see assertAnonymousCacheHit() for the sliding-window rationale.
    */
-  protected function assertAnonymousCacheHitWithMaxAge(string $path, int $expectedMaxAge = 86400): void {
+  protected function assertAnonymousCacheHitWithCacheControl(
+    string $path,
+    int $maximumBrowserMaxAge,
+    int $maximumSharedMaxAge,
+    ?int $expectedBrowserMaxAge = NULL,
+    ?int $expectedSharedMaxAge = NULL,
+  ): void {
     for ($attempt = 0; $attempt < 5; $attempt++) {
       try {
         $response = $this->anonGet($path);
@@ -651,16 +657,34 @@ abstract class CacheTestBase extends ExistingSiteBase {
         $this->assertSame('HIT', $status,
           "Expected cache HIT on anonymous request to {$path}, got: {$status}");
         $cacheControl = $response->getHeaderLine('cache-control');
-        $this->assertStringContainsString(
-          "max-age={$expectedMaxAge}",
-          $cacheControl,
-          "Expected cache-control: max-age={$expectedMaxAge} for {$path}, got: {$cacheControl}"
-        );
+        $browserMaxAge = $this->cacheControlDirectiveValue($cacheControl, 'max-age');
+        $sharedMaxAge = $this->cacheControlDirectiveValue($cacheControl, 's-maxage');
+        $this->assertNotNull($browserMaxAge,
+          "Expected a numeric max-age for {$path}, got: {$cacheControl}");
+        $this->assertNotNull($sharedMaxAge,
+          "Expected a numeric s-maxage for {$path}, got: {$cacheControl}");
+        $this->assertLessThanOrEqual($maximumBrowserMaxAge, $browserMaxAge,
+          "Expected max-age no greater than {$maximumBrowserMaxAge} for {$path}, got: {$cacheControl}");
+        $this->assertLessThanOrEqual($maximumSharedMaxAge, $sharedMaxAge,
+          "Expected s-maxage no greater than {$maximumSharedMaxAge} for {$path}, got: {$cacheControl}");
+        if ($expectedBrowserMaxAge !== NULL) {
+          $this->assertSame($expectedBrowserMaxAge, $browserMaxAge,
+            "Expected max-age={$expectedBrowserMaxAge} for {$path}, got: {$cacheControl}");
+        }
+        if ($expectedSharedMaxAge !== NULL) {
+          $this->assertSame($expectedSharedMaxAge, $sharedMaxAge,
+            "Expected s-maxage={$expectedSharedMaxAge} for {$path}, got: {$cacheControl}");
+        }
         $this->assertStringContainsString(
           'public',
           $cacheControl,
           "Expected cache-control to include 'public' for {$path}, got: {$cacheControl}"
         );
+        $age = $response->getHeaderLine('Age');
+        if ($age !== '') {
+          $this->assertMatchesRegularExpression('/^\d+$/', trim($age),
+            "Expected a numeric Age header when present for {$path}, got: {$age}");
+        }
         return;
       }
       catch (ClientException $e) {
@@ -672,6 +696,20 @@ abstract class CacheTestBase extends ExistingSiteBase {
         throw $e;
       }
     }
+  }
+
+  /**
+   * Reads an integer Cache-Control directive value from a response header.
+   */
+  protected function cacheControlDirectiveValue(string $cacheControl, string $name): ?int {
+    foreach (explode(',', $cacheControl) as $directive) {
+      $parts = array_pad(explode('=', trim($directive), 2), 2, NULL);
+      if (strcasecmp($parts[0], $name) === 0 && $parts[1] !== NULL) {
+        $value = trim($parts[1], " \t\n\r\0\x0B\"");
+        return ctype_digit($value) ? (int) $value : NULL;
+      }
+    }
+    return NULL;
   }
 
   /**
@@ -740,6 +778,7 @@ abstract class CacheTestBase extends ExistingSiteBase {
       $this->visit($path);
       $header = strtoupper(trim($this->getSession()->getResponseHeader('x-drupal-dynamic-cache') ?? ''));
       if ($header === 'HIT') {
+        $this->assertAuthenticatedResponseNotShared();
         return;
       }
       if ($attempt < 4) {
@@ -758,6 +797,16 @@ abstract class CacheTestBase extends ExistingSiteBase {
     $header = strtoupper(trim($this->getSession()->getResponseHeader('x-drupal-dynamic-cache') ?? ''));
     $this->assertSame('MISS', $header,
       "Expected x-drupal-dynamic-cache: MISS on {$path}, got: {$header}");
+    $this->assertAuthenticatedResponseNotShared();
+  }
+
+  /**
+   * Ensures authenticated responses are not made publicly shareable.
+   */
+  private function assertAuthenticatedResponseNotShared(): void {
+    $cacheControl = strtolower((string) $this->getSession()->getResponseHeader('Cache-Control'));
+    $this->assertStringNotContainsString('public', $cacheControl);
+    $this->assertNull($this->cacheControlDirectiveValue($cacheControl, 's-maxage'));
   }
 
   // ---------------------------------------------------------------------------

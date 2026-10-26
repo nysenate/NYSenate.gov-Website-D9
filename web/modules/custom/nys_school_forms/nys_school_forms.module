@@ -44,21 +44,6 @@ function nys_school_forms_theme(): array {
 }
 
 /**
- * Implements hook_ENTITY_TYPE_access() for webform submission entity.
- *
- * Provides access control for the webform submission entity.
- */
-function nys_school_forms_webform_submission_access(WebformSubmissionInterface $webform_submission, $op, $account): AccessResult {
-  // Check if the user is anonymous.
-  if ($account->isAnonymous()) {
-    return AccessResult::forbidden();
-  }
-
-  // Allow authenticated users to access the webform submission.
-  return AccessResult::allowed();
-}
-
-/**
  * Implements hook_form_FORM_ID_alter.
  */
 function nys_school_forms_form_node_student_submission_container_form_alter(&$form, FormStateInterface $form_state, $form_id): void {

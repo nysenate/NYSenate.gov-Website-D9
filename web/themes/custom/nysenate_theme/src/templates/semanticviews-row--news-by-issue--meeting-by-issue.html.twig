@@ -32,7 +32,7 @@
   <div class="event-details">
       <h3 class="c-event-name">{{ fields.title.content }}</h3>
     <a class="c-event-location" href="{{ location.link }}" target="_blank">
-      <span class="icon-before__circle-pin"></span>
+      <span class="icon-before__circle-pin" aria-hidden="true"></span><span class="visually-hidden">Event location: </span>
       <span>{{ location.name }}</span>
     </a>
   </div>

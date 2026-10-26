@@ -15,15 +15,9 @@
  * @see template_preprocess_details()
  */
 #}
-<div{{ attributes }}>
+<div{{ attributes.without('required', 'aria-required', 'open') }}>
   {%- if title -%}
-    {%
-      set summary_classes = [
-        required ? 'js-form-required',
-        required ? 'form-required',
-      ]
-    %}
-    <summary{{ summary_attributes.addClass(summary_classes) }}>{{ title }}</summary>
+    <div class="details-title{% if required %} js-form-required form-required{% endif %}">{{ title }}</div>
   {%- endif -%}
   <div class="details-wrapper">
     {% if errors %}

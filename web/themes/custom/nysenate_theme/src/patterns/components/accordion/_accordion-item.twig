@@ -1,13 +1,13 @@
 {% import '@rain_theme/icons/_icons-macro.twig' as icons %}
 
 <article class="accordion">
-  <button type="button" class="accordion__toggle" aria-controls="accordion__content-{{ item.accordion_instance }}" aria-expanded="false" id="accordion__toggle-{{ item.accordion_instance }}" aria-selected="false">
+  <button type="button" class="accordion__toggle" aria-controls="accordion__content-{{ item.accordion_instance }}" aria-expanded="false" id="accordion__toggle-{{ item.accordion_instance }}">
     <span class="accordion__heading">
       {{ item.heading }}
     </span>
     {{ icons.get('accordion__arrow'|lower) }}
   </button>
-  <div class="accordion__content" id="accordion__content-{{ item.accordion_instance }}" aria-hidden="true" aria-labelledby="accordion__content-{{ item.accordion_instance }}">
+  <div class="accordion__content" id="accordion__content-{{ item.accordion_instance }}" aria-hidden="true" aria-labelledby="accordion__toggle-{{ item.accordion_instance }}">
     {% block accordion_content %}
       {{ item.content }}
     {% endblock %}

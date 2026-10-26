@@ -932,8 +932,11 @@ p.c-hero--welcome {
       svg path {
         fill: #000;
       }
+      // Note: this element's `filter: invert()` flips rendered colors, so a
+      // #fff fill here would render as black (near-invisible against the
+      // dark background) on hover. Keep it #000 so hover stays white.
       &:hover svg path {
-        fill: #fff;
+        fill: #000;
       }
 
       &::after {

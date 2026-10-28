@@ -363,13 +363,16 @@
       // Screen readers: only announce on an actual filter change, not on
       // initial page load. 'drupalViewsProcessed' is not a real Drupal/Views
       // event (it never fires), so jQuery's ajaxComplete, filtered to the
-      // Views AJAX endpoint, is the real completion signal.
+      // Views AJAX endpoint, is the real completion signal. It fires after
+      // behaviors have already rebuilt the summary above (and removed
+      // `.rows-message`), so announce that text rather than rebuilding it —
+      // a second rebuild would no longer find the real count.
       $(document).off('ajaxComplete.befLiveRegion').on('ajaxComplete.befLiveRegion', function (event, xhr, ajaxSettings) {
         if (!ajaxSettings.url || ajaxSettings.url.indexOf('/views/ajax') === -1) {
           return;
         }
         $(exposedFormSelector).each(function () {
-          const message = updateVisibleSummary(this);
+          const message = $(this).closest('.block-views').find('.active-filters-summary').first().text().trim();
           if (message) {
             Drupal.announce(message);
           }

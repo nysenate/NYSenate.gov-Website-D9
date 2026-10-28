@@ -1,0 +1,6 @@
+services:
+  nys_openleg.cache_control_subscriber:
+    class: Drupal\nys_openleg\EventSubscriber\OpenLegCacheControlSubscriber
+    arguments: ['@config.factory']
+    tags:
+      - { name: event_subscriber }

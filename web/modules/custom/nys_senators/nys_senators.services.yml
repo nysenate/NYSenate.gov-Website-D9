@@ -1,4 +1,12 @@
 services:
+  logger.channel.nys_senators:
+    parent: logger.channel_base
+    arguments: ['nys_senators']
+  nys_senators.detail_pagination_redirect:
+    class: Drupal\nys_senators\EventSubscriber\DetailPaginationRedirectSubscriber
+    arguments: ['@current_user', '@config.factory', '@logger.channel.nys_senators']
+    tags:
+      - { name: event_subscriber }
   nys_senators.senators_helper:
     class: Drupal\nys_senators\SenatorsHelper
     arguments:

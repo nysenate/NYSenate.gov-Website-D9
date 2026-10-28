@@ -29,12 +29,12 @@
 # real gap between what CI verifies and what the local suite verifies.
 #
 # CHUNK SIZING (current suite)
-# The suite runs ~51 test cases across 9 chunks.
+# The suite runs ~62 test cases across 9 chunks.
 # AnonymousCacheHitTest is split into two chunks for historical reasons (the split
 # predates the New Relic diagnosis). It can be recombined without issue.
 #   Chunk 1: testAnonymousCacheHit — 6 cases (top-level pages only).
 #   Chunk 2: testContentTypeDisplayPageCacheHit|testOpenLegBrowsePageCacheHit
-#            — 7 + 3 = 10 cases.
+#            plus timed Views, OpenLeg short-TTL, searches, login, and 404 — 21 cases.
 # AnonymousCacheNonInvalidationTest is split into two chunks to keep each SSH
 # session under Pantheon's 10-minute idle timeout on slower environments (dev).
 # Both chunks are marked `ci: false`: on Pantheon multidev, Cloudflare's BAN
@@ -74,8 +74,8 @@ chunks:
   - label: "AnonymousCacheHitTest (top-level pages)"
     filter: "AnonymousCacheHitTest::testAnonymousCacheHit"
 
-  - label: "AnonymousCacheHitTest (content type display pages + OpenLeg browse)"
-    filter: "AnonymousCacheHitTest::(testContentTypeDisplayPageCacheHit|testOpenLegBrowsePageCacheHit)"
+  - label: "AnonymousCacheHitTest (content pages + OpenLeg cache policies)"
+    filter: "AnonymousCacheHitTest::(testContentTypeDisplayPageCacheHit|testTimedViewPageUsesGlobalSharedLifetime|testIssuePageCacheHitWithFindSenatorLink|testOpenLegBrowsePageCacheHit|testOpenLegShortLifetimePageCacheHit|testSearchRemainsUncacheable|testLoginFormRemainsPrivate|testNotFoundResponseDoesNotGetSharedTtl)"
 
   - label: "AnonymousCacheNonInvalidationTest (article + bill)"
     filter: "AnonymousCacheNonInvalidationTest::(testArticleEditDoesNotInvalidateUnrelatedPages|testBillEditDoesNotInvalidateUnrelatedPages)"

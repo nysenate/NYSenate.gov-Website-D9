@@ -61,7 +61,6 @@
                 title: contact_your_senator.title,
                 link: contact_your_senator.link,
                 senator_image: contact_your_senator.senator_image,
-                with_modal: TRUE,
               } only %}
             {% endif %}
           </div>
@@ -140,13 +139,4 @@
     </div>
   </div>
 
-  {% if login_block %}
-    <div class="user-login-modal">
-      <div class="content">
-        <span class="close">&times;</span>
-        {{ login_block }}
-      </div>
-    </div>
-  {% endif %}
 </div>
-

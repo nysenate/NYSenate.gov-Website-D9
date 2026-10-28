@@ -3280,22 +3280,10 @@ function nysenate_theme_preprocess_taxonomy_term__issues(&$variables) {
     }
   }
   else {
-    $current_path = \Drupal::service('path.current')->getPath();
-    $path_alias = \Drupal::service('path_alias.manager')->getAliasByPath($current_path);
-    if (!$path_alias) {
-      throw new NotFoundHttpException();
-    }
-    $params = [
-      'destination' => $path_alias,
+    $link = [
+      'url' => '/find-my-senator',
+      'text' => t('Find your Senator'),
     ];
-    $link = Link::fromTextAndUrl(
-      t('Find your Senator'),
-      Url::fromUserInput('/user/login', ['query' => $params])
-    );
-
-    $block_manager = \Drupal::service('plugin.manager.block');
-    $plugin_block = $block_manager->createInstance('nys_block_user_login_form_block');
-    $variables['login_block'] = $plugin_block->build();
   }
 
   $variables['contact_your_senator'] = [

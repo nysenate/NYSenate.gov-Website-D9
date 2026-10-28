@@ -1,6 +1,6 @@
 # Cache Regression Tests (DTT)
 
-Automated cache regression tests for NYSenate.gov, built on [Drupal Test Traits](https://gitlab.com/weitzman/drupal-test-traits) (DTT) `ExistingSiteBase`. Unlike `BrowserTestBase` — which installs a fresh Drupal database and uses an internal test client — DTT's `ExistingSiteBase` makes real HTTP requests to an already-running site. This means responses pass through the actual cache infrastructure (Redis, Cloudflare) and carry real cache headers (`x-drupal-cache`, `x-drupal-dynamic-cache`, `cache-control`, `cf-cache-status`) that reflect production behavior.
+Automated cache regression tests for NYSenate.gov, built on [Drupal Test Traits](https://gitlab.com/weitzman/drupal-test-traits) (DTT) `ExistingSiteBase`. Unlike `BrowserTestBase` — which installs a fresh Drupal database and uses an internal test client — DTT's `ExistingSiteBase` makes real HTTP requests to an already-running site. This means responses pass through the actual cache infrastructure (Redis, Cloudflare) and carry real cache headers (`x-drupal-cache`, `x-drupal-dynamic-cache`, `cache-control`, `cf-cache-status`, and `Age` when available) that reflect production behavior.
 
 The suite is designed to exercise the full cache stack on both local and Pantheon environments:
 - **DDEV / VM:** Redis is the page cache backend. `x-drupal-cache` is the authoritative cache status header.
@@ -11,8 +11,16 @@ The suite is designed to exercise the full cache stack on both local and Pantheo
 ## What these tests ensure
 
 **Anonymous page cache** (`AnonymousCacheHitTest`)
-- All 6 top-level navigation pages return a CDN cache HIT (`cf-cache-status: HIT` on Cloudflare environments, `x-drupal-cache: HIT` on local) after the first request, and each declares `cache-control: max-age=86400, public`.
-- All 7 primary content type display pages (article, bill, event, in_the_news, meeting, public_hearing, resolution) return a cache HIT and declare a 24-hour `cache-control: max-age=86400, public` lifetime.
+- All 6 top-level navigation pages return a CDN cache HIT (`cf-cache-status: HIT` on Cloudflare environments, `x-drupal-cache: HIT` on local) after the first request, with browser `max-age=300` and shared `s-maxage=2592000`.
+- All 7 primary content type display pages (article, bill, event, in_the_news, meeting, public_hearing, resolution) return a cache HIT with the same browser/shared lifetimes.
+- Committee and issue taxonomy pages embedding time-cached Views use the global shared lifetime, rather than their shorter positive render-cache lifetimes. Anonymous issue pages link to `/find-my-senator` without an embedded login form or modal; repeated responses verify the link and public cache HIT behavior.
+- The Follow Issue flag's contextual-menu shortcut (used by admins) is disabled because Flag forces entity max-age to zero when it is enabled. Follow/Unfollow buttons remain available through the existing lazy builders in issue cards and the action bar.
+- Successful OpenLeg browse responses retain a shared lifetime no greater than their seven-day `604800` render-cache metadata or the global shared setting. Short-lived OpenLeg error output retains its 300-second lifetime in both caches. The OpenLeg subscriber runs after core/cache_control_override and before http_cache_control, which preserves an existing `s-maxage`.
+- `cache_control_override` remains enabled with minimum 0 and maximum 300: zero metadata denies page caching, and positive finite metadata can shorten browser freshness. Outside OpenLeg, positive metadata does not constrain the global shared lifetime. Render metadata bubbling itself is unchanged.
+- Login, search, zero-lifetime, and authenticated responses remain protected. The shared setting for 404s is disabled; this does not independently disable their browser caching. Private, no-cache, and no-store policies remain owned by the existing cache stack, not a custom header-repair subscriber. Cache tags, normal deployment invalidation, purges and eviction continue to apply independently of these TTL ceilings.
+- Global, legislation, and OpenLeg search routes explicitly disable caching. Repeated-request checks cover empty search forms, populated results, and transcript queries without a subtype, asserting noncacheable headers and no CDN HIT.
+
+Never run mutation-based DTT tests against production.
 
 **Anonymous cache non-invalidation** (`AnonymousCacheNonInvalidationTest`) — **local DDEV only, excluded from Pantheon CI; see below**
 - All saves use `saveEntity()` so Cloudflare BANs are genuinely dispatched before the HIT assertions run — the tests verify that the BAN was correctly scoped, not merely that no BAN occurred.
@@ -43,6 +51,7 @@ The suite is designed to exercise the full cache stack on both local and Pantheo
 
 **Authenticated dynamic page cache** (`AuthenticatedDynamicCacheTest`)
 - All assertions use the cross-user pattern: User A warms the dynamic cache skeleton; User B's first visit must return `x-drupal-dynamic-cache: HIT`. This is the correct regression pattern — a per-user cache bug (missing `#create_placeholder => TRUE` on a lazy builder) would cause same-user repeat-visit tests to pass while cross-user tests fail.
+- Authenticated response headers must not contain `public` or a positive shared `s-maxage`.
 - Verified on two representative top-level pages (/ and /legislation), two representative content type display pages (bill and article), and one senator-microsite content type page (article with `field_senator_multiref`).
 - Any direct entity save on a user account (even with no field changes) busts that user's warmed entries via the `user:{uid}` cache tag.
 - The dynamic page cache bin is cleared in `setUp()` to guarantee a cold-cache starting state for every test run.
@@ -50,6 +59,12 @@ The suite is designed to exercise the full cache stack on both local and Pantheo
 **Cache poisoning prevention** (`NoCachePoisoningTest`)
 - Per-user lazy builder output — issue follow/unfollow state, committee follow/unfollow state, the header user menu welcome message, and the district senator link in the "I Want To" block — is personalized correctly per user and never leaked across users via the shared dynamic cache skeleton.
 - An authenticated visit does not cause authenticated content to be served to anonymous visitors.
+
+## Detail pagination redirects
+
+The `senator_microsite_content:article_footer` display uses a bounded four-item selection without paging; its newsroom link is unchanged. Article, in-the-news, event and honoree full templates share this footer.
+
+The `nys_senators` redirect subscriber runs at request priority 31, after access-aware routing (32) and before Redirect's route normalizer (30). Anonymous GET/HEAD canonical node requests for those four bundles with any `page` value receive a cacheable local 301 when the footer pager is retired. Entity paths go directly to the canonical alias. Other query parameters survive except `destination`, which is dropped to prevent redirect-target overrides. Listings, search, other bundles, denied access, authenticated users and unsafe methods are excluded.
 
 ## Running in CI (Pantheon multidev)
 

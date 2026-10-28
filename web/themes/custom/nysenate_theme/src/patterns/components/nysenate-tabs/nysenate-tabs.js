@@ -275,11 +275,17 @@
    * Shows "count + applied filter labels" beneath BEF exposed filter bars,
    * and announces the same to screen readers on Views AJAX updates.
    *
+   * Opt-in per view display: add `js-exposed-results-header` under the
+   * display's Advanced > CSS class in the Views UI. Views without that class
+   * are left untouched.
+   *
    * Uses Drupal core's Drupal.announce() (core/misc/announce.js) rather than
    * a bespoke live region, since core already provides and manages one.
    */
   Drupal.behaviors.befLiveRegion = {
     attach: function (context) {
+      const exposedFormSelector = '.block-views .js-exposed-results-header .views-exposed-form';
+
       // Build "Label: selected value" pairs, using each field's associated
       // <label> text and (for selects) the chosen OPTION TEXT rather than
       // its value attribute, which is often an opaque target ID.
@@ -350,7 +356,7 @@
       // Show the summary on initial load and after every Views AJAX refresh
       // (Drupal re-attaches behaviors to the replaced exposed form either
       // way, so a single `once()` here covers both cases).
-      once('active-filters-summary', '.block-views .views-exposed-form', context).forEach(function (form) {
+      once('active-filters-summary', exposedFormSelector, context).forEach(function (form) {
         updateVisibleSummary(form);
       });
 
@@ -362,7 +368,7 @@
         if (!ajaxSettings.url || ajaxSettings.url.indexOf('/views/ajax') === -1) {
           return;
         }
-        $('.block-views .views-exposed-form').each(function () {
+        $(exposedFormSelector).each(function () {
           const message = updateVisibleSummary(this);
           if (message) {
             Drupal.announce(message);

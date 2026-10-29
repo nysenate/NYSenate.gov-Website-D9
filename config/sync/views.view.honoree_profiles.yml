@@ -781,6 +781,7 @@ display:
         type: fields
       defaults:
         title: false
+        css_class: false
         use_ajax: false
         pager: false
         link_display: false
@@ -791,6 +792,7 @@ display:
         filters: false
         filter_groups: false
         header: false
+      css_class: js-exposed-results-header
       use_ajax: true
       display_description: ''
       link_display: custom_url
@@ -1355,6 +1357,7 @@ display:
         type: fields
       defaults:
         title: false
+        css_class: false
         use_ajax: false
         pager: false
         link_display: false
@@ -1366,6 +1369,7 @@ display:
         filters: false
         filter_groups: false
         header: false
+      css_class: js-exposed-results-header
       use_ajax: true
       display_description: ''
       link_display: custom_url
@@ -1382,6 +1386,16 @@ display:
           empty: false
           content: '<h2>Women of Distinction Honorees</h2>'
           tokenize: false
+        result:
+          id: result
+          table: views
+          field: result
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: result
+          empty: false
+          content: '<div class="rows-message">Showing @start - @end of @total results.</div>'
       display_extenders: {  }
       block_description: 'All Women List'
     cache_metadata:

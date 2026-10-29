@@ -278,6 +278,30 @@
 
     @include breakpoint($bp-sm) {
       flex-direction: unset;
+      // Bottom-align so Apply sits level with the filter boxes (labels sit
+      // above the boxes, not above the button).
+      align-items: flex-end;
+
+      // BEF only renders Reset once a filter is active. It's positioned
+      // out of flow below Apply (so the row height, and with it the
+      // bottom-anchored select arrow, never changes). When it's there, lift
+      // the Apply/Reset pair by half of Reset's height (45px + 8px gap) so
+      // the pair is centered on the filter boxes, and reserve room for the
+      // half that still hangs below the row.
+      &:has(.form-actions > :nth-child(2)) {
+        margin-bottom: 27px;
+
+        .form-actions {
+          transform: translateY(-26.5px);
+        }
+      }
+
+      .form-actions > :nth-child(2) {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        margin-top: 8px;
+      }
     }
 
     .form-item {
@@ -291,6 +315,13 @@
     .form-item-name,
     .form-item-search {
       flex: 2;
+    }
+
+    // Keep Apply's column a fixed width so Reset showing up doesn't
+    // squeeze the filters; Reset hangs below it (see breakpoint above).
+    .form-actions {
+      position: relative;
+      flex: 0 0 auto;
     }
   }
 }

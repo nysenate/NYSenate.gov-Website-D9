@@ -1,6 +1,7 @@
 {{ attach_library('nysenate_theme/article-page') }}
 {{ attach_library('nysenate_theme/file-uploads') }}
 {{ attach_library('nysenate_theme/session') }}
+{{ attach_library('nysenate_theme/issues') }}
 
 {%
     set classes = [
@@ -13,7 +14,6 @@
 
 <article {{ attributes.addClass(classes) }}>
   {{ title_prefix }}
-
   {% if page %}
     <header class="c-news--head">
       <h1 class="nys-article-title">{{ title }}</h1>
@@ -32,6 +32,7 @@
             <span class="date-display-single">{{ content.field_date[0]['#markup'] }}</span>
           </p>
         {% endif %}
+          {#
         {% if issues or majority_issue %}
           <ul class="nys-associated-topics">
             ISSUE:
@@ -45,6 +46,28 @@
             {% endif %}
           </ul>
         {% endif %}
+
+          {% if content.field_issues or content.field_majority_issue_tag %}
+              <ul class="nys-associated-topics">
+                  ISSUE:
+                  {% if content.field_majority_issue %}
+                      <li>{{ content.field_majority_issue_tag }}</li>
+                  {% endif %}
+                  {% if content.field_issues %}
+                      {% for key, item in content.field_issues %}
+                          {% if key|first != '#' %}
+                              <li>{{ item }}</li>
+                          {% endif %}
+                      {% endfor %}
+                  {% endif %}
+              </ul>
+          {% endif %}
+          #}
+
+          {% include '@nysenate_theme/issues/issues.twig' with {
+              majority_issue: content.field_majority_issue_tag.0,
+              issues: content.field_issues,
+          } only %}
 
         {% if content.field_committee.0 %}
           <ul class="nys-associated-topics">

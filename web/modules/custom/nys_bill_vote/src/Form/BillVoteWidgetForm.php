@@ -5,6 +5,7 @@ namespace Drupal\nys_bill_vote\Form;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\BeforeCommand;
 use Drupal\Core\Ajax\InvokeCommand;
+use Drupal\Core\Ajax\PrependCommand;
 use Drupal\Core\Ajax\RedirectCommand;
 use Drupal\Core\Ajax\RemoveCommand;
 use Drupal\Core\Form\FormBase;
@@ -12,6 +13,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\nys_bills\BillsHelper;
 use Drupal\nys_subscriptions\SubscriptionInterface;
+use Drupal\node\NodeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -101,7 +103,16 @@ class BillVoteWidgetForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, $parameter = []) {
+  public function buildForm(array $form, FormStateInterface $form_state, $parameter = [], ?NodeInterface $bill_node = NULL) {
+    if ($bill_node) {
+      $parameter = [
+        'entity_type' => 'bill',
+        'entity_id' => $bill_node->id(),
+        'is_embed' => FALSE,
+        'simple_mode' => FALSE,
+      ];
+      $form_state->addBuildInfo('args', [$parameter]);
+    }
     // In this special case, just leave.
     // @todo This method comes from nys_utils.
     // @todo Uncomment the condition after testing.
@@ -133,6 +144,10 @@ class BillVoteWidgetForm extends FormBase {
     $form_state->addBuildInfo('is_embed', $parameter['is_embed'] ?? FALSE);
 
     $form['#id'] = 'nys-bill-vote-vote-widget-' . $node_id;
+    $form['#method'] = 'post';
+    // Process submissions once, rather than during page placeholder rendering.
+    $form['#action'] = Url::fromRoute('bill_vote.widget', ['bill_node' => $node_id])->toString();
+    $ajax_url = Url::fromRoute('bill_vote.widget', ['bill_node' => $node_id]);
 
     $label = $parameter['simple_mode']
       ? $this->billVoteHelper->getVotedLabel()
@@ -179,11 +194,12 @@ class BillVoteWidgetForm extends FormBase {
               ($default_value === 'yes') ? 'current-vote' : '',
               ($default_value === 'no') ? 'change-vote' : '',
             ],
-            // 'type' => 'submit',
           ],
           '#id' => 'edit-nys-bill-vote-yes-' . $node_id,
           '#value' => 'Aye',
           '#ajax' => [
+            'url' => $ajax_url,
+            'options' => ['query' => ['ajax_form' => 1]],
             'callback' => [$this, 'voteAjaxCallback'],
             'event' => 'click',
           ],
@@ -201,11 +217,12 @@ class BillVoteWidgetForm extends FormBase {
               ($default_value === 'no') ? 'current-vote' : '',
               ($default_value === 'yes') ? 'change-vote' : '',
             ],
-            // 'type' => 'submit',
           ],
           '#id' => 'edit-nys-bill-vote-no-' . $node_id,
           '#value' => 'Nay',
           '#ajax' => [
+            'url' => $ajax_url,
+            'options' => ['query' => ['ajax_form' => 1]],
             'callback' => [$this, 'voteAjaxCallback'],
             'event' => 'click',
           ],
@@ -221,6 +238,28 @@ class BillVoteWidgetForm extends FormBase {
         ],
       ],
     ];
+
+    // Confirmation submits use Drupal's form token and AJAX handling.
+    foreach (['yes', 'no'] as $vote_value) {
+      $form['confirm_' . $vote_value] = [
+        '#type' => 'submit',
+        '#name' => 'confirm_' . $vote_value,
+        '#id' => 'edit-confirm-' . $vote_value . '-' . $node_id,
+        '#value' => $vote_value === 'yes' ? $this->t('Confirm support') : $this->t('Confirm opposition'),
+        '#vote_value' => $vote_value,
+        '#attributes' => [
+          'hidden' => TRUE,
+          'data-confirm-vote' => $vote_value,
+        ],
+        '#access' => $this->currentUser->isAuthenticated(),
+        '#ajax' => [
+          'url' => $ajax_url,
+          'options' => ['query' => ['ajax_form' => 1]],
+          'callback' => [$this, 'confirmedVoteAjaxCallback'],
+          'event' => 'click',
+        ],
+      ];
+    }
 
     $this->addSubscriptionForm($form, $form_state, $node_id);
 
@@ -275,6 +314,8 @@ class BillVoteWidgetForm extends FormBase {
           '#id' => 'edit-nys-bill-subscribe-' . $node_id,
           '#value' => 'Subscribe',
           '#ajax' => [
+            'url' => Url::fromRoute('bill_vote.widget', ['bill_node' => $node_id]),
+            'options' => ['query' => ['ajax_form' => 1]],
             'callback' => [$this, 'subscribeAjaxSubmit'],
             'wrapper' => 'edit-nys-bill-subscribe-' . $node_id,
           ],
@@ -342,6 +383,11 @@ class BillVoteWidgetForm extends FormBase {
   public function voteAjaxCallback(&$form, FormStateInterface $form_state) {
     $response = new AjaxResponse();
 
+    if ($form_state->hasAnyErrors()) {
+      $response->addCommand(new PrependCommand('#' . $form['#id'], ['#type' => 'status_messages']));
+      return $response;
+    }
+
     // Redirect to registration page for anonymous users.
     if (!$this->currentUser->isAuthenticated()) {
       $url = Url::fromRoute('user.register');
@@ -352,28 +398,15 @@ class BillVoteWidgetForm extends FormBase {
     }
 
     $settings = $form_state->getBuildInfo();
-    $user_input = $form_state->getUserInput();
     $triggering_element = $form_state->getTriggeringElement();
     $value = $triggering_element['#value'];
     $id = $triggering_element['#id'];
 
-    $bill_path = '/node/' . (empty($user_input['nid']) ? $settings['entity_id'] : $user_input['nid']);
-
-    $intent = $this->billVoteHelper->getIntentFromVote($value);
-
-    if ($settings['is_embed']) {
-      $url = Url::fromUserInput($bill_path);
-      $command = new RedirectCommand($url->toString() . '?intent=' . $intent);
-      $response->addCommand($command);
-      return $response;
-    }
-
-    $vote_args = [
-      '#' . $id,
-      $this->billVoteHelper->getVotedLabel($intent)->__toString(),
-      $intent,
-    ];
-    $response->addCommand(new InvokeCommand($id, 'nysBillVoteUpdate', $vote_args));
+    $bill = $this->entityTypeManager->getStorage('node')->load($settings['entity_id']);
+    $response->addCommand(new InvokeCommand('#' . $id, 'nysBillVoteConfirm', [
+      $value === 'Aye' ? 'yes' : 'no',
+      $bill->label(),
+    ]));
 
     return $response;
   }
@@ -477,13 +510,54 @@ class BillVoteWidgetForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
-    // @todo This method comes from nys_accumulator custom module.
-    // @phpstan-ignore-next-line
-    // nyslog();
-    $build_info = $form_state->getBuildInfo();
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     $element = $form_state->getTriggeringElement();
-    $this->billVoteHelper->processVote($build_info['entity_type'], $build_info['entity_id'], $element['value']);
+    if (!isset($element['#vote_value'])) {
+      return;
+    }
+
+    $settings = $form_state->getBuildInfo();
+    $bill = $this->entityTypeManager->getStorage('node')->load($settings['entity_id']);
+    if (!$this->currentUser->isAuthenticated()
+      || !$bill instanceof NodeInterface
+      || $bill->bundle() !== 'bill'
+      || !$bill->access('view', $this->currentUser)
+      || !in_array($element['#vote_value'], ['yes', 'no'], TRUE)) {
+      $form_state->setErrorByName('nys_bill_vote', $this->t('Unable to record this position. Please reload the bill page and try again.'));
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitForm(array &$form, FormStateInterface $form_state) {
+    $element = $form_state->getTriggeringElement();
+    if (!isset($element['#vote_value'])) {
+      return;
+    }
+
+    $settings = $form_state->getBuildInfo();
+    $bill = $this->entityTypeManager->getStorage('node')->load($settings['entity_id']);
+    $vote = $this->billVoteHelper->processVote($this->currentUser, $bill, $element['#vote_value']);
+    $form_state->set('vote_recorded', $vote !== NULL);
+    if ($vote === NULL) {
+      $this->messenger()->addError($this->t('Your position could not be recorded. Please try again.'));
+    }
+  }
+
+  /**
+   * Updates the voting UI only after a validated, successful submission.
+   */
+  public function confirmedVoteAjaxCallback(array &$form, FormStateInterface $form_state): AjaxResponse {
+    $response = new AjaxResponse();
+    if ($form_state->hasAnyErrors() || !$form_state->get('vote_recorded')) {
+      $response->addCommand(new PrependCommand('#' . $form['#id'], ['#type' => 'status_messages']));
+      return $response;
+    }
+
+    $value = $form_state->getTriggeringElement()['#vote_value'];
+    $response->addCommand(new InvokeCommand('#' . $form['#id'], 'nysBillVoteRecorded', [$value]));
+    return $response;
   }
 
 }

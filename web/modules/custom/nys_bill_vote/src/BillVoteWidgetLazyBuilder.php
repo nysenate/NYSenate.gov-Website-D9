@@ -3,6 +3,7 @@
 namespace Drupal\nys_bill_vote;
 
 use Drupal\Core\Form\FormBuilderInterface;
+use Drupal\Core\Form\FormState;
 use Drupal\Core\Security\TrustedCallbackInterface;
 
 /**
@@ -53,9 +54,13 @@ class BillVoteWidgetLazyBuilder implements TrustedCallbackInterface {
       'simple_mode' => $simpleMode,
     ];
 
-    $form = $this->formBuilder->getForm(
+    // Placeholders only display forms; the dedicated route processes POSTs.
+    $form_state = (new FormState())
+      ->setUserInput([])
+      ->addBuildInfo('args', [$settings]);
+    $form = $this->formBuilder->buildForm(
       'Drupal\nys_bill_vote\Form\BillVoteWidgetForm',
-      $settings
+      $form_state
     );
 
     // Ensure the user cache context is explicit so the render cache creates

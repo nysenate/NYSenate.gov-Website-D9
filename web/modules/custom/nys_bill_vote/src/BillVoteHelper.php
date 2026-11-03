@@ -326,6 +326,9 @@ class BillVoteHelper {
 
     // If vote is new, or if the vote is different, process the vote.
     $needs_processing = $vote->isNew() || ($vote_index !== $vote->getValue());
+    if ($user->id() && ($user->field_voting_auto_subscribe->value ?? TRUE)) {
+      $this->billsHelper->subscribeToBill($bill_node, $user);
+    }
 
     // If needed, set the vote value and save.
     if ($needs_processing) {
@@ -346,17 +349,6 @@ class BillVoteHelper {
           );
         return NULL;
       }
-    }
-
-    // Voting subscribes the constituent and creates the matching bill Flag.
-    $subscription = $this->billsHelper->subscribeToBill($bill_node, $user);
-    if (!$subscription) {
-      $this->log->error('Could not subscribe constituent to voted bill.');
-      return NULL;
-    }
-    if ($subscription->getCanceled()) {
-      $subscription->set('canceled', 0);
-      $subscription->save();
     }
 
     return $vote;

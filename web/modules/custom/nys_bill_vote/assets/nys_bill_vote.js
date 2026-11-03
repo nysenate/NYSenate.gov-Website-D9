@@ -47,7 +47,28 @@
         $modal[0].showModal();
     };
 
-    $.fn.nysBillVoteRecorded = function (voteValue) {
+    $.fn.nysBillVoteIntent = function (voteValue) {
+        var $form = this,
+            intentText = voteValue === 'yes' ? Drupal.t('support') : Drupal.t('oppose'),
+            $target = $form.find('.nys-bill-vote-' + voteValue);
+
+        $target.addClass('selected accent-bg').siblings('.nys-bill-vote-yes, .nys-bill-vote-no')
+            .removeClass('selected accent-bg');
+        $('.c-bill--vote-widget').addClass('c-bill--vote-attach').removeClass('c-bill--vote-widget');
+        $('.c-bill--message-form, .c-bill--sentiment-update').show();
+        $('#nys-bills-bill-form input[name=vote_value]').val(voteValue);
+        $('#nys-bills-bill-form input[type="submit"]').val(voteValue === 'yes'
+            ? Drupal.t('Support this bill')
+            : Drupal.t('Oppose this bill'));
+        $form.find('.c-bill-polling--cta').text(
+            Drupal.t('Complete this form to @intent this bill:', {'@intent': intentText})
+        );
+        if ($form.hasClass('nys-bill-vote-form-embedded')) {
+            $('.nys-bill-subscribe').addClass('js-hide');
+        }
+    };
+
+    $.fn.nysBillVoteRecorded = function (voteValue, isSubscribed) {
         var $form = this,
             $target = $form.find('.nys-bill-vote-' + voteValue),
             buttonText = voteValue === 'yes'
@@ -58,9 +79,11 @@
         $target.siblings('.nys-bill-vote-yes, .nys-bill-vote-no')
             .removeClass('selected accent-bg current-vote').addClass('change-vote');
 
-        $form.find('.nys-subscribe-button').replaceWith(
-            $('<div/>', {class: 'subscribe_result', text: Drupal.t('You Are Subscribed.')})
-        );
+        if (isSubscribed) {
+            $form.find('.nys-subscribe-button').replaceWith(
+                $('<div/>', {class: 'subscribe_result', text: Drupal.t('You Are Subscribed.')})
+            );
+        }
         $form.find('.c-bill-polling--cta').text(voteValue === 'yes'
             ? Drupal.t('You are in favor of this bill')
             : Drupal.t('You are opposed to this bill'));
@@ -85,6 +108,26 @@
             if ($('#nys-bills-bill-form input[name=register]', context).prop('checked') === false
                 && !drupalSettings.settings.is_logged_in) {
                 $('.c-bill--message-form .form-item-message', context).hide();
+            }
+
+            var intent = new URLSearchParams(window.location.search).get('intent'),
+                $form = $('.nys-bill-vote-form:not(.nys-bill-vote-form-embedded)', context).first();
+
+            if (!['support', 'oppose'].includes(intent) || !$form.length) {
+                return;
+            }
+            if ($form.attr('data-intent-processed')) {
+                return;
+            }
+            $form.attr('data-intent-processed', 'true');
+
+            var voteValue = intent === 'support' ? 'yes' : 'no';
+            if (drupalSettings.settings.is_logged_in) {
+                var billName = (drupalSettings.bill_vote && drupalSettings.bill_vote.bill_name) || document.title;
+                $form.nysBillVoteConfirm(voteValue, billName);
+            }
+            else {
+                $form.nysBillVoteIntent(voteValue);
             }
         }
     };

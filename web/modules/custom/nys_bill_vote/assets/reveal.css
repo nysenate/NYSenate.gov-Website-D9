@@ -1,3 +1,7 @@
+/* Keep internal submit controls hidden before JavaScript initializes. */
+.nys-bill-vote-form [data-confirm-vote][hidden] {
+  display: none !important;
+}
 
 body.is-reveal-open {
   overflow: hidden
@@ -242,6 +246,12 @@ html.is-reveal-open,html.is-reveal-open body {
 
 dialog {
   display: none; }
+  dialog.nys-bill-vote-confirmation {
+    position: fixed;
+    margin-bottom: auto; }
+  dialog.nys-bill-vote-confirmation::backdrop {
+    display: block;
+    background: rgba(0, 0, 0, 0.45); }
   dialog::backdrop, dialog + .backdrop {
     position: fixed;
     top: 0;

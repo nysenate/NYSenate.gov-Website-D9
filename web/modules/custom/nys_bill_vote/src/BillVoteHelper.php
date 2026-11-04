@@ -326,6 +326,9 @@ class BillVoteHelper {
 
     // If vote is new, or if the vote is different, process the vote.
     $needs_processing = $vote->isNew() || ($vote_index !== $vote->getValue());
+
+    // If the user auto-subscribes when voting, create the subscription.
+    // This also creates a flagging entry, for now.
     if ($user->id() && ($user->field_voting_auto_subscribe->value ?? TRUE)) {
       $this->billsHelper->subscribeToBill($bill_node, $user);
     }

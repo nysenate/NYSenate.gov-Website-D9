@@ -1,10 +1,25 @@
 /**
  * @file
  * Confirms bill positions before submitting the Drupal voting form.
+ *
+ * Intent URLs only propose a position. Authenticated votes are saved by a
+ * separate Form API POST after confirmation; the server validates the session
+ * token and bill access. The dialog itself is not a CSRF protection mechanism.
  */
 (function ($, Drupal, drupalSettings) {
     'use strict';
 
+    /**
+     * Opens confirmation without saving a vote until Confirm is selected.
+     *
+     * @param {string} voteValue
+     *   The proposed position, 'yes' or 'no'.
+     * @param {string} billName
+     *   The bill label shown to the voter as text.
+     *
+     * @this {jQuery}
+     *   The triggering element or its voting form.
+     */
     $.fn.nysBillVoteConfirm = function (voteValue, billName) {
         var $form = this.closest('form'),
             modalId = $form.attr('id') + '-confirmation',
@@ -47,6 +62,15 @@
         $modal[0].showModal();
     };
 
+    /**
+     * Prepares the anonymous participation form without submitting it.
+     *
+     * @param {string} voteValue
+     *   The proposed position, 'yes' or 'no'.
+     *
+     * @this {jQuery}
+     *   The voting form on the bill detail page.
+     */
     $.fn.nysBillVoteIntent = function (voteValue) {
         var $form = this,
             intentText = voteValue === 'yes' ? Drupal.t('support') : Drupal.t('oppose'),
@@ -68,6 +92,17 @@
         }
     };
 
+    /**
+     * Updates the widget after the server reports a successful vote submission.
+     *
+     * @param {string} voteValue
+     *   The recorded position, 'yes' or 'no'.
+     * @param {boolean} isSubscribed
+     *   Whether the voter has a confirmed, non-canceled bill subscription.
+     *
+     * @this {jQuery}
+     *   The voting form targeted by the server's AJAX command.
+     */
     $.fn.nysBillVoteRecorded = function (voteValue, isSubscribed) {
         var $form = this,
             $target = $form.find('.nys-bill-vote-' + voteValue),
@@ -104,6 +139,12 @@
     };
 
     Drupal.behaviors.nysBillVote = {
+        /**
+         * Applies an intent hint once per detail-page widget, including AJAX.
+         *
+         * @param {Document|Element} context
+         *   The document or newly attached portion of the page.
+         */
         attach: function (context) {
             if ($('#nys-bills-bill-form input[name=register]', context).prop('checked') === false
                 && !drupalSettings.settings.is_logged_in) {

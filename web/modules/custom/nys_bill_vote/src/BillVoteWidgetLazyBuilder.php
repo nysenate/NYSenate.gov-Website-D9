@@ -13,6 +13,7 @@ use Drupal\Core\Security\TrustedCallbackInterface;
  * vote and subscription state from the globally-cached page output, allowing
  * bill display pages to be page-cached anonymously while authenticated users
  * receive their personalised vote/subscribe state via the dynamic page cache.
+ * Submissions are processed separately by the bill_vote.widget Form API route.
  */
 class BillVoteWidgetLazyBuilder implements TrustedCallbackInterface {
 
@@ -54,7 +55,9 @@ class BillVoteWidgetLazyBuilder implements TrustedCallbackInterface {
       'simple_mode' => $simpleMode,
     ];
 
-    // Placeholders only display forms; the dedicated route processes POSTs.
+    // Unset input would make Form API read POST data from the current request.
+    // Explicitly empty input keeps placeholder rendering display-only, even
+    // when the surrounding page request contains a widget submission.
     $form_state = (new FormState())
       ->setUserInput([])
       ->addBuildInfo('args', [$settings]);

@@ -17,7 +17,12 @@ use Drupal\node\NodeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * The Bill Vote Widget form class.
+ * Builds bill widgets and processes authenticated vote submissions.
+ *
+ * The lazy builder displays this form; bill_vote.widget handles its POSTs.
+ * Initial Aye/Nay callbacks only request confirmation or redirect to an intent
+ * URL. Votes are saved in submitForm(), after Form API's session-token checks
+ * and this form's vote-specific validation. AJAX callbacks present the result.
  */
 class BillVoteWidgetForm extends FormBase {
 
@@ -102,6 +107,9 @@ class BillVoteWidgetForm extends FormBase {
 
   /**
    * {@inheritdoc}
+   *
+   * Lazy rendering supplies widget settings; route reconstruction supplies the
+   * upcast bill and reads presentation flags from the request query instead.
    */
   public function buildForm(array $form, FormStateInterface $form_state, $parameter = [], ?NodeInterface $bill_node = NULL) {
     if ($bill_node) {
@@ -145,6 +153,8 @@ class BillVoteWidgetForm extends FormBase {
     $form['#id'] = 'nys-bill-vote-vote-widget-' . $node_id;
     $form['#method'] = 'post';
     // Process submissions once, rather than during page placeholder rendering.
+    // These client-controlled flags preserve layout and embedded redirects;
+    // they do not authorize writes or select a different bill.
     $widget_context = [
       'is_embed' => (int) ($parameter['is_embed'] ?? FALSE),
       'simple_mode' => (int) ($parameter['simple_mode'] ?? FALSE),
@@ -242,7 +252,8 @@ class BillVoteWidgetForm extends FormBase {
       ],
     ];
 
-    // Confirmation submits use Drupal's form token and AJAX handling.
+    // The dialog triggers these real Form API submit controls. Hiding them is
+    // only a UI detail; Form API validates the token before running submitForm.
     foreach (['yes', 'no'] as $vote_value) {
       $form['confirm_' . $vote_value] = [
         '#type' => 'submit',
@@ -388,7 +399,7 @@ class BillVoteWidgetForm extends FormBase {
   }
 
   /**
-   * AJAX Callback function for the buttons.
+   * Requests confirmation or redirects without recording the proposed vote.
    */
   public function voteAjaxCallback(&$form, FormStateInterface $form_state) {
     $response = new AjaxResponse();
@@ -526,6 +537,8 @@ class BillVoteWidgetForm extends FormBase {
 
   /**
    * {@inheritdoc}
+   *
+   * Adds vote-specific checks to Form API validation.
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $element = $form_state->getTriggeringElement();
@@ -546,6 +559,10 @@ class BillVoteWidgetForm extends FormBase {
 
   /**
    * {@inheritdoc}
+   *
+   * Form API calls this handler only after successful validation. Subscription
+   * status is reported separately: a recorded vote does not imply enrollment
+   * in bill alerts when the constituent has opted out or canceled.
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $element = $form_state->getTriggeringElement();
@@ -566,6 +583,9 @@ class BillVoteWidgetForm extends FormBase {
 
   /**
    * Updates the voting UI only after a validated, successful submission.
+   *
+   * AJAX callbacks can run after validation errors, so a response alone is not
+   * proof that submitForm() ran or that the vote was saved.
    */
   public function confirmedVoteAjaxCallback(array &$form, FormStateInterface $form_state): AjaxResponse {
     $response = new AjaxResponse();

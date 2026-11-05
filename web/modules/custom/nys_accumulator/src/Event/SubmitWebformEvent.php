@@ -6,13 +6,13 @@ use Drupal\nys_accumulator\AccumulatorEventBase;
 use Drupal\webform\Entity\WebformSubmission;
 
 /**
- * Defines the nys_accumulator.submit_question event.
+ * Defines the nys_accumulator.submit_webform event.
  *
  * This event is dispatched based on detection in hook_entity_presave().
  *
  * @see nys_accumulator_entity_presave()
  */
-class SubmitQuestionEvent extends AccumulatorEventBase {
+class SubmitWebformEvent extends AccumulatorEventBase {
 
   /**
    * {@inheritDoc}

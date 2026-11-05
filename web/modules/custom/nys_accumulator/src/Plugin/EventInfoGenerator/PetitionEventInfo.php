@@ -27,14 +27,14 @@ class PetitionEventInfo extends EventInfoGeneratorBase {
    *
    * @var \Drupal\nys_senators\SenatorsHelper
    */
-  protected SenatorsHelper $helper;
+  protected SenatorsHelper $senatorHelper;
 
   /**
    * {@inheritDoc}
    */
   public function __construct(SenatorsHelper $helper, array $definition, string $plugin_id, array $configuration = []) {
     parent::__construct($definition, $plugin_id, $configuration);
-    $this->helper = $helper;
+    $this->senatorHelper = $helper;
   }
 
   /**
@@ -53,11 +53,9 @@ class PetitionEventInfo extends EventInfoGeneratorBase {
    * Add the petition's owner and their district.
    */
   protected function extraBuild(ContentEntityBase $source, array &$ret): void {
-    /**
-     * @var \Drupal\taxonomy\Entity\Term $sponsor
-     */
+    /** @var \Drupal\taxonomy\Entity\Term $sponsor */
     $sponsor = $source->field_senator_multiref->entity;
-    $district = $this->helper->loadDistrict($sponsor);
+    $district = $this->senatorHelper->loadDistrict($sponsor);
     $ret['senator_shortname'] = $sponsor?->field_ol_shortname?->value ?? '';
     $ret['district_number'] = $district?->field_district_number?->value ?? 0;
   }

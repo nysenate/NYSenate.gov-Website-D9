@@ -265,10 +265,8 @@ class AccumulatorEntry {
     }
 
     if ($senator && $district) {
-      /**
-       * @var \Drupal\taxonomy\Entity\Term $district
-       * @var \Drupal\taxonomy\Entity\Term $senator
-       */
+      /** @var \Drupal\taxonomy\Entity\Term $district */
+      /** @var \Drupal\taxonomy\Entity\Term $senator */
       $ret = [
         'district' => $district->field_district_number->value ?: 0,
         'shortname' => $senator->field_ol_shortname->value ?: 'NONE_LOADED',

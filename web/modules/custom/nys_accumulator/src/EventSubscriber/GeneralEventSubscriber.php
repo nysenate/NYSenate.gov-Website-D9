@@ -2,6 +2,7 @@
 
 namespace Drupal\nys_accumulator\EventSubscriber;
 
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Logger\LoggerChannelTrait;
@@ -10,14 +11,16 @@ use Drupal\flag\Event\FlaggingEvent;
 use Drupal\flag\Event\UnflaggingEvent;
 use Drupal\flag\FlaggingInterface;
 use Drupal\nys_accumulator\Event\FirstLoginEvent;
-use Drupal\nys_accumulator\Event\SubmitQuestionEvent;
+use Drupal\nys_accumulator\Event\SubmitWebformEvent;
 use Drupal\nys_accumulator\Event\UserEditEvent;
 use Drupal\nys_accumulator\Event\VoteCastEvent;
 use Drupal\nys_accumulator\Events;
 use Drupal\nys_accumulator\Service\Accumulator;
 use Drupal\nys_accumulator\Service\EventInfoManager;
 use Drupal\nys_slack\Service\Slack;
+use Drupal\taxonomy\Entity\Term;
 use Drupal\user\Entity\User;
+use Drupal\webform\Entity\WebformSubmission;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -86,7 +89,7 @@ class GeneralEventSubscriber implements EventSubscriberInterface {
       Events::FIRST_LOGIN => 'firstLogin',
       Events::VOTE_CAST => 'voteCast',
       Events::USER_EDIT => 'userEdit',
-      Events::SUBMIT_QUESTION => 'submitQuestion',
+      Events::SUBMIT_WEBFORM => 'submitWebform',
     ];
   }
 
@@ -287,44 +290,24 @@ class GeneralEventSubscriber implements EventSubscriberInterface {
   /**
    * Acts on a questionnaire submission.
    */
-  public function submitQuestion(SubmitQuestionEvent $event): void {
-    /**
-     * @var \Drupal\webform\Entity\WebformSubmission $submit
-     */
+  public function submitWebform(SubmitWebformEvent $event): void {
+    /** @var \Drupal\webform\Entity\WebformSubmission $submit */
     $submit = $event->context;
 
     // Only act if this is a new submission.
     if ($submit->isNew()) {
-      // Try to find the owning questionnaire (webform) node.
-      $form = $submit->getWebform();
-      try {
-        $nodes = $this->entityManager->getStorage('node')
-          ->loadByProperties(
-            [
-              'type' => 'webform',
-              'status' => 1,
-              'webform.target_id' => $form->id(),
-            ]
-          );
-        $node = current($nodes);
-      }
-      catch (\Throwable) {
-        $node = NULL;
-      }
-
-      // If a node could not be found, leave.
-      if (!$node) {
-        return;
-      }
-
-      // Compile the info.
+      // Set up the webform's info.
       $info = [
-        'form_id' => $node->id(),
-        'form_title' => $form->get('title'),
-        'stub' => $node->field_title_stub->value,
+        'form_id' => $submit->getWebform()->id(),
+        'form_title' => $submit->getWebform()->get('title'),
         'form_values' => [],
       ];
-      $fields = $form->getElementsDecoded();
+
+      // Get the owner.  This also populates 'stub'.
+      $owner = $this->getWebformOwner($submit, $info);
+
+      // Get the form field names and values.
+      $fields = $submit->getWebform()->getElementsDecoded();
       foreach ($submit->getData() as $field => $value) {
         $info['form_values'][] = [
           'field' => $fields[$field]['#title'] ?? $field,
@@ -332,11 +315,80 @@ class GeneralEventSubscriber implements EventSubscriberInterface {
         ];
       }
 
-      // Create the entry.
-      $entry = $this->accumulator->createEntry('poll', 'webform');
+      // Create the entry.  The target is the form's owner.
+      $entry = $this->accumulator->createEntry('poll', 'webform', NULL, $owner);
       $entry->info = $info;
       $entry->save();
     }
+  }
+
+  /**
+   * Finds the "owner" of a webform, and populates "stub" in the event info.
+   *
+   * Some webforms are attached to a senator through a node's field_webform_id,
+   * but others appear as blocks with no "owning" node.  For these latter forms,
+   * the senator's tid must be injected into the form submission.  This is done
+   * in the webform's build source.
+   *
+   * We also need a "stub" for the form, which serves as a unique identifier.
+   * This is auto-populated when creating a new node (field_title_stub).  For
+   * the blocks, we create the stub from the senator's name and the form id.
+   *
+   * Any errors in loading the nodes/terms or in accessing their fields will
+   * result in a NULL owner.  The stub will default to the form's title or id.
+   *
+   * See senator_contact_form webform config for how to configure tid.
+   * See nys_petitions_handle_stub_form_validate() for how stubs are made.
+   */
+  protected function getWebformOwner(WebformSubmission $submission, array &$info): ?ContentEntityInterface {
+    $form = $submission->getWebform();
+    // Detect if the form is "owned" by a node.
+    try {
+      $nodes = $this->entityManager->getStorage('node')
+        ->loadByProperties([
+          'type' => 'webform',
+          'status' => 1,
+          'webform.target_id' => $form->id(),
+        ]);
+      $node = current($nodes);
+      $owner = $this->entityManager->getStorage('taxonomy_term')
+        ->load($node->field_senator_multiref->value);
+      assert($owner instanceof Term);
+      $stub = $node->field_title_stub?->value ?: $node->label();
+    }
+    catch (\Throwable) {
+      $stub = '';
+      $owner = NULL;
+    }
+
+    // That didn't work.  See if a senator was injected into 'tid'.
+    // The stub will be the form id plus the owner's name.
+    if (!$stub) {
+      $tid = $submission->getElementData('tid');
+      if ($tid) {
+        try {
+          $owner = $this->entityManager->getStorage('taxonomy_term')
+            ->load($tid);
+          assert($owner instanceof Term);
+          $stub = $form->id() . ' ' . $owner->label();
+        }
+        catch (\Throwable) {
+          $stub = '';
+          $owner = NULL;
+        }
+      }
+    }
+
+    // If a stub has been found, use it.  Otherwise, use the form name/id.
+    // Enforce the same length/content restrictions.
+    $stub = $stub ?: (
+      $submission->getWebform()?->get('title') ?? $info['form_id']
+    );
+    $info['stub'] = substr(
+      preg_replace('/[^0-9a-z_]/', '-', strtolower($stub)),
+      0, 115);
+
+    return $owner;
   }
 
 }

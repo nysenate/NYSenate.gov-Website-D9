@@ -43,7 +43,7 @@ function nys_accumulator_entity_presave(EntityInterface $entity): void {
   $event = match ($entity->getEntityTypeId()) {
     'vote' => 'vote_cast',
     'user' => 'user_edit',
-    'webform_submission' => 'submit_question',
+    'webform_submission' => 'submit_webform',
     default => NULL,
   };
   if ($event) {

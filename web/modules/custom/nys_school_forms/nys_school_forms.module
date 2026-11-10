@@ -14,6 +14,7 @@ use Drupal\file\Entity\File;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
 use Drupal\views\ViewExecutable;
+use Drupal\views\Views;
 
 /**
  * Implements hook_form_FORM_ID_alter.
@@ -126,14 +127,21 @@ function nys_school_forms_inline_entity_form_entity_form_alter(&$form, FormState
 function nys_school_forms_form_views_exposed_form_alter(&$form, FormStateInterface $form_state, $form_id): void {
   switch ($form['#id']) {
     case 'views-exposed-form-display-student-submissions-block-1':
-      // Set submission year filter to current year, if no user input.
-      $user_input = $form_state->getUserInput();
-      $default_empty_fields = ['title', 'field_student_name_value', 'created'];
-      $default_empty_fields_empty = empty(array_filter(array_intersect_key($user_input, array_flip($default_empty_fields))));
-      if ($default_empty_fields_empty && $user_input['field_grade_value'] === 'All') {
-        $form_state->setUserInput(['created' => date('Y')]);
-      }
+      $current_year = (int) date('Y');
+      $years = range($current_year, $current_year - 49);
+      $form['created']['#type'] = 'select';
+      $form['created']['#options'] = array_combine($years, $years);
+      unset($form['created']['#size'], $form['created']['#attributes']['autocomplete']);
+      $form['created']['#attributes']['class'] = array_diff(
+        $form['created']['#attributes']['class'] ?? [],
+        ['js-datepicker-years-filter']
+      );
+      $form['created']['#attached']['library'] = array_diff(
+        $form['created']['#attached']['library'] ?? [],
+        ['views_year_filter/datepicker']
+      );
       break;
+
     case 'views-exposed-form-manage-student-submissions-page-1':
       // Set date filters to current year, if no user input.
       $user_input = $form_state->getUserInput();
@@ -186,7 +194,72 @@ function nys_school_forms_views_pre_view(ViewExecutable $view, $display_id, &$ar
         $args[1] = $microsite_node->field_senator_multiref->target_id;
       }
     }
+
+    $input = $view->getExposedInput();
+    if (!isset($input['created']) || $input['created'] === '') {
+      $input['created'] = _nys_school_forms_latest_submission_year($view, $args);
+      $view->setExposedInput($input);
+    }
   }
+}
+
+/**
+ * Finds the latest submission year using the gallery's access and scope rules.
+ */
+function _nys_school_forms_latest_submission_year(
+  ViewExecutable $view,
+  array $args,
+): int {
+  $current_year = (int) date('Y');
+  $latest = Views::getView($view->id());
+  $latest->setDisplay('default');
+  $latest->setArguments($args);
+
+  // Retain publication and bundle rules without applying visitor filters.
+  $filters = array_filter(
+    $latest->display_handler->getOption('filters'),
+    static fn(array $filter): bool => empty($filter['exposed'])
+  );
+  $filters['created'] = [
+    'id' => 'created',
+    'table' => 'node_field_data',
+    'field' => 'created',
+    'plugin_id' => 'date',
+    'operator' => 'between',
+    'value' => [
+      'min' => ($current_year - 49) . '-01-01 00:00:00',
+      'max' => $current_year . '-12-31 23:59:59',
+      'type' => 'date',
+    ],
+    'group' => 1,
+  ];
+  $latest->display_handler->overrideOption('filters', $filters);
+  $latest->display_handler->overrideOption('sorts', [
+    'created' => [
+      'id' => 'created',
+      'table' => 'node_field_data',
+      'field' => 'created',
+      'plugin_id' => 'date',
+      'order' => 'DESC',
+    ],
+  ]);
+  $latest->display_handler->overrideOption('pager', [
+    'type' => 'some',
+    'options' => ['items_per_page' => 1, 'offset' => 0],
+  ]);
+  $latest->display_handler->overrideOption('exposed_form', ['type' => 'basic']);
+  $latest->preExecute();
+  try {
+    $latest->execute();
+  }
+  finally {
+    $latest->postExecute();
+  }
+
+  $submission = $latest->result[0]->_entity ?? NULL;
+  return $submission instanceof NodeInterface
+    ? (int) date('Y', $submission->getCreatedTime())
+    : $current_year;
 }
 
 /**

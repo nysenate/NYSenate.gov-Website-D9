@@ -5139,6 +5139,9 @@ function nysenate_theme_preprocess_node__microsite_page__full(&$variables) {
           }
         }
       }
+      elseif ($name === 'Earth Day' || $name === 'Thankful' ) {
+        $variables['#attached']['library'][] = 'nysenate_theme/submission-results';
+      }
     }
   }
 
@@ -5749,8 +5752,7 @@ function nysenate_theme_preprocess_tweets(&$variables) {
  */
 function nysenate_theme_preprocess_webform_confirmation(&$variables) {
   $submissions = [];
-  if (in_array($variables['webform']->id(),
-    ['school_form', 'school_form_thanksgiving', 'school_form_earth_day'])) {
+  if ($variables['webform']->id() === 'school_form') {
     $webform = \Drupal::entityTypeManager()->getStorage('webform')->load($variables['webform']->id());
 
     $school_id = $variables['webform_submission']->getData()['school_name'];

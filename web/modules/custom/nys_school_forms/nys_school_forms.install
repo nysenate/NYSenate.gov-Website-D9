@@ -118,3 +118,29 @@ function nys_school_forms_update_8004() {
     );
   }
 }
+
+/**
+ * Deletes retired School Form Type terms before removing their vocabulary.
+ */
+function nys_school_forms_update_8005(): void {
+  $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+  $deleted_count = 0;
+  do {
+    $term_ids = $term_storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('vid', 'school_form_type')
+      ->range(0, 100)
+      ->execute();
+    if (!$term_ids) {
+      break;
+    }
+
+    $term_storage->delete($term_storage->loadMultiple($term_ids));
+    $deleted_count += count($term_ids);
+  } while (TRUE);
+
+  \Drupal::logger('nys_school_forms')->notice(
+    'Deleted @count terms from the retired School Form Type vocabulary.',
+    ['@count' => $deleted_count]
+  );
+}

@@ -1,19 +1,13 @@
-bill_vote.confirmation:
-  path: '/bill_vote_confirmation/callback/{bill_node}/{vote_value}'
+bill_vote.widget:
+  path: '/bill-vote/{bill_node}'
   defaults:
-    _controller: '\Drupal\nys_bill_vote\Controller\BillVoteController::confirmationAjaxCallback'
+    _form: '\Drupal\nys_bill_vote\Form\BillVoteWidgetForm'
+  methods: [POST]
   requirements:
     _permission: 'access content'
+    _entity_access: 'bill_node.view'
   options:
-    no_cache: 'TRUE'
     parameters:
       bill_node:
         type: entity:node
         bundle: ['bill']
-
-bill_vote.autosub:
-  path: '/bill_vote_autosub/callback/{entity_id}/{autosub}'
-  defaults:
-    _controller: '\Drupal\nys_bill_vote\Controller\BillVoteController::autosubAjaxCallback'
-  requirements:
-    _permission: 'access content'

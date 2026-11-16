@@ -3,6 +3,7 @@
 namespace Drupal\nys_bill_vote;
 
 use Drupal\Core\Form\FormBuilderInterface;
+use Drupal\Core\Form\FormState;
 use Drupal\Core\Security\TrustedCallbackInterface;
 
 /**
@@ -12,6 +13,7 @@ use Drupal\Core\Security\TrustedCallbackInterface;
  * vote and subscription state from the globally-cached page output, allowing
  * bill display pages to be page-cached anonymously while authenticated users
  * receive their personalised vote/subscribe state via the dynamic page cache.
+ * Submissions are processed separately by the bill_vote.widget Form API route.
  */
 class BillVoteWidgetLazyBuilder implements TrustedCallbackInterface {
 
@@ -53,9 +55,15 @@ class BillVoteWidgetLazyBuilder implements TrustedCallbackInterface {
       'simple_mode' => $simpleMode,
     ];
 
-    $form = $this->formBuilder->getForm(
+    // Unset input would make Form API read POST data from the current request.
+    // Explicitly empty input keeps placeholder rendering display-only, even
+    // when the surrounding page request contains a widget submission.
+    $form_state = (new FormState())
+      ->setUserInput([])
+      ->addBuildInfo('args', [$settings]);
+    $form = $this->formBuilder->buildForm(
       'Drupal\nys_bill_vote\Form\BillVoteWidgetForm',
-      $settings
+      $form_state
     );
 
     // Ensure the user cache context is explicit so the render cache creates

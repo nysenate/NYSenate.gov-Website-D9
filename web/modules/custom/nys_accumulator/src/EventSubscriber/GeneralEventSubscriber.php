@@ -352,7 +352,7 @@ class GeneralEventSubscriber implements EventSubscriberInterface {
         ]);
       $node = current($nodes);
       $owner = $this->entityManager->getStorage('taxonomy_term')
-        ->load($node->field_senator_multiref->value);
+        ->load($node->field_senator_multiref->target_id);
       assert($owner instanceof Term);
       $stub = $node->field_title_stub?->value ?: $node->label();
     }

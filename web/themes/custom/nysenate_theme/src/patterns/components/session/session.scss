@@ -146,6 +146,97 @@
   }
 }
 
+// Title-first variant (public hearing): the DOM order is H1, date, info, so
+// screen readers reach the title first. The grid puts the date back where the
+// flex/block layout above shows it: above the title on small screens, in its
+// own left column (content width + 80px margin) on wider ones.
+.c-meeting-detail--info-container.c-meeting-detail--title-first {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    'date'
+    'title'
+    'info';
+
+  > .c-meeting-detail--date {
+    grid-area: date;
+    // Don't stretch down both rows; the box should only be as tall as the
+    // date (otherwise VoiceOver's cursor outline covers the whole column).
+    align-self: start;
+  }
+
+  > .c-meeting-detail--title {
+    grid-area: title;
+  }
+
+  > .c-meeting-detail--info {
+    grid-area: info;
+  }
+
+  @include breakpoint($bp-sm) {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+      'date title'
+      'date info';
+
+    // The title used to sit inside .c-meeting-detail--info, which caps the
+    // column at 625px.
+    > .c-meeting-detail--title {
+      max-width: 625px;
+    }
+  }
+
+  // The map pin is icon-font text in ::before; give it empty alt text so it
+  // is not read as part of the link name. Browsers without support for the
+  // alt-text syntax ignore the second declaration and keep the first.
+  .c-meeting-detail--location-link::before {
+    content: '\32';
+    content: '\32' / '';
+  }
+}
+
+// Targets of the "Watch the … video" links (public hearing): keep the top of
+// the video clear of the sticky header (120px on phones, 140px from $bp-sm).
+#hearing-video,
+#hearing-live-video {
+  scroll-margin-top: 140px;
+
+  @include breakpoint($bp-sm) {
+    scroll-margin-top: 160px;
+  }
+}
+
+// Video status as its own element: a decorative icon span (aria-hidden) and
+// the status text or link. The icon keeps the divider/spacing the status
+// span's own ::before has in the older markup.
+.c-meeting-video--status {
+  .c-meeting-video--icon::before {
+    color: $orange01;
+    font-size: 28px;
+    line-height: 16px;
+    padding: 0 3px 0 10px;
+    vertical-align: middle;
+    margin-left: 10px;
+    border-left: 1px solid $grey05;
+    margin-top: -3px;
+
+    @include breakpoint($bp-sm) {
+      font-size: 30px;
+    }
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+
+    &:hover,
+    &:focus {
+      text-decoration: underline;
+    }
+  }
+}
+
 .c-block .c-meeting-detail--location-link {
   display: block;
   margin: 0 0 10px 0;
@@ -229,6 +320,18 @@ div.c-meeting-detail--location {
   display: inline;
   .nys-associated-topics {
     border-left: none;
+
+    // Associated-topics component (<section> > heading + <ul>): the section
+    // takes over the inline-block box the old <ul> had, and the inner list
+    // flows inline after the label, as the old <li>s did.
+    &:is(section) {
+      display: inline-block;
+
+      > ul {
+        display: inline;
+      }
+    }
+
     &.issues {
       border-right: 1px solid #222222;
       padding-right: 15px;

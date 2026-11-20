@@ -1,0 +1,39 @@
+{#
+/**
+ * @file
+ * Associated topics: a labelled list of related links (issues, committees…).
+ *
+ * The heading introduces the list for screen reader users, and an optional
+ * visually hidden prefix gives each link text that makes sense out of context
+ * (e.g. "Issue: Crime" in a screen reader's links list).
+ *
+ * role="list" on the <ul> is deliberate: Safari drops list semantics from
+ * lists styled with list-style: none, so VoiceOver wouldn't announce it.
+ *
+ * The <section> is deliberately unnamed (no aria-label/aria-labelledby), so it
+ * is not exposed as a region landmark; the heading is enough for navigation.
+ *
+ * Build `items` with nysenate_theme_associated_topic_links() in preprocess.
+ *
+ * Variables:
+ * - label: Heading text, e.g. 'Related issues'|t.
+ * - heading_level: Heading level, 2–6. Defaults to 2.
+ * - label_hidden: (optional) TRUE to keep the heading for screen readers but
+ *   hide it visually, for places that show no label today.
+ * - items: List of links, each { label, url }.
+ * - item_prefix: (optional) Visually hidden text before each link label,
+ *   e.g. 'Issue:'|t.
+ * - modifier: (optional) Extra class(es) for the section.
+ */
+#}
+{% if items %}
+  {% set level = heading_level in [2, 3, 4, 5, 6] ? heading_level : 2 %}
+  <section class="nys-associated-topics{{ modifier ? ' ' ~ modifier }}">
+    <h{{ level }} class="nys-associated-topics--label{{ label_hidden ? ' visually-hidden' }}">{{ label }}</h{{ level }}>
+    <ul role="list">
+      {% for item in items %}
+        <li><a href="{{ item.url }}">{% if item_prefix %}<span class="visually-hidden">{{ item_prefix }} </span>{% endif %}{{ item.label }}</a></li>
+      {% endfor %}
+    </ul>
+  </section>
+{% endif %}

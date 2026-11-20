@@ -8,15 +8,19 @@
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
+use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\file\Entity\File;
+use Drupal\media\MediaInterface;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
 use Drupal\nys_search\Form\GlobalSearchForm;
@@ -3870,6 +3874,15 @@ function nysenate_current_legislative_session() {
  * Implements hook_preprocess_media().
  */
 function nysenate_theme_preprocess_media(&$variables) {
+  // A parent node can set a descriptive iframe title for an oEmbed video
+  // (see nysenate_theme_preprocess_node__public_hearing()).
+  if (!empty($variables['elements']['#nys_iframe_title'])) {
+    $deltas = isset($variables['content']['field_media_oembed_video']) ? Element::children($variables['content']['field_media_oembed_video']) : [];
+    foreach ($deltas as $delta) {
+      $variables['content']['field_media_oembed_video'][$delta]['#attributes']['title'] = (string) $variables['elements']['#nys_iframe_title'];
+    }
+  }
+
   if (isset($variables['content']['field_media_file'])) {
     $file_name = $variables['name'];
     $file = $variables['media']->field_media_file->entity;
@@ -4128,16 +4141,289 @@ function nysenate_theme_preprocess_node__public_hearing(&$variables) {
     $title = $node->getTitle();
     // Set up reference variables indicating if this event spans multiple days.
     $is_multiday = !($date_value['start_date_raw']->format('Ymd') == $date_value['end_date_raw']->format('Ymd'));
-    $description = $variables['content']['body'][0]['#text'] ?? '';
+    $description = nysenate_theme_calendar_description($node);
     $variables['calendar_links'] = nysenate_theme_generate_add_to_calendar($title, $date_value['start_date_raw'], $date_value['end_date_raw'], $is_multiday, $description, $location['address']);
+  }
+
+  // Spoken/display forms of the date and times, without leading zeros:
+  // "March 4, 2026", "9:30 AM".
+  if (isset($date_value['start_date_raw'])) {
+    $start = $date_value['start_date_raw'];
+    $end = $date_value['end_date_raw'];
+    $date_value['date_full'] = $start->format('F j, Y');
+    $date_value['start_time'] = $start->format('g:i A');
+    $date_value['end_time'] = $end->format('g:i A');
   }
 
   $variables['location_url'] = !empty($location['location_url']) ? urlencode($location['location_url']) : urlencode($location['address']);
   $variables['date_value'] = $date_value;
   $variables['video_status'] = $video_status;
+  $variables['video_status_link'] = nysenate_theme_video_status_link($video_status['key'] ?? '', $variables['content']);
   $variables['location'] = $location['address'];
 
+  // Related issues and committees for the associated-topics component.
+  $cacheability = new CacheableMetadata();
+  $issue_fields = ['field_issues', 'field_majority_issue_tag'];
+  $variables['related_issues'] = nysenate_theme_associated_topic_links($node, $issue_fields, $cacheability);
+  $variables['related_committees'] = nysenate_theme_associated_topic_links($node, ['field_committee'], $cacheability);
+  // Attachments for the file-uploads component (same cacheability bucket).
+  $variables['attachment_files'] = nysenate_theme_file_links($node, 'field_attachment', $cacheability);
+  $variables['associated_topics_cache'] = [];
+  $cacheability->applyTo($variables['associated_topics_cache']);
+
+  // Title the video iframe after this hearing ("Video: <hearing title>"),
+  // applied in nysenate_theme_preprocess_media(). The media item's own render
+  // cache entry is skipped, since the title now depends on the parent node;
+  // it is still cached as part of this node.
+  $video_deltas = isset($variables['content']['field_yt']) ? Element::children($variables['content']['field_yt']) : [];
+  foreach ($video_deltas as $delta) {
+    $variables['content']['field_yt'][$delta]['#nys_iframe_title'] = t('Video: @title', ['@title' => $node->label()]);
+    unset($variables['content']['field_yt'][$delta]['#cache']['keys']);
+  }
+
   $variables['how_a_bill_block'] = get_how_a_bill_becomes_law_block();
+}
+
+/**
+ * Builds the file list for the file-uploads component.
+ *
+ * Reads a media reference field (media types with a file source, e.g. the
+ * "file" media type) and returns one link per file. The link label is the
+ * file's description when set, otherwise the filename without its extension
+ * and with underscores replaced by spaces.
+ *
+ * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
+ *   The entity holding the media reference field.
+ * @param string $field_name
+ *   The media reference field name.
+ * @param \Drupal\Core\Cache\CacheableMetadata $cacheability
+ *   Collects the cacheability of the access checks, media and files. The
+ *   caller must apply it to something that gets rendered.
+ *
+ * @return array
+ *   A list of files, each an array with 'url', 'label', 'type' (e.g. "PDF")
+ *   and 'size' (e.g. "240 KB").
+ */
+function nysenate_theme_file_links(FieldableEntityInterface $entity, string $field_name, CacheableMetadata $cacheability): array {
+  if (!$entity->hasField($field_name)) {
+    return [];
+  }
+  $items = $entity->get($field_name);
+  $field_access = $items->access('view', NULL, TRUE);
+  $cacheability->addCacheableDependency($field_access);
+  if (!$field_access->isAllowed()) {
+    return [];
+  }
+
+  $entity_repository = \Drupal::service('entity.repository');
+  $file_url_generator = \Drupal::service('file_url_generator');
+  $files = [];
+
+  /** @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $items */
+  foreach ($items->referencedEntities() as $media) {
+    if (!$media instanceof MediaInterface) {
+      continue;
+    }
+    $media = $entity_repository->getTranslationFromContext($media);
+    $access = $media->access('view', NULL, TRUE);
+    $cacheability->addCacheableDependency($access);
+    if (!$access->isAllowed()) {
+      continue;
+    }
+    $cacheability->addCacheableDependency($media);
+
+    $source_field = $media->getSource()->getConfiguration()['source_field'] ?? '';
+    if (!$source_field || !$media->hasField($source_field) || $media->get($source_field)->isEmpty()) {
+      continue;
+    }
+    $file_item = $media->get($source_field)->first();
+    /** @var \Drupal\file\FileInterface|null $file */
+    $file = $file_item->entity;
+    if (!$file) {
+      continue;
+    }
+    $cacheability->addCacheableDependency($file);
+
+    $uri = $file->getFileUri();
+    $description = trim((string) ($file_item->description ?? ''));
+    $label = $description !== ''
+      ? $description
+      : str_replace('_', ' ', pathinfo($file->getFilename(), PATHINFO_FILENAME));
+
+    $files[] = [
+      'url' => $file_url_generator->generateString($uri),
+      'label' => $label,
+      'type' => strtoupper(pathinfo($uri, PATHINFO_EXTENSION)),
+      'size' => nysenate_theme_format_file_size((int) $file->getSize()),
+    ];
+  }
+
+  return $files;
+}
+
+/**
+ * Formats a file size for display: "240 KB" or "1.5 MB".
+ *
+ * @param int $bytes
+ *   The size in bytes.
+ *
+ * @return string
+ *   The formatted size.
+ */
+function nysenate_theme_format_file_size(int $bytes): string {
+  if ($bytes >= 1048576) {
+    return (string) t('@size MB', ['@size' => round($bytes / 1048576, 1)]);
+  }
+  return (string) t('@size KB', ['@size' => max(1, (int) round($bytes / 1024))]);
+}
+
+/**
+ * Builds the video status text, and the anchor of the video it refers to.
+ *
+ * The status is written in sentence case (CSS uppercases it). When the video
+ * it describes is on the page, the status becomes a link to it: the archived
+ * video (field_yt, wrapper id "hearing-video") or the live stream
+ * (field_ustream / field_video_redirect, wrapper id "hearing-live-video").
+ *
+ * @param string $status
+ *   The field_video_status value.
+ * @param array $content
+ *   The node's content render array, used to tell whether a video field
+ *   actually renders (it respects field and media access).
+ *
+ * @return array
+ *   An array with 'text' (empty when there is no status to show) and
+ *   'anchor' (the target id without "#", or '' when there is no link).
+ */
+function nysenate_theme_video_status_link(string $status, array $content): array {
+  $has_archive = isset($content['field_yt'][0]);
+  $has_live = ($status === 'streaming_live_now' && isset($content['field_ustream'][0]))
+    || ($status === 'streaming_redirect' && isset($content['field_video_redirect'][0]));
+
+  switch ($status) {
+    case 'archived_video':
+      return $has_archive
+        ? ['text' => t('Watch the archived video'), 'anchor' => 'hearing-video']
+        : ['text' => t('Archived video'), 'anchor' => ''];
+
+    case 'streaming_live_now':
+    case 'streaming_redirect':
+      return $has_live
+        ? ['text' => t('Watch the live video'), 'anchor' => 'hearing-live-video']
+        : ['text' => t('Streaming live now'), 'anchor' => ''];
+
+    case 'will_stream_live':
+      return ['text' => t('Will stream live'), 'anchor' => ''];
+
+    default:
+      return ['text' => '', 'anchor' => ''];
+  }
+}
+
+/**
+ * Builds the link list for the associated-topics component.
+ *
+ * Reads the referenced entities (taxonomy terms or nodes) from one or more
+ * entity reference fields and returns their labels and URLs, in field order.
+ * Field and entity view access are checked, so anything a field formatter
+ * would hide (e.g. a field restricted by field_permissions) stays hidden.
+ *
+ * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
+ *   The entity holding the reference fields.
+ * @param string[] $field_names
+ *   Entity reference field names to read, in display order. Fields the
+ *   entity does not have are skipped.
+ * @param \Drupal\Core\Cache\CacheableMetadata $cacheability
+ *   Collects the cacheability of the access checks, referenced entities and
+ *   generated URLs. The caller must apply it to something that gets
+ *   rendered, e.g. the associated_topics_cache variable in
+ *   nysenate_theme_preprocess_node__public_hearing().
+ *
+ * @return array
+ *   A list of links, each an array with 'label' and 'url' (string) keys.
+ */
+function nysenate_theme_associated_topic_links(FieldableEntityInterface $entity, array $field_names, CacheableMetadata $cacheability): array {
+  $entity_repository = \Drupal::service('entity.repository');
+  $links = [];
+
+  foreach ($field_names as $field_name) {
+    if (!$entity->hasField($field_name)) {
+      continue;
+    }
+    /** @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $items */
+    $items = $entity->get($field_name);
+    $field_access = $items->access('view', NULL, TRUE);
+    $cacheability->addCacheableDependency($field_access);
+    if (!$field_access->isAllowed()) {
+      continue;
+    }
+
+    foreach ($items->referencedEntities() as $referenced) {
+      $referenced = $entity_repository->getTranslationFromContext($referenced);
+      $access = $referenced->access('view', NULL, TRUE);
+      $cacheability->addCacheableDependency($access);
+      if (!$access->isAllowed()) {
+        continue;
+      }
+      $cacheability->addCacheableDependency($referenced);
+      $url = $referenced->toUrl()->toString(TRUE);
+      $cacheability->addCacheableDependency($url);
+      $links[] = [
+        'label' => $referenced->label(),
+        'url' => $url->getGeneratedUrl(),
+      ];
+    }
+  }
+
+  return $links;
+}
+
+/**
+ * Builds a plain-text "Add to calendar" description for a node.
+ *
+ * The body summary (as plain text) when one is set, then a blank line, then
+ * a link line to the node's page. Without a summary, only the link line; the
+ * body itself is not used.
+ *
+ * @param \Drupal\node\NodeInterface $node
+ *   The node.
+ *
+ * @return string
+ *   The description.
+ */
+function nysenate_theme_calendar_description(NodeInterface $node): string {
+  $summary = '';
+  if ($node->hasField('body') && !$node->get('body')->isEmpty()) {
+    $summary = nysenate_theme_plain_text((string) $node->get('body')->first()->summary);
+  }
+
+  $url = $node->toUrl('canonical', ['absolute' => TRUE])->toString();
+  $link_line = $node->bundle() === 'public_hearing'
+    ? t('Details, testimony and live video: @url', ['@url' => $url])
+    : t('Details and live video: @url', ['@url' => $url]);
+
+  return $summary === '' ? (string) $link_line : $summary . "\n\n" . $link_line;
+}
+
+/**
+ * Converts an HTML fragment to a single line of plain text.
+ *
+ * Tags become spaces (so table cells and paragraphs don't run together),
+ * entities are decoded, and runs of whitespace, including non-breaking
+ * spaces, collapse to a single space.
+ *
+ * @param string $html
+ *   The HTML fragment.
+ *
+ * @return string
+ *   The plain text.
+ */
+function nysenate_theme_plain_text(string $html): string {
+  $text = strip_tags(str_replace('<', ' <', $html));
+  $text = html_entity_decode($text, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+  $text = preg_replace('/[\s\x{00A0}]+/u', ' ', $text);
+  // Inline tags (e.g. "<b>word</b>,") leave a space before punctuation.
+  return trim(preg_replace('/ ([,.;:!?)])/', '$1', $text));
 }
 
 /**

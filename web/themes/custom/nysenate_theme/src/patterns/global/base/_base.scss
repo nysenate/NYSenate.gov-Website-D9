@@ -862,6 +862,17 @@ h2.c-subpage-header--title {
   font-size: 15px;
   line-height: 1.2em;
   font-family: $font-sans-bold;
+
+  // The label is a heading in the associated-topics component; undo the
+  // global h1–h6 margin/weight so it still sits inline like the old <div>.
+  &:is(h2, h3, h4, h5, h6) {
+    margin: 0 10px 0 0;
+    font-weight: inherit;
+
+    &::after {
+      content: ':';
+    }
+  }
 }
 
 // NEWS HEADER AREA

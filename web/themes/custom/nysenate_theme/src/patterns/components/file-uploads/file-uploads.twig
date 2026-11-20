@@ -1,10 +1,43 @@
+{#
+/**
+ * @file
+ * File uploads: a list of downloadable files, optionally under a heading.
+ *
+ * Variables:
+ * - heading: (optional) Heading text, e.g. 'Testimony and documents'|t.
+ * - heading_level: (optional) Heading level, 2–6. Defaults to 2.
+ * - files: (optional) List of files, each { url, label, type, size }, built
+ *   with nysenate_theme_file_links() in preprocess. Rendered as a <ul>, one
+ *   link per file: "label (TYPE, size)". role="list" is deliberate: Safari
+ *   drops list semantics from lists styled with list-style: none.
+ * - attachment: (legacy) A rendered file/media field, used when `files` is
+ *   not passed. Templates that haven't moved to `files` yet still use this.
+ * - classes: (optional) Extra classes for the wrapper.
+ */
+#}
 {{ attach_library('nysenate_theme/file-uploads') }}
 
+{% set level = heading_level in [2, 3, 4, 5, 6] ? heading_level : 2 %}
 <div class="c-block c-block--pg-file-uploads {{ classes }}">
+  {% if heading %}
+    <div class="c-container--header__top-border">
+      <h{{ level }} class="c-container--title">{{ heading }}</h{{ level }}>
+    </div>
+  {% endif %}
   <div class="c-news--download">
-    <span class='file'>
-      <img class='file-icon' alt='PDF icon' title='application/pdf' src='/modules/file/icons/application-pdf.png'>
-      {{ attachment }}
-    <span>
+    {% if files %}
+      <ul class="c-file-uploads__list" role="list">
+        {% for file in files %}
+          <li class="file">
+            <a href="{{ file.url }}">{{ file.label }} ({{ file.type }}, {{ file.size }})</a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <span class="file">
+        <img class="file-icon" alt="" src="/modules/file/icons/application-pdf.png">
+        {{ attachment }}
+      </span>
+    {% endif %}
   </div>
 </div>

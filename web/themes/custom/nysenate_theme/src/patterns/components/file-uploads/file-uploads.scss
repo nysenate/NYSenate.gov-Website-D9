@@ -40,6 +40,20 @@
 	.field__label {
 		display: none;
 	}
+
+	// One <li class="file"> per file; looks the same as the old field output.
+	.c-file-uploads__list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+
+		.file > a::before {
+			// The presskit icon is icon-font text; give it empty alt text so it
+			// isn't read as part of the link name (older browsers ignore this).
+			content: '\6b';
+			content: '\6b' / '';
+		}
+	}
 }
 
 .c-news--head .c-news--download {

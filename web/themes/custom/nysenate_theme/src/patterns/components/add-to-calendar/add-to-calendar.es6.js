@@ -23,7 +23,6 @@
         $(this).toggleClass('active');
         $(this).attr('aria-expanded', isExpanded ? 'false' : 'true');
 
-        dropdownContent.attr('aria-expanded', isExpanded ? 'false' : 'true');
         dropdownContent.toggleClass('active');
       });
 
@@ -36,7 +35,7 @@
 
           event.preventDefault();
           toggle.removeClass('active').attr('aria-expanded', 'false').focus();
-          dropdownContent.removeClass('active').attr('aria-expanded', 'false');
+          dropdownContent.removeClass('active');
         }
       });
     }

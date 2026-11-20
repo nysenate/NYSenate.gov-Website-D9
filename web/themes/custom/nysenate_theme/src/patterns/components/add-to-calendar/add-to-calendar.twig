@@ -17,7 +17,7 @@
     </span>
     Add to Calendar
   </button>
-  <ul id="add-event-dropdown" class="add-to-calendar__dropdown" aria-expanded="false" role="list">
+  <ul id="add-event-dropdown" class="add-to-calendar__dropdown" role="list">
     {% for calendar_link in calendar_links %}
       <li class="add-to-calendar__dropdown-item {{ calendar_link.class }}">
         <a href="{{ calendar_link.url }}">{{ calendar_link.type }}
@@ -29,4 +29,3 @@
     {% endfor %}
   </ul>
 </div>
-  </button>

@@ -97,9 +97,9 @@ elements: |-
       '#required': true
       '#default_value': '[current-user:field_address:postal_code]'
   tid:
-    '#type': hidden
+    '#type': value
     '#title': tid
-    '#default_value': '[current-page:senator-tid]'
+    '#value': '[current-page:senator-tid]'
   captcha:
     '#type': captcha
   actions:
@@ -327,4 +327,5 @@ handlers:
       sender_name: ''
       theme_name: ''
       parameters: {  }
+      langcode: ''
 variants: {  }

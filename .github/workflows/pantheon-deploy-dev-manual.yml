@@ -11,6 +11,9 @@ on:
         options:
           - main
 
+permissions:
+  contents: read
+
 env:
   GIT_COMMIT_MESSAGE: 'Github Actions Build'
 
@@ -35,55 +38,28 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ vars.PHP_VERSION }}
-          extensions: gmp
-
-      - name: Add the Pantheon SSH Key for the CI user
-        uses: webfactory/ssh-agent@v0.7.0
-        with:
-          ssh-private-key: ${{ secrets.PANTHEON_SSH_PRIVATE_KEY }}
-
-      - name: Disable Pantheon SSH strict host key checking
-        run: 'printf "\nHost *\n\tStrictHostKeyChecking no" >> ~/.ssh/config'
-
-      - name: Configure git config
-        run: |
-          git config --global user.name "NY Senate CI Bot"
-          git config --global user.email "zalewski.senate+github@gmail.com"
-
-      - name: Set up the Pantheon GIT Remote
-        run: |
-          git remote add pantheon ${{ vars.PANTHEON_GIT_REMOTE }}
-          echo $(git remote -v)
-
-      - name: Cache Composer dependencies to make builds faster
-        uses: actions/cache@v3
-        env:
-          cache-name: cache-vendor
-        with:
-          path: ./vendor
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/composer.lock') }}
+          extensions: gd, sodium, zip, gmp
 
       - name: Make composer available and do a composer install to build Drupal
-        uses: php-actions/composer@v6
-        with:
-          php_version: ${{ vars.PHP_VERSION }}
-          php_extensions: gd sodium zip gmp
+        run: composer install --no-dev --no-scripts --no-interaction --no-progress --prefer-dist --optimize-autoloader
 
       - name: Setup Node with the version set in .nvmrc
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version-file: '${{ vars.THEME_PATH }}/.nvmrc'
           cache: 'npm'
           cache-dependency-path: '${{ vars.THEME_PATH }}/package-lock.json'
 
       - name: Build nysenate_theme Theme Assets
+        env:
+          THEME_PATH: ${{ vars.THEME_PATH }}
         run: |
-          cd ${{ vars.THEME_PATH }}
-          npm install
+          cd "$THEME_PATH"
+          npm ci --ignore-scripts
           npm run build
 
       - name: Update NodeJS to version in nys theme via .nvmrc.
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version-file: 'web/themes/custom/nys/.nvmrc'
           cache: 'npm'
@@ -92,16 +68,44 @@ jobs:
       - name: Build nys Theme Assets
         run: |
           cd web/themes/custom/nys
-          npm install
+          npm ci --ignore-scripts
           npm run build
 
-      - name: Prepare and deploy build artifact to Pantheon
+      - name: Prepare release artifact
         run: |
-          mkdir build
-          rsync -az --exclude=node_modules --exclude=.git --exclude=/build ./ build/
-          cd build
+          mkdir -p "$RUNNER_TEMP/pantheon-artifact"
+          bash scripts/build-pantheon-artifact.sh "$RUNNER_TEMP/pantheon-artifact"
+
+      - name: Add the Pantheon SSH Key for the CI user
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.PANTHEON_SSH_PRIVATE_KEY }}
+
+      - name: Retain existing Pantheon SSH connection policy
+        run: 'printf "\nHost *.drush.in\n  StrictHostKeyChecking no\n" >> "$HOME/.ssh/config"'
+
+      - name: Configure Git for the deployment commit
+        run: |
+          git config --global user.name "NY Senate CI Bot"
+          git config --global user.email "zalewski.senate+github@gmail.com"
+
+      - name: Install verified Terminus
+        run: |
+          bash scripts/install-terminus.sh "$RUNNER_TEMP/terminus"
+          echo "$RUNNER_TEMP/terminus" >> "$GITHUB_PATH"
+
+      - name: Authenticate Terminus
+        env:
+          PANTHEON_MACHINE_TOKEN: ${{ secrets.PANTHEON_MACHINE_TOKEN }}
+        run: "$RUNNER_TEMP/terminus/terminus auth:login --machine-token=\"$PANTHEON_MACHINE_TOKEN\""
+
+      - name: Deploy prepared artifact to Pantheon
+        env:
+          PANTHEON_GIT_REMOTE: ${{ vars.PANTHEON_GIT_REMOTE }}
+        run: |
+          cd "$RUNNER_TEMP/pantheon-artifact"
           git init
-          git remote add pantheon ${{ vars.PANTHEON_GIT_REMOTE }}
+          git remote add pantheon "$PANTHEON_GIT_REMOTE"
           git checkout -b "nys-build-artifact-${{ env.NOW_GIT_SAFE }}"
           git add -Af .
           git commit -q -m "${{ env.GIT_COMMIT_MESSAGE }} - ${{ env.NOW }}"

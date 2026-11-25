@@ -1,0 +1,42 @@
+diff --git a/src/Scanner/DaemonTCPIP.php b/src/Scanner/DaemonTCPIP.php
+--- a/src/Scanner/DaemonTCPIP.php
++++ b/src/Scanner/DaemonTCPIP.php
+@@ -68,2 +68,8 @@
+-    $file_handler = fopen($file->getFileUri(), 'r');
++    $file_handler = @fopen($file->getFileUri(), 'r');
++    if (!is_resource($file_handler)) {
++      // @see Drupal\ckeditor5\Controller\CKEditor5ImageController
++      $upload = \Drupal::request()->files->get('upload');
++      $file_handler = fopen($upload->getRealPath(), 'r');
++    }
++
+     stream_copy_to_stream($file_handler, $scanner_handler);
+diff --git a/src/Scanner/DaemonUnixSocket.php b/src/Scanner/DaemonUnixSocket.php
+--- a/src/Scanner/DaemonUnixSocket.php
++++ b/src/Scanner/DaemonUnixSocket.php
+@@ -45,2 +45,2 @@
+-    $file_handler    = fopen($file->getFileUri(), 'r');
++    $file_handler    = @fopen($file->getFileUri(), 'r');
+     $scanner_handler = @fsockopen("unix://{$this->_unix_socket}", 0);
+@@ -58,3 +58,8 @@
+-    stream_copy_to_stream($file_handler, $scanner_handler);
++    if (!is_resource($file_handler)) {
++      // @see Drupal\ckeditor5\Controller\CKEditor5ImageController
++      $upload = \Drupal::request()->files->get('upload');
++      $file_handler = fopen($upload->getRealPath(), 'r');
++    }
++    stream_copy_to_stream($file_handler, $scanner_handler);
+ 
+     // Send a zero-length block to indicate that we're done sending file data.
+diff --git a/src/Scanner/Executable.php b/src/Scanner/Executable.php
+--- a/src/Scanner/Executable.php
++++ b/src/Scanner/Executable.php
+@@ -55,2 +55,8 @@
+     $filename = \Drupal::service('file_system')->realpath($file->getFileUri());
++    if (!file_exists($filename)) {
++      // @see Drupal\ckeditor5\Controller\CKEditor5ImageController
++      $upload = \Drupal::request()->files->get('upload');
++      $filename = $upload->getRealPath();
++    }
++
+     $cmd = escapeshellcmd($script) . ' ' . escapeshellarg($filename) . ' 2>&1';

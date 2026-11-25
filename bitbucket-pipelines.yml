@@ -10,18 +10,11 @@ pipelines:
           - composer-project-vendor
         script:
           - uname -a
-          - mkdir -p /root/.ssh
-          - echo "bitbucket.org,104.192.143.2 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAubiN81eDcafrgMeLzaFPsw2kNvEcqTKl/VqLat/MaB33pZy0y3rJZtnqwR2qOOvbwKZYKiEO1O6VqNEBxKvJJelCq0dTXWT5pbO2gDXC6h6QDXCaHo6pOHGPUy+YBaGQRGuSusMEASYiWunYN0vCAI8QaXnWMXNMdFP3jHAJH0eDsoiGnLPBlBp4TNm6rYI74nMzgz3B9IikW4WVK+dc8KZJZWYjAuORU3jc1c/NPskD2ASinf8v3xnfXeukU0sJ5N6m5E8VLjObPEO+mN2t/FZTMZLiFqPWc/ALSqnMnnhwrNi2rbfg/rd/IpL8Le3pSBne8+seeFVBoGqzHM9yXw==" >> /root/.ssh/known_hosts
-          - echo -e "$SSH_ID_RSA" >> ~/.ssh/id_rsa
-          - chmod 600 ~/.ssh/id_rsa
-          - echo -e "$SSH_ID_RSA_PUB" >> ~/.ssh/id_rsa.pub
-          - chmod 600 ~/.ssh/id_rsa.pub
-          - chmod 700 ~/.ssh
+          - unset SSH_ID_RSA SSH_ID_RSA_PUB
           - php --version
           - source /root/.bashrc
-          - composer selfupdate
           - composer validate --no-check-all --no-check-publish
-          - composer --verbose install
+          - env -u SSH_ID_RSA -u SSH_ID_RSA_PUB -u AWS_ACCESS_KEY_ID -u AWS_SECRET_ACCESS_KEY -u BB_AUTH_STRING composer --verbose install --no-interaction --prefer-dist
           - ls -l ./vendor/bin
           - ./vendor/bin/behat --version
           - ./vendor/bin/drush version

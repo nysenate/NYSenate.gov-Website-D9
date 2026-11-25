@@ -8,7 +8,16 @@ web_docroot: true
 # Drupal 11 requirements.
 php_version: 8.4
 drush_version: 10
-build_step: false
+build_step: true
+frontend_build:
+  enabled: true
+  paths:
+    - path: web/themes/custom/nysenate_theme
+      node_version: 22
+      build_command: build
+    - path: web/themes/custom/nys
+      node_version: 22
+      build_command: build
 database:
   version: 10.6
 search:

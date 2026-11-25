@@ -17,10 +17,6 @@
         {
             "type": "composer",
             "url": "https://asset-packagist.org"
-        },
-        {
-            "type": "vcs",
-            "url": "https://oauth2:5eWouk836yRxGz4RUPy7@git.drupalcode.org/issue/address_map_link-3411810.git"
         }
     ],
     "require": {
@@ -28,7 +24,7 @@
         "ext-json": "*",
         "bower-asset/colorbox": "^1.6",
         "composer/installers": "^2.0",
-        "cweagans/composer-patches": "^1.7.0",
+        "cweagans/composer-patches": "^2.0",
         "dompdf/dompdf": "^3.0",
         "drupal/action": "^0.2",
         "drupal/address": "^2.0",
@@ -255,7 +251,7 @@
         ]
     },
     "extra": {
-        "composer-exit-on-patch-failure": false,
+        "composer-exit-on-patch-failure": true,
         "installer-types": [
             "bower-asset",
             "npm-asset"
@@ -299,16 +295,16 @@
                 "2993688 - Views relationships with multi-valued entity reference fields invalidate Distinct query option": "https://www.drupal.org/files/issues/2022-06-16/2993688-99.patch",
                 "2701575 - : TypeError: Drupal\\Core\\Routing\\RequestContext::fromRequest() https://www.drupal.org/project/drupal/issues/2701575": "https://www.drupal.org/files/issues/2022-02-28/2701575-14.patch",
                 "3202896 - Don't display OEmbed error to anonymous visitors when resource stops being available: https://www.drupal.org/project/drupal/issues/3202896": "https://www.drupal.org/files/issues/2022-02-23/issue-3202896-6.patch",
-                "2769407 - Views UI should offer a 'Treat NULL values as FALSE' on boolean field": "https://www.drupal.org/files/issues/2026-01-19/2769407-D11.3.x-116.patch",
+                "2769407 - Views UI should offer a 'Treat NULL values as FALSE' on boolean field": "https://www.drupal.org/files/issues/2026-07-30/2769407_views_ui_null_option-11.4.4-128.patch",
                 "2741877 - Nested modals don't work - fixed focal point preview modal": "https://www.drupal.org/files/issues/2026-05-26/drupal-2741877-nested-modals-176-d11.3-2.patch",
                 "3049216 - ajax error": "https://www.drupal.org/files/issues/2023-01-31/3049216-21_0.patch",
-                "3315678 - strnatcasecmp(): Passing null to parameter #2 ($string2) of type string is deprecated": "https://www.drupal.org/files/issues/2023-01-30/categorizing_plugin_error-3315678-16.patch"
+                "3315678 - strnatcasecmp(): Passing null to parameter #2 ($string2) of type string is deprecated": "https://git.drupalcode.org/project/drupal/-/merge_requests/17577.diff"
             },
             "drupal/inline_entity_form": {
                 "3099844 - Required fields make an optional IEF (erroneously) required": "https://www.drupal.org/files/issues/2024-02-01/inline_entity_form-required_fields_optional_ief-3099844-35.patch"
             },
             "drupal/flag": {
-                "3336839 - FlagCountManager: Call to a member function id() on null": "https://www.drupal.org/files/issues/2025-06-10/flag-count-manager-error-3336839-20.patch"
+                "3336839 - FlagCountManager: Call to a member function id() on null": "https://git.drupalcode.org/project/flag/-/merge_requests/186.diff"
             },
             "drupal/webform": {
                 "3323334: Allow Disabling open/closed/scheduled on field widget": "https://www.drupal.org/files/issues/2025-08-06/3323334-allow-disabling-open-closed-scheduled-on-field-widget-6.3.0-beta4.patch"
@@ -331,13 +327,10 @@
                 "3214365 - Crop widget not adjusting crop box when crop is applied\nx": "https://www.drupal.org/files/issues/2021-06-09/crop_widget_not_adjusting_to_existing_crop-3214365-9.patch"
             },
             "drupal/clamav": {
-                "3383653 -Support image upload plugin for CKEditor5\n": "https://git.drupalcode.org/project/clamav/-/merge_requests/7.patch"
+                "3383653 -Support image upload plugin for CKEditor5\n": "patches/clamav-ckeditor5-upload.patch"
             },
             "drupal/stage_file_proxy": {
                 "3457368 - createProxyHeadersArray(): Argument #1 ($headers_string) must be of type string": "https://git.drupalcode.org/project/stage_file_proxy/-/merge_requests/74.patch"
-            },
-            "drupal/term_merge": {
-                "3311345 - better UI": "https://www.drupal.org/files/issues/2025-11-04/term_merge_ajax-filter3311345-22.patch"
             },
             "drupal/entity_print": {
                 "Possibility to alter http headers when we generate PDF": "https://www.drupal.org/files/issues/2021-08-17/entity_print-3202847-4.patch"

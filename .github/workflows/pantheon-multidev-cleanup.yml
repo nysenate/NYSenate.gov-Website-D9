@@ -6,11 +6,19 @@ on:
       - main
     types: [ closed ]
 
+permissions:
+  contents: read
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Check out the trusted installation script
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -18,20 +26,22 @@ jobs:
           extensions: gmp
 
       - name: Add SSH Key
-        uses: webfactory/ssh-agent@v0.8.0
+        uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.PANTHEON_SSH_PRIVATE_KEY }}
-
-      - name: Disable Pantheon SSH strict host key checking
-        run: 'printf "\nHost *\n\tStrictHostKeyChecking no" >> ~/.ssh/config'
 
       - name: Get the Pantheon Multidev Name
         run: echo PANTHEON_MULTIDEV=$(echo "pr-${{ github.event.pull_request.number }}") >> $GITHUB_ENV
 
-      - name: Install Terminus
-        uses: pantheon-systems/terminus-github-actions@main
-        with:
-          pantheon-machine-token: ${{ secrets.PANTHEON_MACHINE_TOKEN }}
+      - name: Install and authenticate Terminus
+        run: |
+          bash scripts/install-terminus.sh "$RUNNER_TEMP/terminus"
+          echo "$RUNNER_TEMP/terminus" >> "$GITHUB_PATH"
+
+      - name: Authenticate Terminus
+        env:
+          PANTHEON_MACHINE_TOKEN: ${{ secrets.PANTHEON_MACHINE_TOKEN }}
+        run: terminus auth:login --machine-token="$PANTHEON_MACHINE_TOKEN"
 
       - name: Delete Pantheon Multidev
         run: terminus multidev:delete ${{ vars.PANTHEON_SITE }}.${{ env.PANTHEON_MULTIDEV }} --yes

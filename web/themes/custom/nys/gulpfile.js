@@ -139,11 +139,10 @@ function componentStylesWatch(cb) {
   cb();
 }
 
-function componentStylesBuild(cb) {
-  gulp
+function componentStylesBuild() {
+  return gulp
     .src(paths.component.styles.src)
     .pipe(sass(sassOpts))
-    .on('error', sass.logError)
     .pipe(postcss())
     .pipe(
       rename(function (file) {
@@ -151,8 +150,6 @@ function componentStylesBuild(cb) {
       })
     )
     .pipe(gulp.dest(paths.component.styles.dest));
-
-  cb();
 }
 
 /*------------------------------------*\
@@ -181,15 +178,14 @@ function componentScriptsWatch(cb) {
   cb();
 }
 
-function componentScriptsBuild(cb) {
-  gulp
+function componentScriptsBuild() {
+  return gulp
     .src(paths.component.scripts.src)
     .pipe(named(renameComponentScripts))
     .pipe(webpack(webpackConfig, webpackCompiler))
     .pipe(ignore.exclude(['**/*.map']))
     .pipe(uglify())
     .pipe(gulp.dest(paths.component.scripts.dest));
-  cb();
 }
 
 /*------------------------------------*\

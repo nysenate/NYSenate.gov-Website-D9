@@ -71,6 +71,26 @@ Confirm you can browse to [https://nysenate.ddev.site](https://nysenate.ddev.sit
 * Run `ddev drush cex` to export Drupal configuration to the profile/profilename/config/sync folder.
 * Make sure to run `ddev composer install` and then `ddev drush deploy` after pulling the latest from the `develop` branch. This will install the latest PHP dependencies and update/import the latest config into your database.
 
+## Adding or updating Composer patches
+
+Patch definitions live in `composer.json`; Composer Patches generates `patches.lock.json`
+to lock their contents and checksums. After adding or updating a patch definition or local patch file, run:
+
+```sh
+ddev composer patches-relock
+ddev composer patches-repatch
+ddev composer update --lock
+```
+
+**Warning:** `patches-repatch` replaces installed patched dependencies, discarding any local
+changes inside them. Review the patch and lockfile diffs, test the affected functionality,
+and include the related patch definitions/files and both lockfiles in the same change.
+Do not regenerate checksums just to bypass an unexpected patch integrity failure.
+
+Normal `composer install` uses the existing patch lockfile without refreshing it. After
+pulling someone else's patch changes, use `ddev composer patches-repatch` to apply them
+to an existing installation; a fresh installation only needs `ddev composer install`.
+
 ## Additional Links
 * [Project Drupal Theme Guide](https://bitbucket.org/mediacurrent/nys_nysenate_gov.git/src/HEAD/web/themes/custom/project_theme/README.md?fileviewer=file-view-default)
 * [DDEV-Local Documentation](https://ddev.readthedocs.io/en/stable/)
@@ -87,7 +107,19 @@ not, click the button that says "track info" - you may need to do this a couple 
 
 ## Github Actions
 If a branch is created off of `main` with the naming convention `feature/JIRA-1234`, upon creating a pull request,
-a Github Action will run doing a composer build and a build of the front end assets. The assets will be pushed to Pantheon
-and a multi-dev environment will be created. As long as the pull request is open, you may continue to push changes to the
-feature branch and the multi-dev environment will be updated. Note, it can take up to 2.5 hours for a multi-dev environment
-to be created.
+the [PR workflow](.github/workflows/pantheon-deploy-multidev.yml) uses Pantheon's Push to Pantheon Action to create or update
+`pr-<number>`. Integrated Composer and Frontend Asset Builds are configured in [pantheon.yml](pantheon.yml);
+Pantheon installs PHP dependencies and builds `nysenate_theme` and `nys` with Node 22.
+New Multidevs clone only the database from `PANTHEON_MULTIDEV_CLONE_ENV` (`--no-files`).
+The Action handles creation and Git deployment with `skip_build_tools: true` and `clone_files: false`;
+this remains a GitHub Actions workflow, not the Pantheon GitHub Application integration.
+Existing Multidevs must be in Git connection mode; review/preserve any SFTP code changes before switching modes.
+Stage File Proxy continues to supply public files on demand; only `private_settings.php` is copied from that same
+source over SFTP after the push. Subsequent pushes reuse the database and refresh that one settings file.
+Before cache and accessibility tests run, CI checks the remote Git revision and requires Terminus to confirm a
+successful workflow for that commit (up to 20 minutes). An unchanged rerun can reuse its prior successful build.
+
+This is a WIP platform-build trial. Inspect Pantheon's build logs and deployed revision before accepting the result;
+an available URL or green deployment status alone is not proof of a successful current build.
+The manual Dev artifact workflow has not yet been migrated: do not merge/promote the native build configuration or
+run that workflow against it until the Dev deployment path is reconciled. The current `main` configuration is unchanged.

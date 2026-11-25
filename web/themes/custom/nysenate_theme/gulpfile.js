@@ -14,7 +14,7 @@ const patternlab = require('@pattern-lab/core')(config);
 // Check out the ./gulp-tasks directory for more.
 const { compileSass, compileJS } = require('./gulp-tasks/compile.js');
 const { lintJS, lintSass } = require('./gulp-tasks/lint.js');
-const { compressAssets } = require('./gulp-tasks/compress.js');
+const { copyAssets } = require('./gulp-tasks/compress.js');
 const { cleanCSS, cleanJS } = require('./gulp-tasks/clean.js');
 const { concatCSS, concatJS } = require('./gulp-tasks/concat.js');
 const { moveFonts, movePatternCSS } = require('./gulp-tasks/move.js');
@@ -27,7 +27,7 @@ exports.compile = parallel(compileSass, compileJS, moveFonts, movePatternCSS);
 exports.lint = parallel(lintSass, lintJS);
 
 // Compress Files
-exports.compress = compressAssets;
+exports.compress = copyAssets;
 
 // Concat all CSS and JS files into a master bundle.
 exports.concat = parallel(concatCSS, concatJS);
@@ -124,7 +124,7 @@ exports.watch = series(
     compileSass,
     lintJS,
     compileJS,
-    compressAssets,
+    copyAssets,
     moveFonts,
     movePatternCSS
   ),
@@ -143,7 +143,7 @@ exports.default = series(
     compileSass,
     lintJS,
     compileJS,
-    compressAssets,
+    copyAssets,
     moveFonts,
     movePatternCSS
   ),
